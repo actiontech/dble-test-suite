@@ -268,27 +268,6 @@ Feature: test with useNewJoinOptimizer=true
       | conn   | toClose | sql                                                         | db|
       | conn_8 | true    | SELECT a.Name,a.DeptName,b.Manager,c.salary FROM Employee a cross join Level c LEFT JOIN Dept b on a.DeptName= b.DeptName order by a.name | schema1 |
 
-    #rule-A: cross join & left join & one ER, ER first
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_J"
-       | conn   | toClose | sql                                                         | db|
-       | conn_9 | false   | explain SELECT a.Name,a.DeptName,b.Manager,c.salary FROM Employee a cross join Level c LEFT JOIN Dept b on a.DeptName= b.DeptName order by a.name| schema1|
-    Then check resultset "rs_J" has lines with following column values
-      | SHARDING_NODE-0     | TYPE-1            | SQL/REF-2                                                                                         |
-      | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` where 1=1  ORDER BY `a`.`name` ASC |
-      | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` where 1=1  ORDER BY `a`.`name` ASC |
-      | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                                                                                                                                        |
-      | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                   |
-      | dn1_0             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c`                                                                                                                                                 |
-      | dn2_0             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c`                                                                                                                                                 |
-      | dn3_1             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c`                                                                                                                                                 |
-      | merge_1           | MERGE           | dn1_0; dn2_0; dn3_1                                                                                                                                                                                                 |
-      | shuffle_field_3   | SHUFFLE_FIELD   | merge_1                                                                                                                                                                                                             |
-      | join_1            | JOIN            | shuffle_field_1; shuffle_field_3                                                                                                                                                                                    |
-      | shuffle_field_2   | SHUFFLE_FIELD   | join_1                                                                                                                                                                                                              |
-    Then execute sql in "dble-1" and the result should be consistent with mysql
-      | conn   | toClose | sql                                                         | db|
-      | conn_9 | true    | SELECT a.Name,a.DeptName,b.Manager,c.country FROM Employee a cross join Info c LEFT JOIN Dept b on c.DeptName= b.DeptName order by a.name| schema1 |
-
     #rule-A: inner join & inner join & one ER, ER first
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_K"
        | conn    | toClose | sql                                                         | db|
