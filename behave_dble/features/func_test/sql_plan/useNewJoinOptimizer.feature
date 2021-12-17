@@ -68,7 +68,7 @@ Feature: test with useNewJoinOptimizer=true
         | conn_0 | false    | insert into Level values('P7',7,10000),('P8',8,15000),('P9',9,20000),('P10',10,25000)                                                                                                                                                                                                                             | schema1 | success|
         | conn_0 | true     | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance') | schema1| success|
 
-     #rule-A: left join & left join & no ER   -->  join order not change
+     #rule-A: left join & left join & one ER   -->  join order not change
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_A"
       | conn   | toClose | sql                                                         | db|
       | conn_0 | false   | explain SELECT a.Name,a.DeptName,b.Manager,c.country FROM Employee a LEFT JOIN Info c on a.name=c.name LEFT JOIN Dept b on c.DeptName= b.DeptName order by a.name| schema1|
