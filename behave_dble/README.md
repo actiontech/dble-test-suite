@@ -47,7 +47,7 @@ jdbc 5.1.39
 - restore_mysql_service --启动已停止的MySQL服务，一般用于用例中有停止MySQL服务的场景
 - restore_global_setting --还原MySQL中全局变量值到默认值，一般用于用例中有改变MySQL默认全局变量值的场景
 - restore_mysql_config --还原MySQL的配置值到初始值，一般用于用例中有改变MySQL配置值的场景
-- delete_mysql_tables --清理指定后端MySQL上db1-db4库上的所有表，一般用于删除该用例中建立在后端MySQL上的表
+- delete_mysql_tables --清理指定后端MySQL上指定库中的所有表，一般用于删除该用例中建立在后端MySQL上的表
 #### 其他tags参数说明
 - btrace --用于标注此scenario用到了btrace插桩，便于后续统一管理
 - skip_restart --scenario结束之后保持当前的配置，且不会重启dble，一般用于前后scenario有关联的场景或者scenario运行失败时的原因分析
