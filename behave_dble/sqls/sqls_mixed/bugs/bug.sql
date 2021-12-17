@@ -238,7 +238,8 @@ drop table if exists sharding_4_t1
 #github issue 829
 drop table if exists schema2.global_4_t1
 create table schema2.global_4_t1(id int,name varchar(30),role varchar(30)) DEFAULT CHARSET=UTF8
-/* ApplicationName=DBeaver 5.2.4 - Main */ create or replace view schema2.view_tg as select name,role from schema2.global_4_t1
+# http://10.186.18.11/jira/browse/DBLE0REQ-1541
+# /* ApplicationName=DBeaver 5.2.4 - Main */ create or replace view schema2.view_tg as select name,role from schema2.global_4_t1
 /* ApplicationName=DBeaver 5.2.4 - Metadata / SHOW FULL TABLES FROM schema2 */
 drop table if exists schema2.global_4_t1
 drop view if exists view_tg
