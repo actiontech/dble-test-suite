@@ -157,11 +157,8 @@ class RestoreEnvObject(object):
             else:
                 paras = {}
 
-            logger.debug("try to delete_mysql_tables of mysqls: {0}".format(paras))
-
-            # only delete tables from db1~db4, because only these four databases are installed when the environment is initialized
-            db_list = ["db1", "db2", "db3", "db4"]
-            for host_name in paras:
+            for host_name in paras.keys():
+                logger.debug("try to delete_mysql_tables of mysqls: {0}".format(host_name))
                 ssh = get_ssh(host_name)
 
                 if host_name.find("dble") != -1:
@@ -175,14 +172,19 @@ class RestoreEnvObject(object):
                 if len(stdout) > 0:
                     ssh.exec_command("rm -rf /tmp/tables.txt")
 
-                generate_drop_tables_sql = "select concat('drop table if exists ',table_name,';') from information_schema.TABLES where table_schema like 'db%' into outfile '/tmp/tables.txt'"
-                execute_sql_in_host(host_name, {"sql": generate_drop_tables_sql}, mode)
-                for db in db_list:
+                for database in paras[host_name]:
+                    generate_drop_tables_sql = "select concat('drop table if exists ',table_name,';') from information_schema.TABLES where table_schema='{0}' into outfile '/tmp/tables.txt'".format(database)
+                    execute_sql_in_host(host_name, {"sql": generate_drop_tables_sql}, mode)
+
                     # MySQLDB not support source grammar,replace with ssh cmd
-                    ssh.exec_command("mysql -uroot -p111111 -D{0} -e 'source /tmp/tables.txt'".format(db))
-                ssh.exec_command("rm -rf /tmp/tables.txt")
+                    rc, stdout, stderr = ssh.exec_command("mysql -uroot -p111111 -D{0} -e 'source /tmp/tables.txt'".format(database))
+                    stderr = stderr.lower()
+                    assert stderr.find("error") == -1, "deletet mysql in {0}:{1} failed, err: {2}".format(host_name, database, stderr)
+                    ssh.exec_command("rm -rf /tmp/tables.txt")
 
                 logger.debug("{0} tables has been delete success".format(host_name))
+
+            logger.info("all required tables has been delete success")
 
     def get_tag_params(self, tagKey):
         description = self._scenario.description
