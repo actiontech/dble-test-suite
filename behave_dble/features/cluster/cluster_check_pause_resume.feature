@@ -219,8 +219,8 @@ Feature: test "pause/resume" in zk cluster
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
      """
      ERROR
-     There are some node in cluster can
-     recycle backend
+     we will try to resume cluster in the backend
+     please check the dble status and dble log
      """
     #case check lock on zookeeper
     Given execute linux command in "dble-1"
@@ -245,91 +245,91 @@ Feature: test "pause/resume" in zk cluster
       | conn_3 | True     | select * from sharding_4_t1               | length{(1)}   | schema1  |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
 
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      /-DidleTimeout=/d
-      $a -DidleTimeout=10000
-      """
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
-      """
-      /-DidleTimeout=/d
-      $a -DidleTimeout=10000
-      """
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
-      """
-      /-DidleTimeout=/d
-      $a -DidleTimeout=10000
-      """
-    Then restart dble in "dble-1" success
-    Then restart dble in "dble-2" success
-    Then restart dble in "dble-3" success
-    Then execute sql in "dble-1" in "admin" mode
-      | conn    | toClose | sql                                                                     | expect                  |
-      | conn_11 | true    | pause @@shardingNode = 'dn1,dn2' and timeout = 5,queue=10,wait_limit=1  | success                 |
-    #sleep 20s,because idleTimeout=10s,timeout more than 10s
-    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
-      """
-      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /tryResume/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
-      """
-    Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
-    Then execute "admin" cmd  in "dble-1" at background
-      | conn    | toClose | sql       | db                 |
-      | conn_11 | True    | resume    | dble_information   |
-    #case check lock on zookeeper
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
-      """
-      pause_node.lock
-      """
-    #sleep 10s,because idleTimeout=10000
-    Given sleep "11" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
-      """
-      ERROR
-      Lost connection to MySQL server during query
-      """
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                       | expect                                                     | db       |
-      | conn_1 | True     | select * from sharding_4_t1               | waiting time exceeded wait_limit from pause shardingNode   | schema1  |
-    Then execute sql in "dble-2" in "user" mode
-      | conn   | toClose  | sql                                       | expect                                                     | db       |
-      | conn_2 | True     | select * from sharding_4_t1               | waiting time exceeded wait_limit from pause shardingNode   | schema1  |
-    Then execute sql in "dble-3" in "user" mode
-      | conn   | toClose  | sql                                       | expect                                                     | db       |
-      | conn_3 | True     | select * from sharding_4_t1               | waiting time exceeded wait_limit from pause shardingNode   | schema1  |
-    Given sleep "10" seconds
-    Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
-    Given destroy btrace threads list
-    Given delete file "/opt/dble/BtraceDelayAfterDdl.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceDelayAfterDdl.java.log" on "dble-1"
-    Given delete file "/tmp/dble_admin_query.log" on "dble-1"
-    Then execute sql in "dble-1" in "admin" mode
-      | conn    | toClose | sql     | expect                     |
-      | conn_11 | true    | resume  | No shardingNode paused     |
-    #case check lock on zookeeper
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
-      """
-      pause_node.lock
-      """
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                       | expect    | db       |
-      | conn_1 | True     | select * from sharding_4_t1               | success   | schema1  |
-    Then execute sql in "dble-2" in "user" mode
-      | conn   | toClose  | sql                                       | expect    | db       |
-      | conn_2 | True     | select * from sharding_4_t1               | success   | schema1  |
-    Then execute sql in "dble-3" in "user" mode
-      | conn   | toClose  | sql                                       | expect        | db       |
-      | conn_3 | false    | select * from sharding_4_t1               | length{(1)}   | schema1  |
-      | conn_3 | True     | drop table if exists sharding_4_t1        | success       | schema1  |
-    Given execute linux command in "dble-1"
-    """
-    rm -rf /tmp/dble_*
-    """
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#      """
+#      /-DidleTimeout=/d
+#      $a -DidleTimeout=10000
+#      """
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
+#      """
+#      /-DidleTimeout=/d
+#      $a -DidleTimeout=10000
+#      """
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
+#      """
+#      /-DidleTimeout=/d
+#      $a -DidleTimeout=10000
+#      """
+#    Then restart dble in "dble-1" success
+#    Then restart dble in "dble-2" success
+#    Then restart dble in "dble-3" success
+#    Then execute sql in "dble-1" in "admin" mode
+#      | conn    | toClose | sql                                                                     | expect                  |
+#      | conn_11 | true    | pause @@shardingNode = 'dn1,dn2' and timeout = 5,queue=10,wait_limit=1  | success                 |
+#    #sleep 20s,because idleTimeout=10s,timeout more than 10s
+#    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
+#      """
+#      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
+#      /tryResume/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+#      """
+#    Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
+#    Then execute "admin" cmd  in "dble-1" at background
+#      | conn    | toClose | sql       | db                 |
+#      | conn_11 | True    | resume    | dble_information   |
+#    #case check lock on zookeeper
+#    Given execute linux command in "dble-1"
+#      """
+#      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+#      """
+#    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+#      """
+#      pause_node.lock
+#      """
+#    #sleep 10s,because idleTimeout=10000
+#    Given sleep "11" seconds
+#    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+#      """
+#      ERROR
+#      Lost connection to MySQL server during query
+#      """
+#    Then execute sql in "dble-1" in "user" mode
+#      | conn   | toClose  | sql                                       | expect                                                     | db       |
+#      | conn_1 | True     | select * from sharding_4_t1               | waiting time exceeded wait_limit from pause shardingNode   | schema1  |
+#    Then execute sql in "dble-2" in "user" mode
+#      | conn   | toClose  | sql                                       | expect                                                     | db       |
+#      | conn_2 | True     | select * from sharding_4_t1               | waiting time exceeded wait_limit from pause shardingNode   | schema1  |
+#    Then execute sql in "dble-3" in "user" mode
+#      | conn   | toClose  | sql                                       | expect                                                     | db       |
+#      | conn_3 | True     | select * from sharding_4_t1               | waiting time exceeded wait_limit from pause shardingNode   | schema1  |
+#    Given sleep "10" seconds
+#    Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
+#    Given destroy btrace threads list
+#    Given delete file "/opt/dble/BtraceDelayAfterDdl.java" on "dble-1"
+#    Given delete file "/opt/dble/BtraceDelayAfterDdl.java.log" on "dble-1"
+#    Given delete file "/tmp/dble_admin_query.log" on "dble-1"
+#    Then execute sql in "dble-1" in "admin" mode
+#      | conn    | toClose | sql     | expect                     |
+#      | conn_11 | true    | resume  | No shardingNode paused     |
+#    #case check lock on zookeeper
+#    Given execute linux command in "dble-1"
+#      """
+#      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+#      """
+#    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+#      """
+#      pause_node.lock
+#      """
+#    Then execute sql in "dble-1" in "user" mode
+#      | conn   | toClose  | sql                                       | expect    | db       |
+#      | conn_1 | True     | select * from sharding_4_t1               | success   | schema1  |
+#    Then execute sql in "dble-2" in "user" mode
+#      | conn   | toClose  | sql                                       | expect    | db       |
+#      | conn_2 | True     | select * from sharding_4_t1               | success   | schema1  |
+#    Then execute sql in "dble-3" in "user" mode
+#      | conn   | toClose  | sql                                       | expect        | db       |
+#      | conn_3 | false    | select * from sharding_4_t1               | length{(1)}   | schema1  |
+#      | conn_3 | True     | drop table if exists sharding_4_t1        | success       | schema1  |
+#    Given execute linux command in "dble-1"
+#    """
+#    rm -rf /tmp/dble_*
+#    """
