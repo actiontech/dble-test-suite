@@ -380,9 +380,7 @@ Feature: verify hint sql
       | conn_0 | False   | create table test1(id int not null, name varchar(40), depart varchar(40),role varchar(30),code int(4)) | success | schema1 |
       | conn_0 | False   | drop view if exists view_tt                                                                            | success | schema1 |
       | conn_0 | False   | create view view_tt as select name,depart,role from test1                                              | success | schema1 |
-      | conn_0 | True    | drop view view_tt                                                                                      | success | schema1 |
-# http://10.186.18.11/jira/browse/DBLE0REQ-1541
-#      | conn_0 | True    | /* ApplicationName=DBeaver 5.2.4 - Main */drop view view_tt                                            | success | schema1 |
+      | conn_0 | True    | /* ApplicationName=DBeaver 5.2.4 - Main */drop view view_tt                                            | success | schema1 |
     #from issue: 842
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect                | db      |
@@ -399,9 +397,7 @@ Feature: verify hint sql
     #from issue:829
     Then execute sql in "dble-1" in "user" mode
       | sql                                                                          | expect  | db      |
-      | SHOW FULL TABLES FROM schema1                                                | success | schema1 |
-# http://10.186.18.11/jira/browse/DBLE0REQ-1541
-#      | /* ApplicationName=DBeaver 5.2.4 - Metadata */ SHOW FULL TABLES FROM schema1 | success | schema1 |
+      | /* ApplicationName=DBeaver 5.2.4 - Metadata */ SHOW FULL TABLES FROM schema1 | success | schema1 |
     #from issue:824
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                 | expect      | db      |
