@@ -27,7 +27,7 @@ Feature: verify hint sql
       | conn_1 | True    | show tables              | hasnot{('test_index'),} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                  | expect                                   | db      |
-      | conn_0 | False   | /*!dble:shardingNod=dn1*/ drop table test_table                                                      | druid not support sql syntax, the reason is sql syntax error, no terminated. DROP | schema1 |
+      | conn_0 | False   | /*!dble:shardingNod=dn1*/ drop table test_table                                                      | please following the dble hint syntax: /*!dble:shardingNode=? */ sql | schema1 |
       | conn_0 | False   | /*#dble:shardingNode=dn1*/ drop table test_table                                                     | success                                  | schema1 |
       | conn_0 | False   | drop table if exists test_shard                                                                      | success                                  | schema1 |
       | conn_0 | False   | create table test_table (id int ,name varchar(20))                                                   | success                                  | schema1 |
