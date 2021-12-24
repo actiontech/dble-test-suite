@@ -2144,9 +2144,9 @@ Feature: test with useNewJoinOptimizer=true
           | union_all_1       | UNION_ALL       | shuffle_field_2; shuffle_field_6                                                                                                                                                                                     |
           | distinct_1        | DISTINCT        | union_all_1                                                                                                                                                                                                          |
           | shuffle_field_3   | SHUFFLE_FIELD   | distinct_1                                                                                                                                                                                                           |
-#     Then execute sql in "dble-1" and the result should be consistent with mysql
-#        | conn    | toClose   | sql                                                         | db|
-#        | conn_1  | true      | SELECT * FROM Employee a INNER JOIN Level c on a.level=c.levelname LEFT JOIN Dept b on a.DeptName= b.DeptName UNION SELECT * FROM Employee a LEFT JOIN Level c on a.level=c.levelname INNER JOIN Dept b on a.DeptName= b.DeptName  | schema1|
+     Then execute sql in "dble-1" and the result should be consistent with mysql
+        | conn    | toClose   | sql                                                         | db|
+        | conn_1  | true      | SELECT * FROM Employee a INNER JOIN Level c on a.level=c.levelname LEFT JOIN Dept b on a.DeptName= b.DeptName UNION SELECT * FROM Employee a LEFT JOIN Level c on a.level=c.levelname INNER JOIN Dept b on a.DeptName= b.DeptName  | schema1|
 
      # more join
      Given execute single sql in "dble-1" in "user" mode and save resultset in "B"
