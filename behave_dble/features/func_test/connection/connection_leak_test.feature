@@ -7,7 +7,7 @@ Feature: connection leak test
 
   # issue：https://github.com/actiontech/dble/issues/1261
   @btrace
-  Scenario: modify table's configuration that has been created, reload @@config_all not hang when backend mysql disconnected
+  Scenario: modify table's configuration that has been created, reload @@config_all not hang when backend mysql disconnected             #1
 
     Given record current dble log line number in "log_1"
     Given delete file "/opt/dble/BtraceLineDelay.java" on "dble-1"
@@ -64,7 +64,7 @@ Feature: connection leak test
     Given delete file "/opt/dble/BtraceLineDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceLineDelay.java.log" on "dble-1"
 
-  Scenario: two case explained below (06 regression added)
+  Scenario: two case explained below (06 regression added)                            #2
     Given delete the following xml segment
       | file             | parent         | child                   |
       | sharding.xml     | {'tag':'root'} | {'tag':'schema'}        |
@@ -118,7 +118,7 @@ Feature: connection leak test
     Given sleep "5" seconds
     Then check sql thread output in "err"
       """
-        1105, "java.io.IOException: the dbInstance[172.100.9.5:3307] can't reach. Please check the dbInstance status"
+        1105, "java.io.IOException: the dbInstance[172.100.9.5:3307] can't reach. Please check the dbInstance is accessible"
       """
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
