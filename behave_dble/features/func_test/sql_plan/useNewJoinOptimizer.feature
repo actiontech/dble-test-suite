@@ -1818,6 +1818,11 @@ Feature: test with useNewJoinOptimizer=true
       | conn_0 | false    | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance') | schema1| success|
       | conn_0 | true     | insert into FamilyInfo values('Harry', 'department', 3),('George', 'department', 5), ('Harriet', 'villa', 6), ('Mary', 'villa', 8), ('LiLi', 'Self-built house', 10), ('Tom', 'department', 2)                                                                          | schema1| success|
 
+    Then execute sql in "mysql" in "mysql" mode
+      | conn   | toClose  | sql                       | db | expect               |
+      | conn_0 | false    | create table FamilyInfo(name varchar(25) not null, housetype varchar(250) not null, familynum int not null)engine=innodb charset=utf8                      | schema1  | success|
+      | conn_0 | true     | insert into FamilyInfo values('Harry', 'department', 3),('George', 'department', 5), ('Harriet', 'villa', 6), ('Mary', 'villa', 8), ('LiLi', 'Self-built house', 10), ('Tom', 'department', 2)                                                                          | schema1| success|
+
      # GlobalTable + shardingTable + GlobalTable
      #rule A: left join & left join & no ER, GlobalTable first
      Given execute single sql in "dble-1" in "user" mode and save resultset in "A"
@@ -2144,9 +2149,10 @@ Feature: test with useNewJoinOptimizer=true
           | union_all_1       | UNION_ALL       | shuffle_field_2; shuffle_field_6                                                                                                                                                                                     |
           | distinct_1        | DISTINCT        | union_all_1                                                                                                                                                                                                          |
           | shuffle_field_3   | SHUFFLE_FIELD   | distinct_1                                                                                                                                                                                                           |
-     Then execute sql in "dble-1" and the result should be consistent with mysql
-        | conn    | toClose   | sql                                                         | db|
-        | conn_1  | true      | SELECT * FROM Employee a INNER JOIN Level c on a.level=c.levelname LEFT JOIN Dept b on a.DeptName= b.DeptName UNION SELECT * FROM Employee a LEFT JOIN Level c on a.level=c.levelname INNER JOIN Dept b on a.DeptName= b.DeptName  | schema1|
+     #see http://10.186.18.11/jira/browse/DBLE0REQ-1565
+  #     Then execute sql in "dble-1" and the result should be consistent with mysql
+  #        | conn    | toClose   | sql                                                         | db|
+  #        | conn_1  | true      | SELECT * FROM Employee a INNER JOIN Level c on a.level=c.levelname LEFT JOIN Dept b on a.DeptName= b.DeptName UNION SELECT * FROM Employee a LEFT JOIN Level c on a.level=c.levelname INNER JOIN Dept b on a.DeptName= b.DeptName  | schema1|
 
      # more join
      Given execute single sql in "dble-1" in "user" mode and save resultset in "B"
