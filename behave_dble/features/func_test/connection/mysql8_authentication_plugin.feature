@@ -282,8 +282,8 @@ Feature: check mysql 8.0 authentication plugin
     """
     Then restart dble in "dble-1" success
 
-    Given execute linux command in "dble-1" and contains exception "Please check the dbInstance status"
-    #java.io.IOException: the dbInstance[172.100.9.9:3307] can't reach. Please check the dbInstance status
+    Given execute linux command in "dble-1" and contains exception "Please check the dbInstance is accessible"
+    #java.io.IOException: the dbInstance[172.100.9.9:3307] can't reach. Please check the dbInstance is accessible
     """
     mysql -P{node:client_port} -u{node:client_user} -h{node:ip} -e "drop table if exists schema1.test"
     """
