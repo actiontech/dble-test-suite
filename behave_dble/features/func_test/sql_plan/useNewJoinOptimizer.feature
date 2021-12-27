@@ -1,7 +1,7 @@
 # -*- coding=utf-8 -*-
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-# Created by caiwe at 2021/12/10
+# Created by caiwei at 2021/12/10
 Feature: test with useNewJoinOptimizer=true
 
 #more information find in confluence: http://10.186.18.11/confluence/pages/viewpage.action?pageId=32064447
