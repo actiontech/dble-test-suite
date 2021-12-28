@@ -169,6 +169,8 @@ def destroy_threads(context):
 def step_impl(context, result):
     if result.lower() == "res":
         output = getattr(context, "sql_thread_result")
+        context.logger.debug("sql thread output from res: {0}".format(output))
     elif result.lower() == "err":
         output = getattr(context, "sql_thread_err")
-    assert str(output).find(context.text.strip()) > -1, "not found '{0}' in sql '{1}'".format(context.text, result)
+        context.logger.debug("sql thread output from err: {0}".format(output))
+    assert str(output).find(context.text.strip()) > -1, "expect output: {0} in {1}, but was: {2}".format(context.text, result, output)
