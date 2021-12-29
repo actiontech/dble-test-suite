@@ -17,4 +17,4 @@ for((i=0; i<count; i=i+1)); do
     ssh root@${mysql_install[$i]}  "bash /usr/local/bin/mysql_init.sh"
 done
 
-bash /init_assets/behave_dble/compose/docker-build-behave/resetReplication.sh
+bash /docker-build/resetReplication.sh
