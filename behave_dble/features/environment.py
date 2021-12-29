@@ -119,15 +119,15 @@ def before_scenario(context, scenario):
     logger.info('#' * 30)
     logger.info('Scenario start: <{0}>'.format(scenario.name))
     logger.info(context.text)
-    if "restore_letter_sensitive" in scenario.tags:
-        context.text = """
-        /lower_case_table_names/d
-        /server-id/a lower_case_table_names = 0
-        """
-        update_config_and_restart_mysql(context, "mysql-master1")
-        update_config_and_restart_mysql(context, "mysql-master2")
-        update_config_and_restart_mysql(context, "mysql-slave1")
-        update_config_and_restart_mysql(context, "mysql-slave2")
+    # if "restore_letter_sensitive" in scenario.tags:
+    #     context.text = """
+    #     /lower_case_table_names/d
+    #     /server-id/a lower_case_table_names = 0
+    #     """
+    #     update_config_and_restart_mysql(context, "mysql-master1")
+    #     update_config_and_restart_mysql(context, "mysql-master2")
+    #     update_config_and_restart_mysql(context, "mysql-slave1")
+    #     update_config_and_restart_mysql(context, "mysql-slave2")
 
 def after_scenario(context, scenario):
     mm, ss = divmod((datetime.datetime.now() - context.scenario_begin_time).total_seconds(), 60)

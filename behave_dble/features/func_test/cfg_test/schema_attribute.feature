@@ -112,7 +112,7 @@ Feature: test some import nodes attr in schema.xml
     Then create "14" conn while maxCon="15" finally close all conn
     Then create "15" conn while maxCon="15" finally close all conn
     """
-    the max active Connections size can not be max than maxCon for data host[dh1.hostM1]
+    the max active Connections size can not be max than maxCon for data host\[dh1.hostM1]
     """
   @NORMAL
   Scenario: if "dataHost" node attr "maxCon" less than or equal the count of related datanodes, maxCon will be count(related dataNodes)+1; A DDL will take 1 more than we can see, the invisible one is used to take ddl metadata #5
@@ -152,7 +152,7 @@ Feature: test some import nodes attr in schema.xml
     Then create "3" conn while maxCon="3" finally close all conn
     Then create "4" conn while maxCon="3" finally close all conn
     """
-    the max active Connections size can not be max than maxCon for data host[dh1.hostM1]
+    the max active Connections size can not be max than maxCon for data host\[dh1.hostM1]
     """
 
   @CRITICAL
