@@ -2,39 +2,39 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import logging
+import time
 
-from lib import utils
-
-from mysql_steps import execute_sql_in_host
-from lib.utils import get_sftp, get_ssh, get_node
 from hamcrest import *
+from step_function import update_cnf_content
+from restart import start_mysql
 
 logger = logging.getLogger('root')
 
 
 class RestoreEnvObject(object):
-    def __init__(self, scenario):
+    def __init__(self, context,scenario):
         self._scenario = scenario
+        self._context = context
 
-    def restore(self):
-        if "restore_mysql_service" in self._scenario.tags:
-            params_dic = self.get_tag_params("{'restore_mysql_service'")
-
-            if params_dic:
-                paras = params_dic["restore_mysql_service"]
-            else:
-                paras = {}
-
-            logger.debug("try to restore_mysql_service: {0}".format(paras))
-            for host_name, mysql_vars in paras.items():
-                logger.debug("the value of host_name is: {0}".format(host_name))
-                for k, v in mysql_vars.items():
-                    if v:
-                        update_file_content(self._context, "/etc/my.cnf", host_name)
-                        start_mysql(self._context, host_name)
-
-                    # mysql = ObjectFactory.create_mysql_object(host_name)
-                    # mysql.start()
+    def restore(self, context):
+        # if "restore_mysql_service" in self._scenario.tags:
+        #     params_dic = self.get_tag_params("{'restore_mysql_service'")
+        #
+        #     if params_dic:
+        #         paras = params_dic["restore_mysql_service"]
+        #     else:
+        #         paras = {}
+        #
+        #     logger.debug("try to restore_mysql_service: {0}".format(paras))
+        #     for host_name, mysql_vars in paras.items():
+        #         logger.debug("the value of host_name is: {0}".format(host_name))
+        #         for k, v in mysql_vars.items():
+        #             if v:
+        #                 update_file_content(self._context, "/etc/my.cnf", host_name)
+        #                 start_mysql(self._context, host_name)
+        #
+        #             # mysql = ObjectFactory.create_mysql_object(host_name)
+        #             # mysql.start()
 
         if "restore_mysql_config" in self._scenario.tags:
             params_dic = self.get_tag_params("{'restore_mysql_config'")
@@ -54,10 +54,10 @@ class RestoreEnvObject(object):
                         sed_str += "/{0}/d\n".format(k)
                     else:
                         sed_str += "/{0}/d\n/server-id/a {0}={1}\n".format(k, v)
-
-                mysql = ObjectFactory.create_mysql_object(host_name)
-                mysql.restart(sed_str)
-
+                time.sleep(2)
+                logger.debug("change content {0}".format(host_name))
+                update_cnf_content(context, sed_str, '/etc/my.cnf', host_name)
+                start_mysql(context, host_name)
 
     def get_tag_params(self, tagKey):
         description = self._scenario.description

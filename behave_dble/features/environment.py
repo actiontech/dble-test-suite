@@ -3,7 +3,7 @@
 import logging
 import os
 import sys
-from steps.RestoreEnvObject import RestoreEnvObject
+from steps.RestoreEnv import RestoreEnvObject
 import datetime
 from steps.step_check_sql import reset_repl
 from steps.lib.Node import get_ssh, get_sftp
@@ -147,8 +147,8 @@ def after_scenario(context, scenario):
 
     if "aft_reset_replication" in scenario.tags:
         reset_repl(context)
-    restore_obj = RestoreEnvObject(scenario)
-    restore_obj.restore()
+    restore_obj = RestoreEnvObject(context,scenario)
+    restore_obj.restore(context)
     # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
     stop_scenario_for_failed = context.config.stop and scenario.status == "failed"
     if not stop_scenario_for_failed and not "skip_restart" in scenario.tags and not context.userDebug:

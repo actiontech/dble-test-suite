@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import os
 import threading
-from behave_dble.features.steps.lib.Node import get_node
+from lib.Node import get_node
 
 coding= 'utf8'
 import logging

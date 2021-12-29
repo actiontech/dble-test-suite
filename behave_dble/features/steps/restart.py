@@ -12,8 +12,8 @@ from behave import *
 from hamcrest import *
 
 from lib.DBUtil import DBUtil
-from . lib.Node import get_node, get_ssh
-from . step_function import update_file_content
+from lib.Node import get_node, get_ssh
+from step_function import update_file_content
 
 @Given('restart mysql in "{host}" with sed cmds to update mysql config')
 def update_config_and_restart_mysql(context, host):
