@@ -6,7 +6,7 @@ import time
 
 from hamcrest import *
 from step_function import update_cnf_content
-from restart import start_mysql
+from restart import start_mysql, stop_mysql
 
 logger = logging.getLogger('root')
 
@@ -56,6 +56,10 @@ class RestoreEnvObject(object):
                         sed_str += "/{0}/d\n/server-id/a {0}={1}\n".format(k, v)
                 time.sleep(2)
                 logger.debug("change content {0}".format(host_name))
+                stop_mysql(context, host_name)
+
+                # to wait stop finished
+                time.sleep(10)
                 update_cnf_content(context, sed_str, '/etc/my.cnf', host_name)
                 start_mysql(context, host_name)
 
