@@ -167,16 +167,17 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       | limit_1            | LIMIT                 | merge_2                                                                                                                                       |
       | shuffle_field_1    | SHUFFLE_FIELD         | limit_1                                                                                                                                       |
       | scalar_sub_query_1 | SCALAR_SUB_QUERY      | shuffle_field_1                                                                                                                               |
-      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                      |
+      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                      |
+      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                      |
+      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                      |
       | merge_and_order_1  | MERGE_AND_ORDER       | dn1_1; dn2_0; dn3_0; dn4_0                                                                                                                    |
       | shuffle_field_2    | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                             |
       | dn1_2              | BASE SQL(May No Need) | scalar_sub_query_1; select `b`.`id`,`b`.`code` from  `single_t1` `b`                                                                          |
       | merge_3            | MERGE                 | dn1_2                                                                                                                                         |
       | join_1             | JOIN                  | shuffle_field_2; merge_3                                                                                                                      |
-      | shuffle_field_3    | SHUFFLE_FIELD         | join_1                                                                                                                                        |
+      | where_filter_1     | WHERE_FILTER          | join_1                                                                                                                                        |
+      | shuffle_field_3    | SHUFFLE_FIELD         | where_filter_1                                                                                                                                |
     # join contain = subquery
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs10"
       | conn   | toClose | sql                                                                                                                                                                        | expect  | db      |
@@ -191,16 +192,17 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       | limit_1            | LIMIT                 | merge_2                                                                                                                                       |
       | shuffle_field_1    | SHUFFLE_FIELD         | limit_1                                                                                                                                       |
       | scalar_sub_query_2 | SCALAR_SUB_QUERY      | shuffle_field_1                                                                                                                               |
-      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                      |
+      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                      |
+      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                      |
+      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                      |
       | merge_and_order_1  | MERGE_AND_ORDER       | dn1_1; dn2_0; dn3_0; dn4_0                                                                                                                    |
       | shuffle_field_2    | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                             |
       | dn1_2              | BASE SQL(May No Need) | scalar_sub_query_2; select `b`.`id`,`b`.`code` from  `single_t1` `b`                                                                          |
       | merge_3            | MERGE                 | dn1_2                                                                                                                                         |
       | join_1             | JOIN                  | shuffle_field_2; merge_3                                                                                                                      |
-      | shuffle_field_3    | SHUFFLE_FIELD         | join_1                                                                                                                                        |
+      | where_filter_1     | WHERE_FILTER          | join_1                                                                                                                                        |
+      | shuffle_field_3    | SHUFFLE_FIELD         | where_filter_1                                                                                                                                |
 
     # order by contain in-subquery
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs11"
@@ -637,16 +639,17 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       | limit_1            | LIMIT                 | where_filter_1                                                                                                                                                              |
       | shuffle_field_2    | SHUFFLE_FIELD         | limit_1                                                                                                                                                                     |
       | scalar_sub_query_1 | SCALAR_SUB_QUERY      | shuffle_field_2                                                                                                                                                             |
-      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC                               |
-      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC                               |
-      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC                               |
-      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC                               |
+      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                                                    |
+      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                                                    |
+      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                                                    |
+      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                                                    |
       | merge_and_order_1  | MERGE_AND_ORDER       | dn1_1; dn2_0; dn3_0; dn4_0                                                                                                                                                  |
       | shuffle_field_3    | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                           |
       | dn1_2              | BASE SQL(May No Need) | scalar_sub_query_1; select `b`.`id`,`b`.`code` from  `single_t1` `b`                                                                                                        |
       | merge_3            | MERGE                 | dn1_2                                                                                                                                                                       |
       | join_2             | JOIN                  | shuffle_field_3; merge_3                                                                                                                                                    |
-      | shuffle_field_4    | SHUFFLE_FIELD         | join_2                                                                                                                                                                      |
+      | where_filter_2     | WHERE_FILTER          | join_2                                                                                                                                                                      |
+      | shuffle_field_4    | SHUFFLE_FIELD         | where_filter_2                                                                                                                                                              |
     # join contain = subquery
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs10"
       | conn   | toClose | sql                                                                                                                                                                        | expect  | db      |
@@ -662,16 +665,17 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       | limit_1            | LIMIT                 | merge_2                                                                                                                                       |
       | shuffle_field_1    | SHUFFLE_FIELD         | limit_1                                                                                                                                       |
       | scalar_sub_query_2 | SCALAR_SUB_QUERY      | shuffle_field_1                                                                                                                               |
-      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                      |
+      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                      |
+      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                      |
+      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` ORDER BY `c`.`id` ASC                                      |
       | merge_and_order_1  | MERGE_AND_ORDER       | dn1_1; dn2_0; dn3_0; dn4_0                                                                                                                    |
       | shuffle_field_2    | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                             |
       | dn1_2              | BASE SQL(May No Need) | scalar_sub_query_2; select `b`.`id`,`b`.`code` from  `single_t1` `b`                                                                          |
       | merge_3            | MERGE                 | dn1_2                                                                                                                                         |
       | join_1             | JOIN                  | shuffle_field_2; merge_3                                                                                                                      |
-      | shuffle_field_3    | SHUFFLE_FIELD         | join_1                                                                                                                                        |
+      | where_filter_1     | WHERE_FILTER          | join_1                                                                                                                                        |
+      | shuffle_field_3    | SHUFFLE_FIELD         | where_filter_1                                                                                                                                |
 
     # order by contain in-subquery
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs11"
