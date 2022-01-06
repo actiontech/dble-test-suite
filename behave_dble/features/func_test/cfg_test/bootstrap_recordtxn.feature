@@ -3,6 +3,7 @@
 # Created by wangjuan at 2021/7/14
 
 Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
+    #about http://10.186.18.11/jira/browse/DBLE0REQ-853
 
   Scenario: check recordTxn #1
     Given delete file "/opt/dble/txlogs/server-tx.log" on "dble-1"
@@ -151,16 +152,16 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_3_7" in host "dble-1"
     """
     ConnID:3, XID:14
+    [[]dn5[]]drop table if exists no_sharding_t1;
+    [[]dn5[]]create table no_sharding_t1(id int, age int);
+    [[]dn5[]]alter table no_sharding_t1 add column name CHAR(15);
+    [[]dn5[]]truncate table no_sharding_t1;
+    [[]dn5[]]create index my_index on no_sharding_t1 (id);
+    [[]dn5[]]drop index my_index on no_sharding_t1;
     [[]dn5[]] LOCK TABLES no_sharding_t1 READ;
     """
     Then check following text exist "N" in file "/opt/dble/txlogs/server-tx.log" after line "1og_3_7" in host "dble-1"
     """
-    drop table if exists no_sharding_t1;
-    create table no_sharding_t1(id int, age int);
-    alter table no_sharding_t1 add column name CHAR(15);
-    truncate table no_sharding_t1;
-    create index my_index on no_sharding_t1 (id);
-    drop index my_index on no_sharding_t1;
     unlock tables;
     create view test_view as select * from no_sharding_t1;
     drop view test_view;

@@ -118,7 +118,7 @@ Feature:  backend_variables test
       | conn_1 | False   | commit                                           | success |
       | conn_1 | False   | set autocommit=1                                 | success |
       | conn_1 | False   | set xa=off                                       | success |
-      | conn_1 | False   | drop table if exists sharding_2_t1               | success |
+      | conn_1 | False   | select * from sharding_2_t1                      | success |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                | expect          |
       | conn_0 | False   | select * from backend_variables where variable_name='autocommit' and variable_value='true'                         | length{(4)}     |
