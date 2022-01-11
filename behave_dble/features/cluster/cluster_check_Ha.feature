@@ -125,8 +125,8 @@ Feature: test "ha" in zk cluster
       | show @@dbinstance |
     Then check resultset "Res_A" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 0           | 28           | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | W     | 0        | 1000   | 0           | 24           | false       |
       | ha_group2  | hostS1 | 172.100.9.2 | 3306   | R     | 0        | 1000   | 0           | 0            | false       |
       | ha_group2  | hostS2 | 172.100.9.3 | 3306   | R     | 0        | 1000   | 0           | 0            | false       |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_B"
@@ -144,8 +144,6 @@ Feature: test "ha" in zk cluster
       | W/R        | 4            |
       | ACTIVE     | 5            |
       | SIZE       | 7            |
-      | READ_LOAD  | 8            |
-      | WRITE_LOAD | 9            |
       | DISABLED   | 10           |
     Then check resultsets "Res_C" and "Res_B" are same in following columns
       | column     | column_index |
@@ -156,8 +154,6 @@ Feature: test "ha" in zk cluster
       | W/R        | 4            |
       | ACTIVE     | 5            |
       | SIZE       | 7            |
-      | READ_LOAD  | 8            |
-      | WRITE_LOAD | 9            |
       | DISABLED   | 10           |
     Then execute admin cmd "dbGroup @@disable name = 'ha_group2'"
     #case check disable change to "true"
@@ -202,8 +198,8 @@ Feature: test "ha" in zk cluster
       | show @@dbinstance |
     Then check resultset "Res_D" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | W     | 0        | 1000   | 0           | 0            | true        |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 0           | 28           | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | W     | 0        | 1000   | 0           | 24           | true        |
       | ha_group2  | hostS1 | 172.100.9.2 | 3306   | R     | 0        | 1000   | 0           | 0            | true        |
       | ha_group2  | hostS2 | 172.100.9.3 | 3306   | R     | 0        | 1000   | 0           | 0            | true        |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_E"
@@ -221,8 +217,6 @@ Feature: test "ha" in zk cluster
       | W/R        | 4            |
       | ACTIVE     | 5            |
       | SIZE       | 7            |
-      | READ_LOAD  | 8            |
-      | WRITE_LOAD | 9            |
       | DISABLED   | 10           |
     Then check resultsets "Res_E" and "Res_F" are same in following columns
       | column     | column_index |
@@ -233,8 +227,6 @@ Feature: test "ha" in zk cluster
       | W/R        | 4            |
       | ACTIVE     | 5            |
       | SIZE       | 7            |
-      | READ_LOAD  | 8            |
-      | WRITE_LOAD | 9            |
       | DISABLED   | 10           |
     #case if sql query route ha_group2(dn2 or dn4) will be wrong
     #case global table
@@ -242,6 +234,7 @@ Feature: test "ha" in zk cluster
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global1 values (1)     | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
     #java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status
       """
@@ -252,6 +245,7 @@ Feature: test "ha" in zk cluster
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global2 values (2)     | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
     #java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status
       """
@@ -307,6 +301,8 @@ Feature: test "ha" in zk cluster
       """
       bash ./compose/docker-build-behave/ChangeMaster.sh dble-2 mysql-master2 dble-3
       """
+    ###  heartbeatPeriodMillis  default 10s,  let restore heartbeat
+    Given sleep "10" seconds
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS1'"
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
@@ -346,8 +342,8 @@ Feature: test "ha" in zk cluster
       | show @@dbinstance |
     Then check resultset "Res_1" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | 0           | 0            | true        |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 2           | 33           | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | 0           | 24           | true        |
       | ha_group2  | hostS1 | 172.100.9.2 | 3306   | W     | 0        | 1000   | 0           | 0            | true        |
       | ha_group2  | hostS2 | 172.100.9.3 | 3306   | R     | 0        | 1000   | 0           | 0            | true        |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_2"
@@ -422,8 +418,8 @@ Feature: test "ha" in zk cluster
       | show @@dbinstance |
     Then check resultset "Res_4" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | 0           | 0            | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 2           | 33           | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | 0           | 24           | false       |
       | ha_group2  | hostS1 | 172.100.9.2 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
       | ha_group2  | hostS2 | 172.100.9.3 | 3306   | R     | 0        | 1000   | 0           | 0            | false       |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_5"
@@ -482,11 +478,11 @@ Feature: test "ha" in zk cluster
       | sql               |
       | show @@dbinstance |
     Then check resultset "Res_A" has lines with following column values
-      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | 0           | 0            | false       |
-      | ha_group2  | hostS1 | 172.100.9.2 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | R     | 0        | 1000   | 0           | 0            | false       |
+      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | DISABLED-10 |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | false       |
+      | ha_group2  | hostS1 | 172.100.9.2 | 3306   | W     | 0        | 1000   | false       |
+      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | R     | 0        | 1000   | false       |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_B"
       | sql               |
       | show @@dbinstance |
@@ -502,8 +498,6 @@ Feature: test "ha" in zk cluster
       | W/R        | 4            |
       | ACTIVE     | 5            |
       | SIZE       | 7            |
-      | READ_LOAD  | 8            |
-      | WRITE_LOAD | 9            |
       | DISABLED   | 10           |
     Then check resultsets "Res_C" and "Res_B" are same in following columns
       | column     | column_index |
@@ -514,8 +508,6 @@ Feature: test "ha" in zk cluster
       | W/R        | 4            |
       | ACTIVE     | 5            |
       | SIZE       | 7            |
-      | READ_LOAD  | 8            |
-      | WRITE_LOAD | 9            |
       | DISABLED   | 10           |
 
     Then execute admin cmd "dbGroup @@disable name = 'ha_group2' instance = 'hostS1'"
@@ -553,11 +545,11 @@ Feature: test "ha" in zk cluster
       | sql               |
       | show @@dbinstance |
     Then check resultset "Res_D" has lines with following column values
-      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | 0           | 0            | false       |
-      | ha_group2  | hostS1 | 172.100.9.2 | 3306   | W     | 0        | 1000   | 0           | 0            | true        |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | R     | 0        | 1000   | 0           | 0            | false       |
+      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | DISABLED-10 |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | false       |
+      | ha_group2  | hostS1 | 172.100.9.2 | 3306   | W     | 0        | 1000   | true        |
+      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | R     | 0        | 1000   | false       |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_E"
       | sql               |
       | show @@dbinstance |
@@ -581,6 +573,7 @@ Feature: test "ha" in zk cluster
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global1 values (1)     | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
     #java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status
       """
@@ -591,6 +584,7 @@ Feature: test "ha" in zk cluster
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global2 values (2)     | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
     #java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status
       """
@@ -640,6 +634,8 @@ Feature: test "ha" in zk cluster
       """
       bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
      """
+    ###  heartbeatPeriodMillis  default 10s,  let restore heartbeat
+    Given sleep "10" seconds
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
@@ -679,11 +675,11 @@ Feature: test "ha" in zk cluster
       | sql               |
       | show @@dbinstance |
     Then check resultset "Res_1" has lines with following column values
-      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | 0           | 0            | false       |
-      | ha_group2  | hostS1 | 172.100.9.2 | 3306   | R     | 0        | 1000   | 0           | 0            | true        |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
+      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | DISABLED-10 |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | false       |
+      | ha_group2  | hostS1 | 172.100.9.2 | 3306   | R     | 0        | 1000   | true        |
+      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | W     | 0        | 1000   | false       |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_2"
       | sql               |
       | show @@dbinstance |
@@ -750,11 +746,11 @@ Feature: test "ha" in zk cluster
       | sql               |
       | show @@dbinstance |
     Then check resultset "Res_5" has lines with following column values
-      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10  |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 0           | 0            | false        |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | 0           | 0            | false        |
-      | ha_group2  | hostS1 | 172.100.9.2 | 3306   | R     | 0        | 1000   | 0           | 0            | false        |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | W     | 0        | 1000   | 0           | 0            | false        |
+      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | DISABLED-10  |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | false        |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | false        |
+      | ha_group2  | hostS1 | 172.100.9.2 | 3306   | R     | 0        | 1000   | false        |
+      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | W     | 0        | 1000   | false        |
     #case query dml sql will be success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect      | db      |
