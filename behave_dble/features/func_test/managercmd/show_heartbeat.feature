@@ -127,7 +127,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     Then check resultset "21" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6  | STOP-9 | RS_MESSAGE-10    |
       | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 10000      | false  | None             |
-      | hostS1 | 172.100.9.2 | 3306   | error     | 2       | idle     | 10000      | false  | connection Error |
+      | hostS1 | 172.100.9.2 | 3306   | error     | 2       | idle     | 10000      | false  | connection Error//heartbeat conn for sql[show slave status] is closed, due to stream closed |
     Given start mysql in host "mysql-slave1"
     Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "22"
@@ -160,7 +160,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     Then check resultset "31" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10                                                              |
       | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 10000     | false  | None                                                                       |
-      | hostS1 | 172.100.9.2 | 3306   | error     | 0       | idle     | 10000     | false  | heartbeat conn for sql[show slave status] is closed, due to stream closed  |
+      | hostS1 | 172.100.9.2 | 3306   | error     | 0       | idle     | 10000     | false  | connection Error//heartbeat conn for sql[show slave status] is closed, due to stream closed |
       | hostS2 | 172.100.9.3 | 3306   | ok        | 0       | idle     | 10000     | false  | None                                                                       |
     Given start mysql in host "mysql-slave1"
     Given sleep "10" seconds
