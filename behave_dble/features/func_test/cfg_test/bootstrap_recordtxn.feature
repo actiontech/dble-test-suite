@@ -25,7 +25,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_1 | false   | drop table if exists sharding_4_t1                               | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
-    ConnID:3, XID:1
+    ConnID:3, XID:0
     [[]dn1[]]select 1;
     [[]dn2[]]select 1;
     [[]dn3[]]select 1;
@@ -41,7 +41,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_1 | false   | create table sharding_4_t1(id int, age int)                      | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_3_1" in host "dble-1"
     """
-    ConnID:3, XID:2
+    ConnID:3, XID:1
     [[]dn1[]]select 1;
     [[]dn2[]]select 1;
     [[]dn3[]]select 1;
@@ -57,7 +57,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_1 | false   | alter table sharding_4_t1 add column name CHAR(15)               | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_3_2" in host "dble-1"
     """
-    ConnID:3, XID:3
+    ConnID:3, XID:2
     [[]dn1[]]select 1;
     [[]dn2[]]select 1;
     [[]dn3[]]select 1;
@@ -73,7 +73,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_1 | false   | truncate table sharding_4_t1                                     | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_3_3" in host "dble-1"
     """
-    ConnID:3, XID:4
+    ConnID:3, XID:3
     [[]dn1[]]select 1;
     [[]dn2[]]select 1;
     [[]dn3[]]select 1;
@@ -89,7 +89,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_1 | false   | create index my_index on sharding_4_t1 (id)                      | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_3_4" in host "dble-1"
     """
-    ConnID:3, XID:5
+    ConnID:3, XID:4
     [[]dn1[]]select 1;
     [[]dn2[]]select 1;
     [[]dn3[]]select 1;
@@ -105,7 +105,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_1 | false   | drop index my_index on sharding_4_t1                             | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_3_5" in host "dble-1"
     """
-    ConnID:3, XID:6
+    ConnID:3, XID:5
     [[]dn1[]]select 1;
     [[]dn2[]]select 1;
     [[]dn3[]]select 1;
@@ -124,7 +124,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_1 | false   | drop view test_view2                                             | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_3_6" in host "dble-1"
     """
-    ConnID:3, XID:7
+    ConnID:3, XID:6
     [[]dn1[]] LOCK TABLES sharding_4_t1 READ;
     [[]dn2[]] LOCK TABLES sharding_4_t1 READ;
     [[]dn3[]] LOCK TABLES sharding_4_t1 READ;
@@ -151,7 +151,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_1 | true    | drop view test_view                                              | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_3_7" in host "dble-1"
     """
-    ConnID:3, XID:14
+    ConnID:3, XID:13
     [[]dn5[]]drop table if exists no_sharding_t1;
     [[]dn5[]]create table no_sharding_t1(id int, age int);
     [[]dn5[]]alter table no_sharding_t1 add column name CHAR(15);
@@ -189,7 +189,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_2 | false   | select * from no_sharding_t1                                                                      | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "1og_3_8" in host "dble-1"
     """
-    ConnID:4, XID:1
+    ConnID:4, XID:0
     [[]dn1[]]INSERT INTO sharding_4_t1
     VALUES (4, 40, 44);
     [[]dn2[]]INSERT INTO sharding_4_t1
@@ -198,10 +198,10 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     VALUES (2, 20, 22);
     [[]dn4[]]INSERT INTO sharding_4_t1
     VALUES (3, 30, 33);
-    ConnID:4, XID:2
+    ConnID:4, XID:1
     [[]dn3[]]update sharding_4_t1 set age=20 where id in (2, 3);
     [[]dn4[]]update sharding_4_t1 set age=20 where id in (2, 3);
-    ConnID:4, XID:3
+    ConnID:4, XID:2
     [[]dn1[]]delete from sharding_4_t1;
     [[]dn2[]]delete from sharding_4_t1;
     [[]dn3[]]delete from sharding_4_t1;
@@ -259,7 +259,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | drop table if exists test                                | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_1" in host "dble-1"
     """
-    ConnID:2, XID:1
+    ConnID:2, XID:0
     begin
     [[]dn1[]]select 1;
     [[]dn2[]]select 1;
@@ -276,7 +276,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;create table test(id int, age int)                      | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_2" in host "dble-1"
     """
-    ConnID:2, XID:2
+    ConnID:2, XID:1
     begin
     [[]dn1[]]select 1;
     [[]dn2[]]select 1;
@@ -293,7 +293,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;alter table test add column name CHAR(15)               | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_3" in host "dble-1"
     """
-    ConnID:2, XID:3
+    ConnID:2, XID:2
     begin
     [[]dn1[]]select 1;
     [[]dn2[]]select 1;
@@ -310,7 +310,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;truncate table test                                     | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_4" in host "dble-1"
     """
-    ConnID:2, XID:4
+    ConnID:2, XID:3
     begin
     [[]dn1[]]select 1;
     [[]dn2[]]select 1;
@@ -327,7 +327,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;create index my_index_1 on test (id);rollback           | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_5" in host "dble-1"
     """
-    ConnID:2, XID:5
+    ConnID:2, XID:4
     begin
     [[]dn1[]]select 1;
     [[]dn2[]]select 1;
@@ -340,7 +340,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     """
     Then check following text exist "N" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_5" in host "dble-1"
     """
-    ConnID:2, XID:6
+    ConnID:2, XID:5
     rollback
     """
     Given record current dble log "/opt/dble/txlogs/server-tx.log" line number in "log_5_6"
@@ -349,7 +349,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;drop index my_index_1 on test;commit                    | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_6" in host "dble-1"
     """
-    ConnID:2, XID:7
+    ConnID:2, XID:6
     begin
     [[]dn1[]]select 1;
     [[]dn2[]]select 1;
@@ -362,7 +362,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     """
     Then check following text exist "N" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_6" in host "dble-1"
     """
-    ConnID:2, XID:8
+    ConnID:2, XID:7
     commit
     """
     Given record current dble log "/opt/dble/txlogs/server-tx.log" line number in "log_5_7"
@@ -371,7 +371,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;drop table if exists sing1                              | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_7" in host "dble-1"
     """
-    ConnID:2, XID:9
+    ConnID:2, XID:8
     begin
     [[]dn1[]]drop table if exists sing1
     """
@@ -381,7 +381,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;create table sing1(id int, age int)                     | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_8" in host "dble-1"
     """
-    ConnID:2, XID:10
+    ConnID:2, XID:9
     begin
     [[]dn1[]]create table sing1(id int, age int)
     """
@@ -391,7 +391,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;alter table sing1 add column name CHAR(15)              | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_9" in host "dble-1"
     """
-    ConnID:2, XID:11
+    ConnID:2, XID:10
     begin
     [[]dn1[]]alter table sing1 add column name CHAR(15)
     """
@@ -401,13 +401,13 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;truncate table sing1;commit                             | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_10" in host "dble-1"
     """
-    ConnID:2, XID:12
+    ConnID:2, XID:11
     begin
     [[]dn1[]]TRUNCATE TABLE sing1
     """
     Then check following text exist "N" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_10" in host "dble-1"
     """
-    ConnID:2, XID:13
+    ConnID:2, XID:12
     commit
     """
     Given record current dble log "/opt/dble/txlogs/server-tx.log" line number in "log_5_11"
@@ -416,13 +416,13 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;create index my_index_2 on sing1 (id);rollback          | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_11" in host "dble-1"
     """
-    ConnID:2, XID:14
+    ConnID:2, XID:13
     begin
     [[]dn1[]]CREATE INDEX my_index_2 ON sing1 (id)
     """
     Then check following text exist "N" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_11" in host "dble-1"
     """
-    ConnID:2, XID:15
+    ConnID:2, XID:14
     rollback
     """
     Given record current dble log "/opt/dble/txlogs/server-tx.log" line number in "log_5_12"
@@ -431,7 +431,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;drop index my_index_2 on sing1                          | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_12" in host "dble-1"
     """
-    ConnID:2, XID:16
+    ConnID:2, XID:15
     begin
     [[]dn1[]]drop index my_index_2 on sing1
     """
@@ -444,15 +444,15 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;drop view test_view1                                    | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_13" in host "dble-1"
     """
-    ConnID:2, XID:17
+    ConnID:2, XID:16
     begin
     [[]dn1[]] LOCK TABLES test READ;
     [[]dn2[]] LOCK TABLES test READ;
     [[]dn3[]] LOCK TABLES test READ;
     [[]dn4[]] LOCK TABLES test READ;
+    ConnID:2, XID:17
     ConnID:2, XID:18
     ConnID:2, XID:19
-    ConnID:2, XID:20
     """
     Then check following text exist "N" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_13" in host "dble-1"
     """
@@ -469,12 +469,12 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | true    | begin;drop view test_view2                                    | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_14" in host "dble-1"
     """
-    ConnID:2, XID:21
+    ConnID:2, XID:20
     begin
     [[]dn1[]] LOCK TABLES sing1 READ;
+    ConnID:2, XID:21
     ConnID:2, XID:22
     ConnID:2, XID:23
-    ConnID:2, XID:24
     """
     Then check following text exist "N" in file "/opt/dble/txlogs/server-tx.log" after line "log_5_14" in host "dble-1"
     """
@@ -490,7 +490,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_4 | false   | begin;insert into test values (1,10,11);commit                                             | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_6_1" in host "dble-1"
     """
-    ConnID:3, XID:1
+    ConnID:3, XID:0
     begin
     [[]dn1[]]INSERT INTO test
     VALUES (1, 10, 11);
@@ -505,7 +505,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_4 | false   | begin;update test set age=20 where id=1;commit;                                            | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_6_2" in host "dble-1"
     """
-    ConnID:3, XID:2
+    ConnID:3, XID:1
     begin
     [[]dn1[]]UPDATE test
     SET age = 20
@@ -521,7 +521,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_4 | false   | begin;delete from test where id=1;commit;                                                  | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_6_3" in host "dble-1"
     """
-    ConnID:3, XID:3
+    ConnID:3, XID:2
     begin
     [[]dn1[]]DELETE FROM test
     WHERE id = 1;
@@ -536,7 +536,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_4 | false   | begin;select * from test where id=3;commit;                                                | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_6_4" in host "dble-1"
     """
-    ConnID:3, XID:4
+    ConnID:3, XID:3
     begin
     commit
     """
@@ -550,7 +550,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_4 | false   | begin;insert into sing1 values (11,10,1),(12,20,2);commit;                                 | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_6_5" in host "dble-1"
     """
-    ConnID:3, XID:5
+    ConnID:3, XID:4
     begin
     [[]dn1[]]INSERT INTO sing1
     VALUES (11, 10, 1),
@@ -563,7 +563,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_4 | false   | begin;update sing1 set age=20;commit;                                                      | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_6_6" in host "dble-1"
     """
-    ConnID:3, XID:6
+    ConnID:3, XID:5
     begin
     [[]dn1[]]UPDATE sing1
     SET age = 20
@@ -575,7 +575,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_4 | false   | begin;delete from sing1 where id=11;commit;                                                | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_6_7" in host "dble-1"
     """
-    ConnID:3, XID:7
+    ConnID:3, XID:6
     begin
     [[]dn1[]]DELETE FROM sing1
     WHERE id = 11
@@ -587,7 +587,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_4 | false   | begin;select * from sing1 where id=12;commit;                                              | success | schema1 |
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" after line "log_6_8" in host "dble-1"
     """
-    ConnID:3, XID:8
+    ConnID:3, XID:7
     begin
     commit
     """
