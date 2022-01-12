@@ -149,7 +149,10 @@ Feature: test mysql one node down
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                            | db      |
       | conn_1 | False   | alter table sharding_4_t1 add age int          | schema1 |
-    Then check btrace "BtraceAddMetaLock.java" output in "dble-1"
+
+     #make sure stop mysql after enter btrace second time
+    Given sleep "18" seconds
+    Then check btrace "BtraceAddMetaLock.java" output in "dble-1" with "2" times
     """
     get into clearIfSessionClosed,start sleep
     """
@@ -179,7 +182,7 @@ Feature: test mysql one node down
     Given update file content "./assets/BtraceAddMetaLock.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
-    /sleepWhensingTable/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+    /sleepWhenClearIfSession/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceAddMetaLock.java" in "dble-1"
     Given execute sqls in "dble-1" at background
