@@ -41,9 +41,9 @@ Feature: test ddl refactor
       | <exec_ddl_sql.start>                  | 5           |
       | <exec_ddl_sql.succ>                   | 5           |
       | <update_ddl_metadata.start>           | 1           |
-      |<update_ddl_metadata>                  | 2           |
-      |update_ddl_metadata.succ               | 1           |
-      |<finish_ddl_trace>                     | 1           |
+      | <update_ddl_metadata>                 | 2           |
+      | <update_ddl_metadata.succ>            | 1           |
+      | <finish_ddl_trace>                    | 1           |
     Then execute sql in "dble-1" in "user" mode
       | sql                                | expect   | db      |
       | drop table if exists sharding_4_t1 | success  | schema1 |
