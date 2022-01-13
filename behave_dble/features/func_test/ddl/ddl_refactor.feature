@@ -32,15 +32,18 @@ Feature: test ddl refactor
       | sql                                 | expect   | db      |
       | create table sharding_4_t1(id int)  | success  | schema1 |
     Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
-      | key                  | occur_times |
-      | ROUTE_END            | 1      |
-      | LOCK_END             | 1      |
-      | CONN_TEST_START      | 5      |
-      | CONN_TEST_SUCCESS    | 8      |
-      | CONN_EXECUTE_START   | 4      |
-      | CONN_EXECUTE_SUCCESS | 8      |
-      | META_UPDATE          | 1      |
-      | EXECUTE_END          | 1      |
+      | key                                   | occur_times |
+      | <init_ddl_trace>                      | 1           |
+      | <add_local_lock.start>                | 1           |
+      | <add_local_lock.succ>                 | 1           |
+      | <test_ddl_conn.start>                 | 5           |
+      | <test_ddl_conn.succ>                  | 5           |
+      | <exec_ddl_sql.start>                  | 5           |
+      | <exec_ddl_sql.succ>                   | 5           |
+      | <update_ddl_metadata.start>           | 1           |
+      |<update_ddl_metadata>                  | 2           |
+      |update_ddl_metadata.succ               | 1           |
+      |<finish_ddl_trace>                     | 1           |
     Then execute sql in "dble-1" in "user" mode
       | sql                                | expect   | db      |
       | drop table if exists sharding_4_t1 | success  | schema1 |
