@@ -20,7 +20,5 @@
 #system config
 -DserverPort=8066
 
--DuseNewJoinOptimizer=true
-
 #for code coverage
 #-javaagent:lib/jacocoagent.jar=output=file,append=true,destfile=/opt/dble_jacoco.exec
