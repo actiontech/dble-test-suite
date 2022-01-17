@@ -30,7 +30,7 @@ Feature:  dble_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(107)}     | dble_information |
+      | conn_0 | False   | select * from dble_variables    | length{(108)}     | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
