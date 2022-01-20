@@ -1,6 +1,7 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2020/3/9
+# update by caiwei at 2022/01/12 because of http://10.186.18.11/jira/browse/DBLE0REQ-1447
 Feature: test ddl refactor
   check log when ddl execute failed
   check log when ddl execute successfully
@@ -20,7 +21,7 @@ Feature: test ddl refactor
       | drop table sharding_4_t1 | Unknown table 'db1.sharding_4_t1' | schema1 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    CONN_EXECUTE_ERROR
+    \[DDL_3.dn1\] <exec_ddl_sql.fail> Unknown table '\''db1.sharding_4_t1'\''
     """
     Then execute sql in "dble-1" in "user" mode
       | sql                                | expect   | db      |
@@ -31,15 +32,18 @@ Feature: test ddl refactor
       | sql                                 | expect   | db      |
       | create table sharding_4_t1(id int)  | success  | schema1 |
     Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
-      | key                  | occur_times |
-      | ROUTE_END            | 1      |
-      | LOCK_END             | 1      |
-      | CONN_TEST_START      | 5      |
-      | CONN_TEST_SUCCESS    | 8      |
-      | CONN_EXECUTE_START   | 4      |
-      | CONN_EXECUTE_SUCCESS | 8      |
-      | META_UPDATE          | 1      |
-      | EXECUTE_END          | 1      |
+      | key                                   | occur_times |
+      | <init_ddl_trace>                      | 1           |
+      | <add_local_lock.start>                | 1           |
+      | <add_local_lock.succ>                 | 1           |
+      | <test_ddl_conn.start>                 | 5           |
+      | <test_ddl_conn.succ>                  | 5           |
+      | <exec_ddl_sql.start>                  | 5           |
+      | <exec_ddl_sql.succ>                   | 5           |
+      | <update_ddl_metadata.start>           | 1           |
+      | <update_ddl_metadata>                 | 2           |
+      | <update_ddl_metadata.succ>            | 1           |
+      | <finish_ddl_trace>                    | 1           |
     Then execute sql in "dble-1" in "user" mode
       | sql                                | expect   | db      |
       | drop table if exists sharding_4_t1 | success  | schema1 |
@@ -59,20 +63,24 @@ Feature: test ddl refactor
     Given sleep "120" seconds
     Then get result of oscmd named "rs_A" in "dble-1"
     """
-    cat /opt/dble/logs/dble.log |grep WARN|grep "THIS DDL EXECUTE FOR TOO LONG" |wc -l
+    cat /opt/dble/logs/dble.log |grep WARN|grep "this ddl{drop table sharding_4_t1} execute for too long" |wc -l
     """
     Then check result "rs_A" value is "1"
     Then get index:"0" column value of "show @@session" named as "id_A"
     Then kill dble front connection "id_A" in "dble-1" with manager command
     Then get result of oscmd named "rs_B" in "dble-1"
     """
-    cat /opt/dble/logs/dble.log |grep WARN|grep "THIS DDL EXECUTE FOR TOO LONG" |wc -l
+    cat /opt/dble/logs/dble.log |grep WARN|grep "this ddl{drop table sharding_4_t1} execute for too long" |wc -l
     """
     Then check result "rs_B" value is "1"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    EXECUTE_CONN_CLOSE
-    EXECUTE_END
+    \[DDL_3\] <exec_ddl_sql.fail>
+    \[DDL_3\] <finish_ddl_trace>
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    """
+    NullPointerException
     """
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql    | expect  | db  |
@@ -106,8 +114,8 @@ Feature: test ddl refactor
 
     Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                           | occur_times |
-      | NEW DDL START:\[DDL\]         | 4690        |
-      | DDL END:\[DDL\]               | 4690        |
+      | <init_ddl_trace>              | 4690        |
+      | <finish_ddl_trace>            | 4690        |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
