@@ -10,7 +10,7 @@ Feature: test with useNewJoinOptimizer=true
   @delete_mysql_tables
   Scenario: shardingTable  + shardingTable  +  shardingTable                              #1
     """
-    {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3']}}
+    {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
     """
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -374,8 +374,8 @@ Feature: test with useNewJoinOptimizer=true
        | conn_14 | false   | explain SELECT * FROM Employee a LEFT JOIN Level c on a.Level=c.levelname LEFT JOIN Dept b on a.DeptName= b.DeptName and b.deptid =2 order by a.Name| schema1|
     Then check resultset "rs_O" has lines with following column values
         | SHARDING_NODE-0     | TYPE-1            | SQL/REF-2                                                                                         |
-        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` and b.deptid = 2 where 1=1  ORDER BY `a`.`level` ASC |
-        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` and b.deptid = 2 where 1=1  ORDER BY `a`.`level` ASC |
+        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` and (b.deptid = 2) where 1=1  ORDER BY `a`.`level` ASC |
+        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` and (b.deptid = 2) where 1=1  ORDER BY `a`.`level` ASC |
         | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                                                                                                                                                          |
         | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                                     |
         | dn1_0             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` ORDER BY `c`.`levelname` ASC                                                                                                                                      |
@@ -396,8 +396,8 @@ Feature: test with useNewJoinOptimizer=true
        | conn_15 | false   | explain SELECT * FROM Employee a LEFT JOIN Dept b on a.DeptName=b.DeptName  LEFT JOIN Info c on a.DeptName=c.DeptName and b.deptid=2 order by a.Name | schema1|
     Then check resultset "rs_P" has lines with following column values
         | SHARDING_NODE-0     | TYPE-1            | SQL/REF-2                                                                                         |
-        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  (  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` )  left join  `Info` `c` on `a`.`DeptName` = `c`.`DeptName` and b.deptid = 2 where 1=1  ORDER BY `a`.`name` ASC |
-        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  (  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` )  left join  `Info` `c` on `a`.`DeptName` = `c`.`DeptName` and b.deptid = 2 where 1=1  ORDER BY `a`.`name` ASC |
+        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  (  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` )  left join  `Info` `c` on `a`.`DeptName` = `c`.`DeptName` and (b.deptid = 2) where 1=1  ORDER BY `a`.`name` ASC |
+        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  (  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` )  left join  `Info` `c` on `a`.`DeptName` = `c`.`DeptName` and (b.deptid = 2) where 1=1  ORDER BY `a`.`name` ASC |
         | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                                                                                                                                                                                  |
         | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                                                             |
     Then execute sql in "dble-1" and the result should be consistent with mysql
@@ -439,8 +439,8 @@ Feature: test with useNewJoinOptimizer=true
        | conn_17 | false   | explain SELECT * FROM Employee a LEFT JOIN Level c on a.Level=c.levelname LEFT JOIN (select * from Dept)  b on a.DeptName= b.DeptName and b.deptid =2 order by a.Name| schema1|
     Then check resultset "rs_R" has lines with following column values
         | SHARDING_NODE-0     | TYPE-1            | SQL/REF-2                                                                                         |
-        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join (select `Dept`.`deptname`,`Dept`.`deptid`,`Dept`.`manager` from  `Dept`) b on `a`.`DeptName` = `b`.`DeptName` and b.deptid = 2 where 1=1  ORDER BY `a`.`level` ASC |
-        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join (select `Dept`.`deptname`,`Dept`.`deptid`,`Dept`.`manager` from  `Dept`) b on `a`.`DeptName` = `b`.`DeptName` and b.deptid = 2 where 1=1  ORDER BY `a`.`level` ASC |
+        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join (select `Dept`.`deptname`,`Dept`.`deptid`,`Dept`.`manager` from  `Dept`) b on `a`.`DeptName` = `b`.`DeptName` and (b.deptid = 2) where 1=1  ORDER BY `a`.`level` ASC |
+        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join (select `Dept`.`deptname`,`Dept`.`deptid`,`Dept`.`manager` from  `Dept`) b on `a`.`DeptName` = `b`.`DeptName` and (b.deptid = 2) where 1=1  ORDER BY `a`.`level` ASC |
         | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                                                                                                                                                                                                                         |
         | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                                                                                                    |
         | dn1_0             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` ORDER BY `c`.`levelname` ASC                                                                                                                                                                                                     |
@@ -581,8 +581,8 @@ Feature: test with useNewJoinOptimizer=true
        | conn_23 | false   | explain SELECT * FROM Employee a INNER JOIN  Level c on a.Level=c.levelname LEFT JOIN Dept b on a.DeptName= b.DeptName and b.deptid=2 order by a.Name | schema1|
      Then check resultset "rs_W" has lines with following column values
         | SHARDING_NODE-0     | TYPE-1            | SQL/REF-2                                                                                         |
-        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` and b.deptid = 2 where 1=1  ORDER BY `a`.`level` ASC |
-        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` and b.deptid = 2 where 1=1  ORDER BY `a`.`level` ASC |
+        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` and (b.deptid = 2) where 1=1  ORDER BY `a`.`level` ASC |
+        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`DeptName` = `b`.`DeptName` and (b.deptid = 2) where 1=1  ORDER BY `a`.`level` ASC |
         | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                                                                                                                                                          |
         | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                                     |
         | dn1_0             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` ORDER BY `c`.`levelname` ASC                                                                                                                                      |
@@ -772,8 +772,8 @@ Feature: test with useNewJoinOptimizer=true
        | conn_31 | false   | explain SELECT * FROM Employee a inner join Info c LEFT JOIN Dept b on a.deptname=b.deptname and b.deptid=2 order by a.name  | schema1|
      Then check resultset "E" has lines with following column values
         | SHARDING_NODE-0     | TYPE-1            | SQL/REF-2                                                                                         |
-        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` and b.deptid = 2 where 1=1  ORDER BY `a`.`name` ASC |
-        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` and b.deptid = 2 where 1=1  ORDER BY `a`.`name` ASC |
+        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` and (b.deptid = 2) where 1=1  ORDER BY `a`.`name` ASC |
+        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` and (b.deptid = 2) where 1=1  ORDER BY `a`.`name` ASC |
         | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                                                                                                                                                         |
         | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                                    |
         | dn3_1             | BASE SQL        | select `c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Info` `c`                                                                                                                                                            |
@@ -1303,7 +1303,7 @@ Feature: test with useNewJoinOptimizer=true
    @delete_mysql_tables
   Scenario: shardingTable  + GlobalTable  +  GlobalTable                     #2
     """
-    {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3']}}
+    {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
     """
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -1348,6 +1348,17 @@ Feature: test with useNewJoinOptimizer=true
       | conn_0 | false    | insert into Level values('P7',7,10000),('P8',8,15000),('P9',9,20000),('P10',10,25000)                                                                                                                                                                                                                             | schema1 | success|
       | conn_0 | true     | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance') | schema1| success|
 
+     #create table used in comparing mysql
+     Then execute sql in "mysql" in "mysql" mode
+        | conn   | toClose  | sql                       | db | expect               |
+        | conn_0 | false    | create table Employee (name varchar(250) not null,empid int not null,deptname varchar(250) not null,level varchar(250) not null)engine=innodb charset=utf8 | schema1  | success|
+        | conn_0 | false    | create table Dept(deptname varchar(250) not null,deptid int not null,manager varchar(250) not null)engine=innodb charset=utf8                              | schema1  | success|
+        | conn_0 | false    | create table Level(levelname varchar(250) not null,levelid int not null,salary int not null)engine=innodb charset=utf8                                     | schema1  | success|
+        | conn_0 | false    | create table Info(name varchar(250) not null,age int not null,country varchar(250) not null,deptname varchar(250) not null)engine=innodb charset=utf8      | schema1  | success|
+        | conn_0 | false    | insert into Employee values('Harry',3415,'Finance','P7'),('Sally',2242,'Sales','P7'),('George',3401,'Finance','P8'),('Harriet',2202,'Sales','P8'),('Mary',1257,'Human Resources','P7'),('LiLi',9527,'Human Resources','P9'),('Tom',7012,'Market','P9'),('Tony',3052,'Market','P10'),('Jessi',7948,'Finance','P8') | schema1 | success|
+        | conn_0 | false    | insert into Dept values('Finance',2,'George'),('Sales',3,'Harriet'),('Market',4,'Tom')                                                                                                                                                                                               | schema1 | success|
+        | conn_0 | false    | insert into Level values('P7',7,10000),('P8',8,15000),('P9',9,20000),('P10',10,25000)                                                                                                                                                                                                                             | schema1 | success|
+        | conn_0 | true     | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance') | schema1| success|
 
     # rule A: left join & left join & no ER, join order not change
     Given execute single sql in "dble-1" in "user" mode and save resultset in "A"
@@ -1768,7 +1779,7 @@ Feature: test with useNewJoinOptimizer=true
   @delete_mysql_tables
    Scenario: GlobalTable  + [otherTypeTable]            #3
      """
-    {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3', 'db4'], 'mysql-master2': ['db1', 'db2', 'db3', 'db4']}}
+    {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3', 'db4'], 'mysql-master2': ['db1', 'db2', 'db3', 'db4'], 'mysql':['schema1']}}
     """
 
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -1818,10 +1829,19 @@ Feature: test with useNewJoinOptimizer=true
       | conn_0 | false    | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance') | schema1| success|
       | conn_0 | true     | insert into FamilyInfo values('Harry', 'department', 3),('George', 'department', 5), ('Harriet', 'villa', 6), ('Mary', 'villa', 8), ('LiLi', 'Self-built house', 10), ('Tom', 'department', 2)                                                                          | schema1| success|
 
+    #create table used in comparing mysql
     Then execute sql in "mysql" in "mysql" mode
-      | conn   | toClose  | sql                       | db | expect               |
-      | conn_0 | false    | create table FamilyInfo(name varchar(25) not null, housetype varchar(250) not null, familynum int not null)engine=innodb charset=utf8                      | schema1  | success|
-      | conn_0 | true     | insert into FamilyInfo values('Harry', 'department', 3),('George', 'department', 5), ('Harriet', 'villa', 6), ('Mary', 'villa', 8), ('LiLi', 'Self-built house', 10), ('Tom', 'department', 2)                                                                          | schema1| success|
+        | conn   | toClose  | sql                       | db | expect               |
+        | conn_0 | false    | create table Employee (name varchar(250) not null,empid int not null,deptname varchar(250) not null,level varchar(250) not null)engine=innodb charset=utf8 | schema1  | success|
+        | conn_0 | false    | create table Dept(deptname varchar(250) not null,deptid int not null,manager varchar(250) not null)engine=innodb charset=utf8                              | schema1  | success|
+        | conn_0 | false    | create table Level(levelname varchar(250) not null,levelid int not null,salary int not null)engine=innodb charset=utf8                                     | schema1  | success|
+        | conn_0 | false    | create table Info(name varchar(250) not null,age int not null,country varchar(250) not null,deptname varchar(250) not null)engine=innodb charset=utf8      | schema1  | success|
+        | conn_0 | false    | create table FamilyInfo(name varchar(25) not null, housetype varchar(250) not null, familynum int not null)engine=innodb charset=utf8                      | schema1  | success|
+        | conn_0 | false    | insert into Employee values('Harry',3415,'Finance','P7'),('Sally',2242,'Sales','P7'),('George',3401,'Finance','P8'),('Harriet',2202,'Sales','P8'),('Mary',1257,'Human Resources','P7'),('LiLi',9527,'Human Resources','P9'),('Tom',7012,'Market','P9'),('Tony',3052,'Market','P10'),('Jessi',7948,'Finance','P8') | schema1 | success|
+        | conn_0 | false    | insert into Dept values('Finance',2,'George'),('Sales',3,'Harriet'),('Market',4,'Tom')                                                                                                                                                                                               | schema1 | success|
+        | conn_0 | false    | insert into Level values('P7',7,10000),('P8',8,15000),('P9',9,20000),('P10',10,25000)                                                                                                                                                                                                                             | schema1 | success|
+        | conn_0 | false    | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance') | schema1| success|
+        | conn_0 | true     | insert into FamilyInfo values('Harry', 'department', 3),('George', 'department', 5), ('Harriet', 'villa', 6), ('Mary', 'villa', 8), ('LiLi', 'Self-built house', 10), ('Tom', 'department', 2)                                                                          | schema1| success|
 
      # GlobalTable + shardingTable + GlobalTable
      #rule A: left join & left join & no ER, GlobalTable first
@@ -2117,7 +2137,19 @@ Feature: test with useNewJoinOptimizer=true
       | conn_0 | false    | insert into Employee values('Harry',3415,'Finance','P7'),('Sally',2242,'Sales','P7'),('George',3401,'Finance','P8'),('Harriet',2202,'Sales','P8'),('Mary',1257,'Human Resources','P7'),('LiLi',9527,'Human Resources','P9'),('Tom',7012,'Market','P9'),('Tony',3052,'Market','P10'),('Jessi',7948,'Finance','P8') | schema1 | success|
       | conn_0 | false    | insert into Dept values('Finance',2,'George'),('Sales',3,'Harriet'),('Market',4,'Tom')                                                                                                                                                                                               | schema1 | success|
       | conn_0 | false    | insert into Level values('P7',7,10000),('P8',8,15000),('P9',9,20000),('P10',10,25000)                                                                                                                                                                                                                             | schema1 | success|
-      | conn_0 | false    | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance') | schema1| success|
+      | conn_0 | true     | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance') | schema1| success|
+
+      #create table used in comparing mysql
+     Then execute sql in "mysql" in "mysql" mode
+        | conn   | toClose  | sql                       | db | expect               |
+        | conn_0 | false    | create table Employee (name varchar(250) not null,empid int not null,deptname varchar(250) not null,level varchar(250) not null)engine=innodb charset=utf8 | schema1  | success|
+        | conn_0 | false    | create table Dept(deptname varchar(250) not null,deptid int not null,manager varchar(250) not null)engine=innodb charset=utf8                              | schema1  | success|
+        | conn_0 | false    | create table Level(levelname varchar(250) not null,levelid int not null,salary int not null)engine=innodb charset=utf8                                     | schema1  | success|
+        | conn_0 | false    | create table Info(name varchar(250) not null,age int not null,country varchar(250) not null,deptname varchar(250) not null)engine=innodb charset=utf8      | schema1  | success|
+        | conn_0 | false    | insert into Employee values('Harry',3415,'Finance','P7'),('Sally',2242,'Sales','P7'),('George',3401,'Finance','P8'),('Harriet',2202,'Sales','P8'),('Mary',1257,'Human Resources','P7'),('LiLi',9527,'Human Resources','P9'),('Tom',7012,'Market','P9'),('Tony',3052,'Market','P10'),('Jessi',7948,'Finance','P8') | schema1 | success|
+        | conn_0 | false    | insert into Dept values('Finance',2,'George'),('Sales',3,'Harriet'),('Market',4,'Tom')                                                                                                                                                                                               | schema1 | success|
+        | conn_0 | false    | insert into Level values('P7',7,10000),('P8',8,15000),('P9',9,20000),('P10',10,25000)                                                                                                                                                                                                                             | schema1 | success|
+        | conn_0 | true     | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance') | schema1| success|
 
      Given execute single sql in "dble-1" in "user" mode and save resultset in "A"
          | conn     | toClose  | sql                                                         | db|
@@ -2311,8 +2343,8 @@ Feature: test with useNewJoinOptimizer=true
           | dn3_0             | BASE SQL        | select `d`.`levelname`,`d`.`levelid`,`d`.`salary` from  `Level` `d` ORDER BY `d`.`levelname` ASC                                                                                                                                               |
           | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0; dn3_0                                                                                                                                                                                                                            |
           | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                                              |
-          | dn3_1             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Employee` `a` left join  `Info` `c` on `a`.`deptname` = `c`.`deptname` and a.name = 'Tom' where 1=1  ORDER BY `a`.`name` ASC |
-          | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Employee` `a` left join  `Info` `c` on `a`.`deptname` = `c`.`deptname` and a.name = 'Tom' where 1=1  ORDER BY `a`.`name` ASC |
+          | dn3_1             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Employee` `a` left join  `Info` `c` on `a`.`deptname` = `c`.`deptname` and (a.name = 'Tom') where 1=1  ORDER BY `a`.`name` ASC |
+          | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Employee` `a` left join  `Info` `c` on `a`.`deptname` = `c`.`deptname` and (a.name = 'Tom') where 1=1  ORDER BY `a`.`name` ASC |
           | merge_and_order_2 | MERGE_AND_ORDER | dn3_1; dn4_0                                                                                                                                                                                                                                   |
           | shuffle_field_3   | SHUFFLE_FIELD   | merge_and_order_2                                                                                                                                                                                                                              |
           | dn3_2             | BASE SQL        | select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b` ORDER BY `b`.`manager` ASC                                                                                                                                                   |
