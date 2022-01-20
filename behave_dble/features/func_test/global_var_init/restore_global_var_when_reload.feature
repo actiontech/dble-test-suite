@@ -181,8 +181,8 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    a/-Dautocommit=0
-    a/-DtxIsolation=2
+    $a -Dautocommit=0
+    $a -DtxIsolation=2
     """
     Given stop dble in "dble-1"
     Given execute sql in "mysql-master1"
@@ -191,7 +191,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn_0 | True    | set global tx_isolation='REPEATABLE-READ' |
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
-    Then check general log in host "mysql-master1" has not "SET global autocommit=0,tx_isolation='READ-COMMITTED'"
+    Then check general log in host "mysql-master1" has "SET global autocommit=0,tx_isolation='READ-COMMITTED'"
+    When execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                         | expect  |
+      | conn_1 | True    | fresh conn forced where dbGroup='ha_group1' | success |
     When execute sql in "dble-1" in "user" mode
       | sql                                | expect  | db      |
       | drop table if exists sharding_4_t1 | success | schema1 |
@@ -267,6 +270,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a -Dautocommit=0
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -285,7 +292,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
         </dbInstance>
     </dbGroup>
     """
-    Then execute admin cmd "reload @@config_all"
+    Given Restart dble in "dble-1" success
     Given execute sql in "dble-1" in "user" mode
       | sql                                | expect  |db      |
       | drop table if exists sharding_2_t1 | success |schema1 |
