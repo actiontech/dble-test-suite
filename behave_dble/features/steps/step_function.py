@@ -255,7 +255,7 @@ def check_text(context,flag,filename,hostname,checkFromLine=0):
 
     ssh = get_ssh(hostname)
     for str in strs_list:
-        cmd = "tail -n +{2} {1} | grep -n \'{0}\'".format(str,filename,checkFromLine)
+        cmd = "tail -n +{2} {1} | grep -n \"{0}\"".format(str,filename,checkFromLine)
         rc, stdout, stderr = ssh.exec_command(cmd)
         if flag =="N":
             assert_that(len(stdout) == 0,"expect \"{0}\" not exist in file {1},but exist".format(str,filename))
