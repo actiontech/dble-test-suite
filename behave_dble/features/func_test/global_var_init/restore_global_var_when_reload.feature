@@ -190,11 +190,13 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn_0 | False   | set global autocommit=1                   |
       | conn_0 | True    | set global tx_isolation='REPEATABLE-READ' |
     Given turn on general log in "mysql-master1"
+    Given turn on general log in "mysql-master2"
     When Start dble in "dble-1"
     Then check general log in host "mysql-master1" has "SET global autocommit=0,tx_isolation='READ-COMMITTED'"
     When execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                         | expect  |
-      | conn_1 | True    | fresh conn forced where dbGroup='ha_group1' | success |
+      | conn_1 | False   | fresh conn forced where dbGroup='ha_group1' | success |
+      | conn_1 | True    | fresh conn forced where dbGroup='ha_group2' | success |
     When execute sql in "dble-1" in "user" mode
       | sql                                | expect  | db      |
       | drop table if exists sharding_4_t1 | success | schema1 |
