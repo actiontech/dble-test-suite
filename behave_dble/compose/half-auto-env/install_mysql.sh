@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (C) 2016-2021 ActionTech.
+# Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 #install mysql, the script is tested for mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz
 echo "bash dir : $( dirname ${BASH_SOURCE[0]} )"
