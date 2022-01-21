@@ -72,7 +72,7 @@ Feature: check fingerprint log
     """
     INFO
     execute manager cmd from root@172.100.9.8
-    update dble_db_group set rw_split_mode=3 where name="ha_group5"
+    update dble_db_group set rw_split_mode=3 where name=\"ha_group5\"
     """
     Given delete file "/tmp/fingerprint.log" on "dble-1"
     Given execute linux command in "dble-1"
@@ -83,7 +83,7 @@ Feature: check fingerprint log
     """
     INFO
     execute manager cmd from root@172.100.9.8
-    delete from dble_db_group where name="ha_group5"
+    delete from dble_db_group where name=\"ha_group5\"
     """
     Given delete file "/tmp/fingerprint.log" on "dble-1"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
@@ -197,7 +197,7 @@ Feature: check fingerprint log
     """
     INFO
     execute manager cmd from root@172.100.9.8
-    drop database @@shardingNode="dn5"
+    drop database @@shardingNode=\"dn5\"
     """
     Given delete file "/tmp/fingerprint.log" on "dble-1"
     Given execute linux command in "dble-1"
@@ -208,7 +208,7 @@ Feature: check fingerprint log
     """
     INFO
     execute manager cmd from root@172.100.9.8
-    create database @@shardingNode="dn5"
+    create database @@shardingNode=\"dn5\"
     """
     Given delete file "/tmp/fingerprint.log" on "dble-1"
     Given execute linux command in "dble-1"
@@ -263,7 +263,7 @@ Feature: check fingerprint log
     """
     INFO
     execute manager cmd from root@172.100.9.8
-    reload @@general_log_file="general/test.log"
+    reload @@general_log_file=\"general/test.log\"
     """
     Given delete file "/tmp/fingerprint.log" on "dble-1"
     Given execute linux command in "dble-1"
@@ -417,7 +417,7 @@ Feature: check fingerprint log
     """
     INFO
     execute manager cmd from root@172.100.9.8
-    /\*#update=dble_db_group\*/update dble_db_group set rw_split_mode=3 where name="ha_group5"
+    /\*#update=dble_db_group\*/update dble_db_group set rw_split_mode=3 where name=\"ha_group5\"
     """
     Given delete file "/tmp/fingerprint.log" on "dble-1"
     Given execute linux command in "dble-1"
@@ -428,7 +428,7 @@ Feature: check fingerprint log
     """
     INFO
     execute manager cmd from root@172.100.9.8
-    /\*#delete=dble_db_group \*/delete from dble_db_group where name="ha_group5"
+    /\*#delete=dble_db_group \*/delete from dble_db_group where name=\"ha_group5\"
     """
     Given delete file "/tmp/fingerprint.log" on "dble-1"
     Given execute linux command in "dble-1"
@@ -542,7 +542,7 @@ Feature: check fingerprint log
     """
     INFO
     execute manager cmd from root@172.100.9.8
-    /\*# drop=database \*/drop database @@shardingNode ="dn5"
+    /\*# drop=database \*/drop database @@shardingNode =\"dn5\"
     """
     Given delete file "/tmp/fingerprint.log" on "dble-1"
     Given execute linux command in "dble-1"
@@ -553,7 +553,7 @@ Feature: check fingerprint log
     """
     INFO
     execute manager cmd from root@172.100.9.8
-    /\*# create=database \*/ create database @@shardingNode="dn5"
+    /\*# create=database \*/ create database @@shardingNode=\"dn5\"
     """
     Given delete file "/tmp/fingerprint.log" on "dble-1"
     Given execute linux command in "dble-1"
@@ -608,7 +608,7 @@ Feature: check fingerprint log
     """
     INFO
     execute manager cmd from root@172.100.9.8
-    /\*# reload=general_log_file \*/reload @@general_log_file="general/test.log"
+    /\*# reload=general_log_file \*/reload @@general_log_file=\"general/test.log\"
     """
     Given delete file "/tmp/fingerprint.log" on "dble-1"
     Given execute linux command in "dble-1"
@@ -758,8 +758,8 @@ Feature: check fingerprint log
       \*/drop table if exists sharding_4_t1
       \*/create table sharding_4_t1(id int,name varchar(10))
       \*/create index id_index on sharding_4_t1(id)
-      \*/insert into sharding_4_t1 values(1,"name1"),(2,"name2"),(3,"name3"),(4,"name4")
-      \*/update sharding_4_t1 set name="33" where id=3
+      \*/insert into sharding_4_t1 values(1,\"name1\"),(2,\"name2\"),(3,\"name3\"),(4,\"name4\")
+      \*/update sharding_4_t1 set name=\"33\" where id=3
       \*/delete from sharding_4_t1
       \*/drop index id_index on sharding_4_t1
       \*/create view test_view as select * from sharding_4_t1
