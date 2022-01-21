@@ -11,7 +11,7 @@ from steps.mysql_steps import restart_mysql
 from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
 
-logger = logging.getLogger('environment')
+logger = logging.getLogger('root')
 
 def init_dble_conf(context, para_dble_conf):
     para_dble_conf_lower = para_dble_conf.lower()

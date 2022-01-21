@@ -10,7 +10,7 @@ from lib.DBUtil import DBUtil
 from lib.utils import get_node, get_sftp
 from lib.XMLUtil import add_child_in_string, delete_child_node, get_xml_from_str, add_child_in_xml,change_root_node_properties,add_child_in_string_with_duplicate_name
 
-LOGGER = logging.getLogger('steps.reload')
+LOGGER = logging.getLogger('root')
 
 def get_dble_conn(context, default_db="schema1", node=None):
     if node is None:

@@ -19,7 +19,7 @@ from lib.generate_util import generate
 from behave import *
 from hamcrest import *
 from step_reload import get_admin_conn, get_dble_conn
-logger = logging.getLogger('steps.function')
+logger = logging.getLogger('root')
 
 @then('Test the data types supported by the sharding column in "{sql_name}"')
 def test_data_type(context, sql_name):

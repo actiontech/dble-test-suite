@@ -10,7 +10,7 @@ from lib import utils
 from steps.lib.ObjectFactory import ObjectFactory
 from steps.mysql_steps import execute_sql_in_host
 
-logger = logging.getLogger('environment.after_scenario')
+logger = logging.getLogger('root')
 class RestoreEnvObject(object):
     def __init__(self,scenario):
         self._scenario = scenario

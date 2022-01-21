@@ -17,7 +17,7 @@ from behave import *
 global sql_threads
 sql_threads = []
 
-logger = logging.getLogger('steps.mysql_steps')
+logger = logging.getLogger('root')
 
 @Given('restart mysql in "{host_name}" with sed cmds to update mysql config')
 @Given('restart mysql in "{host_name}"')
