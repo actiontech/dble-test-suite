@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2021 ActionTech.
+# Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2019/1/2
 Feature: # Detecting the reasonableness of the alarm information returned by the front end
