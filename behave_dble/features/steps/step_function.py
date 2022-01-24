@@ -276,9 +276,9 @@ def check_text_times(context, filename, hostname, num, checkFromLine=0):
 
     ssh = get_ssh(hostname)
     for str in strs_list:
-        cmd = "tail -n +{2} {1} | grep -n \'{0}\' | wc -l".format(str, filename, checkFromLine)
+        cmd = "tail -n +{2} {1} | grep -n \"{0}\" | wc -l".format(str, filename, checkFromLine)
         rc, stdout, stderr = ssh.exec_command(cmd)
-        assert_that(stdout == num,"expect \"{0}\" exists in file {1} with {2} times, but was {3} times".format(str, filename, num, stdout))
+        assert_that(stdout == num, "expect \"{0}\" exists in file {1} with {2} times, but was {3} times".format(str, filename, num, stdout))
 
 
 @Then('check following two texts exist at least one in file "{filename}" after line "{checkFromLine}" in host "{hostname}"')
@@ -292,9 +292,9 @@ def check_text_at_least_one(context,filename,hostname,checkFromLine=0):
     strs_list = strs.splitlines()
 
     ssh = get_ssh(hostname)
-    cmd = "tail -n +{3} {2} | grep -n -e \'{0}\' -e \'{1}\'".format(strs_list[0],strs_list[1],filename,checkFromLine)
+    cmd = "tail -n +{3} {2} | grep -n -e \"{0}\" -e \'{1}\'".format(strs_list[0], strs_list[1], filename, checkFromLine)
     rc, stdout, stderr = ssh.exec_command(cmd)
-    assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1} at least one,but has not both ".format(strs_list,filename))
+    assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1} at least one,but has not both ".format(strs_list, filename))
 
 @Then ('check following "{flag}" exist in dir "{dirname}" in "{hostname}"')
 def step_impl(context,flag,dirname,hostname):

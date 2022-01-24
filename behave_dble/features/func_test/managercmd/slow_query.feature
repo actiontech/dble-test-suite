@@ -134,11 +134,11 @@ Feature: test slow query log related manager command
      Given prepare a thread execute sql "update a_test set name = "3"" with "conn_1"
      Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
-     update a_test set name = "2"
+     update a_test set name = \"2\"
      """
      Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
-     update a_test set name = "3"
+     update a_test set name = \"3\"
      """
 #case wiat 10 secends in conn0 query commit ,to check slowlogs has update sql
      Given sleep "10" seconds
@@ -147,7 +147,7 @@ Feature: test slow query log related manager command
       | conn_0 | true    | commit | success | schema1 |
      Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
-     update a_test set name = "3"
+     update a_test set name = /"3/"
      """
     Given destroy sql threads list
 #case drop table
