@@ -71,21 +71,21 @@ DBLE0REQ-38
       """
     Then check following text exist "Y" in file "/tmp/dble_sharidng.log" in host "dble-1"
       """
-      "data":{"schema":\[
-      {"name":"schema1","sqlMaxLimit":100,"shardingNode":"dn5",
-      "table":\[
-      {"type":"GlobalTable","properties":{"name":"test","shardingNode":"dn1,dn2,dn3,dn4"}},{"type":"ShardingTable","properties":{"function":"hash-two","shardingColumn":"id","name":"sharding_2_t1","shardingNode":"dn1,dn2"}},
-      {"type":"ShardingTable","properties":{"function":"hash-four","shardingColumn":"id","name":"sharding_4_t1","shardingNode":"dn1,dn2,dn3,dn4"}},
-      {"type":"ShardingTable","properties":{"function":"enum_func","shardingColumn":"id","name":"enum_table","shardingNode":"dn1,dn2,dn3,dn4"}}\]}\],
-      "shardingNode":\[
-      {"name":"dn1","dbGroup":"ha_group1","database":"db1"},{"name":"dn2","dbGroup":"ha_group2","database":"db1"},
-      {"name":"dn3","dbGroup":"ha_group1","database":"db2"},{"name":"dn4","dbGroup":"ha_group2","database":"db2"},{"name":"dn5","dbGroup":"ha_group1","database":"db3"}\],
-      "function":\[
-      {"name":"hash-two","clazz":"Hash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-three","clazz":"Hash","property":\[{"value":"3","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-four","clazz":"Hash","property":\[{"value":"4","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-string-into-two","clazz":"StringHash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"enum_func","clazz":"enum","property":\[{"value":"enum.txt","name":"ruleFile"},{"value":"-1","name":"defaultNode"},{"value":"0","name":"type"}\]}
+      \"data\":{\"schema\":\[
+      {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
+      \"table\":\[
+      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},{\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"enum_func\",\"shardingColumn\":\"id\",\"name\":\"enum_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
+      \"shardingNode\":\[
+      {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},
+      {\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},{\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
+      \"function\":\[
+      {\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-three\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"3\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"enum_func\",\"clazz\":\"enum\",\"property\":\[{\"value\":\"enum.txt\",\"name\":\"ruleFile\"},{\"value\":\"-1\",\"name\":\"defaultNode\"},{\"value\":\"0\",\"name\":\"type\"}\]}
       """
 
     #test: type:string default node
@@ -160,19 +160,19 @@ DBLE0REQ-38
       """
     Then check following text exist "Y" in file "/tmp/dble_sharidng.log" in host "dble-1"
       """
-      {"schema":\[{"name":"schema1","sqlMaxLimit":100,"shardingNode":"dn5",
-      "table":\[
-      {"type":"GlobalTable","properties":{"name":"test","shardingNode":"dn1,dn2,dn3,dn4"}},
-      {"type":"ShardingTable","properties":{"function":"hash-two","shardingColumn":"id","name":"sharding_2_t1","shardingNode":"dn1,dn2"}},
-      {"type":"ShardingTable","properties":{"function":"hash-four","shardingColumn":"id","name":"sharding_4_t1","shardingNode":"dn1,dn2,dn3,dn4"}},
-      {"type":"ShardingTable","properties":{"function":"enum_func","shardingColumn":"id","name":"enum_table","shardingNode":"dn1,dn2,dn3,dn4"}}\]}\],
-      "shardingNode":\[{"name":"dn1","dbGroup":"ha_group1","database":"db1"},{"name":"dn2","dbGroup":"ha_group2","database":"db1"},
-      {"name":"dn3","dbGroup":"ha_group1","database":"db2"},{"name":"dn4","dbGroup":"ha_group2","database":"db2"},{"name":"dn5","dbGroup":"ha_group1","database":"db3"}\],
-      "function":\[{"name":"hash-two","clazz":"Hash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-three","clazz":"Hash","property":\[{"value":"3","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-four","clazz":"Hash","property":\[{"value":"4","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-string-into-two","clazz":"StringHash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"enum_func","clazz":"Enum","property":\[{"value":"enum.txt","name":"ruleFile"},{"value":"1","name":"type"},{"value":"3","name":"defaultNode"}\]}\]
+      {\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
+      \"table\":\[
+      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"enum_func\",\"shardingColumn\":\"id\",\"name\":\"enum_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
+      \"shardingNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},
+      {\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},{\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
+      \"function\":\[{\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-three\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"3\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"enum_func\",\"clazz\":\"Enum\",\"property\":\[{\"value\":\"enum.txt\",\"name\":\"ruleFile\"},{\"value\":\"1\",\"name\":\"type\"},{\"value\":\"3\",\"name\":\"defaultNode\"}\]}\]
       """
 
     #clearn all conf
@@ -251,20 +251,20 @@ DBLE0REQ-38
       """
     Then check following text exist "Y" in file "/tmp/dble_sharidng.log" in host "dble-1"
       """
-      data":{"schema":\[{"name":"schema1","sqlMaxLimit":100,"shardingNode":"dn5",
-      "table":\[
-      {"type":"GlobalTable","properties":{"name":"test","shardingNode":"dn1,dn2,dn3,dn4"}},
-      {"type":"ShardingTable","properties":{"function":"hash-two","shardingColumn":"id","name":"sharding_2_t1","shardingNode":"dn1,dn2"}},
-      {"type":"ShardingTable","properties":{"function":"hash-four","shardingColumn":"id","name":"sharding_4_t1","shardingNode":"dn1,dn2,dn3,dn4"}},
-      {"type":"ShardingTable","properties":{"function":"numberrange_func","shardingColumn":"id","name":"numberrange_table","shardingNode":"dn1,dn2,dn3,dn4"}}\]}\],
-      "shardingNode":\[{"name":"dn1","dbGroup":"ha_group1","database":"db1"},{"name":"dn2","dbGroup":"ha_group2","database":"db1"},{"name":"dn3","dbGroup":"ha_group1","database":"db2"},
-      {"name":"dn4","dbGroup":"ha_group2","database":"db2"},{"name":"dn5","dbGroup":"ha_group1","database":"db3"}\],
-      "function":\[
-      {"name":"hash-two","clazz":"Hash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-three","clazz":"Hash","property":\[{"value":"3","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-four","clazz":"Hash","property":\[{"value":"4","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-string-into-two","clazz":"StringHash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"numberrange_func","clazz":"numberrange","property":\[{"value":"partition.txt","name":"ruleFile"},{"value":"3","name":"defaultNode"}\]}\]}}
+      data\":{\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
+      \"table\":\[
+      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"numberrange_func\",\"shardingColumn\":\"id\",\"name\":\"numberrange_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
+      \"shardingNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
+      {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
+      \"function\":\[
+      {\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-three\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"3\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"numberrange_func\",\"clazz\":\"numberrange\",\"property\":\[{\"value\":\"partition.txt\",\"name\":\"ruleFile\"},{\"value\":\"3\",\"name\":\"defaultNode\"}\]}\]}}
       """
 
     #test: not defaultNode
@@ -303,20 +303,20 @@ DBLE0REQ-38
       """
     Then check following text exist "Y" in file "/tmp/dble_sharidng.log" in host "dble-1"
       """
-      data":{"schema":\[{"name":"schema1","sqlMaxLimit":100,"shardingNode":"dn5",
-      "table":\[
-      {"type":"GlobalTable","properties":{"name":"test","shardingNode":"dn1,dn2,dn3,dn4"}},
-      {"type":"ShardingTable","properties":{"function":"hash-two","shardingColumn":"id","name":"sharding_2_t1","shardingNode":"dn1,dn2"}},
-      {"type":"ShardingTable","properties":{"function":"hash-four","shardingColumn":"id","name":"sharding_4_t1","shardingNode":"dn1,dn2,dn3,dn4"}},
-      {"type":"ShardingTable","properties":{"function":"numberrange_func","shardingColumn":"id","name":"numberrange_table","shardingNode":"dn1,dn2,dn3,dn4"}}\]}\],
-      "shardingNode":\[{"name":"dn1","dbGroup":"ha_group1","database":"db1"},{"name":"dn2","dbGroup":"ha_group2","database":"db1"},{"name":"dn3","dbGroup":"ha_group1","database":"db2"},
-      {"name":"dn4","dbGroup":"ha_group2","database":"db2"},{"name":"dn5","dbGroup":"ha_group1","database":"db3"}\],
-      "function":\[
-      {"name":"hash-two","clazz":"Hash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-three","clazz":"Hash","property":\[{"value":"3","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-four","clazz":"Hash","property":\[{"value":"4","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-string-into-two","clazz":"StringHash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"numberrange_func","clazz":"numberrange","property":\[{"value":"partition.txt","name":"ruleFile"}\]}\]}}
+      data\":{\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
+      \"table\":\[
+      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"numberrange_func\",\"shardingColumn\":\"id\",\"name\":\"numberrange_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
+      \"shardingNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
+      {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
+      \"function\":\[
+      {\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-three\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"3\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"numberrange_func\",\"clazz\":\"numberrange\",\"property\":\[{\"value\":\"partition.txt\",\"name\":\"ruleFile\"}\]}\]}}
       """
 
     #clearn all conf
@@ -397,20 +397,20 @@ DBLE0REQ-38
       """
     Then check following text exist "Y" in file "/tmp/dble_sharidng.log" in host "dble-1"
       """
-      "data":{"schema":\[{"name":"schema1","sqlMaxLimit":100,"shardingNode":"dn5",
-      "table":\[
-      {"type":"GlobalTable","properties":{"name":"test","shardingNode":"dn1,dn2,dn3,dn4"}},
-      {"type":"ShardingTable","properties":{"function":"hash-two","shardingColumn":"id","name":"sharding_2_t1","shardingNode":"dn1,dn2"}},
-      {"type":"ShardingTable","properties":{"function":"hash-four","shardingColumn":"id","name":"sharding_4_t1","shardingNode":"dn1,dn2,dn3,dn4"}},
-      {"type":"ShardingTable","properties":{"function":"patternrange_func","shardingColumn":"id","name":"patternrange_table","shardingNode":"dn1,dn2,dn3,dn4"}}\]}\],
-      "shardingNode":\[{"name":"dn1","dbGroup":"ha_group1","database":"db1"},{"name":"dn2","dbGroup":"ha_group2","database":"db1"},{"name":"dn3","dbGroup":"ha_group1","database":"db2"},
-      {"name":"dn4","dbGroup":"ha_group2","database":"db2"},{"name":"dn5","dbGroup":"ha_group1","database":"db3"}\],
-      "function":\[
-      {"name":"hash-two","clazz":"Hash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-three","clazz":"Hash","property":\[{"value":"3","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-four","clazz":"Hash","property":\[{"value":"4","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-string-into-two","clazz":"StringHash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"patternrange_func","clazz":"PatternRange","property":\[{"value":"patternrange.txt","name":"ruleFile"},{"value":"1000","name":"patternValue"},{"value":"3","name":"defaultNode"}\]}\]}}
+      \"data\":{\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
+      \"table\":\[
+      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"patternrange_func\",\"shardingColumn\":\"id\",\"name\":\"patternrange_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
+      \"shardingNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
+      {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
+      \"function\":\[
+      {\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-three\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"3\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"patternrange_func\",\"clazz\":\"PatternRange\",\"property\":\[{\"value\":\"patternrange.txt\",\"name\":\"ruleFile\"},{\"value\":\"1000\",\"name\":\"patternValue\"},{\"value\":\"3\",\"name\":\"defaultNode\"}\]}\]}}
       """
 
     #test: not defaultNode
@@ -450,20 +450,20 @@ DBLE0REQ-38
       """
     Then check following text exist "Y" in file "/tmp/dble_sharidng.log" in host "dble-1"
       """
-      data":{"schema":\[{"name":"schema1","sqlMaxLimit":100,"shardingNode":"dn5",
-      "table":\[
-      {"type":"GlobalTable","properties":{"name":"test","shardingNode":"dn1,dn2,dn3,dn4"}},
-      {"type":"ShardingTable","properties":{"function":"hash-two","shardingColumn":"id","name":"sharding_2_t1","shardingNode":"dn1,dn2"}},
-      {"type":"ShardingTable","properties":{"function":"hash-four","shardingColumn":"id","name":"sharding_4_t1","shardingNode":"dn1,dn2,dn3,dn4"}},
-      {"type":"ShardingTable","properties":{"function":"patternrange_func","shardingColumn":"id","name":"patternrange_table","shardingNode":"dn1,dn2,dn3,dn4"}}\]}\],
-      "shardingNode":\[{"name":"dn1","dbGroup":"ha_group1","database":"db1"},{"name":"dn2","dbGroup":"ha_group2","database":"db1"},{"name":"dn3","dbGroup":"ha_group1","database":"db2"},
-      {"name":"dn4","dbGroup":"ha_group2","database":"db2"},{"name":"dn5","dbGroup":"ha_group1","database":"db3"}\],
-      "function":\[
-      {"name":"hash-two","clazz":"Hash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-three","clazz":"Hash","property":\[{"value":"3","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-four","clazz":"Hash","property":\[{"value":"4","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-string-into-two","clazz":"StringHash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"patternrange_func","clazz":"PatternRange","property":\[{"value":"patternrange.txt","name":"ruleFile"},{"value":"1000","name":"patternValue"}\]}\]}}
+      data\":{\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
+      \"table\":\[
+      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"patternrange_func\",\"shardingColumn\":\"id\",\"name\":\"patternrange_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
+      \"shardingNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
+      {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
+      \"function\":\[
+      {\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-three\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"3\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"patternrange_func\",\"clazz\":\"PatternRange\",\"property\":\[{\"value\":\"patternrange.txt\",\"name\":\"ruleFile\"},{\"value\":\"1000\",\"name\":\"patternValue\"}\]}\]}}
       """
     #clearn all conf
     Given delete file "/opt/dble/conf/patternrange.txt" on "dble-1"
