@@ -209,7 +209,7 @@ Feature: test "binlog" in zk cluster
     Given sleep "8" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      Error can'\''t wait all session finished
+      Error can't wait all session finished
       """
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
@@ -251,7 +251,7 @@ Feature: test "binlog" in zk cluster
     Given sleep "8" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      Error can'\''t wait all session finished
+      Error can't wait all session finished
       """
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
@@ -288,7 +288,7 @@ Feature: test "binlog" in zk cluster
     Given sleep "8" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      Error can'\''t wait all session finished
+      Error can't wait all session finished
       """
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
@@ -354,7 +354,7 @@ Feature: test "binlog" in zk cluster
     Given sleep "8" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      Error can'\''t wait all session finished
+      Error can't wait all session finished
       """
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
@@ -559,7 +559,7 @@ Feature: test "binlog" in zk cluster
     Given destroy sql threads list
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
-      Error can'\''t wait all session finished
+      Error can't wait all session finished
       """
    # check on zk cluster hasn't binlog_pause "status"
     Given execute linux command in "dble-1"

@@ -160,39 +160,39 @@ Feature: test "ha" in zk cluster
     #case check disable change to "true"
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_D"
       | sql               |
@@ -303,36 +303,36 @@ Feature: test "ha" in zk cluster
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS1'"
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_1"
       | sql               |
@@ -376,39 +376,39 @@ Feature: test "ha" in zk cluster
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_4"
       | sql               |
@@ -514,33 +514,33 @@ Feature: test "ha" in zk cluster
     Then execute admin cmd "dbGroup @@disable name = 'ha_group2' instance = 'hostS1'"
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_D"
       | sql               |
@@ -637,36 +637,36 @@ Feature: test "ha" in zk cluster
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_1"
       | sql               |
@@ -711,33 +711,33 @@ Feature: test "ha" in zk cluster
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3307" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostS1" url="172.100.9.2:3307" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Given execute single sql in "dble-3" in "admin" mode and save resultset in "Res_5"
       | sql               |
