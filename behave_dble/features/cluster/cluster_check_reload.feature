@@ -82,7 +82,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/opt/dble/conf/sequence_db_conf.properties" in host "dble-1"
       """
-      `schema1`.`test_auto`=dn1
+      \`schema1\`.\`test_auto\`=dn1
       """
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
@@ -99,7 +99,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/opt/dble/conf/sequence_db_conf.properties" in host "dble-2"
       """
-      `schema1`.`test_auto`=dn1
+      \`schema1\`.\`test_auto\`=dn1
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
@@ -116,7 +116,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/opt/dble/conf/sequence_db_conf.properties" in host "dble-3"
       """
-      `schema1`.`test_auto`=dn1
+      \`schema1\`.\`test_auto\`=dn1
       """
     #check on dble-1 dble-2 dble-3 data currect,query ddl/explain/dml
     Then execute sql in "dble-1" in "user" mode
