@@ -20,11 +20,11 @@ Feature: on zookeeper to check start config
     Given reset dble registered nodes in zk
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """
-      dbGroup="ha_group22"
+      dbGroup=\"ha_group22\"
       """
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      dbGroup="ha_group22"
+      dbGroup=\"ha_group22\"
       """
     Given execute linux command in "dble-1"
       """
@@ -73,11 +73,11 @@ Feature: on zookeeper to check start config
       """
     Then check following text exist "Y" in file "/tmp/dble_conf_db.log" in host "dble-1"
       """
-      {"dbGroup":\[
-      {"rwSplitMode":0,"name":"ha_group1","delayThreshold":100,"heartbeat":{"value":"select user()"},
-      "dbInstance":\[{"name":"hostM1","url":"172.100.9.5:3307","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":true}\]},
-      {"rwSplitMode":0,"name":"ha_group2","delayThreshold":1000,"heartbeat":{"value":"select 5"},
-      "dbInstance":\[{"name":"hostM2","url":"172.100.9.6:3307","password":"111111","user":"test","maxCon":1111,"minCon":22,"primary":true}
+      {\"dbGroup\":\[
+      {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+      \"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
+      {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":1000,\"heartbeat\":{\"value\":\"select 5\"},
+      \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1111,\"minCon\":22,\"primary\":true}
       """
     Given execute linux command in "dble-1"
       """
@@ -85,23 +85,23 @@ Feature: on zookeeper to check start config
       """
     Then check following text exist "Y" in file "/tmp/dble_conf_sharding.log" in host "dble-1"
       """
-      {"schema":\[
-      {"name":"schema1","sqlMaxLimit":100,"shardingNode":"dn5",
-      "table":\[
-      {"type":"GlobalTable","properties":{"name":"test","shardingNode":"dn1,dn2,dn3,dn4"}},
-      {"type":"ShardingTable","properties":{"function":"hash-two","shardingColumn":"id","name":"sharding_2_t1","shardingNode":"dn1,dn2"}},
-      {"type":"ShardingTable","properties":{"function":"hash-four","shardingColumn":"id","name":"sharding_4_t1","shardingNode":"dn1,dn2,dn3,dn4"}}\]},
-      {"name":"schema2","sqlMaxLimit":101,"shardingNode":"dn1",
-      "table":\[
-      {"type":"ShardingTable","properties":{"function":"hash-two","shardingColumn":"id","name":"sharding","shardingNode":"dn1,dn2"}}\]}\],
-      "shardingNode":\[
-      {"name":"dn1","dbGroup":"ha_group1","database":"db1"},{"name":"dn2","dbGroup":"ha_group2","database":"db1"},{"name":"dn3","dbGroup":"ha_group1","database":"db2"},
-      {"name":"dn4","dbGroup":"ha_group2","database":"db2"},{"name":"dn5","dbGroup":"ha_group1","database":"db3"}\],
-      "function":\[
-      {"name":"hash-two","clazz":"Hash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-three","clazz":"Hash","property":\[{"value":"3","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-four","clazz":"Hash","property":\[{"value":"4","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
-      {"name":"hash-string-into-two","clazz":"StringHash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}
+      {\"schema\":\[
+      {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
+      \"table\":\[
+      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]},
+      {\"name\":\"schema2\",\"sqlMaxLimit\":101,\"shardingNode\":\"dn1\",
+      \"table\":\[
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding\",\"shardingNode\":\"dn1,dn2\"}}\]}\],
+      \"shardingNode\":\[
+      {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
+      {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
+      \"function\":\[
+      {\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-three\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"3\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
+      {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}
       """
     Given execute linux command in "dble-1"
       """
@@ -109,7 +109,7 @@ Feature: on zookeeper to check start config
       """
     Then check following text exist "Y" in file "/tmp/dble_conf_user.log" in host "dble-1"
       """
-      {"user":\[{"type":"ManagerUser","properties":{"name":"root","password":"111111"}},{"type":"ShardingUser","properties":{"schemas":"schema1,schema2","name":"test","password":"111111"}
+      {\"user\":\[{\"type\":\"ManagerUser\",\"properties\":{\"name\":\"root\",\"password\":\"111111\"}},{\"type\":\"ShardingUser\",\"properties\":{\"schemas\":\"schema1,schema2\",\"name\":\"test\",\"password\":\"111111\"}
       """
     Given execute linux command in "dble-1"
       """
@@ -126,11 +126,11 @@ Feature: on zookeeper to check start config
       """
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """
-      dbGroup="ha_group22"
+      dbGroup=\"ha_group22\"
       """
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      dbGroup="ha_group22"
+      dbGroup=\"ha_group22\"
       """
     Given execute linux command in "dble-1"
       """
@@ -138,20 +138,20 @@ Feature: on zookeeper to check start config
       """
     Then check following text exist "Y" in file "/tmp/dble_conf_sharding.log" in host "dble-1"
       """
-      "shardingNode":\[
-      {"name":"dn1","dbGroup":"ha_group1","database":"db1"},{"name":"dn2","dbGroup":"ha_group2","database":"db1"},{"name":"dn3","dbGroup":"ha_group1","database":"db2"},
-      {"name":"dn4","dbGroup":"ha_group2","database":"db2"},{"name":"dn5","dbGroup":"ha_group1","database":"db3"}\],
+      \"shardingNode\":\[
+      {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
+      {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
       """
     Then check following text exist "N" in file "/tmp/dble_conf_sharding.log" in host "dble-1"
       """
-      {"name":"dn2","dbGroup":"ha_group22","database":"db1"}
+      {\"name\":\"dn2\",\"dbGroup\":\"ha_group22\",\"database\":\"db1\"}
       """
 
     Then restart dble in "dble-1" success
      ## The restart is successful because the metadata overwrites the wrong config, Use correct metadata in zk conf
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """
-      dbGroup="ha_group22"
+      dbGroup=\"ha_group22\"
       """
 
     Given execute linux command in "dble-1"

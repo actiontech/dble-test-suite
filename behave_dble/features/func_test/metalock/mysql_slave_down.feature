@@ -198,8 +198,7 @@ Feature: test mysql one node down
     Given sleep "6" seconds
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
-      the dbInstance\[172.100.9.5:3307\] can
-      t reach. Please check the dbInstance is accessible
+      the dbInstance\[172.100.9.5:3307\] can't reach. Please check the dbInstance is accessible
       """
     Given start mysql in host "mysql-master1"
     Given sleep "30" seconds

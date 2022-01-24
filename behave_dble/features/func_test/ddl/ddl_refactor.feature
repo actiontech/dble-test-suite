@@ -21,7 +21,7 @@ Feature: test ddl refactor
       | drop table sharding_4_t1 | Unknown table 'db1.sharding_4_t1' | schema1 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    \[DDL_3.dn1\] <exec_ddl_sql.fail> Unknown table '\''db1.sharding_4_t1'\''
+    \[DDL_3.dn1\] <exec_ddl_sql.fail> Unknown table 'db1.sharding_4_t1'
     """
     Then execute sql in "dble-1" in "user" mode
       | sql                                | expect   | db      |
