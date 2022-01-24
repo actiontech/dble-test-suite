@@ -134,11 +134,11 @@ Feature: test slow query log related manager command
      Given prepare a thread execute sql "update a_test set name = "3"" with "conn_1"
      Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
-     update a_test set name = "2"
+     update a_test set name = \"2\"
      """
      Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
-     update a_test set name = "3"
+     update a_test set name = \"3\"
      """
 #case wiat 10 secends in conn0 query commit ,to check slowlogs has update sql
      Given sleep "10" seconds
@@ -147,7 +147,7 @@ Feature: test slow query log related manager command
       | conn_0 | true    | commit | success | schema1 |
      Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
-     update a_test set name = "3"
+     update a_test set name = \"3\"
      """
     Given destroy sql threads list
 #case drop table
@@ -430,12 +430,12 @@ Feature: test slow query log related manager command
       | conn_0 | True    | insert into sharding_4_t1 values(1,1,1,1)                                                                                                                                                 | success                                  | schema1 |
     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
     """
-    CREATE TABLE sharding_4_t1(id int(10) unsigned NOT NULL,t_id int(10) unsigned NOT NULL DEFAULT "0",name char(1) NOT NULL DEFAULT "",pad int(11) NOT NULL,PRIMARY KEY (id),KEY k_1 (t_id))
+    CREATE TABLE sharding_4_t1(id int(10) unsigned NOT NULL,t_id int(10) unsigned NOT NULL DEFAULT \"0\",name char(1) NOT NULL DEFAULT \"\",pad int(11) NOT NULL,PRIMARY KEY (id),KEY k_1 (t_id))
     insert into sharding_4_t1 values(1,1,1,1)
     """
     Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
     """
-    insert into sharding_4_t1 values(1,1,1,1),(2,2,"test_2",2),(3,3,"test_3",4),(4,4,4,3),(5,5,"test...5",1),(6,6,"test6",6)
+    insert into sharding_4_t1 values(1,1,1,1),(2,2,\"test_2\",2),(3,3,\"test_3\",4),(4,4,4,3),(5,5,\"test...5\",1),(6,6,\"test6\",6)
     """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """

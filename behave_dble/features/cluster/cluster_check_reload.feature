@@ -70,53 +70,53 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-1
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """
-      <shardingTable name="sharding2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+      <shardingTable name=\"sharding2\" shardingNode=\"dn1,dn2\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM3" url="172.100.9.5:3307" password="111111" user="test" maxCon="107" minCon="10" disabled="false" primary="true">
+      <dbInstance name=\"hostM3\" url=\"172.100.9.5:3307\" password=\"111111\" user=\"test\" maxCon=\"107\" minCon=\"10\" disabled=\"false\" primary=\"true\">
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-1"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/sequence_db_conf.properties" in host "dble-1"
       """
-      `schema1`.`test_auto`=dn1
+      \`schema1\`.\`test_auto\`=dn1
       """
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      <shardingTable name="sharding2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+      <shardingTable name=\"sharding2\" shardingNode=\"dn1,dn2\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM3" url="172.100.9.5:3307" password="111111" user="test" maxCon="107" minCon="10" disabled="false" primary="true"/>
+      <dbInstance name=\"hostM3\" url=\"172.100.9.5:3307\" password=\"111111\" user=\"test\" maxCon=\"107\" minCon=\"10\" disabled=\"false\" primary=\"true\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/sequence_db_conf.properties" in host "dble-2"
       """
-      `schema1`.`test_auto`=dn1
+      \`schema1\`.\`test_auto\`=dn1
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      <shardingTable name="sharding2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+      <shardingTable name=\"sharding2\" shardingNode=\"dn1,dn2\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM3" url="172.100.9.5:3307" password="111111" user="test" maxCon="107" minCon="10" disabled="false" primary="true"/>
+      <dbInstance name=\"hostM3\" url=\"172.100.9.5:3307\" password=\"111111\" user=\"test\" maxCon=\"107\" minCon=\"10\" disabled=\"false\" primary=\"true\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-3"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/sequence_db_conf.properties" in host "dble-3"
       """
-      `schema1`.`test_auto`=dn1
+      \`schema1\`.\`test_auto\`=dn1
       """
     #check on dble-1 dble-2 dble-3 data currect,query ddl/explain/dml
     Then execute sql in "dble-1" in "user" mode
@@ -150,7 +150,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      "name":"sharding2"
+      \"name\":\"sharding2\"
       """
     Given execute linux command in "dble-1"
       """
@@ -158,7 +158,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1"
       """
-      "name":"hostM3"
+      \"name\":\"hostM3\"
       """
     Given execute linux command in "dble-2"
       """
@@ -166,7 +166,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2"
       """
-      "schemas":"schema1,schema2","name":"test"
+      \"schemas\":\"schema1,schema2\",\"name\":\"test\"
       """
     Given execute linux command in "dble-2"
       """
@@ -174,7 +174,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_sequences.log" in host "dble-2"
       """
-      {"sequence_db_conf.properties":{"`schema1`.`test_auto`":"dn1"}}}
+      {\"sequence_db_conf.properties\":{\"\`schema1\`.\`test_auto\`\":\"dn1\"}}}
       """
     Given execute linux command in "dble-3"
       """
@@ -254,41 +254,41 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-1
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """
-      <shardingTable name="sharding3" shardingNode="dn2,dn1" function="hash-two" shardingColumn="id"/>
+      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM" url="172.100.9.5:3307" password="111111" user="test" maxCon="108" minCon="1" disabled="false" primary="true">
+      <dbInstance name=\"hostM\" url=\"172.100.9.5:3307\" password=\"111111\" user=\"test\" maxCon=\"108\" minCon=\"1\" disabled=\"false\" primary=\"true\">
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-1"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
       """
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      <shardingTable name="sharding3" shardingNode="dn2,dn1" function="hash-two" shardingColumn="id"/>
+      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM" url="172.100.9.5:3307" password="111111" user="test" maxCon="108" minCon="1" disabled="false" primary="true"/>
+      <dbInstance name=\"hostM\" url=\"172.100.9.5:3307\" password=\"111111\" user=\"test\" maxCon=\"108\" minCon=\"1\" disabled=\"false\" primary=\"true\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      <shardingTable name="sharding3" shardingNode="dn2,dn1" function="hash-two" shardingColumn="id"/>
+      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM" url="172.100.9.5:3307" password="111111" user="test" maxCon="108" minCon="1" disabled="false" primary="true"/>
+      <dbInstance name=\"hostM\" url=\"172.100.9.5:3307\" password=\"111111\" user=\"test\" maxCon=\"108\" minCon=\"1\" disabled=\"false\" primary=\"true\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-3"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
       """
     #check on dble-1 dble-2 dble-3 data currect,query ddl/explain/dml
     Then execute sql in "dble-1" in "user" mode
@@ -322,7 +322,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      "name":"sharding3"
+      \"name\":\"sharding3\"
       """
     Given execute linux command in "dble-1"
       """
@@ -330,8 +330,8 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1"
       """
-      "name":"hostM"
-      "maxCon":108
+      \"name\":\"hostM\"
+      \"maxCon\":108
       """
     Given execute linux command in "dble-2"
       """
@@ -339,7 +339,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2"
       """
-      "schemas":"schema1,schema2,schema3","name":"test"
+      \"schemas\":\"schema1,schema2,schema3\",\"name\":\"test\"
       """
     Given execute linux command in "dble-3"
       """
@@ -383,25 +383,25 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-1, has "function="hash-three""
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """
-      <shardingTable name="sharding4" shardingNode="dn2,dn1" function="hash-three" shardingColumn="id"/>
+      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1\" function=\"hash-three\" shardingColumn=\"id\"/>
       """
     #check config on dble-2,has "function="hash-two""
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      <shardingTable name="sharding3" shardingNode="dn2,dn1" function="hash-two" shardingColumn="id"/>
+      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      <shardingTable name="sharding4" shardingNode="dn2,dn1" function="hash-three" shardingColumn="id"/>
+      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1\" function=\"hash-three\" shardingColumn=\"id\"/>
       """
     #check config on dble-3,has "function="hash-two""
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      <shardingTable name="sharding3" shardingNode="dn2,dn1" function="hash-two" shardingColumn="id"/>
+      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      <shardingTable name="sharding4" shardingNode="dn2,dn1" function="hash-three" shardingColumn="id"/>
+      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1\" function=\"hash-three\" shardingColumn=\"id\"/>
       """
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
@@ -414,11 +414,11 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "N" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      "name":"sharding4"
+      \"name\":\"sharding4\"
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      "name":"sharding3"
+      \"name\":\"sharding3\"
       """
     Given execute linux command in "dble-3"
       """
@@ -439,17 +439,17 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-1
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """
-      <shardingTable name="sharding4" shardingNode="dn2,dn1,dn3" function="hash-three" shardingColumn="id"/>
+      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1,dn3\" function=\"hash-three\" shardingColumn=\"id\"/>
       """
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      <shardingTable name="sharding4" shardingNode="dn2,dn1,dn3" function="hash-three" shardingColumn="id"/>
+      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1,dn3\" function=\"hash-three\" shardingColumn=\"id\"/>
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      <shardingTable name="sharding4" shardingNode="dn2,dn1,dn3" function="hash-three" shardingColumn="id"/>
+      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1,dn3\" function=\"hash-three\" shardingColumn=\"id\"/>
       """
     #case check on zookeeper
     Given execute linux command in "dble-1"
@@ -458,11 +458,11 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "N" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      "name":"sharding3"
+      \"name\":\"sharding3\"
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      "name":"sharding4"
+      \"name\":\"sharding4\"
       """
     Given execute linux command in "dble-3"
       """
@@ -489,25 +489,25 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-1
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbGroup rwSplitMode="1.2" name="ha_group1" delayThreshold="100">
-      maxCon="10086"
+      <dbGroup rwSplitMode=\"1.2\" name=\"ha_group1\" delayThreshold=\"100\">
+      maxCon=\"10086\"
       """
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
-      maxCon="108"
+      <dbGroup rwSplitMode=\"0\" name=\"ha_group1\" delayThreshold=\"100\">
+      maxCon=\"108\"
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
-      maxCon="108"
+      <dbGroup rwSplitMode=\"0\" name=\"ha_group1\" delayThreshold=\"100\">
+      maxCon=\"108\"
       """
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     #  Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 70; cvc-datatype-valid.1.2.1: '1.2' is not a valid value for 'integer'.
       """
-      '\''1.2'\'' is not a valid value for '\''integer'\''
+      '1.2' is not a valid value for 'integer'
       """
     #case check on zookeeper
     Given execute linux command in "dble-1"
@@ -516,13 +516,13 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1"
       """
-      "maxCon":108
-      "rwSplitMode":0,"name":"ha_group1"
+      \"maxCon\":108
+      \"rwSplitMode\":0,\"name\":\"ha_group1\"
       """
     Then check following text exist "N" in file "/tmp/dble_zk_db.log" in host "dble-1"
       """
-      "maxCon":10086
-      "rwSplitMode":1.2
+      \"maxCon\":10086
+      "rwSplitMode\":1.2
       """
     Given execute linux command in "dble-3"
       """
@@ -545,20 +545,20 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-1
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbGroup rwSplitMode="1" name="ha_group1" delayThreshold="100">
-      maxCon="10086"
+      <dbGroup rwSplitMode=\"1\" name=\"ha_group1\" delayThreshold=\"100\">
+      maxCon=\"10086\"
       """
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbGroup rwSplitMode="1" name="ha_group1" delayThreshold="100">
-      maxCon="10086"
+      <dbGroup rwSplitMode=\"1\" name=\"ha_group1\" delayThreshold=\"100\">
+      maxCon=\"10086\"
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbGroup rwSplitMode="1" name="ha_group1" delayThreshold="100">
-      maxCon="10086"
+      <dbGroup rwSplitMode=\"1\" name=\"ha_group1\" delayThreshold=\"100\">
+      maxCon=\"10086\"
       """
     #case check on zookeeper
     Given execute linux command in "dble-1"
@@ -567,13 +567,13 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "N" in file "/tmp/dble_zk_db.log" in host "dble-1"
       """
-      "maxCon":108
-      "rwSplitMode":0,"name":"ha_group1"
+      \"maxCon\":108
+      \"rwSplitMode\":0,\"name\":\"ha_group1\"
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1"
       """
-      "maxCon":10086
-      "rwSplitMode":1
+      \"maxCon\":10086
+      \"rwSplitMode\":1
       """
     Given execute linux command in "dble-3"
       """
@@ -595,17 +595,17 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-1
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-1"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema4444"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema4444\"/>
       """
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-3"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
       """
     Given sleep "10" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
@@ -620,11 +620,11 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2"
       """
-      "schemas":"schema1,schema2,schema3","name":"test"
+      \"schemas\":\"schema1,schema2,schema3\",\"name\":\"test\"
       """
     Then check following text exist "N" in file "/tmp/dble_zk_user.log" in host "dble-2"
       """
-      "schemas":"schema1,schema4444","name":"test"
+      \"schemas\":\"schema1,schema4444\",\"nam\e":\"test\"
       """
     Given execute linux command in "dble-3"
       """
@@ -641,17 +641,17 @@ Feature: test "reload @@config" in zk cluster
      #check config on dble-1
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-1"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
       """
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-3"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
       """
     #check on dble-1 dble-2 dble-3 data currect,query ddl/explain/dml
     Then execute sql in "dble-1" in "user" mode
@@ -687,11 +687,11 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2"
       """
-      "schemas":"schema1,schema2,schema3","name":"test"
+      \"schemas\":\"schema1,schema2,schema3\",\"name\":\"test\"
       """
     Then check following text exist "N" in file "/tmp/dble_zk_user.log" in host "dble-2"
       """
-      "schemas":"schema1,schema4444","name":"test"
+      \"schemas\":\"schema1,schema4444\",\"name\":\"test\"
       """
     Given execute linux command in "dble-3"
       """
@@ -752,11 +752,11 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      "name":"sharding5"
+      \"name\":\"sharding5\"
       """
     Then check following text exist "N" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      "name":"sharding4"
+      \"name\":\"sharding4\"
       """
     Given execute linux command in "dble-3"
       """
@@ -777,17 +777,17 @@ Feature: test "reload @@config" in zk cluster
     #case dble-2,dble-3 reload success
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """
-      <shardingTable name="sharding5" shardingNode="dn2,dn1,dn4,dn3" function="hash-four" shardingColumn="id"/>
+      <shardingTable name=\"sharding5\" shardingNode=\"dn2,dn1,dn4,dn3\" function=\"hash-four\" shardingColumn=\"id\"/>
       """
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      <shardingTable name="sharding5" shardingNode="dn2,dn1,dn4,dn3" function="hash-four" shardingColumn="id"/>
+      <shardingTable name=\"sharding5\" shardingNode=\"dn2,dn1,dn4,dn3\" function=\"hash-four\" shardingColumn=\"id\"/>
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      <shardingTable name="sharding5" shardingNode="dn2,dn1,dn4,dn3" function="hash-four" shardingColumn="id"/>
+      <shardingTable name=\"sharding5\" shardingNode=\"dn2,dn1,dn4,dn3\" function=\"hash-four\" shardingColumn=\"id\"/>
       """
     #check on dble-1 dble-2 dble-3 data currect,query ddl/explain/dml
     Then execute sql in "dble-1" in "user" mode
