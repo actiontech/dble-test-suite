@@ -187,10 +187,10 @@ Feature: check single dble detach or attach from cluster
       | sql               |
       | show @@dbinstance |
     Then check resultset "Res_A" has lines with following column values
-      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | 0           | 0            | false       |
-      | ha_group2  | hostS2 | 172.100.9.2 | 3307   | R     | 0        | 0           | 0            | false       |
+      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | DISABLED-10 |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | false       |
+      | ha_group2  | hostS2 | 172.100.9.2 | 3307   | R     | 0        | false       |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                               | expect                                                |
       | conn_1 | False     | dbGroup @@enable name='ha_group1' | cluster is detached, you should attach cluster first. |
@@ -199,10 +199,10 @@ Feature: check single dble detach or attach from cluster
       | sql               |
       | show @@dbinstance |
     Then check resultset "Res_B" has lines with following column values
-      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | 0           | 0            | false       |
-      | ha_group2  | hostS2 | 172.100.9.2 | 3307   | R     | 0        | 0           | 0            | false       |
+      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | DISABLED-10 |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | false       |
+      | ha_group2  | hostS2 | 172.100.9.2 | 3307   | R     | 0        | false       |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                                                                           | expect                                                |
       | conn_1 | False     | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | cluster is detached, you should attach cluster first. |
@@ -241,10 +241,10 @@ Feature: check single dble detach or attach from cluster
       | sql               |
       | show @@dbinstance |
     Then check resultset "Res_C" has lines with following column values
-      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 0           | 0            | true        |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | 0           | 0            | false       |
-      | ha_group2  | hostS2 | 172.100.9.2 | 3307   | R     | 0        | 0           | 0            | false       |
+      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | DISABLED-10 |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | true        |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | false       |
+      | ha_group2  | hostS2 | 172.100.9.2 | 3307   | R     | 0        | false       |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                               | expect  |
       | conn_1 | False     | dbGroup @@enable name='ha_group1' | success |
@@ -253,10 +253,10 @@ Feature: check single dble detach or attach from cluster
       | sql               |
       | show @@dbinstance |
     Then check resultset "Res_D" has lines with following column values
-      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | R     | 0        | 0           | 0            | false       |
-      | ha_group2  | hostS2 | 172.100.9.2 | 3307   | W     | 0        | 0           | 0            | false       |
+      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | DISABLED-10 |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | R     | 0        | false       |
+      | ha_group2  | hostS2 | 172.100.9.2 | 3307   | W     | 0        | false       |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                                                                           | expect  |
       | conn_1 | False     | dbGroup @@switch name='ha_group2' master='hostM2'                             | success |
