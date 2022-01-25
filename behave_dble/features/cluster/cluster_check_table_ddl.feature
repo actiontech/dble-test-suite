@@ -465,10 +465,9 @@ Feature: test "ddl" in zk cluster
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                               | expect                      | db      |
       | conn_1 | true    | alter table sharding_4_t1 add age int             | Duplicate column name 'age' | schema1 |
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exists in file "/opt/dble/logs/dble.log" in host "dble-1" with "5" times
       """
-      FAILED;DROP_INDEX;schema1;1;alter table sharding_4_t1 add age int
-      CONN_EXECUTE_ERROR
+       <exec_ddl_sql.fail> Duplicate column name 'age'
       """
     #case check full @@metadata on admin mode
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_A"
