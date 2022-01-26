@@ -566,13 +566,19 @@ def step_impl(context,file,host):
     assert isFound, "can not find expect text '{0}' in {1}".format(context.text, file)
 
 
+@Then('check the occur times of following key in file "{filename}" after line "{checkFromLine}" in "{hostname}"')
+def step_impl(context, filename, hostname, checkFromLine):
+    checkFromLineNum = getattr(context, checkFromLine, 0)
+    check_occur_times(context, filename, hostname, checkFromLineNum)
+
+
 @Then('check the occur times of following key in file "{filename}" in "{hostname}"')
-def step_impl(context, filename, hostname):
+def check_occur_times(context, filename, hostname, checkFromLine=0):
     ssh = get_ssh(hostname)
     for row in context.table:
         str = row["key"]
         num = row["occur_times"]
-        cmd = "grep \'{0}\' {1}|wc -l".format(str, filename)
+        cmd = "tail -n +{2} {1} | grep -n \'{0}\' |wc -l".format(str, filename, checkFromLine)
         rc, stdout, stderr = ssh.exec_command(cmd)
         assert_that(stdout == num,
                     "expect the occur times of \"{0}\" is {1} in {2},but the actual value is {3}".format(str, num, filename,
