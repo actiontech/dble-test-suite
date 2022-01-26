@@ -233,3 +233,18 @@ def step_impl(context, host_name, num, concur="100", mode_name="user"):
 
         if Flag.exception:
             raise Flag.exception
+
+
+@Then('execute "{mode_name}" sql for "{seconds}" seconds in "{host_name}"')
+def step_impl(context, mode_name, seconds, host_name):
+    execute_seconds = int(seconds)
+    current_time_before_execute = int(time.time())
+    while True:
+        current_time_in_execute = int(time.time())
+        if current_time_in_execute - current_time_before_execute < execute_seconds:
+            for row in context.table:
+                execute_sql_in_host(host_name, row.as_dict(), mode_name)
+        else:
+            break
+    context.logger.info("execute sql for {0} seconds in {1} complete".format(seconds, host_name))
+
