@@ -16,6 +16,8 @@ public class BtraceRwSelect{
     public static void handle(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
        BTraceUtils.println("get into rwSelect");
        BTraceUtils.println("------------------------");
-       Thread.sleep(2000L);
+       Thread.sleep(5000L);
+       BTraceUtils.println("sleep end ");
+       BTraceUtils.println(" __________________________ ");
     }
 }

@@ -64,11 +64,11 @@ Feature: connection test in rwSplit mode
 
        #use delete dbInstance to trigger reload
      Then execute sql in "dble-1" in "admin" mode
-        | conn   | toClose | sql                                                         | db      |
-        | conn_2 | False   | delete from dble_db_instance where name='hostM2'            | dble_information   |
+        | conn   | toClose | sql                                               | expect           | db      |
+        | conn_2 | False   | delete from dble_db_instance where name='hostM2'  | success          | dble_information   |
 
        #btrace sleep 5s
-     Given sleep "2" seconds
+     Given sleep "8" seconds
      Then check sql thread output in "res"
         """
           (1,)
@@ -86,10 +86,10 @@ Feature: connection test in rwSplit mode
 
        #use delete dbInstance to trigger reload
      Then execute sql in "dble-1" in "admin" mode
-        | conn   | toClose | sql                                                         | db      |
-        | conn_2 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.2',3307,'test','111111','false','false',1,99)             | dble_information   |
+        | conn   | toClose | sql                                          |expect               | db      |
+        | conn_2 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.2',3307,'test','111111','false','false',1,99) | success            | dble_information   |
      #btrace sleep 5s
-     Given sleep "2" seconds
+     Given sleep "8" seconds
      Then check sql thread output in "res"
         """
           (1,)
@@ -146,11 +146,11 @@ Feature: connection test in rwSplit mode
 
        #use delete dbInstance to trigger reload
      Then execute sql in "dble-1" in "admin" mode
-        | conn   | toClose | sql                                                         | db      |
-        | conn_4 | False   | delete from dble_db_instance where name='hostM2'            | dble_information   |
+        | conn   | toClose | sql                                               | expect           | db      |
+        | conn_4 | False   | delete from dble_db_instance where name='hostM2'  | success          | dble_information   |
 
       #btrace sleep 5s
-     Given sleep "2" seconds
+     Given sleep "8" seconds
      Then check sql thread output in "res"
         """
           (1,)
@@ -168,10 +168,10 @@ Feature: connection test in rwSplit mode
 
      #use add dbInstance to trigger reload
      Then execute sql in "dble-1" in "admin" mode
-        | conn   | toClose | sql                                                         | db      |
-        | conn_4 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.2',3307,'test','111111','false','false',1,99)             | dble_information   |
+        | conn   | toClose | sql                                           |expect              | db      |
+        | conn_4 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.2',3307,'test','111111','false','false',1,99)  | success           | dble_information   |
      #btrace sleep 5s
-     Given sleep "2" seconds
+     Given sleep "8" seconds
      Then check sql thread output in "res"
         """
           (1,)
@@ -198,7 +198,7 @@ Feature: connection test in rwSplit mode
        |rwS1| conn_1 | true    | drop database testdb                    | success |
 
 
-     Scenario: When the front connection is bound with the dbGroup and trigger reload less ten times, result can return correctly      #3
+  Scenario: When the front connection is bound with the dbGroup and trigger reload less ten times, result can return correctly      #3
 
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
         """
@@ -246,10 +246,10 @@ Feature: connection test in rwSplit mode
      #delete slave dbInstance
      Given prepare a thread execute sql "select * from test" with "conn_1"
      Then execute sql in "dble-1" in "admin" mode
-        | conn   | toClose | sql                                                         | db      |
-        | conn_2 | False   | delete from dble_db_instance where name='hostM2'            | dble_information   |
-     #because btrace sleep 2s
-     Given sleep "3" seconds
+        | conn   | toClose | sql                                                   | expect             | db      |
+        | conn_2 | False   | delete from dble_db_instance where name='hostM2'      | success            | dble_information   |
+     #because btrace sleep 5s
+     Given sleep "8" seconds
      Then check sql thread output in "res"
         """
           (1,)
@@ -260,8 +260,8 @@ Feature: connection test in rwSplit mode
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                                         | db      |
         | conn_2 | true    | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.2',3307,'test','111111','false','false',1,99)            | dble_information   |
-      #because btrace sleep 2s
-     Given sleep "3" seconds
+      #because btrace sleep 5s
+     Given sleep "8" seconds
      Then check sql thread output in "res"
         """
           (1,)
@@ -324,8 +324,8 @@ Feature: connection test in rwSplit mode
      Given sleep "5" seconds
      Given prepare a thread execute sql "select * from test" with "conn_1"
 
-     #every time need 2 seconds,make sure execute time more than 11*2
-     Then execute "admin" sql for "25" seconds in "dble-1"
+     #every time need 5 seconds,make sure execute time more than 11*5
+     Then execute "admin" sql for "60" seconds in "dble-1"
         | conn   | toClose | sql                                                         | db      |
         | conn_2 | False   | delete from dble_db_instance where name='hostM2'            | dble_information   |
         | conn_2 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.2',3307,'test','111111','false','false',1,99)| dble_information|
