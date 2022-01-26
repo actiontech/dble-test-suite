@@ -557,13 +557,13 @@ Feature: test "ddl" in zk cluster
     #case wait idle timeout,check  query ddl on dble-2,dble-3 will has metaLock
     Given sleep "11" seconds
     Then execute sql in "dble-2" in "user" mode
-      | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
-      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 drop age1.    | schema1 |
-      | conn_2 | true     | alter table sharding_4_t1 drop age1           | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 drop age1       | schema1 |
+      | conn   | toClose  | sql                                           | expect                                                                                                                                      | db      |
+      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 add age1 int.     | schema1 |
+      | conn_2 | true     | alter table sharding_4_t1 drop age1           | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 drop age1.        | schema1 |
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
-      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 add age2 int    | schema1 |
-      | conn_3 | true     | alter table sharding_4_t1 drop age2           | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 drop age2       | schema1 |
+      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 add age2 int.    | schema1 |
+      | conn_3 | true     | alter table sharding_4_t1 drop age2           | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 drop age2.       | schema1 |
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
