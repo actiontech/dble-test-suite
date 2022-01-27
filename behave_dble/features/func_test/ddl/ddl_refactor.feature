@@ -3,12 +3,40 @@
 # Created by maofei at 2020/3/9
 # update by caiwei at 2022/01/12 because of http://10.186.18.11/jira/browse/DBLE0REQ-1447
 Feature: test ddl refactor
-  check log when ddl execute failed
   check log when ddl execute successfully
+  check log when ddl execute failed
   check warning log when the time of hang>60s
   can‘t support ddl in xa transaction
 
-  Scenario: check log when ddl execute failed       #1
+  Scenario: check log when ddl execute successfully   #1
+    Given execute sql in "dble-1" in "user" mode
+      | sql                                 | expect   | db      |
+      | drop table if exists sharding_4_t1  | success  | schema1 |
+
+    Given record current dble log line number in "log_num"
+    Then execute sql in "dble-1" in "user" mode
+      | sql                                 | expect   | db      |
+      | create table sharding_4_t1(id int)  | success  | schema1 |
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" after line "log_num" in "dble-1"
+      | key                                   | occur_times |
+      | <init_ddl_trace>                      | 1           |
+      | <add_table_lock.start>                | 1           |
+      | <add_table_lock.succ>                 | 1           |
+      | <test_ddl_conn.start>                 | 5           |
+      | <test_ddl_conn.succ>                  | 5           |
+      | <exec_ddl_sql.start>                  | 5           |
+      | <exec_ddl_sql.get_conn>               | 4           |
+      | <exec_ddl_sql.succ>                   | 5           |
+      | <update_table_metadata.start>         | 1           |
+      | <update_table_metadata>               | 2           |
+      | <update_table_metadata.succ>          | 1           |
+      | <release_table_lock.succ>             | 1           |
+      | <finish_ddl_trace>                    | 1           |
+    Then execute sql in "dble-1" in "user" mode
+      | sql                                | expect   | db      |
+      | drop table if exists sharding_4_t1 | success  | schema1 |
+
+  Scenario: check log when ddl execute failed       #2
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect   | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1 | success  | schema1 |
@@ -16,38 +44,29 @@ Feature: test ddl refactor
     Then execute sql in "mysql-master1"
       | sql                                | expect    | db     |
       | drop table if exists sharding_4_t1 | success   | db1    |
+
+    Given record current dble log line number in "log_num"
     Then execute sql in "dble-1" in "user" mode
       | sql                      | expect                            | db      |
       | drop table sharding_4_t1 | Unknown table 'db1.sharding_4_t1' | schema1 |
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
-    """
-    \[DDL_3.dn1\] <exec_ddl_sql.fail> Unknown table 'db1.sharding_4_t1'
-    """
-    Then execute sql in "dble-1" in "user" mode
-      | sql                                | expect   | db      |
-      | drop table if exists sharding_4_t1 | success  | schema1 |
 
-  Scenario: check log when ddl execute successfully   #2
-    Then execute sql in "dble-1" in "user" mode
-      | sql                                 | expect   | db      |
-      | create table sharding_4_t1(id int)  | success  | schema1 |
-    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" after line "log_num" in "dble-1"
       | key                                   | occur_times |
       | <init_ddl_trace>                      | 1           |
-      | <add_local_lock.start>                | 1           |
-      | <add_local_lock.succ>                 | 1           |
+      | <add_table_lock.start>                | 1           |
+      | <add_table_lock.succ>                 | 1           |
       | <test_ddl_conn.start>                 | 5           |
       | <test_ddl_conn.succ>                  | 5           |
       | <exec_ddl_sql.start>                  | 5           |
-      | <exec_ddl_sql.succ>                   | 5           |
-      | <update_ddl_metadata.start>           | 1           |
-      | <update_ddl_metadata>                 | 2           |
-      | <update_ddl_metadata.succ>            | 1           |
+      | <exec_ddl_sql.get_conn>               | 4           |
+      | <exec_ddl_sql.succ>                   | 3           |
+      | <exec_ddl_sql.fail>                   | 2           |
+      | <update_table_metadata>               | 1           |
+      | <release_table_lock.succ>             | 1           |
       | <finish_ddl_trace>                    | 1           |
     Then execute sql in "dble-1" in "user" mode
       | sql                                | expect   | db      |
       | drop table if exists sharding_4_t1 | success  | schema1 |
-
 
   @current
   Scenario: check warning log when the time of hang>60s   #3
