@@ -133,7 +133,6 @@ Feature: test "binlog" in zk cluster
     Given delete file "/tmp/dble_admin_query.log" on "dble-3"
 
 
-
   @btrace
   Scenario: query "show @@binlog.status" timeout, do ddl #2
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -193,7 +192,7 @@ Feature: test "binlog" in zk cluster
       """
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      Error can'\''t wait all session finished
+      Error can't wait all session finished
       3307
       """
    # during "hang",to check on zk cluster has binlog_pause "status"
@@ -237,7 +236,7 @@ Feature: test "binlog" in zk cluster
       """
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      Error can'\''t wait all session finished
+      Error can't wait all session finished
       mysql-bin
       """
     Given execute linux command in "dble-1"
@@ -274,7 +273,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      Error can'\''t wait all session finished
+      Error can't wait all session finished
       3307
       """
     Given execute linux command in "dble-1"
@@ -340,7 +339,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      Error can'\''t wait all session finished
+      Error can't wait all session finished
       3307
       """
     Given execute linux command in "dble-1"
@@ -364,7 +363,7 @@ Feature: test "binlog" in zk cluster
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given delete file "/tmp/dble_user_query.log" on "dble-3"
 
-    #sing table ddl,the singtable doing ddl "hang",but doing "show @@binlog.status" donot "hang"
+    #single table ddl,the singtable doing ddl "hang",but doing "show @@binlog.status" do not "hang"
     Given sleep "2" seconds
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Given execute sqls in "dble-1" at background
@@ -527,7 +526,7 @@ Feature: test "binlog" in zk cluster
       | conn_2  | False   | show @@binlog.status | dble_information |
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
-      Error can'\''t wait all session finished
+      Error can't wait all session finished
       172.100.9.6:3307
       """
     Given prepare a thread execute sql "insert into global1 values (3)" with "conn_31"
@@ -1039,7 +1038,7 @@ Feature: test "binlog" in zk cluster
     Given destroy sql threads list
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
-      Error can'\''t wait all session finished
+      Error can't wait all session finished
       """
    # check on zk cluster hasn't binlog_pause "status"
     Given execute linux command in "dble-1"
