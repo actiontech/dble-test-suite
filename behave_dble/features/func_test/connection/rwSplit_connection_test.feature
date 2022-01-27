@@ -78,7 +78,7 @@ Feature: connection test in rwSplit mode
      Given sleep "5" seconds
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1"
         """
-          \[background task\]recycle old group`ha_group2` resulttrue
+          \[background task\]recycle old group\`ha_group2\` resulttrue
         """
 
      Given record current dble log line number in "log_num_2"
@@ -99,7 +99,7 @@ Feature: connection test in rwSplit mode
      Given sleep "5" seconds
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_2" in host "dble-1"
         """
-          \[background task\]recycle old group`ha_group2` resulttrue
+          \[background task\]recycle old group\`ha_group2\` resulttrue
         """
      Then check btrace "BtraceRwSelect.java" output in "dble-1" with "2" times
        """
@@ -160,7 +160,7 @@ Feature: connection test in rwSplit mode
      Given sleep "5" seconds
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1"
         """
-          \[background task\]recycle old group`ha_group2` resulttrue
+          \[background task\]recycle old group\`ha_group2\` resulttrue
         """
 
      Given record current dble log line number in "log_num_4"
@@ -181,7 +181,7 @@ Feature: connection test in rwSplit mode
      Given sleep "5" seconds
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_4" in host "dble-1"
         """
-          \[background task\]recycle old group`ha_group2` resulttrue
+          \[background task\]recycle old group\`ha_group2\` resulttrue
         """
 
      Then check btrace "BtraceRwSelect.java" output in "dble-1" with "2" times
