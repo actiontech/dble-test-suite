@@ -1,10 +1,11 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2021/05/25
+#update by caiwei at 2022/01/27 for http://10.186.18.11/jira/browse/DBLE0REQ-1384
 
 Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool"
 
-  processors、backendProcessors、processorExecutor、backendProcessorExecutor、complexExecutor、writeToBackendWorker
+  NIOFrontRW、NIOBackendRW、frontWorker、backendWorker、complexQueryWorker、writeToBackendWorker
 
 
   Scenario: basic test about 'update'  #1
