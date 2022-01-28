@@ -580,7 +580,8 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       NullPointerException
       """
 
-
+  @skip
+    # because http://10.186.18.11/jira/browse/DBLE0REQ-1627
   Scenario: test "backendWorker" and usePerformanceMode=0 #7
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
