@@ -255,7 +255,7 @@ def check_text(context,flag,filename,hostname,checkFromLine=0):
 
     ssh = get_ssh(hostname)
     for str in strs_list:
-        cmd = "tail -n +{2} {1} | grep -n \'{0}\'".format(str,filename,checkFromLine)
+        cmd = "tail -n +{2} {1} | grep -n \"{0}\"".format(str,filename,checkFromLine)
         rc, stdout, stderr = ssh.exec_command(cmd)
         if flag =="N":
             assert_that(len(stdout) == 0,"expect \"{0}\" not exist in file {1},but exist".format(str,filename))
@@ -276,9 +276,9 @@ def check_text_times(context, filename, hostname, num, checkFromLine=0):
 
     ssh = get_ssh(hostname)
     for str in strs_list:
-        cmd = "tail -n +{2} {1} | grep -n \'{0}\' | wc -l".format(str, filename, checkFromLine)
+        cmd = "tail -n +{2} {1} | grep -n \"{0}\" | wc -l".format(str, filename, checkFromLine)
         rc, stdout, stderr = ssh.exec_command(cmd)
-        assert_that(stdout == num,"expect \"{0}\" exists in file {1} with {2} times, but was {3} times".format(str, filename, num, stdout))
+        assert_that(stdout == num, "expect \"{0}\" exists in file {1} with {2} times, but was {3} times".format(str, filename, num, stdout))
 
 
 @Then('check following two texts exist at least one in file "{filename}" after line "{checkFromLine}" in host "{hostname}"')
@@ -292,9 +292,9 @@ def check_text_at_least_one(context,filename,hostname,checkFromLine=0):
     strs_list = strs.splitlines()
 
     ssh = get_ssh(hostname)
-    cmd = "tail -n +{3} {2} | grep -n -e \'{0}\' -e \'{1}\'".format(strs_list[0],strs_list[1],filename,checkFromLine)
+    cmd = "tail -n +{3} {2} | grep -n -e \"{0}\" -e \'{1}\'".format(strs_list[0], strs_list[1], filename, checkFromLine)
     rc, stdout, stderr = ssh.exec_command(cmd)
-    assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1} at least one,but has not both ".format(strs_list,filename))
+    assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1} at least one,but has not both ".format(strs_list, filename))
 
 @Then ('check following "{flag}" exist in dir "{dirname}" in "{hostname}"')
 def step_impl(context,flag,dirname,hostname):
@@ -566,13 +566,19 @@ def step_impl(context,file,host):
     assert isFound, "can not find expect text '{0}' in {1}".format(context.text, file)
 
 
+@Then('check the occur times of following key in file "{filename}" after line "{checkFromLine}" in "{hostname}"')
+def step_impl(context, filename, hostname, checkFromLine):
+    checkFromLineNum = getattr(context, checkFromLine, 0)
+    check_occur_times(context, filename, hostname, checkFromLineNum)
+
+
 @Then('check the occur times of following key in file "{filename}" in "{hostname}"')
-def step_impl(context, filename, hostname):
+def check_occur_times(context, filename, hostname, checkFromLine=0):
     ssh = get_ssh(hostname)
     for row in context.table:
         str = row["key"]
         num = row["occur_times"]
-        cmd = "grep \'{0}\' {1}|wc -l".format(str, filename)
+        cmd = "tail -n +{2} {1} | grep -n \'{0}\' |wc -l".format(str, filename, checkFromLine)
         rc, stdout, stderr = ssh.exec_command(cmd)
         assert_that(stdout == num,
                     "expect the occur times of \"{0}\" is {1} in {2},but the actual value is {3}".format(str, num, filename,

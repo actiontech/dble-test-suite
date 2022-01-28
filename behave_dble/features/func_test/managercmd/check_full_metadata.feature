@@ -439,12 +439,12 @@ Feature: test "check full @@metadata...'"
     Then execute admin cmd "reload @@config_all"
     Then check following text exist "N" in file "dble.log" in host "dble-1"
       """
-      CREATE TABLE `test_shard`
+      CREATE TABLE \`test_shard\`
       """
     Then execute admin cmd "reload @@metadata"
     Then check following text exist "N" in file "dble.log" in host "dble-1"
       """
-      CREATE TABLE `test_shard`
+      CREATE TABLE \`test_shard\`
       """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
        """
@@ -456,12 +456,12 @@ Feature: test "check full @@metadata...'"
     Given Restart dble in "dble-1" success
     Then check following text exist "N" in file "dble.log" in host "dble-1"
       """
-      CREATE TABLE `test_shard`
+      CREATE TABLE \`test_shard\`
       """
     Given sleep "1" seconds
     Then check following text exist "N" in file "dble.log" in host "dble-1"
       """
-      CREATE TABLE `test_shard`
+      CREATE TABLE \`test_shard\`
       """
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                          | expect                  |
@@ -474,12 +474,12 @@ Feature: test "check full @@metadata...'"
     Then execute admin cmd "reload @@config_all"
     Then check following text exist "N" in file "dble.log" in host "dble-1"
       """
-      CREATE TABLE `mytest_auto_test1`
+      CREATE TABLE \`mytest_auto_test1\`
       """
     Then execute admin cmd "reload @@metadata"
     Then check following text exist "N" in file "dble.log" in host "dble-1"
       """
-      CREATE TABLE `mytest_auto_test1`
+      CREATE TABLE \`mytest_auto_test1\`
       """
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                         | expect                          |

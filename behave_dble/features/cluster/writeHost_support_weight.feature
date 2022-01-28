@@ -35,9 +35,9 @@ Feature:check if sharding.xml in which writeHost contains "weight" push success 
       Given sleep "2" seconds
       Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      readWeight="3"
+      readWeight=\"3\"
      """
       Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      readWeight="3"
+      readWeight=\"3\"
       """
