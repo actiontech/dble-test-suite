@@ -181,8 +181,8 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    a/-Dautocommit=0
-    a/-DtxIsolation=2
+    $a -Dautocommit=0
+    $a -DtxIsolation=2
     """
     Given stop dble in "dble-1"
     Given execute sql in "mysql-master1"
@@ -190,8 +190,13 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn_0 | False   | set global autocommit=1                   |
       | conn_0 | True    | set global tx_isolation='REPEATABLE-READ' |
     Given turn on general log in "mysql-master1"
+    Given turn on general log in "mysql-master2"
     When Start dble in "dble-1"
-    Then check general log in host "mysql-master1" has not "SET global autocommit=0,tx_isolation='READ-COMMITTED'"
+    Then check general log in host "mysql-master1" has "SET global autocommit=0,tx_isolation='READ-COMMITTED'"
+    When execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                         | expect  |
+      | conn_1 | False   | fresh conn forced where dbGroup='ha_group1' | success |
+      | conn_1 | True    | fresh conn forced where dbGroup='ha_group2' | success |
     When execute sql in "dble-1" in "user" mode
       | sql                                | expect  | db      |
       | drop table if exists sharding_4_t1 | success | schema1 |
@@ -267,6 +272,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a -Dautocommit=0
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -285,7 +294,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
         </dbInstance>
     </dbGroup>
     """
-    Then execute admin cmd "reload @@config_all"
+    Given Restart dble in "dble-1" success
     Given execute sql in "dble-1" in "user" mode
       | sql                                | expect  |db      |
       | drop table if exists sharding_2_t1 | success |schema1 |
@@ -315,8 +324,8 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     Given merge resultset of "heartbeat_master1" and "backendIds_master1" into "ids_to_kill_master1"
     Given merge resultset of "heartbeat_master2" and "backendIds_master2" into "ids_to_kill_master2"
-    Then check general log in host "mysql-master1" has "SET autocommit=0"
-    Then check general log in host "mysql-master2" has "SET autocommit=0"
+    Then check general log in host "mysql-master1" has not "SET autocommit=0"
+    Then check general log in host "mysql-master2" has not "SET autocommit=0"
     Given kill all backend conns in "mysql-master1" except ones in "ids_to_kill_master1"
     Given kill all backend conns in "mysql-master2" except ones in "ids_to_kill_master2"
     Given sleep "5" seconds
@@ -324,8 +333,8 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | sql                         | expect  | db      |
       | select * from sharding_2_t1 | success | schema1 |
     Given sleep "5" seconds
-    Then check general log in host "mysql-master1" has "SET autocommit=1"
-    Then check general log in host "mysql-master2" has "SET autocommit=1"
+    Then check general log in host "mysql-master1" has not "SET autocommit=1"
+    Then check general log in host "mysql-master2" has not "SET autocommit=1"
 
   @restore_global_setting
   Scenario:dble starts at disabled=true, global vars values are different, then change it to enable by manager command, dble send set global query #9

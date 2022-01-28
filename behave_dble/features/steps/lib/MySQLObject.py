@@ -168,6 +168,7 @@ class MySQLObject(object):
 
         ssh = self._mysql_meta.ssh_conn
         rc, sto, ste = ssh.exec_command(find_query_in_genlog_cmd)
+        assert len(ste) == 0, "grep general_log_file fail for {0}".format(ste)
 
         if expect_exist:
             if expect_occur_times_expr is None:
