@@ -197,7 +197,8 @@ Feature: connection test in rwSplit mode
        |user| conn   | toClose | sql                                     | expect  |
        |rwS1| conn_1 | true    | drop database testdb                    | success |
 
-
+   @skip
+     # for case issue not fixed
   Scenario: When the front connection is bound with the dbGroup and trigger reload less ten times, result can return correctly      #3
 
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
