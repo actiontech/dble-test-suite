@@ -64,9 +64,9 @@ def get_dble_install_packet_name(context, version):
 
 def get_download_version(context):
     version = ""
-    ftp_path = context.cfg_dble['ftp_path']
+    packet_name = context.cfg_dble['packet_name']
 
-    if ftp_path.find("{0}") != -1:
+    if packet_name.find("{0}") != -1:
         download_host = context.cfg_dble['download_host']
         cmd = "curl -s '" + download_host + "/actiontech/dble/releases/latest' | awk -F '/' '{print $8}'"
         version = subprocess.check_output(cmd, shell=True)
@@ -78,10 +78,16 @@ def get_download_version(context):
 
 def get_download_ftp_path(context, version):
     ftp_path = context.cfg_dble['ftp_path']
+    ftp_address = context.config.userdata["ftp_address"]
+    packet_name = context.cfg_dble['packet_name']
 
-    if ftp_path.find("{0}") != -1:
+    if packet_name.find("{0}") != -1:
+        # github
         download_host = context.cfg_dble['download_host']
         ftp_path = ftp_path.format(download_host, version)
+    else:
+        # ftp
+        ftp_path = ftp_path.format(ftp_address)
 
     LOGGER.debug("download dble ftp path : {0}".format(ftp_path))
     return ftp_path
@@ -131,17 +137,17 @@ def download_dble(context, dble_packet_name, version):
     LOGGER.debug("cmd:{0}, exit_status:{1}".format(cmd, exit_status))
 
     if context.cfg_dble['packet_name'].find("{0}") == -1:
-        cmd = 'cd {0} && wget --user=ftpuser --password=ftpuser -nv {1}'.format(context.cfg_sys['share_path_docker'],
-                                                                                rpm_ftp_url)
-        os.popen(cmd)
-        # sleep 10s to wait download over
-        time.sleep(10)
+        cmd = 'cd {0} && wget --user={2} --password={3} -nv {1}'.format(
+            context.cfg_sys['share_path_docker'], rpm_ftp_url,
+            context.config.userdata['ftp_user'], context.config.userdata['ftp_passwd'])
     else:
         cmd = 'cd {0} && wget {1}'.format(context.cfg_sys['share_path_docker'], rpm_ftp_url)
-        os.popen(cmd)
-        time.sleep(10)
 
-    LOGGER.debug(cmd)
+    # sleep 10s to wait download over
+    LOGGER.debug("download cmd is : {0}".format(cmd))
+    os.popen(cmd)
+    time.sleep(10)
+
     cmd = "find {0} -maxdepth 1 -name {1} | wc -l".format(context.cfg_sys['share_path_docker'],
                                                           dble_packet_name)
     LOGGER.debug(cmd)
