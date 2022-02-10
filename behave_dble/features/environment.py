@@ -27,19 +27,11 @@ def init_dble_conf(context, para_dble_conf):
     context.dble_conf = conf
 
 
-def config_ini_file(key, value):
-    path = os.path.abspath(r'.') + r'/behave.ini'
-    conf = configparser.ConfigParser()
-    conf.read(path, encoding="utf-8")
-    conf.set('behave.userdata', key, value)
-    conf.write(open(path, "w"))
-
-
-def config_ci_param(key_list):
+def config_env_vars(context, key_list):
     for key in key_list:
         value = os.getenv(key)
         if value is not None:
-            config_ini_file(key, value)
+            setattr(context, key, value)
         else:
             logger.debug("environment variable {0} is not configured".format(key))
 
@@ -53,9 +45,6 @@ def before_all(context):
     logger.info('*       DBLE TEST START      *')
     logger.info('*' * 30)
     logger.info('Enter hook before_all')
-
-    ci_env_params = ["ftp_user", "ftp_passwd"]
-    config_ci_param(ci_env_params)
 
     test_config = context.config.userdata["test_config"].lower() #"./conf/auto_dble_test.yaml"
     #convert auto_dble_test.yaml attr to context attr
@@ -87,6 +76,11 @@ def before_all(context):
     logger.info("run test with environment reinstall: {0}, reset: {1}".format(reinstall, reset))
 
     context.need_download = context.config.userdata["install_from_local"].lower() != "true"
+    context.ftp_user = context.config.userdata["ftp_user"]
+    context.ftp_passwd = context.config.userdata["ftp_passwd"]
+
+    ci_env_vars_list = ["ftp_user", "ftp_passwd"]
+    config_env_vars(context, ci_env_vars_list)
 
     if reinstall:
         install_dble_in_all_nodes(context)
