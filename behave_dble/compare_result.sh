@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (C) 2016-2021 ActionTech.
+# Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 std_result_dir=${1-"std_result"}
 real_result_dir=${2-"sql_cover_log"}
