@@ -1,6 +1,8 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import logging
+import os
+import configparser
 
 from steps.RestoreEnvObject import RestoreEnvObject
 from steps.lib.DbleMeta import DbleMeta
@@ -24,6 +26,24 @@ def init_dble_conf(context, para_dble_conf):
 
     context.dble_conf = conf
 
+
+def config_ini_file(key, value):
+    path = os.path.abspath(r'.') + r'/behave.ini'
+    conf = configparser.ConfigParser()
+    conf.read(path, encoding="utf-8")
+    conf.set('behave.userdata', key, value)
+    conf.write(open(path, "w"))
+
+
+def config_ci_param(key_list):
+    for key in key_list:
+        value = os.getenv(key)
+        if value is not None:
+            config_ini_file(key, value)
+        else:
+            logger.debug("environment variable {0} is not configured".format(key))
+
+
 def before_all(context):
     setup_logging('./conf/logging.yaml')
     steps_logger = logging.getLogger('root')
@@ -33,6 +53,9 @@ def before_all(context):
     logger.info('*       DBLE TEST START      *')
     logger.info('*' * 30)
     logger.info('Enter hook before_all')
+
+    ci_env_params = ["ftp_user", "ftp_passwd"]
+    config_ci_param(ci_env_params)
 
     test_config = context.config.userdata["test_config"].lower() #"./conf/auto_dble_test.yaml"
     #convert auto_dble_test.yaml attr to context attr
