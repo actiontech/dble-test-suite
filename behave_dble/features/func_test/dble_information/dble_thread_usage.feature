@@ -3,9 +3,8 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_thread_usage table test
-    @skip
-      # uodate thread name and skip for http://10.186.18.11/jira/browse/DBLE0REQ-1627
-    Scenario:  dble_thread_usage  table #1
+
+  Scenario:  dble_thread_usage  table #1
   #case desc dble_thread_usage
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_usage_1"
       | conn   | toClose | sql                    | db               |
@@ -119,16 +118,16 @@ Feature:  dble_thread_usage table test
       | conn_0 | False   | select thread_name from dble_thread_usage order by thread_name desc limit 2   | success                                |
       | conn_0 | False   | select thread_name from dble_thread_usage where thread_name like '%Front%'    | has{(('0-NIOFrontRW',),)}              |
   #case supported select max/min from
-      | conn_0 | False   | select max(thread_name) from dble_thread_usage                      | has{(('3-writeToBackendWorker',),)}  |
-      | conn_0 | False   | select min(thread_name) from dble_thread_usage                      | has{(('0-NIOBackendRW',),)}          |
+      | conn_0 | False   | select max(thread_name) from dble_thread_usage                                | has{(('3-writeToBackendWorker',),)}    |
+      | conn_0 | False   | select min(thread_name) from dble_thread_usage                                | has{(('0-backendWorker',),)}           |
   #case supported where [sub-query]
       | conn_0 | False   | select thread_name from dble_thread_usage where last_minute in (select last_minute from dble_thread_usage where last_five_minute < '10%') | success     |
   #case supported select field from
-      | conn_0 | False   | select last_quarter_min from dble_thread_usage where thread_name = '0-frontWorker'       | success      |
+      | conn_0 | False   | select last_quarter_min from dble_thread_usage where thread_name = '0-frontWorker'  | success      |
   #case unsupported update/delete/insert
-      | conn_0 | False   | delete from dble_thread_usage where thread_name = '0-frontWorker'                            | Access denied for table 'dble_thread_usage'  |
-      | conn_0 | False   | update dble_thread_usage set thread_name = '2' where thread_name = '0-frontWorker'           | Access denied for table 'dble_thread_usage'  |
-      | conn_0 | True    | insert into dble_thread_usage values ('0-NIOFrontRW','1%', '1%', '1%')                       | Access denied for table 'dble_thread_usage'  |
+      | conn_0 | False   | delete from dble_thread_usage where thread_name = '0-frontWorker'                   | Access denied for table 'dble_thread_usage'  |
+      | conn_0 | False   | update dble_thread_usage set thread_name = '2' where thread_name = '0-frontWorker'  | Access denied for table 'dble_thread_usage'  |
+      | conn_0 | True    | insert into dble_thread_usage values ('0-NIOFrontRW','1%', '1%', '1%')              | Access denied for table 'dble_thread_usage'  |
 
 
 
