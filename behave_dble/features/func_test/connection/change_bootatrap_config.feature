@@ -580,8 +580,6 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       NullPointerException
       """
 
-  @skip
-    # because http://10.186.18.11/jira/browse/DBLE0REQ-1627
   Scenario: test "backendWorker" and usePerformanceMode=0 #7
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -639,7 +637,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
 
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                  | expect                                        | db               |
+      | conn   | toClose | sql                                                                                        | expect                              | db               |
       | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='backendWorker'     | has{(('backendWorker', 4, 4),)}     | dble_information |
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
@@ -657,12 +655,12 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
     # change core_pool_size 4-2
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                  | expect                                 | db               |
-      | conn_0 | False   | select * from dble_thread_usage where thread_name like '%-backendWorker'                    | length{(4)}                            | dble_information |
+      | conn   | toClose | sql                                                                                        | expect                                 | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like '%-backendWorker'                   | length{(4)}                            | dble_information |
       | conn_0 | true    | update dble_thread_pool set core_pool_size=2 where name ='backendWorker'                   | success                                | dble_information |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                  | expect                                        | db               |
+      | conn   | toClose | sql                                                                                        | expect                              | db               |
       | conn_0 | true    | select name,pool_size,core_pool_size from dble_thread_pool where name ='backendWorker'     | has{(('backendWorker', 2, 2),)}     | dble_information |
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
