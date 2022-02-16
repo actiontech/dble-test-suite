@@ -93,9 +93,9 @@ delete from schema2.test2;
 drop table if exists test_shard;
 CREATE TABLE test_shard ( id long,c1 CHAR(1) CHARACTER SET latin1, c2 CHAR(1) CHARACTER SET ascii,`c3` char(10) CHARACTER SET gbk, c4 char(10) character set utf8) DEFAULT CHARSET=utf8;
 INSERT INTO test_shard VALUES (11111,'a','b','你','我');
-SELECT CONCAT(c1,c2),c3 FROM test_shard;
+SELECT CONCAT(c1, c2),c3 FROM test_shard;
 set names 'utf8';
-SELECT CONCAT(c1,c2),c3 FROM test_shard;
+SELECT CONCAT(c1, c2),c3 FROM test_shard;
 #statement
 prepare stmt from 'insert into schema2.test2 values(111,111,"test中id为1",111)';
 execute stmt;
