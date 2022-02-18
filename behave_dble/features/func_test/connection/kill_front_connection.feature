@@ -51,9 +51,9 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
 
 # case 2: kill query nonexistent processlist_id
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql             | expect                     |
-      | conn_0 | False   | kill query -1   | Unknown connection id:-1   |
-      | conn_0 | False   | kill query 8888 | Unknown connection id:8888 |
+      | conn   | toClose | sql             | expect                      |
+      | conn_0 | False   | kill query -1   | Unknown connection id: -1   |
+      | conn_0 | False   | kill query 8888 | Unknown connection id: 8888 |
       | conn_0 | False   | kill query abc  | Invalid connection id:abc  |
 
 # case 3: kill query other user's processlist_id
@@ -68,8 +68,8 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn_0 | False   | use schema1 | success |
 
     Then execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
-      | user   | passwd | conn   | toClose | sql            | expect                                | db      |
-      | test01 | 111111 | conn_1 | True    | kill query {0} | can't kill other user's connection{0} | schema1 |
+      | user   | passwd | conn   | toClose | sql            | expect                                  | db      |
+      | test01 | 111111 | conn_1 | True    | kill query {0} | can't kill other user's connection: {0} | schema1 |
 
     Given delete the following xml segment
       |file        | parent                 | child                                            |
