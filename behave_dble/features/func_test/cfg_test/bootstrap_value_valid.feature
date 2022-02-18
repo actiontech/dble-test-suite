@@ -5,7 +5,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
   only check part of system childnodes, not all, list from https://github.com/actiontech/dble/issues/579
 
   @NORMAL
-  Scenario: config all system property, some values are illegal, start dble success #1
+  Scenario: config all system property, some values are illegal, start dble failed #1
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
     $a\sequenceHandlerType=20
@@ -133,7 +133,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ orderMemSize \] '-5' in bootstrap.cnf is illegal, you may need use the default value 4 replaced
       Property \[ otherMemSize \] '-5' in bootstrap.cnf is illegal, you may need use the default value 4 replaced
       Property \[ processorCheckPeriod \] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
-      property [ processorExecutor ] has been replaced by the property [ frontWorker ].  Property \[ frontWorker \] '-3' in bootstrap.cnf is illegal, you may need use the default value 10 replaced
+      property \[ processorExecutor \] has been replaced by the property \[ frontWorker \].  Property \[ frontWorker \] '-3' in bootstrap.cnf is illegal, you may need use the default value 10 replaced
       Property \[ recordTxn \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       Property \[ sqlExecuteTimeout \] '-20' in bootstrap.cnf is illegal, you may need use the default value 300 replaced
       Property \[ sqlRecordCount \] '-10' in bootstrap.cnf is illegal, you may need use the default value 10 replaced
