@@ -241,7 +241,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) = (case c.name when a.name>c.name then '测试2' else '测试1' end)    | has{(('测试1',),('测试2',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) = (case c.name when a.name>c.name then '测试2' else '测试1' end)    | has{(('测试1',),('测试2',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) > (case c.name when a.name>c.name then '测试2' else '测试1' end)    | has{(('测试2',))}          | schema1 | utf8mb4 |
-      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) < > (case c.name when a.name>c.name then '测试2' else '测试1' end)  | has{(('测试1',),('测试2',),('测试1',),('测试2',))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) <> (case c.name when a.name>c.name then '测试2' else '测试1' end)  | has{(('测试1',),('测试2',),('测试1',),('测试2',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) != (case c.name when a.name>c.name then '测试2' else '测试1' end)   | has{(('测试1',),('测试2',),('测试1',),('测试2',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name from sharding_2_t2 a , sharding_3_t1 c where  (case a.name when a.name<c.name then '测试2' else '测试1' end) = (case c.name when a.name>c.name then '测试2' else '测试1' end)          | has{(('测试1',),('测试2',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select * from sharding_2_t2 a , sharding_3_t1 c where exists ( select (case a.name when a.name<c.name then '测试2' else '测试1' end) )      | Correlated Sub Queries is not supported          | schema1 | utf8mb4 |
@@ -295,7 +295,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | select COALESCE(a.id2 / b.name,b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id    | has{(('测试1',),('测试2',),('测试3',))}      | schema1 | utf8mb4 |
       #case "<=>" / "< ="
       | conn_0 | False   | select a.id2<=>b.name,b.name <= a.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id     | has{((0, 1), (0, 1), (0, 0))}      | schema1 | utf8mb4 |
-      | conn_0 | False   | select '测试'<=>b.name,'爱可生' <= a.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id    | has{((1, 0), (1, 0), (1, 0))}      | schema1 | utf8mb4 |
+      | conn_0 | False   | select '测试'<=>b.name,'爱可生' <= a.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id    | has{((0, 0), (0, 0), (0, 0))}      | schema1 | utf8mb4 |
       #case "IN" / "not IN"
       | conn_0 | False   | select '测试' in a.name,b.name not in '测试' from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id | has{((0, 1), (0, 1), (0, 1))}      | schema1 | utf8mb4 |
       #case "INTERVAL"
@@ -314,7 +314,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | select IF(STRCMP(a.name,b.name),'爱可生','开心') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{(('开心',),('开心',),('爱可生',))}   | schema1 | utf8mb4 |
       | conn_0 | False   | select IFNULL(a.id2 / b.name,'爱可生') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{(('爱可生',),('爱可生',),('爱可生',))}   | schema1 | utf8mb4 |
       | conn_0 | False   | select IFNULL(a.name ,b.name,'爱可生') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{(('测试1',),('测试2',),('测试2',))}     | schema1 | utf8mb4 |
-      | conn_0 | False   | select NULLIF(b.name,'测试1') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                 | has{((None,),(0,),(0,))}                  | schema1 | utf8mb4 |
+      | conn_0 | False   | select NULLIF(b.name,'测试1') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                 | has{((None,),('测试2',),('测试3',))}       | schema1 | utf8mb4 |
       | conn_0 | False   | select IF(STRCMP(a.name > b.name),'爱可生','开心') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | Incorrect parameter count in the call to native function 'STRCMP'  | schema1 | utf8mb4 |
 ##case 4 function : String Functions
       #case "ASCII"  / "BIT_LENGTH"   / "CHAR"   / "HEX" /  "CONV"  / "CHAR_LENGTH"  / "CHARACTER_LENGTH"    issue:DBLE0REQ-747
