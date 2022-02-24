@@ -115,11 +115,11 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | SELECT CONCAT(c_year, '年') AS xValue, statTime , SUBSTRING(statTime, 1, 4) AS queryTimeHistogram , IFNULL(dataValue, 0) AS dataValue, ':statTime' AS queryStatTime , '41101' AS orgNo FROM ( SELECT YEAR(NOW()) AS c_year FROM DUAL UNION ALL (SELECT YEAR(NOW()) - 1 AS c_year FROM DUAL) UNION ALL (SELECT YEAR(NOW()) - 2 AS c_year FROM DUAL) UNION ALL (SELECT YEAR(NOW()) - 3 AS c_year FROM DUAL) UNION ALL (SELECT YEAR(NOW()) - 4 AS c_year FROM DUAL) ) ttt LEFT JOIN ( SELECT tem.stat_time AS statTime , round((tem.gong - tem.shou) / tem.gong * 100, 2) AS dataValue FROM ( SELECT a.stat_time , sum(CASE  WHEN a.IDX_NO = 'JYGK41101030000000338' THEN a.DATA_VALUE ELSE 0 END) AS gong , sum(CASE  WHEN a.IDX_NO = 'JYGK41101030000000339' THEN a.DATA_VALUE ELSE 0 END) AS shou FROM cl_idx_data_monitor a WHERE LENGTH(STAT_TIME) = 8 AND a.theme_no = 'IND_08_TGLOSSYEAR' AND a.stat_calibre = CASE  WHEN LENGTH('41101') = 5 THEN '01' WHEN LENGTH('41101') = 7 THEN '03' WHEN LENGTH('41101') = 8 THEN '04' END AND BUSI_CODE = '03' AND MAJOR_NO = '08' AND a.org_no = '41101' AND a.idx_no IN ('JYGK41101030000000338', 'JYGK41101030000000339') GROUP BY a.stat_time ) tem ) ddd ON ttt.c_year = SUBSTRING(ddd.statTime, 1, 4) ORDER BY c_year| schema1 | utf8mb4 |
     Then check resultset "6" has lines with following column values
       | xValue-0  | statTime-1 | queryTimeHistogram-2 | dataValue-3 | queryStatTime-4 | orgNo-5 |
-      | 2017年    | None       | None                 | 0           | :statTime       | 41101   |
       | 2018年    | None       | None                 | 0           | :statTime       | 41101   |
       | 2019年    | None       | None                 | 0           | :statTime       | 41101   |
       | 2020年    | None       | None                 | 0           | :statTime       | 41101   |
       | 2021年    | None       | None                 | 0           | :statTime       | 41101   |
+      | 2022年    | None       | None                 | 0           | :statTime       | 41101   |
 
 
 ##case the filed support utf8  ATK-1400
@@ -209,8 +209,6 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False    | drop table if exists sys_dict_entry        | success      | schema1 | utf8mb4 |
       | conn_0 | true     | drop table if exists rl_station_relation   | success      | schema1 | utf8mb4 |
 
-
-
    Scenario: check Functions and Operators support utf8mb4: case from issue DBLE0REQ-660 #3
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                           | expect                         | db      | charset |
@@ -243,7 +241,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) = (case c.name when a.name>c.name then '测试2' else '测试1' end)    | has{(('测试1',),('测试2',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) = (case c.name when a.name>c.name then '测试2' else '测试1' end)    | has{(('测试1',),('测试2',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) > (case c.name when a.name>c.name then '测试2' else '测试1' end)    | has{(('测试2',))}          | schema1 | utf8mb4 |
-      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) < > (case c.name when a.name>c.name then '测试2' else '测试1' end)  | has{(('测试1',),('测试2',),('测试1',),('测试2',))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) <> (case c.name when a.name>c.name then '测试2' else '测试1' end)  | has{(('测试1',),('测试2',),('测试1',),('测试2',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) != (case c.name when a.name>c.name then '测试2' else '测试1' end)   | has{(('测试1',),('测试2',),('测试1',),('测试2',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name from sharding_2_t2 a , sharding_3_t1 c where  (case a.name when a.name<c.name then '测试2' else '测试1' end) = (case c.name when a.name>c.name then '测试2' else '测试1' end)          | has{(('测试1',),('测试2',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select * from sharding_2_t2 a , sharding_3_t1 c where exists ( select (case a.name when a.name<c.name then '测试2' else '测试1' end) )      | Correlated Sub Queries is not supported          | schema1 | utf8mb4 |
@@ -297,7 +295,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | select COALESCE(a.id2 / b.name,b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id    | has{(('测试1',),('测试2',),('测试3',))}      | schema1 | utf8mb4 |
       #case "<=>" / "< ="
       | conn_0 | False   | select a.id2<=>b.name,b.name <= a.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id     | has{((0, 1), (0, 1), (0, 0))}      | schema1 | utf8mb4 |
-      | conn_0 | False   | select '测试'<=>b.name,'爱可生' <= a.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id    | has{((1, 0), (1, 0), (1, 0))}      | schema1 | utf8mb4 |
+      | conn_0 | False   | select '测试'<=>b.name,'爱可生' <= a.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id    | has{((0, 0), (0, 0), (0, 0))}      | schema1 | utf8mb4 |
       #case "IN" / "not IN"
       | conn_0 | False   | select '测试' in a.name,b.name not in '测试' from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id | has{((0, 1), (0, 1), (0, 1))}      | schema1 | utf8mb4 |
       #case "INTERVAL"
@@ -316,13 +314,13 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | select IF(STRCMP(a.name,b.name),'爱可生','开心') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{(('开心',),('开心',),('爱可生',))}   | schema1 | utf8mb4 |
       | conn_0 | False   | select IFNULL(a.id2 / b.name,'爱可生') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{(('爱可生',),('爱可生',),('爱可生',))}   | schema1 | utf8mb4 |
       | conn_0 | False   | select IFNULL(a.name ,b.name,'爱可生') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{(('测试1',),('测试2',),('测试2',))}     | schema1 | utf8mb4 |
-      | conn_0 | False   | select NULLIF(b.name,'测试1') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                 | has{((None,),(0,),(0,))}                  | schema1 | utf8mb4 |
+      | conn_0 | False   | select NULLIF(b.name,'测试1') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                 | has{((None,),('测试2',),('测试3',))}       | schema1 | utf8mb4 |
       | conn_0 | False   | select IF(STRCMP(a.name > b.name),'爱可生','开心') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | Incorrect parameter count in the call to native function 'STRCMP'  | schema1 | utf8mb4 |
 ##case 4 function : String Functions
       #case "ASCII"  / "BIT_LENGTH"   / "CHAR"   / "HEX" /  "CONV"  / "CHAR_LENGTH"  / "CHARACTER_LENGTH"    issue:DBLE0REQ-747
-      | conn_0 | False   | select ASCII(b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id       | has{((27979,),(27979,),(27979,))}            | schema1 | utf8mb4 |
-      | conn_0 | False   | select BIT_LENGTH(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{((24,),(24,),(24,))}                     | schema1 | utf8mb4 |
-      | conn_0 | False   | select CHAR(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{((u'\x00',), (u'\x00',), (u'\x00',))}    | schema1 | utf8mb4 |
+      | conn_0 | False   | select ASCII(b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id       | has{((230,),(230,),(230,))}                  | schema1 | utf8mb4 |
+      | conn_0 | False   | select BIT_LENGTH(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{((56,),(56,),(56,))}                     | schema1 | utf8mb4 |
+      | conn_0 | False   | select CHAR(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{((b'\x00',), (b'\x00',), (b'\x00',))}    | schema1 | utf8mb4 |
       | conn_0 | False   | select HEX(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id               | has{((u'E6B58BE8AF9531',), (u'E6B58BE8AF9532',), (u'E6B58BE8AF9532',))}    | schema1 | utf8mb4 |
       | conn_0 | False   | select CONV(HEX(a.name),16,10) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{((u'64938857152353585',), (u'64938857152353586',), (u'64938857152353586',))}                  | schema1 | utf8mb4 |
       #DBLE0REQ-908
@@ -332,8 +330,10 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | select CHAR_LENGTH(a.name),CHARACTER_LENGTH('爱可生社区') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{((3, 5), (3, 5), (3, 5))}           | schema1 | utf8mb4 |
       | conn_0 | False   | select 'a.name' '爱可生社区'  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                               | has{(('a.name爱可生社区',), ('a.name爱可生社区',), ('a.name爱可生社区',))}           | schema1 | utf8mb4 |
       #case "BIN"   / "CHARSET"   issue:DBLE0REQ-746/DBLE0REQ-748
-      | conn_0 | False   | select BIN(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{((u'0',), (u'0',), (u'0',))}     | schema1 | utf8mb4 |
-      | conn_0 | False   | select BIN('测试1') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{((u'0',), (u'0',), (u'0',))}     | schema1 | utf8mb4 |
+#      http://10.186.18.11/jira/browse/DBLE0REQ-1650
+#      | conn_0 | False   | select BIN(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{((u'0',), (u'0',), (u'0',))}     | schema1 | utf8mb4 |
+#      | conn_0 | False   | select BIN('测试1') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{((u'0',), (u'0',), (u'0',))}     | schema1 | utf8mb4 |
+
       #| conn_0 | False   | select CHARSET(CHAR(a.name)),CHARSET(CHAR(b.name USING utf8)) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   |                   | schema1 | utf8mb4 |
       #case "CONCAT_WS"
       | conn_0 | False   | select CONCAT_WS(',','a.name','爱可生社区')  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{(('a.name,爱可生社区',), ('a.name,爱可生社区',), ('a.name,爱可生社区',))}           | schema1 | utf8mb4 |
@@ -407,10 +407,11 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       #case "SUBSTR" / "SUBSTRING"   /  "SUBSTRING_INDEX"      DBLE0REQ-757
       | conn_0 | False   | select SUBSTR(a.name,1),SUBSTR(b.name,1,2) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                       | has{(('测试1','测试',), ('测试2','测试',), ('测试2','测试',))}              | schema1 | utf8mb4 |
       | conn_0 | False   | select SUBSTRING(a.name,1),SUBSTRING(b.name,1,2) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                 | has{(('测试1','测试',), ('测试2','测试',), ('测试2','测试',))}              | schema1 | utf8mb4 |
-      | conn_0 | False   | select SUBSTRING(a.name from 2),SUBSTRING(a.name -1 from 1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id      | Incorrect parameter count in the call to native function 'SUBSTRING'     | schema1 | utf8mb4 |
-      | conn_0 | False   | select SUBSTRING(a.name from 2),SUBSTRING(a.name from -1 for 1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | Incorrect parameter count in the call to native function 'SUBSTRING'     | schema1 | utf8mb4 |
-      | conn_0 | False   | select SUBSTRING(a.name from 1 for 2) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                            | Incorrect parameter count in the call to native function 'SUBSTRING'     | schema1 | utf8mb4 |
-      | conn_0 | False   | select SUBSTRING_INDEX(a.name ,'测', 1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{(('试1',), ('试2',), ('试2',))}        | schema1 | utf8mb4 |
+#      http://10.186.18.11/jira/browse/DBLE0REQ-1650
+#      | conn_0 | False   | select SUBSTRING(a.name from 2),SUBSTRING(a.name -1 from 1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id      | Incorrect parameter count in the call to native function 'SUBSTRING'     | schema1 | utf8mb4 |
+#      | conn_0 | False   | select SUBSTRING(a.name from 2),SUBSTRING(a.name from -1 for 1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | Incorrect parameter count in the call to native function 'SUBSTRING'     | schema1 | utf8mb4 |
+#      | conn_0 | False   | select SUBSTRING(a.name from 1 for 2) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                            | Incorrect parameter count in the call to native function 'SUBSTRING'     | schema1 | utf8mb4 |
+      | conn_0 | False   | select SUBSTRING_INDEX(a.name ,'测', 1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{(('',), ('',), ('',))}        | schema1 | utf8mb4 |
         #case "LTRIM" / "RTRIM"  /  "TRIM"
       | conn_0 | False   | select LTRIM(    a.name)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{(('测试1',), ('测试2',), ('测试2',))}     | schema1 | utf8mb4 |
       | conn_0 | False   | select RTRIM(a.name    )  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{(('测试1',), ('测试2',), ('测试2',))}     | schema1 | utf8mb4 |
