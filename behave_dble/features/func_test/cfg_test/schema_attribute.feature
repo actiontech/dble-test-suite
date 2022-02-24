@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2021 ActionTech.
+# Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Modified by wujinling at 2019/8/29
 Feature: test some import nodes attr in schema.xml
