@@ -177,7 +177,7 @@ def before_step(context, step):
 def after_step(context, step):
     # logger.info('{0}, status:{1}'.format(step.name, step.status))
     if step.status == "failed":
-        logger.error('{0}, status:{1}'.format(step.name, step.status))
+        logger.error('Failing step location: {0}, status:{1}'.format(step.location, step.status))
     else:
         logger.info('{0}, status:{1}'.format(step.name, step.status))
 
