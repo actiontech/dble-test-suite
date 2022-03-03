@@ -159,12 +159,9 @@ def step_impl(context, sql, conn_type=''):
 def execute_sql_backgroud(context, conn, sql):
     sql_cmd = sql.strip()
     res, err = conn.execute(sql_cmd)
-    if len(err) != 0:
-        setattr(context, "sql_thread_err", err)
-        logger.debug("execute sql in thread end, err has been record in context.sql_thread_err")
-    else:
-        setattr(context, "sql_thread_result", res)
-        logger.debug("execute sql in thread end, res has been record in context.sql_thread_result")
+    setattr(context, "sql_thread_result", res)
+    setattr(context, "sql_thread_err", err)
+    logger.debug("execute sql in thread end, res or err has been record in context variables")
 
 
 @Given('destroy sql threads list')
