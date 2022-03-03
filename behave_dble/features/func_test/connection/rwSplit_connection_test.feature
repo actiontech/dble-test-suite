@@ -249,7 +249,7 @@ Feature: connection test in rwSplit mode
         | conn   | toClose | sql                                                   | expect             | db      |
         | conn_2 | False   | delete from dble_db_instance where name='hostM2'      | success            | dble_information   |
      #because btrace sleep 5s
-     Given sleep "8" seconds
+     Given sleep "10" seconds
      Then check sql thread output in "res"
         """
           (1,)
@@ -261,7 +261,7 @@ Feature: connection test in rwSplit mode
         | conn   | toClose | sql                                                         | db      |
         | conn_2 | true    | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.2',3307,'test','111111','false','false',1,99)            | dble_information   |
       #because btrace sleep 5s
-     Given sleep "8" seconds
+     Given sleep "10" seconds
      Then check sql thread output in "res"
         """
           (1,)

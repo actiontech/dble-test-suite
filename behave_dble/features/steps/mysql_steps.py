@@ -144,6 +144,7 @@ def step_impl(context, host_name, num, concur="100", mode_name="user"):
         if Flag.exception:
             raise Flag.exception
 
+
 @Given('prepare a thread execute sql "{sql}" with "{conn_type}"')
 def step_impl(context, sql, conn_type=''):
     conn = DbleObject.dble_long_live_conns.get(conn_type, None)
@@ -154,11 +155,13 @@ def step_impl(context, sql, conn_type=''):
     thd.setDaemon(True)
     thd.start()
 
+
 def execute_sql_backgroud(context, conn, sql):
     sql_cmd = sql.strip()
     res, err = conn.execute(sql_cmd)
-    setattr(context,"sql_thread_result",res)
-    setattr(context,"sql_thread_err",err)
+    setattr(context, "sql_thread_result", res)
+    setattr(context, "sql_thread_err", err)
+    logger.debug("execute sql in thread end, res or err has been record in context variables")
 
 
 @Given('destroy sql threads list')
