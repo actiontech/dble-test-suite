@@ -195,4 +195,21 @@ public final class BtraceSessionStage {
         BTraceUtils.println();
     }
 
+        @OnMethod(
+            clazz = "com.actiontech.dble.net.response.DefaultResponseHandler",
+            method = "ok",
+            location = @Location(Kind.RETURN)
+    )
+    public static void ok(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        long startTime = System.currentTimeMillis();
+        BTraceUtils.println("time[" + startTime + "], start get into ok " );
+        BTraceUtils.println("------- get into ok -------");
+        BTraceUtils.println();
+        Thread.sleep(100L);
+        long endTime = System.currentTimeMillis();
+        BTraceUtils.println("time[" + endTime + "], end get into ok " );
+        BTraceUtils.println();
+    }
+
+
 }
