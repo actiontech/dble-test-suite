@@ -125,6 +125,7 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.server.NonBlockingSession#setBackendResponseEndTime||后端mysql返回完整结果（每个后端mysql节点返回完整结果都会走到这里）|
 |com.actiontech.dble.server.NonBlockingSession#setBeginCommitTime||分布式事务准备提交|
 |com.actiontech.dble.server.NonBlockingSession#setHandlerEnd||处理逻辑到了哪个阶段（具体阶段请参考：com.actiontech.dble.serverSessionStage.java|
+|com.actiontech.dble.net.response.DefaultResponseHandler#ok||dble从后端mysql接收到ok包的阶段|
 
 * 复杂sql语句执行流程可断点
 
