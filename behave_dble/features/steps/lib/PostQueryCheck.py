@@ -106,6 +106,16 @@ class PostQueryCheck(object):
                 assert_that(duration, equal_to(eval(expectRS)))
                 break
 
+            hasEqual = re.search(r"equal\{(.*?)\}", self._expect, re.I)
+            if hasEqual:
+                assert_that(self._real_err is None, "expect query success, but failed for '{0}'".format(self._real_err))
+                expectRs = hasEqual.group(1)         # expectRs type is str, method eval() can change expectRs to tuple
+                assert len(eval(expectRs)) == len(self._real_res), "expect resultSet length is {0}, but real resultSet length is {1}".format(len(eval(expectRs)), len(self._real_res))
+                sorted_expectRs = sorted(eval(expectRs), key=str)
+                sorted_realRs = sorted(self._real_res, key=str)
+                assert sorted_expectRs == sorted_realRs, "expect resultSet not same with real resultSet, expect resultSet: {0}, real resultSet: {1}".format(sorted_expectRs, sorted_realRs)
+                break
+
             if self._expect.lower() == "error totally whack":
                 assert_that(self._real_err, not_none(), "exec sql:{} Err is None, expect:{}".format(self._sql, self._expect))
                 break
