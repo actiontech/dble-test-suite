@@ -45,7 +45,7 @@ Feature: test hint with left2inner/right2inner
       | conn_0 | false    | insert into Employee values('Harry',3415,'Finance','P7'),('Sally',2242,'Sales','P7'),('George',3401,'Finance','P8'),('Harriet',2202,'Sales','P8'),('Mary',1257,'Human Resources','P7'),('LiLi',9527,'Human Resources','P9'),('Tom',7012,'Market','P9'),('Tony',3052,'Market','P10'),('Jessi',7948,'Finance','P8') | schema1 | success|
       | conn_0 | false    | insert into Dept values('Finance',2,'George'),('Sales',3,'Harriet'),('Market',4,'Tom')                                                                                                                                                                                                                            | schema1 | success|
       | conn_0 | false    | insert into Level values('P7',7,10000),('P8',8,15000),('P9',9,20000),('P10',10,25000)                                                                                                                                                                                                                             | schema1 | success|
-      | conn_0 | true     | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance')                                           | schema1| success|
+      | conn_0 | true     | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('George', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance')                                           | schema1| success|
 
     #one left join appeared in main sql transform to inner join
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_A"
@@ -174,15 +174,12 @@ Feature: test hint with left2inner/right2inner
       | conn_1   | true    | /*!dble:plan=$left2inner*/select * from (select a.name,b.deptname from Employee a left join Dept b on a.deptname=b.deptname) as c                                                                                      |  length{(7)} |
 
 
-     # | conn_1   | true    | /*!dble:plan=$left2inner*/select deptname,count(*) from Employee group by deptname=(select a.deptname from Employee a left join Dept b on a.deptname=b.deptname where a.empid=1257)                                    | equal{(('Finance', 9),)}|
-
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                  | db       | expect |
       | conn_2 | false    | drop table if exists Employee        | schema1  | success|
       | conn_2 | false    | drop table if exists Dept            | schema1  | success|
       | conn_2 | false    | drop table if exists Info            | schema1  | success|
       | conn_2 | true     | drop table if exists Level           | schema1  | success|
-
 
     # Why change to use singleTable?
     # Some types of subqueries are inconvenient to know the correctness of the transformation from the query plan and results
@@ -215,7 +212,7 @@ Feature: test hint with left2inner/right2inner
       | conn_0 | false    | insert into Employee values('Harry',3415,'Finance','P7'),('Sally',2242,'Sales','P7'),('George',3401,'Finance','P8'),('Harriet',2202,'Sales','P8'),('Mary',1257,'Human Resources','P7'),('LiLi',9527,'Human Resources','P9'),('Tom',7012,'Market','P9'),('Tony',3052,'Market','P10'),('Jessi',7948,'Finance','P8') | schema1 | success|
       | conn_0 | false    | insert into Dept values('Finance',2,'George'),('Sales',3,'Harriet'),('Market',4,'Tom')                                                                                                                                                                                                                            | schema1 | success|
       | conn_0 | false    | insert into Level values('P7',7,10000),('P8',8,15000),('P9',9,20000),('P10',10,25000)                                                                                                                                                                                                                             | schema1 | success|
-      | conn_0 | true     | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance')                                           | schema1| success|
+      | conn_0 | true     | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('George', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance')                                           | schema1| success|
 
     #left join appeared in on subquery transform to inner join
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_A"
@@ -244,10 +241,10 @@ Feature: test hint with left2inner/right2inner
     #left join appeared in group by having subquery transform to inner join
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_D"
       | conn   | toClose | sql                                                                                                                                                                                  | db     |
-      | conn_1 | false   | explain /*!dble:plan=$left2inner*/select deptname,count(*) from Employee group by deptname=(select a.deptname from Employee a left join Dept b on a.deptname=b.deptname where a.empid=1257)  | schema1|
+      | conn_1 | false   | explain /*!dble:plan=$left2inner*/select deptname,count(*) from Employee group by deptname having deptname in (select a.deptname from Employee a left join Dept b on a.deptname=b.deptname where a.empid=1257)  | schema1|
     Then check resultset "rs_D" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2                                                                                                                                                                                                                                           |
-      | dn1              | BASE SQL | select `Employee`.`deptname`,count(*) from  `Employee` GROUP BY `Employee`.`deptname`=(select `a`.`deptname` as `autoalias_scalar` from  `Employee` `a` join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` where `a`.`empid` = 1257 limit 0,2) ASC |
+      | dn1              | BASE SQL |  select `Employee`.`deptname`,count(*) as `count(*)` from  `Employee` where `Employee`.`deptname` in (select  distinct `a`.`deptname` as `autoalias_scalar` from  `Employee` `a` join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` where `a`.`empid` = 1257) GROUP BY `Employee`.`deptname` ASC order by `Employee`.`deptname` ASC  |
 
     #left join appeared in group by subquery transform to inner join
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_E"
@@ -295,8 +292,8 @@ Feature: test hint with left2inner/right2inner
       | conn_1   | false   | /*!dble:plan=$left2inner*/select * from Employee a left join Dept b on (select c.deptname from Employee c left join Info d on c.deptname=d.deptname where c.empid=7021)=b.deptname          | length{(0)}   |
       | conn_1   | false   | /*!dble:plan=$left2inner*/select deptname from Employee where deptname in (select a.deptname from Employee a left join Dept b on a.deptname=b.deptname)                                     | equal{(('Finance',),('Finance',),('Finance',),('Sales',),('Sales',),('Market',),('Market',))}   |
       | conn_1   | false   | /*!dble:plan=$left2inner*/select * from Employee order by (select a.deptname from Employee a left join Dept b on a.deptname=b.deptname where a.empid=7012)                                  | equal{(('Harry', 3415, 'Finance', 'P7'), ('Sally', 2242, 'Sales', 'P7'), ('George', 3401, 'Finance', 'P8'), ('Harriet', 2202, 'Sales', 'P8'), ('Mary', 1257, 'Human Resources', 'P7'), ('LiLi', 9527, 'Human Resources', 'P9'), ('Tom', 7012, 'Market', 'P9'), ('Tony', 3052, 'Market', 'P10'), ('Jessi', 7948, 'Finance', 'P8'))}   |
-      | conn_1   | false   | /*!dble:plan=$left2inner*/select deptname,count(*) from Employee group by deptname=(select a.deptname from Employee a left join Dept b on a.deptname=b.deptname where a.empid=1257)         | equal{(('Finance', 9),)}  |
-      | conn_1   | false   | /*!dble:plan=$left2inner*/select deptname,count(*) from Employee group by (select a.deptname from Employee a left join Dept b on a.deptname=b.deptname where a.empid=1257)                  | equal{(('Finance', 9),)}                         |
+      | conn_1   | false   | /*!dble:plan=$left2inner*/select deptname,count(*) from Employee group by deptname having deptname in (select a.deptname from Employee a left join Dept b on a.deptname=b.deptname where a.empid=1257) | length{0}  |
+      | conn_1   | false   | /*!dble:plan=$left2inner*/select deptname,count(*) from Employee group by (select a.deptname from Employee a left join Dept b on a.deptname=b.deptname where a.empid=1257)                  | equal{(('Finance', 9),)}|
       | conn_1   | false   | /*!dble:plan=$left2inner*/select * from Employee where Employee.deptname=any(select a.deptname from Employee a left join Dept b on a.deptname=b.deptname) order by Employee.deptname        | equal{(('Harry', 3415, 'Finance', 'P7'), ('Jessi', 7948, 'Finance', 'P8'), ('George', 3401, 'Finance', 'P8'), ('Tony', 3052, 'Market', 'P10'), ('Tom', 7012, 'Market', 'P9'), ('Harriet', 2202, 'Sales', 'P8'), ('Sally', 2242, 'Sales', 'P7'))}|
       | conn_1   | false   | /*!dble:plan=$left2inner*/select * from Employee where Employee.deptname=some(select a.deptname from Employee a left join Dept b on a.deptname=b.deptname) order by Employee.deptname       | equal{(('Harry', 3415, 'Finance', 'P7'), ('Jessi', 7948, 'Finance', 'P8'), ('George', 3401, 'Finance', 'P8'), ('Tony', 3052, 'Market', 'P10'), ('Tom', 7012, 'Market', 'P9'), ('Harriet', 2202, 'Sales', 'P8'), ('Sally', 2242, 'Sales', 'P7'))}|
       | conn_1   | false   | /*!dble:plan=$left2inner*/select * from Employee where Employee.deptname=all(select a.deptname from Employee a left join Dept b on a.deptname=b.deptname) order by Employee.deptname        | length{(0)} |
@@ -344,7 +341,7 @@ Feature: test hint with left2inner/right2inner
       | conn_0 | false    | insert into Employee values('Harry',3415,'Finance','P7'),('Sally',2242,'Sales','P7'),('George',3401,'Finance','P8'),('Harriet',2202,'Sales','P8'),('Mary',1257,'Human Resources','P7'),('LiLi',9527,'Human Resources','P9'),('Tom',7012,'Market','P9'),('Tony',3052,'Market','P10'),('Jessi',7948,'Finance','P8') | schema1 | success|
       | conn_0 | false    | insert into Dept values('Finance',2,'George'),('Sales',3,'Harriet'),('Market',4,'Tom')                                                                                                                                                                                                                            | schema1 | success|
       | conn_0 | false    | insert into Level values('P7',7,10000),('P8',8,15000),('P9',9,20000),('P10',10,25000)                                                                                                                                                                                                                             | schema1 | success|
-      | conn_0 | true     | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance')                                           | schema1| success|
+      | conn_0 | true     | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('George', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance')                                           | schema1| success|
 
     #left2inner & in2join
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_A"
@@ -374,8 +371,8 @@ Feature: test hint with left2inner/right2inner
       | conn_1 | false   | explain /*!dble:plan=$left2inner$in2join*/select b.deptname from Employee a left join Dept b on a.deptname=b.deptname where b.deptname in (select d.deptname from Employee c left join Info d on c.deptname=d.deptname) order by a.name| schema1|
     Then check resultset "rs_B" has lines with following column values
       | SHARDING_NODE-0            | TYPE-1                   | SQL/REF-2                                                                                                                                                            |
-      | dn3_0                      | BASE SQL                 | select `b`.`deptname` from  `Dept` `b` join  `Employee` `a` on `b`.`deptname` = `a`.`deptname` where 1=1  ORDER BY `b`.`deptname` ASC                                |
-      | dn4_0                      | BASE SQL                 | select `b`.`deptname` from  `Dept` `b` join  `Employee` `a` on `b`.`deptname` = `a`.`deptname` where 1=1  ORDER BY `b`.`deptname` ASC                                |
+      | dn3_0                      | BASE SQL                 | select `b`.`deptname`,`a`.`name` from  `Dept` `b` join  `Employee` `a` on `b`.`deptname` = `a`.`deptname` where 1=1  ORDER BY `b`.`deptname` ASC                                |
+      | dn4_0                      | BASE SQL                 | select `b`.`deptname`,`a`.`name` from  `Dept` `b` join  `Employee` `a` on `b`.`deptname` = `a`.`deptname` where 1=1  ORDER BY `b`.`deptname` ASC                                |
       | merge_and_order_1          | MERGE_AND_ORDER          | dn3_0; dn4_0                                                                                                                                                         |
       | shuffle_field_1            | SHUFFLE_FIELD            | merge_and_order_1                                                                                                                                                    |
       | dn3_1                      | BASE SQL                 | select DISTINCT `d`.`deptname` as `autoalias_scalar` from  `Employee` `c` join  `Info` `d` on `c`.`deptname` = `d`.`deptname` where 1=1  ORDER BY `d`.`deptname` ASC |
@@ -386,7 +383,8 @@ Feature: test hint with left2inner/right2inner
       | rename_derived_sub_query_1 | RENAME_DERIVED_SUB_QUERY | shuffle_field_3                                                                                                                                                      |
       | shuffle_field_4            | SHUFFLE_FIELD            | rename_derived_sub_query_1                                                                                                                                           |
       | join_1                     | JOIN                     | shuffle_field_1; shuffle_field_4                                                                                                                                     |
-      | shuffle_field_2            | SHUFFLE_FIELD            | join_1                                                                                                                                                               |
+      | order_1                    | ORDER                    | join_1                                                                                                                                                               |
+      | shuffle_field_2            | SHUFFLE_FIELD            | order_1                                                                                                                                                              |
 
 
 #    # left2inner & one ER 【rule A】
@@ -479,8 +477,8 @@ Feature: test hint with left2inner/right2inner
       | conn_1 | false   | explain /*!dble:plan=(a,c,b)$left2inner*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.deptname=b.deptname LEFT JOIN Info c on a.deptname=c.deptname and b.deptname=c.deptname order by a.name                     | schema1|
     Then check resultset "rs_H" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                                                                                                              |
-      | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`deptname`,`c`.`country`,`b`.`manager` from  (  `Employee` `a` join  `Info` `c` on `a`.`deptname` = `c`.`deptname` )  join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` and `c`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `a`.`name` ASC |
-      | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`deptname`,`c`.`country`,`b`.`manager` from  (  `Employee` `a` join  `Info` `c` on `a`.`deptname` = `c`.`deptname` )  join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` and `c`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `a`.`name` ASC |
+      | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`deptname`,`c`.`country`,`b`.`manager` from  (  `Employee` `a` join  `Info` `c` on `a`.`deptname` = `c`.`deptname` )  join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` and `c`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `a`.`name` ASC//select `a`.`name`,`a`.`deptname`,`c`.`country`,`b`.`manager` from  (  `Employee` `a` join  `Info` `c` on `a`.`deptname` = `c`.`deptname` )  join  `Dept` `b` on `c`.`deptname` = `b`.`deptname` and `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `a`.`name` ASC |
+      | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`deptname`,`c`.`country`,`b`.`manager` from  (  `Employee` `a` join  `Info` `c` on `a`.`deptname` = `c`.`deptname` )  join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` and `c`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `a`.`name` ASC//select `a`.`name`,`a`.`deptname`,`c`.`country`,`b`.`manager` from  (  `Employee` `a` join  `Info` `c` on `a`.`deptname` = `c`.`deptname` )  join  `Dept` `b` on `c`.`deptname` = `b`.`deptname` and `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `a`.`name` ASC |
       | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                                                                                                                                                                                           |
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                                                                      |
 
@@ -528,6 +526,7 @@ Feature: test hint with left2inner/right2inner
       | conn_1 | false    | drop table if exists Info           | schema1  | success|
       | conn_1 | true     | drop table if exists Level          | schema1  | success|
 
+
   Scenario: test with useNewJoinOptimizer=true, left join transform to inner join may lead to other possibilities of query plan  #4
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -567,7 +566,7 @@ Feature: test hint with left2inner/right2inner
       | conn_0 | false    | insert into Employee values('Harry',3415,'Finance','P7'),('Sally',2242,'Sales','P7'),('George',3401,'Finance','P8'),('Harriet',2202,'Sales','P8'),('Mary',1257,'Human Resources','P7'),('LiLi',9527,'Human Resources','P9'),('Tom',7012,'Market','P9'),('Tony',3052,'Market','P10'),('Jessi',7948,'Finance','P8') | schema1 | success|
       | conn_0 | false    | insert into Dept values('Finance',2,'George'),('Sales',3,'Harriet'),('Market',4,'Tom')                                                                                                                                                                                                                            | schema1 | success|
       | conn_0 | false    | insert into Level values('P7',7,10000),('P8',8,15000),('P9',9,20000),('P10',10,25000)                                                                                                                                                                                                                             | schema1 | success|
-      | conn_0 | true     | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance')                                           | schema1| success|
+      | conn_0 | true     | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('George', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance')                                           | schema1| success|
 
     # base on : rule A
     # left2inner & two ER, query plan not change, without left2inner inner join should execute firstly
