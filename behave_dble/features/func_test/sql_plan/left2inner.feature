@@ -387,12 +387,23 @@ Feature: test hint with left2inner/right2inner
       | shuffle_field_2            | SHUFFLE_FIELD            | order_1                                                                                                                                                              |
 
 
-#    # left2inner & one ER 【rule A】
-#    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_C"
-#      | conn   | toClose | sql                                                                                                                                                                                           | db     |
-#      | conn_1 | false   | explain /*!dble:plan=(c,b)&a$left2inner*/SELECT a.Name,a.DeptName,b.Manager,c.country FROM Employee a LEFT JOIN Info c on a.name=c.name LEFT JOIN Dept b on c.DeptName= b.DeptName order by a.name   | schema1|
-#    Then check resultset "rs_C" has lines with following column values
-#      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                                                            |
+    # left2inner & one ER 【rule A】
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_C"
+      | conn   | toClose | sql                                                                                                                                                                                                  | db     |
+      | conn_1 | false   | explain /*!dble:plan=(c,b)&a$left2inner*/SELECT a.Name,a.DeptName,b.Manager,c.country FROM Employee a LEFT JOIN Info c on a.name=c.name LEFT JOIN Dept b on c.DeptName= b.DeptName order by a.name   | schema1|
+    Then check resultset "rs_C" has lines with following column values
+      | SHARDING_NODE-0   | TYPE-1                | SQL/REF-2                                                                                                                                                                                                            |
+      | dn3_0             | BASE SQL              | select `b`.`manager`,`c`.`country`,`c`.`name` from  `Info` `c` join  `Dept` `b` on `c`.`DeptName` = `b`.`DeptName` where 1=1  ORDER BY `c`.`name` ASC               |
+      | dn4_0             | BASE SQL              | select `b`.`manager`,`c`.`country`,`c`.`name` from  `Info` `c` join  `Dept` `b` on `c`.`DeptName` = `b`.`DeptName` where 1=1  ORDER BY `c`.`name` ASC               |
+      | merge_and_order_1 | MERGE_AND_ORDER       | dn3_0; dn4_0                                                                                                                                                        |
+      | shuffle_field_1   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                   |
+      | dn3_1             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `a`.`name`,`a`.`deptname` from  `Employee` `a` where `a`.`name` in ('{NEED_TO_REPLACE}') ORDER BY `a`.`name` ASC |
+      | dn4_1             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `a`.`name`,`a`.`deptname` from  `Employee` `a` where `a`.`name` in ('{NEED_TO_REPLACE}') ORDER BY `a`.`name` ASC |
+      | merge_and_order_2 | MERGE_AND_ORDER       | dn3_1; dn4_1                                                                                                                                                        |
+      | shuffle_field_3   | SHUFFLE_FIELD         | merge_and_order_2                                                                                                                                                   |
+      | join_1            | JOIN                  | shuffle_field_1; shuffle_field_3                                                                                                                                    |
+      | order_1           | ORDER                 | join_1                                                                                                                                                              |
+      | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                             |
 
 
     #left2inner & three ER 【rule A】
