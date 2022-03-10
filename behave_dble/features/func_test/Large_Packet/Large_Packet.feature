@@ -123,6 +123,7 @@ Feature:Support MySQL's large package protocol
       s/-Xmx1G/-Xmx4G/g
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
+      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=2G/g
       """
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
       """
@@ -379,6 +380,7 @@ Feature:Support MySQL's large package protocol
       s/-Xmx1G/-Xmx4G/g
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
+      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=2G/g
       """
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
       """
@@ -662,6 +664,7 @@ Feature:Support MySQL's large package protocol
       s/-Xmx1G/-Xmx8G/g
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
+      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=2G/g
       """
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
       """
@@ -910,6 +913,7 @@ Feature:Support MySQL's large package protocol
       s/-Xmx1G/-Xmx8G/g
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
+      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=2G/g
       """
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
       """
