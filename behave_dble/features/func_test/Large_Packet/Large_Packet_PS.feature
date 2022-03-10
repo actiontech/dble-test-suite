@@ -17,6 +17,7 @@ Feature:Support MySQL's large package protocol about 'ps protocol'
       """
       s/-Xmx1G/-Xmx12G/g
       /DmaxPacketSize/d
+      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=2G/g
       /# processor/a -DmaxPacketSize=41943040
       """
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
