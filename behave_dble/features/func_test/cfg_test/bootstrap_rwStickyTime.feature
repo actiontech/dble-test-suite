@@ -6,7 +6,6 @@
 Feature: test rwStickyTime on rwSplit mode
   #about http://10.186.18.11/jira/browse/DBLE0REQ-1305
 
-  ## pipenv run behave -Dreset=false -D dble_conf=template features/func_test/cfg_test/bootstrap_rwStickyTime.feature
 
   @restore_global_setting
   Scenario: test rwStickyTime when db.xml rwSplitMode="0"  #1
