@@ -140,7 +140,6 @@ class PostQueryCheck(object):
             realRS_list = list(map(list, res))
             for i in resExpect_list:
                 real = realRS_list.__contains__(i)
-                logger.debug("i===={0}, real===={1}".format(i, real))
                 if real:
                     realRS_list.remove(i)          # prevent duplication in expected results
                 assert real == bHas, "sql: {0}, expect {1} in resultSet {2}, but not".format(self._sql, resExpect, bHas)
