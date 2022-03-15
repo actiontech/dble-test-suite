@@ -352,9 +352,9 @@ Feature: verify hint sql
       | conn_0 | True    | create procedure select_name() begin select id,name from test_sp where id =2;end | success | db1 |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                 | expect    | db      |
-      | conn_0 | False   | /*!dble:shardingNode=dn1*/call select_name                          | length{2} | schema1 |
-      | conn_0 | True    | /*!dble:sql=select id from test_shard where id =2*/call select_name | length{2} | schema1 |
+      | conn   | toClose | sql                                                                 | expect             | db      |
+      | conn_0 | False   | /*!dble:shardingNode=dn1*/call select_name                          | hasStr{'test_sp2'} | schema1 |
+      | conn_0 | True    | /*!dble:sql=select id from test_shard where id =2*/call select_name | hasStr{'test_sp2'} | schema1 |
 
   @regression
   Scenario: routed node when index with hint    from issue: 892    author:maofei #7

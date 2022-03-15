@@ -206,7 +206,7 @@ Feature: check single dble detach or attach from cluster
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                                                                           | expect                                                |
       | conn_1 | False     | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | cluster is detached, you should attach cluster first. |
-      | conn_1 | False     | show @@pause                                                                  | hasnot{{('dn1',),('dn2',))}                               |
+      | conn_1 | False     | show @@pause                                                                  | hasnot{(('dn1',),('dn2',))}                           |
       | conn_1 | False     | resume                                                                        | cluster is detached, you should attach cluster first. |
       | conn_1 | False     | use dble_information                                                          | success |
       | conn_1 | False     | insert into dble_db_group(name, heartbeat_stmt, heartbeat_timeout, heartbeat_retry, rw_split_mode, delay_threshold, disable_ha) value ('ha_group5', 'select user()', 0, 1, 1, 100, 'false') | cluster is detached, you should attach cluster first. |

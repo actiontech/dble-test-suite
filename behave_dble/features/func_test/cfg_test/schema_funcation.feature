@@ -145,9 +145,9 @@ Feature: schema support add function
        | test14          | schema2 |       100 | SHARDING |
        | test15          | schema2 |       100 | SHARDING |
        | test16          | schema2 |       100 | SHARDING |
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                            | expect        | db              |
-#      | conn_0 | true    | select * from dble_table_sharding_node         | length{(42)}  | dble_information|
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                            | expect        | db              |
+      | conn_0 | true    | select * from dble_table_sharding_node         | length{(42)}  | dble_information|
 
     # insert into table created in schema with function, to verify data insert correctly
     # take table test1 and test6 as example
@@ -157,7 +157,7 @@ Feature: schema support add function
       | conn_1 | true    | insert into test6(lid) values(1),(2),(3),(4)  | success| schema2|
     Then execute sql in "mysql-master1" in "mysql" mode
       | conn  | toClose | sql                                           | expect           | db    |
-      | conn_1| False   | select * from test1                           | has{(2,),(4,)}     | db1   |
+      | conn_1| False   | select * from test1                           | has{(2,),(4,)}   | db1   |
       | conn_1| true    | select * from test6                           | has{(2,1),(4,2)} | db1   |
     Then execute sql in "mysql-master2" in "mysql" mode
       | conn  | toClose | sql                                           | expect           | db    |
