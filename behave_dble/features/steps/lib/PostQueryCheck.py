@@ -136,6 +136,7 @@ class PostQueryCheck(object):
                 real = self.findFromMultiRes(res, subResExpect)
                 assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
         else:  # for single query resultset
+            assert type(resExpect[0]) is tuple, "expect result format not expected, please check"
             resExpect_list = list(map(list, resExpect))
             realRS_list = list(map(list, res))
             for i in resExpect_list:

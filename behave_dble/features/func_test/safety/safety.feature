@@ -44,18 +44,18 @@ Feature: multi-tenancy, user-Permission
     #Standalone database: A tenant a database
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                   | expect                                  |
-        | testA| testA  | conn_0 | False    | show databases                        | has{('mytestA',)},hasnot{('mytestB',)}  |
+        | testA| testA  | conn_0 | False    | show databases                        | has{(('mytestA',),)}, hasnot{(('mytestB',),)}  |
         | testA| testA  | conn_0 | False    | use mytestB                           | Access denied for user                  |
         | testA| testA  | conn_0 | False    | drop table if exists mytestA.test2    | success                                 |
         | testA| testA  | conn_0 | False    | create table mytestA.test2(id int)    | success                                 |
         | testA| testA  | conn_0 | True     | drop table if exists mytestA.test2    | success                                 |
-        | testB| testB  | conn_1 | False    | show databases                        | has{('mytestB',)},hasnot{('mytestA',)}  |
+        | testB| testB  | conn_1 | False    | show databases                        | has{(('mytestB',),)},hasnot{(('mytestA',),)}  |
         | testB| testB  | conn_1 | False    | use mytestA                           | Access denied for user                  |
         | testB| testB  | conn_1 | False    | drop table if exists mytestA.test2    | Access denied for user                  |
         | testB| testB  | conn_1 | False    | drop table if exists mytestB.test1    | success                                 |
         | testB| testB  | conn_1 | False    | create table mytestB.test1(id int)    | success                                 |
         | testB| testB  | conn_1 | True     | drop table if exists mytestB.test1    | success                                 |
-        | testC| testC  | conn_2 | False    | show databases                        | has{('mytestC',)},hasnot{('mytestD',)}  |
+        | testC| testC  | conn_2 | False    | show databases                        | has{(('mytestC',),)},hasnot{(('mytestD',),)}  |
         | testC| testC  | conn_2 | False    | use mytestD                           | Access denied for user                  |
         | testC| testC  | conn_2 | False    | drop table if exists mytestC.sbtestC1 | success                                 |
         | testC| testC  | conn_2 | False    | create table mytestC.sbtestC1(id int) | success                                 |

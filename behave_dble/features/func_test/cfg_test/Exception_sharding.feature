@@ -155,21 +155,21 @@ Feature: sharding basic config test
   Scenario:test the parameter of slow_log and flow_control #9
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                    | expect         |
-      | conn_0 | False   | show @@slow_query_log                                                                  | has{('0',)}    |
+      | conn_0 | False   | show @@slow_query_log                                                                  | has{(('0',),)}    |
       | conn_0 | False   | enable @@slow_query_log                                                                | success        |
-      | conn_0 | False   | show @@slow_query_log                                                                  | has{('1',)}    |
+      | conn_0 | False   | show @@slow_query_log                                                                  | has{(('1',),)}    |
 
-      | conn_0 | False   | show @@slow_query.time                                                                 | has{('100',)}  |
+      | conn_0 | False   | show @@slow_query.time                                                                 | has{(('100',),)}  |
       | conn_0 | False   | reload @@slow_query.time = 200                                                         | success        |
-      | conn_0 | False   | show @@slow_query.time                                                                 | has{('200',)}  |
+      | conn_0 | False   | show @@slow_query.time                                                                 | has{(('200',),)}  |
 
-      | conn_0 | False   | show @@slow_query.flushperiod                                                          | has{('1',)}    |
+      | conn_0 | False   | show @@slow_query.flushperiod                                                          | has{(('1',),)}    |
       | conn_0 | False   | reload @@slow_query.flushperiod = 200                                                  | success        |
-      | conn_0 | False   | show @@slow_query.flushperiod                                                          | has{('200',)}  |
+      | conn_0 | False   | show @@slow_query.flushperiod                                                          | has{(('200',),)}  |
 
-      | conn_0 | False   | show @@slow_query.flushsize                                                            | has{('1000',)} |
+      | conn_0 | False   | show @@slow_query.flushsize                                                            | has{(('1000',),)} |
       | conn_0 | False   | reload @@slow_query.flushsize = 500                                                    | success        |
-      | conn_0 | True    | show @@slow_query.flushsize                                                            | has{('500',)}  |
+      | conn_0 | True    | show @@slow_query.flushsize                                                            | has{(('500',),)}  |
 
       | conn_0 | False   | flow_control @@set enableFlowControl = true flowControlHighLevel= 200 flowControlLowLevel = 100 | success        |
 

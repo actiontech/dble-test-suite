@@ -100,11 +100,11 @@ Feature: #view test except sql cover
       | conn_0 | False   | drop table if exists sharding_4_t1                             | success                                                                                                | schema1 |
       | conn_0 | False   | create table sharding_4_t1(id int,name varchar(10),age int)    | success                                                                                                | schema1 |
       | conn_0 | False   | insert into sharding_4_t1 values(1,1,1),(2,2,2),(3,3,3)        | success                                                                                                | schema1 |
-      | conn_0 | False   | show tables                                                    | hasStr{view_nosharding},hasStr{sharding_1_t1},hasnot{('view_sharding_1_t1'),},hasnot{('view_test10'),} | schema1 |
-      | conn_0 | False   | show tables                                                    | hasStr{view_test10},hasnot{('view_sharding_1_t1'),},hasnot{('view_nosharding'),}                       | schema2 |
-      | conn_0 | False   | show all tables where Table_type='VIEW'                        | hasStr{view_nosharding},hasnot{('view_sharding_1_t1'),},hasnot{('view_test10'),}                       | schema1 |
-      | conn_0 | False   | show all tables where Table_type='VIEW'                        | hasStr{view_test10},hasnot{('view_sharding_1_t1'),},hasnot{('view_nosharding'),}                       | schema2 |
-      | conn_0 | False   | show full tables where Table_type='VIEW'                       | hasStr{view_test10},hasnot{('view_sharding_1_t1'),},hasnot{('view_nosharding'),}                       | schema2 |
+      | conn_0 | False   | show tables                                                    | hasStr{view_nosharding},hasStr{sharding_1_t1},hasnot{(('view_sharding_1_t1',),)},hasnot{(('view_test10',),)} | schema1 |
+      | conn_0 | False   | show tables                                                    | hasStr{view_test10},hasnot{(('view_sharding_1_t1',),)},hasnot{(('view_nosharding',),)}                       | schema2 |
+      | conn_0 | False   | show all tables where Table_type='VIEW'                        | hasStr{view_nosharding},hasnot{(('view_sharding_1_t1',),)},hasnot{(('view_test10',),)}                       | schema1 |
+      | conn_0 | False   | show all tables where Table_type='VIEW'                        | hasStr{view_test10},hasnot{(('view_sharding_1_t1',),)},hasnot{(('view_nosharding',),)}                       | schema2 |
+      | conn_0 | False   | show full tables where Table_type='VIEW'                       | hasStr{view_test10},hasnot{(('view_sharding_1_t1',),)},hasnot{(('view_nosharding',),)}                       | schema2 |
       | conn_0 | False   | show create table schema2.view_test10                          | length{(1)}                                                                                            | schema1 |
       | conn_0 | False   | show create table schema1.view_nosharding                      | length{(1)}                                                                                            | schema1 |
       | conn_0 | False   | show create table view_sharding_1_t1                           | Table 'db3.view_sharding_1_t1' doesn't exist                                                           | schema1 |
@@ -119,9 +119,9 @@ Feature: #view test except sql cover
     #only can manuplate vertical-node-view in dble after reload metadata
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                  | expect                                                 | db      |
-      | conn_0 | False   | show tables                                          | hasStr{sharding_1_t1}, hasnot{('view_sharding_1_t1'),} | schema1 |
-      | conn_0 | False   | show all tables                                      | hasStr{sharding_1_t1}, hasnot{('view_sharding_1_t1'),} | schema1 |
-      | conn_0 | False   | show full tables                                     | hasStr{sharding_1_t1}, hasnot{('view_sharding_1_t1'),} | schema1 |
+      | conn_0 | False   | show tables                                          | hasStr{sharding_1_t1}, hasnot{(('view_sharding_1_t1',),)} | schema1 |
+      | conn_0 | False   | show all tables                                      | hasStr{sharding_1_t1}, hasnot{(('view_sharding_1_t1',),)} | schema1 |
+      | conn_0 | False   | show full tables                                     | hasStr{sharding_1_t1}, hasnot{(('view_sharding_1_t1',),)} | schema1 |
       | conn_0 | False   | select * from schema2.view_test10 join sharding_1_t1 | length{(20)}                                           | schema1 |
       | conn_0 | False   | select * from schema2.view_test10 join sharding_4_t1 | length{(15)}                                           | schema1 |
 
