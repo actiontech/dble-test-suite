@@ -206,7 +206,7 @@ Feature: check single dble detach or attach from cluster
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                                                                           | expect                                                |
       | conn_1 | False     | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | cluster is detached, you should attach cluster first. |
-      | conn_1 | False     | show @@pause                                                                  | hasnot{('dn1'),('dn2')}                               |
+      | conn_1 | False     | show @@pause                                                                  | hasnot{(('dn1',),('dn2',))}                           |
       | conn_1 | False     | resume                                                                        | cluster is detached, you should attach cluster first. |
       | conn_1 | False     | use dble_information                                                          | success |
       | conn_1 | False     | insert into dble_db_group(name, heartbeat_stmt, heartbeat_timeout, heartbeat_retry, rw_split_mode, delay_threshold, disable_ha) value ('ha_group5', 'select user()', 0, 1, 1, 100, 'false') | cluster is detached, you should attach cluster first. |
@@ -218,7 +218,7 @@ Feature: check single dble detach or attach from cluster
       | conn_0 | False     | drop table if exists sharding_4_t2                       | cluster is detached, you should attach cluster first. | schema1 |
       | conn_0 | False     | create view test_view as select * from sharding_4_t2     | cluster is detached, you should attach cluster first. | schema1 |
       | conn_0 | False     | begin;insert into sharding_4_t2 values(1,1),(2,2);commit | success | schema1 |
-      | conn_0 | False     | select * from sharding_4_t2                              | has{((1,'1'),(2,'2'),)} | schema1 |
+      | conn_0 | False     | select * from sharding_4_t2                              | has{((1,'1'),(2,'2'))} | schema1 |
       | conn_0 | False     | update sharding_4_t2 set name=0 where id=1               | success | schema1 |
       | conn_0 | False     | delete from sharding_4_t2                                | success | schema1 |
       | conn_0 | False     | set xa=on; set autocommit=0                              | success | schema1 |
@@ -428,7 +428,7 @@ Feature: check single dble detach or attach from cluster
     Given sleep "3" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                | expect                | db      |
-      | conn_3  | false   | show tables                        | has{(('test_view'),)} | schema1 |
+      | conn_3  | false   | show tables                        | has{(('test_view',),)} | schema1 |
     Given stop btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
     Given stop btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach3.java.log" on "dble-1"
@@ -1012,10 +1012,10 @@ Feature: check single dble detach or attach from cluster
     Given sleep "3" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql             | expect                    | db      |
-      | conn_4 | false   | show tables     | has{(('sharding_4_t1',))} | schema1 |
+      | conn_4 | false   | show tables     | has{(('sharding_4_t1',),)} | schema1 |
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose | sql             | expect                    | db      |
-      | conn_3 | false   | show tables     | has{(('sharding_4_t1',))} | schema1 |
+      | conn_3 | false   | show tables     | has{(('sharding_4_t1',),)} | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose   | sql                               | expect  | db      |
       | conn_1  | false     | cluster @@attach                  | success | schema1 |
@@ -1036,10 +1036,10 @@ Feature: check single dble detach or attach from cluster
     Given sleep "3" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose   | sql            | expect                | db      |
-      | conn_4  | false     | show tables    | has{(('test_view',))} | schema1 |
+      | conn_4  | false     | show tables    | has{(('test_view',),)} | schema1 |
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose   | sql            | expect                | db      |
-      | conn_3  | false     | show tables    | has{(('test_view',))} | schema1 |
+      | conn_3  | false     | show tables    | has{(('test_view',),)} | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose   | sql                        | expect  | db      |
       | conn_1  | false     | cluster @@attach           | success | schema1 |
@@ -1219,17 +1219,17 @@ Feature: check single dble detach or attach from cluster
     Given record current dble log line number in "log_line_num"
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose   | sql            | expect                     | db      |
-      | conn_4  | false     | show tables    | hasnot{('sharding_4_t1',)} | schema1 |
+      | conn_4  | false     | show tables    | hasnot{(('sharding_4_t1',),)} | schema1 |
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose   | sql            | expect                     | db      |
-      | conn_3  | false     | show tables    | has{('sharding_4_t1',)}    | schema1 |
+      | conn_3  | false     | show tables    | has{(('sharding_4_t1',),)}    | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose   | sql                               | expect  |
       | conn_1  | false     | cluster @@attach                  | success |
       | conn_1  | false     | reload @@metadata                 | success |
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose   | sql                                                      | expect                    | db      |
-      | conn_4  | false     | show tables                                              | has{(('sharding_4_t1',))} | schema1 |
+      | conn_4  | false     | show tables                                              | has{(('sharding_4_t1',),)} | schema1 |
       | conn_4  | false     | insert into sharding_4_t1 (id) values (1),(2),(3),(4)    | success                   | schema1 |
     Given stop btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
     Given destroy btrace threads list
@@ -1253,7 +1253,7 @@ Feature: check single dble detach or attach from cluster
     Given record current dble log line number in "log_line_num"
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose   | sql                        | expect                  | db      |
-      | conn_4  | false     | show tables                | hasnot{('test_view',)}  | schema1 |
+      | conn_4  | false     | show tables                | hasnot{(('test_view',),)}  | schema1 |
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose   | sql                        | expect      | db      |
       | conn_3  | false     | select * from test_view    | length{(4)} | schema1 |

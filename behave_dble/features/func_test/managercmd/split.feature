@@ -129,10 +129,10 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | False    | select * from sharding_1_t1                                                 | length{(5)}                                 | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1                   | has{(2,'2',2),(4,'4',4)}                   | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1                    | has{(1,'1',1),(3,'3',3),(5,'5',5)}       | schema1     |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                    | has{(4,'4',4)}                              | schema1     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                    | has{((4,'4',4),)}                              | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1                    | has{(1,'1',1),(5,'5',5)}                  | schema1     |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                    | has{(2,'2',2)}                              | schema1     |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                    | has{(3,'3',3)}                              | schema1     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                    | has{((2,'2',2),)}                              | schema1     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                    | has{((3,'3',3),)}                              | schema1     |
       | conn_0 | False    | select * from nosharding                                                     | length{(5)}                                 | schema1     |
       | conn_0 | True     | select * from global_sequence                                               | length{(5)}                                 | schema1     |
     Given execute oscmd in "dble-1"
@@ -198,10 +198,10 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | False    | select * from sharding_1_t1                                                 | length{(5)}                                 | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1                   | has{(2,'2',2),(4,'4',4)}                   | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1                    | has{(1,'1',1),(3,'3',3),(5,'5',5)}       | schema1     |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                    | has{(4,'4',4)}                              | schema1     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                    | has{((4,'4',4),)}                              | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1                    | has{(1,'1',1),(5,'5',5)}                  | schema1     |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                    | has{(2,'2',2)}                              | schema1     |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                    | has{(3,'3',3)}                              | schema1     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                    | has{((2,'2',2),)}                              | schema1     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                    | has{((3,'3',3),)}                              | schema1     |
       | conn_0 | True     | select * from global_sequence                                               | length{(5)}                                 | schema1     |
     Given execute oscmd in "dble-1"
      """
@@ -255,10 +255,10 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | False    | select * from sharding_1_t1                                                 | length{(5)}                                 | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1                   | has{(2,'2',2),(4,'4',4)}                   | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1                    | has{(1,'1',1),(3,'3',3),(5,'5',5)}       | schema1     |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                    | has{(4,'4',4)}                              | schema1     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                    | has{((4,'4',4),)}                              | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1                    | has{(1,'1',1),(5,'5',5)}                  | schema1     |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                    | has{(2,'2',2)}                              | schema1     |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                    | has{(3,'3',3)}                              | schema1     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                    | has{((2,'2',2),)}                              | schema1     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                    | has{((3,'3',3),)}                              | schema1     |
       | conn_0 | False    | select * from nosharding                                                     | length{(5)}                                 | schema1     |
       | conn_0 | True     | select * from global_sequence                                               | length{(5)}                                 | schema1     |
     Given execute oscmd in "dble-1"
@@ -295,10 +295,10 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | False    | select * from sharding_1_t1                                                 | length{(5)}                                 | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1                   | has{(2,'2',2),(4,'4',4)}                   | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1                    | has{(1,'1',1),(3,'3',3),(5,'5',5)}       | schema1     |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                    | has{(4,'4',4)}                              | schema1     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                    | has{((4,'4',4),)}                              | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1                    | has{(1,'1',1),(5,'5',5)}                  | schema1     |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                    | has{(2,'2',2)}                              | schema1     |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                    | has{(3,'3',3)}                              | schema1     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                    | has{((2,'2',2),)}                              | schema1     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                    | has{((3,'3',3),)}                              | schema1     |
       | conn_0 | False    | select * from nosharding                                                     | length{(5)}                                 | schema1     |
       | conn_0 | True     | select * from global_sequence                                               | length{(5)}                                 | schema1     |
     Given execute oscmd in "dble-1"

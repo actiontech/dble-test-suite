@@ -38,13 +38,13 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | dn5    | ha_group1/da3 | true            | 0        | 0      | 1000   | 0         | -1              |
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                       | expect          |
-      | conn_0 | False    | show databases like 'da1' | has{('da1',),}  |
-      | conn_0 | False    | show databases like 'da2' | has{('da2',),}  |
-      | conn_0 | True     | show databases like 'da3' | has{('da3',),}  |
+      | conn_0 | False    | show databases like 'da1' | has{(('da1',),)}  |
+      | conn_0 | False    | show databases like 'da2' | has{(('da2',),)}  |
+      | conn_0 | True     | show databases like 'da3' | has{(('da3',),)}  |
     Then execute sql in "mysql-master2"
       | conn   | toClose  | sql                        | expect          |
-      | conn_0 | False    | show databases like 'da1'  | has{('da1',),}  |
-      | conn_0 | True     | show databases like 'da2'  | has{('da2',),}  |
+      | conn_0 | False    | show databases like 'da1'  | has{(('da1',),)}  |
+      | conn_0 | True     | show databases like 'da2'  | has{(('da2',),)}  |
     Then execute admin cmd "drop database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                       | expect       |

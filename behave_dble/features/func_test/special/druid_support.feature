@@ -116,11 +116,11 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
       | conn_1 | False   | drop table if exists single_t1                      | success | schema1 |
       | conn_1 | False   | create table single_t1(id int,name varchar(20))     | success | schema1 |
       | conn_1 | False   | insert into single_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-      | conn_1 | False   | select * from single_t1 where id=1 for share        | has{((1,'1'))} | schema1 |
+      | conn_1 | False   | select * from single_t1 where id=1 for share        | has{((1,'1'),)} | schema1 |
       | conn_2 | False   | select * from single_t1                             | has{((1,'1'),(2,'2'),(3,'3'),(4,'4'))} | schema1 |
       | conn_2 | False   | update single_t1 set name=22 where id=2             | success | schema1 |
       | conn_1 | False   | begin                                               | success | schema1 |
-      | conn_1 | False   | select * from single_t1 where id=1 for share        | has{((1,'1'))} | schema1 |
+      | conn_1 | False   | select * from single_t1 where id=1 for share        | has{((1,'1'),)} | schema1 |
       | conn_2 | False   | select * from single_t1                             | has{((1,'1'),(2,'22'),(3,'3'),(4,'4'))} | schema1 |
       | conn_2 | False   | update single_t1 set name=11 where id=1             | Lock wait timeout exceeded; try restarting transaction | schema1 |
       | conn_2 | False   | delete from single_t1 where id=1                    | Lock wait timeout exceeded; try restarting transaction | schema1 |
@@ -128,7 +128,7 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
       | conn_2 | False   | update single_t1 set name=11 where id=1             | success | schema1 |
       | conn_2 | False   | delete from single_t1 where id=1                    | success | schema1 |
       | conn_1 | False   | set autocommit=0                                    | success | schema1 |
-      | conn_1 | False   | select * from single_t1 where id=2 for share        | has{((2,'22'))} | schema1 |
+      | conn_1 | False   | select * from single_t1 where id=2 for share        | has{((2,'22'),)} | schema1 |
       | conn_2 | False   | begin                                               | success | schema1 |
       #DBLE0REQ-1191
       | conn_2 | False   | select * from single_t1 where id in (2,3) for share skip locked | druid not support sql syntax, the reason is sql syntax error, no terminated. IDENTIFIER | schema1 |
