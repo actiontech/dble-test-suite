@@ -202,50 +202,144 @@ Feature: test with hint plan A with other table type
 
   # 3. a LEFT JOIN b on a.col=b.col INNER JOIN c on a.col=c.col
   # 3.1 left join & inner join & 2 ER  abc
-    # todo
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs"
-      | conn   | toClose | sql                                                                                                                                                                                                   | expect  | db      |
-      | conn_1 | False   | explain /*!dble:plan= (a,b) & c  */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON a.deptname=c.deptname order by a.name | success | schema1 |
+      | conn   | toClose | sql                                                                                                                                                                                                 | expect  | db      |
+      | conn_1 | False   | explain /*!dble:plan= (a,b,c)  */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON a.deptname=c.deptname order by a.name | success | schema1 |
 
     Then check resultset "join_rs" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1                | SQL/REF-2                                                                                                                                                                  |
-      | dn3_0             | BASE SQL              | select `a`.`name`,`a`.`deptname`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `a`.`deptname` ASC        |
-      | dn4_0             | BASE SQL              | select `a`.`name`,`a`.`deptname`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `a`.`deptname` ASC        |
-      | merge_and_order_1 | MERGE_AND_ORDER       | dn3_0; dn4_0                                                                                                                                                               |
-      | shuffle_field_1   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                          |
-      | dn5_0//dn6_0      | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`country`,`c`.`deptname` from  `Info` `c` where `c`.`deptname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`deptname` ASC |
-      | merge_1           | MERGE                 | dn5_0//dn6_0                                                                                                                                                               |
-      | join_1            | JOIN                  | shuffle_field_1; merge_1                                                                                                                                                   |
-      | order_1           | ORDER                 | join_1                                                                                                                                                                     |
-      | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                    |
+      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                                                                               |
+      | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`deptname`,`b`.`manager`,`c`.`country` from  (  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` )  join  `Info` `c` on `a`.`deptname` = `c`.`deptname` where 1=1  ORDER BY `a`.`name` ASC |
+      | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`deptname`,`b`.`manager`,`c`.`country` from  (  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` )  join  `Info` `c` on `a`.`deptname` = `c`.`deptname` where 1=1  ORDER BY `a`.`name` ASC |
+      | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                                                                                                                                                            |
+      | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                                       |
+
 
     Then execute sql in "dble-1" and the result should be consistent with mysql
-      | conn   | toClose | sql                                                                                                                                                                                           | db      |
-      | conn_1 | true    | /*#dble:plan= (a,b) & c  */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON a.deptname=c.deptname order by a.name | schema1 |
+      | conn   | toClose | sql                                                                                                                                                                                         | db      |
+      | conn_1 | true    | /*#dble:plan= (a,b,c)  */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON a.deptname=c.deptname order by a.name | schema1 |
 
 
    # 3.2 left join & inner join & 1 ER  abc
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs"
-      | conn   | toClose | sql                                                                                                                                                                                                  | expect  | db      |
-      | conn_1 | False   | explain /*!dble:plan= (a,b) & c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON a.deptname=c.deptname order by a.name | success | schema1 |
+      | conn   | toClose | sql                                                                                                                                                                                                   | expect  | db      |
+      | conn_1 | False   | explain /*!dble:plan= (a,b) & c */ SELECT b.name,b.deptname,a.manager,c.salary FROM Dept a LEFT JOIN Employee b ON a.deptname=b.deptname INNER JOIN Level c ON b.level=c.levelname ORDER BY a.manager | success | schema1 |
 
     Then check resultset "join_rs" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1                | SQL/REF-2                                                                                                                                                                  |
-      | dn3_0             | BASE SQL              | select `a`.`name`,`a`.`deptname`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `a`.`deptname` ASC        |
-      | dn4_0             | BASE SQL              | select `a`.`name`,`a`.`deptname`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `a`.`deptname` ASC        |
-      | merge_and_order_1 | MERGE_AND_ORDER       | dn3_0; dn4_0                                                                                                                                                               |
-      | shuffle_field_1   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                          |
-      | dn5_0//dn6_0      | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`country`,`c`.`deptname` from  `Info` `c` where `c`.`deptname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`deptname` ASC |
-      | merge_1           | MERGE                 | dn5_0//dn6_0                                                                                                                                                               |
-      | join_1            | JOIN                  | shuffle_field_1; merge_1                                                                                                                                                   |
-      | order_1           | ORDER                 | join_1                                                                                                                                                                     |
-      | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                    |
+      | SHARDING_NODE-0   | TYPE-1                | SQL/REF-2                                                                                                                                                                     |
+      | dn3_0             | BASE SQL              | select `b`.`name`,`b`.`deptname`,`b`.`level`,`a`.`manager` from  `Dept` `a` left join  `Employee` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `b`.`level` ASC  |
+      | dn4_0             | BASE SQL              | select `b`.`name`,`b`.`deptname`,`b`.`level`,`a`.`manager` from  `Dept` `a` left join  `Employee` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `b`.`level` ASC  |
+      | merge_and_order_1 | MERGE_AND_ORDER       | dn3_0; dn4_0                                                                                                                                                                  |
+      | shuffle_field_1   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                             |
+      | dn6_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
+      | merge_1           | MERGE                 | dn6_0                                                                                                                                                                         |
+      | join_1            | JOIN                  | shuffle_field_1; merge_1                                                                                                                                                      |
+      | order_1           | ORDER                 | join_1                                                                                                                                                                        |
+      | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                       |
 
 
     Then execute sql in "dble-1" and the result should be consistent with mysql
-      | conn   | toClose | sql                                                                                                                                                                                          | db      |
-      | conn_1 | true    | /*#dble:plan= (a,b) & c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON a.deptname=c.deptname order by a.name | schema1 |
+      | conn   | toClose | sql                                                                                                                                                                                           | db      |
+      | conn_1 | true    | /*#dble:plan= (a,b) & c */ SELECT b.name,b.deptname,a.manager,c.salary FROM Dept a LEFT JOIN Employee b ON a.deptname=b.deptname INNER JOIN Level c ON b.level=c.levelname ORDER BY a.manager | schema1 |
 
+
+   # 3.3 left join & inner join & NO ER  abc
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs"
+      | conn   | toClose | sql                                                                                                                                                                                                | expect  | db      |
+      | conn_1 | False   | explain /*!dble:plan= a \| b \| c */ SELECT b.name,b.deptname,a.manager,c.salary FROM Dept a LEFT JOIN Employee b ON a.manager=b.name INNER JOIN Level c ON b.level=c.levelname ORDER BY a.manager | success | schema1 |
+
+    Then check resultset "join_rs" has lines with following column values
+      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                 |
+      | dn3_0             | BASE SQL        | select `a`.`manager` from  `Dept` `a` ORDER BY `a`.`manager` ASC                          |
+      | dn4_0             | BASE SQL        | select `a`.`manager` from  `Dept` `a` ORDER BY `a`.`manager` ASC                          |
+      | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                              |
+      | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                         |
+      | dn3_1             | BASE SQL        | select `b`.`name`,`b`.`deptname`,`b`.`level` from  `Employee` `b` ORDER BY `b`.`name` ASC |
+      | dn4_1             | BASE SQL        | select `b`.`name`,`b`.`deptname`,`b`.`level` from  `Employee` `b` ORDER BY `b`.`name` ASC |
+      | merge_and_order_2 | MERGE_AND_ORDER | dn3_1; dn4_1                                                                              |
+      | shuffle_field_4   | SHUFFLE_FIELD   | merge_and_order_2                                                                         |
+      | join_1            | JOIN            | shuffle_field_1; shuffle_field_4                                                          |
+      | order_1           | ORDER           | join_1                                                                                    |
+      | shuffle_field_2   | SHUFFLE_FIELD   | order_1                                                                                   |
+      | dn5_0             | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
+      | merge_1           | MERGE           | dn5_0                                                                                     |
+      | join_2            | JOIN            | shuffle_field_2; merge_1                                                                  |
+      | order_2           | ORDER           | join_2                                                                                    |
+      | shuffle_field_3   | SHUFFLE_FIELD   | order_2                                                                                   |
+
+    Then execute sql in "dble-1" and the result should be consistent with mysql
+      | conn   | toClose | sql                                                                                                                                                                                        | db      |
+      | conn_1 | true    | /*#dble:plan= a \| b \| c */ SELECT b.name,b.deptname,a.manager,c.salary FROM Dept a LEFT JOIN Employee b ON a.manager=b.name INNER JOIN Level c ON b.level=c.levelname ORDER BY a.manager | schema1 |
+
+
+ # 4. a LEFT JOIN b on a.col=b.col INNER JOIN c on b.col=c.col
+    # 4.1  left join & inner join & 2 ER  abc
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs"
+      | conn   | toClose | sql                                                                                                                                                                                                | expect  | db      |
+      | conn_1 | False   | explain /*!dble:plan= (a,b,c) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON b.deptname=c.deptname ORDER BY a.name | success | schema1 |
+
+    Then check resultset "join_rs" has lines with following column values
+      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                                                                               |
+      | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`deptname`,`b`.`manager`,`c`.`country` from  (  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` )  join  `Info` `c` on `b`.`deptname` = `c`.`deptname` where 1=1  ORDER BY `a`.`name` ASC |
+      | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`deptname`,`b`.`manager`,`c`.`country` from  (  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` )  join  `Info` `c` on `b`.`deptname` = `c`.`deptname` where 1=1  ORDER BY `a`.`name` ASC |
+      | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                                                                                                                                                            |
+      | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                                       |
+
+    Then execute sql in "dble-1" and the result should be consistent with mysql
+      | conn   | toClose | sql                                                                                                                                                                                        | db      |
+      | conn_1 | true    | /*#dble:plan= (a,b,c) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON b.deptname=c.deptname ORDER BY a.name | schema1 |
+
+
+     # 4.2 left join & left join & 1 ER  abc
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs"
+      | conn   | toClose | sql                                                                                                                                                                                                   | expect  | db      |
+      | conn_1 | False   | explain /*!dble:plan= (a,b) & c */ SELECT b.name,b.deptname,a.manager,c.salary FROM Dept a LEFT JOIN Employee b ON a.deptname=b.deptname INNER JOIN Level c ON b.level=c.levelname ORDER BY a.manager | success | schema1 |
+
+    Then check resultset "join_rs" has lines with following column values
+      | SHARDING_NODE-0   | TYPE-1                | SQL/REF-2                                                                                                                                                                     |
+      | dn3_0             | BASE SQL              | select `b`.`name`,`b`.`deptname`,`b`.`level`,`a`.`manager` from  `Dept` `a` left join  `Employee` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `b`.`level` ASC  |
+      | dn4_0             | BASE SQL              | select `b`.`name`,`b`.`deptname`,`b`.`level`,`a`.`manager` from  `Dept` `a` left join  `Employee` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `b`.`level` ASC  |
+      | merge_and_order_1 | MERGE_AND_ORDER       | dn3_0; dn4_0                                                                                                                                                                  |
+      | shuffle_field_1   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                             |
+      | dn5_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
+      | merge_1           | MERGE                 | dn5_0                                                                                                                                                                         |
+      | join_1            | JOIN                  | shuffle_field_1; merge_1                                                                                                                                                      |
+      | order_1           | ORDER                 | join_1                                                                                                                                                                        |
+      | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                       |
+
+
+    Then execute sql in "dble-1" and the result should be consistent with mysql
+      | conn   | toClose | sql                                                                                                                                                                                           | db      |
+      | conn_1 | true    | /*#dble:plan= (a,b) & c */ SELECT b.name,b.deptname,a.manager,c.salary FROM Dept a LEFT JOIN Employee b ON a.deptname=b.deptname INNER JOIN Level c ON b.level=c.levelname ORDER BY a.manager | schema1 |
+
+
+    # 4.3 left join & left join & NO ER  abc
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs"
+      | conn   | toClose | sql                                                                                                                                                                                                | expect  | db      |
+      | conn_1 | False   | explain /*!dble:plan= a \| b \| c */ SELECT b.name,b.deptname,a.manager,c.salary FROM Dept a LEFT JOIN Employee b ON a.manager=b.name INNER JOIN Level c ON b.level=c.levelname ORDER BY a.manager | success | schema1 |
+
+    Then check resultset "join_rs" has lines with following column values
+      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                 |
+      | dn3_0             | BASE SQL        | select `a`.`manager` from  `Dept` `a` ORDER BY `a`.`manager` ASC                          |
+      | dn4_0             | BASE SQL        | select `a`.`manager` from  `Dept` `a` ORDER BY `a`.`manager` ASC                          |
+      | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                              |
+      | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                         |
+      | dn3_1             | BASE SQL        | select `b`.`name`,`b`.`deptname`,`b`.`level` from  `Employee` `b` ORDER BY `b`.`name` ASC |
+      | dn4_1             | BASE SQL        | select `b`.`name`,`b`.`deptname`,`b`.`level` from  `Employee` `b` ORDER BY `b`.`name` ASC |
+      | merge_and_order_2 | MERGE_AND_ORDER | dn3_1; dn4_1                                                                              |
+      | shuffle_field_4   | SHUFFLE_FIELD   | merge_and_order_2                                                                         |
+      | join_1            | JOIN            | shuffle_field_1; shuffle_field_4                                                          |
+      | order_1           | ORDER           | join_1                                                                                    |
+      | shuffle_field_2   | SHUFFLE_FIELD   | order_1                                                                                   |
+      | dn5_0             | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
+      | merge_1           | MERGE           | dn5_0                                                                                     |
+      | join_2            | JOIN            | shuffle_field_2; merge_1                                                                  |
+      | order_2           | ORDER           | join_2                                                                                    |
+      | shuffle_field_3   | SHUFFLE_FIELD   | order_2                                                                                   |
+
+
+    Then execute sql in "dble-1" and the result should be consistent with mysql
+      | conn   | toClose | sql                                                                                                                                                                                        | db      |
+      | conn_1 | true    | /*#dble:plan= a \| b \| c */ SELECT b.name,b.deptname,a.manager,c.salary FROM Dept a LEFT JOIN Employee b ON a.manager=b.name INNER JOIN Level c ON b.level=c.levelname ORDER BY a.manager | schema1 |
 
 
   # 4. a INNER JOIN b on a.col=b.col LEFT JOIN c on a.col=c.col
@@ -312,8 +406,6 @@ Feature: test with hint plan A with other table type
       | join_1            | JOIN                  | shuffle_field_1; merge_1                                                                                                                                                   |
       | order_1           | ORDER                 | join_1                                                                                                                                                                     |
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                    |
-
-
 
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                                                                                                                           | db      |
