@@ -78,10 +78,10 @@ Feature: test some import nodes attr in sharding.xml
       | conn   | toClose  | sql                               | expect              | db     |
       | conn_0 | False    | drop table if exists test_table   | success             | schema1 |
       | conn_0 | False    | create table test_table(id int)   | success             | schema1 |
-      | conn_0 | False    | show all tables                   | has{('test_table','GLOBAL TABLE')}   | schema1 |
+      | conn_0 | False    | show all tables                   | has{(('test_table','GLOBAL TABLE'),)}   | schema1 |
       | conn_0 | False    | drop table if exists test2_table  | success             | schema1 |
       | conn_0 | False    | create table test2_table(id int)  | success             | schema1 |
-      | conn_0 | True     | show all tables                   | has{('test_table','GLOBAL TABLE')}   | schema1 |
+      | conn_0 | True     | show all tables                   | has{(('test_table','GLOBAL TABLE'),)}   | schema1 |
 
   @BLOCKER
   Scenario: test "dbInstance" node attr "maxCon" #4

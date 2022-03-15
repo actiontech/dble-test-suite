@@ -170,7 +170,7 @@ Feature:  dble_db_instance table test
       | conn_0 | False   | select name,db_group from dble_db_instance where test_on_create like '%fa%'    | has{(('s2', 'ha_group1',), ('M2', 'ha_group2',))}         |
   #case supported select where [sub-query]
       | conn_0 | False   | select user from dble_db_instance where name in (select name from dble_db_instance where disabled ='false')        | has{(('test',), ('test',), ('test',))}          |
-      | conn_0 | False   | select user from dble_db_instance where name >all (select name from dble_db_instance where disabled ='false')      | has{(('test',))}                                 |
+      | conn_0 | False   | select user from dble_db_instance where name >all (select name from dble_db_instance where disabled ='false')      | has{(('test',),)}                                 |
       | conn_0 | False   | select user from dble_db_instance where name < any (select name from dble_db_instance where disabled ='false')     | has{(('test',), ('test',))}                      |
       | conn_0 | False   | select user from dble_db_instance where name = any (select name from dble_db_instance where disabled ='false')     |has{(('test',), ('test',), ('test',))}           |
   #case supported select field

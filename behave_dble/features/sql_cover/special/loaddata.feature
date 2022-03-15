@@ -64,9 +64,9 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
       | conn_0 | False   | load data infile './data.txt' into table sharding_4_t1 fields terminated by ',';                                        |success       | schema1 |
       | conn_0 | False   | load data infile './data2.txt' into table sharding_4_t1 fields terminated by ',';                                       | success      | schema1 |
       | conn_0 | False   | select * from sharding_4_t1                                                                                             | length{(4)}  | schema1 |
-      | conn_0 | False   | select name from sharding_4_t1 where id=1                                                                               | has{('#1')}  | schema1 |
-      | conn_0 | False   | select name from sharding_4_t1 where id=3                                                                               | has{('#3')}  | schema1 |
-      | conn_0 | True    | select name from sharding_4_t1 where id=4                                                                               | has{('#4')}  | schema1 |
+      | conn_0 | False   | select name from sharding_4_t1 where id=1                                                                               | has{(('#1',),)}  | schema1 |
+      | conn_0 | False   | select name from sharding_4_t1 where id=3                                                                               | has{(('#3',),)}  | schema1 |
+      | conn_0 | True    | select name from sharding_4_t1 where id=4                                                                               | has{(('#4',),)}  | schema1 |
 
   Scenario: load data for table using global sequence from issue:1048    #3
      Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
@@ -135,6 +135,6 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
       | conn_0 | False   | drop table if exists sharding_4_t1                                                                                               | success      | schema1 |
       | conn_0 | False   | CREATE TABLE sharding_4_t1(ID INT NOT NULL,FirstName VARCHAR(20),LastName VARCHAR(20),Department VARCHAR(20),Salary INT)         | success      | schema1 |
       | conn_0 | False   | load data infile "./tab.txt" into table sharding_4_t1  FIELDS   OPTIONALLY ENCLOSED BY '"'   LINES TERMINATED BY '\n';           |success       | schema1 |
-      | conn_0 | False   | select * from sharding_4_t1                                                                                                      |has{('Mazojys	ddd	ggg')}  | schema1 |
+      | conn_0 | False   | select * from sharding_4_t1                                                                                                      |has{(('Mazojys	ddd	ggg',),)}  | schema1 |
       | conn_0 | True   | drop table if exists sharding_4_t1                                                                                                |success       | schema1 |
     Given remove local and server file "tab.txt"

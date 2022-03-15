@@ -38,7 +38,7 @@ Feature: schema support add function
     # table has only one auto_increment column will be confirmed as shardingKey
     # after create table , then add high priority column and reload @@metadata, shardingColumn should change
 
-    Given delete all backend mysql tables
+#    Given delete all backend mysql tables
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
         <schema shardingNode="dn1,dn2" name="schema2" function="hash-two" sqlMaxLimit="100"></schema>
@@ -157,11 +157,11 @@ Feature: schema support add function
       | conn_1 | true    | insert into test6(lid) values(1),(2),(3),(4)  | success| schema2|
     Then execute sql in "mysql-master1" in "mysql" mode
       | conn  | toClose | sql                                           | expect           | db    |
-      | conn_1| False   | select * from test1                           | has{(2),(4)}     | db1   |
+      | conn_1| False   | select * from test1                           | has{(2,),(4,)}   | db1   |
       | conn_1| true    | select * from test6                           | has{(2,1),(4,2)} | db1   |
     Then execute sql in "mysql-master2" in "mysql" mode
       | conn  | toClose | sql                                           | expect           | db    |
-      | conn_1| False   | select * from test1                           | has{(1),(3)}     | db1   |
+      | conn_1| False   | select * from test1                           | has{(1,),(3,)}     | db1   |
       | conn_1| true    | select * from test6                           | has{(1,1),(3,2)} | db1   |
 
     # after create table, add high priority type of shardingKey, origin sharding column not change, after reload @@metadata, sharding column will change
@@ -170,33 +170,33 @@ Feature: schema support add function
       | conn_1 | true    | alter table test2 add (new_ID_a int, index a(new_ID_a))            | success| schema2|
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                  | expect                     | db              |
-      | conn_1 | true    | select sharding_column from dble_sharding_table      | hasnot{('NEW_ID_A'),}      | dble_information|
+      | conn_1 | true    | select sharding_column from dble_sharding_table      | hasnot{(('NEW_ID_A',),)}      | dble_information|
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                  | expect                  | db              |
-      | conn_1 | true    | select sharding_column from dble_sharding_table      | has{('NEW_ID_A'),}      | dble_information|
+      | conn_1 | true    | select sharding_column from dble_sharding_table      | has{(('NEW_ID_A',),)}      | dble_information|
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                             | expect | db     |
       | conn_1 | true    | alter table test2 add (new_ID_b int unique)                     | success| schema2|
      Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                  | expect                     | db              |
-      | conn_1 | true    | select sharding_column from dble_sharding_table      | hasnot{('NEW_ID_B'),}      | dble_information|
+      | conn_1 | true    | select sharding_column from dble_sharding_table      | hasnot{(('NEW_ID_B',),)}      | dble_information|
     Then execute admin cmd "reload @@metadata where schema='schema2'"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                  | expect                  | db              |
-      | conn_1 | true    | select sharding_column from dble_sharding_table      | has{('NEW_ID_B'),}      | dble_information|
+      | conn_1 | true    | select sharding_column from dble_sharding_table      | has{(('NEW_ID_B',),)}      | dble_information|
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                     | expect | db     |
       | conn_1 | true    | alter table test2 add column new_ID_C int primary key                   | success| schema2|
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                  | expect                     | db              |
-      | conn_1 | true    | select sharding_column from dble_sharding_table      | hasnot{('NEW_ID_C'),}      | dble_information|
+      | conn_1 | true    | select sharding_column from dble_sharding_table      | hasnot{(('NEW_ID_C',),)}      | dble_information|
     Then execute admin cmd "reload @@config_all -r"
     Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                  | expect                     | db              |
-     | conn_1 | true    | select sharding_column from dble_sharding_table      | has{('NEW_ID_C'),}         | dble_information|
+     | conn_1 | true    | select sharding_column from dble_sharding_table      | has{(('NEW_ID_C',),)}         | dble_information|
 
     # column type required by schema function not match with table's column type, table will create success but cannot add data
     Then execute sql in "dble-1" in "user" mode
@@ -364,8 +364,8 @@ Feature: schema support add function
       | conn_1| true    | select * from global_1                        | has{(1,1),(2,2),(3,3),(4,4)} | db2   |
     Then execute sql in "mysql-master2" in "mysql" mode
       | conn  | toClose | sql                                           | expect                       | db    |
-      | conn_3| False   | select * from sharding_1                      | has{(3,3),}                  | db1   |
-      | conn_4| False   | select * from sharding_1                      | has{(2,2),}                  | db2   |
+      | conn_3| False   | select * from sharding_1                      | has{((3,3),)}                  | db1   |
+      | conn_4| False   | select * from sharding_1                      | has{((2,2),)}                  | db2   |
       | conn_3| true    | select * from global_1                        | has{(1,1),(2,2),(3,3),(4,4)} | db1   |
       | conn_4| true    | select * from global_1                        | has{(1,1),(2,2),(3,3),(4,4)} | db2   |
     Then execute sql in "dble-1" in "user" mode
@@ -410,11 +410,11 @@ Feature: schema support add function
       Then execute admin cmd "reload @@config_all"
       Then execute sql in "dble-1" in "user" mode
         |conn   | toClose | sql                                             | expect                                 | db      |
-        |conn_1 | False   | show tables                                     | hasnot{('test1'),('test2'),('test3')}  | schema2 |
+        |conn_1 | False   | show tables                                     | hasnot{('test1',),('test2',),('test3',)}  | schema2 |
         |conn_1 | False   | create table test1(aid int,id int)              | success                                | schema2 |
         |conn_1 | False   | create table test2(aid int,id int)              | success                                | schema2 |
         |conn_1 | False   | create table test3(aid int,id int)              | success                                | schema2 |
-        |conn_1 | False   | show tables                                     | has{('test1'),('test2'),('test3')}     | schema2 |
+        |conn_1 | False   | show tables                                     | has{('test1',),('test2',),('test3',)}     | schema2 |
         |conn_1 | False   | drop table if exists test1                      | success                                | schema2 |
         |conn_1 | False   | drop table if exists test2                      | success                                | schema2 |
         |conn_1 | true    | drop table if exists test3                      | success                                | schema2 |
@@ -465,7 +465,7 @@ Feature: schema support add function
       Then execute admin cmd "reload @@config_all"
       Then execute sql in "dble-1" in "user" mode
         |conn   | toClose | sql                                             | expect                                   | db      |
-        |conn_3 | true    | show tables                                     | has{('sharding_table_1'),}               | schema2 |
+        |conn_3 | true    | show tables                                     | has{(('sharding_table_1',),)}               | schema2 |
       Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1"
         """
           Table \[sharding_table_1\] structure are not consistent in different shardingNode
@@ -543,7 +543,7 @@ Feature: schema support add function
         """
       Then execute sql in "dble-1" in "user" mode
         |conn    | toClose  | sql                             | expect                         | db      |
-        |conn_12 | true     | show tables                     | hasnot{('sharding_table_3'),}  | schema2 |
+        |conn_12 | true     | show tables                     | hasnot{('sharding_table_3',),}  | schema2 |
 
     Scenario: checkTableConsistency=0, Consistency check by reload          #5
 
@@ -611,7 +611,7 @@ Feature: schema support add function
         """
       Then execute sql in "dble-1" in "user" mode
         |conn    | toClose  | sql                             | expect                         | db      |
-        |conn_9  | true     | show tables                     | hasnot{('sharding_table_3'),}  | schema2 |
+        |conn_9  | true     | show tables                     | hasnot{('sharding_table_3',),}  | schema2 |
 
       #backend mysql table structure changed
       Given record current dble log line number in "log_num_3"
