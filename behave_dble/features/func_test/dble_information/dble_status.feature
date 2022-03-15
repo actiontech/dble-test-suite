@@ -58,8 +58,8 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
       | conn_0 | False   | select * from dble_status where comment like '%of%'                                    | length{(7)}                                                            |
       | conn_0 | False   | select comment from dble_status                                                        | length{(12)}                                                           |
   #case supported select max/min from table
-      | conn_0 | False   | select max(variable_name) from dble_status                                             | has{('uptime')}                                                        |
-      | conn_0 | False   | select min(variable_name) from dble_status                                             | has{('config_reload_timestamp')}                                       |
+      | conn_0 | False   | select max(variable_name) from dble_status                                             | has{(('uptime',),)}                                                        |
+      | conn_0 | False   | select min(variable_name) from dble_status                                             | has{(('config_reload_timestamp',),)}                                       |
   #case supported select field from table
       | conn_0 | False   | select variable_name from dble_status where variable_value = '0'                       | has{(('questions',), ('transactions',))}                               |
   #case unsupported update/delete/insert

@@ -38,9 +38,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
@@ -72,9 +72,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | True     | delete from sharding_4_t1                                                       | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(4,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(1,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((4,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((1,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_1"
       | conn   | toClose | sql                                                                 | db               |
@@ -125,9 +125,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(7,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(3,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((7,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((3,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_11"
       | conn   | toClose | sql                                                                 | db               |
@@ -194,9 +194,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | split2 | 111111 | conn_3 | True    | select 1                                         | success | db2 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect    | db               |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(9,)} | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(7,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((9,),)} | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((7,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_12"
       | conn   | toClose | sql                                                                 | db               |
@@ -230,9 +230,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
      Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect  | db      |
@@ -244,9 +244,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(4,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(1,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((4,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((1,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_13"
       | conn   | toClose | sql                                                                 | db               |
       | conn_0 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
@@ -280,18 +280,18 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                    | expect  | db      |
       | conn_1 | true    | select 1                | success | schema1 |
       | conn_2 | true    | select 5                | success | schema2 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(2,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(1,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((2,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((1,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_14"
       | conn   | toClose | sql                                                                 | db               |
       | conn_0 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
@@ -357,9 +357,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                                          | expect  | db      |
       #dn1-select/2/2-tx/2/2, dn2-select/2/2-tx/2/2, dn3-select/2/2-tx/2/2, dn4-select/2/2-tx/2/2
@@ -387,9 +387,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     Given sleep "3" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(4,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(4,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(2,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((4,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((4,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((2,),)}   | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_11"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | True    | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
@@ -439,9 +439,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                                                                                                                           | expect  | db      |
@@ -459,9 +459,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     Given sleep "3" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(3,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(4,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(2,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((3,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((4,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((2,),)}   | dble_information |
 
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_12"
       | conn   | toClose | sql                                                                 | db               |
@@ -502,9 +502,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | user   | passwd | conn   | toClose | sql                                                                                                                 | expect  | db      |
       | split1 | 111111 | conn_3 | False   | insert into test_table(id,name,age) select id,name,age from test_table1                                             | success | schema1 |
@@ -518,9 +518,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | split1 | 111111 | conn_3 | False   | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(2,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(1,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((1,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((2,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((1,),)}   | dble_information |
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_13"
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                   | db               |
       | conn_1 | True    | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
@@ -546,9 +546,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                      | expect  | db      |
@@ -560,9 +560,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
 
      Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(2,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(1,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((1,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((2,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((1,),)}   | dble_information |
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_14"
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                   | db               |
       | conn_1 | True    | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
@@ -622,9 +622,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                                       | expect  | db      |
@@ -634,9 +634,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | True     | /*!dble:shardingNode=dn1*/ delete from sharding_4_t1 where id=666                         | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(1,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((1,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((1,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_11"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | True    | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
@@ -657,7 +657,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False    | /*!dble:shardingNode=dn1*/ select n.id,s.name from sharding_2_t1 n join sharding_4_t1 s on n.id=s.id                    | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(1,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((1,),)}   | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_31"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,associate_tables,sql_select_count,sql_select_rows,sql_select_examined_rows from sql_statistic_by_associate_tables_by_entry_by_user  | dble_information |
@@ -690,9 +690,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
@@ -744,9 +744,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(4,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(2,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((4,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((2,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_11"
       | conn   | toClose | sql                                                                 | db               |
@@ -804,7 +804,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_3 | True     | select * from sharding_4_t1 where name <> (select name from sharding_2_t1 where id !=1)       | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(1,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((1,),)}   | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_31"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | true    | select entry,user,associate_tables,sql_select_count,sql_select_rows,sql_select_examined_rows from sql_statistic_by_associate_tables_by_entry_by_user  | dble_information |
@@ -844,9 +844,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     #case  begin ... commit
     Then execute sql in "dble-1" in "user" mode
@@ -863,9 +863,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | rwS1 | 111111 | conn_4 | False   | commit                                             | success | db2 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(2,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((1,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((2,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_12"
       | conn   | toClose | sql                                                                 | db               |
@@ -895,9 +895,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | rwS1 | 111111 | conn_4 | False   | rollback                                                 | success | db2 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(2,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((1,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((2,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_13"
       | conn   | toClose | sql                                                                 | db               |
@@ -924,9 +924,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | rwS1 | 111111 | conn_31 | true    | delete from db2.test_table1  | success | db1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(2,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((1,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((2,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_13"
       | conn   | toClose | sql                                                                 | db               |
@@ -962,9 +962,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(2,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((1,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((2,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_14"
       | conn   | toClose | sql                                                                 | db               |
@@ -1019,7 +1019,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | rwS1 | 111111 | conn_33 | True     | select * from db2.test_table1 where name <> (select name from test_table where id !=1)        | success | db1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(1,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((1,),)}   | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_32"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | true    | select entry,user,associate_tables,sql_select_count,sql_select_rows,sql_select_examined_rows from sql_statistic_by_associate_tables_by_entry_by_user  | dble_information |
@@ -1055,9 +1055,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
@@ -1075,9 +1075,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | True    | delete from sharding_4_t1                                                        | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(4,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(1,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((4,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((1,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_11"
       | conn   | toClose | sql                                                                 | db               |
@@ -1109,7 +1109,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | True    | delete from sharding_4_t1                                                                          | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(1,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((1,),)}   | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_31"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | true    | select entry,user,associate_tables,sql_select_count,sql_select_rows,sql_select_examined_rows from sql_statistic_by_associate_tables_by_entry_by_user  | dble_information |
@@ -1152,9 +1152,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_1 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
@@ -1194,9 +1194,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(4,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(2,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((4,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((2,),)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_11"
       | conn   | toClose | sql                                                                 | db               |
@@ -1252,7 +1252,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(1,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((1,),)}   | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_31"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | true    | select entry,user,associate_tables,sql_select_count,sql_select_rows,sql_select_examined_rows from sql_statistic_by_associate_tables_by_entry_by_user  | dble_information |
@@ -1306,9 +1306,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
 
     #case Syntax error sql will not be counted --shardinguser
@@ -1332,9 +1332,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(1,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((1,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((1,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_11"
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                   | db               |
@@ -1355,9 +1355,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect                                 | db      |
@@ -1373,9 +1373,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_2 | true    | update test1003 set id =2 where id =1 | Table 'schema2.test1003' doesn't exist | schema2 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(4,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((1,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((4,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_12"
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                   | db               |
@@ -1413,9 +1413,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
       #complex don't supported sql
     Then execute sql in "dble-1" in "user" mode
@@ -1430,9 +1430,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | replace into test(name) select name from sharding_4_t1                                                                         | This `REPLACE ... SELECT Syntax` is not supported | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
 
     Then execute sql in "dble-1" in "user" mode
@@ -1441,9 +1441,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | update sharding_2_t1 a,schema2.sharding_2 b set a.age=b.age+1,b.name=a.name+1 where a.id=2 and b.id=2                          | Truncated incorrect DOUBLE value: 'b'             | schema1 |
      Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(2,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((1,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((2,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_13"
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                   | db               |
       | conn_0 | True    | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
@@ -1471,9 +1471,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
       | conn_0 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((0,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
      Then execute sql in "dble-1" in "user" mode
       | user   | passwd | conn   | toClose | sql                                    | expect                                      | db  |
@@ -1497,9 +1497,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | split1 | 111111 | conn_3 | true     | select * from (select s.sno from test_table s where s.id=1)      | Every derived table must have its own alias                      | db1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(2,)}   | dble_information |
-      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((1,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{((2,),)}   | dble_information |
+      | conn_0 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{((0,),)}   | dble_information |
 
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_14"
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                   | db               |

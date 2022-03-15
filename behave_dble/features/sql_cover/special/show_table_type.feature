@@ -10,8 +10,8 @@ Feature: table type check
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                     | expect                       | db      |
       | conn_0 | False    | create table if not exists test(id int) | success                      | schema1 |
-      | conn_0 | False    | show full tables                        | has{('test','BASE TABLE')}   | schema1 |
-      | conn_0 | False    | show full tables from `schema1`         | has{('test','BASE TABLE')}   | schema1 |
+      | conn_0 | False    | show full tables                        | has{(('test','BASE TABLE'),)}   | schema1 |
+      | conn_0 | False    | show full tables from `schema1`         | has{(('test','BASE TABLE'),)}   | schema1 |
       | conn_0 | True     | drop table test                         | success                      | schema1 |
 
 
@@ -36,7 +36,7 @@ Feature: table type check
       | conn_2 | False   | reload @@metadata              | success                        |
       Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect                         |
-      | conn_0 | False   | show tables                    | has{('test1')}                 |
+      | conn_0 | False   | show tables                    | has{(('test1',),)}             |
       | conn_0 | False   | drop table if exists test1     | success                        |
 #case Default node in dn5 but was not in dn1
       Then execute sql in "mysql-master1"
@@ -48,7 +48,7 @@ Feature: table type check
       | conn   | toClose | sql                            | expect                         |
       | conn_0 | False   | show tables                    | hasNoStr{('test1')}            |
       | conn_0 | False   | create table test1 (id int)    | success                        |
-      | conn_0 | False   | show tables                    | has{('test1')}                 |
+      | conn_0 | False   | show tables                    | has{(('test1',),)}             |
       | conn_0 | False   | drop table if exists test1     | success                        |
   #case table "test1" is single table
       Then execute sql in "mysql-master1"
