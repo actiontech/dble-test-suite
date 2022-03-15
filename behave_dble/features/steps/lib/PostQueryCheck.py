@@ -136,18 +136,14 @@ class PostQueryCheck(object):
                 real = self.findFromMultiRes(res, subResExpect)
                 assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
         else:  # for single query resultset
-            if len(resExpect) == len(res) and type(resExpect[0]) == type(res[0]):
-                real = collections.Counter(list(resExpect)) == collections.Counter(list(res))
-            else:
-                real = res.__contains__(resExpect)
-
-                if not real == bHas:
-                    # unicode_expect = resExpect.decode('utf8')
-                    expect_tuple = list(map(lambda x: filter(lambda y: y == resExpect, x), res))
-                    real = len(expect_tuple) > 0
-                    # LOGGER.debug("***zhj debug 2, len expect_tuple {0}".format(len(expect_tuple)))
-
-            assert real == bHas, "sql: {0}, expect {1} in resultset {2}, but not".format(self._sql, resExpect, bHas)
+            assert type(resExpect[0]) is tuple, "expect result format not expected, please check"
+            resExpect_list = list(map(list, resExpect))
+            realRS_list = list(map(list, res))
+            for i in resExpect_list:
+                real = realRS_list.__contains__(i)
+                if real:
+                    realRS_list.remove(i)          # prevent duplication in expected results
+                assert real == bHas, "sql: {0}, expect {1} in resultSet {2}, but not".format(self._sql, resExpect, bHas)
 
     def matchResultSet(self, res, expect, num):
         subRes_list = []

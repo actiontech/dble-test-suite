@@ -20,11 +20,11 @@ Feature: verify hint sql
       | conn_0 | True    | /*!dble:shardingNode=dn1*/ insert into test_table values(2,'test2')                                             | success | schema1 |
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                      | expect                  | db  |
-      | conn_0 | False   | show tables              | has{('test_table'),}    | db1 |
-      | conn_0 | False   | show tables              | has{('test_index'),}    | db1 |
-      | conn_0 | True    | select * from test_table | has{(2, 'test2'),}     | db1 |
-      | conn_1 | False   | show tables              | hasnot{('test_table'),} | db2 |
-      | conn_1 | True    | show tables              | hasnot{('test_index'),} | db2 |
+      | conn_0 | False   | show tables              | has{(('test_table',),)}    | db1 |
+      | conn_0 | False   | show tables              | has{(('test_index',),)}    | db1 |
+      | conn_0 | True    | select * from test_table | has{((2, 'test2'),)}     | db1 |
+      | conn_1 | False   | show tables              | hasnot{(('test_table',),)} | db2 |
+      | conn_1 | True    | show tables              | hasnot{(('test_index',),)} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                  | expect                                   | db      |
       | conn_0 | False   | /*!dble:shardingNod=dn1*/ drop table test_table                                                      | please following the dble hint syntax: /*!dble:shardingNode=? */ sql | schema1 |
@@ -53,18 +53,18 @@ Feature: verify hint sql
       | /*!dble:shardingNode=dn1*/ insert into test_table select id,name from test_shard where id>4 | success | schema1 |
     Then execute sql in "mysql-master1"
       | sql                      | expect                     | db  |
-      | select * from test_table | has{(6, 'test_shard6')}    | db1 |
-      | select * from test_table | hasnot{(6, 'test_shard6')} | db2 |
+      | select * from test_table | has{((6, 'test_shard6'),)}    | db1 |
+      | select * from test_table | hasnot{((6, 'test_shard6'),)} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | sql                                                                                   | expect  | db      |
       | /*!dble:shardingNode=dn3*/ replace test_table select id,name from test_shard where id < 7 | success | schema1 |
     Then execute sql in "mysql-master1"
       | sql                      | expect                     | db  |
-      | select * from test_table | hasnot{(5, 'test_shard5')} | db1 |
-      | select * from test_table | has{(5, 'test_shard5')}    | db2 |
+      | select * from test_table | hasnot{((5, 'test_shard5'),)} | db1 |
+      | select * from test_table | has{((5, 'test_shard5'),)}    | db2 |
     Then execute sql in "dble-1" in "user" mode
       | sql                                                             | expect    | db      |
-      | /*!dble:shardingNode=dn3*/ select count(*) from test_shard          | has{(2),} | schema1 |
+      | /*!dble:shardingNode=dn3*/ select count(*) from test_shard          | has{((2,),)} | schema1 |
       | /*!dble:shardingNode=dn1*/ alter table test_table add c varchar(20) | success   | schema1 |
     Then execute sql in "mysql-master1"
       | sql             | expect       | db  |
@@ -92,11 +92,11 @@ Feature: verify hint sql
       | conn_0 | True    | /*!dble:sql=select id from test_shard where id =4*/ insert into test_table values(2,'test2')                                             | success | schema1 |
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                      | expect                  | db  |
-      | conn_0 | False   | show tables              | has{('test_table'),}    | db1 |
-      | conn_0 | False   | show tables              | has{('test_index'),}    | db1 |
-      | conn_0 | True    | select * from test_table | has{(2, 'test2'),}     | db1 |
-      | conn_1 | False   | show tables              | hasnot{('test_table'),} | db2 |
-      | conn_1 | True    | show tables              | hasnot{('test_index'),} | db2 |
+      | conn_0 | False   | show tables              | has{(('test_table',),)}    | db1 |
+      | conn_0 | False   | show tables              | has{(('test_index',),)}    | db1 |
+      | conn_0 | True    | select * from test_table | has{((2, 'test2'),)}     | db1 |
+      | conn_1 | False   | show tables              | hasnot{(('test_table',),)} | db2 |
+      | conn_1 | True    | show tables              | hasnot{(('test_index',),)} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                | expect                                                                       | db      |
       | conn_0 | False   | /*!dble:sql=select id from test_shard where id =4*/ drop table test_table                                          | success                                                                      | schema1 |
@@ -124,19 +124,19 @@ Feature: verify hint sql
       | /*!dble:sql=select id from test_shard where id =4*/ insert into test_table select id,name from test_shard where id>4 | success | schema1 |
     Then execute sql in "mysql-master1"
       | sql                      | expect                     | db  |
-      | select * from test_table | has{(6, 'test_shard6')}    | db1 |
-      | select * from test_table | hasnot{(6, 'test_shard6')} | db2 |
+      | select * from test_table | has{((6, 'test_shard6'),)}    | db1 |
+      | select * from test_table | hasnot{((6, 'test_shard6'),)} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | sql                                                                                                                | expect  | db      |
       | /*!dble:sql=select id from test_shard where id =5*/ replace test_table select id,name from test_shard where id < 7 | success | schema1 |
     Then execute sql in "mysql-master1"
       | sql                      | expect                     | db  |
-      | select * from test_table | hasnot{(5, 'test_shard5')} | db1 |
-      | select * from test_table | has{(5, 'test_shard5')}    | db2 |
+      | select * from test_table | hasnot{((5, 'test_shard5'),)} | db1 |
+      | select * from test_table | has{((5, 'test_shard5'),)}    | db2 |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | sql                                                                                          | expect    | db      |
-      | /*!dble:sql=select id from test_shard where id =5*/ select count(*) from test_shard          | has{(2),} | schema1 |
+      | /*!dble:sql=select id from test_shard where id =5*/ select count(*) from test_shard          | has{((2,),)} | schema1 |
       | /*!dble:sql=select id from test_shard where id =4*/ alter table test_table add c varchar(20) | success   | schema1 |
     Then execute sql in "mysql-master1"
       | sql             | expect       | db  |
@@ -329,7 +329,8 @@ Feature: verify hint sql
       | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(0)} |
       | conn_0 | False   | set global log_output='file'                                                            | success     |
       | conn_0 | True    | set global general_log=off                                                              | success     |
-  @TRIVIAL
+
+  @TRIVIAL@skip
   Scenario: hint for specail sql syntax: call procedure #6
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
       """
@@ -351,9 +352,9 @@ Feature: verify hint sql
       | conn_0 | True    | create procedure select_name() begin select id,name from test_sp where id =2;end | success | db1 |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                 | expect                     | db      |
-      | conn_0 | False   | /*!dble:shardingNode=dn1*/call select_name                              | has{[((2, 'test_sp2'),)]} | schema1 |
-      | conn_0 | True    | /*!dble:sql=select id from test_shard where id =2*/call select_name | has{[((2, 'test_sp2'),)]} | schema1 |
+      | conn   | toClose | sql                                                                 | expect             | db      |
+      | conn_0 | False   | /*!dble:shardingNode=dn1*/call select_name                          | hasStr{'test_sp2'} | schema1 |
+      | conn_0 | True    | /*!dble:sql=select id from test_shard where id =2*/call select_name | hasStr{'test_sp2'} | schema1 |
 
   @regression
   Scenario: routed node when index with hint    from issue: 892    author:maofei #7
