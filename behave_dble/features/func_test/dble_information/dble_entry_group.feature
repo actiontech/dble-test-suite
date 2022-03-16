@@ -141,7 +141,7 @@ Feature:  dble_entry test
 #case supported where [sub-query]
       | conn_0 | False   | select username from dble_entry where blacklist in (select blacklist from dble_entry where type = 'username')  | has{(('test4',), ('test',),('rwS2',))}     |
 #case supported select field from
-      | conn_0 | False   | select type from dble_entry where conn_attr_key is not null     | has{(('conn_attr',))}        |
+      | conn_0 | False   | select type from dble_entry where conn_attr_key is not null     | has{(('conn_attr',),)}        |
 #case unsupported dml
       | conn_0 | False   | delete from dble_entry where type='username'               | Access denied for table 'dble_entry'     |
       | conn_0 | False   | update dble_entry set type='aa'  where type='username'     | Access denied for table 'dble_entry'     |
@@ -191,13 +191,13 @@ Feature:  dble_entry test
       | conn_0 | False   | select abs(id) from dble_entry_schema                      | length{(13)}   |
 #case supported select where [sub-query]
       | conn_0 | False   | select id from dble_entry where id in (select id from dble_entry_schema) limit 3                   | has{((6,), (7,), (8,))}                          |
-      | conn_0 | False   | select id from dble_entry where id >all (select id from dble_entry_schema)                         | has{((12,),(13,),(14,),(15,),(16,),)}            |
+      | conn_0 | False   | select id from dble_entry where id >all (select id from dble_entry_schema)                         | has{((12,),(13,),(14,),(15,),(16,))}             |
       | conn_0 | False   | select id from dble_entry where id <any (select id from dble_entry_schema) limit 3                 | has{((1,), (2,), (3,))}                          |
       | conn_0 | False   | select id from dble_entry where id =any (select id from dble_entry_schema)                         | has{((6,), (7,), (8,), (9,), (10,), (11,))}      |
-      | conn_0 | False   | select * from dble_entry_schema where id in (select id from dble_entry) limit 1 order by id        | has{((6, 'schema1'))}                            |
+      | conn_0 | False   | select * from dble_entry_schema where id in (select id from dble_entry) limit 1 order by id        | has{((6, 'schema1'),)}                            |
       | conn_0 | False   | select * from dble_entry_schema where id >all (select id from dble_entry)                          | success                                          |
-      | conn_0 | False   | select * from dble_entry_schema where id <any (select id from dble_entry) limit 1                  | has{((6, 'schema1'))}                            |
-      | conn_0 | False   | select * from dble_entry_schema where id =any (select id from dble_entry) limit 1 order by id desc | has{((11, 'schema1'))}                           |
+      | conn_0 | False   | select * from dble_entry_schema where id <any (select id from dble_entry) limit 1                  | has{((6, 'schema1'),)}                            |
+      | conn_0 | False   | select * from dble_entry_schema where id =any (select id from dble_entry) limit 1 order by id desc | has{((11, 'schema1'),)}                           |
 #case unsupported update/delete/insert
       | conn_0 | False   | delete from dble_entry_schema where schema='schema1'                   | Access denied for table 'dble_entry_schema'     |
       | conn_0 | False   | update dble_entry_schema set schema = 'a' where schema='schema1'       | Access denied for table 'dble_entry_schema'     |
@@ -569,7 +569,7 @@ Feature:  dble_entry test
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                        | expect                                                  |
       | conn_0 | False   | select schema,is_effective from dble_entry_table_privilege order by table desc limit 2     | has{(('schema1', 'false'), ('schema1', 'false'))}       |
-      | conn_0 | False   | select * from dble_entry_table_privilege where schema like '%2%'                           | has{((3,'schema2','no_s1','false',0,1,1,1,'false'))}    |
+      | conn_0 | False   | select * from dble_entry_table_privilege where schema like '%2%'                           | has{((3,'schema2','no_s1','false',0,1,1,1,'false'),)}   |
 #case supported select max/min
       | conn_0 | False   | select max(id) from dble_entry_table_privilege                      | has{((3,),)}  |
       | conn_0 | False   | select min(id) from dble_entry_table_privilege                      | has{((2,),)}  |
