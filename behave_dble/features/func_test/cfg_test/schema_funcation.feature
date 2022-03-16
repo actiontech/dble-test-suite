@@ -38,7 +38,7 @@ Feature: schema support add function
     # table has only one auto_increment column will be confirmed as shardingKey
     # after create table , then add high priority column and reload @@metadata, shardingColumn should change
 
-#    Given delete all backend mysql tables
+    Given delete all backend mysql tables
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
         <schema shardingNode="dn1,dn2" name="schema2" function="hash-two" sqlMaxLimit="100"></schema>
