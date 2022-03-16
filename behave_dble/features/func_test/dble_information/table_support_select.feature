@@ -3,7 +3,7 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  show databases/use dble_information/show tables [like]
-
+  @skip_restart
   Scenario:  show databases/use dble_information/show tables [like] #1
 
     Then execute sql in "dble-1" in "admin" mode
@@ -20,11 +20,11 @@ Feature:  show databases/use dble_information/show tables [like]
 #case show databases correct or erroneous spelling
       | conn_0 | False   | show database                          | Unsupported statement                                                  |
       | conn_0 | False   | show databasesl                        | Unsupported statement                                                  |
-      | conn_0 | False   | show databases                         | has{('dble_information')}                                              |
+      | conn_0 | False   | show databases                         | has{(('dble_information',),)}                                              |
 #case query with  correct schema
-      | conn_0 | False   | desc dble_information.version          | has{('version', 'varchar(64)', 'NO', 'PRI', None, '')}                 |
-      | conn_0 | False   | describe dble_information.version      | has{('version', 'varchar(64)', 'NO', 'PRI', None, '')}                 |
-      | conn_0 | False   | select * from dble_information.version | has{('version')}                                                       |
+      | conn_0 | False   | desc dble_information.version          | has{(('version', 'varchar(64)', 'NO', 'PRI', None, ''),)}                 |
+      | conn_0 | False   | describe dble_information.version      | has{(('version', 'varchar(64)', 'NO', 'PRI', None, ''),)}                 |
+      | conn_0 | False   | select * from dble_information.version | success                                                                |
 #case use dble_information correct or erroneous spelling
       | conn_0 | False   | use dble_informatio                    | Unknown database 'dble_informatio'                                     |
       | conn_0 | False   | use dble_information                   | success                                                                |
@@ -32,12 +32,12 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | False   | show table                             | Unsupported statement                                                  |
       | conn_0 | False   | show full tables                       | Unsupported statement                                                  |
       | conn_0 | False   | show columns from version              | Unsupported statement                                                  |
-      | conn_0 | False   | show tables                            | has{('Tables_in_dble_information')}                                    |
-      | conn_0 | False   | show tables like '%s%'                 | has{('Tables_in_dble_information (%s%)')}                              |
-      | conn_0 | False   | show tables like 'version'             | has{('Tables_in_dble_information (version)')}                          |
+      | conn_0 | False   | show tables                            | success                                                           |
+      | conn_0 | False   | show tables like '%s%'                 | success                                       |
+      | conn_0 | False   | show tables like 'version'             | has{(('version',),)}                          |
 #case desc/describe
-      | conn_0 | False   | desc version                           | has{('version', 'varchar(64)', 'NO', 'PRI', None, '')}                 |
-      | conn_0 | False   | describe version                       | has{('version', 'varchar(64)', 'NO', 'PRI', None, '')}                 |
+      | conn_0 | False   | desc version                           | has{(('version', 'varchar(64)', 'NO', 'PRI', None, ''),)}                 |
+      | conn_0 | False   | describe version                       | has{(('version', 'varchar(64)', 'NO', 'PRI', None, ''),)}                 |
 #case correct or erroneous spelling
       | conn_0 | False   | descc version                          | Unsupported statement                                                  |
       | conn_0 | False   | desc versio                            | Table `dble_information`.`versio` doesn't exist                        |
