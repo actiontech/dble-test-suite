@@ -7,9 +7,9 @@ Feature: test slow query log related manager command
       Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                     | expect       |
         | conn_0 | False   | enable @@slow_query_log | success      |
-        | conn_0 | False   | show @@slow_query_log   | has{('1',)}  |
+        | conn_0 | False   | show @@slow_query_log   | has{(('1',),)}  |
         | conn_0 | False   | disable @@slow_query_log| success      |
-        | conn_0 | True    | show @@slow_query_log   | has{('0',)}  |
+        | conn_0 | True    | show @@slow_query_log   | has{(('0',),)}  |
   @NORMAL
   Scenario: test "show @@slow_query.time", "reload @@slow_query.time", "show @@slow_query.flushperid", "reload @@slow_query.flushperid", "show @@slow_query.flushsize", "reload @@slow_query.flushsize" #2
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -21,23 +21,23 @@ Feature: test slow query log related manager command
        Given Restart dble in "dble-1" success
        Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                   | expect        |
-        | conn_0 | False   | show @@slow_query.time                | has{('30',)}  |
+        | conn_0 | False   | show @@slow_query.time                | has{(('30',),)}  |
         | conn_0 | False   | reload @@slow_query.time = 200        | success       |
-        | conn_0 | False   | show @@slow_query.time                | has{('200',)} |
+        | conn_0 | False   | show @@slow_query.time                | has{(('200',),)} |
   #CASE slow_query.time values can set  0 or other positive int
         | conn_0 | False   | reload @@slow_query.time = 0          | success                    |
-        | conn_0 | False   | show @@slow_query.time                | has{('0',)}                |
+        | conn_0 | False   | show @@slow_query.time                | has{(('0',),)}                |
         | conn_0 | False   | reload @@slow_query.time = -1         | the commend is not correct |
         | conn_0 | False   | reload @@slow_query.time = 1          | success                    |
-        | conn_0 | False   | show @@slow_query.time                | has{('1',)}                |
+        | conn_0 | False   | show @@slow_query.time                | has{(('1',),)}                |
 
-        | conn_0 | False   | show @@slow_query.flushperiod         | has{('1000',)} |
+        | conn_0 | False   | show @@slow_query.flushperiod         | has{(('1000',),)} |
         | conn_0 | False   | reload @@slow_query.flushperiod = 200 | success        |
-        | conn_0 | False   | show @@slow_query.flushperiod         | has{('200',)}  |
+        | conn_0 | False   | show @@slow_query.flushperiod         | has{(('200',),)}  |
 
-        | conn_0 | False   | show @@slow_query.flushsize           | has{('5',)}    |
+        | conn_0 | False   | show @@slow_query.flushsize           | has{(('5',),)}    |
         | conn_0 | False   | reload @@slow_query.flushsize = 50    | success        |
-        | conn_0 | True    | show @@slow_query.flushsize           | has{('50',)}   |
+        | conn_0 | True    | show @@slow_query.flushsize           | has{(('50',),)}   |
 
   @NORMAL
   Scenario: check slow query log written in assigned file #3
