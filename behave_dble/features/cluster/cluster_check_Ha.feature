@@ -109,13 +109,13 @@ Feature: test "ha" in zk cluster
     Given sleep "2" seconds
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql             | expect             | db  |
-      | conn_0 | True    | show tables     | has{('sing2')}     | db1 |
+      | conn_0 | True    | show tables     | has{(('sing2',),)}     | db1 |
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql             | expect             | db  |
-      | conn_0 | True    | show tables     | has{('sing2')}     | db1 |
+      | conn_0 | True    | show tables     | has{(('sing2',),)}     | db1 |
      Then execute sql in "mysql-slave2"
       | conn   | toClose | sql             | expect             | db  |
-      | conn_0 | True    | show tables     | has{('sing2')}     | db1 |
+      | conn_0 | True    | show tables     | has{(('sing2',),)}     | db1 |
      #case  when ClusterEnable=true && useOuterHa=true && needSyncHa=true, check "dbgroup"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_A"
       | sql               |
