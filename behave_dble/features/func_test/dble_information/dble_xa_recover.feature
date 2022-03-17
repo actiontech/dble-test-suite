@@ -72,7 +72,7 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn_0 | False   | select data from dble_xa_recover                                                       | length{(4)}                               |
     # case supported select max/min from table
       | conn_0 | False   | select max(data) from dble_xa_recover                                                  | has{(('host_xa_test',),)}                     |
-      | conn_0 | False   | select min(data) from dble_xa_recover                                                  | has{(('Dble_Server.abcd',),)}                 |
+      | conn_0 | False   | select min(data) from dble_xa_recover                                                  | has{(('Dble_Server.1.db1',),)}                 |
     # case supported select field from table
       | conn_0 | False   | select data from dble_xa_recover where instance = 'hostM1'                             | has{(('Dble_Server.abcd',), ('Dble_Server.1.db1',))} |
     # case unsupported update/delete/insert
