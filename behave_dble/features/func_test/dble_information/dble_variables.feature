@@ -220,8 +220,8 @@ Feature:  dble_variables test
   #case supported select * from dble_variables where [sub-query]
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                              | expect               | db               |
-      | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('./slowlogs/',),)} | dble_information |
-      | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('xalog',),)}       | dble_information |
+      | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('xalog',),)}   | dble_information |
+      | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('-1',),)}      | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(92)}         | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(90)}         | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
