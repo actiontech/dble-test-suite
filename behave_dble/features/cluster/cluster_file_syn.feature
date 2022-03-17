@@ -66,11 +66,11 @@ Feature: Cluster file synchronization test
       |conn_1 | False   | create table new_sharding(id int)                                 | schema2      | success  |
       |conn_1 | true    | insert into table new_sharding values(1),(2),(3),(4),(100),(1000) | schema2      | success  |
      Then execute sql in "mysql-master1" in "mysql" mode
-      |conn   | toClose | sql                                                           |  db        | expect                   |
-      |conn_2 | true    | select * from new_sharding                                    |  db1       | has{(1),(2),(100),(1000)}|
+      |conn   | toClose | sql                                                           |  db        | expect                       |
+      |conn_2 | true    | select * from new_sharding                                    |  db1       | has{(1,),(2,),(100,),(1000,)}|
      Then execute sql in "mysql-master2" in "mysql" mode
-      |conn   | toClose | sql                                                           |  db        | expect                   |
-      |conn_3 | true    | select * from new_sharding                                    |  db1       | has{(3),(4)}             |
+      |conn   | toClose | sql                                                           |  db        | expect                     |
+      |conn_3 | true    | select * from new_sharding                                    |  db1       | has{(3,),(4,)}             |
 
     #modify file context, file also should be synchronized
     Given execute oscmd in "dble-1"
@@ -104,11 +104,11 @@ Feature: Cluster file synchronization test
       |conn   | toClose | sql                                                              |  db               | expect   |
       |conn_4 | true    | insert into table new_sharding values(5),(6),(7),(10000)         | schema2           | success  |
     Then execute sql in "mysql-master1" in "mysql" mode
-      |conn   | toClose | sql                                                           |  db        | expect                       |
-      |conn_5 | true    | select * from new_sharding                                    |  db1       | has{(1),(2),(7),(100),(1000)}|
+      |conn   | toClose | sql                                                           |  db        | expect                            |
+      |conn_5 | true    | select * from new_sharding                                    |  db1       | has{(1,),(2,),(7,),(100,),(1000,)}|
     Then execute sql in "mysql-master2" in "mysql" mode
-      |conn   | toClose | sql                                                           |  db        | expect                   |
-      |conn_6 | true    | select * from new_sharding                                    |  db1       | has{(3),(4),(5),(6)}     |
+      |conn   | toClose | sql                                                           |  db        | expect                       |
+      |conn_6 | true    | select * from new_sharding                                    |  db1       | has{(3,),(4,),(5,),(6,)}     |
     Then execute sql in "dble-1" in "user" mode
       |conn   | toClose | sql                                                              |  db               | expect   |
       |conn_7 | true    | drop table if exists new_sharding                                | schema2           | success  |

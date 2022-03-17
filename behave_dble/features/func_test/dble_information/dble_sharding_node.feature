@@ -60,8 +60,8 @@ Feature:  dble_sharding_node table test
       | dn6    | ha_group2/db3 | true            |
     Then execute admin cmd "pause @@shardingNode='dn1' and timeout=10"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql          | expect       |
-      | conn_0 | False   | show @@pause | has{(('dn1'),)} |
+      | conn   | toClose | sql          | expect           |
+      | conn_0 | False   | show @@pause | has{(('dn1',),)} |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_sharding_node_5"
       | conn   | toClose | sql                              | db               |
       | conn_0 | False   | select * from dble_sharding_node | dble_information |
