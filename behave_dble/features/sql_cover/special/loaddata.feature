@@ -49,13 +49,13 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
   Scenario: Load data lines which start with ‘#’ from issue:1101    #2
      Given create local and server file "data.txt" and fill with text
      """
-      #1,1
-      2,2
+     #1,1
+     2,2
      """
     Given create local and server file "data2.txt" and fill with text
      """
-      #3,3
-      #4,4
+     #3,3
+     #4,4
      """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                     | expect       | db      |
@@ -134,7 +134,7 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
       | conn   | toClose | sql                                                                                                                              | expect       | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                                                                                               | success      | schema1 |
       | conn_0 | False   | CREATE TABLE sharding_4_t1(ID INT NOT NULL,FirstName VARCHAR(20),LastName VARCHAR(20),Department VARCHAR(20),Salary INT)         | success      | schema1 |
-      | conn_0 | False   | load data infile "./tab.txt" into table sharding_4_t1  FIELDS   OPTIONALLY ENCLOSED BY '"'   LINES TERMINATED BY '\n';           |success       | schema1 |
-      | conn_0 | False   | select * from sharding_4_t1                                                                                                      |has{(('Mazojys	ddd	ggg',),)}  | schema1 |
-      | conn_0 | True   | drop table if exists sharding_4_t1                                                                                                |success       | schema1 |
+      | conn_0 | False   | load data infile "./tab.txt" into table sharding_4_t1  FIELDS   OPTIONALLY ENCLOSED BY '"'   LINES TERMINATED BY '\n';           | success      | schema1 |
+      | conn_0 | False   | select * from sharding_4_t1                                                                                                      | has{((201, 'Mazojys\tddd\tggg', 'Fxoj', 'Finance', 7800),)}  | schema1 |
+      | conn_0 | True   | drop table if exists sharding_4_t1                                                                                                | success       | schema1 |
     Given remove local and server file "tab.txt"
