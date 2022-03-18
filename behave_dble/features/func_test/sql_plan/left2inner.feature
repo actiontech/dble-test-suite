@@ -59,6 +59,7 @@ Feature: test hint with left2inner/right2inner
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                            |
 
     #more than one left join appeared in main sql transform to inner join
+    #has known issue:http://10.186.18.11/jira/browse/DBLE0REQ-1691 , nut not confluence result
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_B"
       | conn   | toClose | sql                                                                                                                                                                     | db     |
       | conn_1 | false   | explain /*!dble:plan=$left2inner*/select b.deptname from Employee a left join Dept b on a.deptname=b.deptname left join Info c on a.deptname=c.deptname order by a.name | schema1|
@@ -81,6 +82,7 @@ Feature: test hint with left2inner/right2inner
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                            |
 
     #left join & inner join appeared in main sql transform to inner join
+    #has known issue:http://10.186.18.11/jira/browse/DBLE0REQ-1691 , nut not confluence result
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_D"
       | conn   | toClose | sql                                                                                                                                                                         | db     |
       | conn_1 | false   | explain /*!dble:plan=$left2inner*/SELECT b.deptname FROM Employee a INNER JOIN Info c on a.deptname=c.deptname LEFT JOIN Dept b on a.DeptName= b.DeptName order by a.name   | schema1|
@@ -92,6 +94,7 @@ Feature: test hint with left2inner/right2inner
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                      |
 
     #right join & inner join appeared in main sql transform to inner join
+    #has known issue:http://10.186.18.11/jira/browse/DBLE0REQ-1691 , nut not confluence result
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_E"
       | conn   | toClose | sql                                                                                                                                                                      | db     |
       | conn_1 | false   | explain /*!dble:plan=$right2inner*/SELECT a.name FROM Employee a INNER JOIN Info c on a.deptname=c.deptname RIGHT JOIN Dept b on a.DeptName= b.DeptName order by a.name  | schema1|
@@ -103,6 +106,7 @@ Feature: test hint with left2inner/right2inner
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                       |
 
     #left join & right join & inner join appeared in main sql transform to inner join
+    #has known issue:http://10.186.18.11/jira/browse/DBLE0REQ-1691 , nut not confluence result
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_F"
       | conn   | toClose | sql                                                                                                                                                                                                                              | db     |
       | conn_1 | false   | explain /*!dble:plan=$left2inner$right2inner*/ SELECT b.deptname FROM Employee a LEFT JOIN Dept b on a.deptname=b.deptname INNER JOIN Level c on a.level=c.levelname RIGHT JOIN Info d on a.deptname=d.deptname order by a.name  | schema1|
