@@ -135,12 +135,12 @@ Feature: test rwStickyTime on rwSplit mode
     Then check general log in host "mysql-slave1" has not "select id from testtb where id=8"
     Then check general log in host "mysql-slave1" has not "select id from testtb where id=9"
 
+#### DBLE0REQ-1681
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+       """
+       because in the sticky time range，so select write instance
+       """
 
-##### DBLE0REQ-1681
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#       """
-#       because in the sticky time range，so select write instance
-#       """
 ###########invalid data
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
