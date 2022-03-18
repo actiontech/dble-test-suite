@@ -463,46 +463,46 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                  | expect  | db      |
       # Columns contain in-subquery
-      | conn_1 | False   | select a.id, select max(b.id) from no_sharding_t1 b where b.id in (select distinct d.id from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id | has{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
+      | conn_1 | False   | select a.id, select max(b.id) from no_sharding_t1 b where b.id in (select distinct d.id from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id | equal{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
       # Columns contain = subquery
-      | conn_1 | False   | select a.id, select max(b.id) from no_sharding_t1 b where b.id = (select max(d.id) from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id      | has{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
+      | conn_1 | False   | select a.id, select max(b.id) from no_sharding_t1 b where b.id = (select max(d.id) from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id      | equal{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
       # where contain in-subquery
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id in (SELECT b.id FROM no_sharding_t1 b) ORDER BY a.id | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id in (SELECT b.id FROM no_sharding_t1 b) ORDER BY a.id | equal{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
       # where contain = subquery
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id =(SELECT b.id FROM no_sharding_t1 b WHERE b.id =1 limit 1) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id =(SELECT b.id FROM no_sharding_t1 b WHERE b.id =1 limit 1) ORDER BY a.id | equal{((1,'a',1),)} | schema1 |
       # join contain in-subquery
-      | conn_1 | False   | SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id IN ( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | has{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
+      | conn_1 | False   | SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id IN ( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | equal{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
       # join contain = subquery
-      | conn_1 | False   | SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id =( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | has{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
+      | conn_1 | False   | SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id =( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | equal{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
       # order by contain in-subquery
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.age>5 ORDER BY (select c.id from no_sharding_t1 c where 1=1 and c.id in (select d.id from single_t1 d) order by c.id limit 1) | has{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.age>5 ORDER BY (select c.id from no_sharding_t1 c where 1=1 and c.id in (select d.id from single_t1 d) order by c.id limit 1) | equal{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
       # order by contain = subquery
-      | conn_1 | False   | select a.* from sharding_4_t1 a where a.age>5 order by (select c.id from no_sharding_t1 c where 1=1 and c.id=(select max(d.id) from single_t1 d) order by c.id limit 1) | has{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | select a.* from sharding_4_t1 a where a.age>5 order by (select c.id from no_sharding_t1 c where 1=1 and c.id=(select max(d.id) from single_t1 d) order by c.id limit 1) | equal{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
       # having contain in-subquery
-      | conn_1 | False   | select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id in (select b.id from single_t1 b where b.code>5) order by a.id | has{((6,),(7,),(8,))} | schema1 |
+      | conn_1 | False   | select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id in (select b.id from single_t1 b where b.code>5) order by a.id | equal{((6,),(7,),(8,))} | schema1 |
       # having contain = subquery
-      | conn_1 | False   | select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id=(select max(b.id) from single_t1 b where b.code>5) order by a.id | has{((8,))} | schema1 |
+      | conn_1 | False   | select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id=(select max(b.id) from single_t1 b where b.code>5) order by a.id | equal{((8,),)} | schema1 |
       # Nested subquery contain in-subquery
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id IN (select b.id from single_t1 b where 1=1 and b.id in (SELECT c.id FROM no_sharding_t1 c)) ORDER BY a.id | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id in (select b.id from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id IN (select b.id from single_t1 b where 1=1 and b.id in (SELECT c.id FROM no_sharding_t1 c)) ORDER BY a.id | equal{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id in (select b.id from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | equal{((1,'a',1),)} | schema1 |
       # Nested subquery contain = subquery
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id =(select max(b.id) from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id =(select max(b.id) from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | equal{((1,'a',1),)} | schema1 |
       # = any() subquery
-      | conn_1 | False   | select * from sharding_4_t1 where id = any(select id from single_t1 where code=1) order by name desc | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where id = any(select id from single_t1 where code=1) order by name desc | equal{((1,'a',1),)} | schema1 |
       # other any() subquery
-      | conn_1 | False   | select * from sharding_4_t1 where id <> any(select id from single_t1 where code=1) order by name desc | has{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where id <> any(select id from single_t1 where code=1) order by name desc | equal{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
       # = some() subquery
-      | conn_1 | False   | select * from sharding_4_t1 where id = some(select id from no_sharding_t1 where code=1) order by name desc | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where id = some(select id from no_sharding_t1 where code=1) order by name desc | equal{((1,'a',1),)} | schema1 |
       # other some() subquery
-      | conn_1 | False   | select * from sharding_4_t1 where id != some(select id from no_sharding_t1 where code=1) order by name desc | has{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where id != some(select id from no_sharding_t1 where code=1) order by name desc | equal{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
       # = all() subquery
       | conn_1 | False   | select * from sharding_4_t1 where age = all(select code from no_sharding_t1 where code>2) order by name desc | success | schema1 |
       # other all() subquery
-      | conn_1 | False   | select * from sharding_4_t1 where age <> all(select code from no_sharding_t1 where code>2) order by name desc | has{((1,'a',1),(2,'b',2))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where age <> all(select code from no_sharding_t1 where code>2) order by name desc | equal{((1,'a',1),(2,'b',2))} | schema1 |
       # not subquery
-      | conn_1 | False   | select * from sharding_4_t1 where not id=(select max(id) from no_sharding_t1) order by id                     | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where not id=(select max(id) from no_sharding_t1) order by id                     | equal{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17))} | schema1 |
       # exists subquery
-      | conn_1 | False   | select * from sharding_4_t1 where exists (select id from no_sharding_t1 where code=1) order by name desc      | has{((8,'dd',18),(4,'d',4),(7,'cc',17),(3,'c',3),(6,'bb',16),(2,'b',2),(5,'aa',15),(1,'a',1))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where exists (select id from no_sharding_t1 where code=1) order by name desc      | equal{((8,'dd',18),(4,'d',4),(7,'cc',17),(3,'c',3),(6,'bb',16),(2,'b',2),(5,'aa',15),(1,'a',1))} | schema1 |
       | conn_1 | True    | drop table if exists sharding_4_t1;drop table if exists no_sharding_t1;drop table if exists single_t1         | success | schema1 |
 
 
@@ -948,46 +948,46 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                  | expect  | db      |
       # Columns contain in-subquery
-      | conn_1 | False   | select a.id, select max(b.id) from no_sharding_t1 b where b.id in (select distinct d.id from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id | has{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
+      | conn_1 | False   | select a.id, select max(b.id) from no_sharding_t1 b where b.id in (select distinct d.id from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id | equal{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
       # Columns contain = subquery
-      | conn_1 | False   | select a.id, select max(b.id) from no_sharding_t1 b where b.id = (select max(d.id) from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id      | has{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
+      | conn_1 | False   | select a.id, select max(b.id) from no_sharding_t1 b where b.id = (select max(d.id) from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id      | equal{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
       # where contain in-subquery
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id in (SELECT b.id FROM no_sharding_t1 b) ORDER BY a.id | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id in (SELECT b.id FROM no_sharding_t1 b) ORDER BY a.id | equal{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
       # where contain = subquery
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id =(SELECT b.id FROM no_sharding_t1 b WHERE b.id =1 limit 1) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id =(SELECT b.id FROM no_sharding_t1 b WHERE b.id =1 limit 1) ORDER BY a.id | equal{((1,'a',1),)} | schema1 |
       # join contain in-subquery
-      | conn_1 | False   | SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id IN ( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | has{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
+      | conn_1 | False   | SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id IN ( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | equal{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
       # join contain = subquery
-      | conn_1 | False   | SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id =( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | has{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
+      | conn_1 | False   | SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id =( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | equal{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
       # order by contain in-subquery
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.age>5 ORDER BY (select c.id from no_sharding_t1 c where 1=1 and c.id in (select d.id from single_t1 d) order by c.id limit 1) | has{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.age>5 ORDER BY (select c.id from no_sharding_t1 c where 1=1 and c.id in (select d.id from single_t1 d) order by c.id limit 1) | equal{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
       # order by contain = subquery
-      | conn_1 | False   | select a.* from sharding_4_t1 a where a.age>5 order by (select c.id from no_sharding_t1 c where 1=1 and c.id=(select max(d.id) from single_t1 d) order by c.id limit 1) | has{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | select a.* from sharding_4_t1 a where a.age>5 order by (select c.id from no_sharding_t1 c where 1=1 and c.id=(select max(d.id) from single_t1 d) order by c.id limit 1) | equal{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
       # having contain in-subquery
-      | conn_1 | False   | select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id in (select b.id from single_t1 b where b.code>5) order by a.id | has{((6,),(7,),(8,))} | schema1 |
+      | conn_1 | False   | select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id in (select b.id from single_t1 b where b.code>5) order by a.id | equal{((6,),(7,),(8,))} | schema1 |
       # having contain = subquery
-      | conn_1 | False   | select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id=(select max(b.id) from single_t1 b where b.code>5) order by a.id | has{((8,))} | schema1 |
+      | conn_1 | False   | select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id=(select max(b.id) from single_t1 b where b.code>5) order by a.id | equal{((8,),)} | schema1 |
       # Nested subquery contain in-subquery
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id IN (select b.id from single_t1 b where 1=1 and b.id in (SELECT c.id FROM no_sharding_t1 c)) ORDER BY a.id | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id in (select b.id from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id IN (select b.id from single_t1 b where 1=1 and b.id in (SELECT c.id FROM no_sharding_t1 c)) ORDER BY a.id | equal{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id in (select b.id from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | equal{((1,'a',1),)} | schema1 |
       # Nested subquery contain = subquery
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id =(select max(b.id) from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id =(select max(b.id) from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | equal{((1,'a',1),)} | schema1 |
       # = any() subquery
-      | conn_1 | False   | select * from sharding_4_t1 where id = any(select id from single_t1 where code=1) order by name desc | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where id = any(select id from single_t1 where code=1) order by name desc | equal{((1,'a',1),)} | schema1 |
       # other any() subquery
-      | conn_1 | False   | select * from sharding_4_t1 where id <> any(select id from single_t1 where code=1) order by name desc | has{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where id <> any(select id from single_t1 where code=1) order by name desc | equal{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
       # = some() subquery
-      | conn_1 | False   | select * from sharding_4_t1 where id = some(select id from no_sharding_t1 where code=1) order by name desc | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where id = some(select id from no_sharding_t1 where code=1) order by name desc | equal{((1,'a',1),)} | schema1 |
       # other some() subquery
-      | conn_1 | False   | select * from sharding_4_t1 where id != some(select id from no_sharding_t1 where code=1) order by name desc | has{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where id != some(select id from no_sharding_t1 where code=1) order by name desc | equal{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
       # = all() subquery
       | conn_1 | False   | select * from sharding_4_t1 where age = all(select code from no_sharding_t1 where code>2) order by name desc | success | schema1 |
       # other all() subquery
-      | conn_1 | False   | select * from sharding_4_t1 where age <> all(select code from no_sharding_t1 where code>2) order by name desc | has{((1,'a',1),(2,'b',2))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where age <> all(select code from no_sharding_t1 where code>2) order by name desc | equal{((1,'a',1),(2,'b',2))} | schema1 |
       # not subquery
-      | conn_1 | False   | select * from sharding_4_t1 where not id=(select max(id) from no_sharding_t1) order by id                     | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where not id=(select max(id) from no_sharding_t1) order by id                     | equal{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17))} | schema1 |
       # exists subquery
-      | conn_1 | False   | select * from sharding_4_t1 where exists (select id from no_sharding_t1 where code=1) order by name desc      | has{((8,'dd',18),(4,'d',4),(7,'cc',17),(3,'c',3),(6,'bb',16),(2,'b',2),(5,'aa',15),(1,'a',1))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where exists (select id from no_sharding_t1 where code=1) order by name desc      | equal{((8,'dd',18),(4,'d',4),(7,'cc',17),(3,'c',3),(6,'bb',16),(2,'b',2),(5,'aa',15),(1,'a',1))} | schema1 |
       | conn_1 | True    | drop table if exists sharding_4_t1;drop table if exists no_sharding_t1;drop table if exists single_t1         | success | schema1 |
 
 
@@ -1422,46 +1422,46 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                  | expect  | db      |
       # Columns contain in-subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id, select max(b.id) from no_sharding_t1 b where b.id in (select distinct d.id from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id | has{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id, select max(b.id) from no_sharding_t1 b where b.id in (select distinct d.id from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id | equal{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
       # Columns contain = subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id, select max(b.id) from no_sharding_t1 b where b.id = (select max(d.id) from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id      | has{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id, select max(b.id) from no_sharding_t1 b where b.id = (select max(d.id) from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id      | equal{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
       # where contain in-subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id in (SELECT b.id FROM no_sharding_t1 b) ORDER BY a.id | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id in (SELECT b.id FROM no_sharding_t1 b) ORDER BY a.id | equal{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
       # where contain = subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id =(SELECT b.id FROM no_sharding_t1 b WHERE b.id =1 limit 1) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id =(SELECT b.id FROM no_sharding_t1 b WHERE b.id =1 limit 1) ORDER BY a.id | equal{((1,'a',1),)} | schema1 |
       # join contain in-subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id IN ( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | has{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id IN ( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | equal{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
       # join contain = subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id =( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | has{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id =( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | equal{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
       # order by contain in-subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.age>5 ORDER BY (select c.id from no_sharding_t1 c where 1=1 and c.id in (select d.id from single_t1 d) order by c.id limit 1) | has{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.age>5 ORDER BY (select c.id from no_sharding_t1 c where 1=1 and c.id in (select d.id from single_t1 d) order by c.id limit 1) | equal{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
       # order by contain = subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select a.* from sharding_4_t1 a where a.age>5 order by (select c.id from no_sharding_t1 c where 1=1 and c.id=(select max(d.id) from single_t1 d) order by c.id limit 1) | has{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select a.* from sharding_4_t1 a where a.age>5 order by (select c.id from no_sharding_t1 c where 1=1 and c.id=(select max(d.id) from single_t1 d) order by c.id limit 1) | equal{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
       # having contain in-subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id in (select b.id from single_t1 b where b.code>5) order by a.id | has{((6,),(7,),(8,))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id in (select b.id from single_t1 b where b.code>5) order by a.id | equal{((6,),(7,),(8,))} | schema1 |
       # having contain = subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id=(select max(b.id) from single_t1 b where b.code>5) order by a.id | has{((8,))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id=(select max(b.id) from single_t1 b where b.code>5) order by a.id | equal{((8,),)} | schema1 |
       # Nested subquery contain in-subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id IN (select b.id from single_t1 b where 1=1 and b.id in (SELECT c.id FROM no_sharding_t1 c)) ORDER BY a.id | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id in (select b.id from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id IN (select b.id from single_t1 b where 1=1 and b.id in (SELECT c.id FROM no_sharding_t1 c)) ORDER BY a.id | equal{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id in (select b.id from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | equal{((1,'a',1),)} | schema1 |
       # Nested subquery contain = subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id =(select max(b.id) from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id =(select max(b.id) from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | equal{((1,'a',1),)} | schema1 |
       # = any() subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id = any(select id from single_t1 where code=1) order by name desc | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id = any(select id from single_t1 where code=1) order by name desc | equal{((1,'a',1),)} | schema1 |
       # other any() subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id <> any(select id from single_t1 where code=1) order by name desc | has{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id <> any(select id from single_t1 where code=1) order by name desc | equal{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
       # = some() subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id = some(select id from no_sharding_t1 where code=1) order by name desc | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id = some(select id from no_sharding_t1 where code=1) order by name desc | equal{((1,'a',1),)} | schema1 |
       # other some() subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id != some(select id from no_sharding_t1 where code=1) order by name desc | has{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id != some(select id from no_sharding_t1 where code=1) order by name desc | equal{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
       # = all() subquery
       | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where age = all(select code from no_sharding_t1 where code>2) order by name desc | success | schema1 |
       # other all() subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where age <> all(select code from no_sharding_t1 where code>2) order by name desc | has{((1,'a',1),(2,'b',2))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where age <> all(select code from no_sharding_t1 where code>2) order by name desc | equal{((1,'a',1),(2,'b',2))} | schema1 |
       # not subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where not id=(select max(id) from no_sharding_t1) order by id                     | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where not id=(select max(id) from no_sharding_t1) order by id                     | equal{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17))} | schema1 |
       # exists subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where exists (select id from no_sharding_t1 where code=1) order by name desc      | has{((8,'dd',18),(4,'d',4),(7,'cc',17),(3,'c',3),(6,'bb',16),(2,'b',2),(5,'aa',15),(1,'a',1))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where exists (select id from no_sharding_t1 where code=1) order by name desc      | equal{((8,'dd',18),(4,'d',4),(7,'cc',17),(3,'c',3),(6,'bb',16),(2,'b',2),(5,'aa',15),(1,'a',1))} | schema1 |
       | conn_1 | True    | drop table if exists sharding_4_t1;drop table if exists no_sharding_t1;drop table if exists single_t1         | success | schema1 |
 
   #add for http://10.186.18.11/jira/browse/DBLE0REQ-1474
@@ -1895,44 +1895,44 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                  | expect  | db      |
       # Columns contain in-subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id, select max(b.id) from no_sharding_t1 b where b.id in (select distinct d.id from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id | has{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id, select max(b.id) from no_sharding_t1 b where b.id in (select distinct d.id from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id | equal{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
       # Columns contain = subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id, select max(b.id) from no_sharding_t1 b where b.id = (select max(d.id) from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id      | has{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id, select max(b.id) from no_sharding_t1 b where b.id = (select max(d.id) from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id      | equal{((1,8),(2,8),(3,8),(4,8),(5,8),(6,8),(7,8),(8,8))} | schema1 |
       # where contain in-subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id in (SELECT b.id FROM no_sharding_t1 b) ORDER BY a.id | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id in (SELECT b.id FROM no_sharding_t1 b) ORDER BY a.id | equal{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
       # where contain = subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id =(SELECT b.id FROM no_sharding_t1 b WHERE b.id =1 limit 1) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id =(SELECT b.id FROM no_sharding_t1 b WHERE b.id =1 limit 1) ORDER BY a.id | equal{((1,'a',1),)} | schema1 |
       # join contain in-subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id IN ( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | has{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id IN ( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | equal{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
       # join contain = subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id =( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | has{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id =( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | equal{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
       # order by contain in-subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.age>5 ORDER BY (select c.id from no_sharding_t1 c where 1=1 and c.id in (select d.id from single_t1 d) order by c.id limit 1) | has{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.age>5 ORDER BY (select c.id from no_sharding_t1 c where 1=1 and c.id in (select d.id from single_t1 d) order by c.id limit 1) | equal{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
       # order by contain = subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select a.* from sharding_4_t1 a where a.age>5 order by (select c.id from no_sharding_t1 c where 1=1 and c.id=(select max(d.id) from single_t1 d) order by c.id limit 1) | has{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select a.* from sharding_4_t1 a where a.age>5 order by (select c.id from no_sharding_t1 c where 1=1 and c.id=(select max(d.id) from single_t1 d) order by c.id limit 1) | equal{((5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
       # having contain in-subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id in (select b.id from single_t1 b where b.code>5) order by a.id | has{((6,),(7,),(8,))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id in (select b.id from single_t1 b where b.code>5) order by a.id | equal{((6,),(7,),(8,))} | schema1 |
       # having contain = subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id=(select max(b.id) from single_t1 b where b.code>5) order by a.id | has{((8,))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id=(select max(b.id) from single_t1 b where b.code>5) order by a.id | equal{((8,),)} | schema1 |
       # Nested subquery contain in-subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id IN (select b.id from single_t1 b where 1=1 and b.id in (SELECT c.id FROM no_sharding_t1 c)) ORDER BY a.id | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id in (select b.id from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id IN (select b.id from single_t1 b where 1=1 and b.id in (SELECT c.id FROM no_sharding_t1 c)) ORDER BY a.id | equal{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id in (select b.id from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | equal{((1,'a',1),)} | schema1 |
       # Nested subquery contain = subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id =(select max(b.id) from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/SELECT a.* FROM sharding_4_t1 a WHERE a.id =(select max(b.id) from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | equal{((1,'a',1),)} | schema1 |
       # = any() subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id = any(select id from single_t1 where code=1) order by name desc | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id = any(select id from single_t1 where code=1) order by name desc | equal{((1,'a',1),)} | schema1 |
       # other any() subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id <> any(select id from single_t1 where code=1) order by name desc | has{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id <> any(select id from single_t1 where code=1) order by name desc | equal{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
       # = some() subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id = some(select id from no_sharding_t1 where code=1) order by name desc | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id = some(select id from no_sharding_t1 where code=1) order by name desc | equal{((1,'a',1),)} | schema1 |
       # other some() subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id != some(select id from no_sharding_t1 where code=1) order by name desc | has{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where id != some(select id from no_sharding_t1 where code=1) order by name desc | equal{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
       # = all() subquery
       | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where age = all(select code from no_sharding_t1 where code>2) order by name desc | success | schema1 |
       # other all() subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where age <> all(select code from no_sharding_t1 where code>2) order by name desc | has{((1,'a',1),(2,'b',2))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where age <> all(select code from no_sharding_t1 where code>2) order by name desc | equal{((1,'a',1),(2,'b',2))} | schema1 |
       # not subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where not id=(select max(id) from no_sharding_t1) order by id                     | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where not id=(select max(id) from no_sharding_t1) order by id                     | equal{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17))} | schema1 |
       # exists subquery
-      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where exists (select id from no_sharding_t1 where code=1) order by name desc      | has{((8,'dd',18),(4,'d',4),(7,'cc',17),(3,'c',3),(6,'bb',16),(2,'b',2),(5,'aa',15),(1,'a',1))} | schema1 |
+      | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where exists (select id from no_sharding_t1 where code=1) order by name desc      | equal{((8,'dd',18),(4,'d',4),(7,'cc',17),(3,'c',3),(6,'bb',16),(2,'b',2),(5,'aa',15),(1,'a',1))} | schema1 |
       | conn_1 | True    | drop table if exists sharding_4_t1;drop table if exists no_sharding_t1;drop table if exists single_t1         | success | schema1 |
