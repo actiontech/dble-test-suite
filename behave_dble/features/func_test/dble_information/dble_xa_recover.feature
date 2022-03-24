@@ -79,6 +79,10 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn_0 | False   | delete from dble_xa_recover where instance='hostM1'                                    | Access denied for table 'dble_xa_recover' |
       | conn_0 | False   | update dble_xa_recover set data='number of requests' where instance='hostM1'           | Access denied for table 'dble_xa_recover' |
       | conn_0 | True    | insert into dble_xa_recover values ('a','b','c')                                       | Access denied for table 'dble_xa_recover' |
+
+    # sleep reason: http://10.186.18.11/jira/browse/DBLE0REQ-1683
+    Given sleep "2" seconds
+
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                             |
       | conn_1 | False   | xa rollback 'Dble_Server.abcd'  |
@@ -230,9 +234,6 @@ Feature: check dble_xa_recover and exception xa transactions
     Dble_Server.abc.20
     Please clean up according to the actual situation.
     """
-
-    # sleep reason: http://10.186.18.11/jira/browse/DBLE0REQ-1683
-    Given sleep "2" seconds
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                               |
       | conn_8 | False   | xa commit 'Dble_Server.abc.2.db1' |
