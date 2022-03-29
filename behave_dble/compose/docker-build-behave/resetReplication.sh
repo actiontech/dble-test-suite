@@ -15,14 +15,19 @@ for((i=0; i<count_V5; i=i+1)); do
 	echo "restart mysql and delete none-sys dbs in ${mysql_install_V5[$i]}"
 	ssh root@${mysql_install_V5[$i]}  "sed -i -e '/lower_case_table_names/d' -e '/server-id/a lower_case_table_names = 0' /root/sandboxes/msb_5_7_25/my.sandbox.cnf" \
 	&& ssh root@${mysql_install_V5[$i]}  "/root/sandboxes/msb_5_7_25/restart" \
+	&& ssh root@${mysql_install_V5[$i]} "rm -rf /usr/bin/mysql && ln -sf /root/opt/mysql/5.7.25/bin/mysql /usr/bin/mysql" \
+  && ssh root@${mysql_install_V5[$i]} "rm -f /tmp/mysql.sock  && ln -s /tmp/mysql_sandbox3307.sock /tmp/mysql.sock" \
 	&& scp ${base_dir}/deleteDb.sql "root@${mysql_install_V5[$i]}:/" \
 	&& sleep 5s \
 	&& ssh root@${mysql_install_V5[$i]}  "mysql -uroot -p111111 < /deleteDb.sql"
 done
+
 for((i=0; i<count_V8; i=i+1)); do
 	echo "restart mysql and delete none-sys dbs in ${mysql_install_V8[$i]}"
 	ssh root@${mysql_install_V8[$i]}  "sed -i -e '/lower_case_table_names/d' -e '/server-id/a lower_case_table_names = 0' /root/sandboxes/msb_8_0_18/my.sandbox.cnf" \
 	&& ssh root@${mysql_install_V8[$i]}  "/root/sandboxes/msb_8_0_18/restart" \
+	&& ssh root@${mysql_install_V8[$i]} "rm -rf /usr/bin/mysql && ln -sf /root/opt/mysql/8.0.18/bin/mysql /usr/bin/mysql" \
+	&& ssh root@${mysql_install_V8[$i]} "rm -f /tmp/mysql.sock  && ln -s /tmp/mysql_sandbox3307.sock /tmp/mysql.sock" \
 	&& scp ${base_dir}/deleteDb.sql "root@${mysql_install_V8[$i]}:/" \
 	&& sleep 5s \
 	&& ssh root@${mysql_install_V8[$i]}  "mysql -uroot -p111111 < /deleteDb.sql"
