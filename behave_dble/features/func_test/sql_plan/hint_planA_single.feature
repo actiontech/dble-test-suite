@@ -87,7 +87,6 @@ Feature: test with hint plan A with other table type
       | conn_1 | False   | explain /*!dble:plan= (a,c,b) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname LEFT JOIN Info c ON a.deptname=c.deptname order by a.name | schema1 | hint explain build failures! check ER condition |
 
     # 1.3 left join & left join & 1 ER  abc
-    # TODO : http://10.186.18.11/jira/browse/DBLE0REQ-1655
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs"
       | conn   | toClose | sql                                                                                                                                                                                               | expect  | db      |
       | conn_1 | False   | explain /*!dble:plan= (a,b) & c */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname LEFT JOIN Level c ON a.level=c.levelname ORDER BY a.name | success | schema1 |
@@ -113,7 +112,6 @@ Feature: test with hint plan A with other table type
 
   # 2. a LEFT JOIN b on a.col=b.col LEFT JOIN c on b.col=c.col
   # 2.1 left join & left join & 2 ER  abc
-    # TODO :http://10.186.18.11/jira/browse/DBLE0REQ-1655
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs"
       | conn   | toClose | sql                                                                                                                                                                                                 | expect  | db      |
       | conn_1 | False   | explain /*!dble:plan= (a,b) & c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname LEFT JOIN Info c ON b.deptname=c.deptname ORDER BY a.name | success | schema1 |
@@ -204,8 +202,6 @@ Feature: test with hint plan A with other table type
       | join_1            | JOIN                  | shuffle_field_1; shuffle_field_3                                                                                                                                           |
       | order_1           | ORDER                 | join_1                                                                                                                                                                     |
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                    |
-
-
 
 
     Then execute sql in "dble-1" and the result should be consistent with mysql

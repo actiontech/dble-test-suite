@@ -131,8 +131,8 @@ Feature: test with hint plan A
 
     # 1.6 left join & left join & 1 ER  a,c,b not support
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                                                                                                                                   | db      | expect                                               |
-      | conn_1 | False   | explain /*!dble:plan=a \| c \| b */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname LEFT JOIN Info c ON a.deptname=c.deptname order by a.name; | schema1 | hint explain build failures! check & or \| condition |
+      | conn   | toClose | sql                                                                                                                                                                                                  | db      | expect                                                       |
+      | conn_1 | False   | explain /*!dble:plan=a \| c \| b */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname LEFT JOIN Info c ON a.deptname=c.deptname order by a.name | schema1 | hint explain build failures! check table a & or \| condition |
 
     # 1.7 left join & left join & 1 ER  bac, bca, cab, cba
     Then execute sql in "dble-1" in "user" mode
