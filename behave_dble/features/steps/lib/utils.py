@@ -163,6 +163,7 @@ def merge_cmd_strings(filename, sedStr):
     return cmd
 
 
+# restore system time in behave docker, but due to all dockers use one kernel, other dockers system time will change too
 def restore_sys_time():
     import subprocess
     res = subprocess.Popen('ntpdate -u 0.centos.pool.ntp.org', shell=True, stdout=subprocess.PIPE)
