@@ -1170,58 +1170,57 @@ Feature: test with useNewJoinOptimizer=true
         | conn   | toClose | sql                                                         | db|
         | conn_48| true    | SELECT * FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.DeptName=c.DeptName and b.DeptName=c.DeptName order by a.Name  | schema1|
 
-    #see issue : http://10.186.18.11/jira/browse/DBLE0REQ-1705
      #optimization about undirected graph : left join & left join (or) & one ER, join order not change
-#    Given execute single sql in "dble-1" in "user" mode and save resultset in "V"
-#         | conn    | toClose | sql                                                         | db|
-#         | conn_49 | false   | explain SELECT * FROM Employee a LEFT JOIN Info c on a.name=c.name LEFT JOIN Dept b on a.DeptName= b.DeptName or a.empid=b.deptid order by a.name | schema1|
-#    Then check resultset "V" has lines with following column values
-#        | SHARDING_NODE-0     | TYPE-1            | SQL/REF-2                                                                                         |
-#        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  `Employee` `a` ORDER BY `a`.`name` ASC |
-#        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  `Employee` `a` ORDER BY `a`.`name` ASC |
-#        | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                          |
-#        | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                     |
-#        | dn3_1             | BASE SQL        | select `c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Info` `c` ORDER BY `c`.`name` ASC     |
-#        | dn4_1             | BASE SQL        | select `c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Info` `c` ORDER BY `c`.`name` ASC     |
-#        | merge_and_order_2 | MERGE_AND_ORDER | dn3_1; dn4_1                                                                                          |
-#        | shuffle_field_4   | SHUFFLE_FIELD   | merge_and_order_2                                                                                     |
-#        | join_1            | JOIN            | shuffle_field_1; shuffle_field_4                                                                      |
-#        | shuffle_field_2   | SHUFFLE_FIELD   | join_1                                                                                                |
-#        | dn3_2             | BASE SQL        | select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b`                                     |
-#        | dn4_2             | BASE SQL        | select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b`                                     |
-#        | merge_1           | MERGE           | dn3_2; dn4_2                                                                                          |
-#        | shuffle_field_5   | SHUFFLE_FIELD   | merge_1                                                                                               |
-#        | join_2            | JOIN            | shuffle_field_2; shuffle_field_5                                                                      |
-#        | shuffle_field_3   | SHUFFLE_FIELD   | join_2                                                                                                |
-#    Then execute sql in "dble-1" and the result should be consistent with mysql
-#        | conn   | toClose | sql                                                         | db|
-#        | conn_49| true    | SELECT * FROM Employee a LEFT JOIN Info c on a.name=c.name LEFT JOIN Dept b on a.DeptName= b.DeptName or a.empid=b.deptid order by a.name  | schema1|
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "V"
+         | conn    | toClose | sql                                                         | db|
+         | conn_49 | false   | explain SELECT * FROM Employee a LEFT JOIN Info c on a.name=c.name LEFT JOIN Dept b on a.DeptName= b.DeptName or a.empid=b.deptid order by a.name | schema1|
+    Then check resultset "V" has lines with following column values
+        | SHARDING_NODE-0     | TYPE-1            | SQL/REF-2                                                                                         |
+        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  `Employee` `a` ORDER BY `a`.`name` ASC |
+        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  `Employee` `a` ORDER BY `a`.`name` ASC |
+        | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                          |
+        | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                     |
+        | dn3_1             | BASE SQL        | select `c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Info` `c` ORDER BY `c`.`name` ASC     |
+        | dn4_1             | BASE SQL        | select `c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Info` `c` ORDER BY `c`.`name` ASC     |
+        | merge_and_order_2 | MERGE_AND_ORDER | dn3_1; dn4_1                                                                                          |
+        | shuffle_field_4   | SHUFFLE_FIELD   | merge_and_order_2                                                                                     |
+        | join_1            | JOIN            | shuffle_field_1; shuffle_field_4                                                                      |
+        | shuffle_field_2   | SHUFFLE_FIELD   | join_1                                                                                                |
+        | dn3_2             | BASE SQL        | select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b`                                     |
+        | dn4_2             | BASE SQL        | select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b`                                     |
+        | merge_1           | MERGE           | dn3_2; dn4_2                                                                                          |
+        | shuffle_field_5   | SHUFFLE_FIELD   | merge_1                                                                                               |
+        | join_2            | JOIN            | shuffle_field_2; shuffle_field_5                                                                      |
+        | shuffle_field_3   | SHUFFLE_FIELD   | join_2                                                                                                |
+    Then execute sql in "dble-1" and the result should be consistent with mysql
+        | conn   | toClose | sql                                                         | db|
+        | conn_49| true    | SELECT * FROM Employee a LEFT JOIN Info c on a.name=c.name LEFT JOIN Dept b on a.DeptName= b.DeptName or a.empid=b.deptid order by a.name  | schema1|
 
     #optimization about undirected graph : left join & left join (or) & two ER, join order not change
-#    Given execute single sql in "dble-1" in "user" mode and save resultset in "W"
-#         | conn    | toClose | sql                                                         | db|
-#         | conn_50 | false   | explain SELECT * FROM Employee a LEFT JOIN Info c on a.name=c.name LEFT JOIN Dept b on a.DeptName= b.DeptName or b.DeptName=c.DeptName order by a.name | schema1|
-#    Then check resultset "W" has lines with following column values
-#        | SHARDING_NODE-0     | TYPE-1            | SQL/REF-2                                                                                         |
-#        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  `Employee` `a` ORDER BY `a`.`name` ASC |
-#        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  `Employee` `a` ORDER BY `a`.`name` ASC |
-#        | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                          |
-#        | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                     |
-#        | dn3_1             | BASE SQL        | select `c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Info` `c` ORDER BY `c`.`name` ASC     |
-#        | dn4_1             | BASE SQL        | select `c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Info` `c` ORDER BY `c`.`name` ASC     |
-#        | merge_and_order_2 | MERGE_AND_ORDER | dn3_1; dn4_1                                                                                          |
-#        | shuffle_field_4   | SHUFFLE_FIELD   | merge_and_order_2                                                                                     |
-#        | join_1            | JOIN            | shuffle_field_1; shuffle_field_4                                                                      |
-#        | shuffle_field_2   | SHUFFLE_FIELD   | join_1                                                                                                |
-#        | dn3_2             | BASE SQL        | select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b`                                     |
-#        | dn4_2             | BASE SQL        | select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b`                                     |
-#        | merge_1           | MERGE           | dn3_2; dn4_2                                                                                          |
-#        | shuffle_field_5   | SHUFFLE_FIELD   | merge_1                                                                                               |
-#        | join_2            | JOIN            | shuffle_field_2; shuffle_field_5                                                                      |
-#        | shuffle_field_3   | SHUFFLE_FIELD   | join_2                                                                                                |
-#    Then execute sql in "dble-1" and the result should be consistent with mysql
-#        | conn   | toClose | sql                                                         | db|
-#        | conn_50| true    | SELECT * FROM Employee a LEFT JOIN Info c on a.name=c.name LEFT JOIN Dept b on a.DeptName= b.DeptName or b.DeptName=c.DeptName order by a.name  | schema1|
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "W"
+         | conn    | toClose | sql                                                         | db|
+         | conn_50 | false   | explain SELECT * FROM Employee a LEFT JOIN Info c on a.name=c.name LEFT JOIN Dept b on a.DeptName= b.DeptName or b.DeptName=c.DeptName order by a.name | schema1|
+    Then check resultset "W" has lines with following column values
+        | SHARDING_NODE-0     | TYPE-1            | SQL/REF-2                                                                                         |
+        | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  `Employee` `a` ORDER BY `a`.`name` ASC |
+        | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  `Employee` `a` ORDER BY `a`.`name` ASC |
+        | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                          |
+        | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                     |
+        | dn3_1             | BASE SQL        | select `c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Info` `c` ORDER BY `c`.`name` ASC     |
+        | dn4_1             | BASE SQL        | select `c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Info` `c` ORDER BY `c`.`name` ASC     |
+        | merge_and_order_2 | MERGE_AND_ORDER | dn3_1; dn4_1                                                                                          |
+        | shuffle_field_4   | SHUFFLE_FIELD   | merge_and_order_2                                                                                     |
+        | join_1            | JOIN            | shuffle_field_1; shuffle_field_4                                                                      |
+        | shuffle_field_2   | SHUFFLE_FIELD   | join_1                                                                                                |
+        | dn3_2             | BASE SQL        | select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b`                                     |
+        | dn4_2             | BASE SQL        | select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b`                                     |
+        | merge_1           | MERGE           | dn3_2; dn4_2                                                                                          |
+        | shuffle_field_5   | SHUFFLE_FIELD   | merge_1                                                                                               |
+        | join_2            | JOIN            | shuffle_field_2; shuffle_field_5                                                                      |
+        | shuffle_field_3   | SHUFFLE_FIELD   | join_2                                                                                                |
+    Then execute sql in "dble-1" and the result should be consistent with mysql
+        | conn   | toClose | sql                                                         | db|
+        | conn_50| true    | SELECT * FROM Employee a LEFT JOIN Info c on a.name=c.name LEFT JOIN Dept b on a.DeptName= b.DeptName or b.DeptName=c.DeptName order by a.name  | schema1|
 
         #optimization about undirected graph : inner join & inner join (or) & one ER, join order not change
     Given execute single sql in "dble-1" in "user" mode and save resultset in "X"
