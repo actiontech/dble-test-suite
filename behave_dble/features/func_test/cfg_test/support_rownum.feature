@@ -9,9 +9,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs1" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                    |
-      | enableRoutePenetration   | 0             | Whether enable route penetration |
-      | routePenetrationRules    |               | The config of route penetration  |
+      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                                           |
+      | enableRoutePenetration   | 0             | Whether enable route penetration.The default value is 0 |
+      | routePenetrationRules    |               | The config of route penetration.The default value is '' |
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DenableRoutePenetration=0
@@ -21,9 +21,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs2" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                    |
-      | enableRoutePenetration   | 0             | Whether enable route penetration |
-      | routePenetrationRules    |               | The config of route penetration  |
+      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                                           |
+      | enableRoutePenetration   | 0             | Whether enable route penetration.The default value is 0 |
+      | routePenetrationRules    |               | The config of route penetration.The default value is '' |
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DroutePenetrationRules=abc
@@ -33,9 +33,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs3" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                    |
-      | enableRoutePenetration   | 0             | Whether enable route penetration |
-      | routePenetrationRules    | abc           | The config of route penetration  |
+      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                                           |
+      | enableRoutePenetration   | 0             | Whether enable route penetration.The default value is 0 |
+      | routePenetrationRules    | abc           | The config of route penetration.The default value is '' |
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DenableRoutePenetration/d
@@ -49,10 +49,7 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: property routePenetrationRules can't be null
     """
-    parse the route-penetration rule, please check the
-    routePenetrationRules
-    detail exception is :java.lang.IllegalStateException: property routePenetrationRules
-    be null
+    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: property routePenetrationRules can't be null
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -66,9 +63,7 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path $
     """
-    parse the route-penetration rule, please check the
-    routePenetrationRules
-    detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path \$
+    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path \\$
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -79,9 +74,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs4" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                    |
-      | enableRoutePenetration   | 1             | Whether enable route penetration |
-      | routePenetrationRules    | {"abc":"123"} | The config of route penetration  |
+      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                                           |
+      | enableRoutePenetration   | 1             | Whether enable route penetration.The default value is 0 |
+      | routePenetrationRules    | {"abc":"123"} | The config of route penetration.The default value is '' |
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DroutePenetrationRules={"abc":"123"}/c -DroutePenetrationRules={"rules":"123"}
@@ -93,9 +88,7 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was STRING at line 1 column 11 path $.rules
     """
-    parse the route-penetration rule, please check the
-    routePenetrationRules
-    detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was STRING at line 1 column 11 path \$.rules
+    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was STRING at line 1 column 11 path \\$.rules
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -108,10 +101,7 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: regex can't be null or empty.
     """
-    parse the route-penetration rule, please check the
-    routePenetrationRules
-    detail exception is :java.lang.IllegalStateException: regex
-    t be null or empty.
+    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: regex can't be null or empty.
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -126,9 +116,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs5" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1                       | PARAM_DESCR-2                    |
-      | enableRoutePenetration   | 1                                   | Whether enable route penetration |
-      | routePenetrationRules    | {"rules":[{"abc":123,"regex":"1"}]} | The config of route penetration  |
+      | PARAM_NAME-0             | PARAM_VALUE-1                       | PARAM_DESCR-2                                           |
+      | enableRoutePenetration   | 1                                   | Whether enable route penetration.The default value is 0 |
+      | routePenetrationRules    | {"rules":[{"abc":123,"regex":"1"}]} | The config of route penetration.The default value is '' |
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DroutePenetrationRules/d
@@ -144,10 +134,7 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonParseException: Cannot parse json '123' to boolean value
     """
-    parse the route-penetration rule, please check the
-    routePenetrationRules
-    detail exception is :com.google.gson.JsonParseException: Cannot parse json
-    to boolean value
+    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonParseException: Cannot parse json '123' to boolean value
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -163,9 +150,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs6" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1                                              | PARAM_DESCR-2                    |
-      | enableRoutePenetration   | 1                                                          | Whether enable route penetration |
-      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1"}]} | The config of route penetration  |
+      | PARAM_NAME-0             | PARAM_VALUE-1                                              | PARAM_DESCR-2                                           |
+      | enableRoutePenetration   | 1                                                          | Whether enable route penetration.The default value is 0 |
+      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1"}]} | The config of route penetration.The default value is '' |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                               | expect  | db      |
       | conn_1 | False   | drop table if exists sharding_2_t1                                                | success | schema1 |
@@ -202,9 +189,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs7" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                    |
-      | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration |
-      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":false,"caseSensitive":true}]}  | The config of route penetration  |
+      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                                           |
+      | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration.The default value is 0 |
+      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":false,"caseSensitive":true}]}  | The config of route penetration.The default value is '' |
         Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                               | expect  | db      |
       | conn_1 | False   | select id from sharding_2_t1                                                      | success | schema1 |
@@ -238,9 +225,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs8" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                    |
-      | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration |
-      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":false,"caseSensitive":false}]} | The config of route penetration  |
+      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                                           |
+      | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration.The default value is 0 |
+      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":false,"caseSensitive":false}]} | The config of route penetration.The default value is '' |
         Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                               | expect  | db      |
       | conn_1 | False   | select id from sharding_2_t1                                                      | success | schema1 |
@@ -274,9 +261,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs8" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                     | PARAM_DESCR-2                    |
-      | enableRoutePenetration   | 1                                                                                                 | Whether enable route penetration |
-      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":true,"caseSensitive":false}]} | The config of route penetration  |
+      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                     | PARAM_DESCR-2                                           |
+      | enableRoutePenetration   | 1                                                                                                 | Whether enable route penetration.The default value is 0 |
+      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":true,"caseSensitive":false}]} | The config of route penetration.The default value is '' |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                               | expect  | db      |
       | conn_1 | False   | select id from sharding_2_t1                                                      | success | schema1 |
@@ -307,9 +294,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs8" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                    |
-      | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration |
-      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":true,"caseSensitive":false},{"regex":"rownum","partMatch":true,"caseSensitive":true}]} | The config of route penetration  |
+      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                                           |
+      | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration.The default value is 0 |
+      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":true,"caseSensitive":false},{"regex":"rownum","partMatch":true,"caseSensitive":true}]} | The config of route penetration.The default value is '' |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                               | expect  | db      |
       | conn_1 | False   | select id from sharding_2_t1                                                      | success | schema1 |
@@ -682,20 +669,17 @@ Feature: support rownum sql
       | conn   | toClose | sql                                                                                                                     | expect  | db      |
       | conn_2 | False   | explain select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from sharding_2_t2) and status=1 | success | schema1 |
     Then check resultset "rownum_rs0" has lines with following column values
-      | SHARDING_NODE-0            | TYPE-1                   | SQL/REF-2 |
-      | dn1_0                      | BASE SQL                 | select `sharding_2_t1`.`id`,`sharding_2_t1`.`parent_id` from  `sharding_2_t1` where `sharding_2_t1`.`status` = 1 ORDER BY `sharding_2_t1`.`id` ASC |
-      | dn2_0                      | BASE SQL                 | select `sharding_2_t1`.`id`,`sharding_2_t1`.`parent_id` from  `sharding_2_t1` where `sharding_2_t1`.`status` = 1 ORDER BY `sharding_2_t1`.`id` ASC |
-      | merge_and_order_1          | MERGE_AND_ORDER          | dn1_0; dn2_0                                                                                                                                                                                                                    |
-      | shuffle_field_1            | SHUFFLE_FIELD            | merge_and_order_1                                                                                                                                                                                                               |
-      | dn1_1                      | BASE SQL                 | select DISTINCT `sharding_2_t2`.`parent_id` as `autoalias_scalar` from  `sharding_2_t2` ORDER BY `sharding_2_t2`.`parent_id` ASC                                                                                                |
-      | dn2_1                      | BASE SQL                 | select DISTINCT `sharding_2_t2`.`parent_id` as `autoalias_scalar` from  `sharding_2_t2` ORDER BY `sharding_2_t2`.`parent_id` ASC                                                                                                |
-      | merge_and_order_2          | MERGE_AND_ORDER          | dn1_1; dn2_1                                                                                                                                                                                                                    |
-      | distinct_1                 | DISTINCT                 | merge_and_order_2                                                                                                                                                                                                               |
-      | shuffle_field_3            | SHUFFLE_FIELD            | distinct_1                                                                                                                                                                                                                      |
-      | rename_derived_sub_query_1 | RENAME_DERIVED_SUB_QUERY | shuffle_field_3                                                                                                                                                                                                                 |
-      | shuffle_field_4            | SHUFFLE_FIELD            | rename_derived_sub_query_1                                                                                                                                                                                                      |
-      | join_1                     | JOIN                     | shuffle_field_1; shuffle_field_4                                                                                                                                                                                                |
-      | shuffle_field_2            | SHUFFLE_FIELD            | join_1                                                                                                                                                                                                                          |
+      | SHARDING_NODE-0 | TYPE-1                | SQL/REF-2 |
+      | dn1_0           | BASE SQL              | select DISTINCT `sharding_2_t2`.`parent_id` as `autoalias_scalar` from  `sharding_2_t2`                                                                                                            |
+      | dn2_0           | BASE SQL              | select DISTINCT `sharding_2_t2`.`parent_id` as `autoalias_scalar` from  `sharding_2_t2`                                                                                                            |
+      | merge_1         | MERGE                 | dn1_0; dn2_0                                                                                                                                                                                       |
+      | distinct_1      | DISTINCT              | merge_1                                                                                                                                                                                            |
+      | shuffle_field_1 | SHUFFLE_FIELD         | distinct_1                                                                                                                                                                                         |
+      | in_sub_query_1  | IN_SUB_QUERY          | shuffle_field_1                                                                                                                                                                                    |
+      | dn1_1           | BASE SQL(May No Need) | in_sub_query_1; select `sharding_2_t1`.`id`,`sharding_2_t1`.`parent_id` as `rownum` from  `sharding_2_t1` where  ( `sharding_2_t1`.`id` in ('{NEED_TO_REPLACE}') AND `sharding_2_t1`.`status` = 1) |
+      | dn2_1           | BASE SQL(May No Need) | in_sub_query_1; select `sharding_2_t1`.`id`,`sharding_2_t1`.`parent_id` as `rownum` from  `sharding_2_t1` where  ( `sharding_2_t1`.`id` in ('{NEED_TO_REPLACE}') AND `sharding_2_t1`.`status` = 1) |
+      | merge_2         | MERGE                 | dn1_1; dn2_1                                                                                                                                                                                       |
+      | shuffle_field_2 | SHUFFLE_FIELD         | merge_2                                                                                                                                                                                            |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs1"
       | conn   | toClose | sql                                                                                                                                            | expect  | db      |
       | conn_2 | False   | explain select t2.id,t2.shard_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id and t1.id=1 | success | schema1 |
@@ -803,20 +787,17 @@ Feature: support rownum sql
       | conn   | toClose | sql                                                                                                                     | expect  | db      |
       | conn_2 | False   | explain select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from sharding_2_t2) and status=1 | success | schema1 |
     Then check resultset "rownum_rs0" has lines with following column values
-      | SHARDING_NODE-0            | TYPE-1                   | SQL/REF-2 |
-      | dn1_0                      | BASE SQL                 | select `sharding_2_t1`.`id`,`sharding_2_t1`.`parent_id` from  `sharding_2_t1` where `sharding_2_t1`.`status` = 1 ORDER BY `sharding_2_t1`.`id` ASC |
-      | dn2_0                      | BASE SQL                 | select `sharding_2_t1`.`id`,`sharding_2_t1`.`parent_id` from  `sharding_2_t1` where `sharding_2_t1`.`status` = 1 ORDER BY `sharding_2_t1`.`id` ASC |
-      | merge_and_order_1          | MERGE_AND_ORDER          | dn1_0; dn2_0                                                                                                                                       |
-      | shuffle_field_1            | SHUFFLE_FIELD            | merge_and_order_1                                                                                                                                  |
-      | dn3_0                      | BASE SQL                 | select DISTINCT `sharding_2_t2`.`parent_id` as `autoalias_scalar` from  `sharding_2_t2` ORDER BY `sharding_2_t2`.`parent_id` ASC                   |
-      | dn4_0                      | BASE SQL                 | select DISTINCT `sharding_2_t2`.`parent_id` as `autoalias_scalar` from  `sharding_2_t2` ORDER BY `sharding_2_t2`.`parent_id` ASC                   |
-      | merge_and_order_2          | MERGE_AND_ORDER          | dn3_0; dn4_0                                                                                                                                       |
-      | distinct_1                 | DISTINCT                 | merge_and_order_2                                                                                                                                  |
-      | shuffle_field_3            | SHUFFLE_FIELD            | distinct_1                                                                                                                                         |
-      | rename_derived_sub_query_1 | RENAME_DERIVED_SUB_QUERY | shuffle_field_3                                                                                                                                    |
-      | shuffle_field_4            | SHUFFLE_FIELD            | rename_derived_sub_query_1                                                                                                                         |
-      | join_1                     | JOIN                     | shuffle_field_1; shuffle_field_4                                                                                                                   |
-      | shuffle_field_2            | SHUFFLE_FIELD            | join_1                                                                                                                                             |
+      | SHARDING_NODE-0 | TYPE-1                | SQL/REF-2 |
+      | dn3_0           | BASE SQL              | select DISTINCT `sharding_2_t2`.`parent_id` as `autoalias_scalar` from  `sharding_2_t2`                                                                                                            |
+      | dn4_0           | BASE SQL              | select DISTINCT `sharding_2_t2`.`parent_id` as `autoalias_scalar` from  `sharding_2_t2`                                                                                                            |
+      | merge_1         | MERGE                 | dn3_0; dn4_0                                                                                                                                                                                       |
+      | distinct_1      | DISTINCT              | merge_1                                                                                                                                                                                            |
+      | shuffle_field_1 | SHUFFLE_FIELD         | distinct_1                                                                                                                                                                                         |
+      | in_sub_query_1  | IN_SUB_QUERY          | shuffle_field_1                                                                                                                                                                                    |
+      | dn1_0           | BASE SQL(May No Need) | in_sub_query_1; select `sharding_2_t1`.`id`,`sharding_2_t1`.`parent_id` as `rownum` from  `sharding_2_t1` where  ( `sharding_2_t1`.`id` in ('{NEED_TO_REPLACE}') AND `sharding_2_t1`.`status` = 1) |
+      | dn2_0           | BASE SQL(May No Need) | in_sub_query_1; select `sharding_2_t1`.`id`,`sharding_2_t1`.`parent_id` as `rownum` from  `sharding_2_t1` where  ( `sharding_2_t1`.`id` in ('{NEED_TO_REPLACE}') AND `sharding_2_t1`.`status` = 1) |
+      | merge_2         | MERGE                 | dn1_0; dn2_0                                                                                                                                                                                       |
+      | shuffle_field_2 | SHUFFLE_FIELD         | merge_2                                                                                                                                                                                            |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs1"
       | conn   | toClose | sql                                                                                                                                            | expect  | db      |
       | conn_2 | False   | explain select t2.id,t2.shard_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id and t1.id=1 | success | schema1 |
@@ -1237,11 +1218,11 @@ Feature: support rownum sql
       # join, order by
       | conn_2 | False   | select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id where t2.parent_id>1 order by t2.id desc | has{(2, 'single_t1_4', 1.0),(2, 'single_t1_5', 1.0),(2, 'single_t1_6', 1.0)} | schema1 |
       # join, group by, having
-      | conn_2 | False   | select t2.parent_id,t1.code,t1.status,@rownum:=1 from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 | has{(2,'b',1,1)} | schema1 |
-      | conn_2 | False   | select a.*,@rownum:=@rownum+1 from (select id,single_value from single_t1 where parent_id in (select id from sharding_2_t1 where id=2)) a,(select @rownum:=0) r | has{(4, 'single_t1_4', 1.0),(5, 'single_t1_5', 2.0),(6, 'single_t1_6', 3.0)} | schema1 |
-      | conn_2 | False   | select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from single_t1) and status=1 | has{(2, 1)} | schema1 |
-      | conn_2 | False   | select t2.id,t2.single_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id and t1.id=1 | has{(1, 'single_t1_1', 'sharding_2_t1_1', 0),(2, 'single_t1_2', 'sharding_2_t1_1', 0),(3, 'single_t1_3', 'sharding_2_t1_1', 0)} | schema1 |
-      | conn_2 | False   | select t1.shard_name,t2.parent_id,count(0) as abcrownum from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id | has{('sharding_2_t1_2', 2, 3)} | schema1 |
+      | conn_2 | False   | select t2.parent_id,t1.code,t1.status,@rownum:=1 from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 | has{((2,'b',1,1),)} | schema1 |
+      | conn_2 | False   | select a.*,@rownum:=@rownum+1 from (select id,single_value from single_t1 where parent_id in (select id from sharding_2_t1 where id=2)) a,(select @rownum:=0) r | has{((4, 'single_t1_4', 1.0),(5, 'single_t1_5', 2.0),(6, 'single_t1_6', 3.0))} | schema1 |
+      | conn_2 | False   | select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from single_t1) and status=1 | has{((2, 1),)} | schema1 |
+      | conn_2 | False   | select t2.id,t2.single_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id and t1.id=1 | has{((1, 'single_t1_1', 'sharding_2_t1_1', 0),(2, 'single_t1_2', 'sharding_2_t1_1', 0),(3, 'single_t1_3', 'sharding_2_t1_1', 0))} | schema1 |
+      | conn_2 | False   | select t1.shard_name,t2.parent_id,count(0) as abcrownum from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id | has{(('sharding_2_t1_2', 2, 3),)} | schema1 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
      """
      the query select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from single_t1) and status=1 match the route penetration regex
@@ -1446,15 +1427,14 @@ Feature: support rownum sql
       | conn   | toClose | sql                                                                                                                 | expect  | db      |
       | conn_2 | False   | explain select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from single_t1) and status=1 | success | schema1 |
     Then check resultset "rownum_rs10" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2 |
-      | dn1_0             | BASE SQL        | select `sharding_2_t1`.`id`,`sharding_2_t1`.`parent_id` from  `sharding_2_t1` where `sharding_2_t1`.`status` = 1 ORDER BY `sharding_2_t1`.`id` ASC                                                                                                     |
-      | dn2_0             | BASE SQL        | select `sharding_2_t1`.`id`,`sharding_2_t1`.`parent_id` from  `sharding_2_t1` where `sharding_2_t1`.`status` = 1 ORDER BY `sharding_2_t1`.`id` ASC                                                                                                     |
-      | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0                                                                                                                                                                                                                                           |
-      | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                                                      |
-      | dn3_0             | BASE SQL        | select `autoalias_single_t1`.`autoalias_scalar` from (select  distinct `single_t1`.`parent_id` as `autoalias_scalar` from  `single_t1` order by `single_t1`.`parent_id` ASC) autoalias_single_t1 order by `autoalias_single_t1`.`autoalias_scalar` ASC |
-      | merge_1           | MERGE           | dn3_0                                                                                                                                                                                                                                                  |
-      | join_1            | JOIN            | shuffle_field_1; merge_1                                                                                                                                                                                                                               |
-      | shuffle_field_2   | SHUFFLE_FIELD   | join_1                                                                                                                                                                                                                                                 |
+      | SHARDING_NODE-0 | TYPE-1                | SQL/REF-2 |
+      | dn3_0           | BASE SQL              | select  distinct `single_t1`.`parent_id` as `autoalias_scalar` from  `single_t1`                                                                                                                   |
+      | merge_1         | MERGE                 | dn3_0                                                                                                                                                                                              |
+      | in_sub_query_1  | IN_SUB_QUERY          | merge_1                                                                                                                                                                                            |
+      | dn1_0           | BASE SQL(May No Need) | in_sub_query_1; select `sharding_2_t1`.`id`,`sharding_2_t1`.`parent_id` as `rownum` from  `sharding_2_t1` where  ( `sharding_2_t1`.`id` in ('{NEED_TO_REPLACE}') AND `sharding_2_t1`.`status` = 1) |
+      | dn2_0           | BASE SQL(May No Need) | in_sub_query_1; select `sharding_2_t1`.`id`,`sharding_2_t1`.`parent_id` as `rownum` from  `sharding_2_t1` where  ( `sharding_2_t1`.`id` in ('{NEED_TO_REPLACE}') AND `sharding_2_t1`.`status` = 1) |
+      | merge_2         | MERGE                 | dn1_0; dn2_0                                                                                                                                                                                       |
+      | shuffle_field_1 | SHUFFLE_FIELD         | merge_2                                                                                                                                                                                            |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs11"
       | conn   | toClose | sql                                                                                                                         | expect  | db      |
       | conn_2 | False   | explain select t2.id,t2.single_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id and t1.id=1 | success | schema1 |
@@ -1514,20 +1494,20 @@ Feature: support rownum sql
     Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                         | expect  | db      |
-      | conn_2 | False   | select t1.id,t2.single_value,@rownum:=1 from global_t1 t1,single_t1 t2 where t1.id=t2.parent_id order by t2.id desc | has{(1, 'single_t1_1', 1.0),(1, 'single_t1_2', 1.0),(1, 'single_t1_3', 1.0),(2, 'single_t1_4', 1.0),(2, 'single_t1_5', 1.0),(2, 'single_t1_6', 1.0)} | schema1 |
-      | conn_2 | False   | select a.*,@rownum:=@rownum+1 from (select t1.id,t2.single_value from global_t1 t1, single_t1 t2 where t1.id=t2.parent_id order by t2.id) a,(select @rownum:=0) r | has{(1, 'single_t1_1', 1.0),(1, 'single_t1_2', 2.0),(1, 'single_t1_3', 3.0),(2, 'single_t1_4', 4.0),(2, 'single_t1_5', 5.0),(2, 'single_t1_6', 6.0)} | schema1 |
+      | conn_2 | False   | select t1.id,t2.single_value,@rownum:=1 from global_t1 t1,single_t1 t2 where t1.id=t2.parent_id order by t2.id desc | has{((1, 'single_t1_1', 1.0),(1, 'single_t1_2', 1.0),(1, 'single_t1_3', 1.0),(2, 'single_t1_4', 1.0),(2, 'single_t1_5', 1.0),(2, 'single_t1_6', 1.0))} | schema1 |
+      | conn_2 | False   | select a.*,@rownum:=@rownum+1 from (select t1.id,t2.single_value from global_t1 t1, single_t1 t2 where t1.id=t2.parent_id order by t2.id) a,(select @rownum:=0) r | has{((1, 'single_t1_1', 1.0),(1, 'single_t1_2', 2.0),(1, 'single_t1_3', 3.0),(2, 'single_t1_4', 4.0),(2, 'single_t1_5', 5.0),(2, 'single_t1_6', 6.0))} | schema1 |
       # sharding column
-      | conn_2 | False   | select t1.id,t2.single_value,@rownum:=1 from global_t1 t1,single_t1 t2 where t1.id=t2.parent_id and t1.id=2 | has{(2, 'single_t1_4', 1.0),(2, 'single_t1_5', 1.0),(2, 'single_t1_6', 1.0)} | schema1 |
+      | conn_2 | False   | select t1.id,t2.single_value,@rownum:=1 from global_t1 t1,single_t1 t2 where t1.id=t2.parent_id and t1.id=2 | has{((2, 'single_t1_4', 1.0),(2, 'single_t1_5', 1.0),(2, 'single_t1_6', 1.0))} | schema1 |
       # in sub query
-      | conn_2 | False   | select id,single_value,@rownum:=1 from single_t1 where parent_id in (select id from global_t1 where id>1) | has{(4, 'single_t1_4', 1.0),(5, 'single_t1_5', 1.0),(6, 'single_t1_6', 1.0)} | schema1 |
+      | conn_2 | False   | select id,single_value,@rownum:=1 from single_t1 where parent_id in (select id from global_t1 where id>1) | has{((4, 'single_t1_4', 1.0),(5, 'single_t1_5', 1.0),(6, 'single_t1_6', 1.0))} | schema1 |
       # join, order by
-      | conn_2 | False   | select t1.id,t2.single_value,@rownum:=1 from global_t1 t1 join single_t1 t2 on t1.id=t2.parent_id where t2.parent_id>1 order by t2.id desc | has{(2, 'single_t1_4', 1.0),(2, 'single_t1_5', 1.0),(2, 'single_t1_6', 1.0)} | schema1 |
+      | conn_2 | False   | select t1.id,t2.single_value,@rownum:=1 from global_t1 t1 join single_t1 t2 on t1.id=t2.parent_id where t2.parent_id>1 order by t2.id desc | has{((2, 'single_t1_4', 1.0),(2, 'single_t1_5', 1.0),(2, 'single_t1_6', 1.0))} | schema1 |
       # join, group by, having
-      | conn_2 | False   | select t2.parent_id,t1.code,t1.status,@rownum:=1 from global_t1 t1 join single_t1 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 | has{(2,'b',1,1)} | schema1 |
-      | conn_2 | False   | select a.*,@rownum:=@rownum+1 from (select id,single_value from single_t1 where parent_id in (select id from global_t1 where id=2)) a,(select @rownum:=0) r | has{(4, 'single_t1_4', 1.0),(5, 'single_t1_5', 2.0),(6, 'single_t1_6', 3.0)} | schema1 |
-      | conn_2 | False   | select id,parent_id as rownum from global_t1 where id in (select parent_id from single_t1) and status=1 | has{(2, 1)} | schema1 |
-      | conn_2 | False   | select t2.id,t2.single_value,t1.global_name,0 as rownumabc from global_t1 t1 join single_t1 t2 on t1.id=t2.parent_id and t1.id=1 | has{(1, 'single_t1_1', 'global_t1_1', 0),(2, 'single_t1_2', 'global_t1_1', 0),(3, 'single_t1_3', 'global_t1_1', 0)} | schema1 |
-      | conn_2 | False   | select t1.global_name,t2.parent_id,count(0) as abcrownum from global_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id | has{('global_t1_2', 2, 3)} | schema1 |
+      | conn_2 | False   | select t2.parent_id,t1.code,t1.status,@rownum:=1 from global_t1 t1 join single_t1 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 | has{((2,'b',1,1),)} | schema1 |
+      | conn_2 | False   | select a.*,@rownum:=@rownum+1 from (select id,single_value from single_t1 where parent_id in (select id from global_t1 where id=2)) a,(select @rownum:=0) r | has{((4, 'single_t1_4', 1.0),(5, 'single_t1_5', 2.0),(6, 'single_t1_6', 3.0))} | schema1 |
+      | conn_2 | False   | select id,parent_id as rownum from global_t1 where id in (select parent_id from single_t1) and status=1 | has{((2, 1),)} | schema1 |
+      | conn_2 | False   | select t2.id,t2.single_value,t1.global_name,0 as rownumabc from global_t1 t1 join single_t1 t2 on t1.id=t2.parent_id and t1.id=1 | has{((1, 'single_t1_1', 'global_t1_1', 0),(2, 'single_t1_2', 'global_t1_1', 0),(3, 'single_t1_3', 'global_t1_1', 0))} | schema1 |
+      | conn_2 | False   | select t1.global_name,t2.parent_id,count(0) as abcrownum from global_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id | has{(('global_t1_2', 2, 3),)} | schema1 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs3"
       | conn   | toClose | sql                                                                                                                               | expect  | db      |
