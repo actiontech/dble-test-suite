@@ -4,7 +4,7 @@
 # Created by chenhuiming at 2022/2/28
 Feature: test with hint plan A with other table type
 
-  @skip_restart  #@delete_mysql_tables #
+  @delete_mysql_tables
   Scenario: shardingTable  + shardingTable  +  GlobalTable                              #1
   """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
@@ -88,8 +88,8 @@ Feature: test with hint plan A with other table type
       | dn4_0             | BASE SQL              | select `a`.`name`,`a`.`deptname`,`a`.`level`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `a`.`level` ASC  |
       | merge_and_order_1 | MERGE_AND_ORDER       | dn3_0; dn4_0                                                                                                                                                                  |
       | shuffle_field_1   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                             |
-      | dn5_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
-      | merge_1           | MERGE                 | dn5_0                                                                                                                                                                         |
+      | dn5_0//dn6_0      | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
+      | merge_1           | MERGE                 | dn5_0//dn6_0                                                                                                                                                                  |
       | join_1            | JOIN                  | shuffle_field_1; merge_1                                                                                                                                                      |
       | order_1           | ORDER                 | join_1                                                                                                                                                                        |
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                       |
@@ -100,7 +100,7 @@ Feature: test with hint plan A with other table type
       | conn_1 | true    | /*#dble:plan= (a,b) & c */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a LEFT JOIN Dept b ON a.deptname=b.deptname LEFT JOIN Level c ON a.level=c.levelname ORDER BY a.name | schema1 |
 
 
-        # 1.4 left join & left join & NO ER  abc \|
+    # 1.4 left join & left join & NO ER  abc \|
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs"
       | conn   | toClose | sql                                                                                                                                                                                            | expect  | db      |
       | conn_1 | False   | explain /*!dble:plan= a \| b \| c */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a LEFT JOIN Dept b ON a.name=b.manager LEFT JOIN Level c ON a.level=c.levelname ORDER BY a.name | success | schema1 |
@@ -118,8 +118,8 @@ Feature: test with hint plan A with other table type
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_4                                                          |
       | order_1           | ORDER           | join_1                                                                                    |
       | shuffle_field_2   | SHUFFLE_FIELD   | order_1                                                                                   |
-      | dn5_0             | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
-      | merge_1           | MERGE           | dn5_0                                                                                     |
+      | dn5_0//dn6_0      | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
+      | merge_1           | MERGE           | dn5_0//dn6_0                                                                              |
       | join_2            | JOIN            | shuffle_field_2; merge_1                                                                  |
       | order_2           | ORDER           | join_2                                                                                    |
       | shuffle_field_3   | SHUFFLE_FIELD   | order_2                                                                                   |
@@ -159,8 +159,8 @@ Feature: test with hint plan A with other table type
       | dn4_0             | BASE SQL              | select `b`.`name`,`b`.`deptname`,`b`.`level`,`a`.`manager` from  `Dept` `a` left join  `Employee` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `b`.`level` ASC  |
       | merge_and_order_1 | MERGE_AND_ORDER       | dn3_0; dn4_0                                                                                                                                                                  |
       | shuffle_field_1   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                             |
-      | dn5_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
-      | merge_1           | MERGE                 | dn5_0                                                                                                                                                                         |
+      | dn5_0//dn6_0      | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
+      | merge_1           | MERGE                 | dn5_0//dn6_0                                                                                                                                                                  |
       | join_1            | JOIN                  | shuffle_field_1; merge_1                                                                                                                                                      |
       | order_1           | ORDER                 | join_1                                                                                                                                                                        |
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                       |
@@ -189,8 +189,8 @@ Feature: test with hint plan A with other table type
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_4                                                          |
       | order_1           | ORDER           | join_1                                                                                    |
       | shuffle_field_2   | SHUFFLE_FIELD   | order_1                                                                                   |
-      | dn6_0             | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
-      | merge_1           | MERGE           | dn6_0                                                                                     |
+      | dn5_0//dn6_0      | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
+      | merge_1           | MERGE           | dn5_0//dn6_0                                                                              |
       | join_2            | JOIN            | shuffle_field_2; merge_1                                                                  |
       | order_2           | ORDER           | join_2                                                                                    |
       | shuffle_field_3   | SHUFFLE_FIELD   | order_2                                                                                   |
@@ -230,8 +230,8 @@ Feature: test with hint plan A with other table type
       | dn4_0             | BASE SQL              | select `a`.`name`,`a`.`deptname`,`a`.`level`,`b`.`manager` from  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `a`.`level` ASC  |
       | merge_and_order_1 | MERGE_AND_ORDER       | dn3_0; dn4_0                                                                                                                                                                  |
       | shuffle_field_1   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                             |
-      | dn6_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
-      | merge_1           | MERGE                 | dn6_0                                                                                                                                                                         |
+      | dn5_0//dn6_0      | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
+      | merge_1           | MERGE                 | dn5_0//dn6_0                                                                                                                                                                  |
       | join_1            | JOIN                  | shuffle_field_1; merge_1                                                                                                                                                      |
       | order_1           | ORDER                 | join_1                                                                                                                                                                        |
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                       |
@@ -260,8 +260,8 @@ Feature: test with hint plan A with other table type
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_4                                                          |
       | order_1           | ORDER           | join_1                                                                                    |
       | shuffle_field_2   | SHUFFLE_FIELD   | order_1                                                                                   |
-      | dn6_0             | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
-      | merge_1           | MERGE           | dn6_0                                                                                     |
+      | dn5_0//dn6_0      | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
+      | merge_1           | MERGE           | dn5_0//dn6_0                                                                              |
       | join_2            | JOIN            | shuffle_field_2; merge_1                                                                  |
       | order_2           | ORDER           | join_2                                                                                    |
       | shuffle_field_3   | SHUFFLE_FIELD   | order_2                                                                                   |
@@ -301,8 +301,8 @@ Feature: test with hint plan A with other table type
       | dn4_0             | BASE SQL              | select `b`.`name`,`b`.`deptname`,`b`.`level`,`a`.`manager` from  `Dept` `a` left join  `Employee` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `b`.`level` ASC  |
       | merge_and_order_1 | MERGE_AND_ORDER       | dn3_0; dn4_0                                                                                                                                                                  |
       | shuffle_field_1   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                             |
-      | dn5_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
-      | merge_1           | MERGE                 | dn5_0                                                                                                                                                                         |
+      | dn5_0//dn6_0      | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
+      | merge_1           | MERGE                 | dn5_0//dn6_0                                                                                                                                                                  |
       | join_1            | JOIN                  | shuffle_field_1; merge_1                                                                                                                                                      |
       | order_1           | ORDER                 | join_1                                                                                                                                                                        |
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                       |
@@ -331,8 +331,8 @@ Feature: test with hint plan A with other table type
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_4                                                          |
       | order_1           | ORDER           | join_1                                                                                    |
       | shuffle_field_2   | SHUFFLE_FIELD   | order_1                                                                                   |
-      | dn5_0             | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
-      | merge_1           | MERGE           | dn5_0                                                                                     |
+      | dn5_0//dn6_0      | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
+      | merge_1           | MERGE           | dn5_0//dn6_0                                                                              |
       | join_2            | JOIN            | shuffle_field_2; merge_1                                                                  |
       | order_2           | ORDER           | join_2                                                                                    |
       | shuffle_field_3   | SHUFFLE_FIELD   | order_2                                                                                   |
@@ -357,13 +357,13 @@ Feature: test with hint plan A with other table type
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                                  |
 
     Then execute sql in "dble-1" and the result should be consistent with mysql
-      | conn   | toClose | sql                                                                                                                                                                                        | db      |
-      | conn_1 | true    | /*#dble:plan= (a,b,c) */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON a.deptname=c.deptname order by a.name | schema1 |
+      | conn   | toClose | sql                                                                                                                                                                                         | db      |
+      | conn_1 | true    | /*#dble:plan= (a,b,c) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON a.deptname=c.deptname order by a.name | schema1 |
 
     # 5.2  inner join & inner join & 1  ER  bac
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs"
-      | conn   | toClose | sql                                                                                                                                                                                                  | expect  | db      |
-      | conn_1 | False   | explain /*!dble:plan= (a,b) & c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname INNER JOIN Level c ON a.level=c.levelname order by a.name | success | schema1 |
+      | conn   | toClose | sql                                                                                                                                                                                                 | expect  | db      |
+      | conn_1 | False   | explain /*!dble:plan= (a,b) & c */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname INNER JOIN Level c ON a.level=c.levelname order by a.name | success | schema1 |
 
     Then check resultset "join_rs" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1                | SQL/REF-2                                                                                                                                                                     |
@@ -371,17 +371,15 @@ Feature: test with hint plan A with other table type
       | dn4_0             | BASE SQL              | select `a`.`name`,`a`.`deptname`,`a`.`level`,`b`.`manager` from  `Employee` `a` join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `a`.`level` ASC       |
       | merge_and_order_1 | MERGE_AND_ORDER       | dn3_0; dn4_0                                                                                                                                                                  |
       | shuffle_field_1   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                             |
-      | dn5_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
-      | merge_1           | MERGE                 | dn5_0                                                                                                                                                                         |
+      | dn5_0//dn6_0      | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
+      | merge_1           | MERGE                 | dn5_0//dn6_0                                                                                                                                                                  |
       | join_1            | JOIN                  | shuffle_field_1; merge_1                                                                                                                                                      |
       | order_1           | ORDER                 | join_1                                                                                                                                                                        |
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                       |
 
-
-
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                                                                                                                         | db      |
-      | conn_1 | true    | /*#dble:plan= (a,b) & c */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname LEFT JOIN Info c ON a.deptname=c.deptname order by a.name | schema1 |
+      | conn_1 | true    | /*#dble:plan= (a,b) & c */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname INNER JOIN Level c ON a.level=c.levelname order by a.name | schema1 |
 
     # 5.3  inner join & inner join & NO  ER
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs"
@@ -401,8 +399,8 @@ Feature: test with hint plan A with other table type
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_4                                                          |
       | order_1           | ORDER           | join_1                                                                                    |
       | shuffle_field_2   | SHUFFLE_FIELD   | order_1                                                                                   |
-      | dn5_0             | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
-      | merge_1           | MERGE           | dn5_0                                                                                     |
+      | dn5_0//dn6_0      | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
+      | merge_1           | MERGE           | dn5_0//dn6_0                                                                              |
       | join_2            | JOIN            | shuffle_field_2; merge_1                                                                  |
       | order_2           | ORDER           | join_2                                                                                    |
       | shuffle_field_3   | SHUFFLE_FIELD   | order_2                                                                                   |
@@ -439,8 +437,8 @@ Feature: test with hint plan A with other table type
       | dn4_0             | BASE SQL              | select `b`.`name`,`b`.`deptname`,`b`.`level`,`a`.`manager` from  `Dept` `a` join  `Employee` `b` on `a`.`deptname` = `b`.`deptname` where 1=1  ORDER BY `b`.`level` ASC       |
       | merge_and_order_1 | MERGE_AND_ORDER       | dn3_0; dn4_0                                                                                                                                                                  |
       | shuffle_field_1   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                             |
-      | dn5_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
-      | merge_1           | MERGE                 | dn5_0                                                                                                                                                                         |
+      | dn5_0//dn6_0      | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
+      | merge_1           | MERGE                 | dn5_0//dn6_0                                                                                                                                                                  |
       | join_1            | JOIN                  | shuffle_field_1; merge_1                                                                                                                                                      |
       | order_1           | ORDER                 | join_1                                                                                                                                                                        |
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                       |
@@ -467,8 +465,8 @@ Feature: test with hint plan A with other table type
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_4                                                          |
       | order_1           | ORDER           | join_1                                                                                    |
       | shuffle_field_2   | SHUFFLE_FIELD   | order_1                                                                                   |
-      | dn5_0             | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
-      | merge_1           | MERGE           | dn5_0                                                                                     |
+      | dn5_0//dn6_0      | BASE SQL        | select `c`.`salary`,`c`.`levelname` from  `Level` `c` order by `c`.`levelname` ASC        |
+      | merge_1           | MERGE           | dn5_0//dn6_0                                                                              |
       | join_2            | JOIN            | shuffle_field_2; merge_1                                                                  |
       | order_2           | ORDER           | join_2                                                                                    |
       | shuffle_field_3   | SHUFFLE_FIELD   | order_2                                                                                   |

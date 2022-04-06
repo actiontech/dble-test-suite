@@ -4,7 +4,7 @@
 # Created by chenhuiming at 2022/3/8
 Feature: test with hint plan A with other table type
 
-  @skip_restart  #@delete_mysql_tables #
+  @delete_mysql_tables
   Scenario: shardingTable  + SingleTable  +  SingleTable                              #1
   """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
