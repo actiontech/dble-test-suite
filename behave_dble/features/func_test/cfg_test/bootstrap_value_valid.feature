@@ -4,7 +4,7 @@
 Feature: if childnodes value of system in bootstrap.cnf are invalid, replace them with default values
   only check part of system childnodes, not all, list from https://github.com/actiontech/dble/issues/579
 
-  @skip_restart
+  @NORMAL
   Scenario: config all system property, some values are illegal, start dble failed #1
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
