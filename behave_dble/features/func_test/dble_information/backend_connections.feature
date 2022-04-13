@@ -180,7 +180,7 @@ Feature:  backend_connections test
       | conn_0 | True    | insert into backend_connections values (1,'1',1,1,1)                      | Access denied for table 'backend_connections'     |
 
   @btrace
-  Scenario: check connection status #2
+  Scenario: check backend connection status #2
 
     # state = HEARTBEAT CHECK
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
