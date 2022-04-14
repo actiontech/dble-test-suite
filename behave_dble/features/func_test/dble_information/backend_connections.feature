@@ -178,3 +178,114 @@ Feature:  backend_connections test
       | conn_0 | False   | delete from backend_connections where user='test'                         | Access denied for table 'backend_connections'     |
       | conn_0 | False   | update backend_connections set user = 'a' where user ='test'              | Access denied for table 'backend_connections'     |
       | conn_0 | True    | insert into backend_connections values (1,'1',1,1,1)                      | Access denied for table 'backend_connections'     |
+
+  @btrace
+  Scenario: check backend connection status #2
+
+    # state = HEARTBEAT CHECK
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      """
+        <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+            <heartbeat>select user()</heartbeat>
+            <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="100" minCon="10" primary="true">
+                 <property name="testWhileIdle">true</property>
+                 <property name="timeBetweenEvictionRunsMillis">3000</property>
+            </dbInstance>
+        </dbGroup>
+      """
+    Given execute admin cmd "reload @@config_all" success
+    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
+    Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
+        """
+        s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
+        /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(6000L)/;/\}/!ba}
+        """
+    Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
+
+    # sleep time > timeBetweenEvictionRunsMillis = 3
+    Given sleep "4" seconds
+    Then check btrace "BtraceAboutConnection.java" output in "dble-1"
+      """
+        sending ping signal
+      """
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                                  | expect             | db              |
+      | conn_0 | true    | select * from backend_connections where remote_addr="172.100.9.5" and used_for_heartbeat="false" and state="HEARTBEAT CHECK"   | length{(1)}        |dble_information |
+    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
+    Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given destroy btrace threads list
+
+    #state = EVICT
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="20" minCon="4" primary="true">
+             <property name="heartbeatPeriodMillis">180000</property>
+             <property name="idleTimeout">3000</property>
+             <property name="timeBetweenEvictionRunsMillis">5000</property>
+        </dbInstance>
+     </dbGroup>
+
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="20" minCon="4" primary="true">
+             <property name="idleTimeout">3000</property>
+        </dbInstance>
+    </dbGroup>
+     """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                       | expect                     | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                        | success                    | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))       | success                    | schema1 |
+      | conn_0 | True    | insert into sharding_4_t1 values(2,2)                     | success                    | schema1 |
+      | conn_1 | False   | begin                                                     | success                    | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1                               | success                    | schema1 |
+      | conn_2 | False   | begin                                                     | success                    | schema1 |
+      | conn_2 | False   | select * from sharding_4_t1                               | success                    | schema1 |
+      | conn_3 | False   | begin                                                     | success                    | schema1 |
+      | conn_3 | False   | select * from sharding_4_t1                               | success                    | schema1 |
+      | conn_4 | False   | begin                                                     | success                    | schema1 |
+      | conn_4 | False   | select * from sharding_4_t1                               | success                    | schema1 |
+      | conn_5 | False   | begin                                                     | success                    | schema1 |
+      | conn_5 | False   | select * from sharding_4_t1                               | success                    | schema1 |
+      | conn_1 | False   | commit                                                    | success                    | schema1 |
+      | conn_2 | False   | commit                                                    | success                    | schema1 |
+      | conn_3 | False   | commit                                                    | success                    | schema1 |
+      | conn_4 | False   | commit                                                    | success                    | schema1 |
+      | conn_5 | False   | commit                                                    | success                    | schema1 |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                             | expect        | db                |
+      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'      | has{((20,),)}  | dble_information  |
+    Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
+        """
+        s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
+        /evict/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+        """
+    Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
+    #sleep 5s to wait connections idle timeout and into scaling period
+    Given sleep "5" seconds
+    Then check btrace "BtraceAboutConnection.java" output in "dble-1"
+      """
+        get into evict
+      """
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                 | expect        | db                |
+      | conn_0 | false   | select * from backend_connections where remote_addr="172.100.9.5" and state="EVICT" and used_for_heartbeat='false'  | length{(1)}   | dble_information  |
+
+    #btrace sleep 10s, make sure btrace sleep over then check idle connection nums
+    Given sleep "5" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                 | expect        | db                |
+      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'                          | has{((14,),)}  | dble_information  |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                 | expect        | db                |
+      | conn_0 | true    | drop table if exists sharding_4_t1                                                                                  | success       | schema1           |
+
+    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
+    Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given destroy btrace threads list
