@@ -59,7 +59,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       $a\-DbindIp=256.256.256.258
       $a\-DserverPort=-1
       $a\-DmanagerPort=-2
-      /-DProcessors=1/c -DProcessors=-3
+      /-Dprocessors=1/c -Dprocessors=-3
       $a\-DbackendProcessors=-3
       $a\-DbackendProcessorExecutor=-4
       /-DprocessorExecutor=1/c -DprocessorExecutor=-3
@@ -91,6 +91,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       $a\-DfrontSocketSoRcvbuf=-1048576
       $a\-DfrontSocketSoSndbuf=-4194304
     """
+
     Then restart dble in "dble-1" failed for
       """
       sequenceHandlerType value is 20, it will use default value:2
@@ -133,6 +134,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ orderMemSize \] '-5' in bootstrap.cnf is illegal, you may need use the default value 4 replaced
       Property \[ otherMemSize \] '-5' in bootstrap.cnf is illegal, you may need use the default value 4 replaced
       Property \[ processorCheckPeriod \] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
+      property \[ processors \] has been replaced by the property \[ NIOFrontRW \].  Property \[ NIOFrontRW \] '-3' in bootstrap.cnf is illegal, you may need use the default value 80 replaced
       property \[ processorExecutor \] has been replaced by the property \[ frontWorker \].  Property \[ frontWorker \] '-3' in bootstrap.cnf is illegal, you may need use the default value 80 replaced
       Property \[ recordTxn \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       Property \[ sqlExecuteTimeout \] '-20' in bootstrap.cnf is illegal, you may need use the default value 300 replaced
