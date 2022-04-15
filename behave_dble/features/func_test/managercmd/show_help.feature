@@ -77,7 +77,7 @@ Feature: test show @@help
       | reload @@metadata [where schema=? [and table=?] \| where table in ('schema1.table1',...)]           | Reload metadata of tables or specified table                                      |
       | reload @@sqlslow=                                                                                   | Set Slow SQL Time(ms)                                                             |
       | reload @@user_stat                                                                                  | Reset show @@sql  @@sql.sum @@sql.slow                                            |
-      | reload @@query_cf[=table&column]                                                                    | Reset show @@sql.conditiont                                                       |
+      | reload @@query_cf[=table&column]                                                                    | Reset show @@sql.condition                                                       |
       | release @@reload_metadata                                                                           | Release reload process , unlock the config meta lock                              |
       | offline                                                                                             | Change Server status to OFF                                                       |
       | online                                                                                              | Change Server status to ON                                                        |
