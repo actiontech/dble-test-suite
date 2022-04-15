@@ -77,13 +77,13 @@ Feature: test show @@help
       | reload @@metadata [where schema=? [and table=?] \| where table in ('schema1.table1',...)]           | Reload metadata of tables or specified table                                      |
       | reload @@sqlslow=                                                                                   | Set Slow SQL Time(ms)                                                             |
       | reload @@user_stat                                                                                  | Reset show @@sql  @@sql.sum @@sql.slow                                            |
-      | reload @@query_cf[=table&column]                                                                    | Reset show @@sql.conditiont                                                       |
+      | reload @@query_cf[=table&column]                                                                    | Reset show @@sql.condition                                                        |
       | release @@reload_metadata                                                                           | Release reload process , unlock the config meta lock                              |
       | offline                                                                                             | Change Server status to OFF                                                       |
       | online                                                                                              | Change Server status to ON                                                        |
       | flow_control @@show                                                                                 | Show the current config of the flow control                                       |
       | flow_control @@list                                                                                 | List all the connection be flow-control now                                       |
-      | flow_control @@set [enableFlowControl = true/false] [flowControlHighLevel = ?] [flowControlLowLevel = ?] | Change the config of flow control                                                 |
+      | flow_control @@set [enableFlowControl = true/false] [flowControlHighLevel = ?] [flowControlLowLevel = ?] | Change the config of flow control                                            |
       | dryrun                                                                                              | Dry run to check config before reload xml                                         |
       | pause @@shardingNode = 'dn1,dn2,....' and timeout = ? [,queue = ?,wait_limit = ?]                   | Block query requests witch specified shardingNodes involved                       |
       | RESUME                                                                                              | Resume the query requests of the paused shardingNodes                             |
