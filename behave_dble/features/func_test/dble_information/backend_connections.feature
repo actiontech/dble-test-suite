@@ -277,7 +277,7 @@ Feature:  backend_connections test
       | conn_0 | false   | select * from backend_connections where remote_addr="172.100.9.5" and state="EVICT" and used_for_heartbeat='false'  | length{(1)}   | dble_information  |
 
     #btrace sleep 10s, make sure btrace sleep over then check idle connection nums
-    Given sleep "5" seconds
+    Given sleep "7" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                 | expect        | db                |
       | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'                          | has{((14,),)}  | dble_information  |
