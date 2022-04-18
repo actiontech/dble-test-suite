@@ -121,7 +121,7 @@ Feature: test rwStickyTime on rwSplit mode
     Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect              | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('0',),)}      | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('0ms',),)}      | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | user | passwd  | conn   | toClose | sql                                       | expect  | db     |
@@ -364,7 +364,7 @@ Feature: test rwStickyTime on rwSplit mode
     Given record current dble log line number in "log_num_4"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect             | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('0',),)}     | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('0ms',),)}     | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd  | conn   | toClose | sql                                       | expect  | db     |
       | rwS1 | 111111  | conn_0 | False   | insert into testtb values (7,7),(8,8)     | success | testdb |
@@ -599,7 +599,7 @@ Feature: test rwStickyTime on rwSplit mode
     Given record current dble log line number in "log_num_4"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect              | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('0',),)}      | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('0ms',),)}      | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd  | conn   | toClose | sql                                       | expect  | db     |
       | rwS1 | 111111  | conn_0 | False   | insert into testtb values (7,7),(8,8)     | success | testdb |
@@ -836,7 +836,7 @@ Feature: test rwStickyTime on rwSplit mode
     Given record current dble log line number in "log_num_4"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect              | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('0',),)}      | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('0ms',),)}      | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd  | conn   | toClose | sql                                       | expect  | db     |
       | rwS1 | 111111  | conn_0 | False   | insert into testtb values (7,7),(8,8)     | success | testdb |
@@ -916,10 +916,7 @@ Feature: test rwStickyTime on rwSplit mode
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                   | db               |
       | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('1000ms',),)}      | dble_information |
-    Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                       | expect  | db     |
-      | rwS1 | 111111 | conn_0 | False   | drop table if exists testtb               | success | testdb |
-      | rwS1 | 111111 | conn_0 | true    | drop database if exists testdb            | success |        |
+
 
 
   @restore_global_setting @restore_mysql_service
@@ -961,7 +958,7 @@ Feature: test rwStickyTime on rwSplit mode
       | rwS1 | 111111  | conn_0 | true    | create database testdb                    | success |   |
       | rwS1 | 111111  | conn_0 | False   | use testdb                                | success |   |
       | rwS1 | 111111  | conn_0 | False   | drop table if exists testtb               | success | testdb |
-      | rwS1 | 111111  | conn_0 | true    | create table testtb(id int,age int)       | success | testdb |
+      | rwS1 | 111111  | conn_0 | False   | create table testtb(id int,age int)       | success | testdb |
 
     Given stop mysql in host "mysql-slave1"
     Then execute sql in "dble-1" in "user" mode
