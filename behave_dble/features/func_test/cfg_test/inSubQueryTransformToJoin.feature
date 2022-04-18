@@ -548,7 +548,7 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       | conn_1 | False   | explain select a.id, select max(b.id) from no_sharding_t1 b where b.id in (select distinct d.id from single_t1 d) as name FROM sharding_4_t1 a ORDER BY a.id | success | schema1 |
     Then check resultset "join_rs5" has lines with following column values
       | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2 |
-      | dn5_0              | BASE SQL              | select `b`.`id`,`b`.`nick`,`b`.`code` from  `no_sharding_t1` `b`                                                                                 |
+      | dn5_0              | BASE SQL              | select `b`.`id` from  `no_sharding_t1` `b`                                                                                                       |
       | merge_1            | MERGE                 | dn5_0                                                                                                                                            |
       | shuffle_field_1    | SHUFFLE_FIELD         | merge_1                                                                                                                                          |
       | dn1_0              | BASE SQL              | select `autoalias_single_t1`.`autoalias_scalar` from (select  distinct `d`.`id` as `autoalias_scalar` from  `single_t1` `d`) autoalias_single_t1 |
@@ -625,7 +625,7 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       | conn_1 | False   | explain SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id IN ( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | success | schema1 |
     Then check resultset "join_rs9" has lines with following column values
       | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2 |
-      | dn1_0              | BASE SQL              | select `a`.`id`,`a`.`code` from  `single_t1` `a`                                                                                                                            |
+      | dn1_0              | BASE SQL              | select `a`.`id` from  `single_t1` `a`                                                                                                                                       |
       | merge_1            | MERGE                 | dn1_0                                                                                                                                                                       |
       | shuffle_field_1    | SHUFFLE_FIELD         | merge_1                                                                                                                                                                     |
       | order_1            | ORDER                 | shuffle_field_1                                                                                                                                                             |
@@ -713,10 +713,10 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       | conn_1 | False   | explain select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id in (select b.id from single_t1 b where b.code>5) order by a.id | success | schema1 |
     Then check resultset "join_rs13" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2 |
-      | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`name`,`a`.`age` from  `sharding_4_t1` `a` ORDER BY `a`.`id` ASC                                                                                                                                                                      |
-      | dn2_0             | BASE SQL        | select `a`.`id`,`a`.`name`,`a`.`age` from  `sharding_4_t1` `a` ORDER BY `a`.`id` ASC                                                                                                                                                                      |
-      | dn3_0             | BASE SQL        | select `a`.`id`,`a`.`name`,`a`.`age` from  `sharding_4_t1` `a` ORDER BY `a`.`id` ASC                                                                                                                                                                      |
-      | dn4_0             | BASE SQL        | select `a`.`id`,`a`.`name`,`a`.`age` from  `sharding_4_t1` `a` ORDER BY `a`.`id` ASC                                                                                                                                                                      |
+      | dn1_0             | BASE SQL        | select `a`.`id` from  `sharding_4_t1` `a` ORDER BY `a`.`id` ASC                                                                                                                                                                                           |
+      | dn2_0             | BASE SQL        | select `a`.`id` from  `sharding_4_t1` `a` ORDER BY `a`.`id` ASC                                                                                                                                                                                           |
+      | dn3_0             | BASE SQL        | select `a`.`id` from  `sharding_4_t1` `a` ORDER BY `a`.`id` ASC                                                                                                                                                                                           |
+      | dn4_0             | BASE SQL        | select `a`.`id` from  `sharding_4_t1` `a` ORDER BY `a`.`id` ASC                                                                                                                                                                                           |
       | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0; dn3_0; dn4_0                                                                                                                                                                                                                                |
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                                                         |
       | dn1_1             | BASE SQL        | select `autoalias_single_t1`.`autoalias_scalar` from (select  distinct `b`.`id` as `autoalias_scalar` from  `single_t1` `b` where `b`.`code` > 5 order by autoalias_scalar ASC) autoalias_single_t1 order by `autoalias_single_t1`.`autoalias_scalar` ASC |
@@ -754,7 +754,7 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       | dn4_0                      | BASE SQL                 | select `a`.`id`,`a`.`name`,`a`.`age` from  `sharding_4_t1` `a` ORDER BY `a`.`id` ASC                                                                                                                                                                     |
       | merge_and_order_1          | MERGE_AND_ORDER          | dn1_0; dn2_0; dn3_0; dn4_0                                                                                                                                                                                                                               |
       | shuffle_field_1            | SHUFFLE_FIELD            | merge_and_order_1                                                                                                                                                                                                                                        |
-      | dn1_1                      | BASE SQL                 | select `b`.`id`,`b`.`code` from  `single_t1` `b` ORDER BY `b`.`id` ASC                                                                                                                                                                                   |
+      | dn1_1                      | BASE SQL                 | select `b`.`id` from  `single_t1` `b` ORDER BY `b`.`id` ASC                                                                                                                                                                                   |
       | merge_1                    | MERGE                    | dn1_1                                                                                                                                                                                                                                                    |
       | shuffle_field_3            | SHUFFLE_FIELD            | merge_1                                                                                                                                                                                                                                                  |
       | dn5_0                      | BASE SQL                 | select `autoalias_no_sharding_t1`.`autoalias_scalar` from (select  distinct `c`.`id` as `autoalias_scalar` from  `no_sharding_t1` `c` order by autoalias_scalar ASC) autoalias_no_sharding_t1 order by `autoalias_no_sharding_t1`.`autoalias_scalar` ASC |
@@ -947,7 +947,7 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       # where contain in-subquery
       | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id in (SELECT b.id FROM no_sharding_t1 b) ORDER BY a.id | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
       # where contain = subquery
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id =(SELECT b.id FROM no_sharding_t1 b WHERE b.id =1 limit 1) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id =(SELECT b.id FROM no_sharding_t1 b WHERE b.id =1 limit 1) ORDER BY a.id | has{((1,'a',1),)} | schema1 |
       # join contain in-subquery
       | conn_1 | False   | SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id IN ( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | has{((1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),(1,'a',1),)} | schema1 |
       # join contain = subquery
@@ -959,18 +959,18 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       # having contain in-subquery
       | conn_1 | False   | select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id in (select b.id from single_t1 b where b.code>5) order by a.id | has{((6,),(7,),(8,))} | schema1 |
       # having contain = subquery
-      | conn_1 | False   | select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id=(select max(b.id) from single_t1 b where b.code>5) order by a.id | has{((8,))} | schema1 |
+      | conn_1 | False   | select a.id from sharding_4_t1 a where 1=1 group by a.id having a.id=(select max(b.id) from single_t1 b where b.code>5) order by a.id | has{((8,),)} | schema1 |
       # Nested subquery contain in-subquery
       | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id IN (select b.id from single_t1 b where 1=1 and b.id in (SELECT c.id FROM no_sharding_t1 c)) ORDER BY a.id | has{((1,'a',1),(2,'b',2),(3,'c',3),(4,'d',4),(5,'aa',15),(6,'bb',16),(7,'cc',17),(8,'dd',18))} | schema1 |
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id in (select b.id from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id in (select b.id from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | has{((1,'a',1),)} | schema1 |
       # Nested subquery contain = subquery
-      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id =(select max(b.id) from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | SELECT a.* FROM sharding_4_t1 a WHERE a.id =(select max(b.id) from single_t1 b where 1=1 and b.id =(SELECT max(c.id) FROM no_sharding_t1 c where c.code=1)) ORDER BY a.id | has{((1,'a',1),)} | schema1 |
       # = any() subquery
-      | conn_1 | False   | select * from sharding_4_t1 where id = any(select id from single_t1 where code=1) order by name desc | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where id = any(select id from single_t1 where code=1) order by name desc | has{((1,'a',1),)} | schema1 |
       # other any() subquery
       | conn_1 | False   | select * from sharding_4_t1 where id <> any(select id from single_t1 where code=1) order by name desc | has{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
       # = some() subquery
-      | conn_1 | False   | select * from sharding_4_t1 where id = some(select id from no_sharding_t1 where code=1) order by name desc | has{((1,'a',1))} | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 where id = some(select id from no_sharding_t1 where code=1) order by name desc | has{((1,'a',1),)} | schema1 |
       # other some() subquery
       | conn_1 | False   | select * from sharding_4_t1 where id != some(select id from no_sharding_t1 where code=1) order by name desc | has{((8,'dd',18), (4,'d',4), (7,'cc',17), (3,'c',3), (6,'bb',16), (2,'b',2), (5,'aa',15))} | schema1 |
       # = all() subquery
