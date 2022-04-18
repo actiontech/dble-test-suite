@@ -832,8 +832,8 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
        get into reRegister
        """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                   | expect                                                                                                            | db               |
-      | conn_1 | True    | update dble_thread_pool set core_pool_size=2 where name like '%_NIO_REACTOR_FRONT-'   | Other threads are executing reload config or management commands(insert/update/delete), please try again later    | dble_information |
+      | conn   | toClose | sql                                                                                   | expect                                                                                            | db               |
+      | conn_1 | True    | update dble_thread_pool set core_pool_size=2 where name like '%_NIO_REACTOR_FRONT-'   | Other threads are executing management commands(insert/update/delete), please try again later.    | dble_information |
     Given stop btrace script "BtraceAboutBootstrap.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceAboutBootstrap.java" on "dble-1"
@@ -906,8 +906,8 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
        get into reRegister
        """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                   | expect                                                                                                            | db               |
-      | conn_3 | True    | update dble_thread_pool set core_pool_size=2 where name like '%_NIO_REACTOR_FRONT-'   | Other threads are executing reload config or management commands(insert/update/delete), please try again later    | dble_information |
+      | conn   | toClose | sql                                                                                   | expect                                                                                            | db               |
+      | conn_3 | True    | update dble_thread_pool set core_pool_size=2 where name like '%_NIO_REACTOR_FRONT-'   | Other threads are executing management commands(insert/update/delete), please try again later.    | dble_information |
     Given stop btrace script "BtraceAboutBootstrap.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceAboutBootstrap.java" on "dble-1"
