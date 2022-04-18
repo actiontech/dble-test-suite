@@ -33,6 +33,7 @@ Feature: test config in user.xml  ---  analysisUser
      """
 
 
+  @TRIVIAL
   Scenario: add analysisUser user with dbGroup which does not exist, start dble fail    #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
@@ -582,6 +583,23 @@ Feature: test config in user.xml  ---  analysisUser
 #      | conn_0 | False   | show @@connection.coun          | length{(1)}  |
 #      | conn_0 | False   | reload @@user_stat            | length{(1)}  | 重置前面命令的状态 Reset show @@sql  @@sql.sum @@sql.slow  @@sql.high  @@sql.large  @@sql.resultset  success
 
+
+
+  @skip_restart
+  Scenario: test 'sqlExecuteTimeout'  #14
+
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" >
+        <heartbeat>select 1</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="true" />
+    </dbGroup>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group4" maxCon="0"/>
+    """
+    Then execute admin cmd "reload @@config"
 
 
 
