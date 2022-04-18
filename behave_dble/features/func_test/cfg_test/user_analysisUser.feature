@@ -1,5 +1,6 @@
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
+# Created by quexiuping at 2021/04/07
 
 Feature: test config in user.xml  ---  analysisUser
 
@@ -55,6 +56,18 @@ Feature: test config in user.xml  ---  analysisUser
     """
      <analysisUser name="ana1" password="111111" dbGroup="ha_group3" />
     """
+     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="CLICKHOUSE"/>
+    </dbGroup>
+    """
+    Then execute admin cmd "reload @@config_all"
+    """
+    Reload config failure.The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: databaseType [CLICKHOUSE]  use lowercase
+    """
+
     ### databaseType is default
      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -309,7 +322,7 @@ Feature: test config in user.xml  ---  analysisUser
       | ana1:tenant1  | 111111 | conn_2 | False   | show tables | success  |
 
 
-  @CRITICAL @skip_restart
+  @CRITICAL
   Scenario: test 'sqlExecuteTimeout'  #12
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -325,27 +338,18 @@ Feature: test config in user.xml  ---  analysisUser
              <property name="timeBetweenEvictionRunsMillis">10</property>
         </dbInstance>
     </dbGroup>
-    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" >
-        <heartbeat>select 1</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="true" />
-    </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
     <analysisUser name="ana1" password="111111" dbGroup="ha_group3" maxCon="0" />
-    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group4" maxCon="0"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd    | conn   | toClose    | sql              | expect                                 |
       | ana1  | 111111    | conn_0 | false      | select sleep(3)  | reason is [sql timeout]                |
-    Then execute sql in "dble-1" in "user" mode
-      | user  | passwd    | conn   | toClose    | sql              | expect                                 |
-      | rwS1  | 111111    | conn_1 | false      | select sleep(3)  | reason is [sql timeout]                |
 
 
   @TRIVIAL
-  #@skip_restart
   Scenario: analysisUser user supporte management cmd success    #13
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -367,15 +371,10 @@ Feature: test config in user.xml  ---  analysisUser
     """
     Given Restart dble in "dble-1" success
 
-#    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group4" maxCon="0"/>
-#    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" >
-#        <heartbeat>select 1</heartbeat>
-#        <dbInstance name="hostM1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="true" />
-#    </dbGroup>
-
     Then execute sql in "dble-1" in "user" mode
-     | user  | passwd | conn   | toClose | sql      | expect   |
-     | ana1  | 111111 | conn_1 | False   | select 1 | success  |
+     | user  | passwd | conn   | toClose | sql         | expect   |
+     | ana1  | 111111 | conn_1 | False   | use default | success  |
+     | ana1  | 111111 | conn_1 | False   | select 1    | success  |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                     | expect       |
@@ -405,7 +404,7 @@ Feature: test config in user.xml  ---  analysisUser
       | conn_0 | False   | show @@sql.condition                                              | length{(2)}   |
       | conn_0 | False   | show @@heartbeat                                                  | length{(4)}   |
       | conn_0 | False   | show @@heartbeat.detail  where name='hostM1'                      | success       |
-      | conn_0 | False   | show @@sysparam                                                   | length{(105)} |
+      | conn_0 | False   | show @@sysparam                                                   | length{(107)} |
       | conn_0 | False   | show @@white                                                      | length{(3)}   |
       | conn_0 | False   | show @@directmemory                                               | length{(1)}   |
       | conn_0 | False   | show @@command.count                                              | length{(1)}   |
@@ -445,7 +444,7 @@ Feature: test config in user.xml  ---  analysisUser
      | user  | passwd | conn   | toClose | sql      | expect   |
      | ana1  | 111111 | conn_1 | False   | select 1 | success  |
 
-#########   offline  online
+#########   offline  online   ###DBLE0REQ-1701
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                | expect  |
       | conn_0 | False   | offline            | success |
@@ -476,7 +475,9 @@ Feature: test config in user.xml  ---  analysisUser
       | conn_0 | False   | reload @@slow_query.flushperiod=2  | success  |
       | conn_0 | False   | show @@slow_query.flushsize        | success  |
       | conn_0 | False   | reload @@slow_query.flushsize=100  | success  |
-#show @@connection.sql.status where FRONT_ID=
+
+ ### DBLE0REQ-1701
+    #show @@connection.sql.status where FRONT_ID=
 
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                | expect   |
@@ -549,20 +550,24 @@ Feature: test config in user.xml  ---  analysisUser
       | ana1  | 111111 | conn_1 | False   | select user()      | success  |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                          | expect        |
-      ####1700
-#      | conn_2 | False   | select * from dble_information.dble_flow_control where connection_info like "%9004%"                          | length{(22)}  |
+ ####1700
+      | conn_2 | False   | select * from dble_information.dble_flow_control where connection_info like "%9004%"                          | length{(21)}  |
+    Then execute sql in "dble-1" in "user" mode
+      | user  | passwd | conn   | toClose | sql                | expect   |
+      | ana1  | 111111 | conn_1 | False   | select user()      | success  |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                          | expect        |
+      | conn_2 | False   | select * from dble_information.dble_flow_control where connection_info like "%9004%"                          | length{(21)}  |
       | conn_2 | False   | flow_control @@set enableFlowControl = false | success       |
       | conn_2 | False   | flow_control @@show                          | length{(0)}   |
       | conn_2 | False   | flow_control @@list                          | length{(0)}   |
+####DBLE0REQ-1700
+      | conn_0 | False   | show @@backend where port= 9004          | length{(21)}  |
+      | conn_0 | False   | show @@session            | length{(0)}  |
+      | conn_0 | False   | show @@session.xa         | length{(0)}  |
 
 
-  #### 有问题
-#      | conn_0 | False   | show @@backend where port= 9004          | length{(1)}  |
-#      | conn_0 | False   | show @@session         | length{(1)}  |
-#      | conn_0 | False   | show @@session.xa         | length{(1)}  |
-
-
-#### 没有统计到分析用户的sql
+#### 没有统计到分析用户的sql ####DBLE0REQ-1701
 #    Given execute sql "50" times in "dble-1" at concurrent
 #      | user  | passwd | sql             |
 #      | ana1  | 111111 | select 1        |

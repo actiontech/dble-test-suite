@@ -1,223 +1,161 @@
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
+# Created by quexiuping at 2021/04/07
 
-Feature: test config in user.xml  ---  analysisUser
+
+Feature: test config in user.xml  ---  rwSplitUser
 
 
   @NORMAL
-  Scenario: test analysisUser ---- add  user with illegal label, reload fail   #1
+  Scenario: test rwSplitUser ---- add  user with illegal label, reload fail   #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-     <analysisUser name="ana1" password="test_password" dbGroup="ha_group1" test="0"/>
+     <rwSplitUser name="rwS1" password="test_password" dbGroup="ha_group1" test="0"/>
     """
 
     Then execute admin cmd "reload @@config_all"
     """
-    Attribute 'test' is not allowed to appear in element 'analysisUser'
+    Attribute 'test' is not allowed to appear in element 'rwSplitUser'
     """
 
 
   @TRIVIAL
-  Scenario: analysisUser spelling mistake, start dble fail    #2
+  Scenario: rwSplitUser spelling mistake, start dble fail    #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-     <analysisuser name="ana1" password="test_password" dbGroup="ha_group3" />
+     <rwSplitser name="rwS1" password="test_password" dbGroup="ha_group3" />
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Invalid content was found starting with element 'analysisuser'. One of '{managerUser, shardingUser, rwSplitUser, analysisUser, blacklist}' is expected
+    Invalid content was found starting with element 'rwSplitser'. One of '{managerUser, shardingUser, rwSplitUser, analysisUser, blacklist}' is expected
     """
     Then Restart dble in "dble-1" failed for
      """
-     Invalid content was found starting with element 'analysisuser'. One of '{managerUser, shardingUser, rwSplitUser, analysisUser, blacklist}' is expected
+     Invalid content was found starting with element 'rwSplitser'. One of '{managerUser, shardingUser, rwSplitUser, analysisUser, blacklist}' is expected
      """
 
 
   @TRIVIAL
-  Scenario: add analysisUser user with dbGroup which does not exist, start dble fail    #3
+  Scenario: add rwSplitUser user with dbGroup which does not exist, start dble fail    #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-     <analysisUser name="ana1" password="test_password" dbGroup="ha_group3" />
+     <rwSplitUser name="rwS1" password="test_password" dbGroup="ha_group3" />
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload config failure.The reason is The user's group[ana1.ha_group3] for analysisUser isn't configured in db.xml.
+    Reload config failure.The reason is The user's group[rwS1.ha_group3] for rwSplit isn't configured in db.xml.
     """
     Then Restart dble in "dble-1" failed for
      """
-     The user's group\[ana1.ha_group3\] for analysisUser isn't configured in db.xml.
+     The user's group\[rwS1.ha_group3\] for rwSplit isn't configured in db.xml.
      """
 
 
   @TRIVIAL
-  Scenario: add analysisUser user with dbGroup which db.xml dbInstance database type must be CLICKHOUSE    #4
+  Scenario: add rwSplitUser user with dbGroup which db.xml dbInstance database type must be mysql    #4
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-     <analysisUser name="ana1" password="111111" dbGroup="ha_group3" />
+     <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
     """
-    ### databaseType is default
+
      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload config failure.The reason is The group[ana1.ha_group3] all dbInstance database type must be CLICKHOUSE
+    Reload config failure.The reason is The group[rwS1.ha_group3] all dbInstance database type must be MYSQL
     """
-    ### databaseType is mysql
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+
+     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="mysql"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" databaseType="MYSQL"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload config failure.The reason is The group[ana1.ha_group3] all dbInstance database type must be CLICKHOUSE
-    """
-    ### databaseType is
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType=" "/>
-    </dbGroup>
-    """
-    Then execute admin cmd "reload @@config_all"
-    """
-    databaseType [ ] not support
-    """
-    ### databaseType is  null
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="null"/>
-    </dbGroup>
-    """
-    Then execute admin cmd "reload @@config_all"
-    """
-    databaseType [null] not support
-    """
-    ### databaseType is abc
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="abc"/>
-    </dbGroup>
-    """
-    Then execute admin cmd "reload @@config_all"
-    """
-    databaseType [abc] not support
-    """
-    ### databaseType is -1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="-1"/>
-    </dbGroup>
-    """
-    Then execute admin cmd "reload @@config_all"
-    """
-    databaseType [-1] not support
-    """
-    ### databaseType is 9.9
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="9.9"/>
-    </dbGroup>
-    """
-    Then execute admin cmd "reload @@config_all"
-    """
-    databaseType [9.9] not support
+    Reload config failure.The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: databaseType [MYSQL]  use lowercase
     """
 
 
   @TRIVIAL
-  Scenario: add analysisUser user with dbGroup which shardinguser use, start dble fail    #5
+  Scenario: add rwSplitUser user with dbGroup which shardinguser use, start dble fail    #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-     <analysisUser name="ana1" password="111111" dbGroup="ha_group1" />
+     <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group1" />
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.1:3307" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse">
+        <dbInstance name="hostM3" password="111111" url="172.100.9.1:3307" user="test" maxCon="1000" minCon="10" primary="true" >
         </dbInstance>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
     """
-    shardingNodeDbGroup [ha_group1] define error ,all dbInstance database type must be MYSQL
+    Reload config failure.The reason is The group[rwS1.ha_group1] has been used by sharding node, can't be used by rwSplit
     """
-    Then Restart dble in "dble-1" failed for
-     """
-     shardingNodeDbGroup \[ha_group1\] define error ,all dbInstance database type must be MYSQL
-     """
 
 
   @TRIVIAL
-  Scenario: both single & multiple analysisUser user reload and do management cmd success    #6
+  Scenario: both single & multiple rwSplitUser user reload and do management cmd success    #6
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-     <analysisUser name="ana1" password="111111" dbGroup="ha_group3" />
+     <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
     """
      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" />
     </dbGroup>
     """
      Then execute admin cmd "reload @@config_all"
 
     Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql      | expect   |
-     | ana1  | 111111 | conn_1 | False   | select 1 | success  |
+     | rwS1  | 111111 | conn_1 | False   | select 1 | success  |
 
     Then execute admin cmd "show @@version"
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-     <analysisUser name="ana2" password="111111" dbGroup="ha_group3" />
+     <rwSplitUser name="rwS2" password="111111" dbGroup="ha_group3" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql      | expect   |
-     | ana2  | 111111 | conn_2 | False   | select 1 | success  |
+     | rwS2  | 111111 | conn_2 | False   | select 1 | success  |
 
     Then execute admin cmd "show @@version"
 
 
   @CRITICAL
-  Scenario:config ip white dbInstance to analysisUser , analysisUser user not in white dbInstance access denied    #7
+  Scenario:config ip white dbInstance to rwSplitUser , rwSplitUser user not in white dbInstance access denied    #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <analysisUser name="ana1" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.253" />
-    <analysisUser name="ana2" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.8" />
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.253" />
+    <rwSplitUser name="rwS2" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.8" />
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" />
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql      | expect   |
-      | ana2  | 111111 | conn_0 | True    | select 1 | success  |
-      | ana1  | 111111 | conn_0 | True    | select 1 | Access denied for user 'ana1' |
+      | rwS2  | 111111 | conn_0 | True    | select 1 | success  |
+      | rwS1  | 111111 | conn_0 | True    | select 1 | Access denied for user 'rwS1' |
 
 
   @CRITICAL
@@ -226,23 +164,23 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <analysisUser name="ana1" password="111111" dbGroup="ha_group3" maxCon="1" />
-    <analysisUser name="ana2" password="111111" dbGroup="ha_group3" maxCon="0" />
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" maxCon="1" />
+    <rwSplitUser name="rwS2" password="111111" dbGroup="ha_group3" maxCon="0" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd    | conn   | toClose  | sql      | expect                             |
-      | ana1  | 111111    | conn_0 | False    | select 1 | success                            |
-      | ana1  | 111111    | new    | True     | select 1 | too many connections for this user |
-      | ana1  | 111111    | new    | True     | select 1 | ana1                               |
-      | ana2  | 111111    | conn_1 | False    | select 1 | success                            |
-      | ana2  | 111111    | new    | False    | select 1 | success                            |
-      | ana2  | 111111    | new    | False    | select 1 | success                            |
+      | rwS1  | 111111    | conn_0 | False    | select 1 | success                            |
+      | rwS1  | 111111    | new    | True     | select 1 | too many connections for this user |
+      | rwS1  | 111111    | new    | True     | select 1 | rwS1                               |
+      | rwS2  | 111111    | conn_1 | False    | select 1 | success                            |
+      | rwS2  | 111111    | new    | False    | select 1 | success                            |
+      | rwS2  | 111111    | new    | False    | select 1 | success                            |
 
 
   @CRITICAL
@@ -255,62 +193,62 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <analysisUser name="ana1" password="111111" dbGroup="ha_group3" maxCon="1" />
-    <analysisUser name="ana2" password="111111" dbGroup="ha_group3" maxCon="1" />
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" maxCon="1" />
+    <rwSplitUser name="rwS2" password="111111" dbGroup="ha_group3" maxCon="1" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd    | conn   | toClose  | sql      | expect                                 |
-      | ana1  | 111111    | conn_0 | False    | select 1 | success                                |
-      | ana1  | 111111    | new    | False    | select 1 | too many connections for this user     |
-      | ana2  | 111111    | new    | False    | select 1 | too many connections for dble server   |
+      | rwS1  | 111111    | conn_0 | False    | select 1 | success                                |
+      | rwS1  | 111111    | new    | False    | select 1 | too many connections for this user     |
+      | rwS2  | 111111    | new    | False    | select 1 | too many connections for dble server   |
 
 
-  Scenario:  config two analysisUser with the same name, reload failed    #10
+  Scenario:  config two rwSplitUser with the same name, reload failed    #10
      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
       <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" />
       </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml" with duplicate name
       """
-      <analysisUser name="ana1" password="111111" dbGroup="ha_group3" maxCon="1" />
-      <analysisUser name="ana1" password="222222" dbGroup="ha_group3" maxCon="1" />
+      <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" maxCon="1" />
+      <rwSplitUser name="rwS1" password="222222" dbGroup="ha_group3" maxCon="1" />
       """
     Then execute admin cmd "reload @@config_all" get the following output
       """
-      User [ana1] has already existed
+      User [rwS1] has already existed
       """
 
 
-  Scenario:  analysisUser with the tenant   #11
+  Scenario:  rwSplitUser with the tenant   #11
      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
       <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" />
       </dbGroup>
       """
      Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
-      <analysisUser name="ana1" password="111111" dbGroup="ha_group3" tenant="tenant1" />
+      <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" tenant="tenant1" />
       """
     Then execute admin cmd "reload @@config"
 
     Then execute sql in "dble-1" in "user" mode
-      | user          | passwd | conn   | toClose | sql         | expect   |
-      | ana1:tenant1  | 111111 | conn_2 | False   | select 1    | success  |
-      | ana1:tenant1  | 111111 | conn_2 | False   | show tables | success  |
+      | user          | passwd | conn   | toClose | sql            | expect   |
+      | rwS1:tenant1  | 111111 | conn_2 | False   | select 1       | success  |
+      | rwS1:tenant1  | 111111 | conn_2 | False   | show databases | success  |
 
 
-  @CRITICAL @skip_restart
+  @CRITICAL
   Scenario: test 'sqlExecuteTimeout'  #12
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -322,32 +260,23 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="true" >
              <property name="timeBetweenEvictionRunsMillis">10</property>
         </dbInstance>
-    </dbGroup>
-    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" >
-        <heartbeat>select 1</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="true" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <analysisUser name="ana1" password="111111" dbGroup="ha_group3" maxCon="0" />
-    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group4" maxCon="0"/>
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" maxCon="0"/>
     """
     Given Restart dble in "dble-1" success
-    Then execute sql in "dble-1" in "user" mode
-      | user  | passwd    | conn   | toClose    | sql              | expect                                 |
-      | ana1  | 111111    | conn_0 | false      | select sleep(3)  | reason is [sql timeout]                |
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd    | conn   | toClose    | sql              | expect                                 |
       | rwS1  | 111111    | conn_1 | false      | select sleep(3)  | reason is [sql timeout]                |
 
 
   @TRIVIAL
-  #@skip_restart
-  Scenario: analysisUser user supporte management cmd success    #13
+  Scenario: rwSplitUser user supporte management cmd success    #13
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -356,27 +285,21 @@ Feature: test config in user.xml  ---  analysisUser
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <analysisUser name="ana1" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1"  />
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1"  />
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="2" name="ha_group3" delayThreshold="100" >
-        <heartbeat>select 1</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.13:9004" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.14:9004" user="test" maxCon="100" minCon="10" primary="false" databaseType="clickhouse"/>
+        <heartbeat>show slave status</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.12:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     Given Restart dble in "dble-1" success
 
-#    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group4" maxCon="0"/>
-#    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" >
-#        <heartbeat>select 1</heartbeat>
-#        <dbInstance name="hostM1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="true" />
-#    </dbGroup>
-
     Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql      | expect   |
-     | ana1  | 111111 | conn_1 | False   | select 1 | success  |
+     | rwS1  | 111111 | conn_1 | False   | select 1 | success  |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                     | expect       |
@@ -406,7 +329,7 @@ Feature: test config in user.xml  ---  analysisUser
       | conn_0 | False   | show @@sql.condition                                              | length{(2)}   |
       | conn_0 | False   | show @@heartbeat                                                  | length{(4)}   |
       | conn_0 | False   | show @@heartbeat.detail  where name='hostM1'                      | success       |
-      | conn_0 | False   | show @@sysparam                                                   | length{(105)} |
+      | conn_0 | False   | show @@sysparam                                                   | length{(107)} |
       | conn_0 | False   | show @@white                                                      | length{(3)}   |
       | conn_0 | False   | show @@directmemory                                               | length{(1)}   |
       | conn_0 | False   | show @@command.count                                              | length{(1)}   |
@@ -437,28 +360,26 @@ Feature: test config in user.xml  ---  analysisUser
       | conn_0 | False   | reload @@sqlslow=1                                                | success       |
       | conn_0 | False   | reload @@query_cf                                                 | success       |
       | conn_0 | true    | release @@reload_metadata                                         | Dble not in reloading or reload status not interruptible       |
-
-### #db.xml should be has "show slave status" in heartbeat ,but analysisUser can not configured "show slave status"
-##      | conn_0 | False   | show @@dbinstance.synstatus   | length{(0)}  |
+      | conn_0 | False   | show @@dbinstance.synstatus                                       | success       |
 
 
     Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql      | expect   |
-     | ana1  | 111111 | conn_1 | False   | select 1 | success  |
+     | rwS1  | 111111 | conn_1 | False   | select 1 | success  |
 
-#########   offline  online
+#########   offline  online #1700
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                | expect  |
       | conn_0 | False   | offline            | success |
 #    Then execute sql in "dble-1" in "user" mode
 #      | user  | passwd | conn   | toClose | sql                | expect   |
-#      | ana1  | 111111 | conn_1 | False   | select user()      | The server has been shutdown  |
+#      | rwS1  | 111111 | conn_1 | False   | select user()      | The server has been shutdown  |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                | expect  |
       | conn_0 | False   | online             | success |
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                | expect   |
-      | ana1  | 111111 | conn_1 | False   | select user()      | success  |
+      | rwS1  | 111111 | conn_1 | False   | select user()      | success  |
 #########   dryrun
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                | expect  |
@@ -481,7 +402,7 @@ Feature: test config in user.xml  ---  analysisUser
 
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                | expect   |
-      | ana1  | 111111 | conn_1 | False   | select user()      | success  |
+      | rwS1  | 111111 | conn_1 | False   | select user()      | success  |
 #########   database
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                           | expect  |
@@ -500,7 +421,7 @@ Feature: test config in user.xml  ---  analysisUser
       | conn_2 | False   | dbGroup @@disable name='ha_group3'                | success  |
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                | expect                                                    |
-      | ana1  | 111111 | conn_1 | False   | select user()      | the dbGroup[ha_group3] doesn't contain active dbInstance  |
+      | rwS1  | 111111 | conn_1 | False   | select user()      | the dbGroup[ha_group3] doesn't contain active dbInstance  |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                           | expect   |
@@ -509,11 +430,11 @@ Feature: test config in user.xml  ---  analysisUser
       | conn_2 | False   | dbGroup @@events                                              | success  |
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                | expect   |
-      | ana1  | 111111 | conn_1 | False   | select user()      | success  |
+      | rwS1  | 111111 | conn_1 | False   | select user()      | success  |
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
     """
-     <dbInstance name=\"hostM1\" url=\"172.100.9.13:9004\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"false\" databaseType=\"clickhouse\"/>
-     <dbInstance name=\"hostS1\" url=\"172.100.9.14:9004\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"true\" databaseType=\"clickhouse\"/>
+     <dbInstance name=\"hostM1\" url=\"172.100.9.11:3307\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"false\"/>
+     <dbInstance name=\"hostS1\" url=\"172.100.9.12:3307\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"true\"/>
     """
 
 #########   fresh conn
@@ -547,23 +468,27 @@ Feature: test config in user.xml  ---  analysisUser
       | conn_2 | False   | flow_control @@list                          | length{(44)}  |
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                | expect   |
+      | rwS1  | 111111 | conn_1 | False   | select user()      | success  |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                          | expect        |
+ ####1700
+      | conn_2 | False   | select * from dble_information.dble_flow_control where connection_info like "%3307%"                          | length{(43)}  |
+    Then execute sql in "dble-1" in "user" mode
+      | user  | passwd | conn   | toClose | sql                | expect   |
       | ana1  | 111111 | conn_1 | False   | select user()      | success  |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                          | expect        |
-      ####1700
-#      | conn_2 | False   | select * from dble_information.dble_flow_control where connection_info like "%9004%"                          | length{(22)}  |
+      | conn_2 | False   | select * from dble_information.dble_flow_control where connection_info like "%3307%"                          | length{(43)}  |
       | conn_2 | False   | flow_control @@set enableFlowControl = false | success       |
       | conn_2 | False   | flow_control @@show                          | length{(0)}   |
       | conn_2 | False   | flow_control @@list                          | length{(0)}   |
+####DBLE0REQ-1700
+      | conn_0 | False   | show @@backend where port= 3307          | length{(43)}  |
+      | conn_0 | False   | show @@session            | length{(0)}  |
+      | conn_0 | False   | show @@session.xa         | length{(0)}  |
 
 
-  #### 有问题
-#      | conn_0 | False   | show @@backend where port= 9004          | length{(1)}  |
-#      | conn_0 | False   | show @@session         | length{(1)}  |
-#      | conn_0 | False   | show @@session.xa         | length{(1)}  |
-
-
-#### 没有统计到分析用户的sql
+#### 没有统计到分析用户的sql ####DBLE0REQ-1701
 #    Given execute sql "50" times in "dble-1" at concurrent
 #      | user  | passwd | sql             |
 #      | ana1  | 111111 | select 1        |
@@ -582,24 +507,3 @@ Feature: test config in user.xml  ---  analysisUser
 #      | conn_0 | False   | show @@sql.sum.table           | length{(1)}  |
 #      | conn_0 | False   | show @@connection.coun          | length{(1)}  |
 #      | conn_0 | False   | reload @@user_stat            | length{(1)}  | 重置前面命令的状态 Reset show @@sql  @@sql.sum @@sql.slow  @@sql.high  @@sql.large  @@sql.resultset  success
-
-
-
-  @skip_restart
-  Scenario: test 'sqlExecuteTimeout'  #14
-
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" >
-        <heartbeat>select 1</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="true" />
-    </dbGroup>
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group4" maxCon="0"/>
-    """
-    Then execute admin cmd "reload @@config"
-
-
-
