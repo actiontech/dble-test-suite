@@ -30,7 +30,7 @@ Feature: test with hint plan A with other table type
         <property name="hashSlice">0:2</property>
     </function>
     """
-    Then restart dble in "dble-1" success
+    Then execute admin cmd "reload @@config_all"
     Then execute sql in "mysql"
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                                               | expect  | db      |
       | conn_0 | False   | create database if not exists schema1                                                                                                                                                                                                                                                                             | success | schema1 |
