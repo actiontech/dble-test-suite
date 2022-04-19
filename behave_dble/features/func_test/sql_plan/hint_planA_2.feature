@@ -34,7 +34,7 @@ Feature: test with hint plan A with other table type
         <property name="hashSlice">0:2</property>
     </function>
     """
-    Then restart dble in "dble-1" success
+    Then execute admin cmd "reload @@config_all"
     Then execute sql in "mysql"
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                                                                                 | expect  | db      |
       | conn_0 | False   | create database if not exists schema1                                                                                                                                                                                                                                                                                                               | success | schema1 |
@@ -191,7 +191,7 @@ Feature: test with hint plan A with other table type
         <property name="hashSlice">0:2</property>
     </function>
     """
-    Then restart dble in "dble-1" success
+    Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                                               | expect  | db      |
       | conn_0 | False   | drop table if exists Employee;drop table if exists Dept;drop table if exists Level;drop table if exists Info;drop table if exists FamilyInfo                                                                                                                                                                      | success | schema1 |
