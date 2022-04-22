@@ -37,9 +37,9 @@ Feature: test flow_control about complex query
       | conn_1 | true    | drop table if exists sharding_4_t1                                                                                                                                   | success | schema1 | utf8mb4 |
       | conn_1 | true    | create table sharding_2_t1 (id int,a varchar(120) ,b varchar(120) ,c varchar(120) ,d varchar(120) ) default charset=utf8                                             | success | schema1 | utf8mb4 |
       | conn_1 | true    | create table sharding_4_t1 (id int,a varchar(120) ,b varchar(120) ,c varchar(120) ,d varchar(120) ) default charset=utf8                                             | success | schema1 | utf8mb4 |
-      | conn_1 | true    | insert into sharding_2_t1 values (1,repeat("中",32),repeat("华",32),repeat("民",32),repeat("国",32)),(2,repeat("中",32),repeat("华",32),repeat("民",32),repeat("国",32)) | success | schema1 | utf8mb4 |
-      | conn_1 | true    | insert into sharding_4_t1 values (1,repeat("中",32),repeat("华",32),repeat("民",32),repeat("国",32)),(2,repeat("中",32),repeat("华",32),repeat("民",32),repeat("国",32)) | success | schema1 | utf8mb4 |
-      | conn_1 | true    | insert into sharding_4_t1 values (3,repeat("中",32),repeat("华",32),repeat("民",32),repeat("国",32)),(4,repeat("中",32),repeat("华",32),repeat("民",32),repeat("国",32)) | success | schema1 | utf8mb4 |
+      | conn_1 | true    | insert into sharding_2_t1 values (1,repeat("爱",32),repeat("可",32),repeat("生",32),repeat("生",32)),(2,repeat("爱",32),repeat("可",32),repeat("生",32),repeat("生",32)) | success | schema1 | utf8mb4 |
+      | conn_1 | true    | insert into sharding_4_t1 values (1,repeat("爱",32),repeat("可",32),repeat("生",32),repeat("生",32)),(2,repeat("爱",32),repeat("可",32),repeat("生",32),repeat("生",32)) | success | schema1 | utf8mb4 |
+      | conn_1 | true    | insert into sharding_4_t1 values (3,repeat("爱",32),repeat("可",32),repeat("生",32),repeat("生",32)),(4,repeat("爱",32),repeat("可",32),repeat("生",32),repeat("生",32)) | success | schema1 | utf8mb4 |
     #prepare more data
     Given execute sql "22" times in "dble-1" at concurrent 22
       | sql                                                                                | db      |
