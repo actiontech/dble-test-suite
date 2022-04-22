@@ -154,7 +154,7 @@ Feature: config db config files incorrect and restart dble or reload configs
       Attribute 'switchType' is not allowed to appear in element 'dbGroup'
       """
 
-  @TRIVIAL
+  @TRIVIAL @skip
   Scenario: dbInstance's  add databasetype  #11
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -310,7 +310,7 @@ Feature: config db config files incorrect and restart dble or reload configs
       The reason is The group[rwS1.ha_group3] all dbInstance database type must be MYSQL
       """
 
-  @TRIVIAL
+  @TRIVIAL @skip
   Scenario: analysisUser with dbInstance database type must be CLICKHOUSE #14
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """

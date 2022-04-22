@@ -322,7 +322,7 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@dbinstance                                                 | length{(4)}   |
       | conn_0 | False   | show @@dbinstance where shardingNode = "dn3"                      | length{(1)}   |
       | conn_0 | False   | show @@dbinstance.syndetail WHERE name = "hostM1"                 | length{(0)}   |
-      | conn_0 | False   | show @@processor                                                  | length{(17)}  |
+      | conn_0 | False   | show @@processor                                                  | success       |
       | conn_0 | False   | show @@command                                                    | length{(1)}   |
       | conn_0 | False   | show @@connection                                                 | length{(2)}   |
       | conn_0 | False   | show @@cache                                                      | length{(2)}   |
