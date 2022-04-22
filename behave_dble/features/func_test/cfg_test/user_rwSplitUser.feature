@@ -475,7 +475,7 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_2 | False   | select * from dble_information.dble_flow_control where connection_info like "%3307%"                          | length{(43)}  |
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                | expect   |
-      | ana1  | 111111 | conn_1 | False   | select user()      | success  |
+      |  rwS1  | 111111 | conn_1 | False   | select user()      | success  |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                          | expect        |
       | conn_2 | False   | select * from dble_information.dble_flow_control where connection_info like "%3307%"                          | length{(43)}  |
@@ -488,13 +488,13 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@session.xa         | length{(0)}  |
 
 
-#### 没有统计到分析用户的sql ####DBLE0REQ-1701
+#### 没有统计到读写分离用户的sql ####DBLE0REQ-1701
 #    Given execute sql "50" times in "dble-1" at concurrent
 #      | user  | passwd | sql             |
-#      | ana1  | 111111 | select 1        |
+#      |  rwS1  | 111111 | select 1        |
 #    Given execute sql "20" times in "dble-1" at concurrent
 #      | user  | passwd | sql             |
-#      | ana1  | 111111 | select 1        |
+#      |  rwS1  | 111111 | select 1        |
 #    Then execute sql in "dble-1" in "admin" mode
 #      | conn   | toClose | sql                                     | expect       |
 #      | conn_0 | False   | show @@connection.sql        | length{(1)}  |
