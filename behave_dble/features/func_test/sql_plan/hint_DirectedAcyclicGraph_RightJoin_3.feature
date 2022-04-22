@@ -4,7 +4,6 @@
 # Created by zhangqian at 2022/03/10
 Feature: test with joinStrategyType
 
-#  @skip_restart
   @delete_mysql_tables
   Scenario: shardingTable  + globalTable  +  globalTable  #Directed Acyclic Graph && right join
   """
@@ -36,7 +35,6 @@ Feature: test with joinStrategyType
             <property name="hashSlice">0:2</property>
         </function>
     """
-#    Given Restart dble in "dble-1" success
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                                               | db      | expect  |
@@ -246,7 +244,7 @@ Feature: test with joinStrategyType
       | conn_0 | False   | explain /*!dble:plan=a&(c\|b) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager inner JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name;    | some errors near the node 'b'. Because left join and inner join can't point to same node.       | schema1 |
       | conn_0 | False   | explain /*!dble:plan=(c,a,b) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager inner JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name;     | can't use '{node=c}' node for root. Because exists some left join relations point to this node. | schema1 |
       | conn_0 | False   | explain /*!dble:plan=(c\|a)&b*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager inner JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name;     | can't use '{node=c}' node for root. Because exists some left join relations point to this node. | schema1 |
-#      | conn_0 | False   | explain /*!dble:plan=c&(a,b) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager inner JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name;     | The ER relation in the hint currently only supports when it exists in the headmost of hint.     | schema1 |
+      | conn_0 | False   | explain /*!dble:plan=c&(a,b) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager inner JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name;     | The ER relation in the hint currently only supports when it exists in the headmost of hint.     | schema1 |
       | conn_0 | False   | explain /*!dble:plan=c&(b,a) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager inner JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name;     | The ER relation in the hint currently only supports when it exists in the headmost of hint.     | schema1 |
       | conn_0 | False   | explain /*!dble:plan=c&b&a */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager inner JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name;       | can't use '{node=c}' node for root. Because exists some left join relations point to this node. | schema1 |
       | conn_0 | False   | explain /*!dble:plan=b \| a \| c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager inner JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | can't use '{node=b}' node for root. Because exists some left join relations point to this node. | schema1 |
@@ -1007,7 +1005,6 @@ Feature: test with joinStrategyType
       | conn_0 | False   | explain /*!dble:plan=a\|c\|b */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name;  | can't use '{node=a}' node for root. Because exists some left join relations point to this node. | schema1 |
       | conn_0 | True    | explain /*!dble:plan=(c\|a)&b */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | You are using wrong hint. please check the node 'a',there are no previous nodes connect to it.  | schema1 |
 
-#  @skip_restart
   @delete_mysql_tables
   Scenario: shardingTable  + globalTable  +  singleTable  #Directed Acyclic Graph && right join
   """
@@ -1039,7 +1036,6 @@ Feature: test with joinStrategyType
             <property name="hashSlice">0:2</property>
         </function>
     """
-#    Given Restart dble in "dble-1" success
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                                               | db      | expect  |
@@ -1064,7 +1060,7 @@ Feature: test with joinStrategyType
 #      | conn_0 | false   | insert into Level values('P7',7,10000),('P8',8,15000),('P9',9,20000),('P10',10,25000)                                                                                                                                                                                                                             | schema1 | success |
 #      | conn_0 | true    | insert into Info values('Harry', 25, 'China','Finance'),('Sally', 30, 'USA', 'Sales'),('Gerorge', 20, 'UK', 'Finance'),('Harriet', 35, 'Japan', 'Sales'),('Mary', 22, 'China', 'Human Resources'),('LiLi',33,'Krean','Human Resources'),('Jessi', 27,'Krean','Finance')                                           | schema1 | success |
 
-        # left join & left join & 0 er & ab, ac bc
+    # left join & left join & 0 er & ab, ac bc
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                                                                                                                                                                         | db      |
       | conn_0 | false   | explain /*!dble:plan=a & b & c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -2118,7 +2114,6 @@ Feature: test with joinStrategyType
       | conn_0 | False   | explain /*!dble:plan=a\|c\|b */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name;  | can't use '{node=a}' node for root. Because exists some left join relations point to this node. | schema1 |
       | conn_0 | True    | explain /*!dble:plan=(c\|a)&b */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | You are using wrong hint. please check the node 'a',there are no previous nodes connect to it.  | schema1 |
 
-#  @skip_restart
   @delete_mysql_tables
   Scenario: shardingTable  + singleTable  +  singleTable  #Directed Acyclic Graph && right join
   """
@@ -2150,7 +2145,6 @@ Feature: test with joinStrategyType
             <property name="hashSlice">0:2</property>
         </function>
     """
-#    Given Restart dble in "dble-1" success
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                                               | db      | expect  |
@@ -2469,7 +2463,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                  | db      |
       | conn_0 | true    | /*#dble:plan=b \| a \| c*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a inner JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
-#    # left join & inner join & 0 er & ab, ac bc
+    # left join & inner join & 0 er & ab, ac bc
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_17"
       | conn   | toClose | sql                                                                                                                                                                                                             | db      |
       | conn_0 | false   | explain /*!dble:plan=(b \| a) & c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a inner JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -2914,7 +2908,7 @@ Feature: test with joinStrategyType
       | conn_0 | False   | explain /*!dble:plan=c&(b,a) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | The ER relation in the hint currently only supports when it exists in the headmost of hint. | schema1 |
       | conn_0 | True    | explain /*!dble:plan=(a,b)&c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | hint explain build failures! check ER condition                                             | schema1 |
 
-    #    # right join & right join & 0 er & ab, ac  --> not support at this version
+   # right join & right join & 0 er & ab, ac  --> not support at this version
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                                           | expect                                                                                                                                   | db      |
       | conn_0 | False   | explain /*!dble:plan=c & b & a*/ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager RIGHT JOIN Level c ON a.level=c.levelname ORDER BY a.name; | we don't support optimize this sql use hints yet. Maybe this sql contains 'multi right join' or 'cartesian with relation' or 'subquery'. | schema1 |
@@ -3238,8 +3232,7 @@ Feature: test with joinStrategyType
       | conn_0 | False   | explain /*!dble:plan=a\|c\|b */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name;  | can't use '{node=a}' node for root. Because exists some left join relations point to this node. | schema1 |
       | conn_0 | True    | explain /*!dble:plan=(c\|a)&b */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | You are using wrong hint. please check the node 'a',there are no previous nodes connect to it.  | schema1 |
 
-  # root node is GlobalTable
-#  @skip_restart
+# root node is GlobalTable
   @delete_mysql_tables
   Scenario: GlobalTable  + [otherTypeTable]            #Directed Acyclic Graph && right join
   """
@@ -4440,9 +4433,8 @@ Feature: test with joinStrategyType
       | conn_0 | False   | explain /*!dble:plan=a\|c\|b */ SELECT b.name,a.deptname,c.manager,a.country FROM Info a right JOIN Employee b on a.name=b.name inner JOIN Dept c on b.deptname=c.deptname order by a.name;  | can't use '{node=a}' node for root. Because exists some left join relations point to this node. | schema1 |
       | conn_0 | True    | explain /*!dble:plan=(c\|a)&b */ SELECT b.name,a.deptname,c.manager,a.country FROM Info a right JOIN Employee b on a.name=b.name inner JOIN Dept c on b.deptname=c.deptname order by a.name; | You are using wrong hint. please check the node 'a',there are no previous nodes connect to it.  | schema1 |
 
-  # root node is SingleTable
-  @skip_restart
-#  @delete_mysql_tables
+# root node is SingleTable
+  @delete_mysql_tables
   Scenario: SingleTable  + [otherTypeTable]            #Directed Acyclic Graph && right join
   """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3', 'db4'], 'mysql-master2': ['db1', 'db2', 'db3', 'db4']}}

@@ -4,8 +4,7 @@
 # Created by zhangqian at 2022/02/16
 Feature: test with joinStrategyType
 
-  @skip_restart
-#  @delete_mysql_tables
+  @delete_mysql_tables
   Scenario: shardingTable  + shardingTable  +  shardingTable  #Directed Acyclic Graph
   """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3']}}
@@ -36,7 +35,6 @@ Feature: test with joinStrategyType
             <property name="hashSlice">0:2</property>
         </function>
       """
-#    Given Restart dble in "dble-1" success
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                                               | db      | expect  |
@@ -4357,7 +4355,6 @@ Feature: test with joinStrategyType
       | conn_0 | False   | explain /*!dble:plan=(c,b,a) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | hint explain build failures! check ER condition                                             | schema1 |
       | conn_0 | Ture    | explain /*!dble:plan=c&(b,a) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | The ER relation in the hint currently only supports when it exists in the headmost of hint. | schema1 |
 
-#  @skip_restart
   @delete_mysql_tables
   Scenario: shardingTable  + shardingTable  +  shardingTable  #right join
   """
@@ -4389,7 +4386,6 @@ Feature: test with joinStrategyType
             <property name="hashSlice">0:2</property>
         </function>
       """
-#    Given Restart dble in "dble-1" success
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                                               | db      | expect  |
