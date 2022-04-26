@@ -12,13 +12,13 @@ import java.sql.*;
  * @modifiedBy
  * @version 1.0
  */
-public class RwSplitUserTest extends InterfaceTest {
+public class RwSplitUserPsTest extends InterfaceTest {
 
     private String slaveIp = "172.100.9.2";
     private String masterIp = "172.100.9.6";
     private String rwSplitUser = "split33";
 
-    public RwSplitUserTest(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
+    public RwSplitUserPsTest(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
         super(mysqlProp, dbleProp, isMysqlDriver);
     }
 
