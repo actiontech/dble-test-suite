@@ -5,7 +5,7 @@
 Feature: test with joinStrategyType
 
   @delete_mysql_tables
-  Scenario: shardingTable  + shardingTable  +  shardingTable  #Directed Acyclic Graph
+  Scenario: shardingTable  + shardingTable  +  shardingTable  Directed Acyclic Graph #1
   """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
   """
@@ -199,7 +199,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                                 | db      |
       | conn_0 | true    | /*#dble:plan=(a \| b) & c  */SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.deptname=c.deptname and b.deptname=c.deptname order by a.name; | schema1 |
 
-    # left join & left join & 2 er & ab, ac bc
+    # left join & left join & 2 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_6"
 #      | conn   | toClose | sql                                                                                                                                                                                                                          | db      |
 #      | conn_0 | false   | explain /*!dble:plan=(a & b) \| c  */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.deptname=c.deptname and b.deptname=c.deptname order by a.name; | schema1 |
@@ -345,7 +345,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                          | db      |
       | conn_0 | true    | /*#dble:plan=(a \| b) & c  */SELECT a.name,a.deptname,b.manager,c.country FROM  Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.deptname=c.deptname order by a.name; | schema1 |
 
-    # left join & left join & 1 er & ab, ac bc
+    # left join & left join & 1 er & ab, ac bc       ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_11"
 #      | conn   | toClose | sql                                                                                                                                                                                                                   | db      |
 #      | conn_0 | false   | explain /*!dble:plan=(a & b) \| c  */ SELECT a.name,a.deptname,b.manager,c.country FROM  Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.deptname=c.deptname order by a.name; | schema1 |
@@ -491,7 +491,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                      | db      |
       | conn_0 | true    | /*#dble:plan= (a \| b) & c   */SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
-    # left join & left join & 0 er & ab, ac bc
+    # left join & left join & 0 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_16"
 #      | conn   | toClose | sql                                                                                                                                                                                                               | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (a & b) \| c   */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -709,7 +709,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                                  | db      |
       | conn_0 | true    | /*#dble:plan= (a \| b) & c */SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.deptname=c.deptname order by a.name; | schema1 |
 
-    # left join & inner join & 2 er & ab, ac bc
+    # left join & inner join & 2 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_25"
 #      | conn   | toClose | sql                                                                                                                                                                                                                           | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (a & b) \| c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.deptname=c.deptname order by a.name; | schema1 |
@@ -737,7 +737,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                                     | db      |
 #      | conn_0 | true    | /*#dble:plan= (a & b) \| c */SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.deptname=c.deptname order by a.name; | schema1 |
 
-  # left join & inner join & 2 er & ab, ac bc
+  # left join & inner join & 2 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_26"
 #      | conn   | toClose | sql                                                                                                                                                                                                                           | db      |
 #      | conn_0 | false   | explain /*!dble:plan= a \| (b & c) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.deptname=c.deptname order by a.name; | schema1 |
@@ -835,7 +835,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                                  | db      |
       | conn_0 | true    | /*#dble:plan= (a \| b) & c */SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.deptname=c.deptname and b.deptname=c.deptname order by a.name; | schema1 |
 
-    # left join & inner join & 2 er & ab, ac bc
+    # left join & inner join & 2 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_32"
 #      | conn   | toClose | sql                                                                                                                                                                                                                        | db      |
 #      | conn_0 | false   | explain /*!dble:plan= a \| (b & c) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.deptname=c.deptname and b.deptname=c.deptname order by a.name; | schema1 |
@@ -947,7 +947,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                                  | db      |
       | conn_0 | true    | /*#dble:plan= (b \| a) & c */SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.deptname=c.deptname and b.deptname=c.deptname order by a.name; | schema1 |
 
-    # left join & inner join & 2 er & ab, ac bc
+    # left join & inner join & 2 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_32"
 #      | conn   | toClose | sql                                                                                                                                                                                                                           | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (b & a) \| c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.deptname=c.deptname and b.deptname=c.deptname order by a.name; | schema1 |
@@ -1070,7 +1070,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                          | db      |
       | conn_0 | true    | /*#dble:plan= (a \| b) & c */SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname order by a.name; | schema1 |
 
-    # left join & inner join & 1 er & ab, ac bc
+    # left join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_36"
 #      | conn   | toClose | sql                                                                                                                                                                                                                   | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (a & b) \| c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname order by a.name; | schema1 |
@@ -1219,7 +1219,7 @@ Feature: test with joinStrategyType
       | conn_0 | true    | /*#dble:plan= a & ( b \| c ) */SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.deptname=c.deptname order by a.name; | schema1 |
 
 
-    # left join & inner join & 1 er & ab, ac bc
+    # left join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_45"
 #      | conn   | toClose | sql                                                                                                                                                                                                                   | db      |
 #      | conn_0 | false   | explain /*!dble:plan= a \| (b & c) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.deptname=c.deptname order by a.name; | schema1 |
@@ -1246,7 +1246,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                             | db      |
 #      | conn_0 | true    | /*#dble:plan= a \| (b & c) */SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.deptname=c.deptname order by a.name; | schema1 |
 
-    # left join & inner join & 1 er & ab, ac bc
+    # left join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_46"
 #      | conn   | toClose | sql                                                                                                                                                                                                                   | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (a & b) \| c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.deptname=c.deptname order by a.name; | schema1 |
@@ -1381,7 +1381,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                          | db      |
       | conn_0 | true    | /*#dble:plan= b & (a \| c) */SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.deptname=c.deptname order by a.name; | schema1 |
 
-#    # left join & inner join & 1 er & ab, ac bc
+#    # left join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_51"
 #      | conn   | toClose | sql                                                                                                                                                                                                                   | db      |
 #      | conn_0 | false   | explain /*!dble:plan= b \| (a & c) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.deptname=c.deptname order by a.name; | schema1 |
@@ -1408,7 +1408,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                             | db      |
 #      | conn_0 | true    | /*#dble:plan= b \| (a & c) */SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.deptname=c.deptname order by a.name; | schema1 |
 
-#  # left join & inner join & 1 er & ab, ac bc
+#  # left join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_52"
 #      | conn   | toClose | sql                                                                                                                                                                                                                   | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (b & a) \| c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.deptname=c.deptname order by a.name; | schema1 |
@@ -1556,7 +1556,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                    | db      |
       | conn_0 | true    | /*#dble:plan= (a \| b) & c*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
-    # left join & inner join & no er & ab, ac bc
+    # left join & inner join & no er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_57"
 #      | conn   | toClose | sql                                                                                                                                                                                                             | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (a & b) \| c*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -1583,7 +1583,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                        | db      |
 #      | conn_0 | true    | /*#dble:plan= (a & b) \| c*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
-  # left join & inner join & no er & ab, ac bc
+  # left join & inner join & no er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_58"
 #      | conn   | toClose | sql                                                                                                                                                                                                             | db      |
 #      | conn_0 | false   | explain /*!dble:plan= a \| (b & c)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -1732,7 +1732,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                      | db      |
       | conn_0 | true    | /*#dble:plan= a & ( b \| c )*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
-#    # left join & inner join & no er & ab, ac bc
+#    # left join & inner join & no er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_69"
 #      | conn   | toClose | sql                                                                                                                                                                                                               | db      |
 #      | conn_0 | false   | explain /*!dble:plan= a \| (b & c)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -1759,7 +1759,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                        | db      |
 #      | conn_0 | true    | /*#dble:plan= a \| (b & c)*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
-#    # left join & inner join & no er & ab, ac bc
+#    # left join & inner join & no er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_70"
 #      | conn   | toClose | sql                                                                                                                                                                                                             | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (a & b) \| c*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -1894,7 +1894,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                    | db      |
       | conn_0 | true    | /*#dble:plan= b & (a \| c)*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
-#    # left join & inner join & no er & ab, ac bc
+#    # left join & inner join & no er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_75"
 #      | conn   | toClose | sql                                                                                                                                                                                                             | db      |
 #      | conn_0 | false   | explain /*!dble:plan= b \| (a & c)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -1921,7 +1921,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                        | db      |
 #      | conn_0 | true    | /*#dble:plan= b \| (a & c)*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
-    # left join & inner join & no er & ab, ac bc
+    # left join & inner join & no er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_76"
 #      | conn   | toClose | sql                                                                                                                                                                                                             | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (b & a) \| c*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -2080,7 +2080,7 @@ Feature: test with joinStrategyType
       | conn_0 | False   | explain /*!dble:plan=b&(a\|c) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON  a.deptname=c.deptname and b.deptname=c.deptname ORDER BY a.name;    | hint explain build failures! check table b & or \| condition | schema1 |
       | conn_0 | False   | explain /*!dble:plan=(b\|c)&a */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON  a.deptname=c.deptname and b.deptname=c.deptname ORDER BY a.name;    | hint explain build failures! check table b & or \| condition | schema1 |
       | conn_0 | False   | explain /*!dble:plan=(c,a)&b */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON  a.deptname=c.deptname and b.deptname=c.deptname ORDER BY a.name;     | hint explain build failures! check table b & or \| condition | schema1 |
-#      | conn_0 | False   | explain /*!dble:plan=c\|(a&b) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON  a.deptname=c.deptname and b.deptname=c.deptname ORDER BY a.name;    | The ER relation in the hint currently only supports when it exists in the headmost of hint. | schema1 |
+#         ==> DBLE0REQ-1636   | conn_0 | False   | explain /*!dble:plan=c\|(a&b) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON  a.deptname=c.deptname and b.deptname=c.deptname ORDER BY a.name;    | The ER relation in the hint currently only supports when it exists in the headmost of hint. | schema1 |
       | conn_0 | True    | explain /*!dble:plan=c& (b \| a) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON  a.deptname=c.deptname and b.deptname=c.deptname ORDER BY a.name; | hint explain build failures! check table c & or \| condition | schema1 |
 
     # inner join & inner join & 2 er & ab, ac bc
@@ -2167,7 +2167,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                                       | db      |
       | conn_0 | true    | /*#dble:plan= a & ( b \| c )*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name= b.manager INNER JOIN  Info c on a.deptname=c.deptname  and b.deptname=c.deptname ORDER BY a.name; | schema1 |
 
-#    # inner join & inner join & 2 er & ab, ac bc
+#    # inner join & inner join & 2 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_87"
 #      | conn   | toClose | sql                                                                                                                                                                                                                                | db      |
 #      | conn_0 | false   | explain /*!dble:plan= a \| (b & c)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name= b.manager INNER JOIN  Info c on a.deptname=c.deptname  and b.deptname=c.deptname ORDER BY a.name; | schema1 |
@@ -2195,7 +2195,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                                         | db      |
 #      | conn_0 | true    | /*#dble:plan= a \| (b & c)*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name= b.manager INNER JOIN  Info c on a.deptname=c.deptname  and b.deptname=c.deptname ORDER BY a.name; | schema1 |
 
-#    # inner join & inner join & 2 er & ab, ac bc
+#    # inner join & inner join & 2 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_88"
 #      | conn   | toClose | sql                                                                                                                                                                                                                              | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (a & b) \| c*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name= b.manager INNER JOIN  Info c on a.deptname=c.deptname  and b.deptname=c.deptname ORDER BY a.name; | schema1 |
@@ -2349,7 +2349,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                                       | db      |
       | conn_0 | true    | /*#dble:plan= b & ( a \| c )*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name= b.manager INNER JOIN  Info c on a.deptname=c.deptname  and b.deptname=c.deptname ORDER BY a.name; | schema1 |
 
-#    # inner join & inner join & 2 er & ab, ac bc
+#    # inner join & inner join & 2 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_94"
 #      | conn   | toClose | sql                                                                                                                                                                                                                                | db      |
 #      | conn_0 | false   | explain /*!dble:plan= b \| (a& c)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name= b.manager INNER JOIN  Info c on a.deptname=c.deptname  and b.deptname=c.deptname ORDER BY a.name; | schema1 |
@@ -2377,7 +2377,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                                         | db      |
 #      | conn_0 | true    | /*#dble:plan= b \| (a& c)*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name= b.manager INNER JOIN  Info c on a.deptname=c.deptname  and b.deptname=c.deptname ORDER BY a.name; | schema1 |
 
-    # inner join & inner join & 2 er & ab, ac bc
+    # inner join & inner join & 2 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_95"
 #      | conn   | toClose | sql                                                                                                                                                                                                                              | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (b & a) \| c*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name= b.manager INNER JOIN  Info c on a.deptname=c.deptname  and b.deptname=c.deptname ORDER BY a.name; | schema1 |
@@ -2656,7 +2656,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                               | db      |
       | conn_0 | true    | /*#dble:plan= c & b & a*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON a.deptname=c.deptname and c.name=b.manager ORDER BY a.name; | schema1 |
 
-#    # inner join & inner join & 2 er & ab, ac bc
+#    # inner join & inner join & 2 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_107"
 #      | conn   | toClose | sql                                                                                                                                                                                                                        | db      |
 #      | conn_0 | false   | explain /*!dble:plan= c \| (b& a)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b ON a.deptname=b.deptname INNER JOIN Info c ON a.deptname=c.deptname and c.name=b.manager ORDER BY a.name; | schema1 |
@@ -2808,7 +2808,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                              | db      |
       | conn_0 | true    | /*#dble:plan= (a \| b) & c*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.manager=c.name order by a.name; | schema1 |
 
-#    # inner join & inner join & 1 er & ab, ac bc
+#    # inner join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1635
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_112"
 #      | conn   | toClose | sql                                                                                                                                                                                                                      | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (a,c)\|b*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.manager=c.name order by a.name; | schema1 |
@@ -2884,7 +2884,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                           | db      |
       | conn_0 | true    | /*#dble:plan= b & a & c*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.manager=c.name order by a.name; | schema1 |
 
-#    # inner join & inner join & 1 er & ab, ac bc
+#    # inner join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_115"
 #      | conn   | toClose | sql                                                                                                                                                                                                                   | db      |
 #      | conn_0 | false   | explain /*!dble:plan= b \| (a& c)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.manager=c.name order by a.name; | schema1 |
@@ -2912,7 +2912,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                                 | db      |
 #      | conn_0 | true    | /*#dble:plan= b \| (a& c)*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.manager=c.name order by a.name; | schema1 |
 
-    # inner join & inner join & 1 er & ab, ac bc
+    # inner join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_116"
 #      | conn   | toClose | sql                                                                                                                                                                                                                     | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (b & a) \| c*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.manager=c.name order by a.name; | schema1 |
@@ -3052,7 +3052,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                             | db      |
       | conn_0 | true    | /*#dble:plan= (b \| c) & a*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.manager=c.name order by a.name; | schema1 |
 
-#    # inner join & inner join & 1 er & ab, ac bc
+#    # inner join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_120"
 #      | conn   | toClose | sql                                                                                                                                                                                                                        | db      |
 #      | conn_0 | false   | explain /*!dble:plan= b \| (c& a)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.manager=c.name order by a.name; | schema1 |
@@ -3100,7 +3100,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                         | db      |
       | conn_0 | true    | /*#dble:plan= (c,a)&b*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.manager=c.name order by a.name; | schema1 |
 
-    # inner join & inner join & 1 er & ab, ac bc
+    # inner join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1635
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_122"
 #      | conn   | toClose | sql                                                                                                                                                                                                                 | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (c,a)\|b*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.manager=c.name order by a.name; | schema1 |
@@ -3176,7 +3176,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                               | db      |
       | conn_0 | true    | /*#dble:plan= c & ( b \| a )*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.manager=c.name order by a.name; | schema1 |
 
-    # inner join & inner join & 1 er & ab, ac bc
+    # inner join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_125"
 #      | conn   | toClose | sql                                                                                                                                                                                                                      | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (c & b) \| a*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.deptname=c.deptname and b.manager=c.name order by a.name; | schema1 |
@@ -3328,7 +3328,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                                           | db      |
       | conn_0 | true    | /*#dble:plan= a & ( b \| c )*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager and b.deptid=3 INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname ORDER BY a.name; | schema1 |
 
-    # inner join & inner join & 1 er & ab, ac bc
+    # inner join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_130"
 #      | conn   | toClose | sql                                                                                                                                                                                                                                  | db      |
 #      | conn_0 | false   | explain /*!dble:plan= a \| (b & c)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager and b.deptid=3 INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname ORDER BY a.name; | schema1 |
@@ -3463,7 +3463,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                                         | db      |
       | conn_0 | true    | /*#dble:plan= (a \| c) & b*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager and b.deptid=3 INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname ORDER BY a.name; | schema1 |
 
-#    # inner join & inner join & 1 er & ab, ac bc
+#    # inner join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_134"
 #      | conn   | toClose | sql                                                                                                                                                                                                                                  | db      |
 #      | conn_0 | false   | explain /*!dble:plan= a \| (c & b)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager and b.deptid=3 INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname ORDER BY a.name; | schema1 |
@@ -3544,7 +3544,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                                      | db      |
       | conn_0 | true    | /*#dble:plan= b & a & c*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager and b.deptid=3 INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname ORDER BY a.name; | schema1 |
 
-#    # inner join & inner join & 1 er & ab, ac bc
+#    # inner join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_137"
 #      | conn   | toClose | sql                                                                                                                                                                                                                               | db      |
 #      | conn_0 | false   | explain /*!dble:plan= b \| (a& c)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager and b.deptid=3 INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname ORDER BY a.name; | schema1 |
@@ -3598,7 +3598,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                                         | db      |
       | conn_0 | true    | /*#dble:plan= (b \| a) & c*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager and b.deptid=3 INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname ORDER BY a.name; | schema1 |
 
-#    # inner join & inner join & 1 er & ab, ac bc
+#    # inner join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1635
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_139"
 #      | conn   | toClose | sql                                                                                                                                                                                                                                  | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (b,c)\|a*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager and b.deptid=3 INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname ORDER BY a.name; | schema1 |
@@ -3701,7 +3701,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                                         | db      |
       | conn_0 | true    | /*#dble:plan= c & (a \| b)*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager and b.deptid=3 INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname ORDER BY a.name; | schema1 |
 
-#    # inner join & inner join & 1 er & ab, ac bc
+#    # inner join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_143"
 #      | conn   | toClose | sql                                                                                                                                                                                                                                  | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (c & a) \| b*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager and b.deptid=3 INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname ORDER BY a.name; | schema1 |
@@ -3755,7 +3755,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                                         | db      |
       | conn_0 | true    | /*#dble:plan= (c \| a) & b*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager and b.deptid=3 INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname ORDER BY a.name; | schema1 |
 
-#    # inner join & inner join & 1 er & ab, ac bc
+#    # inner join & inner join & 1 er & ab, ac bc      ==> DBLE0REQ-1635
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_145"
 #      | conn   | toClose | sql                                                                                                                                                                                                                                  | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (c,b)\|a*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager and b.deptid=3 INNER JOIN Info c on a.name=c.name and b.deptname=c.deptname ORDER BY a.name; | schema1 |
@@ -3875,7 +3875,7 @@ Feature: test with joinStrategyType
       | conn_0 | true    | /*#dble:plan= a & ( b \| c )*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
 
-#    # inner join & inner join & 0 er & ab, ac bc
+#    # inner join & inner join & 0 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_149"
 #      | conn   | toClose | sql                                                                                                                                                                                                                | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (a & b) \| c*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -3956,7 +3956,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                  | db      |
       | conn_0 | true    | /*#dble:plan= a & c & b*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
-#    # inner join & inner join & 0 er & ab, ac bc
+#    # inner join & inner join & 0 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_152"
 #      | conn   | toClose | sql                                                                                                                                                                                                           | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (a & c) \| b*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -4037,7 +4037,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                    | db      |
       | conn_0 | true    | /*#dble:plan= b \| a \| c*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
-#    # inner join & inner join & 0 er & ab, ac bc
+#    # inner join & inner join & 0 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_155"
 #      | conn   | toClose | sql                                                                                                                                                                                                                | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (b & a) \| c*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -4119,7 +4119,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                  | db      |
       | conn_0 | true    | /*#dble:plan= b & c & a*/SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
-#    # inner join & inner join & 0 er & ab, ac bc
+#    # inner join & inner join & 0 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_158"
 #      | conn   | toClose | sql                                                                                                                                                                                                           | db      |
 #      | conn_0 | false   | explain /*!dble:plan= b \| (c& a)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -4284,7 +4284,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                                     | db      |
       | conn_0 | true    | /*#dble:plan= (c\| b) & a*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
-#    # inner join & inner join & 0 er & ab, ac bc
+#    # inner join & inner join & 0 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_163"
 #      | conn   | toClose | sql                                                                                                                                                                                                           | db      |
 #      | conn_0 | false   | explain /*!dble:plan= c \| (b& a)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -4312,7 +4312,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                         | db      |
 #      | conn_0 | true    | /*#dble:plan= c \| (b& a)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
 
-#  # inner join & inner join & 0 er & ab, ac bc
+#  # inner join & inner join & 0 er & ab, ac bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_164"
 #      | conn   | toClose | sql                                                                                                                                                                                                              | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (c & b) \| a*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
@@ -4356,7 +4356,7 @@ Feature: test with joinStrategyType
       | conn_0 | Ture    | explain /*!dble:plan=c&(b,a) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | The ER relation in the hint currently only supports when it exists in the headmost of hint. | schema1 |
 
   @delete_mysql_tables
-  Scenario: shardingTable  + shardingTable  +  shardingTable  #right join
+  Scenario: shardingTable  + shardingTable  +  shardingTable  right join      #2
   """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
   """
@@ -4518,7 +4518,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                       | db      |
       | conn_0 | true    | /*#dble:plan= (b \| a) & c*/ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Level c ON a.level=c.levelname ORDER BY a.name; | schema1 |
 
-#    # right join & inner join & 0 er & ab, ac
+#    # right join & inner join & 0 er & ab, ac      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_170"
 #      | conn   | toClose | sql                                                                                                                                                                                               | db      |
 #      | conn_0 | false   | explain /*!dble:plan= b \| (a& c)*/ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Level c ON a.level=c.levelname ORDER BY a.name; | schema1 |
@@ -4547,7 +4547,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                                       | db      |
 #      | conn_0 | true    | /*#dble:plan= b \| (a& c)*/ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Level c ON a.level=c.levelname ORDER BY a.name; | schema1 |
 
-    # right join & inner join & 0 er & ab, ac
+    # right join & inner join & 0 er & ab, ac      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_170"
 #      | conn   | toClose | sql                                                                                                                                                                                              | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (b & a) \| c*/ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Level c ON a.level=c.levelname ORDER BY a.name; | schema1 |
@@ -4584,7 +4584,7 @@ Feature: test with joinStrategyType
       | conn_0 | False   | explain /*!dble:plan=a&b&c */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Level c ON a.level=c.levelname ORDER BY a.name;    | can't use '{node=a}' node for root. Because exists some left join relations point to this node. | schema1 |
       | conn_0 | False   | explain /*!dble:plan=a\|c\|b */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Level c ON a.level=c.levelname ORDER BY a.name;  | can't use '{node=a}' node for root. Because exists some left join relations point to this node. | schema1 |
       | conn_0 | False   | explain /*!dble:plan=b&(c\|a) */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Level c ON a.level=c.levelname ORDER BY a.name; | You are using wrong hint. please check the node 'c',there are no previous nodes connect to it.  | schema1 |
-#      | conn_0 | False   | explain /*!dble:plan=(c&a)\|b */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Level c ON a.level=c.levelname ORDER BY a.name; | hint size 3 not equals to plan node size 2.                                                     | schema1 |
+#         ==> DBLE0REQ-1636   | conn_0 | False   | explain /*!dble:plan=(c&a)\|b */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Level c ON a.level=c.levelname ORDER BY a.name; | hint size 3 not equals to plan node size 2.                                                     | schema1 |
       | conn_0 | True    | explain /*!dble:plan=(c\|b)&a */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Level c ON a.level=c.levelname ORDER BY a.name; | can't use '{node=c}' node for root. Because exists some left join relations point to this node. | schema1 |
 
     # right join & inner join & 0 er & ab, bc
@@ -4671,7 +4671,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                  | db      |
       | conn_0 | true    | /*#dble:plan=(c\| b) & a*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
 
-#    # right join & inner join & 0 er & ab, bc
+#    # right join & inner join & 0 er & ab, bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_174"
 #      | conn   | toClose | sql                                                                                                                                                                                           | db      |
 #      | conn_0 | false   | explain /*!dble:plan= c \| (b& a)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
@@ -4699,7 +4699,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                                  | db      |
 #      | conn_0 | true    | /*#dble:plan=c \| (b& a)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
 
-    # right join & inner join & 0 er & ab, bc
+    # right join & inner join & 0 er & ab, bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_175"
 #      | conn   | toClose | sql                                                                                                                                                                                           | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (c & b) \| a*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
@@ -4808,7 +4808,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                   | db      |
       | conn_0 | true    | /*#dble:plan=(b \| a) & c*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
 
-    # right join & inner join & 0 er & ab, bc
+    # right join & inner join & 0 er & ab, bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_179"
 #      | conn   | toClose | sql                                                                                                                                                                                            | db      |
 #      | conn_0 | false   | explain /*!dble:plan= b \| (a& c)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
@@ -4835,7 +4835,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                                   | db      |
 #      | conn_0 | true    | /*#dble:plan=b \| (a& c)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
 
-    # right join & inner join & 0 er & ab, bc
+    # right join & inner join & 0 er & ab, bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_180"
 #      | conn   | toClose | sql                                                                                                                                                                                            | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (b & a) \| c*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
@@ -4916,7 +4916,7 @@ Feature: test with joinStrategyType
       | conn   | toClose | sql                                                                                                                                                                                   | db      |
       | conn_0 | true    | /*#dble:plan=(b \| c) & a*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
 
-#    # right join & inner join & 0 er & ab, bc
+#    # right join & inner join & 0 er & ab, bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_183"
 #      | conn   | toClose | sql                                                                                                                                                                                            | db      |
 #      | conn_0 | false   | explain /*!dble:plan= b \| (c& a)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
@@ -4943,7 +4943,7 @@ Feature: test with joinStrategyType
 #      | conn   | toClose | sql                                                                                                                                                                                   | db      |
 #      | conn_0 | true    | /*#dble:plan=b \| (c& a)*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
 
-    # right join & inner join & 0 er & ab, bc
+    # right join & inner join & 0 er & ab, bc      ==> DBLE0REQ-1636
 #    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_184"
 #      | conn   | toClose | sql                                                                                                                                                                                           | db      |
 #      | conn_0 | false   | explain /*!dble:plan= (b & c) \| a*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
