@@ -1150,7 +1150,7 @@ Feature: check single dble detach or attach from cluster
 
     # check cluster manager command
     Given prepare a thread run btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
-    Given sleep "3" seconds
+    Given sleep "5" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach6.java" output in "dble-1"
     """

@@ -3,6 +3,7 @@
 # update by quexiuping at 2021/7/22
 
 Feature: test flow_control about simple query
+
 @skip
   Scenario: test flow_control about simple query   # 1
     # prepare data
@@ -31,8 +32,8 @@ Feature: test flow_control about simple query
       | conn_1 | False   | drop table if exists test1                                                                                                                                           | success | schema1 | utf8mb4 |
       | conn_1 | False   | create table sharding_2_t1 (id int,a varchar(120) ,b varchar(120) ,c varchar(120) ,d varchar(120) ) default charset=utf8                                             | success | schema1 | utf8mb4 |
       | conn_1 | False   | create table test1 (id int,a varchar(120) ,b varchar(120) ,c varchar(120) ,d varchar(120) ) default charset=utf8                                                     | success | schema1 | utf8mb4 |
-      | conn_1 | False   | insert into sharding_2_t1 values (1,repeat("中",32),repeat("华",32),repeat("民",32),repeat("国",32)),(2,repeat("中",32),repeat("华",32),repeat("民",32),repeat("国",32)) | success | schema1 | utf8mb4 |
-      | conn_1 | true    | insert into test1 values (1,repeat("中",32),repeat("华",32),repeat("民",32),repeat("国",32)),(2,repeat("中",32),repeat("华",32),repeat("民",32),repeat("国",32))         | success | schema1 | utf8mb4 |
+      | conn_1 | False   | insert into sharding_2_t1 values (1,repeat("爱",32),repeat("可",32),repeat("生",32),repeat("生",32)),(2,repeat("爱",32),repeat("可",32),repeat("生",32),repeat("生",32)) | success | schema1 | utf8mb4 |
+      | conn_1 | true    | insert into test1 values (1,repeat("爱",32),repeat("可",32),repeat("生",32),repeat("生",32)),(2,repeat("爱",32),repeat("可",32),repeat("生",32),repeat("生",32))         | success | schema1 | utf8mb4 |
 
     #prepare more data
     Given execute sql "22" times in "dble-1" at concurrent 22
