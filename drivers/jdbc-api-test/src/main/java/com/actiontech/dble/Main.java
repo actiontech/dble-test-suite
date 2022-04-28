@@ -84,6 +84,9 @@ public class Main {
 			ServerSideCursorTest sideCursorTest = new ServerSideCursorTest(mysqlProp, testProp, true);
 			sideCursorTest.start_test();
 
+			RwSplitUserPsTest rwSplitUserTest = new RwSplitUserPsTest(mysqlProp, testProp, true);
+			rwSplitUserTest.start_test();
+
 			CapClientFoundRowsTest capClientFoundRowsTest = new CapClientFoundRowsTest(mysqlProp, testProp, true);
 			capClientFoundRowsTest.start_test();
 
