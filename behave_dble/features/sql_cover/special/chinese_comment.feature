@@ -239,8 +239,8 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False    | drop table if exists sys_dict_entry        | success      | schema1 | utf8mb4 |
       | conn_0 | true     | drop table if exists rl_station_relation   | success      | schema1 | utf8mb4 |
 
-    @skip_restart
-   Scenario: check Functions and Operators support utf8mb4: case from issue DBLE0REQ-660 #3
+
+    Scenario: check Functions and Operators support utf8mb4: case from issue DBLE0REQ-660 #3
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                           | expect                         | db      | charset |
       | conn_0 | False   | drop table if exists sharding_2_t2                                                                                                            | success                        | schema1 | utf8mb4 |
