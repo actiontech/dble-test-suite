@@ -239,6 +239,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False    | drop table if exists sys_dict_entry        | success      | schema1 | utf8mb4 |
       | conn_0 | true     | drop table if exists rl_station_relation   | success      | schema1 | utf8mb4 |
 
+    @skip_restart
    Scenario: check Functions and Operators support utf8mb4: case from issue DBLE0REQ-660 #3
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                           | expect                         | db      | charset |
@@ -441,7 +442,9 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | select SUBSTRING(a.name from 2),SUBSTRING(a.name from -1 for 1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{(('试1','1',), ('试2','2',), ('试2','2',))}                           | schema1 | utf8mb4 |
       | conn_0 | False   | select SUBSTRING(a.name from 1 for 2) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                            | has{(('测试',), ('测试',), ('测试',))}                                     | schema1 | utf8mb4 |
       | conn_0 | False   | select SUBSTRING_INDEX(a.name ,'测', 1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{(('',), ('',), ('',))}        | schema1 | utf8mb4 |
-        #case "LTRIM" / "RTRIM"  /  "TRIM"
+      | conn_0 | False   | select a.id2 from sharding_2_t2 a join sharding_3_t1 b group by substring(a.name,1,2),b.id  | has{((1,), (2,))}        | schema1 | utf8mb4 |
+
+       #case "LTRIM" / "RTRIM"  /  "TRIM"
       | conn_0 | False   | select LTRIM(    a.name)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{(('测试1',), ('测试2',), ('测试2',))}     | schema1 | utf8mb4 |
       | conn_0 | False   | select RTRIM(a.name    )  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{(('测试1',), ('测试2',), ('测试2',))}     | schema1 | utf8mb4 |
       | conn_0 | False   | select TRIM(   a.name  )  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{(('测试1',), ('测试2',), ('测试2',))}     | schema1 | utf8mb4 |
@@ -468,3 +471,19 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
 #case drop table
       | conn_0 | False   | drop table if exists sharding_2_t2      | success                        | schema1 | utf8mb4 |
       | conn_0 | True    | drop table if exists sharding_3_t1      | success                        | schema1 | utf8mb4 |
+
+
+
+    @skip_restart
+   Scenario: check Functions and Operators support utf8mb4: case from issue DBLE0REQ-660 #3
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                           | expect                         | db      | charset |
+      | conn_0 | False   | drop table if exists sharding_2_t2                                                                                                            | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | drop table if exists sharding_3_t1                                                                                                            | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | create table sharding_2_t2 (id decimal(10,0) NOT NULL,id2 bigint(20) NOT NULL,name varchar(250) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8  | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | create table sharding_3_t1 (id decimal(10,0) NOT NULL,id2 bigint(20) NOT NULL,name varchar(250) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8  | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | insert into sharding_2_t2 values (1,1,'测试1')                                                                                                 | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | insert into sharding_3_t1 values (1,1,'测试1')                                                                                                 | success                        | schema1 | utf8mb4 |
+
+
+   # select * from sharding_2_t2 a join sharding_3_t1 b group by substring(a.name,1,2),b.id;#
