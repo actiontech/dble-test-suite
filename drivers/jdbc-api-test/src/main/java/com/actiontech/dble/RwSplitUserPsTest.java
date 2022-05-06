@@ -41,7 +41,7 @@ public class RwSplitUserPsTest extends InterfaceTest {
         adminCmd = Config.getdbleAdminCmd("insert into dble_information.dble_db_instance (name, db_group, addr, port, user, password_encrypt, encrypt_configured, primary, min_conn_count, max_conn_count) value ('hostS33', 'ha_group33', '" + slaveIp + "', " + mysqlProp.portNumber + ", 'test', '111111', 'false', 'false', 10, 1000);");
         sshExecutor.execute(adminCmd);
         //add rwSplitUser
-        adminCmd = Config.getdbleAdminCmd("insert into dble_information.dble_rw_split_entry (username, password_encrypt, encrypt_configured, max_conn_count, db_group) values ('" + rwSplitUser + "','" + dbleProp.password + "', 'false', 0, 'ha_group3');");
+        adminCmd = Config.getdbleAdminCmd("insert into dble_information.dble_rw_split_entry (username, password_encrypt, encrypt_configured, max_conn_count, db_group) values ('" + rwSplitUser + "','" + dbleProp.password + "', 'false', 0, 'ha_group33');");
         sshExecutor.execute(adminCmd);
 
         //update mysql config
