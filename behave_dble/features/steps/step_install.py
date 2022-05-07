@@ -130,6 +130,13 @@ def set_dble_log_level(context, node, log_level):
         ssh_client.exec_command(cmd)
         return True
 
+
+@Given('set log4j2 log level to "{log_level}" in "{hostname}"')
+def set_dble_log_level_in_host(context, log_level, hostname):
+    node = get_node(hostname)
+    set_dble_log_level(context, node, log_level)
+
+
 @Given('Start dble in "{hostname}"')
 @When('Start dble in "{hostname}"')
 @Then('Start dble in "{hostname}"')
