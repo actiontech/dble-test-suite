@@ -149,7 +149,7 @@ Feature: check sql plan
 
   # DBLE0REQ-1610
   @delete_mysql_tables
-  Scenario: When the subquery is right join, the result of the query is incorrect   #1
+  Scenario: When the subquery is right join, the result of the query is incorrect   #3
   """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2'], 'mysql-master2': ['db1', 'db2'], 'mysql':['schema1']}}
   """
@@ -222,7 +222,7 @@ Feature: check sql plan
 
   # DBLE0REQ-1661
   @delete_mysql_tables
-  Scenario: 3 ER relationships, A left join B inner join C, the query result is wrong   #2
+  Scenario: 3 ER relationships, A left join B inner join C, the query result is wrong   #4
   """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
   """
@@ -308,7 +308,7 @@ Feature: check sql plan
 
   # DBLE0REQ-1504
   @delete_mysql_tables
-  Scenario: The parentheses of the or condition are missing, thus changing the semantics of the condition and eventually causing duplication of results   #3
+  Scenario: The parentheses of the or condition are missing, thus changing the semantics of the condition and eventually causing duplication of results   #5
   """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
   """
@@ -344,9 +344,8 @@ Feature: check sql plan
       | conn   | toClose | sql                                                                                                                                                                                           | db      |
       | conn_0 | true    | SELECT a.Name,a.DeptName,c.levelname,c.salary FROM test a inner JOIN sharding_2_t1 c on c.levelname=a.level and (c.levelname='P7' or (c.salary >=10000 and 22000>=c.salary)) order by a.name; | schema1 |
 
-  @skip_restart
-#  @delete_mysql_tables
-  Scenario: After Huaxia Bank mycat migrated dble, some sql compatibility issues   #4
+  @delete_mysql_tables
+  Scenario: After migrating from mycat to dble, some sql compatibility issues   #6
   """
     {'delete_mysql_tables': {'mysql-master1': ['db1'], 'mysql-master2': ['db1'], 'mysql':['schema1']}}
   """
