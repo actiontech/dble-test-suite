@@ -1684,17 +1684,17 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Given execute sql in "dble-2" in "admin" mode
       | conn   | toClose | sql                                                                   | expect                                                     | db               |
-      | conn_2 | true    | delete from dble_db_instance where db_group = 'ha_group3'             | Other instance are executing reload config or management commands(insert/update/delete), please try again later        | dble_information |
+      | conn_2 | true    | delete from dble_db_instance where db_group = 'ha_group3'             | Other instance is reloading, please try again later.       | dble_information |
       | conn_2 | true    | select * from dble_config                                             | hasStr{ha_group3}                                          | dble_information |
     Given execute sql in "dble-3" in "admin" mode
       | conn   | toClose | sql                                                                   | expect                                                     | db               |
-      | conn_3 | true    | delete from dble_db_group where name='ha_group3'                      | Other instance are executing reload config or management commands(insert/update/delete), please try again later        | dble_information |
+      | conn_3 | true    | delete from dble_db_group where name='ha_group3'                      | Other instance is reloading, please try again later.       | dble_information |
       | conn_3 | true    | select * from dble_config                                             | hasStr{ha_group3}                                          | dble_information |
       | conn_3 | true    | reload @@config_all                                                   | Other instance is reloading, please try again later        | dble_information |
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                                                                        | expect                                                     | db               |
-      | conn_1 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw2','111111','false','100','ha_group3')                     | Other instance are executing reload config or management commands(insert/update/delete), please try again later       | dble_information |
+      | conn_1 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw2','111111','false','100','ha_group3')                     | Other instance is reloading, please try again later.       | dble_information |
       | conn_1 | true    | select * from dble_config                                                                                                                                                  | hasNoStr{rw2}                                              | dble_information |
 
     Given execute linux command in "dble-2"
