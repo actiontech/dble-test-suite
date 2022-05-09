@@ -280,8 +280,8 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | explain select * from aly_test a join aly_order b using(id,c)  where a.id=2 or b.id=1 |
     Then check resultset "rs_20" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
-      | dn2_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and `a`.`c` = `b`.`c` where  ( `b`.`id` in (1) OR `a`.`id` in (2)) |
-      | dn3_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and `a`.`c` = `b`.`c` where  ( `b`.`id` in (1) OR `a`.`id` in (2)) |
+      | dn2_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and (a.c = b.c) where  ( `b`.`id` in (1) OR `a`.`id` in (2)) |
+      | dn3_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and (a.c = b.c) where  ( `b`.`id` in (1) OR `a`.`id` in (2)) |
       | merge_1         | MERGE         | dn2_0; dn3_0                                                                                                                                                 |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                                                                      |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_21"

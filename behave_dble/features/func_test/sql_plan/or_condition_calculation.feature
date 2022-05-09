@@ -1343,28 +1343,28 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn   | toClose | sql          |
       | conn_0 | False   | show trace   |
     Then check resultset "rs_1" has lines with following column values
-      | OPERATION-0               | SHARDING_NODE-4            | SQL/REF-5                                                                                                                                       |
-      | Execute_SQL               | dn2_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  (  ( `a`.`age` = 1 AND `a`.`id` = 1) OR `a`.`id` = 2) |
-      | Fetch_result              | dn2_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  (  ( `a`.`age` = 1 AND `a`.`id` = 1) OR `a`.`id` = 2) |
-      | Execute_SQL               | dn3_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  (  ( `a`.`age` = 1 AND `a`.`id` = 1) OR `a`.`id` = 2) |
-      | Fetch_result              | dn3_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  (  ( `a`.`age` = 1 AND `a`.`id` = 1) OR `a`.`id` = 2) |
-      | MERGE                     | merge_1                    | dn2_0; dn3_0                                                                                                                                    |
-      | SHUFFLE_FIELD             | shuffle_field_1            | merge_1                                                                                                                                         |
-      | Execute_SQL               | dn1_0                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                                        |
-      | Fetch_result              | dn1_0                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                                        |
-      | Execute_SQL               | dn2_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                                        |
-      | Fetch_result              | dn2_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                                        |
-      | Execute_SQL               | dn3_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                                        |
-      | Fetch_result              | dn3_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                                        |
-      | Execute_SQL               | dn4_0                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                                        |
-      | Fetch_result              | dn4_0                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                                        |
-      | MERGE                     | merge_2                    | dn1_0; dn2_1; dn3_1; dn4_0                                                                                                                      |
-      | SHUFFLE_FIELD             | shuffle_field_4            | merge_2                                                                                                                                         |
-      | JOIN                      | join_1                     | shuffle_field_1; shuffle_field_4                                                                                                                |
-      | WHERE_FILTER              | where_filter_1             | join_1                                                                                                                                          |
-      | SHUFFLE_FIELD             | shuffle_field_2            | where_filter_1                                                                                                                                  |
-      | RENAME_DERIVED_SUB_QUERY  | rename_derived_sub_query_1 | shuffle_field_2                                                                                                                                 |
-      | SHUFFLE_FIELD             | shuffle_field_3            | rename_derived_sub_query_1                                                                                                                      |
+      | OPERATION-0               | SHARDING_NODE-4            | SQL/REF-5                                                                                                        |
+      | Execute_SQL               | dn2_0                      | select `a`.`id`,`a`.`age` from  `sharding_4_t1` `a` where  (  ( `a`.`age` = 1 AND `a`.`id` = 1) OR `a`.`id` = 2) |
+      | Fetch_result              | dn2_0                      | select `a`.`id`,`a`.`age` from  `sharding_4_t1` `a` where  (  ( `a`.`age` = 1 AND `a`.`id` = 1) OR `a`.`id` = 2) |
+      | Execute_SQL               | dn3_0                      | select `a`.`id`,`a`.`age` from  `sharding_4_t1` `a` where  (  ( `a`.`age` = 1 AND `a`.`id` = 1) OR `a`.`id` = 2) |
+      | Fetch_result              | dn3_0                      | select `a`.`id`,`a`.`age` from  `sharding_4_t1` `a` where  (  ( `a`.`age` = 1 AND `a`.`id` = 1) OR `a`.`id` = 2) |
+      | MERGE                     | merge_1                    | dn2_0; dn3_0                                                                                                     |
+      | SHUFFLE_FIELD             | shuffle_field_1            | merge_1                                                                                                          |
+      | Execute_SQL               | dn1_0                      | select `b`.`age`,`b`.`name` from  `sharding_4_t2` `b`                                                            |
+      | Fetch_result              | dn1_0                      | select `b`.`age`,`b`.`name` from  `sharding_4_t2` `b`                                                            |
+      | Execute_SQL               | dn2_1                      | select `b`.`age`,`b`.`name` from  `sharding_4_t2` `b`                                                            |
+      | Fetch_result              | dn2_1                      | select `b`.`age`,`b`.`name` from  `sharding_4_t2` `b`                                                            |
+      | Execute_SQL               | dn3_1                      | select `b`.`age`,`b`.`name` from  `sharding_4_t2` `b`                                                            |
+      | Fetch_result              | dn3_1                      | select `b`.`age`,`b`.`name` from  `sharding_4_t2` `b`                                                            |
+      | Execute_SQL               | dn4_0                      | select `b`.`age`,`b`.`name` from  `sharding_4_t2` `b`                                                            |
+      | Fetch_result              | dn4_0                      | select `b`.`age`,`b`.`name` from  `sharding_4_t2` `b`                                                            |
+      | MERGE                     | merge_2                    | dn1_0; dn2_1; dn3_1; dn4_0                                                                                       |
+      | SHUFFLE_FIELD             | shuffle_field_4            | merge_2                                                                                                          |
+      | JOIN                      | join_1                     | shuffle_field_1; shuffle_field_4                                                                                 |
+      | WHERE_FILTER              | where_filter_1             | join_1                                                                                                           |
+      | SHUFFLE_FIELD             | shuffle_field_2            | where_filter_1                                                                                                   |
+      | RENAME_DERIVED_SUB_QUERY  | rename_derived_sub_query_1 | shuffle_field_2                                                                                                  |
+      | SHUFFLE_FIELD             | shuffle_field_3            | rename_derived_sub_query_1                                                                                       |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_11" in host "dble-1"
     """
     these conditions will try to pruning:{(((a.id = 2) and (b.name = 2)) or ((a.age = 1) and (a.id = 1)))}
@@ -1390,27 +1390,27 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn   | toClose | sql          |
       | conn_0 | False   | show trace   |
     Then check resultset "rs_1" has lines with following column values
-      | OPERATION-0              | SHARDING_NODE-4            | SQL/REF-5                                                                                              |
-      | Execute_SQL              | dn1_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`age` = 1 |
-      | Fetch_result             | dn1_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`age` = 1 |
-      | Execute_SQL              | dn2_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`age` = 1 |
-      | Fetch_result             | dn2_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`age` = 1 |
-      | Execute_SQL              | dn3_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`age` = 1 |
-      | Fetch_result             | dn3_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`age` = 1 |
-      | Execute_SQL              | dn4_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`age` = 1 |
-      | Fetch_result             | dn4_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`age` = 1 |
-      | MERGE                    | merge_1                    | dn1_0; dn2_0; dn3_0; dn4_0                                                                             |
-      | SHUFFLE_FIELD            | shuffle_field_1            | merge_1                                                                                                |
-      | Execute_SQL              | dn2_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b` where `b`.`id` in (1,2)       |
-      | Fetch_result             | dn2_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b` where `b`.`id` in (1,2)       |
-      | Execute_SQL              | dn3_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b` where `b`.`id` in (1,2)       |
-      | Fetch_result             | dn3_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b` where `b`.`id` in (1,2)       |
-      | MERGE                    | merge_2                    | dn2_1; dn3_1                                                                                           |
-      | SHUFFLE_FIELD            | shuffle_field_4            | merge_2                                                                                                |
-      | JOIN                     | join_1                     | shuffle_field_1; shuffle_field_4                                                                       |
-      | SHUFFLE_FIELD            | shuffle_field_2            | join_1                                                                                                 |
-      | RENAME_DERIVED_SUB_QUERY | rename_derived_sub_query_1 | shuffle_field_2                                                                                        |
-      | SHUFFLE_FIELD            | shuffle_field_3            | rename_derived_sub_query_1                                                                             |
+      | OPERATION-0              | SHARDING_NODE-4            | SQL/REF-5                                                          |
+      | Execute_SQL              | dn1_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`age` = 1      |
+      | Fetch_result             | dn1_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`age` = 1      |
+      | Execute_SQL              | dn2_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`age` = 1      |
+      | Fetch_result             | dn2_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`age` = 1      |
+      | Execute_SQL              | dn3_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`age` = 1      |
+      | Fetch_result             | dn3_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`age` = 1      |
+      | Execute_SQL              | dn4_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`age` = 1      |
+      | Fetch_result             | dn4_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`age` = 1      |
+      | MERGE                    | merge_1                    | dn1_0; dn2_0; dn3_0; dn4_0                                         |
+      | SHUFFLE_FIELD            | shuffle_field_1            | merge_1                                                            |
+      | Execute_SQL              | dn2_1                      | select `b`.`age` from  `sharding_4_t2` `b` where `b`.`id` in (1,2) |
+      | Fetch_result             | dn2_1                      | select `b`.`age` from  `sharding_4_t2` `b` where `b`.`id` in (1,2) |
+      | Execute_SQL              | dn3_1                      | select `b`.`age` from  `sharding_4_t2` `b` where `b`.`id` in (1,2) |
+      | Fetch_result             | dn3_1                      | select `b`.`age` from  `sharding_4_t2` `b` where `b`.`id` in (1,2) |
+      | MERGE                    | merge_2                    | dn2_1; dn3_1                                                       |
+      | SHUFFLE_FIELD            | shuffle_field_4            | merge_2                                                            |
+      | JOIN                     | join_1                     | shuffle_field_1; shuffle_field_4                                   |
+      | SHUFFLE_FIELD            | shuffle_field_2            | join_1                                                             |
+      | RENAME_DERIVED_SUB_QUERY | rename_derived_sub_query_1 | shuffle_field_2                                                    |
+      | SHUFFLE_FIELD            | shuffle_field_3            | rename_derived_sub_query_1                                         |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_12" in host "dble-1"
     """
     these conditions will try to pruning:{((a.age = 1) and (((b.id = 1)) or ((b.id = 2))))}
@@ -1437,20 +1437,20 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | show trace   |
     Then check resultset "rs_1" has lines with following column values
       | OPERATION-0              | SHARDING_NODE-4            | SQL/REF-5                                                                                                                    |
-      | Execute_SQL              | dn1_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1) |
-      | Fetch_result             | dn1_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1) |
-      | Execute_SQL              | dn2_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1) |
-      | Fetch_result             | dn2_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1) |
-      | Execute_SQL              | dn3_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1) |
-      | Fetch_result             | dn3_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1) |
-      | Execute_SQL              | dn4_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1) |
-      | Fetch_result             | dn4_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1) |
+      | Execute_SQL              | dn1_0                      | select `a`.`id` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1)                                          |
+      | Fetch_result             | dn1_0                      | select `a`.`id` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1)                                          |
+      | Execute_SQL              | dn2_0                      | select `a`.`id` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1)                                          |
+      | Fetch_result             | dn2_0                      | select `a`.`id` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1)                                          |
+      | Execute_SQL              | dn3_0                      | select `a`.`id` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1)                                          |
+      | Fetch_result             | dn3_0                      | select `a`.`id` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1)                                          |
+      | Execute_SQL              | dn4_0                      | select `a`.`id` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1)                                          |
+      | Fetch_result             | dn4_0                      | select `a`.`id` from  `sharding_4_t1` `a` where  ( `a`.`age` = 1 AND `a`.`pad` = 1)                                          |
       | MERGE                    | merge_1                    | dn1_0; dn2_0; dn3_0; dn4_0                                                                                                   |
       | SHUFFLE_FIELD            | shuffle_field_1            | merge_1                                                                                                                      |
-      | Execute_SQL              | dn2_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b` where  ( `b`.`id` in (1,2) AND `b`.`name` = 2)      |
-      | Fetch_result             | dn2_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b` where  ( `b`.`id` in (1,2) AND `b`.`name` = 2)      |
-      | Execute_SQL              | dn3_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b` where  ( `b`.`id` in (1,2) AND `b`.`name` = 2)      |
-      | Fetch_result             | dn3_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b` where  ( `b`.`id` in (1,2) AND `b`.`name` = 2)      |
+      | Execute_SQL              | dn2_1                      | select `b`.`age` from  `sharding_4_t2` `b` where  ( `b`.`id` in (1,2) AND `b`.`name` = 2)                                    |
+      | Fetch_result             | dn2_1                      | select `b`.`age` from  `sharding_4_t2` `b` where  ( `b`.`id` in (1,2) AND `b`.`name` = 2)                                    |
+      | Execute_SQL              | dn3_1                      | select `b`.`age` from  `sharding_4_t2` `b` where  ( `b`.`id` in (1,2) AND `b`.`name` = 2)                                    |
+      | Fetch_result             | dn3_1                      | select `b`.`age` from  `sharding_4_t2` `b` where  ( `b`.`id` in (1,2) AND `b`.`name` = 2)                                    |
       | MERGE                    | merge_2                    | dn2_1; dn3_1                                                                                                                 |
       | SHUFFLE_FIELD            | shuffle_field_4            | merge_2                                                                                                                      |
       | JOIN                     | join_1                     | shuffle_field_1; shuffle_field_4                                                                                             |
@@ -1487,24 +1487,24 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | show trace   |
     Then check resultset "rs_1" has lines with following column values
       | OPERATION-0              | SHARDING_NODE-4            | SQL/REF-5                                                                                                                      |
-      | Execute_SQL              | dn1_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1)) |
-      | Fetch_result             | dn1_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1)) |
-      | Execute_SQL              | dn2_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1)) |
-      | Fetch_result             | dn2_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1)) |
-      | Execute_SQL              | dn3_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1)) |
-      | Fetch_result             | dn3_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1)) |
-      | Execute_SQL              | dn4_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1)) |
-      | Fetch_result             | dn4_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1)) |
+      | Execute_SQL              | dn1_0                      | select `a`.`id`,`a`.`pad`,`a`.`age` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1))                      |
+      | Fetch_result             | dn1_0                      | select `a`.`id`,`a`.`pad`,`a`.`age` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1))                      |
+      | Execute_SQL              | dn2_0                      | select `a`.`id`,`a`.`pad`,`a`.`age` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1))                      |
+      | Fetch_result             | dn2_0                      | select `a`.`id`,`a`.`pad`,`a`.`age` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1))                      |
+      | Execute_SQL              | dn3_0                      | select `a`.`id`,`a`.`pad`,`a`.`age` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1))                      |
+      | Fetch_result             | dn3_0                      | select `a`.`id`,`a`.`pad`,`a`.`age` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1))                      |
+      | Execute_SQL              | dn4_0                      | select `a`.`id`,`a`.`pad`,`a`.`age` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1))                      |
+      | Fetch_result             | dn4_0                      | select `a`.`id`,`a`.`pad`,`a`.`age` from  `sharding_4_t1` `a` where  ( `a`.`pad` = 1 OR `a`.`age` in (1))                      |
       | MERGE                    | merge_1                    | dn1_0; dn2_0; dn3_0; dn4_0                                                                                                     |
       | SHUFFLE_FIELD            | shuffle_field_1            | merge_1                                                                                                                        |
-      | Execute_SQL              | dn1_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                       |
-      | Fetch_result             | dn1_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                       |
-      | Execute_SQL              | dn2_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                       |
-      | Fetch_result             | dn2_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                       |
-      | Execute_SQL              | dn3_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                       |
-      | Fetch_result             | dn3_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                       |
-      | Execute_SQL              | dn4_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                       |
-      | Fetch_result             | dn4_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                                       |
+      | Execute_SQL              | dn1_1                      | select `b`.`age`,`b`.`name`,`b`.`id` from  `sharding_4_t2` `b`                                                                 |
+      | Fetch_result             | dn1_1                      | select `b`.`age`,`b`.`name`,`b`.`id` from  `sharding_4_t2` `b`                                                                 |
+      | Execute_SQL              | dn2_1                      | select `b`.`age`,`b`.`name`,`b`.`id` from  `sharding_4_t2` `b`                                                                 |
+      | Fetch_result             | dn2_1                      | select `b`.`age`,`b`.`name`,`b`.`id` from  `sharding_4_t2` `b`                                                                 |
+      | Execute_SQL              | dn3_1                      | select `b`.`age`,`b`.`name`,`b`.`id` from  `sharding_4_t2` `b`                                                                 |
+      | Fetch_result             | dn3_1                      | select `b`.`age`,`b`.`name`,`b`.`id` from  `sharding_4_t2` `b`                                                                 |
+      | Execute_SQL              | dn4_1                      | select `b`.`age`,`b`.`name`,`b`.`id` from  `sharding_4_t2` `b`                                                                 |
+      | Fetch_result             | dn4_1                      | select `b`.`age`,`b`.`name`,`b`.`id` from  `sharding_4_t2` `b`                                                                 |
       | MERGE                    | merge_2                    | dn1_1; dn2_1; dn3_1; dn4_1                                                                                                     |
       | SHUFFLE_FIELD            | shuffle_field_4            | merge_2                                                                                                                        |
       | JOIN                     | join_1                     | shuffle_field_1; shuffle_field_4                                                                                               |
@@ -1537,29 +1537,29 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn   | toClose | sql          |
       | conn_0 | true    | show trace   |
     Then check resultset "rs_1" has lines with following column values
-      | OPERATION-0              | SHARDING_NODE-4            | SQL/REF-5                                                                                              |
-      | Execute_SQL              | dn2_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`id` in (1,2,3,5) |
-      | Fetch_result             | dn2_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`id` in (1,2,3,5) |
-      | Execute_SQL              | dn3_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`id` in (1,2,3,5) |
-      | Fetch_result             | dn3_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`id` in (1,2,3,5) |
-      | Execute_SQL              | dn4_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`id` in (1,2,3,5) |
-      | Fetch_result             | dn4_0                      | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad` from  `sharding_4_t1` `a` where `a`.`id` in (1,2,3,5) |
-      | MERGE                    | merge_1                    | dn2_0; dn3_0; dn4_0                                                                                            |
-      | SHUFFLE_FIELD            | shuffle_field_1            | merge_1                                                                                                        |
-      | Execute_SQL              | dn1_0                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                       |
-      | Fetch_result             | dn1_0                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                       |
-      | Execute_SQL              | dn2_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                       |
-      | Fetch_result             | dn2_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                       |
-      | Execute_SQL              | dn3_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                       |
-      | Fetch_result             | dn3_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                       |
-      | Execute_SQL              | dn4_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                       |
-      | Fetch_result             | dn4_1                      | select `b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t2` `b`                                       |
-      | MERGE                    | merge_2                    | dn1_0; dn2_1; dn3_1; dn4_1                                                                                     |
-      | SHUFFLE_FIELD            | shuffle_field_4            | merge_2                                                                                                        |
-      | JOIN                     | join_1                     | shuffle_field_1; shuffle_field_4                                                                               |
-      | SHUFFLE_FIELD            | shuffle_field_2            | join_1                                                                                                         |
-      | RENAME_DERIVED_SUB_QUERY | rename_derived_sub_query_1 | shuffle_field_2                                                                                                |
-      | SHUFFLE_FIELD            | shuffle_field_3            | rename_derived_sub_query_1                                                                                     |
+      | OPERATION-0              | SHARDING_NODE-4            | SQL/REF-5                                                             |
+      | Execute_SQL              | dn2_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`id` in (1,2,3,5) |
+      | Fetch_result             | dn2_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`id` in (1,2,3,5) |
+      | Execute_SQL              | dn3_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`id` in (1,2,3,5) |
+      | Fetch_result             | dn3_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`id` in (1,2,3,5) |
+      | Execute_SQL              | dn4_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`id` in (1,2,3,5) |
+      | Fetch_result             | dn4_0                      | select `a`.`id` from  `sharding_4_t1` `a` where `a`.`id` in (1,2,3,5) |
+      | MERGE                    | merge_1                    | dn2_0; dn3_0; dn4_0                                                   |
+      | SHUFFLE_FIELD            | shuffle_field_1            | merge_1                                                               |
+      | Execute_SQL              | dn1_0                      | select `b`.`age` from  `sharding_4_t2` `b`                            |
+      | Fetch_result             | dn1_0                      | select `b`.`age` from  `sharding_4_t2` `b`                            |
+      | Execute_SQL              | dn2_1                      | select `b`.`age` from  `sharding_4_t2` `b`                            |
+      | Fetch_result             | dn2_1                      | select `b`.`age` from  `sharding_4_t2` `b`                            |
+      | Execute_SQL              | dn3_1                      | select `b`.`age` from  `sharding_4_t2` `b`                            |
+      | Fetch_result             | dn3_1                      | select `b`.`age` from  `sharding_4_t2` `b`                            |
+      | Execute_SQL              | dn4_1                      | select `b`.`age` from  `sharding_4_t2` `b`                            |
+      | Fetch_result             | dn4_1                      | select `b`.`age` from  `sharding_4_t2` `b`                            |
+      | MERGE                    | merge_2                    | dn1_0; dn2_1; dn3_1; dn4_1                                            |
+      | SHUFFLE_FIELD            | shuffle_field_4            | merge_2                                                               |
+      | JOIN                     | join_1                     | shuffle_field_1; shuffle_field_4                                      |
+      | SHUFFLE_FIELD            | shuffle_field_2            | join_1                                                                |
+      | RENAME_DERIVED_SUB_QUERY | rename_derived_sub_query_1 | shuffle_field_2                                                       |
+      | SHUFFLE_FIELD            | shuffle_field_3            | rename_derived_sub_query_1                                            |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_15" in host "dble-1"
     """
     these conditions will try to pruning:{(((a.id = 2)) or ((a.id = 1)) or (((a.id = 5)) or ((a.id = 3))))}
