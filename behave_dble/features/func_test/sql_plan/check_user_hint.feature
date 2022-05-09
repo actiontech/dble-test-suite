@@ -15,8 +15,8 @@ Feature: check user hint
     """
     <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true" />
-        <dbInstance name="hostS3" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10" primary="false" />
+        <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
+        <dbInstance name="hostS3" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="false" />
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
