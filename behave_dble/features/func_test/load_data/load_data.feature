@@ -53,3 +53,46 @@ Feature: connect dble in mysql-master1, and execute cmd "load data" with relativ
     """
     rm -rf /usr/local/mysql/data/test.txt
     """
+
+  #DBLE0REQ-1587
+  Scenario: The value of a column in the data is empty, and the data can be successfully inserted  #2
+    Given execute oscmd in "dble-1"
+    """
+    echo -e '1,abc\n2,\n3,qwe' > /opt/dble/test.txt
+    """
+    Given connect "dble-1" with user "test" in "mysql-master1" to execute sql
+    """
+    drop table if exists schema1.test
+    create table schema1.test(id int,c varchar(10))
+    load data infile '/opt/dble/test.txt' into table schema1.test fields terminated by ',' lines terminated by '\n'
+    """
+    Then execute sql in "dble-1" in "user" mode
+      | sql                | expect                                  | db      |
+      | select * from test | hasStr{(1, 'abc'), (2, ''), (3, 'qwe')} | schema1 |
+
+    Given execute oscmd in "dble-1"
+    """
+    rm -rf /opt/dble/test.txt
+    """
+
+  #DBLE0REQ-1595
+  Scenario: When load data empty file, there will be unexpected data import  #3
+    Given execute oscmd in "dble-1"
+    """
+    echo -e '' > /opt/dble/test.txt
+    """
+    Given connect "dble-1" with user "test" in "mysql-master1" to execute sql
+    """
+    drop table if exists schema1.test
+    create table schema1.test(id int,c varchar(10))
+    load data infile '/opt/dble/test.txt' into table schema1.test fields terminated by ',' lines terminated by '\n'
+    """
+
+    Then execute sql in "dble-1" in "user" mode
+      | sql                | expect     | db      |
+      | select * from test | hasStr{()} | schema1 |
+
+    Given execute oscmd in "dble-1"
+    """
+    rm -rf /opt/dble/test.txt
+    """
