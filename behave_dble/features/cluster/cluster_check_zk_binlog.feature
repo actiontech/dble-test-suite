@@ -395,10 +395,11 @@ Feature: test "binlog" in zk cluster
     Given execute sqls in "dble-1" at background
       | conn    | toClose | sql                                                      | db      |
       | conn_11 | true    | alter table no_sharding1 add age int default 2020122005  | schema1 |
-    Given sleep "5" seconds
+    Given sleep "3" seconds
     Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_21 | true    | show @@binlog.status | dble_information |
+    Given sleep "2" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
       172.100.9.6:3306
