@@ -148,3 +148,16 @@ def step_impl(context, host):
         assert len(ste) == 0, "impossible err occur"
 
 
+@Then('execute sql in "{host_name}" and the result should be consistent with mysql')
+def step_impl(context, host_name, mode_name="user"):
+    for row in context.table:
+        dble_res, dble_err = execute_sql_in_host(host_name, row.as_dict(), mode_name)
+        mysql_res, mysql_err = execute_sql_in_host("mysql", row.as_dict(), "mysql")
+        if len(dble_res) == len(mysql_res):
+            sorted_dble_result = sorted(dble_res, key=str)
+            sorted_mysql_result = sorted(mysql_res, key=str)
+            assert sorted_dble_result == sorted_mysql_result, "dble and mysql resultSet not same, dbleResult: {0}, mysqlResultSet: {1}".format(dble_res, mysql_res)
+        else:
+            assert False, "dble and mysql resultSet not same, dbleResultSet's length:{0}, mysqlResultSet's length:{1}".format(len(dble_res), len(mysql_res))
+
+    context.logger.info("resultSets of all sql executed in dble and mysql are same")
