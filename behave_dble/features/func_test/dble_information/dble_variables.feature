@@ -4,21 +4,21 @@
 
 Feature:  dble_variables test
 
- Scenario:  dble_variables table #1
+  Scenario:  dble_variables table #1
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-     """
-     /DbackendProcessorExecutor/d
-     /DcomplexExecutor/d
-     /DwriteToBackendExecutor/d
-     /DbackendProcessors/d
-     $a  -DbackendProcessorExecutor=8
-     $a  -DcomplexExecutor=8
-     $a  -DwriteToBackendExecutor=8
-     $a  -DbackendProcessors=8
-     """
+    """
+    /DbackendProcessorExecutor/d
+    /DcomplexExecutor/d
+    /DwriteToBackendExecutor/d
+    /DbackendProcessors/d
+    $a  -DbackendProcessorExecutor=8
+    $a  -DcomplexExecutor=8
+    $a  -DwriteToBackendExecutor=8
+    $a  -DbackendProcessors=8
+    """
     Then restart dble in "dble-1" success
-  #case desc dble_variables
-   Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_1"
+    #case desc dble_variables
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_1"
       | conn   | toClose | sql                 | db               |
       | conn_0 | False   | desc dble_variables | dble_information |
     Then check resultset "dble_variables_1" has lines with following column values
@@ -30,8 +30,8 @@ Feature:  dble_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(109)}     | dble_information |
-  #case select * from dble_variables
+      | conn_0 | False   | select * from dble_variables    | length{(112)}     | dble_information |
+    #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
       | conn_0 | False   | select * from dble_variables | dble_information |
@@ -146,15 +146,18 @@ Feature:  dble_variables test
       | closeHeartBeatRecord                    | false                           | close heartbeat record. if closed, `show @@dbinstance.synstatus`,`show @@dbinstance.syndetail`,`show @@heartbeat.detail` will be empty and `show @@heartbeat`'s EXECUTE_TIME will be '-' .The default value is false | true        |
       | enableRoutePenetration                  | 0                               | Whether enable route penetration                                                                                                                                                                                     | true        |
       | routePenetrationRules                   |                                 | The config of route penetration                                                                                                                                                                                      | true        |
-    #case supported select limit /order by/ where like
-      Then execute sql in "dble-1" in "admin" mode
+      | isSupportSSL                            | false                           | Whether support for SSL to establish frontend connections                                                                                                                                                            | true        |
+      | serverCertificateKeyStoreUrl            | null                            | Service certificate required for SSL                                                                                                                                                                                 | true        |
+      | trustCertificateKeyStoreUrl             | null                            | Trust certificate required for SSL                                                                                                                                                                                   | true        |
+      #case supported select limit /order by/ where like
+    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                               | expect       | db               |
       | conn_0 | False   | select * from dble_variables limit 10                             | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(20)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(20)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(109)}| dble_information |
-  #case supported select order by concat()
+      | conn_0 | False   | select read_only from dble_variables                              | length{(112)}| dble_information |
+    #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                             | db               |
       | conn_0 | False   | select * from dble_variables order by concat(comment,variable_name) desc limit 5| dble_information |
@@ -165,7 +168,7 @@ Feature:  dble_variables test
       | enableFlowControl  | false            | false       |
       | capClientFoundRows | false            | false       |
       | recordTxn          | 0                | true        |
-  #case supported select where like
+    #case supported select where like
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_4"
       | conn   | toClose | sql                                                                                               | db               |
       | conn_0 | False   | select * from dble_variables where read_only like  '%fals%'  order by variable_name desc limit 10 | dble_information |
@@ -181,7 +184,7 @@ Feature:  dble_variables test
       | frontendByBackendByEntryByUserTableSize | 1024                           | false       |
       | flushSlowLogSize                        | 1000                           | false       |
       | flushSlowLogPeriod                      | 1s                             | false       |
-  #case supported select field from dble_variables
+    #case supported select field from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_5"
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select read_only,variable_name from dble_variables | dble_information |
@@ -191,16 +194,16 @@ Feature:  dble_variables test
       | false       | isOnline                  |
       | true        | heap_memory_max           |
       | true        | direct_memory_max         |
-  #case supported select count(*)
+    #case supported select count(*)
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_6"
       | conn   | toClose | sql                                                              | db               |
       | conn_0 | False   | select read_only,count(*) from dble_variables group by read_only | dble_information |
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
       | false       | 20      |
-      | true        | 89      |
+      | true        | 92      |
 
-  #case supported select field from dble_variables where XXX  DBLE0REQ-485
+    #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
       | conn   | toClose | sql                                                                                                 | db               |
       | conn_0 | False   | select read_only from dble_variables where comment like 'the%' order by variable_name desc limit 10 | dble_information |
@@ -217,18 +220,18 @@ Feature:  dble_variables test
       | true        |
       | true        |
 
-  #case supported select * from dble_variables where [sub-query]
-      Then execute sql in "dble-1" in "admin" mode
+    #case supported select * from dble_variables where [sub-query]
+    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('xalog',),)}   | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('',),)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(92)}         | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(89)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(95)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(92)}         | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
-  #case unsupported update/delete
+    #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
       | conn_0 | False   | update dble_variables set comment='sqlSlowTime1' where variable_value='true' | Access denied for table 'dble_variables' | dble_information |
-  #case select join
+    #case select join
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_9"
       | conn   | toClose | sql                                                                                                                                             | db               |
       | conn_0 | True    | select a.variable_name from dble_variables a inner join dble_status b on a.variable_value=b.variable_value where a.variable_value='1029177344B' | dble_information |
@@ -237,7 +240,7 @@ Feature:  dble_variables test
       | heap_memory_max    |
       | heap_memory_max    |
 
-  #case change bootstrap/cluster.cnf then restart dble-1
+    #case change bootstrap/cluster.cnf then restart dble-1
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
      $a -DxaLogCleanPeriod=2000
