@@ -204,7 +204,7 @@ Feature: test online ddl
       | conn_2 | false   | insert into global(id,name) values (3,'sing')      | success            | schema1 |
       | conn_2 | false   | show index from global                             | hasNoStr{ceshi3}   | schema1 |
       | conn_2 | false   | show index from global                             | hasNoStr{index3}   | schema1 |
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect           | db      |
       | conn_1 | false   | show index from global             | hasStr{ceshi3}   | schema1 |
