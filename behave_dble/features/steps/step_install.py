@@ -472,7 +472,8 @@ def check_cluster_successd(context, expectNodes):
         context.check_zk_nodes_success = False
 
     realNodes = []
-    cmd = "cd {0}/bin && ./zkCli.sh ls /dble/cluster-1/online|grep -v ':'|grep -v ^$ ".format(context.cfg_zookeeper['home'])
+    cluster_name = context.config.userdata["cluster_name"].lower()
+    cmd = "cd {0}/bin && ./zkCli.sh ls /dble/{1}/online|grep -v ':'|grep -v ^$ ".format(context.cfg_zookeeper['home'], cluster_name)
     cmd_ssh = get_ssh("dble-1")
     rc, sto, ste = cmd_ssh.exec_command(cmd)
     LOGGER.debug("add debug to check the result of executing {0} is :sto:{1}".format(cmd,sto))
