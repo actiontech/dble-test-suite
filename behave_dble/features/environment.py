@@ -9,9 +9,9 @@ from steps.lib.MySQLObject import MySQLObject
 from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,reset_repl, get_sftp,get_ssh
 from steps.mysql_steps import restart_mysql
 from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
-    install_dble_in_all_nodes
+    install_dble_in_all_nodes, reset_zk_nodes
 
-logger = logging.getLogger('environment')
+logger = logging.getLogger('root')
 
 def init_dble_conf(context, para_dble_conf):
     para_dble_conf_lower = para_dble_conf.lower()
@@ -64,6 +64,7 @@ def before_all(context):
     context.need_download = context.config.userdata["install_from_local"].lower() != "true"
 
     if reinstall:
+        reset_zk_nodes(context)
         install_dble_in_all_nodes(context)
 
     if reset:

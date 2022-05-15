@@ -14,7 +14,7 @@ from lib.DbleMeta import DbleMeta
 from lib.DBUtil import *
 from lib.utils import get_node, get_ssh
 
-LOGGER = logging.getLogger('steps.install')
+LOGGER = logging.getLogger('root')
 
 @Given('a clean environment in all dble nodes')
 def clean_dble_in_all_nodes(context):
@@ -472,8 +472,7 @@ def check_cluster_successd(context, expectNodes):
         context.check_zk_nodes_success = False
 
     realNodes = []
-    cluster_name = context.config.userdata["cluster_name"].lower()
-    cmd = "cd {0}/bin && ./zkCli.sh ls /dble/{1}/online|grep -v ':'|grep -v ^$ ".format(context.cfg_zookeeper['home'], cluster_name)
+    cmd = "cd {0}/bin && ./zkCli.sh ls /dble/cluster-1/online|grep -v ':'|grep -v ^$ ".format(context.cfg_zookeeper['home'])
     cmd_ssh = get_ssh("dble-1")
     rc, sto, ste = cmd_ssh.exec_command(cmd)
     LOGGER.debug("add debug to check the result of executing {0} is :sto:{1}".format(cmd,sto))
