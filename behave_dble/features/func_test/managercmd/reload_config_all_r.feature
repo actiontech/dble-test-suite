@@ -85,6 +85,10 @@ Feature: reload @@config_all -r
       <shardingNode name="dn5" dbGroup="ha_group1" database="db5"/>
       """
     Then execute admin cmd "reload @@config_all -r"
+    # reload will rebuild the heartbeat, and when the heartbeat is sent for the first time,
+    # it will trigger a one-time connection to query the database's autocommit, transaction isolation level, etc.
+    # so wait here for two seconds
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "E"
       | sql            |
       | show @@backend |
