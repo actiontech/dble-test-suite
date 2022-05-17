@@ -71,14 +71,18 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn_0 | False   | select * from dble_xa_recover where data like '%xa%'                                   | length{(1)}                               |
       | conn_0 | False   | select data from dble_xa_recover                                                       | length{(4)}                               |
     # case supported select max/min from table
-      | conn_0 | False   | select max(data) from dble_xa_recover                                                  | has{('host_xa_test')}                     |
-      | conn_0 | False   | select min(data) from dble_xa_recover                                                  | has{('Dble_Server.abcd')}                 |
+      | conn_0 | False   | select max(data) from dble_xa_recover                                                  | has{(('host_xa_test',),)}                     |
+      | conn_0 | False   | select min(data) from dble_xa_recover                                                  | has{(('Dble_Server.1.db1',),)}                 |
     # case supported select field from table
       | conn_0 | False   | select data from dble_xa_recover where instance = 'hostM1'                             | has{(('Dble_Server.abcd',), ('Dble_Server.1.db1',))} |
     # case unsupported update/delete/insert
       | conn_0 | False   | delete from dble_xa_recover where instance='hostM1'                                    | Access denied for table 'dble_xa_recover' |
       | conn_0 | False   | update dble_xa_recover set data='number of requests' where instance='hostM1'           | Access denied for table 'dble_xa_recover' |
       | conn_0 | True    | insert into dble_xa_recover values ('a','b','c')                                       | Access denied for table 'dble_xa_recover' |
+
+    # sleep reason: http://10.186.18.11/jira/browse/DBLE0REQ-1683
+    Given sleep "2" seconds
+
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                             |
       | conn_1 | False   | xa rollback 'Dble_Server.abcd'  |
@@ -259,27 +263,19 @@ Feature: check dble_xa_recover and exception xa transactions
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    WARN [[]WrapperSimpleAppMain[]] (com.actiontech.dble.backend.mysql.nio.handler.transaction.xa.XAHandler.fillDbInstance(XAHandler.java:61)) - When prepare execute
-    XA RECOVER
-    in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]], check it
-    isAlive is false!
-    WARN [[]WrapperSimpleAppMain[]] (com.actiontech.dble.backend.mysql.nio.handler.transaction.xa.XAHandler.executeXaCmd(XAHandler.java:102)) - When prepare execute
-    XA COMMIT
-    Dble_Server.1.1.db1.schema1.sharding_4_t1
+    When prepare execute 'XA RECOVER' in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]], check it's isAlive is false
+    When prepare execute 'XA COMMIT 'Dble_Server.1.1.db1'' in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]] , check it's isAlive is false
     """
     Given start mysql in host "mysql-master2"
     Then Restart dble in "dble-1" success
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    WARN [[]WrapperSimpleAppMain[]] (com.actiontech.dble.backend.mysql.nio.handler.transaction.xa.XAHandler.fillDbInstance(XAHandler.java:61)) - When prepare execute
-    in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]], check it
-    isAlive is false!
-    WARN [[]WrapperSimpleAppMain[]] (com.actiontech.dble.backend.mysql.nio.handler.transaction.xa.XAHandler.executeXaCmd(XAHandler.java:102)) - When prepare execute
+    When prepare execute 'XA RECOVER' in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]], check it's isAlive is false
+    When prepare execute 'XA COMMIT 'Dble_Server.1.1.db1'' in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]] , check it's isAlive is false
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    XA COMMIT
-    Dble_Server.1.1.db1.schema1.sharding_4_t1
+    XA COMMIT 'Dble_Server.1.1.db1'
     XA RECOVER to con:BackendConnection
     """
     Given sleep "10" seconds
