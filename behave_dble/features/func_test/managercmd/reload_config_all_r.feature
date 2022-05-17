@@ -43,8 +43,8 @@ Feature: reload @@config_all -r
       | sql            |
       | show @@backend |
     Then check resultset "B" has not lines with following column values
-      | HOST-3      |USED_FOR_HEARTBEAT-22|
-      | 172.100.9.6 |false                |
+      | HOST-3      | USED_FOR_HEARTBEAT-22 |
+      | 172.100.9.6 | false                 |
     Then check resultset "C" has lines with following column values
       | HOST-3      |
       | 172.100.9.5 |
@@ -85,6 +85,10 @@ Feature: reload @@config_all -r
       <shardingNode name="dn5" dbGroup="ha_group1" database="db5"/>
       """
     Then execute admin cmd "reload @@config_all -r"
+    # reload will rebuild the heartbeat, and when the heartbeat is sent for the first time,
+    # it will trigger a one-time connection to query the database's autocommit, transaction isolation level, etc.
+    # so wait here for two seconds
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "E"
       | sql            |
       | show @@backend |
@@ -104,5 +108,5 @@ Feature: reload @@config_all -r
       | sql            |
       | show @@backend |
     Then check resultset "F" has not lines with following column values
-      | HOST-3      |USED_FOR_HEARTBEAT-22|
-      | 172.100.9.4 |false                |
+      | HOST-3      | USED_FOR_HEARTBEAT-22 |
+      | 172.100.9.4 | false                 |
