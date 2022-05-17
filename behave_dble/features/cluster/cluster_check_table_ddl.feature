@@ -76,11 +76,14 @@ Feature: test "ddl" in zk cluster
       | consistent_in_sharding_nodes | 4            |
       | consistent_in_memory         | 5            |
     #case check lock on zookeeper values is 0
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1.sharding_4_t1
+      """
     #case alter table on user mode
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose | sql                                      | expect  | db      |
@@ -159,11 +162,14 @@ Feature: test "ddl" in zk cluster
       | conn    | toClose | sql                                                                     | expect                                                       | db               |
       | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  | has{(('schema1', 'sharding_4_t1', 'null', 'null', 0, 0),)}   | dble_information |
     #case check lock on zookeeper values is 0
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1.sharding_4_t1
+      """
 
 
   @skip_restart @btrace
@@ -186,31 +192,37 @@ Feature: test "ddl" in zk cluster
     get into clearIfSessionClosed,start sleep
     """
     #case check lock on zookeeper values is 1
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1.sharding_4_t1
+      """
     Then execute sql in "dble-2" in "user" mode
-      | conn   | toClose  | sql                                           | expect                                                                                           | db      |
-      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | SCHEMA[schema1], TABLE[sharding_4_t1] is doing DDL,sql:alter table sharding_4_t1 add age1 int    | schema1 |
-      | conn_2 | True     | insert into sharding_4_t1 values (1)          | success                                                                                          | schema1 |
+      | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
+      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | java.sql.SQLNonTransientException: The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 add age1 int    | schema1 |
+      | conn_2 | True     | insert into sharding_4_t1 values (1)          | success                                                                                                                                    | schema1 |
     Then execute sql in "dble-3" in "user" mode
-      | conn   | toClose  | sql                                           | expect                                                                                           | db      |
-      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | SCHEMA[schema1], TABLE[sharding_4_t1] is doing DDL,sql:alter table sharding_4_t1 add age2 int    | schema1 |
-      | conn_3 | False    | insert into sharding_4_t1 values (2,2)        | Column count doesn't match value count at row 1                                                  | schema1 |
-      | conn_3 | False    | drop table if exists test1                    | success                                                                                          | schema1 |
-      | conn_3 | true     | create table test1 (id int)                   | success                                                                                          | schema1 |
+      | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
+      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | java.sql.SQLNonTransientException: The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 add age2 int    | schema1 |
+      | conn_3 | False    | insert into sharding_4_t1 values (2,2)        | Column count doesn't match value count at row 1                                                                                            | schema1 |
+      | conn_3 | False    | drop table if exists test1                    | success                                                                                                                                    | schema1 |
+      | conn_3 | true     | create table test1 (id int)                   | success                                                                                                                                    | schema1 |
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given sleep "5" seconds
     #case check lock on zookeeper values is 0
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1.sharding_4_t1
+      """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect                                          | db      |
       | conn_1 | False   | insert into sharding_4_t1 values (3)   | Column count doesn't match value count at row 1 | schema1 |
@@ -270,31 +282,37 @@ Feature: test "ddl" in zk cluster
     get into clearIfSessionClosed,start sleep
     """
     #case check lock on zookeeper values is 1
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1.sharding_4_t1
+      """
     Given stop dble in "dble-1"
     Given sleep "2" seconds
     Then execute sql in "dble-2" in "user" mode
-      | conn   | toClose  | sql                                           | expect                                                                                                                               | db      |
-      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | SCHEMA[schema1], TABLE[sharding_4_t1] is doing DDL,sql:alter table sharding_4_t1 add age1 int                                        | schema1 |
-      | conn_2 | true     | alter table sharding_4_t1 drop age1           | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 drop age1  | schema1 |
-    Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                           | expect                                                                                                                                    | db      |
-      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | SCHEMA[schema1], TABLE[sharding_4_t1] is doing DDL,sql:alter table sharding_4_t1 add age2 int                                             | schema1 |
-      | conn_3 | true     | alter table sharding_4_t1 drop age2           | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 drop age2       | schema1 |
+      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | java.sql.SQLNonTransientException: The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 add age1 int   | schema1 |
+      | conn_2 | true     | alter table sharding_4_t1 drop age1           | java.sql.SQLNonTransientException: The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 drop age1      | schema1 |
+    Then execute sql in "dble-3" in "user" mode
+      | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
+      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | java.sql.SQLNonTransientException: The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 add age2 int    | schema1 |
+      | conn_3 | true     | alter table sharding_4_t1 drop age2           | java.sql.SQLNonTransientException: The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 drop age2       | schema1 |
     Given sleep "13" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     #case check lock on zookeeper values is 0,to wait can't conn dble-1
     Given sleep "30" seconds
-    Then get result of oscmd named "A" in "dble-2"
+    Given execute linux command in "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-2"
+      """
+      schema1.sharding_4_t1
+      """
     #case check full @@metadata on admin mode
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_B"
       | conn    | toClose | sql                                                                              | db               |
@@ -346,16 +364,20 @@ Feature: test "ddl" in zk cluster
       | conn   | toClose | sql                                     | db      |
       | conn_2 | true    | alter table sharding_4_t1 drop age1     | schema1 |
     #case check lock on zookeeper values is 1
-    Then get result of oscmd named "A" in "dble-2"
+    Given execute linux command in "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-2"
+      """
+      schema1.sharding_4_t1
+      """
     Then check btrace "BtraceClusterDelay.java" output in "dble-2"
     """
     get into clearIfSessionClosed,start sleep
     """
     Then Restart dble in "dble-1" success
+    Given sleep "20" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     waiting for DDL finished
@@ -364,11 +386,14 @@ Feature: test "ddl" in zk cluster
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
     #case check lock on zookeeper values is 0
-    Then get result of oscmd named "A" in "dble-2"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1.sharding_4_t1
+      """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                     | expect              | db      |
       | conn_1 | false    | desc sharding_4_t1      | hasNoStr{('age1')}  | schema1 |
@@ -472,11 +497,14 @@ Feature: test "ddl" in zk cluster
       | consistent_in_sharding_nodes | 4            |
       | consistent_in_memory         | 5            |
     #case check lock on zookeeper values is 0
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1.sharding_4_t1
+      """
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose  | sql                                                  | expect    | db      |
       | conn_2 | True     | insert into sharding_4_t1 values (4,4,4)             | success   | schema1 |
@@ -515,35 +543,41 @@ Feature: test "ddl" in zk cluster
       | conn_1 | true    | alter table sharding_4_t1 drop age      | schema1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
-    get into clearIfSessionClosed,start sleep
+    get into delayAfterDdlLockMeta
     """
     #case check lock on zookeeper values is 1
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1.sharding_4_t1
+      """
     #case wait idle timeout,check  query ddl on dble-2,dble-3 will has metaLock
     Given sleep "11" seconds
     Then execute sql in "dble-2" in "user" mode
-      | conn   | toClose  | sql                                           | expect                                                                                                                                    | db      |
-      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | SCHEMA[schema1], TABLE[sharding_4_t1] is doing DDL,sql:alter table sharding_4_t1 add age1 int                                             | schema1 |
-      | conn_2 | true     | alter table sharding_4_t1 drop age1           | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 drop age1       | schema1 |
+      | conn   | toClose  | sql                                           | expect                                                                                                                                      | db      |
+      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 add age1 int.     | schema1 |
+      | conn_2 | true     | alter table sharding_4_t1 drop age1           | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 drop age1.        | schema1 |
     Then execute sql in "dble-3" in "user" mode
-      | conn   | toClose  | sql                                           | expect                                                                                                                                    | db      |
-      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | SCHEMA[schema1], TABLE[sharding_4_t1] is doing DDL,sql:alter table sharding_4_t1 add age2 int                                             | schema1 |
-      | conn_3 | true     | alter table sharding_4_t1 drop age2           | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 drop age2       | schema1 |
+      | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
+      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 add age2 int.    | schema1 |
+      | conn_3 | true     | alter table sharding_4_t1 drop age2           | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 drop age2.       | schema1 |
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     #wait metaLock
     Given sleep "30" seconds
     #case check lock on zookeeper values is 0
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1.sharding_4_t1
+      """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                          | expect                                          | db      |
       | conn_1 | False   | insert into sharding_4_t1 values (6,6,6,6)   | Column count doesn't match value count at row 1 | schema1 |
@@ -618,3 +652,15 @@ Feature: test "ddl" in zk cluster
       | conn   | toClose  | sql                                                    | expect   | db      |
       | conn_3 | False    | drop table if exists sharding_4_t1                     | success  | schema1 |
       | conn_3 | true     | drop table if exists test1                             | success  | schema1 |
+    Given execute linux command in "dble-1"
+    """
+    rm -rf /tmp/dble_*
+    """
+    Given execute linux command in "dble-2"
+    """
+    rm -rf /tmp/dble_*
+    """
+    Given execute linux command in "dble-3"
+    """
+    rm -rf /tmp/dble_*
+    """
