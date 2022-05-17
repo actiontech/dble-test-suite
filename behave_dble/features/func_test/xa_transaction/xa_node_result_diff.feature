@@ -45,8 +45,11 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace
+  @btrace @restore_global_setting
   Scenario: xa start is abnormal: some nodes execute successfully and some nodes return errors. For the error nodes, dble need return a reasonable error message. #2
+    """
+    {'restore_global_setting':{'mysql-master1':{'general_log':0},'mysql-master2':{'general_log':0}}}
+    """
     Then execute sql in "mysql-master1"
       | sql                        | expect  |
       | set global general_log=off | success |
@@ -105,10 +108,10 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
       | conn   | toClose | expect  |
       | conn_3 | False   | success |
     Given destroy sql threads list
-#    Then check sql thread output in "err"
-#    """
-#    The XID already exists
-#    """
+    Then check sql thread output in "err"
+    """
+    The XID already exists
+    """
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Then execute sql in "dble-1" in "user" mode
@@ -132,10 +135,10 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     """
     grep -c -i 'quit' /tmp/general.log
     """
-    Then check result "rs_B" value is "2"
-    Then check result "rs_C" value is "0"
-    Then check result "rs_D" value is "2"
-    Then check result "rs_E" value is "0"
+    Then check result "rs_B" value is "1"
+    Then check result "rs_C" value is "1"
+    Then check result "rs_D" value is "1"
+    Then check result "rs_E" value is "1"
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                        | expect  |
       | conn_0 | True    | set global general_log=off | success |
