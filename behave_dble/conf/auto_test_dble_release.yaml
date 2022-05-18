@@ -28,15 +28,6 @@ cfg_dble:
       ip: 172.100.9.3
       hostname: dble-3
   packet_name: actiontech-dble-{0}.tar.gz #replace {0} with version
-#    ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.02.1/
-#    ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.02.0/
-#    ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.06.0/
-#    ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.07.0/
-#  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.09.1/
-#  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.10.1/
-#  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.12.0/
-#  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.19.01.0/
-#  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.19.03.0/
   ftp_path: https://github.com/actiontech/dble/releases/download/{0}%2Ftag/
   sql_cover_log: sql_cover_log
 cfg_mysql:
