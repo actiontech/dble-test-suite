@@ -120,7 +120,7 @@ Feature: check collation/lower_case_table_names works right for dble
     """
     Then restart dble in "dble-1" failed for
     """
-    schema DbTest referred by user test is not exist!
+    User\[name:test\]'s schema \[DbTest\] is not exist!
     """
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
