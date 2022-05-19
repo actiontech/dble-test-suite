@@ -99,9 +99,9 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ backSocketSoSndbuf \] '-1048576' in bootstrap.cnf is illegal, you may need use the default value 1048576 replaced
       Property \[ backendProcessorExecutor \] '-4' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
       Property \[ backendProcessors \] '-3' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
-      Property \[ complexExecutor \] '-4' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
       Property \[ processorExecutor \] '-3' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
       Property \[ writeToBackendExecutor \] '-4' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
+      Property \[ complexExecutor \] '-4' in bootstrap.cnf is illegal, you may need use the default value 8 replaced
       Property \[ charset \] 'utf-8' in bootstrap.cnf is illegal, use utf8mb4 replaced
       property \[ bufferPoolChunkSize \] '-32767' in bootstrap.cnf is illegal, you may need use the default value 4096 replaced
       Property \[ bufferPoolPageNumber \] '-512' in bootstrap.cnf is illegal, you may need use the default value 409 replaced
