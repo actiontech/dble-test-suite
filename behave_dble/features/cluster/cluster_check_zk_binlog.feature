@@ -370,10 +370,11 @@ Feature: test "binlog" in zk cluster
     Given execute sqls in "dble-1" at background
       | conn    | toClose | sql                                               | db      |
       | conn_11 | true    | alter table sing1 add age int default 2020122004  | schema1 |
-    Given sleep "5" seconds
+    Given sleep "3" seconds
     Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_21 | true    | show @@binlog.status | dble_information |
+    Given sleep "2" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
       172.100.9.6:3306
@@ -421,10 +422,11 @@ Feature: test "binlog" in zk cluster
     Given execute sqls in "dble-1" at background
       | conn    | toClose | sql                                                      | db      |
       | conn_11 | true    | alter table vertical1 add age int default 2020122006     | schema2 |
-    Given sleep "5" seconds
+    Given sleep "3" seconds
     Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_21 | true    | show @@binlog.status | dble_information |
+    Given sleep "2" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
       172.100.9.6:3306
@@ -511,7 +513,6 @@ Feature: test "binlog" in zk cluster
       /checkBackupStatus/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
-
     #route differ node would "hang"
     Then execute "user" cmd  in "dble-1" at background
       | conn     | toClose | sql     | db      |
