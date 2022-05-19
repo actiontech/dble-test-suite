@@ -51,9 +51,9 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
 
 # case 2: kill query nonexistent processlist_id
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql             | expect                     |
-      | conn_0 | False   | kill query -1   | Unknown connection id:-1   |
-      | conn_0 | False   | kill query 8888 | Unknown connection id:8888 |
+      | conn   | toClose | sql             | expect                      |
+      | conn_0 | False   | kill query -1   | Unknown connection id: -1   |
+      | conn_0 | False   | kill query 8888 | Unknown connection id: 8888 |
       | conn_0 | False   | kill query abc  | Invalid connection id:abc  |
 
 # case 3: kill query other user's processlist_id
@@ -68,8 +68,8 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn_0 | False   | use schema1 | success |
 
     Then execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
-      | user   | passwd | conn   | toClose | sql            | expect                                | db      |
-      | test01 | 111111 | conn_1 | True    | kill query {0} | can't kill other user's connection{0} | schema1 |
+      | user   | passwd | conn   | toClose | sql            | expect                                  | db      |
+      | test01 | 111111 | conn_1 | True    | kill query {0} | can't kill other user's connection: {0} | schema1 |
 
     Given delete the following xml segment
       |file        | parent                 | child                                            |
@@ -87,14 +87,14 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn_0 | False   | select * from sharding_4_t1 | success | schema1 |
 
 # case 4.2: kill query the processlist_id has an executing sql
-# case 4.2.1: at setBackendResponseTime stage and in the transaction
+# case 4.2.1: at receive ok packet stage and in the transaction
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql   | expect  | db      |
       | conn_0 | False   | begin | success | schema1 |
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /setBackendResponseTime/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
+    /ok/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
     Given sleep "5" seconds
@@ -132,7 +132,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     Given sleep "5" seconds
     Given prepare a thread execute sql "insert into sharding_4_t1(id) values(5),(6),(7),(8)" with "conn_0"
     Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
-  """
+    """
     end get into setPreExecuteEnd
     """
     Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
@@ -184,8 +184,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn_0 | False   | select * from sharding_4_t1        | success | schema1 |
       | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
 
-# for DBLE0REQ-726
-  Scenario: check kill connection processlist_id #2
+  Scenario: check kill connection processlist_id for DBLE0REQ-726 #2
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                             | expect  | db      |
       | conn_3 | False   | drop table if exists sharding_4_t1                              | success | schema1 |
@@ -200,7 +199,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "connection_2"
       | conn   | toClose | sql                | expect | db |
-      | conn_5 | True    | select sharding_node, user, mysql_db from processlist | hasnot{(('dn1', 'test', 'db1',),('dn2', 'test', 'db1',),('dn3', 'test', 'db2',),('dn4', 'test', 'db2',),)} | dble_information |
+      | conn_5 | True    | select db_instance, user, mysql_db from processlist | hasnot{(('hostM1', 'test', 'db1',),('hostM2', 'test', 'db1',),('hostM1', 'test', 'db2',),('hostM2', 'test', 'db2',),)} | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                       | expect                     | db      |
