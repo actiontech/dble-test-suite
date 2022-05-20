@@ -43,7 +43,7 @@ jdbc 5.1.39
 - restore_sys_time --恢复系统时间到当前时间，目前用于全局序列的用例中
 - aft_reset_replication --重置MySQL数据库中的数据并且恢复复制关系，目前此tag涉及的方法用于4种类型的sql覆盖中
 - restore_network --删除已设置的防火前规则，一般用于使用iptables命令加了防火墙规则的场景
-- restore_view --删除已建立的view，防止dble日志种出现报错信息，一般用于创建了view的场景
+- restore_view --删除已建立的view，防止dble日志中出现报错信息，一般用于创建了view的场景
 - restore_mysql_service --启动已停止的MySQL服务，一般用于用例中有停止MySQL服务的场景
 - restore_global_setting --还原MySQL中全局变量值到默认值，一般用于用例中有改变MySQL默认全局变量值的场景
 - restore_mysql_config --还原MySQL的配置值到初始值，一般用于用例中有改变MySQL配置值的场景
