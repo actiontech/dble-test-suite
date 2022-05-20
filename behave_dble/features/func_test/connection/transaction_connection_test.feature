@@ -60,7 +60,7 @@ Feature: Transaction query error due to connection used error
 # issue: http://10.186.18.11/jira/browse/DBLE0REQ-1757
 #    Then execute sql in "dble-1" in "user" mode
 #      | conn   | toClose | sql                                                              | expect      | db      |
-#      | conn_0 | False   | insert  into table1 values(1),(2),(3)                            | success     | schema1 |
+#      | conn_0 | False   | insert into  table2 values(1,1),(2,2),(3,3)                      | success     | schema1 |
 #      | conn_0 | False   | begin                                                            | success     | schema1 |
 #      | conn_0 | False   | delete from table2                                               | success     | schema1 |
 #      | conn_0 | False   | select * from table1 inner join table2 on table1.id=table2.id    | length{(0)} | schema1 |

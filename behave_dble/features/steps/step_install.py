@@ -277,6 +277,9 @@ def stop_dble_in_node(context, node):
         cmd_kill_guard = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $3}' | xargs kill -9"
         rc1, sto1, ste1 = ssh_client.exec_command(cmd_kill_guard)
 
+        # Delay detection for reason: [if dble_core_exists = '1' , but when execute if statement dble pid has stopped]
+        time.sleep(1)
+
         dble_core_pid = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | wc -l"
         rc2, sto2, ste2 = ssh_client.exec_command(dble_core_pid)
         dble_core_exist = str(sto2) == '1'
