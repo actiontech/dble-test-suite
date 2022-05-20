@@ -56,10 +56,10 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn_0 | False   | select * from dble_xa_recover | dble_information  |
     Then check resultset "dble_xa_recover_2" has lines with following column values
       | dbgroup-0 | instance-1 | ip-2        | port-3 | formatid-4 | gtrid_length-5 | bqual_length-6 | data-7                |
-      | ha_group1 | hostM1     | 172.100.9.5 | 3307   |  1         | 16             | 0              | Dble_Server.abcd      |
-      | ha_group1 | hostM1     | 172.100.9.5 | 3307   |  1         | 17             | 0              | Dble_Server.1.db1     |
-      | ha_group2 | hostM2     | 172.100.9.6 | 3307   |  1         | 12             | 0              | host_xa_test          |
-      | ha_group2 | hostM2     | 172.100.9.6 | 3307   |  1         | 21             | 0              | Dble_Server.1.db1.db2 |
+      | ha_group1 | hostM1     | 172.100.9.5 | 3306   |  1         | 16             | 0              | Dble_Server.abcd      |
+      | ha_group1 | hostM1     | 172.100.9.5 | 3306   |  1         | 17             | 0              | Dble_Server.1.db1     |
+      | ha_group2 | hostM2     | 172.100.9.6 | 3306   |  1         | 12             | 0              | host_xa_test          |
+      | ha_group2 | hostM2     | 172.100.9.6 | 3306   |  1         | 21             | 0              | Dble_Server.1.db1.db2 |
     # case supported select  table limit/order by/where like
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                    | expect                                    |
@@ -177,13 +177,13 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn_0 | True    | select * from dble_xa_recover | dble_information |
     Then check resultset "result_1" has lines with following column values
       | dbgroup-0 | instance-1 | ip-2        | port-3 | formatid-4 | gtrid_length-5 | bqual_length-6 | data-7                |
-      | ha_group1 | hostM1     | 172.100.9.5 | 3307   | 1          | 9              | 0              | test-xa-1             |
-      | ha_group1 | hostM1     | 172.100.9.5 | 3307   | 1          | 17             | 0              | Dble_Server.abc.0     |
-      | ha_group1 | hostM1     | 172.100.9.5 | 3307   | 1          | 18             | 0              | Dble_Server.abc.08    |
-      | ha_group1 | hostM1     | 172.100.9.5 | 3307   | 1          | 20             | 0              | Dble_Server.abc123.0  |
+      | ha_group1 | hostM1     | 172.100.9.5 | 3306   | 1          | 9              | 0              | test-xa-1             |
+      | ha_group1 | hostM1     | 172.100.9.5 | 3306   | 1          | 17             | 0              | Dble_Server.abc.0     |
+      | ha_group1 | hostM1     | 172.100.9.5 | 3306   | 1          | 18             | 0              | Dble_Server.abc.08    |
+      | ha_group1 | hostM1     | 172.100.9.5 | 3306   | 1          | 20             | 0              | Dble_Server.abc123.0  |
     Then restart dble in "dble-1" failed for
     """
-    Suspected residual xa transaction, in the DbInstanceConfig [[]hostName=hostM1, url=172.100.9.5:3307[]], have:
+    Suspected residual xa transaction, in the DbInstanceConfig [[]hostName=hostM1, url=172.100.9.5:3306[]], have:
     Dble_Server.abc.08
     Dble_Server.abc.0
     Please clean up according to the actual situation.
@@ -218,16 +218,16 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn_0 | True    | select * from dble_xa_recover | dble_information |
     Then check resultset "result_2" has lines with following column values
       | dbgroup-0 | instance-1 | ip-2        | port-3 | formatid-4 | gtrid_length-5 | bqual_length-6 | data-7                |
-      | ha_group2 | hostM2     | 172.100.9.6 | 3307   | 1          | 17             | 0              | Dble_Server.abc.1     |
-      | ha_group2 | hostM2     | 172.100.9.6 | 3307   | 1          | 17             | 0              | Dble_Server.abc.2     |
-      | ha_group2 | hostM2     | 172.100.9.6 | 3307   | 1          | 18             | 0              | Dble_Server.abc.20    |
-      | ha_group2 | hostM2     | 172.100.9.6 | 3307   | 1          | 21             | 0              | Dble_Server.abc.2.db1 |
+      | ha_group2 | hostM2     | 172.100.9.6 | 3306   | 1          | 17             | 0              | Dble_Server.abc.1     |
+      | ha_group2 | hostM2     | 172.100.9.6 | 3306   | 1          | 17             | 0              | Dble_Server.abc.2     |
+      | ha_group2 | hostM2     | 172.100.9.6 | 3306   | 1          | 18             | 0              | Dble_Server.abc.20    |
+      | ha_group2 | hostM2     | 172.100.9.6 | 3306   | 1          | 21             | 0              | Dble_Server.abc.2.db1 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect  | db      |
       | conn_9 | true    | drop table if exists sharding_4_t1  | success | schema1 |
     Then restart dble in "dble-1" failed for
     """
-    Suspected residual xa transaction, in the DbInstanceConfig [[]hostName=hostM2, url=172.100.9.6:3307[]], have:
+    Suspected residual xa transaction, in the DbInstanceConfig [[]hostName=hostM2, url=172.100.9.6:3306[]], have:
     Dble_Server.abc.2
     Dble_Server.abc.2.db1
     Dble_Server.abc.1
