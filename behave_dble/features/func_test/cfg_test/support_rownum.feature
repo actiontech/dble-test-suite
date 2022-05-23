@@ -49,10 +49,7 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: property routePenetrationRules can't be null
     """
-    parse the route-penetration rule, please check the
-    routePenetrationRules
-    detail exception is :java.lang.IllegalStateException: property routePenetrationRules
-    be null
+    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: property routePenetrationRules can't be null
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -66,9 +63,7 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path $
     """
-    parse the route-penetration rule, please check the
-    routePenetrationRules
-    detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path \$
+    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path \\$
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -93,9 +88,7 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was STRING at line 1 column 11 path $.rules
     """
-    parse the route-penetration rule, please check the
-    routePenetrationRules
-    detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was STRING at line 1 column 11 path \$.rules
+    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was STRING at line 1 column 11 path \\$.rules
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -108,10 +101,7 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: regex can't be null or empty.
     """
-    parse the route-penetration rule, please check the
-    routePenetrationRules
-    detail exception is :java.lang.IllegalStateException: regex
-    t be null or empty.
+    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: regex can't be null or empty.
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -144,10 +134,7 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonParseException: Cannot parse json '123' to boolean value
     """
-    parse the route-penetration rule, please check the
-    routePenetrationRules
-    detail exception is :com.google.gson.JsonParseException: Cannot parse json
-    to boolean value
+    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonParseException: Cannot parse json '123' to boolean value
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
