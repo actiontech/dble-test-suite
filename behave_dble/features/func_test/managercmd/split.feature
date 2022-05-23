@@ -1119,7 +1119,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     #2.split with a none exists dumpfile path, split return error
     Then execute sql in "dble-1" in "admin" mode
       | sql                                              | expect                                       |
-      | split /opt/test.sql /oom                         | /opt/test.sql (No such file or directory)    |
+      | split /opt/test.sql /opt                         | /opt/test.sql (No such file or directory)    |
     Then check path "/opt/test.sql-dn1-*.dump" in "dble-1" should not exist
     Then check path "/opt/test.sql-dn2-*.dump" in "dble-1" should not exist
     Then check path "/opt/test.sql-dn3-*.dump" in "dble-1" should not exist
