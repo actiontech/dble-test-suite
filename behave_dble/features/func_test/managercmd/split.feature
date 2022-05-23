@@ -1137,7 +1137,18 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     Then check path "/opt/schema1_with_data.sql-dn4-*.dump" in "dble-1" should not exist
     Then check path "/opt/schema1_with_data.sql-dn5-*.dump" in "dble-1" should not exist
 
-    #4.split with with wrong -w
+    #4.split with a wrong dest path, split return error
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                              | expect               |
+      | split /opt/schema1_with_data.sql /oom            | error totally whack  |
+    #check the split out files exist
+    Then check path "/oom/schema1_with_data.sql-dn1-*.dump" in "dble-1" should not exist
+    Then check path "/oom/schema1_with_data.sql-dn2-*.dump" in "dble-1" should not exist
+    Then check path "/oom/schema1_with_data.sql-dn3-*.dump" in "dble-1" should not exist
+    Then check path "/oom/schema1_with_data.sql-dn4-*.dump" in "dble-1" should not exist
+    Then check path "/oom/schema1_with_data.sql-dn5-*.dump" in "dble-1" should not exist
+
+    #5.split with with wrong -w
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                               | expect                                |
       | split /opt/schema1_with_data.sql  /opt -wert;                     | You have an error in your SQL syntax  |
@@ -1149,7 +1160,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     Then check path "/opt/schema1_with_data.sql-dn5-*.dump" in "dble-1" should not exist
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                               | expect                                |
-      | split /opt/schema1_with_data.sql  /opt -w-256;                     | You have an error in your SQL syntax  |
+      | split /opt/schema1_with_data.sql  /opt -w-256;                    | You have an error in your SQL syntax  |
     #check the split out files exist
     Then check path "/opt/schema1_with_data.sql-dn1-*.dump" in "dble-1" should not exist
     Then check path "/opt/schema1_with_data.sql-dn2-*.dump" in "dble-1" should not exist
@@ -1157,7 +1168,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     Then check path "/opt/schema1_with_data.sql-dn4-*.dump" in "dble-1" should not exist
     Then check path "/opt/schema1_with_data.sql-dn5-*.dump" in "dble-1" should not exist
 
-    #5.split with with wrong -t
+    #6.split with with wrong -t
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                               | expect                                |
       | split /opt/schema1_with_data.sql  /opt -w -t&UGF;                 | You have an error in your SQL syntax  |
@@ -1177,7 +1188,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     Then check path "/opt/schema1_with_data.sql-dn4-*.dump" in "dble-1" should not exist
     Then check path "/opt/schema1_with_data.sql-dn5-*.dump" in "dble-1" should not exist
 
-    #6.split with with wrong -l
+    #7.split with with wrong -l
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                               | expect                                |
       | split /opt/schema1_with_data.sql  /opt -w512 -t2 -lxsd;           | You have an error in your SQL syntax  |
