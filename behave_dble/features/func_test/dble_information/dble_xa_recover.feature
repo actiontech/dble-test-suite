@@ -263,19 +263,27 @@ Feature: check dble_xa_recover and exception xa transactions
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    When prepare execute 'XA RECOVER' in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]], check it's isAlive is false
-    When prepare execute 'XA COMMIT 'Dble_Server.1.1.db1'' in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]] , check it's isAlive is false
+    WARN [[]WrapperSimpleAppMain[]] (com.actiontech.dble.backend.mysql.nio.handler.transaction.xa.XAHandler.fillDbInstance(XAHandler.java:61)) - When prepare execute
+    XA RECOVER
+    in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]], check it
+    isAlive is false!
+    WARN [[]WrapperSimpleAppMain[]] (com.actiontech.dble.backend.mysql.nio.handler.transaction.xa.XAHandler.executeXaCmd(XAHandler.java:102)) - When prepare execute
+    XA COMMIT
+    Dble_Server.1.1.db1
     """
     Given start mysql in host "mysql-master2"
     Then Restart dble in "dble-1" success
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    When prepare execute 'XA RECOVER' in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]], check it's isAlive is false
-    When prepare execute 'XA COMMIT 'Dble_Server.1.1.db1'' in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]] , check it's isAlive is false
+    WARN [[]WrapperSimpleAppMain[]] (com.actiontech.dble.backend.mysql.nio.handler.transaction.xa.XAHandler.fillDbInstance(XAHandler.java:61)) - When prepare execute
+    in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]], check it
+    isAlive is false!
+    WARN [[]WrapperSimpleAppMain[]] (com.actiontech.dble.backend.mysql.nio.handler.transaction.xa.XAHandler.executeXaCmd(XAHandler.java:102)) - When prepare execute
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    XA COMMIT 'Dble_Server.1.1.db1'
+    XA COMMIT
+    Dble_Server.1.1.db1
     XA RECOVER to con:BackendConnection
     """
     Given sleep "10" seconds
