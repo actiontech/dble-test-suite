@@ -148,7 +148,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | True     | select * from global_sequence                                             | length{(5)}                                 | schema1    |
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/schema1_with_only_data.sql*.dump
+      rm -rf /opt/schema1_with_only_data.sql*
     """
 
   @CRITICAL @delete_mysql_tables
@@ -218,7 +218,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | True     | select * from global_sequence                                            | length{(5)}                                 | schema1    |
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/noschema_only_table_data.sql*.dump
+      rm -rf /opt/noschema_only_table_data.sql*
     """
 
   @CRITICAL @delete_mysql_tables
@@ -278,7 +278,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | True     | select * from global_sequence                                            | length{(5)}                               | schema1    |
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/schema1_with_data.sql-dn*.dump
+      rm -rf /opt/schema1_with_data.sql-dn*
     """
 
     #3.split with '-s' parameter and the schema exists in dble config(consistent with dump file), split success
@@ -358,7 +358,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | True     | select * from global_sequence                                   | length{(5)}                           | schema1    |
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/schema1_with_data.sql*.dump
+      rm -rf /opt/schema1_with_data.sql*
     """
 
   @CRITICAL @delete_mysql_tables
@@ -472,7 +472,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | True     | /*#dble:shardingNode=dn4*/select * from sharding_4_t3           | has{((3,'3',3),)}                                 | schema2    |
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/all_schemas_with_data.sql*.dump
+      rm -rf /opt/all_schemas_with_data.sql*
     """
 
   @CRITICAL @delete_mysql_tables
@@ -562,7 +562,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | True     | select * from global_sequence                               | length{(5)}                                                          | schema1    |
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/schema1_with_only_data.sql*.dump
+      rm -rf /opt/schema1_with_only_data.sql*
     """
 
   @NORMAL @delete_mysql_tables
@@ -623,7 +623,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     Then check result "rs_B" value is "2"
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/schema1_with_data.sql*.dump
+      rm -rf /opt/schema1_with_data.sql*
     """
 
   @NORMAL @delete_mysql_tables
@@ -671,7 +671,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | True    | select * from global_sequence                         | length{(5)}                                                    | schema1 |
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/schema1_with_data_special.sql-dn*.dump
+      rm -rf /opt/schema1_with_data_special.sql*
     """
 
   @NORMAL @delete_mysql_tables
@@ -687,7 +687,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     """
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                                  | expect                                             |
-      | split /opt/all_schemas_with_data.sql /opt -sschema4                  | Default schema[schema4] doesn't exist in config    |
+      | split /opt/schema1_with_childTable.sql /opt -sschema4                | Default schema[schema4] doesn't exist in config    |
     Then check path "/opt/schema1_with_childTable.sql-dn1-*.dump" in "dble-1" should not exist
     Then check path "/opt/schema1_with_childTable.sql-dn2-*.dump" in "dble-1" should not exist
     Then check path "/opt/schema1_with_childTable.sql-dn3-*.dump" in "dble-1" should not exist
@@ -775,7 +775,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | True     | select * from nosharding                                      | length{(5)}                                       | schema1    |
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/schema1_with_childTable.sql*.dump
+      rm -rf /opt/schema1_with_childTable.sql*
     """
 
   @NORMAL @delete_mysql_tables
@@ -791,7 +791,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     """
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                                  | expect                                             |
-      | split /opt/all_schemas_with_data.sql /opt -sschema4                  | Default schema[schema4] doesn't exist in config    |
+      | split /opt/schema1_with_view.sql /opt -sschema4                      | Default schema[schema4] doesn't exist in config    |
     Then check path "/opt/schema1_with_view.sql-dn1-*.dump" in "dble-1" should not exist
     Then check path "/opt/schema1_with_view.sql-dn2-*.dump" in "dble-1" should not exist
     Then check path "/opt/schema1_with_view.sql-dn3-*.dump" in "dble-1" should not exist
@@ -875,7 +875,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | True     | select * from nosharding                                      | length{(5)}                                       | schema1    |
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/schema1_with_view.sql*.dump
+      rm -rf /opt/schema1_with_view.sql*
     """
 
   @NORMAL @delete_mysql_tables
@@ -890,8 +890,8 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       rm -rf /opt/schema2_with_no_default_shardingNode.sql-dn*.dump
     """
     Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                  | expect                                             |
-      | split /opt/all_schemas_with_data.sql /opt -sschema4                  | Default schema[schema4] doesn't exist in config    |
+      | sql                                                                          | expect                                             |
+      | split /opt/schema2_with_no_default_shardingNode.sql /opt -sschema4           | Default schema[schema4] doesn't exist in config    |
     Then check path "/opt/schema2_with_no_default_shardingNode.sql-dn1-*.dump" in "dble-1" should not exist
     Then check path "/opt/schema2_with_no_default_shardingNode.sql-dn2-*.dump" in "dble-1" should not exist
     Then check path "/opt/schema2_with_no_default_shardingNode.sql-dn3-*.dump" in "dble-1" should not exist
@@ -921,7 +921,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
 
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/schema2_with_no_default_shardingNode.sql*.dump
+      rm -rf /opt/schema2_with_no_default_shardingNode.sql*
     """
 
   @NORMAL @delete_mysql_tables
@@ -1022,7 +1022,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | True     | show tables                   | has{('sharding_2_t1',),}                      | schema2    |
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/schema1_with_only_table_structure.sql*.dump
+      rm -rf /opt/schema1_with_only_table_structure.sql*
     """
 
   @CRITICAL @delete_mysql_tables
@@ -1096,7 +1096,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | True     | select * from global_sequence                              | length{(5)}                           | schema1    |
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/schema1_with_data.sql-dn*.dump
+      rm -rf /opt/schema1_with_data.sql*
     """
 
   @NORMAL
@@ -1199,5 +1199,5 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
 
     Given execute oscmd in "dble-1"
      """
-      rm -rf /opt/schema1_with_data.sql*.dump
+      rm -rf /opt/schema1_with_data.sql*
     """
