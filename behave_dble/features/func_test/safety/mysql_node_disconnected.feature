@@ -9,9 +9,9 @@ Feature: #mysql node disconnected,check the change of dble
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
     Given delete the following xml segment
-      |file        | parent          | child               |
-      |sharding.xml|{'tag':'root'}   | {'tag':'shardingNode'}  |
-      |db.xml       |{'tag':'root'}   | {'tag':'dbGroup'}  |
+      |file          | parent          | child                   |
+      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+      |db.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                                |
       | conn_0 | False   | create database if not exists da1  |
@@ -40,7 +40,7 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | True    | reload @@config_all   | Reload config failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly  |
     Then restart dble in "dble-1" failed for
     """
-    Can't get variables from data node
+    Can't get variables from all dbGroups
     """
     Given start mysql in host "mysql-master1"
     Given Restart dble in "dble-1" success
@@ -69,9 +69,9 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | True    | create table test_table(id int,pad int) | schema1 |
     Given stop mysql in host "mysql-master1"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                 | expect                                                                                      |
-      | conn_0 | False   | dryrun              | hasStr{shardingNode[dn3] has no available primary dbinstance,The table in this shardingNode has not checked} |
-      | conn_0 | True    | reload @@config_all | there are some dbInstance connection failed                                                |
+      | conn   | toClose | sql                 | expect                                                            |
+      | conn_0 | False   | dryrun              | hasStr{Can't connect to [dbInstance[ha_group1.hostM1]]}           |
+      | conn_0 | True    | reload @@config_all | there are some dbInstance connection failed                       |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect               | db      |
