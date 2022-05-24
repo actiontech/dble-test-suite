@@ -181,7 +181,7 @@ Feature: test "ddl" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /sleepWhenClearIfSessionClosed/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+      /delayAfterDdlLockMeta/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Given execute sqls in "dble-1" at background
@@ -189,7 +189,7 @@ Feature: test "ddl" in zk cluster
       | conn_1 | true    | alter table sharding_4_t1 add age int   | schema1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
-    get into clearIfSessionClosed,start sleep
+    get into delayAfterDdlLockMeta
     """
     #case check lock on zookeeper values is 1
     Given execute linux command in "dble-1"
@@ -271,7 +271,7 @@ Feature: test "ddl" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /sleepWhenClearIfSessionClosed/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+      /delayAfterDdlLockMeta/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Given execute sqls in "dble-1" at background
@@ -279,7 +279,7 @@ Feature: test "ddl" in zk cluster
       | conn_1 | true    | alter table sharding_4_t1 drop age      | schema1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
-    get into clearIfSessionClosed,start sleep
+    get into delayAfterDdlLockMeta
     """
     #case check lock on zookeeper values is 1
     Given execute linux command in "dble-1"
@@ -357,7 +357,7 @@ Feature: test "ddl" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /sleepWhenClearIfSessionClosed/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+      /delayAfterDdlLockMeta/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-2"
     Given execute sqls in "dble-2" at background
@@ -374,7 +374,7 @@ Feature: test "ddl" in zk cluster
       """
     Then check btrace "BtraceClusterDelay.java" output in "dble-2"
     """
-    get into clearIfSessionClosed,start sleep
+    get into delayAfterDdlLockMeta
     """
     Then Restart dble in "dble-1" success
     Given sleep "20" seconds
@@ -535,7 +535,7 @@ Feature: test "ddl" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /sleepWhenClearIfSessionClosed/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+      /delayAfterDdlLockMeta/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Given execute sqls in "dble-1" at background
