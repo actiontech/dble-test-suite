@@ -18,8 +18,10 @@ echo "compare c_mysql_api's output with stand: diff -wy curr.output c_mysql_api.
 asExpect=$(diff -wq curr.output c_mysql_api.output)
 if [[ $? -eq 0 ]]; then
     echo "test result is same with std_result, case pass !"
+    exit 0
 else
     echo ${asExpect}
+    exit 1
 fi
 
 #save logs for ci artifacts
