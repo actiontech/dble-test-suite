@@ -558,12 +558,12 @@ Feature: test "ddl" in zk cluster
     Given sleep "11" seconds
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose  | sql                                           | expect                                                                                                                                      | db      |
-      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 add age1 int.     | schema1 |
-      | conn_2 | true     | alter table sharding_4_t1 drop age1           | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 drop age1.        | schema1 |
+      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | java.sql.SQLNonTransientException: The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 add age1 int | schema1 |
+      | conn_2 | true     | alter table sharding_4_t1 drop age1           | java.sql.SQLNonTransientException: The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 drop age1    | schema1 |
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
-      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 add age2 int.    | schema1 |
-      | conn_3 | true     | alter table sharding_4_t1 drop age2           | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists, sql: alter table sharding_4_t1 drop age2.       | schema1 |
+      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | java.sql.SQLNonTransientException: The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 add age2 int | schema1 |
+      | conn_3 | true     | alter table sharding_4_t1 drop age2           | java.sql.SQLNonTransientException: The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 drop age2    | schema1 |
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
