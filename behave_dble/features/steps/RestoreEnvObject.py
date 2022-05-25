@@ -22,6 +22,23 @@ class RestoreEnvObject(object):
         # if "aft_reset_replication" in self._scenario.tags:
         #     utils.reset_repl()
         #
+
+        if "restore_mysql_service" in self._scenario.tags:
+            params_dic = self.get_tag_params("{'restore_mysql_service'")
+
+            if params_dic:
+                paras = params_dic["restore_mysql_service"]
+            else:
+                paras = {}
+
+            logger.debug("try to restore_mysql_service: {0}".format(paras))
+            for host_name, mysql_vars in paras.items():
+                logger.debug("the value of host_name is: {0}".format(host_name))
+                for k, v in mysql_vars.items():
+                    if v:
+                        mysql = ObjectFactory.create_mysql_object(host_name)
+                        mysql.start()
+
         if "restore_global_setting" in self._scenario.tags:
             params_dic = self.get_tag_params("{'restore_global_setting'")
 

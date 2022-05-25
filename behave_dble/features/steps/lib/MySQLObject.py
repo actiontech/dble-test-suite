@@ -63,19 +63,22 @@ class MySQLObject(object):
         if sed_str:
             self.update_config(sed_str)
 
-        cmd_start = "{0} start".format(self._mysql_meta.mysql_init_shell)
+        # if mysqld already started,do not start it again
+        cmd_status = "{0} status".format(self._mysql_meta.mysql_init_shell)
+        rc, status_out, std_err = self._mysql_meta.ssh_conn.exec_command(cmd_status)
+        if status_out.find("MySQL running") == -1:
+            logger.debug("try to start mysql......")
+            cmd_start = "{0} start".format(self._mysql_meta.mysql_init_shell)
+            cd, out, err =self._mysql_meta.ssh_conn.exec_command(cmd_start)
+            self._mysql_meta.close_ssh()
+            logger.debug("Checking MySQL start success......")
+            success_p = "Starting MySQL.*?SUCCESS"
+            obj = re.search(success_p, out)
+            isSuccess = obj is not None
+            assert isSuccess, "start mysql err: {0}".format(err)
 
-        ssh = self._mysql_meta.ssh_conn
-        cd, out, err = ssh.exec_command(cmd_start)
-        self._mysql_meta.close_ssh()
-        logger.debug("check mysql start success")
-        success_p = "Starting MySQL.*?SUCCESS"
-        obj = re.search(success_p, out)
-        isSuccess = obj is not None
-        assert isSuccess, "start mysql err: {1}".format(err)
-
-        logger.debug("start mysql connect_test")
-        self.connect_test()
+            logger.debug("start mysql connect_test")
+            self.connect_test()
 
     def update_config(self, sed_str):
         update_file_with_sed(sed_str, "/etc/my.cnf", self._mysql_meta)
