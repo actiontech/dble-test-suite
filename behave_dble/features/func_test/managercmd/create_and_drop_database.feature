@@ -65,27 +65,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | dn3    | ha_group1/da2 | false            | 0        | 0      | 1000   | 0         | -1              |
       | dn4    | ha_group2/da2 | false            | 0        | 0      | 1000   | 0         | -1              |
       | dn5    | ha_group1/da3 | false            | 0        | 0      | 1000   | 0         | -1              |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "A2"
-      | sql                 |
-      | dryrun              |
-    Then check resultset "A2" has lines with following column values
-      | TYPE-0 | LEVEL-1 | DETAIL-2                                                        |
-      | Meta   | WARNING | Can't get connection for Meta check in shardingNode[hostM1.da1] |
-      | Meta   | WARNING | Can't get connection for Meta check in shardingNode[hostM1.da2] |
-      | Meta   | WARNING | Can't get connection for Meta check in shardingNode[hostM2.da2] |
-      | Meta   | WARNING | Can't get connection for Meta check in shardingNode[hostM2.da1] |
-      | Meta   | WARNING | Can't get connection for Meta check in shardingNode[hostM1.da3] |
     Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "A3"
-      | sql                 |
-      | dryrun              |
-    Then check resultset "A3" has not lines with following column values
-      | TYPE-0 | LEVEL-1 | DETAIL-2                                                        |
-      | Meta   | WARNING | Can't get connection for Meta check in shardingNode[hostM1.da1] |
-      | Meta   | WARNING | Can't get connection for Meta check in shardingNode[hostM1.da2] |
-      | Meta   | WARNING | Can't get connection for Meta check in shardingNode[hostM2.da2] |
-      | Meta   | WARNING | Can't get connection for Meta check in shardingNode[hostM2.da1] |
-      | Meta   | WARNING | Can't get connection for Meta check in shardingNode[hostM1.da3] |
     Then execute admin cmd "drop database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
 
 
@@ -170,12 +150,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | dn3    | ha_group1/da21 | true            | 0        | 0      | 1000   | 0         | -1              |
       | dn4    | ha_group2/da21 | true            | 0        | 0      | 1000   | 0         | -1              |
       | dn5    | ha_group1/da31 | true            | 0        | 0      | 1000   | 0         | -1              |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "B3"
-      | sql                 |
-      | dryrun              |
-    Then check resultset "B3" has lines with following column values
-      | TYPE-0 | LEVEL-1 | DETAIL-2                                                         |
-      | Meta   | WARNING | Can't get connection for Meta check in shardingNode[hostM1.da11] |
+
     Then execute admin cmd "drop database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                        | expect          |

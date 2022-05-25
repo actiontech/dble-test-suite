@@ -111,11 +111,11 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                        |
       | conn_0 | False   | explain select count(*) from aly_test a where a.id =1 group by id          |
     Then check resultset "rs_5" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                               |
+      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                 |
       | dn2             | BASE SQL | select count(*) from aly_test a where a.id =1 group by id |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_6"
-      | conn   | toClose | sql                                                                        |
-      | conn_0 | False   | explain select * from aly_order join test_global where aly_order.id in ( select id from aly_test where id=1) |
+      | conn   | toClose | sql                                                                                                            |
+      | conn_0 | False   | explain select * from aly_order join test_global where aly_order.id in ( select id from aly_test where id=1)   |
     Then check resultset "rs_6" has lines with following column values
       | SHARDING_NODE-0            | TYPE-1                   | SQL/REF-2                                               |
       | dn1_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
@@ -280,8 +280,8 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | explain select * from aly_test a join aly_order b using(id,c)  where a.id=2 or b.id=1 |
     Then check resultset "rs_20" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
-      | dn2_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and `a`.`c` = `b`.`c` where  ( `b`.`id` in (1) OR `a`.`id` in (2)) |
-      | dn3_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and `a`.`c` = `b`.`c` where  ( `b`.`id` in (1) OR `a`.`id` in (2)) |
+      | dn2_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and (a.c = b.c) where  ( `b`.`id` in (1) OR `a`.`id` in (2)) |
+      | dn3_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and (a.c = b.c) where  ( `b`.`id` in (1) OR `a`.`id` in (2)) |
       | merge_1         | MERGE         | dn2_0; dn3_0                                                                                                                                                 |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                                                                      |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_21"
