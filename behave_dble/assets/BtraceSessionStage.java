@@ -27,7 +27,7 @@ public final class BtraceSessionStage {
     public static void setRequestTime(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         long startTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + startTime + "], start get into setRequestTime " );
-        BTraceUtils.println("------- start get into setRequestTime -------");
+        BTraceUtils.println("------- get into setRequestTime -------");
         BTraceUtils.println();
         Thread.sleep(100L);
         long endTime = System.currentTimeMillis();
@@ -43,7 +43,7 @@ public final class BtraceSessionStage {
     public static void startProcess(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         long startTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + startTime + "], start get into startProcess " );
-        BTraceUtils.println("------- start get into startProcess -------");
+        BTraceUtils.println("------- get into startProcess -------");
         BTraceUtils.println();
         Thread.sleep(100L);
         long endTime = System.currentTimeMillis();
@@ -59,7 +59,7 @@ public final class BtraceSessionStage {
     public static void endParse(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         long startTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + startTime + "], start get into endParse " );
-        BTraceUtils.println("------- start get into endParse -------");
+        BTraceUtils.println("------- get into endParse -------");
         BTraceUtils.println();
         Thread.sleep(100L);
         long endTime = System.currentTimeMillis();
@@ -75,7 +75,7 @@ public final class BtraceSessionStage {
     public static void endRoute(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         long startTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + startTime + "], start get into endRoute " );
-        BTraceUtils.println("------- start get into endRoute -------");
+        BTraceUtils.println("------- get into endRoute -------");
         BTraceUtils.println();
         Thread.sleep(100L);
         long endTime = System.currentTimeMillis();
@@ -91,7 +91,7 @@ public final class BtraceSessionStage {
     public static void setPreExecuteEnd(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         long startTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + startTime + "], start get into setPreExecuteEnd " );
-        BTraceUtils.println("------- start get into setPreExecuteEnd -------");
+        BTraceUtils.println("------- get into setPreExecuteEnd -------");
         BTraceUtils.println();
         Thread.sleep(100L);
         long endTime = System.currentTimeMillis();
@@ -107,7 +107,7 @@ public final class BtraceSessionStage {
     public static void setBackendResponseTime(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         long startTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + startTime + "], start get into setBackendResponseTime " );
-        BTraceUtils.println("------- start get into setBackendResponseTime -------");
+        BTraceUtils.println("------- get into setBackendResponseTime -------");
         BTraceUtils.println();
         Thread.sleep(100L);
         long endTime = System.currentTimeMillis();
@@ -123,7 +123,7 @@ public final class BtraceSessionStage {
     public static void setResponseTime(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         long startTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + startTime + "], start get into setResponseTime " );
-        BTraceUtils.println("------- start get into setResponseTime -------");
+        BTraceUtils.println("------- get into setResponseTime -------");
         BTraceUtils.println();
         Thread.sleep(100L);
         long endTime = System.currentTimeMillis();
@@ -155,7 +155,7 @@ public final class BtraceSessionStage {
     public static void setBackendResponseEndTime(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         long startTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + startTime + "], start get into setBackendResponseEndTime " );
-        BTraceUtils.println("------- start get into setBackendResponseEndTime -------");
+        BTraceUtils.println("------- get into setBackendResponseEndTime -------");
         BTraceUtils.println();
         Thread.sleep(100L);
         long endTime = System.currentTimeMillis();
@@ -171,7 +171,7 @@ public final class BtraceSessionStage {
     public static void setBeginCommitTime(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         long startTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + startTime + "], start get into setBeginCommitTime " );
-        BTraceUtils.println("------- start get into setBeginCommitTime -------");
+        BTraceUtils.println("------- get into setBeginCommitTime -------");
         BTraceUtils.println();
         Thread.sleep(100L);
         long endTime = System.currentTimeMillis();
@@ -187,12 +187,29 @@ public final class BtraceSessionStage {
     public static void setHandlerEnd(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         long startTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + startTime + "], start get into setHandlerEnd " );
-        BTraceUtils.println("------- start get into setHandlerEnd -------");
+        BTraceUtils.println("------- get into setHandlerEnd -------");
         BTraceUtils.println();
         Thread.sleep(100L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into setHandlerEnd " );
         BTraceUtils.println();
     }
+
+        @OnMethod(
+            clazz = "com.actiontech.dble.net.response.DefaultResponseHandler",
+            method = "ok",
+            location = @Location(Kind.RETURN)
+    )
+    public static void ok(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        long startTime = System.currentTimeMillis();
+        BTraceUtils.println("time[" + startTime + "], start get into ok " );
+        BTraceUtils.println("------- get into ok -------");
+        BTraceUtils.println();
+        Thread.sleep(100L);
+        long endTime = System.currentTimeMillis();
+        BTraceUtils.println("time[" + endTime + "], end get into ok " );
+        BTraceUtils.println();
+    }
+
 
 }
