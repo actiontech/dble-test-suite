@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 cd ${DIR}/../../../behave_dble/compose/docker-build-behave && bash resetReplication.sh
@@ -18,6 +17,8 @@ echo "compare multiQuery's output with stand: diff -wy curr.output multiQuery.ou
 asExpect=$( diff -wq curr.output multiQuery.output )
 if [[ $? -eq 0 ]]; then
     echo "test result is same with std_result, case pass !"
+    exit 0
 else
     echo ${asExpect}
+    exit 1
 fi
