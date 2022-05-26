@@ -13,4 +13,12 @@ cd ${DIR}/../../behave_dble&&pipenv run behave --stop -D dble_conf=sql_cover_sha
 cd ${DIR}/src && g++ *.cpp -l mysqlcppconn -l yaml-cpp
 
 #do run cpp driver test
-cd ${DIR} && bash do_run_connector_cpp.sh -c
+cd ${DIR} && source do_run_connector_cpp.sh -c
+if [ ${#res} -gt 0 ]; then
+    echo "Oop! results are different with the standard ones, try 'diff -wr ${cmp_std_res_dir} ${cmp_real_res_dir}' to see the details"
+    echo "${res}"
+    exit 1
+else
+    echo "pass"
+    exit 0
+fi
