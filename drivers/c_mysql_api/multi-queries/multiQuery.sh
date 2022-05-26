@@ -18,10 +18,15 @@ echo "compare multiQuery's output with stand: diff -wy curr.output multiQuery.ou
 asExpect=$( diff -wq curr.output multiQuery.output )
 if [[ $? -eq 0 ]]; then
     echo "test result is same with std_result, case pass !"
+    #save logs for ci artifacts
+    scp -r root@dble-1:/opt/dble/logs ${DIR}/dble_logs
+    mv ${DIR}/curr.output ${DIR}/dble_logs/
+    exit 0
 else
     echo ${asExpect}
+    #save logs for ci artifacts
+    scp -r root@dble-1:/opt/dble/logs ${DIR}/dble_logs
+    mv ${DIR}/curr.output ${DIR}/dble_logs/
+    exit 1
 fi
 
-#save logs for ci artifacts
-scp -r root@dble-1:/opt/dble/logs ${DIR}/dble_logs
-mv ${DIR}/curr.output ${DIR}/dble_logs/
