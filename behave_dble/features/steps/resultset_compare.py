@@ -88,6 +88,7 @@ def step_impl(context, rs_name):
             col_idx_list.append(idx)
 
     rs = getattr(context, rs_name)
+    context.logger.debug("result set: {0},  values: {1}".format(rs_name, rs))
     for expect_row in context.table:
         isFound = False
         real_line = 0
@@ -99,11 +100,11 @@ def step_impl(context, rs_name):
                     col_idx = col_idx_list[i - 1]
                 else:
                     col_idx = col_idx_list[i]
-                    
+
                 if (expect_row[i].rfind('expect_result_line:') != -1): #Get the expected number of rows when comparing the number of rows
                     expect_line = int(expect_row[i].split(":")[-1])
                     continue
-            
+
                 real_col = rs_row[col_idx]
                 if( expect_row[i].rfind('+') != -1 ): #actual result tolerance,in the format:"expect_result+tolerance_scope"
                     expect =expect_row[i].split("+")
@@ -116,6 +117,17 @@ def step_impl(context, rs_name):
                     expect_col = expect_row[i]
                     if (expect_col.rfind('/*AllowDiff*/')!=-1):
                         isFound = True
+                    # allow expect line can have multi possibilities
+                    elif expect_col.rfind("//") != -1:
+                        expect = expect_col.split("//")
+                        for x in expect:
+                            if real_col == x:
+                                # context.logger.debug("isFound:true")
+                                isFound = True
+                                # context.logger.info("col index:{0}, expect col:{1}, real_col:{2}".format(i, x, real_col))
+                                break
+                            else:
+                                isFound = False
                     elif (expect_row[i].rfind('[0-9].[0-9]') != -1):
                         # dble_version =  context.cfg_dble['ftp_path'].split('/')[-2]
                         # expect_col = expect_col.replace("${version}",dble_version)

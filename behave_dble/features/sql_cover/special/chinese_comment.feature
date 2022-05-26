@@ -85,7 +85,7 @@ Feature: verify issue 92 #Enter feature name here
       | conn_0 | False   | SELECT t.ben_tim12 AS statTime , CASE  WHEN length(round(t.DA12_VALE)) > 8 THEN round(IFNULL(t.DA12_VALE, 0) / 1340, 2) WHEN length(round(t.DA12_VALE)) > 4 AND length(round(t.DA12_VALE)) < 9 THEN round(IFNULL(t.DA12_VALE, 0) / 10000, 2) ELSE IFNULL(t.DA12_VALE, 0) END AS dataValue , CASE  WHEN length(round(t.DA12_VALE)) > 8 THEN '亿元' WHEN length(round(t.DA12_VALE)) > 4 AND length(round(t.DA12_VALE)) < 9 THEN '万元' ELSE '元' END AS unit FROM ( SELECT tem.ben_tim12 , ifnull(round(tem.dianfei + tem.weiyujin, 2), 0) AS DA12_VALE FROM ( SELECT d.ben_tim12, 'IND_03_WQJJXYJK' AS TE_N , sum(CASE  WHEN d.IX123_NO = 'lll411010334346' THEN D.DA12_V_S ELSE 0 END) AS dianfei , sum(CASE  WHEN d.IX123_NO = 'lll411010334347' THEN D.DA12_V_S ELSE 0 END) AS weiyujin FROM shard12 D WHERE D.TE_N = 'IND_03_WQJJXYJK' AND d.IX123_NO IN ('lll411010334346', 'lll411010334347') AND D.ben_tim12 = DATE_FORMAT(SYSDATE(), '%Y%m%d') AND ((length('41101') = 5 AND OG_NO = '41101' AND SAT_CRE = '01') OR (length('41101') = 7 AND RIGHT('41101', 2) = '99' AND OG_NO = LEFT('41101', 5) AND SAT_CRE = '02') OR (length('41101') = 7 AND RIGHT('41101', 2) != '99' AND OG_NO = '41101')) AND D.DI23M123 = '01' AND BI_CE = '03' AND MO_N = '03' GROUP BY d.ben_tim12 ) tem RIGHT JOIN ( SELECT 'IND_03_WQJJXYJK' AS TE_N ) ss ON ss.TE_N = tem.TE_N ) t | schema1 | utf8mb4 |
     Then check resultset "4" has lines with following column values
       | statTime-0 | dataValue-1 | unit-2  |
-      | None       | 0           | 元      |
+      | None       | 0.0         | 元      |
 
 #case support "between and "function ATK-1388
     Given execute single sql in "dble-1" in "user" mode and save resultset in "5"
@@ -185,7 +185,7 @@ Feature: verify issue 92 #Enter feature name here
       | wsgw-0 | lb-1 |
       | 0.0    | test |
 
-#case no cerate schema but in sql is used this schema then do not occur DBLE0REQ-627
+#case no create schema but in sql is used this schema then do not occur DBLE0REQ-627
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose   | sql                                        | expect    | charset |
       | conn_0 | false     | select * from (SELECT '测33' DI23M123 FROM DUAL ) as A inner join (select * from mimc_be.shard12 UNION ALL select * from mimc_be.shard12 ) as B   | Table `mimc_be`.`shard12` doesn't exist | utf8mb4 |
