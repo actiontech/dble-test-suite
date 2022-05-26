@@ -13,5 +13,5 @@ mv sql_logs ../sql_logs
 cd ../
 if [ "$need_compare" = "-c" ]; then
     echo "comparing results..."
-    source compare_result.sh std_sql_logs sql_logs
+    bash compare_result.sh std_sql_logs sql_logs
 fi
