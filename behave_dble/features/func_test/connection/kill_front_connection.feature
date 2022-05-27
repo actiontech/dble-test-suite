@@ -4,7 +4,7 @@
 Feature: test KILL [CONNECTION | QUERY] processlist_id
 
 # for DBLE0REQ-12
-  @btrace
+  @btrace @skip
   Scenario: check kill query processlist_id #1
 # case 1: kill query current processlist_id
 # case 1.1: kill query processlist_id and does not have an executing sql
