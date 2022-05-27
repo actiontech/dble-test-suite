@@ -63,7 +63,11 @@ Feature:  config user config files incorrect and restart dble or reload configs
       Attribute "schemas" is required and must be specified for element type "shardingUser"
     """
 
+  @restore_mysql_config
   Scenario:  config case sensitive, check privileges work fine #7
+  """
+  {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}
+  """
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
      /lower_case_table_names/d
