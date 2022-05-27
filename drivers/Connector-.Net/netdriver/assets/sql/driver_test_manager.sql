@@ -29,7 +29,6 @@ show @@shardingNode
 show @@shardingNode where schema=schema1;
 show @@shardingNode where schema=schema1 and table=aly_test;
 show @@dbInstance
-show @@dbInstance.cluster
 show @@dbInstance.synstatus
 show @@dbInstance.syndetail where name=172.100.9.1
 show @@directmemory
