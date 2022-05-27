@@ -59,7 +59,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       $a\-DbindIp=256.256.256.258
       $a\-DserverPort=-1
       $a\-DmanagerPort=-2
-      /-DProcessors=1/c -DProcessors=-3
+      /-Dprocessors=1/c -Dprocessors=-3
       $a\-DbackendProcessors=-3
       $a\-DbackendProcessorExecutor=-4
       /-DprocessorExecutor=1/c -DprocessorExecutor=-3
@@ -101,6 +101,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ backendProcessors \] '-3' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
       Property \[ processorExecutor \] '-3' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
       Property \[ writeToBackendExecutor \] '-4' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
+      Property \[ processors \] '-3' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
       Property \[ complexExecutor \] '-4' in bootstrap.cnf is illegal, you may need use the default value 8 replaced
       Property \[ charset \] 'utf-8' in bootstrap.cnf is illegal, use utf8mb4 replaced
       property \[ bufferPoolChunkSize \] '-32767' in bootstrap.cnf is illegal, you may need use the default value 4096 replaced
@@ -295,7 +296,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    $a\-DmaxPacketSize=8000000
+    s/-DmaxPacketSize=5000000/-DmaxPacketSize=8000000/
     """
     Then restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
