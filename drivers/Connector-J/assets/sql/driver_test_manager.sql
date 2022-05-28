@@ -76,7 +76,7 @@ reload @@query_cf=aly_test&id
 reload @@query_cf
 reload @@query_cf=aly_test&id
 reload @@query_cf=NULL
-rollback @@config
+#rollback @@config
 offline
 online
 file @@list
