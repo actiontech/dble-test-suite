@@ -183,59 +183,59 @@ Feature: verify hint sql
       | conn_0 | True    | insert into test_table values(1,'test_table1'),(2,'test_table2'),(3,'test_table3'),(4,'test_table4') | success | schema1 |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                              | expect  |
-      | conn_0 | False   | set global general_log=on        | success |
-      | conn_0 | False   | set global log_output='table'    | success |
-      | conn_0 | True    | truncate table mysql.general_log | success |
+      | conn_1 | False   | set global general_log=on        | success |
+      | conn_1 | False   | set global log_output='table'    | success |
+      | conn_1 | True    | truncate table mysql.general_log | success |
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                              | expect  |
-      | conn_0 | False   | set global general_log=on        | success |
-      | conn_0 | False   | set global log_output='table'    | success |
-      | conn_0 | True    | truncate table mysql.general_log | success |
+      | conn_2 | False   | set global general_log=on        | success |
+      | conn_2 | False   | set global log_output='table'    | success |
+      | conn_2 | True    | truncate table mysql.general_log | success |
     Then execute sql in "dble-1" in "user" mode
       | sql                                              | expect  | db      |
       | /*!dble:db_type=master*/select * from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | conn_2 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
+      | conn_2 | True    | truncate table mysql.general_log                                             | success     |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | conn_1 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |
+      | conn_1 | True    | truncate table mysql.general_log                                             | success     |
     Then execute sql in "dble-1" in "user" mode
       | sql                                             | expect  | db      |
       | /*!dble:db_type=slave*/select * from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | conn_2 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |
+      | conn_2 | True    | truncate table mysql.general_log                                             | success     |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | conn_1 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
+      | conn_1 | True    | truncate table mysql.general_log                                             | success     |
     Then execute sql in "dble-1" in "user" mode
       | sql                                                     | expect  | db      |
       | /*!dble:db_type=master*/select count(*) from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(0)} |
-      | conn_0 | True    | truncate table mysql.general_log                                                        | success     |
+      | conn_2 | False   | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%' | length{(0)} |
+      | conn_2 | True    | truncate table mysql.general_log                                                        | success     |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} |
-      | conn_0 | True    | truncate table mysql.general_log                                                        | success     |
+      | conn_1 | False   | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%' | length{(2)} |
+      | conn_1 | True    | truncate table mysql.general_log                                                        | success     |
     Then execute sql in "dble-1" in "user" mode
       | sql                                                    | expect  | db      |
       | /*!dble:db_type=slave*/select count(*) from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} |
-      | conn_0 | True    | set global log_output='file'                                                            | success     |
+      | conn_2 | False   | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%' | length{(2)} |
+      | conn_2 | True    | set global log_output='file'                                                            | success     |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(0)} |
-      | conn_0 | False   | set global log_output='file'                                                            | success     |
-      | conn_0 | True    | set global general_log=off                                                              | success     |
+      | conn_1 | False   | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%' | length{(0)} |
+      | conn_1 | False   | set global log_output='file'                                                            | success     |
+      | conn_1 | True    | set global general_log=off                                                              | success     |
 
   @NORMAL
   Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 2 #4
@@ -276,59 +276,59 @@ Feature: verify hint sql
       | conn_0 | True    | insert into test_table values(1,'test_table1'),(2,'test_table2'),(3,'test_table3'),(4,'test_table4') | success | schema1 |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                              | expect  |
-      | conn_0 | False   | set global general_log=on        | success |
-      | conn_0 | False   | set global log_output='table'    | success |
-      | conn_0 | True    | truncate table mysql.general_log | success |
+      | conn_1 | False   | set global general_log=on        | success |
+      | conn_1 | False   | set global log_output='table'    | success |
+      | conn_1 | True    | truncate table mysql.general_log | success |
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                              | expect  |
-      | conn_0 | False   | set global general_log=on        | success |
-      | conn_0 | False   | set global log_output='table'    | success |
-      | conn_0 | True    | truncate table mysql.general_log | success |
+      | conn_2 | False   | set global general_log=on        | success |
+      | conn_2 | False   | set global log_output='table'    | success |
+      | conn_2 | True    | truncate table mysql.general_log | success |
     Then execute sql in "dble-1" in "user" mode
       | sql                                              | expect  | db      |
       | /*!dble:db_type=master*/select * from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | conn_2 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
+      | conn_2 | True    | truncate table mysql.general_log                                             | success     |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | conn_1 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |
+      | conn_1 | True    | truncate table mysql.general_log                                             | success     |
     Then execute sql in "dble-1" in "user" mode
       | sql                                             | expect  | db      |
       | /*!dble:db_type=slave*/select * from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | conn_2 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |
+      | conn_2 | True    | truncate table mysql.general_log                                             | success     |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | conn_1 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
+      | conn_1 | True    | truncate table mysql.general_log                                             | success     |
     Then execute sql in "dble-1" in "user" mode
       | sql                                                     | expect  | db      |
       | /*!dble:db_type=master*/select count(*) from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(0)} |
-      | conn_0 | True    | truncate table mysql.general_log                                                        | success     |
+      | conn_2 | False   | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%' | length{(0)} |
+      | conn_2 | True    | truncate table mysql.general_log                                                        | success     |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} |
-      | conn_0 | True    | truncate table mysql.general_log                                                        | success     |
+      | conn_1 | False   | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%' | length{(2)} |
+      | conn_1 | True    | truncate table mysql.general_log                                                        | success     |
     Then execute sql in "dble-1" in "user" mode
       | sql                                                    | expect  | db      |
       | /*!dble:db_type=slave*/select count(*) from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} |
-      | conn_0 | True    | set global log_output='file'                                                            | success     |
+      | conn_2 | False   | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%' | length{(2)} |
+      | conn_2 | True    | set global log_output='file'                                                            | success     |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(0)} |
-      | conn_0 | False   | set global log_output='file'                                                            | success     |
-      | conn_0 | True    | set global general_log=off                                                              | success     |
+      | conn_1 | False   | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%' | length{(0)} |
+      | conn_1 | False   | set global log_output='file'                                                            | success     |
+      | conn_1 | True    | set global general_log=off                                                              | success     |
   @TRIVIAL
   Scenario: hint for specail sql syntax: call procedure #6
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
