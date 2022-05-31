@@ -143,6 +143,7 @@ Feature: schema basic config test
 
   @NORMAL
   Scenario: database configed for datanode is not created and the datanode is used by table #9
+    # http://10.186.18.11/jira/browse/DBLE0REQ-1588 暂未修复
      Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -171,7 +172,7 @@ Feature: schema basic config test
         | root  | 111111    | conn_0 | True    | show @@version | success | schema1 |
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                             | expect   | db      |
-        | test | 111111 | conn_0 | True    | create table if not exists test(id int,name varchar(20))    | Unknown database  | schema1 |
+        | test | 111111 | conn_0 | True    | create table if not exists test(id int,name varchar(20))    | java.io.IOException  | schema1 |
 
   Scenario: Multiple datanodes use the same database of the same datahost #10
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"

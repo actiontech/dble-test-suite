@@ -8,7 +8,7 @@ import re
 from behave import *
 from hamcrest import *
 
-from features.steps.lib.Node import get_ssh
+from lib.Node import get_ssh
 
 
 @Then('check "{logfile}" in "{hostname}" has the warnings')

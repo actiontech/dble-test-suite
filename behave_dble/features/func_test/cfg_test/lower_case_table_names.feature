@@ -8,9 +8,11 @@ Feature: check collation/lower_case_table_names works right for dble
 #  lower_case_table_names=1,CHARACTER SET utf8 COLLATE utf8_bin is case sensitive, from issue 1229
 #  lower_case_table_names=1,CHARACTER SET utf8 COLLATE latin1_swedish_ci is case insensitive, from issue 1229
 
-
-  @BLOCKER
+  @BLOCKER @restore_mysql_config
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive#1
+   """
+   {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0},'mysql-slave1':{'lower_case_table_names':0},'mysql-slave2':{'lower_case_table_names':0}}}
+   """
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
      /lower_case_table_names/d
@@ -99,26 +101,6 @@ Feature: check collation/lower_case_table_names works right for dble
         | test | 111111 | conn_2 | False   | insert into uos_page_ret_inst values('10','AAAA',NULL) ,('36','BBBB',NULL)                                                                          | success     | DbTest |
         | test | 111111 | conn_2 | False   | insert into uos_tache_def values('1557471076988','BBBB','2019-05-10 14:51:17',NULL), ('1557471086419','aaaa','2019-05-10 14:51:26',NULL)  | success      | DbTest |
         | test | 111111 | conn_2 | True    | select INST.TACHE_CODE,def.TACHE_CODE from uos_page_ret_inst INST JOIN uos_tache_def def ON def.TACHE_CODE=INST.TACHE_CODE                  | length{(1)}       | DbTest |
-    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
-      """
-      /lower_case_table_names/d
-      /server-id/a lower_case_table_names = 0
-     """
-    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
-     """
-      /lower_case_table_names/d
-      /server-id/a lower_case_table_names = 0
-     """
-    Given restart mysql in "mysql-slave1" with sed cmds to update mysql config
-     """
-     /lower_case_table_names/d
-     /server-id/a lower_case_table_names = 0
-     """
-    Given restart mysql in "mysql-slave2" with sed cmds to update mysql config
-    """
-     /lower_case_table_names/d
-     /server-id/a lower_case_table_names = 0
-     """
 
   @BLOCKER
   Scenario: set backend mysql lower_case_table_names=0, dble will deal with queries case insensitive  #2

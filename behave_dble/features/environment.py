@@ -3,7 +3,8 @@
 import logging
 import os
 import sys
-
+from steps.RestoreEnv import RestoreEnvObject
+import datetime
 from steps.step_check_sql import reset_repl
 from steps.lib.Node import get_ssh, get_sftp
 from steps.lib.utils import setup_logging ,load_yaml_config, get_nodes
@@ -11,7 +12,6 @@ from steps.step_install import replace_config, set_dbles_log_level, restart_dble
     install_dble_in_all_nodes
 
 from steps.restart import update_config_and_restart_mysql
-
 from .steps.step_function import restore_sys_time
 
 logger = logging.getLogger('environment')
@@ -115,20 +115,24 @@ def after_feature(context, feature):
     logger.info('*' * 30)
 
 def before_scenario(context, scenario):
+    context.scenario_begin_time = datetime.datetime.now()
     logger.info('#' * 30)
     logger.info('Scenario start: <{0}>'.format(scenario.name))
     logger.info(context.text)
-    if "restore_letter_sensitive" in scenario.tags:
-        context.text = """
-        /lower_case_table_names/d
-        /server-id/a lower_case_table_names = 0
-        """
-        update_config_and_restart_mysql(context, "mysql-master1")
-        update_config_and_restart_mysql(context, "mysql-master2")
-        update_config_and_restart_mysql(context, "mysql-slave1")
-        update_config_and_restart_mysql(context, "mysql-slave2")
+    # if "restore_letter_sensitive" in scenario.tags:
+    #     context.text = """
+    #     /lower_case_table_names/d
+    #     /server-id/a lower_case_table_names = 0
+    #     """
+    #     update_config_and_restart_mysql(context, "mysql-master1")
+    #     update_config_and_restart_mysql(context, "mysql-master2")
+    #     update_config_and_restart_mysql(context, "mysql-slave1")
+    #     update_config_and_restart_mysql(context, "mysql-slave2")
 
 def after_scenario(context, scenario):
+    mm, ss = divmod((datetime.datetime.now() - context.scenario_begin_time).total_seconds(), 60)
+    hh, mm = divmod(mm, 60)
+    logger.info('Scenario <{0}> time cost:[{1}]'.format(scenario.name, "%dh:%dm:%ds" % (hh, mm, ss)))
     logger.info('Enter hook after_scenario')
     #clear conns in case of the same name conn is used in after test cases
     for i in range(0, 10):
@@ -143,7 +147,8 @@ def after_scenario(context, scenario):
 
     if "aft_reset_replication" in scenario.tags:
         reset_repl(context)
-
+    restore_obj = RestoreEnvObject(context,scenario)
+    restore_obj.restore(context)
     # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
     stop_scenario_for_failed = context.config.stop and scenario.status == "failed"
     if not stop_scenario_for_failed and not "skip_restart" in scenario.tags and not context.userDebug:

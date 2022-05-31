@@ -238,6 +238,22 @@ def step_impl(context,filename,hostname):
     rc, stdout, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr)==0 ,"get err {0} with deleting {1}".format(stderr,filename))
 
+def update_cnf_content(context, cmd_str, filename, hostname):
+    sed_cmd_list = cmd_str.splitlines()
+    sed_cmd = "sed -i"
+    for cmd in sed_cmd_list:
+        sed_cmd += " -e '{0}'".format(cmd.strip())
+
+    sed_cmd += " {0}".format(filename)
+
+    context.logger.info("sed cmd is :{0}".format(sed_cmd))
+    if hostname.startswith('dble'):
+        ssh = get_ssh(context.dbles, hostname)
+    else:
+        ssh = get_ssh(context.mysqls, hostname)
+    rc, stdout, stderr = ssh.exec_command(sed_cmd)
+    assert_that(len(stderr) == 0, "update file content with:{1}, got err:{0}".format(stderr, sed_cmd))
+
 @Given('execute oscmd in "{hostname}"')
 def step_impl(context,hostname):
     cmd = context.text

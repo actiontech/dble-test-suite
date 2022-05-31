@@ -12,7 +12,7 @@ import yaml
 from behave import *
 from hamcrest import *
 
-from features.steps.lib.Node import Node
+from Node import Node
 
 logger = logging.getLogger('lib')
 
