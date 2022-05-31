@@ -1,12 +1,8 @@
 version: '2'
 networks:
   default:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.100.9.0/24
-          gateway: 172.100.9.253
-
+    external:
+       name: dble_test
 services:
     dble-1:
         image: dble/dble_test_general:latest
