@@ -6,7 +6,7 @@
 #2.20.04.0#dble-8174
 Feature: retry policy after xa transaction commit failed for mysql service stopped
 
-  @btrace
+  @btrace @skip
   Scenario: mysql node hangs causing xa transaction fail to commit,restart mysql node before the front end attempts to commit 5 times , #1
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
@@ -91,7 +91,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace
+  @btrace @skip
   Scenario:mysql node hangs causing xa transaction fail to commit, close background attempts, execute 'kill @@session.xa' #3
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
