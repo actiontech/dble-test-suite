@@ -19,9 +19,9 @@ void case_mysql_options4(MYSQL* conn){
 	mysql_options4(&mysql,MYSQL_OPT_CONNECT_ATTR_ADD, "key3", "value3");
 	mysql_options(&mysql,MYSQL_OPT_CONNECT_ATTR_DELETE, "key1");
 	if(IS_DEBUG){
-        mysql_real_connect(&mysql, HOST_MASTER, TEST_USER, TEST_USER_PASSWD, NULL, 0,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
+        mysql_real_connect(&mysql, HOST_MASTER, TEST_USER, TEST_USER_PASSWD, NULL, MYSQL_PORT, NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
 	}else{
-        mysql_real_connect(&mysql, HOST_DBLE, TEST_USER, TEST_USER_PASSWD, NULL, 0,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
+        mysql_real_connect(&mysql, HOST_DBLE, TEST_USER, TEST_USER_PASSWD, NULL, DBLE_PORT, NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
 	}
 
     if (&mysql == NULL) {
