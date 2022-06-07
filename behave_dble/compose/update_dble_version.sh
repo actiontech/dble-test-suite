@@ -1,10 +1,13 @@
 #!/bin/bash
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-#!/bin/bash
 set -e;
+DIR="$( cd "$( dirname "$0" )" && pwd )"
+
 #version like 2.19.09.0 or 9.9.9.9
 version=${1-"9.9.9.9"}
+ftp_user=${2}
+ftp_passwd=${3}
 old_dble_exists=0
 
 if [ -x "/opt/dble/bin/dble" ]; then
@@ -19,9 +22,9 @@ if [ -x "/opt/dble/bin/dble" ]; then
 
     rm -rf /opt/dble
 fi
-rm -rf actiontech-dble.tar.gz
-cd /opt && wget ftp://ftp:ftp@10.186.18.20/actiontech-dble/qa/${version}/actiontech-dble.tar.gz
-tar -zxf actiontech-dble.tar.gz -C /opt
+rm -rf /opt/actiontech-dble.tar.gz
+cd /opt && wget ftp://${ftp_user}:${ftp_passwd}@10.186.18.90/actiontech-dble/qa/${version}/actiontech-dble.tar.gz
+tar -zxf /opt/actiontech-dble.tar.gz -C /opt
 
 if [ ${old_dble_exists} -eq 1 ]; then
 # reuse old dble conf if exists and start dble
