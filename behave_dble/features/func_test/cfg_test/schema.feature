@@ -139,7 +139,7 @@ Feature: schema basic config test
       | sql                                                      | expect            | db      |
       | create table if not exists test(id int,name varchar(20)) | Unknown database  | schema1 |
 
-  @NORMAL
+  @NORMAL @skip
   Scenario: database configed for datanode is not created and the datanode is used by table #9
      Given delete the following xml segment
       |file        | parent          | child               |
