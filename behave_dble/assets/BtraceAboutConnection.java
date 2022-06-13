@@ -55,7 +55,9 @@ public final class BtraceAboutConnection {
 
     @OnMethod(
             clazz = "com.actiontech.dble.backend.pool.ConnectionPool",
-            location=@Location(value=Kind.LINE,line=373)
+//             location=@Location(value=Kind.LINE,line=373) for 3.22.01
+            location=@Location(value=Kind.LINE,line=378)
+
     )
     public static void evict(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         if(num2.get() == 0) {
