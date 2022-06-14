@@ -39,6 +39,10 @@ Feature: test ddl refactor
       | CONN_EXECUTE_SUCCESS | 8      |
       | META_UPDATE          | 1      |
       | EXECUTE_END          | 1      |
+    Then execute sql in "dble-1" in "user" mode
+      | sql                                | expect   | db      |
+      | drop table if exists sharding_4_t1 | success  | schema1 |
+
 
   @current
   Scenario: check warning log when the time of hang>60s   #3

@@ -12,5 +12,5 @@ cd ../
 
 if [ "$need_compare" = "-c" ]; then
     echo "comparing results..."
-    bash compare_result.sh std_sql_logs sql_logs
+    source compare_result.sh std_sql_logs sql_logs
 fi
