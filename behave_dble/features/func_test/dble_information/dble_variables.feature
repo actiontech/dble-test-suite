@@ -30,7 +30,7 @@ Feature:  dble_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(113)}     | dble_information |
+      | conn_0 | False   | select * from dble_variables    | length{(121)}     | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
@@ -150,14 +150,22 @@ Feature:  dble_variables test
       | routePenetrationRules                   |                                 | The config of route penetration.The default value is ''                                                                                                                                                              | true        |
       | enableSessionActiveRatioStat            | true                            | Whether frontend connection activity ratio statistics are enabled. The default value is 1.                                                                                                                           | true        |
       | enableConnectionAssociateThread         | true                            | Whether to open frontend connection and backend connection are associated with threads. The default value is 1.                                                                                                      | true        |
-    #case supported select limit /order by/ where like
+      | isSupportSSL                            | false                           | isSupportSSL in configuration                                                                                                                                                                                        | true        |
+      | isSupportOpenSSL                        | false                           | Whether OpenSSL is actually supported                                                                                                                                                                                | true        |
+      | serverCertificateKeyStoreUrl            | null                            | Service certificate required of OpenSSL                                                                                                                                                                              | true        |
+      | trustCertificateKeyStoreUrl             | null                            | Trust certificate required of OpenSSL                                                                                                                                                                                | true        |
+      | isSupportGMSSL                          | false                           | Whether GMSSL is actually supported                                                                                                                                                                                  | true        |
+      | gmsslBothPfx                            | null                            | National secret dual certificate/private key file in PFX format                                                                                                                                                      | true        |
+      | gmsslRcaPem                             | null                            | Root certificate of GMSSL                                                                                                                                                                                            | true        |
+      | gmsslOcaPem                             | null                            | Secondary certificate of GMSSL                                                                                                                                                                                       | true        |
+     #case supported select limit /order by/ where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                               | expect       | db               |
       | conn_0 | False   | select * from dble_variables limit 10                             | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(20)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(20)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(113)}| dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(121)}| dble_information |
   #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                             | db               |
@@ -202,7 +210,7 @@ Feature:  dble_variables test
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
       | false       | 20      |
-      | true        | 93      |
+      | true        | 101     |
 
   #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
@@ -226,8 +234,8 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('xalog',),)}   | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('',),)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(96)}         | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(94)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(104)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(102)}        | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
   #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
