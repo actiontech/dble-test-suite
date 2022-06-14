@@ -33,6 +33,7 @@ Feature: schema basic config test
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |server.xml  |{'tag':'root'}   | {'tag':'user', 'kv_map':{'name':'test'}}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
