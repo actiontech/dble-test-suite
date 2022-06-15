@@ -421,6 +421,15 @@ Feature: verify hint sql
       | conn_0 | True    | /*!dble:sql=select * from test_shard where id =1*/drop procedure if exists delete_matches                                                                            | success | schema1 |
 
   Scenario: support create function   author:maofei #10
+    #### set log_bin_trust_function_creators due to This function has none of DETERMINISTIC, NO SQL, or READS SQL DATA in its declaration and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+    Then execute sql in "mysql-master1"
+      | conn   | toClose  | sql                                                  | expect           |
+      | conn_1 | false    | set global log_bin_trust_function_creators = 1       | success          |
+      | conn_1 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'ON'),)}  |
+    Then execute sql in "mysql-master2"
+      | conn   | toClose  | sql                                                  | expect           |
+      | conn_2 | false    | set global log_bin_trust_function_creators = 1       | success          |
+      | conn_2 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'ON'),)}  |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                                                                  | expect                               | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                                                                                                                                                                                                                                                                                                   | success                              | schema1 |
@@ -451,6 +460,14 @@ Feature: verify hint sql
       | conn_0 | False   | /*#dble:shardingNode=dn1*/drop function if exists caseTest                                                                                                                                                                                                                                                                               | success                              | schema1 |
       | conn_0 | False   | /*#dble:shardingNode=dn1*/create function caseTest(str varchar(5),num int) returns int begin case str when 'power' then set @result=power(num,2); when 'ceil' then set @result=ceil(num); when 'floor' then set @result=floor(num); when 'round' then set @result=round(num); else set @result=0; end case; return (select @result); end | success                              | schema1 |
       | conn_0 | True    | /*#dble:shardingNode=dn1*/select caseTest('power',2)                                                                                                                                                                                                                                                                                     | success                              | schema1 |
+    Then execute sql in "mysql-master1"
+      | conn   | toClose  | sql                                                  | expect           |
+      | conn_1 | false    | set global log_bin_trust_function_creators = 0       | success          |
+      | conn_1 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'OFF'),)}  |
+    Then execute sql in "mysql-master2"
+      | conn   | toClose  | sql                                                  | expect           |
+      | conn_2 | false    | set global log_bin_trust_function_creators = 0       | success          |
+      | conn_2 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'OFF'),)}  |
 
   @run
   Scenario: support dble import/export by using GUI  author:wujinling,2019.09.19 #11
