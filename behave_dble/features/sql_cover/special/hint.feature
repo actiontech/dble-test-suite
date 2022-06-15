@@ -514,13 +514,13 @@ Feature: verify hint sql
   Scenario: support create function   author:maofei #10
     #### set log_bin_trust_function_creators due to This function has none of DETERMINISTIC, NO SQL, or READS SQL DATA in its declaration and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
     Then execute sql in "mysql-master1"
-      | conn   | toClose  | sql                                                  | expect           |
-      | conn_1 | true     | set global log_bin_trust_function_creators = 1       | success          |
-      | conn_2 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'ON'),)}  |
+      | user | passwd | conn   | toClose  | sql                                                  | expect                                             | db  |
+      | test | 111111 | conn_1 | true     | set global log_bin_trust_function_creators = 1       | success                                            | db1 |
+      | test | 111111 | conn_2 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'ON'),)}  | db1 |
     Then execute sql in "mysql-master2"
-      | conn   | toClose  | sql                                                  | expect           |
-      | conn_1 | true     | set global log_bin_trust_function_creators = 1       | success          |
-      | conn_2 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'ON'),)}  |
+      | user | passwd | conn   | toClose  | sql                                                  | expect                                             | db  |
+      | test | 111111 | conn_1 | true     | set global log_bin_trust_function_creators = 1       | success                                            | db1 |
+      | test | 111111 | conn_2 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'ON'),)}  | db1 |
 
     Then execute sql in "dble-1" in "test" mode
       | user | passwd | conn   | toClose | sql                                                                                                                                                                                                                                                                                                                                  | expect                               | db      |
@@ -554,13 +554,13 @@ Feature: verify hint sql
       | test | 111111 | conn_0 | True    | /*#dble:datanode=dn1*/select caseTest('power',2)                                                                                                                                                                                                                                                                                     | success                              | schema1 |
 
     Then execute sql in "mysql-master1"
-      | conn   | toClose  | sql                                                  | expect           |
-      | conn_1 | true     | set global log_bin_trust_function_creators = 0       | success          |
-      | conn_2 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'OFF'),)}  |
+      | user | passwd | conn   | toClose  | sql                                                  | expect                                              | db  |
+      | test | 111111 | conn_1 | true     | set global log_bin_trust_function_creators = 0       | success                                             | db1 |
+      | test | 111111 | conn_2 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'OFF'),)}  | db1 |
     Then execute sql in "mysql-master2"
-      | conn   | toClose  | sql                                                  | expect           |
-      | conn_1 | true     | set global log_bin_trust_function_creators = 0       | success          |
-      | conn_2 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'OFF'),)}  |
+      | user | passwd | conn   | toClose  | sql                                                  | expect                                              | db  |
+      | test | 111111 | conn_1 | true     | set global log_bin_trust_function_creators = 0       | success                                             | db1 |
+      | test | 111111 | conn_2 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'OFF'),)}  | db1 |
 
   @run
   Scenario: support dble import/export by using GUI  author:wujinling,2019.09.19 #11

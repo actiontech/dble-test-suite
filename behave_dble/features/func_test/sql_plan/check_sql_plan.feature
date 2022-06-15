@@ -71,6 +71,17 @@ Feature: check sql plan
 
   # DBLE0REQ-1504
   Scenario: The parentheses of the or condition are missing, thus changing the semantics of the condition and eventually causing duplication of results   #2
+    Given delete the following xml segment
+      | file       | parent         | child              |
+      | schema.xml | {'tag':'root'} | {'tag':'schema'}   |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <schema name="schema1" sqlMaxLimit="100">
+      <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two" />
+      <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
+    </schema>
+    """
+    Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                                                                                                                                                                                                            | db      | expect  |
       | test | 111111 | conn_0 | false   | drop table if exists test                                                                                                                                                                                                                                                                                      | schema1 | success |
