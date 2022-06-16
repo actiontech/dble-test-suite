@@ -30,11 +30,11 @@ Feature: about ddl metalock test
 
     #make sure other session execute ddl failed no matter how many times when other session is obtain metalock
     Then execute sql in "dble-1" in "user" mode
-      |conn  | toClose | sql                                   | db      | expect                                                                                      |
-      |conn_2| False   |truncate table sharding_2_t1           | schema1 | SCHEMA[schema1], TABLE[sharding_2_t1] is doing DDL, sql: truncate table sharding_2_t1.      |
-      |conn_2| False   |truncate table sharding_2_t1           | schema1 | SCHEMA[schema1], TABLE[sharding_2_t1] is doing DDL, sql: truncate table sharding_2_t1.      |
-      |conn_2| False   |truncate table sharding_2_t1           | schema1 | SCHEMA[schema1], TABLE[sharding_2_t1] is doing DDL, sql: truncate table sharding_2_t1.      |
-      |conn_2| False   |truncate table sharding_2_t1           | schema1 | SCHEMA[schema1], TABLE[sharding_2_t1] is doing DDL, sql: truncate table sharding_2_t1.      |
+      |conn  | toClose | sql                                   | db      | expect                                                  |
+      |conn_2| False   |truncate table sharding_2_t1           | schema1 | SCHEMA[schema1], TABLE[sharding_2_t1] is doing DDL.     |
+      |conn_2| False   |truncate table sharding_2_t1           | schema1 | SCHEMA[schema1], TABLE[sharding_2_t1] is doing DDL.     |
+      |conn_2| False   |truncate table sharding_2_t1           | schema1 | SCHEMA[schema1], TABLE[sharding_2_t1] is doing DDL.     |
+      |conn_2| False   |truncate table sharding_2_t1           | schema1 | SCHEMA[schema1], TABLE[sharding_2_t1] is doing DDL.     |
     #make sure btrace time over
     Given sleep "5" seconds
 
