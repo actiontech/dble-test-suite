@@ -73,7 +73,6 @@ public class ClobSample extends InterfaceTest{
 				dble_clob = dble_rs.getClob(1);
 				String mysql_str = mysql_clob.getSubString(1, (int)mysql_clob.length());
 				String dble_str = dble_clob.getSubString(1, (int)dble_clob.length());
-				System.out.println(dble_str);
 				if(!mysql_str.equals(dble_str)){
 					print_debug("mysql:"+mysql_str);
 					print_debug("dble:"+dble_str);
