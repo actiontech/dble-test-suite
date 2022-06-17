@@ -63,6 +63,13 @@ Feature: test ddl refactor
     Then check result "rs_A" value is "1"
     Then get index:"0" column value of "show @@session" named as "id_A"
     Then kill dble front connection "id_A" in "dble-1" with manager command
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "Front_id_A"
+      | sql            |
+      | show @@session |
+    Then check resultset "Front_id_A" has not lines with following column values
+      | FRONT_ID-1 |
+      | 2          |
+
     Then get result of oscmd named "rs_B" in "dble-1"
     """
     cat /opt/dble/logs/dble.log |grep WARN|grep "THIS DDL EXECUTE FOR TOO LONG" |wc -l
