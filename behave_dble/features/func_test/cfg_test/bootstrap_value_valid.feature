@@ -275,7 +275,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       | show @@sysparam |
     Then check resultset "sysparam_rs" has lines with following column values
       | PARAM_NAME-0  | PARAM_VALUE-1 |
-      | maxPacketSize | 6291456       |
+      | maxPacketSize | 5000000       |
 
     #case 3  max_packet_size > max_allowed_packet
     Given stop dble in "dble-1"
@@ -304,7 +304,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       | show @@sysparam |
     Then check resultset "sysparam_rs" has lines with following column values
       | PARAM_NAME-0  | PARAM_VALUE-1 |
-      | maxPacketSize | 8000000       |
+      | maxPacketSize | 6291456       |
 
   Scenario: homePath and viewPersistenceConfBaseDir in bootstrap.cnf, restart dble and check paths #9
     Given I remove path "/opt/logs/view_logs" in "dble-1" if exist
