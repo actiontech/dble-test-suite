@@ -207,8 +207,8 @@ def stop_dble_in_node(context, node):
         #rc1, sto1, ste1 = ssh_client.exec_command(stop_dble_cmd)
         #assert_that(len(ste1) == 0, "stop dble fail for:{0}".format(ste1))
 
-        cmd_guard = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $3}' | xargs kill -9"
-        cmd_core = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | xargs kill -9"
+        cmd_guard = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $3}' | xargs -r kill -9"
+        cmd_core = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | xargs -r kill -9"
         rc1, sto1, ste1 = ssh_client.exec_command(cmd_guard)
         rc2, sto2, ste2 = ssh_client.exec_command(cmd_core)
         assert_that(len(ste1)==0 and len(ste2)==0, "kill dble process fail for:{0},{1}".format(ste1,ste2))
