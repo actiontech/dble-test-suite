@@ -14,8 +14,9 @@ services:
         command: ["dble","1"]
         volumes:
             - /opt/dble-1:/init_assets
-            - /opt/share:/share
+            - /share:/share
         ports:
+            - "7121:9066"
             - "7131:8066"
             - "7141:3306"
             - "7151:22"
@@ -34,8 +35,9 @@ services:
         command: ["dble","2"]
         volumes:
             - /opt/dble-2:/init_assets
-            - /opt/share:/share
+            - /share:/share
         ports:
+            - "7122:9066"
             - "7132:8066"
             - "7142:3306"
             - "7152:22"
@@ -54,8 +56,9 @@ services:
         command: ["dble","3"]
         volumes:
             - /opt/dble-3:/init_assets
-            - /opt/share:/share
+            - /share:/share
         ports:
+            - "7123:9066"
             - "7133:8066"
             - "7143:3306"
             - "7153:22"
@@ -74,7 +77,7 @@ services:
         command: ["mysql","4"]
         volumes:
             - /opt/mysql:/init_assets
-            - /opt/share:/share
+            - /share:/share
         ports:
             - "7144:3306"
             - "7154:22"
@@ -93,7 +96,7 @@ services:
         tty: true
         volumes:
             - /opt/mysql-master1:/init_assets
-            - /opt/share:/share
+            - /share:/share
         ports:
             - "7145:3306"
             - "7155:22"
@@ -112,7 +115,7 @@ services:
         tty: true
         volumes:
             - /opt/mysql-master2:/init_assets
-            - /opt/share:/share
+            - /share:/share
         ports:
             - "7146:3306"
             - "7156:22"
@@ -121,33 +124,33 @@ services:
               ipv4_address: 172.100.9.6
         dns: 114.114.114.114
         working_dir: /opt
-    c-plus-driver:
-        image: dble/dble_test_driver:latest
-        container_name: driver-test
-        hostname: driver-test
-        privileged: true
-        stdin_open: true
-        tty: true
-        volumes:
-            - /opt/c-plus-driver:/init_assets
-            - /opt/share:/share
-        networks:
-            default:
-              ipv4_address: 172.100.9.7
-        dns: 114.114.114.114
-        working_dir: /opt
-    behave:
-        image: dble/dble_test_client:latest
-        container_name: behave
-        hostname: behave
-        privileged: true
-        stdin_open: true
-        tty: true
-        volumes:
-            - /opt/behave:/init_assets
-            - /opt/share:/share
-        networks:
-            default:
-              ipv4_address: 172.100.9.8
-        dns: 114.114.114.114
-        working_dir: /init_assets
+#    c-plus-driver:
+#        image: dble/dble_test_driver:latest
+#        container_name: driver-test
+#        hostname: driver-test
+#        privileged: true
+#        stdin_open: true
+#        tty: true
+#        volumes:
+#            - /opt/c-plus-driver:/init_assets
+#            - /opt/share:/share
+#        networks:
+#            default:
+#              ipv4_address: 172.100.9.7
+#        dns: 114.114.114.114
+#        working_dir: /opt
+#    behave:
+#        image: dble/dble_test_client:latest
+#        container_name: behave
+#        hostname: behave
+#        privileged: true
+#        stdin_open: true
+#        tty: true
+#        volumes:
+#            - /opt/behave:/init_assets
+#            - /opt/share:/share
+#        networks:
+#            default:
+#              ipv4_address: 172.100.9.8
+#        dns: 114.114.114.114
+#        working_dir: /init_assets

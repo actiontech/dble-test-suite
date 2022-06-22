@@ -79,7 +79,8 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then datatime "t2" plus start_time "sysTime" to get "t3"
     Then check time "ts_time" equal to "t3"
 
-  @skip_restart @restore_sys_time
+    #skip reason: http://10.186.18.11/confluence/pages/viewpage.action?pageId=34784054
+ @skip @restore_sys_time
   Scenario: when "system time" less than "start time + 17years", execute insert sql will error #2
     Then get resultset of user cmd "select sysdate()" named "curTime"
     When connect ssh execute cmd "date -s 2009/01/01"

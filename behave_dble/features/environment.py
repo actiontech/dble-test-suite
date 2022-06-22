@@ -101,6 +101,7 @@ def after_all(context):
     logger.info('*' * 30)
 
 def before_feature(context, feature):
+    context.feature_begin_time = datetime.datetime.now()
     logger.info('*' * 30)
     logger.info('Feature start: <{0}>'.format(feature.name))
 
@@ -111,7 +112,10 @@ def before_feature(context, feature):
             context.execute_steps(desc)
 
 def after_feature(context, feature):
-    logger.info('Feature end: <{0}>'.format(feature.name))
+    mm, ss = divmod((datetime.datetime.now() - context.feature_begin_time).total_seconds(), 60)
+    hh, mm = divmod(mm, 60)
+    logger.info('feature <{0}> time cost:[{1}]'.format(feature.filename, "%dh:%dm:%ds" % (hh, mm, ss)))
+    logger.info('Feature end: <{0}><{1}>'.format(feature.filename,feature.name))
     logger.info('*' * 30)
 
 def before_scenario(context, scenario):

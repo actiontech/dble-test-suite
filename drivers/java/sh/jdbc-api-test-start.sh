@@ -5,7 +5,7 @@
 echo '=======          copy sys.config         ======='
 cp ../../java-interface/JDBCInterfaceTest/sys.config ../
 echo '=======            package               ======='
-cd ../../jdbc-api-test && /usr/local/apache-maven-3.6.3/bin/mvn -DskipTest clean package assembly:assembly
+cd ../../jdbc-api-test && /usr/local/apache-maven/bin/mvn -DskipTest clean package assembly:assembly
 echo '=======    copy jdbc_api_test-1.0-jar-with-dependencies.jar    ======='
 cp target/jdbc_api_test-1.0-jar-with-dependencies.jar ../java
 echo '=======     start jdbc_api_test          ======='
