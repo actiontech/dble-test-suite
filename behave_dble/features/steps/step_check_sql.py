@@ -30,6 +30,7 @@ current_thread_tag = []
 def get_log_linenu(context):
     logpath = get_full_log_path(context)
     cmd = "wc -l %s | awk '{print $1}'" % logpath
+    context.logger.info("start exec command=== ")
     re, sdo, sdr = context.ssh_client.exec_command(cmd)
     context.logger.info("log lines: {0}".format(sdo))
     context.log_linenu = sdo.strip()
