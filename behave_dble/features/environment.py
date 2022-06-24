@@ -1,7 +1,7 @@
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import logging
-
+import datetime
 from steps.RestoreEnvObject import RestoreEnvObject
 from steps.lib.DbleMeta import DbleMeta
 from steps.lib.MySQLMeta import MySQLMeta
@@ -92,6 +92,7 @@ def after_all(context):
     logger.info('*' * 30)
 
 def before_feature(context, feature):
+    context.feature_begin_time = datetime.datetime.now()
     logger.info('*' * 30)
     logger.info('Feature start: <{0}><{1}>'.format(feature.filename,feature.name))
 
@@ -102,14 +103,21 @@ def before_feature(context, feature):
             context.execute_steps(desc)
 
 def after_feature(context, feature):
+    mm, ss = divmod((datetime.datetime.now() - context.feature_begin_time).total_seconds(), 60)
+    hh, mm = divmod(mm, 60)
+    logger.info('feature <{0}> time cost:[{1}]'.format(feature.filename, "%dh:%dm:%ds" % (hh, mm, ss)))
     logger.info('Feature end: <{0}><{1}>'.format(feature.filename,feature.name))
     logger.info('*' * 30)
 
 def before_scenario(context, scenario):
+    context.scenario_begin_time = datetime.datetime.now()
     logger.info('#' * 30)
     logger.info('Scenario start: <{0}>'.format(scenario.name))
 
 def after_scenario(context, scenario):
+    mm, ss = divmod((datetime.datetime.now() - context.scenario_begin_time).total_seconds(), 60)
+    hh, mm = divmod(mm, 60)
+    logger.info('Scenario <{0}> time cost:[{1}]'.format(scenario.name, "%dh:%dm:%ds" % (hh, mm, ss)))
     logger.info('Enter hook after_scenario')
     #clear conns in case of the same name conn is used in after test cases
     for i in range(0, 10):

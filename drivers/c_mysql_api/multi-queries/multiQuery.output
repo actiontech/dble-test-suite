@@ -45,7 +45,7 @@ field 0: schema1             , length:7
 =====sql index 2 result: =====
 result field 0:  USER()
 Number of rows 1
-field 0: test@172.100.9.7    , length:16
+field 0: test@172.100.9.8    , length:16
         More results exist
 =====sql index 3 result: =====
 result field 0:  @@session.auto_increment_increment
