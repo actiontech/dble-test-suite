@@ -14,16 +14,19 @@ class SSHClient(Logging):
         self._ssh = None
 
     def connect(self):
-        self.logger.info('Create ssh client for ip <{0}>'.format(self._host))
+        self.logger.debug('Create ssh client for ip <{0}>'.format(self._host))
         self._ssh = paramiko.SSHClient()
         self._ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         self._ssh.connect(self._host, port=22, username=self._user, password=self._password, timeout=60)
 
     def exec_command(self, command, timeout=60):
+        self.logger.debug("start to exec cmd: {}".format(command))
         stdin, stdout, stderr = self._ssh.exec_command(command, timeout=timeout)
+        self.logger.debug("start to recv status: {}".format(command))
         rc = stdout.channel.recv_exit_status()
-        sto = stdout.read().strip('\n')
-        ste = stderr.read().strip('\n')
+        self.logger.debug("end recv status: {}".format(command))
+        sto = stdout.read().decode().strip('\n')
+        ste = stderr.read().decode().strip('\n')
         self.logger.debug('<{0}>: Execute command: <{1}> '
                           'Return code <{2}>, Stdout[0:200]: <{3}>, Stderr <{4}>'.format(self._host, command, rc, sto[0:200], ste))
         return rc, sto, ste
