@@ -22,9 +22,7 @@ class SSHClient(Logging):
     def exec_command(self, command, timeout=60):
         self.logger.debug("start to exec cmd: {}".format(command))
         stdin, stdout, stderr = self._ssh.exec_command(command, timeout=timeout)
-        self.logger.debug("start to recv status: {}".format(command))
         rc = stdout.channel.recv_exit_status()
-        self.logger.debug("end recv status: {}".format(command))
         sto = stdout.read().decode().strip('\n')
         ste = stderr.read().decode().strip('\n')
         self.logger.debug('<{0}>: Execute command: <{1}> '
