@@ -28,7 +28,7 @@ Feature: heartbeat basic test
     """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="4" minCon="3" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.1:3306" user="test" maxCon="4" minCon="3" primary="true">
            <property name="heartbeatPeriodMillis">2000</property>
         </dbInstance>
      </dbGroup>
@@ -54,11 +54,11 @@ Feature: heartbeat basic test
       | show @@backend |
     Then check resultset "rs_A" has lines with following column values
       | HOST-3       | USED_FOR_HEARTBEAT-22    |
-      | 172.100.9.5  | false                     |
-      | 172.100.9.5  | false                     |
-      | 172.100.9.5  | false                     |
-      | 172.100.9.5  | false                     |
-      | 172.100.9.5  | true                      |
+      | 172.100.9.1  | false                     |
+      | 172.100.9.1  | false                     |
+      | 172.100.9.1  | false                     |
+      | 172.100.9.1  | false                     |
+      | 172.100.9.1  | true                      |
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql              | expect  | db       |
      | test | 111111 | conn_1 | True     | commit           | success | schema1  |

@@ -30,10 +30,11 @@ class SSHClient(Logging):
         return rc, sto, ste
 
     def close(self):
-        self.logger.info('<{0}>: close ssh client'.format(self._host))
-        if self._ssh:
+        if self._ssh is not None:
             self._ssh.close()
-
+            self.logger.debug(f'close ssh client: <{self._host}>')
+        else:
+            self.logger.debug(f'ssh client is already closed: <{self._host}>')
 
 
 class SFTPClient(Logging):
