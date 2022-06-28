@@ -4,16 +4,24 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-behave = "==1.2.6"
 mysqlclient = "==1.4.2"
-allure-behave = "==2.8.0"
-paramiko = "==2.11.0"
-lxml = "==4.2.5"
-cryptography = ">=2.4.2"
-PyYAML = ">=4.2b1"
-PyHamcrest = "==1.9.0"
+behave = "==1.2.6"
+environs = "*"
+paramiko = "==2.4.2"
+pyhamcrest = "*"
+pymysql = "*"
+pyyaml = "*"
+allure-behave = "*"
+lxml = "*"
+pip = "*"
+cryptography = "==2.3.0"
 
 [dev-packages]
+pylint = "*"
+types-paramiko = "*"
+types-PyMySQL = "*"
+types-PyYAML = "*"
+autopep8 = "*"
 
 [requires]
 python_version = "2.7"
