@@ -462,8 +462,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given execute admin cmd "dbGroup @@enable name='ha_group1'" success
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
-  @skip  @restore_mysql_service
-    ## due to issue:960
+  @restore_mysql_service
   Scenario: if global var detect query failed at heartbeat restore, the heartbeat restore failed #14
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
@@ -476,10 +475,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     heartbeat to \[172.100.9.5:3307\] setError
     """
     Given prepare a thread run btrace script "BtraceSelectGlobalVars1.java" in "dble-1"
-#    sleep 2s for wait btrace in working
-    Given sleep "2" seconds
     Given prepare a thread run btrace script "BtraceSelectGlobalVars2.java" in "dble-1"
-    Given sleep "2" seconds
     Given record current dble log line number in "log_linenu"
     Given start mysql in host "mysql-master1"
 #    run into this btrace code means heartbeat of mysql-master1 has recover success then try to send global var detect query and be blocked 3s by btrace
