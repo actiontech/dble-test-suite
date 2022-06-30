@@ -35,7 +35,7 @@ cfg_server:
 cfg_dble:
   single:
     dble-1:
-      ip: 172.100.9.11
+      ip: 172.100.9.1
       hostname: dble-1
       install_dir: /opt
       client_user: test
@@ -46,7 +46,7 @@ cfg_dble:
       manager_port: 9066
   cluster:
     dble-1:
-      ip: 172.100.9.11
+      ip: 172.100.9.1
       hostname: dble-1
       install_dir: /opt
       conf_dir: dble_conf/
@@ -57,7 +57,7 @@ cfg_dble:
       manager_password: 111111
       manager_port: 9066
     dble-2:
-      ip: 172.100.9.12
+      ip: 172.100.9.2
       hostname: dble-2
       install_dir: /opt
       conf_dir: dble_conf/
@@ -68,7 +68,7 @@ cfg_dble:
       manager_password: 111111
       manager_port: 9066
     dble-3:
-      ip: 172.100.9.13
+      ip: 172.100.9.3
       hostname: dble-3
       install_dir: /opt
       conf_dir: dble_conf/
@@ -84,7 +84,7 @@ cfg_dble:
 cfg_mysql:
   group1:
     inst-1:
-      ip: 172.100.9.1
+      ip: 172.100.9.5
       port: 3306
       hostname: mysql-master1
       user: test
@@ -173,8 +173,8 @@ cfg_zookeeper:
   home: /opt/zookeeper
   port: 2181
   zookeeper-1:
-    ip: 172.100.9.21
+    ip: 172.100.9.1
   zookeeper-2:
-    ip: 172.100.9.22
+    ip: 172.100.9.2
   zookeeper-3:
-    ip: 172.100.9.23
+    ip: 172.100.9.3

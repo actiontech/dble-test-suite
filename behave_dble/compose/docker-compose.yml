@@ -27,7 +27,7 @@ services:
       - 13306:3306
     networks:
       dble-net:
-        ipv4_address: 172.100.9.1
+        ipv4_address: 172.100.9.5
         ipv6_address: 2001::1
     volumes:
       - mysql_1_cgroup:/sys/fs/cgroup
@@ -76,7 +76,7 @@ services:
     tty: true
     networks:
       dble-net:
-        ipv4_address: 172.100.9.11
+        ipv4_address: 172.100.9.1
         ipv6_address: 2001::11
     volumes:
       - dble_1_cgroup:/sys/fs/cgroup
