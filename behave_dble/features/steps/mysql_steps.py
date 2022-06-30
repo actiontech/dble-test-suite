@@ -89,7 +89,7 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
 
     pre_delegater = PreQueryPrepare(query_meta)
     pre_delegater.prepare()
-
+    logger.info('query_meta is {}'.format(query_meta))
     res, err, time_cost = obj.do_execute_query(query_meta)
 
     post_delegater = PostQueryCheck(res, err, time_cost, query_meta)

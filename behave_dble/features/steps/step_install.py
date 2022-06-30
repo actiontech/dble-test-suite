@@ -211,7 +211,7 @@ def start_dble_in_node(context, node, expect_success=True):
             for row in expect_err_info.splitlines():
                 cmd = "grep -i \"{0}\" /opt/dble/logs/wrapper.log | wc -l".format(row.strip())
                 rc, sto, ste = node.ssh_conn.exec_command(cmd)
-                assert_that(str(sto).strip() is not "0", "expect dble restart failed for {0}".format(row))
+                assert_that(str(sto).strip() != "0", "expect dble restart failed for {0}".format(row))
 
 
 def check_dble_started(context, node):
@@ -274,14 +274,14 @@ def stop_dble_in_node(context, node):
         # stop_dble_cmd="{0}/dble/bin/dble stop".format(dble_install_path)
         # rc1, sto1, ste1 = ssh_client.exec_command(stop_dble_cmd)
         # assert_that(len(ste1) == 0, "stop dble fail for:{0}".format(ste1))
-        cmd_kill_guard = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $3}' | xargs kill -9"
+        cmd_kill_guard = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $3}' | xargs -r kill -9"
         rc1, sto1, ste1 = ssh_client.exec_command(cmd_kill_guard)
 
         dble_core_pid = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | wc -l"
         rc2, sto2, ste2 = ssh_client.exec_command(dble_core_pid)
         dble_core_exist = str(sto2) == '1'
         if dble_core_exist:
-            cmd_kill_core = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | xargs kill -9"
+            cmd_kill_core = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | xargs -r kill -9"
             rc3, sto3, ste3 = ssh_client.exec_command(cmd_kill_core)
         else:
             ste3 = ''

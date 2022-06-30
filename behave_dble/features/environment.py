@@ -3,13 +3,13 @@
 import logging
 import os
 import configparser
-
+from pprint import pformat
 from steps.RestoreEnvObject import RestoreEnvObject
 from steps.lib.DbleMeta import DbleMeta
 from steps.lib.MySQLMeta import MySQLMeta
 from steps.lib.MySQLObject import MySQLObject
 from steps.lib.DbleObject import DbleObject
-from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,reset_repl, get_sftp,get_ssh
+from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,reset_repl, get_sftp,get_ssh, create_ssh_client,init_log_directory
 from steps.mysql_steps import restart_mysql
 from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
@@ -37,6 +37,8 @@ def config_env_vars(context, key_list):
 
 
 def before_all(context):
+    context.current_log = init_log_directory()
+
     setup_logging('./conf/logging.yaml')
     steps_logger = logging.getLogger('root')
     context.logger = steps_logger
@@ -55,16 +57,17 @@ def before_all(context):
     context.userDebug = context.config.userdata["user_debug"].lower() == "true"
     context.is_cluster = context.config.userdata["is_cluster"].lower() == "true"
     if context.is_cluster:
-        init_meta(context, "dble_cluster")
+        init_meta(context, "cluster")
     else:
-        init_meta(context, "dble")
+        init_meta(context, "single")
         for node in DbleMeta.dbles:
             disable_cluster_config_in_node(context, node)
 
+    
     init_meta(context, "mysqls")
-    context.ssh_client = get_ssh(context.cfg_dble['dble']['hostname'])
-    context.ssh_sftp = get_sftp(context.cfg_dble['dble']['hostname'])
-
+    context.ssh_clients = create_ssh_client(context)
+    context.ssh_sftp = get_sftp(context.cfg_dble['single']['dble-1']['hostname'])
+    context.ssh_sftp = get_sftp(context.cfg_dble['single']['dble-1']['hostname'])
     try:
         para_dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
@@ -106,7 +109,7 @@ def after_all(context):
             node.ssh_conn.close()
 
     logger.info('*' * 30)
-    logger.info('*       Exit hook after_all， DBLE TEST END        *')
+    logger.info('*       Exit hook after_all, DBLE TEST END        *')
     logger.info('*' * 30)
 
 def before_feature(context, feature):
