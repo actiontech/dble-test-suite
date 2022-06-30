@@ -98,7 +98,7 @@ Feature:  dble_db_instance table test
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="M2" password="MmQ1VfdjVK4VbF7z7WXQ1Zj81wN7EDHJmwwZO9MA2q5RK8rs+fT2Zjy/3XdOyutXRcSLhTqJsAQs1A1M2ww8Pw=="
-             usingDecrypt="true" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
+             usingDecrypt="true" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -196,7 +196,7 @@ Feature:  dble_db_instance table test
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="M2" password="MmQ1VfdjVK4VbF7z7WXQ1Zj81wN7EDHJmwwZO9MA2q5RK8rs+fT2Zjy/3XdOyutXRcSLhTqJsAQs1A1M2ww8Pw=="
-             usingDecrypt="true" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
+             usingDecrypt="true" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """

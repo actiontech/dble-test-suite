@@ -227,7 +227,7 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn_9 | true    | drop table if exists sharding_4_t1  | success | schema1 |
     Then restart dble in "dble-1" failed for
     """
-    Suspected residual xa transaction, in the DbInstanceConfig [[]hostName=hostM2, url=172.100.9.6:3307[]], have:
+    Suspected residual xa transaction, in the DbInstanceConfig [[]hostName=hostM2, url=172.100.9.2:3306[]], have:
     Dble_Server.abc.2
     Dble_Server.abc.2.db1
     Dble_Server.abc.1

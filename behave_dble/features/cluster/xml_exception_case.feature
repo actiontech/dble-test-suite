@@ -27,9 +27,9 @@ Feature: test xml
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
         <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10"/>
-        <dbInstance name="hostS2" password="111111" url="172.100.9.3:3307" user="test" maxCon="1000" minCon="10"/>
+        <dbInstance name="hostS2" password="111111" url="172.100.9.2:3308" user="test" maxCon="1000" minCon="10"/>
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"

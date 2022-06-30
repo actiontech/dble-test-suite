@@ -57,7 +57,7 @@ Feature: We will check readonly status on both master and slave even if the hear
 
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
          <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
+         <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true">
          </dbInstance>
      </dbGroup>
 
@@ -111,7 +111,7 @@ Feature: We will check readonly status on both master and slave even if the hear
 
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
          <heartbeat>select 1</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" disabled="true" minCon="10" primary="true">
+         <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" disabled="true" minCon="10" primary="true">
          </dbInstance>
      </dbGroup>
 
@@ -147,7 +147,7 @@ Feature: We will check readonly status on both master and slave even if the hear
 
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
          <heartbeat>show slave status</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" disabled="false" minCon="10" primary="true">
+         <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" disabled="false" minCon="10" primary="true">
          </dbInstance>
      </dbGroup>
 
@@ -187,7 +187,7 @@ Feature: We will check readonly status on both master and slave even if the hear
 
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
          <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
+         <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true">
          </dbInstance>
      </dbGroup>
 
@@ -270,7 +270,7 @@ Feature: We will check readonly status on both master and slave even if the hear
 
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
          <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
+         <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true">
          </dbInstance>
      </dbGroup>
 
@@ -311,9 +311,9 @@ Feature: We will check readonly status on both master and slave even if the hear
 
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
          <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
+         <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true">
          </dbInstance>
-         <dbInstance name="hosts2" password="111111" url="172.100.9.3:3307" user="test" maxCon="1000" minCon="10" primary="false">
+         <dbInstance name="hosts2" password="111111" url="172.100.9.2:3308" user="test" maxCon="1000" minCon="10" primary="false">
          </dbInstance>
      </dbGroup>
 
@@ -365,10 +365,10 @@ Feature: We will check readonly status on both master and slave even if the hear
 
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
          <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
+         <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true">
              <property name="heartbeatPeriodMillis">1000</property>
          </dbInstance>
-         <dbInstance name="hosts2" password="111111" url="172.100.9.3:3307" user="test" maxCon="1000" minCon="10" primary="false">
+         <dbInstance name="hosts2" password="111111" url="172.100.9.2:3308" user="test" maxCon="1000" minCon="10" primary="false">
              <property name="heartbeatPeriodMillis">100</property>
          </dbInstance>
      </dbGroup>
@@ -497,10 +497,10 @@ Feature: We will check readonly status on both master and slave even if the hear
 
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
          <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
+         <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true">
              <property name="heartbeatPeriodMillis">1000</property>
          </dbInstance>
-         <dbInstance name="hosts2" password="111111" url="172.100.9.3:3307" user="test" maxCon="1000" minCon="10" primary="false">
+         <dbInstance name="hosts2" password="111111" url="172.100.9.2:3308" user="test" maxCon="1000" minCon="10" primary="false">
              <property name="heartbeatPeriodMillis">100</property>
          </dbInstance>
      </dbGroup>

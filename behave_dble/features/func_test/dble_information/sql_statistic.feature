@@ -19,7 +19,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM3" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
+      <dbInstance name="hostM3" password="111111" url="172.100.9.10:3306" user="test" maxCon="100" minCon="10" primary="true" />
       <dbInstance name="hostS3" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
@@ -324,7 +324,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM3" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
+      <dbInstance name="hostM3" password="111111" url="172.100.9.10:3306" user="test" maxCon="100" minCon="10" primary="true" />
       <dbInstance name="hostS3" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
@@ -821,7 +821,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3306" user="test" maxCon="100" minCon="10" primary="true" />
         <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
@@ -1277,7 +1277,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM3" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
+      <dbInstance name="hostM3" password="111111" url="172.100.9.10:3306" user="test" maxCon="100" minCon="10" primary="true" />
       <dbInstance name="hostS3" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """

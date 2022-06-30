@@ -25,7 +25,7 @@ Feature: Deploy DBLE test environment
     Then Start dble in "dble-1"
 
 
-#   @use.with_dble_topo=cluster
+  @use.with_dble_topo=cluster
   # Scenario: Initialize the cluster DBLE
   #   Given I clean dble deploy environment
   #   Given I install dble cluster

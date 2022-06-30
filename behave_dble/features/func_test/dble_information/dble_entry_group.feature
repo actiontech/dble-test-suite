@@ -40,7 +40,7 @@ Feature:  dble_entry test
      </dbGroup>
      <dbGroup rwSplitMode="0" name="dbGroup4" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM4" password="111111" url="172.100.9.3:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM4" password="111111" url="172.100.9.2:3308" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
      </dbGroup>
      """
