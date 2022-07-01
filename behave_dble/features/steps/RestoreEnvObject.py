@@ -135,7 +135,6 @@ class RestoreEnvObject(object):
 
             for host_name in paras.keys():
                 logger.debug("try to delete_mysql_tables of mysqls: {0}".format(host_name))
-                ssh = get_ssh(host_name)
 
                 if host_name.find("dble") != -1:
                     mode = "user"
@@ -143,20 +142,12 @@ class RestoreEnvObject(object):
                     mode = "mysql"
                 logger.debug("the value of host_name is: {0}, mode: {1}".format(host_name, mode))
 
-                # in case of program exits unexpected, tables.txt Residue in /tmp
-                rc, stdout, stderr = ssh.exec_command("find /tmp -name tables.txt")
-                if len(stdout) > 0:
-                    ssh.exec_command("rm -rf /tmp/tables.txt")
-
                 for database in paras[host_name]:
-                    generate_drop_tables_sql = "select concat('drop table if exists ',table_name,';') from information_schema.TABLES where table_schema='{0}' into outfile '/tmp/tables.txt'".format(database)
-                    execute_sql_in_host(host_name, {"sql": generate_drop_tables_sql}, mode)
-
-                    # MySQLDB not support source grammar,replace with ssh cmd
-                    rc, stdout, stderr = ssh.exec_command("mysql -uroot -p111111 -D{0} -e 'source /tmp/tables.txt'".format(database))
-                    stderr = stderr.lower()
-                    assert stderr.find("error") == -1, "deletet mysql in {0}:{1} failed, err: {2}".format(host_name, database, stderr)
-                    ssh.exec_command("rm -rf /tmp/tables.txt")
+                    generate_drop_tables_sql = "select concat('drop table if exists ',table_schema,'.',table_name,';') from information_schema.TABLES where table_schema='{0}'".format(database)
+                    res, err = execute_sql_in_host(host_name, {"sql": generate_drop_tables_sql}, mode)
+                    for sql_element in res:
+                        drop_table_sql = sql_element[0]
+                        execute_sql_in_host(host_name, {"sql": drop_table_sql}, mode)
 
                 logger.debug("{0} tables has been delete success".format(host_name))
 
