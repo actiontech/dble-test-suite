@@ -89,32 +89,32 @@ cfg_mysql:
       hostname: mysql-master1
       user: test
       password: 111111
-      install_path: /root/sandboxes/msb_5_7_25
+      install_path: /root/sandboxes/sandbox
       version: 5.7.25
   group2:
     inst-1:
-      ip: 172.100.9.2
+      ip: 172.100.9.6
       port: 3306
       hostname: mysql-master2
       user: test
       password: 111111
-      install_path: /root/sandboxes/msb_5_7_25
+      install_path: /root/sandboxes/sandbox/master
       version: 5.7.25
     inst-2:
-      ip: 172.100.9.2
+      ip: 172.100.9.6
       port: 3307
       hostname: mysql-slave1
       user: test
       password: 111111
-      install_path: /root/sandboxes/msb_5_7_25
+      install_path: /root/sandboxes/sandbox/node1
       version: 5.7.25
     inst-3:
-      ip: 172.100.9.2
+      ip: 172.100.9.6
       port: 3308
       hostname: mysql-slave2
       user: test
       password: 111111
-      install_path: /root/sandboxes/msb_5_7_25
+      install_path: /root/sandboxes/sandbox/node2
       version: 5.7.25
   # group3:
     # master1:
@@ -167,7 +167,7 @@ cfg_mysql:
       hostname: mysql
       user: test
       password: 111111
-      install_path: /root/sandboxes/msb_5_7_25
+      install_path: /root/sandboxes/sandbox
       version: 5.7.25
 cfg_zookeeper:
   home: /opt/zookeeper

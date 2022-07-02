@@ -22,8 +22,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -225,8 +225,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -465,8 +465,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -695,8 +695,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="3" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -935,8 +935,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -977,8 +977,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="3" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -1012,8 +1012,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"

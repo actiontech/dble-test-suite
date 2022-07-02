@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 networks:
   dble-net:
     driver: bridge
@@ -44,7 +44,7 @@ services:
       - 23306:3306
     networks:
       dble-net:
-        ipv4_address: 172.100.9.2
+        ipv4_address: 172.100.9.6
         ipv6_address: 2001::2
     volumes:
       - mysql_2_cgroup:/sys/fs/cgroup

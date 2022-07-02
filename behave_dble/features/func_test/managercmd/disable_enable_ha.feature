@@ -25,7 +25,7 @@ Feature: test high-availability related commands
 #    check transaction is killed forcely
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                         | expect                                                                                                        | db       |
-      | conn_0 | true     | select * from sharding_4_t1 | java.io.IOException: the dbInstance[172.100.9.2:3306] is disable. Please check the dbInstance disable status  | schema1  |
+      | conn_0 | true     | select * from sharding_4_t1 | java.io.IOException: the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status  | schema1  |
 
     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM2'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
 #    The expect fail msg is tmp,for github issue:#1528
@@ -51,9 +51,9 @@ Feature: test high-availability related commands
     """
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
         </dbInstance>
-        <dbInstance name="slave1" url="172.100.9.2:3307" user="test" password="111111" maxCon="1000" minCon="10" disabled="true">
+        <dbInstance name="slave1" url="172.100.9.6:3307" user="test" password="111111" maxCon="1000" minCon="10" disabled="true">
         </dbInstance>
      </dbGroup>
     """

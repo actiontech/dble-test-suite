@@ -114,7 +114,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
           <heartbeat>select user()</heartbeat>
           <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="100" minCon="10" primary="true">
           </dbInstance>
-          <dbInstance name="hosts1" password="111111" url="172.100.9.2:3307" user="test" maxCon="100" minCon="10" primary="false">
+          <dbInstance name="hosts1" password="111111" url="172.100.9.6:3307" user="test" maxCon="100" minCon="10" primary="false">
           </dbInstance>
       </dbGroup>
     """

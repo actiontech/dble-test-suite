@@ -46,14 +46,16 @@ class MySQLObject(object):
         rc, status_out, std_err = self._mysql_meta.ssh_conn.exec_command(cmd_status)
 
         # if mysqld already stopped,do not stop it again
-        if status_out.find("msb_{} on".format(self._mysql_meta.mysql_version)) != -1:
+        # if status_out.find("msb_{} on".format(self._mysql_meta.mysql_version)) != -1:
+        if status_out.find("* on"):
             # self.turn_off_general_log_and_clean()
 
             logger.debug("try to stop mysql")
 
             stop_cd, stop_out, stop_err = self._mysql_meta.ssh_conn.exec_command(cmd_stop)
             # success_p = "Shutting down MySQL.*?SUCCESS"
-            success_p = "stop /root/sandboxes/msb_{0}".format(self._mysql_meta.mysql_version)
+            # success_p = "stop /root/sandboxes/msb_{0}".format(self._mysql_meta.mysql_version)
+            success_p = "stop {0}".format(self._mysql_meta.mysql_init_shell)
             obj = re.search(success_p, stop_out)
 
             if obj is None:
@@ -71,7 +73,8 @@ class MySQLObject(object):
         # if mysqld already started,do not start it again
         cmd_status = "{0}/status".format(self._mysql_meta.mysql_init_shell)
         rc, status_out, std_err = self._mysql_meta.ssh_conn.exec_command(cmd_status)
-        if status_out.find("msb_{} on".format(self._mysql_meta.mysql_version)) == -1:
+        # if status_out.find("msb_{} on".format(self._mysql_meta.mysql_version)) == -1:
+        if status_out.find("* on"):
             logger.debug("try to start mysql......")
             cmd_start = "{0}/start".format(self._mysql_meta.mysql_init_shell)
             cd, out, err =self._mysql_meta.ssh_conn.exec_command(cmd_start)

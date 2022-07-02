@@ -56,7 +56,7 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
         <heartbeat>select user()</heartbeat>
          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10"  readWeight="1" primary="true">
          </dbInstance>
-         <dbInstance name="hostS1" url="172.100.9.2:3307" user="testx" password="111111" maxCon="1000" minCon="10" readWeight="2">
+         <dbInstance name="hostS1" url="172.100.9.6:3307" user="testx" password="111111" maxCon="1000" minCon="10" readWeight="2">
          </dbInstance>
       </dbGroup>
     """

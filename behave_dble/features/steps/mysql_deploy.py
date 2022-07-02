@@ -59,7 +59,17 @@ def deploy_mysqls(context: Context):
     mysql_sandbox = context.constant["mysql_sandbox_dir"]
     conf = f'--sandbox-directory {mysql_sandbox} --port-as-server-id --remote-access % --bind-address 0.0.0.0' \
            f' -c skip-name-resolve --gtid'
-    single_cmd = f'dbdeployer deploy single {mysql_version} --port 3306 {conf}'
+    mysql_cnf_list = [
+        "default_authentication_plugin=mysql_native_password",
+        "secure_file_priv=",
+        "sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES",
+        "session_track_schema=1",
+        "session_track_state_change=1",
+        "session_track_system_variables=\"*\"",
+    ]
+    mysql_cnf_param = ' '.join(["--my-cnf-options={}".format(x) for x in mysql_cnf_list])
+
+    single_cmd = f'dbdeployer deploy single {mysql_version} --port 3306 {conf} {mysql_cnf_param}'
     repl_cmd = f'dbdeployer deploy replication --topology=master-slave {mysql_version} --base-port 3305 ' \
                f'--concurrent {conf}'
 

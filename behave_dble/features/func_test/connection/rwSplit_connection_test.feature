@@ -32,11 +32,11 @@ Feature: connection test in rwSplit mode
           """
             <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
               <heartbeat>select user()</heartbeat>
-              <dbInstance name="hostM1" password="111111" url="172.100.9.2:3306" user="test" maxCon="10" minCon="3" primary="true">
+              <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
                   <property name="testOnBorrow">false</property>
               </dbInstance>
 
-              <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="10" minCon="3">
+              <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3">
                   <property name="testOnBorrow">false</property>
               </dbInstance>
             </dbGroup>
@@ -120,11 +120,11 @@ Feature: connection test in rwSplit mode
           """
             <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
               <heartbeat>select user()</heartbeat>
-              <dbInstance name="hostM1" password="111111" url="172.100.9.2:3306" user="test" maxCon="10" minCon="3" primary="true">
+              <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
                   <property name="testOnBorrow">true</property>
               </dbInstance>
 
-              <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="10" minCon="3">
+              <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3">
                   <property name="testOnBorrow">true</property>
               </dbInstance>
             </dbGroup>
@@ -219,9 +219,9 @@ Feature: connection test in rwSplit mode
           """
             <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
               <heartbeat>select user()</heartbeat>
-              <dbInstance name="hostM1" password="111111" url="172.100.9.2:3306" user="test" maxCon="10" minCon="3" primary="true">
+              <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
               </dbInstance>
-              <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="10" minCon="3">
+              <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3">
               </dbInstance>
             </dbGroup>
           """
@@ -301,8 +301,8 @@ Feature: connection test in rwSplit mode
           """
             <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
               <heartbeat>select user()</heartbeat>
-              <dbInstance name="hostM1" password="111111" url="172.100.9.2:3306" user="test" maxCon="10" minCon="3" primary="true"/>
-              <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="10" minCon="3"/>
+              <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true"/>
+              <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3"/>
             </dbGroup>
           """
       Given Restart dble in "dble-1" success

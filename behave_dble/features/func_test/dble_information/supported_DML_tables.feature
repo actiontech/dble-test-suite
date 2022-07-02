@@ -135,7 +135,7 @@ Feature: test addition, deletion and modification of dble_information on the man
       {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
       \"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
       {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
-      \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.2:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]
+      \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]
       """
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
@@ -247,17 +247,17 @@ Feature: test addition, deletion and modification of dble_information on the man
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
     \"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
-    \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.2:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
+    \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
     {\"rwSplitMode\":1,\"name\":\"ha_group3\",\"delayThreshold\":-1,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":60,\"errorRetryCount\":1},
     \"dbInstance\":\[{\"name\":\"hostM3\",\"url\":\"172.100.9.1:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"usingDecrypt\":\"false\",\"disabled\":\"true\",\"id\":\"hostM3\",\"readWeight\":\"1\",\"primary\":true,
     \"property\":\[{\"value\":\"30000\",\"name\":\"connectionTimeout\"},{\"value\":\"200\",\"name\":\"connectionHeartbeatTimeout\"},{\"value\":\"false\",\"name\":\"testOnCreate\"},
     {\"value\":\"false\",\"name\":\"testOnBorrow\"},{\"value\":\"false\",\"name\":\"testOnReturn\"},{\"value\":\"false\",\"name\":\"testWhileIdle\"},{\"value\":\"1\",\"name\":\"timeBetweenEvictionRunsMillis\"},
     {\"value\":\"1\",\"name\":\"evictorShutdownTimeoutMillis\"},{\"value\":\"1\",\"name\":\"idleTimeout\"},{\"value\":\"1\",\"name\":\"heartbeatPeriodMillis\"},{\"value\":\"4194304\",\"name\":\"flowHighLevel\"},{\"value\":\"262144\",\"name\":\"flowLowLevel\"}\]
-    {\"name\":\"hostS31\",\"url\":\"172.100.9.2:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":10,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"id\":\"hostS31\",\"readWeight\":\"2\",\"primary\":false,
+    {\"name\":\"hostS31\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":10,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"id\":\"hostS31\",\"readWeight\":\"2\",\"primary\":false,
     \"property\":\[{\"value\":\"3\",\"name\":\"connectionTimeout\"},{\"value\":\"1\",\"name\":\"connectionHeartbeatTimeout\"},{\"value\":\"true\",\"name\":\"testOnCreate\"},{\"value\":\"true\",\"name\":\"testOnBorrow\"},
     {\"value\":\"true\",\"name\":\"testOnReturn\"},{\"value\":\"true\",\"name\":\"testWhileIdle\"},{\"value\":\"2\",\"name\":\"timeBetweenEvictionRunsMillis\"},{\"value\":\"2\",\"name\":\"evictorShutdownTimeoutMillis\"},
     {\"value\":\"2\",\"name\":\"idleTimeout\"},{\"value\":\"2\",\"name\":\"heartbeatPeriodMillis\"},{\"value\":\"4194304\",\"name\":\"flowHighLevel\"},{\"value\":\"262144\",\"name\":\"flowLowLevel\"}\]
-    {\"name\":\"hostS32\",\"url\":\"172.100.9.2:3308\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":99,\"minCon\":2,\"usingDecrypt\":\"false\",\"disabled\":\"true\",\"id\":\"hostS32\",\"readWeight\":\"3\",\"primary\":false,
+    {\"name\":\"hostS32\",\"url\":\"172.100.9.6:3308\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":99,\"minCon\":2,\"usingDecrypt\":\"false\",\"disabled\":\"true\",\"id\":\"hostS32\",\"readWeight\":\"3\",\"primary\":false,
     \"property\":\[{\"value\":\"5\",\"name\":\"connectionTimeout\"},{\"value\":\"2\",\"name\":\"connectionHeartbeatTimeout\"},{\"value\":\"false\",\"name\":\"testOnCreate\"},{\"value\":\"false\",\"name\":\"testOnBorrow\"},
     {\"value\":\"false\",\"name\":\"testOnReturn\"},{\"value\":\"false\",\"name\":\"testWhileIdle\"},{\"value\":\"1\",\"name\":\"timeBetweenEvictionRunsMillis\"},{\"value\":\"1\",\"name\":\"evictorShutdownTimeoutMillis\"},
     {\"value\":\"1\",\"name\":\"idleTimeout\"},{\"value\":\"1\",\"name\":\"heartbeatPeriodMillis\"},{\"value\":\"4194304\",\"name\":\"flowHighLevel\"},{\"value\":\"262144\",\"name\":\"flowLowLevel\"}\]
@@ -285,7 +285,7 @@ Feature: test addition, deletion and modification of dble_information on the man
     {\"value\":\"false\",\"name\":\"testOnReturn\"},{\"value\":\"false\",\"name\":\"testWhileIdle\"},{\"value\":\"30000\",\"name\":\"timeBetweenEvictionRunsMillis\"},{\"value\":\"10000\",\"name\":\"evictorShutdownTimeoutMillis\"},
     {\"value\":\"600000\",\"name\":\"idleTimeout\"},{\"value\":\"10000\",\"name\":\"heartbeatPeriodMillis\"},{\"value\":\"4194304\",\"name\":\"flowHighLevel\"},{\"value\":\"262144\",\"name\":\"flowLowLevel\"}\]
     {\"rwSplitMode\":1,\"name\":\"ha_group7\",\"delayThreshold\":-1,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 3\",\"timeout\":0,\"errorRetryCount\":1},
-    \"dbInstance\":\[{\"name\":\"hostM7\",\"url\":\"172.100.9.2:3308\",\"password\":
+    \"dbInstance\":\[{\"name\":\"hostM7\",\"url\":\"172.100.9.6:3308\",\"password\":
     \",\"user\":\"test\",\"maxCon\":9,\"minCon\":4,\"usingDecrypt\":\"true\",\"disabled\":\"false\",\"id\":\"hostM7\",\"readWeight\":\"0\",\"primary\":true,
     \"property\":\[{\"value\":\"30000\",\"name\":\"connectionTimeout\"},{\"value\":\"20\",\"name\":\"connectionHeartbeatTimeout\"},{\"value\":\"false\",\"name\":\"testOnCreate\"},{\"value\":\"false\",\"name\":\"testOnBorrow\"},
     {\"value\":\"false\",\"name\":\"testOnReturn\"},{\"value\":\"false\",\"name\":\"testWhileIdle\"},{\"value\":\"30000\",\"name\":\"timeBetweenEvictionRunsMillis\"},{\"value\":\"10000\",\"name\":\"evictorShutdownTimeoutMillis\"},
@@ -952,7 +952,7 @@ Feature: test addition, deletion and modification of dble_information on the man
       | conn_0 | false    | update dble_db_instance set min_conn_=10 where db_group='ha_group1'                                  | Unknown column 'min_conn_' in 'field list'                          | dble_information |
       | conn_0 | false    | update dble_db_instance st disabled='false' where min_conn_count=0                                   | You have an error in your SQL syntax                                | dble_information |
       | conn_0 | false    | update dble_db_instance set disabled='false' where active='false'                                    | unknown error:field not found:active                                | dble_information |
-      | conn_0 | false    | update dble_db_instance set addr='172.100.9.3' where db_group='ha_group3'                            | dbGroup[ha_group3]'s child url [172.100.9.2:3308]  duplicated!      | dble_information |
+      | conn_0 | false    | update dble_db_instance set addr='172.100.9.3' where db_group='ha_group3'                            | dbGroup[ha_group3]'s child url [172.100.9.6:3308]  duplicated!      | dble_information |
       #### addr
       | conn_0 | false   | update dble_db_instance set addr=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set addr='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |

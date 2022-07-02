@@ -36,9 +36,9 @@ Feature: test "binlog" in zk cluster
       """
       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
          <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
-         <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10"/>
-         <dbInstance name="hostS2" password="111111" url="172.100.9.2:3308" user="test" maxCon="1000" minCon="10"/>
+         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
+         <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10"/>
+         <dbInstance name="hostS2" password="111111" url="172.100.9.6:3308" user="test" maxCon="1000" minCon="10"/>
       </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -376,7 +376,7 @@ Feature: test "binlog" in zk cluster
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
-      172.100.9.2:3306
+      172.100.9.6:3306
       172.100.9.5:3307
       """
     Given sleep "8" seconds
@@ -402,7 +402,7 @@ Feature: test "binlog" in zk cluster
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
-      172.100.9.2:3306
+      172.100.9.6:3306
       172.100.9.5:3307
       """
     Given sleep "8" seconds
@@ -428,7 +428,7 @@ Feature: test "binlog" in zk cluster
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
-      172.100.9.2:3306
+      172.100.9.6:3306
       172.100.9.5:3307
       """
     Given sleep "8" seconds
@@ -527,7 +527,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
       Error can't wait all session finished
-      172.100.9.2:3306
+      172.100.9.6:3306
       """
     Given prepare a thread execute sql "insert into global1 values (3)" with "conn_31"
     Given prepare a thread execute sql "insert into global2 values (1)" with "conn_32"
@@ -649,7 +649,7 @@ Feature: test "binlog" in zk cluster
       """
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      172.100.9.2:3306
+      172.100.9.6:3306
       172.100.9.5:3307
       """
    # during "hang",to check on zk cluster has binlog_pause "status"
@@ -666,7 +666,7 @@ Feature: test "binlog" in zk cluster
     Given destroy btrace threads list
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      172.100.9.2:3306
+      172.100.9.6:3306
       172.100.9.5:3307
       """
     Then execute sql in "dble-3" in "user" mode
@@ -691,7 +691,7 @@ Feature: test "binlog" in zk cluster
       """
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      172.100.9.2:3306
+      172.100.9.6:3306
       172.100.9.5:3307
       """
     Given execute linux command in "dble-1"
@@ -707,7 +707,7 @@ Feature: test "binlog" in zk cluster
     Given destroy btrace threads list
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      172.100.9.2:3306
+      172.100.9.6:3306
       172.100.9.5:3307
       """
     Then execute sql in "dble-3" in "user" mode
@@ -727,7 +727,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      172.100.9.2:3306
+      172.100.9.6:3306
       172.100.9.5:3307
       """
     Given execute linux command in "dble-1"
@@ -743,7 +743,7 @@ Feature: test "binlog" in zk cluster
     Given destroy btrace threads list
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      172.100.9.2:3306
+      172.100.9.6:3306
       172.100.9.5:3307
       """
     Then execute sql in "dble-2" in "user" mode
@@ -764,7 +764,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      172.100.9.2:3306
+      172.100.9.6:3306
       172.100.9.5:3307
       """
     Given sleep "10" seconds
@@ -772,7 +772,7 @@ Feature: test "binlog" in zk cluster
     Given destroy btrace threads list
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      172.100.9.2:3306
+      172.100.9.6:3306
       172.100.9.5:3307
       """
     Then execute sql in "dble-2" in "user" mode
@@ -793,7 +793,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      172.100.9.2:3306
+      172.100.9.6:3306
       172.100.9.5:3307
       """
     Given execute linux command in "dble-1"
@@ -809,7 +809,7 @@ Feature: test "binlog" in zk cluster
     Given destroy btrace threads list
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      172.100.9.2:3306
+      172.100.9.6:3306
       172.100.9.5:3307
       """
     Then execute sql in "dble-2" in "user" mode
@@ -901,7 +901,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.5:3307
-      172.100.9.2:3306
+      172.100.9.6:3306
       """
     #wait 15s,because btrace sleep 15s
     Given sleep "15" seconds
@@ -920,7 +920,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.5:3307
-      172.100.9.2:3306
+      172.100.9.6:3306
       """
     Then execute sql in "dble-3" in "user" mode
       | conn      | toClose | sql                      | expect          | db      |

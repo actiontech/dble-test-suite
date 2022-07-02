@@ -23,8 +23,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     """
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
-        <dbInstance name="slave1" url="172.100.9.2:3307" user="test" password="111111" maxCon="1000" minCon="10"/>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="slave1" url="172.100.9.6:3307" user="test" password="111111" maxCon="1000" minCon="10"/>
      </dbGroup>
     """
     Then execute admin cmd "reload @@config"
@@ -59,8 +59,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       """
     Then check following text exist "Y" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
-      Write-dbInstance 172.100.9.2:3306 in ha_group2 is not alive!
-      Do not switch ha_group2 Write-dbInstance to 172.100.9.2:3306; due to canbemaster status is 0.
+      Write-dbInstance 172.100.9.6:3306 in ha_group2 is not alive!
+      Do not switch ha_group2 Write-dbInstance to 172.100.9.6:3306; due to canbemaster status is 0.
       Switch failed!
       """
     Given stop dble in "dble-1"
@@ -68,13 +68,13 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     Then Start dble in "dble-1"
     Then check following text exist "N" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
-      Write-dbInstance 172.100.9.2:3306 in ha_group2 is not alive!
-      Do not switch ha_group2 Write-dbInstance to 172.100.9.2:3306; due to canbemaster status is 0.
+      Write-dbInstance 172.100.9.6:3306 in ha_group2 is not alive!
+      Do not switch ha_group2 Write-dbInstance to 172.100.9.6:3306; due to canbemaster status is 0.
       Switch failed!
       """
     Then check following text exist "Y" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
-      DbInstance 172.100.9.2:3306 in ha_group2 is normal!
+      DbInstance 172.100.9.6:3306 in ha_group2 is normal!
       """
 
 
@@ -93,8 +93,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     """
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
-        <dbInstance name="slave1" url="172.100.9.2:3307" user="test" password="111111" maxCon="1000" minCon="10"/>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="slave1" url="172.100.9.6:3307" user="test" password="111111" maxCon="1000" minCon="10"/>
      </dbGroup>
     """
     Given Restart dble in "dble-1" success
@@ -106,13 +106,13 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | show @@custom_mysql_ha   | has{(('1',),)}    |
     Then check following text exist "Y" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
-      DbInstance 172.100.9.2:3306 in ha_group2 is not alive!
+      DbInstance 172.100.9.6:3306 in ha_group2 is not alive!
       Get dbGroups from db.xml file.
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.2:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"slave1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"slave1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
 
      Then execute sql in "dble-1" in "user" mode
@@ -127,8 +127,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     """
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" usingDecrypt="true" password="NxbH9imEoi3INzkFiiSvGbfXOCzN4COTL0vJdyUZyiEW4+lGFgRagpXDeg/7yzVhRkv4jfxuRTRiux7I3iRDOg==" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
-        <dbInstance name="slave1" usingDecrypt="true" url="172.100.9.2:3307" user="test" password="cDswIroIVCCGE376ivg0JtCq22RAqdiMkVzHmiJRtP3S1gb8OsSbA58MjqzGR3cvt4oCBv1B2Z/PpnKAU5wQlQ==" maxCon="1000" minCon="10"/>
+        <dbInstance name="hostM2" usingDecrypt="true" password="NxbH9imEoi3INzkFiiSvGbfXOCzN4COTL0vJdyUZyiEW4+lGFgRagpXDeg/7yzVhRkv4jfxuRTRiux7I3iRDOg==" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="slave1" usingDecrypt="true" url="172.100.9.6:3307" user="test" password="cDswIroIVCCGE376ivg0JtCq22RAqdiMkVzHmiJRtP3S1gb8OsSbA58MjqzGR3cvt4oCBv1B2Z/PpnKAU5wQlQ==" maxCon="1000" minCon="10"/>
      </dbGroup>
     """
     Then execute admin cmd "reload @@config"
@@ -136,8 +136,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.2:3306\" password=\"NxbH9imEoi3INzkFiiSvGbfXOCzN4COTL0vJdyUZyiEW4+lGFgRagpXDeg/7yzVhRkv4jfxuRTRiux7I3iRDOg==\" user=\"test\" maxCon=\"1000\" minCon=\"10\" usingDecrypt=\"true\" primary=\"false\"/>
-      <dbInstance name=\"slave1\" url=\"172.100.9.2:3307\" password=\"cDswIroIVCCGE376ivg0JtCq22RAqdiMkVzHmiJRtP3S1gb8OsSbA58MjqzGR3cvt4oCBv1B2Z/PpnKAU5wQlQ==\" user=\"test\" maxCon=\"1000\" minCon=\"10\" usingDecrypt=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"NxbH9imEoi3INzkFiiSvGbfXOCzN4COTL0vJdyUZyiEW4+lGFgRagpXDeg/7yzVhRkv4jfxuRTRiux7I3iRDOg==\" user=\"test\" maxCon=\"1000\" minCon=\"10\" usingDecrypt=\"true\" primary=\"false\"/>
+      <dbInstance name=\"slave1\" url=\"172.100.9.6:3307\" password=\"cDswIroIVCCGE376ivg0JtCq22RAqdiMkVzHmiJRtP3S1gb8OsSbA58MjqzGR3cvt4oCBv1B2Z/PpnKAU5wQlQ==\" user=\"test\" maxCon=\"1000\" minCon=\"10\" usingDecrypt=\"true\" primary=\"true\"/>
       """
     Given start mysql in host "mysql-master2"
 
@@ -151,13 +151,13 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true"/>
-        <dbInstance name="slave1" url="172.100.9.2:3308" user="test" password="111111" maxCon="1000" minCon="10"/>
+        <dbInstance name="slave1" url="172.100.9.6:3308" user="test" password="111111" maxCon="1000" minCon="10"/>
     </dbGroup>
 
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="false"/>
-        <dbInstance name="slave2" url="172.100.9.2:3307" user="test" password="111111" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="false"/>
+        <dbInstance name="slave2" url="172.100.9.6:3307" user="test" password="111111" maxCon="1000" minCon="10" primary="true"/>
      </dbGroup>
     """
     Then execute admin cmd "reload @@config"
@@ -190,9 +190,9 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     """
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
-        <dbInstance name="slave1" url="172.100.9.2:3307" user="test" password="111111" maxCon="1000" minCon="10"/>
-        <dbInstance name="slave2" url="172.100.9.2:3308" user="test" password="111111" maxCon="1000" minCon="10"/>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="slave1" url="172.100.9.6:3307" user="test" password="111111" maxCon="1000" minCon="10"/>
+        <dbInstance name="slave2" url="172.100.9.6:3308" user="test" password="111111" maxCon="1000" minCon="10"/>
      </dbGroup>
     """
     Given Restart dble in "dble-1" success
@@ -200,17 +200,17 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
-      172.100.9.2:3306 in ha_group2 is not alive!
+      172.100.9.6:3306 in ha_group2 is not alive!
       Get dbGroups from db.xml file.
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.2:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Given start mysql in host "mysql-master2"
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.2:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
 
   Scenario: don't use "disable/enable", can change mysql master and active idle DBLE0REQ-816   #5
@@ -219,11 +219,11 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-       <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true">
+       <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
            <property name="timeBetweenEvictionRunsMillis">5000</property>
        </dbInstance>
-       <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10" />
-       <dbInstance name="hostS2" password="111111" url="172.100.9.2:3308" user="test" maxCon="1000" minCon="10" />
+       <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" />
+       <dbInstance name="hostS2" password="111111" url="172.100.9.6:3308" user="test" maxCon="1000" minCon="10" />
     </dbGroup>
     """
     Then execute admin cmd "reload @@config"
@@ -269,11 +269,11 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     """
     <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-       <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="10" minCon="3" primary="true">
+       <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
            <property name="timeBetweenEvictionRunsMillis">5000</property>
        </dbInstance>
-       <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="10" minCon="3" />
-       <dbInstance name="hostS2" password="111111" url="172.100.9.2:3308" user="test" maxCon="10" minCon="3" >
+       <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3" />
+       <dbInstance name="hostS2" password="111111" url="172.100.9.6:3308" user="test" maxCon="10" minCon="3" >
            <property name="timeBetweenEvictionRunsMillis">5000</property>
        </dbInstance>
     </dbGroup>
@@ -319,11 +319,11 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     """
     <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-       <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="10" minCon="3" primary="true">
+       <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
            <property name="timeBetweenEvictionRunsMillis">5000</property>
        </dbInstance>
-       <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="10" minCon="3" />
-       <dbInstance name="hostS2" password="111111" url="172.100.9.2:3308" user="test" maxCon="10" minCon="3" >
+       <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3" />
+       <dbInstance name="hostS2" password="111111" url="172.100.9.6:3308" user="test" maxCon="10" minCon="3" >
            <property name="timeBetweenEvictionRunsMillis">5000</property>
        </dbInstance>
     </dbGroup>
@@ -369,11 +369,11 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     """
     <dbGroup rwSplitMode="3" name="ha_group2" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-       <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="10" minCon="3" primary="true">
+       <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
            <property name="timeBetweenEvictionRunsMillis">5000</property>
        </dbInstance>
-       <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="10" minCon="3" />
-       <dbInstance name="hostS2" password="111111" url="172.100.9.2:3308" user="test" maxCon="10" minCon="3" >
+       <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3" />
+       <dbInstance name="hostS2" password="111111" url="172.100.9.6:3308" user="test" maxCon="10" minCon="3" >
            <property name="timeBetweenEvictionRunsMillis">5000</property>
        </dbInstance>
     </dbGroup>

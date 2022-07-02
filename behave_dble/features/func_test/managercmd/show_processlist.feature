@@ -20,7 +20,7 @@ Feature: #test show @@processlist
     </dbGroup>
     <dbGroup rwSplitMode="0"  name="ha_group2" delayThreshold="100" >
     <heartbeat>select user()</heartbeat>
-    <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" primary="true" maxCon="4" minCon="4">
+    <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" primary="true" maxCon="4" minCon="4">
     </dbInstance>
     </dbGroup>
     """

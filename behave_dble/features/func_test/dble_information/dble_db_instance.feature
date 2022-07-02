@@ -81,7 +81,7 @@ Feature:  dble_db_instance table test
              <property name="heartbeatPeriodMillis">15000</property>
         </dbInstance>
 
-        <dbInstance name="s2" password="111111" url="172.100.9.2:3307" user="test" maxCon="10" minCon="3" readWeight="3" disabled="true">
+        <dbInstance name="s2" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3" readWeight="3" disabled="true">
              <property name="connectionTimeout">100000</property>
              <property name="connectionHeartbeatTimeout">20</property>
              <property name="testOnCreate">false</property>
@@ -98,7 +98,7 @@ Feature:  dble_db_instance table test
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="M2" password="MmQ1VfdjVK4VbF7z7WXQ1Zj81wN7EDHJmwwZO9MA2q5RK8rs+fT2Zjy/3XdOyutXRcSLhTqJsAQs1A1M2ww8Pw=="
-             usingDecrypt="true" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true">
+             usingDecrypt="true" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -196,7 +196,7 @@ Feature:  dble_db_instance table test
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="M2" password="MmQ1VfdjVK4VbF7z7WXQ1Zj81wN7EDHJmwwZO9MA2q5RK8rs+fT2Zjy/3XdOyutXRcSLhTqJsAQs1A1M2ww8Pw=="
-             usingDecrypt="true" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true">
+             usingDecrypt="true" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
