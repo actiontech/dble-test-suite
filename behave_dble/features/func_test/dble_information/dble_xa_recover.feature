@@ -183,7 +183,7 @@ Feature: check dble_xa_recover and exception xa transactions
       | ha_group1 | hostM1     | 172.100.9.5 | 3307   | 1          | 20             | 0              | Dble_Server.abc123.0  |
     Then restart dble in "dble-1" failed for
     """
-    Suspected residual xa transaction, in the DbInstanceConfig [[]hostName=hostM1, url=172.100.9.5:3307[]], have:
+    Suspected residual xa transaction, in the DbInstanceConfig [[]hostName=hostM1, url=172.100.9.5:3306[]], have:
     Dble_Server.abc.08
     Dble_Server.abc.0
     Please clean up according to the actual situation.

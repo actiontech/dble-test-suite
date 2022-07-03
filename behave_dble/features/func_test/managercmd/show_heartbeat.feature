@@ -19,7 +19,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select 1</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
     </dbGroup>
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
@@ -108,7 +108,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select 1</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
     </dbGroup>
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >

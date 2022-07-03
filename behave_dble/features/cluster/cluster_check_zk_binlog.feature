@@ -377,7 +377,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
       172.100.9.6:3306
-      172.100.9.5:3307
+      172.100.9.5:3306
       """
     Given sleep "8" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
@@ -403,7 +403,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
       172.100.9.6:3306
-      172.100.9.5:3307
+      172.100.9.5:3306
       """
     Given sleep "8" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
@@ -429,7 +429,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
       172.100.9.6:3306
-      172.100.9.5:3307
+      172.100.9.5:3306
       """
     Given sleep "8" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
@@ -650,7 +650,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.6:3306
-      172.100.9.5:3307
+      172.100.9.5:3306
       """
    # during "hang",to check on zk cluster has binlog_pause "status"
     Given execute linux command in "dble-1"
@@ -667,7 +667,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.6:3306
-      172.100.9.5:3307
+      172.100.9.5:3306
       """
     Then execute sql in "dble-3" in "user" mode
       | conn    | toClose | sql                                  | expect              | db      |
@@ -692,7 +692,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.6:3306
-      172.100.9.5:3307
+      172.100.9.5:3306
       """
     Given execute linux command in "dble-1"
       """
@@ -708,7 +708,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.6:3306
-      172.100.9.5:3307
+      172.100.9.5:3306
       """
     Then execute sql in "dble-3" in "user" mode
       | conn    | toClose | sql                                  | expect                         | db      |
@@ -728,7 +728,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.6:3306
-      172.100.9.5:3307
+      172.100.9.5:3306
       """
     Given execute linux command in "dble-1"
       """
@@ -744,7 +744,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.6:3306
-      172.100.9.5:3307
+      172.100.9.5:3306
       """
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose | sql                                          | expect              | db      |
@@ -765,7 +765,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.6:3306
-      172.100.9.5:3307
+      172.100.9.5:3306
       """
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
@@ -773,7 +773,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.6:3306
-      172.100.9.5:3307
+      172.100.9.5:3306
       """
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose | sql                                          | expect              | db      |
@@ -794,7 +794,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.6:3306
-      172.100.9.5:3307
+      172.100.9.5:3306
       """
     Given execute linux command in "dble-1"
       """
@@ -810,7 +810,7 @@ Feature: test "binlog" in zk cluster
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.6:3306
-      172.100.9.5:3307
+      172.100.9.5:3306
       """
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose | sql                                          | expect                         | db      |
@@ -900,7 +900,7 @@ Feature: test "binlog" in zk cluster
     #"hang" query has not result
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      172.100.9.5:3307
+      172.100.9.5:3306
       172.100.9.6:3306
       """
     #wait 15s,because btrace sleep 15s
@@ -919,7 +919,7 @@ Feature: test "binlog" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      172.100.9.5:3307
+      172.100.9.5:3306
       172.100.9.6:3306
       """
     Then execute sql in "dble-3" in "user" mode

@@ -9,7 +9,8 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 Feature: Deploy DBLE test environment
 
-  Scenario: Initialize the MySQLs
+  @Initialize_mysql
+  Scenario: Initialize the MySQL
     Given I clean mysql deploy environment
     Given I deploy mysql
     Given I reset the mysql uuid
@@ -25,7 +26,7 @@ Feature: Deploy DBLE test environment
     Then Start dble in "dble-1"
 
 
-  @use.with_dble_topo=cluster
+  #@use.with_dble_topo=cluster
   # Scenario: Initialize the cluster DBLE
   #   Given I clean dble deploy environment
   #   Given I install dble cluster

@@ -33,8 +33,8 @@ Feature: set charset in server.xml,check backend charsets are as set
     Then check resultset "backend_rs_A" has lines with following column values
       | HOST-3      | CHARACTER_SET_CLIENT-13 | COLLATION_CONNECTION-14 | CHARACTER_SET_RESULTS-15 |
       | 172.100.9.6 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
-      | 172.100.9.2 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
-      | 172.100.9.3 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
+      | 172.100.9.6 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
+      | 172.100.9.6 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                         | expect  | db     |charset|
       | conn_0 | False   | drop table if exists aly_test               | success | schema1 | utf8  |
@@ -60,13 +60,13 @@ Feature: set charset in server.xml,check backend charsets are as set
     Then check resultset "backend_rs_B" has not lines with following column values
       | HOST-3      | CHARACTER_SET_CLIENT-13 | COLLATION_CONNECTION-14 | CHARACTER_SET_RESULTS-15 |
       | 172.100.9.6 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
-      | 172.100.9.2 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
-      | 172.100.9.3 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
+      | 172.100.9.6 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
+      | 172.100.9.6 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
     Then check resultset "backend_rs_B" has lines with following column values
       | HOST-3      | CHARACTER_SET_CLIENT-13 | COLLATION_CONNECTION-14 | CHARACTER_SET_RESULTS-15 |
       | 172.100.9.6 |     latin1              | latin1_swedish_ci       | latin1                   |
-      | 172.100.9.2 |     latin1              | latin1_swedish_ci       | latin1                   |
-      | 172.100.9.3 |     latin1              | latin1_swedish_ci       | latin1                   |
+      | 172.100.9.6 |     latin1              | latin1_swedish_ci       | latin1                   |
+      | 172.100.9.6 |     latin1              | latin1_swedish_ci       | latin1                   |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                         | expect  | db     |
       | conn_1 | False   | drop table if exists aly_test               | success | schema1 |

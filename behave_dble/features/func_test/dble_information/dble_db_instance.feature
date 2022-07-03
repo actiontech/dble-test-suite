@@ -55,7 +55,7 @@ Feature:  dble_db_instance table test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1"  id="xx1">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1"  id="xx1">
              <property name="connectionTimeout">10000</property>
              <property name="connectionHeartbeatTimeout">30</property>
              <property name="testOnCreate">true</property>
@@ -189,7 +189,7 @@ Feature:  dble_db_instance table test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="T1" password="111111" url="172.100.9.5:3307" user="t1" maxCon="1000" minCon="10" primary="true" readWeight="1" >
+        <dbInstance name="T1" password="111111" url="172.100.9.5:3306" user="t1" maxCon="1000" minCon="10" primary="true" readWeight="1" >
         </dbInstance>
 
     </dbGroup>

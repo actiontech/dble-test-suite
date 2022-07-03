@@ -426,7 +426,7 @@ Feature: test "check full @@metadata...'"
       """
       <dbGroup name="host1" rwSplitMode="0" delayThreshold="100">
          <heartbeat>show slave status</heartbeat>
-         <dbInstance name="hostM2" url="172.100.9.5:3307" user="test" password="111111" maxCon="1000" minCon="5" primary="true">
+         <dbInstance name="hostM2" url="172.100.9.5:3306" user="test" password="111111" maxCon="1000" minCon="5" primary="true">
          </dbInstance>
       </dbGroup>
       """

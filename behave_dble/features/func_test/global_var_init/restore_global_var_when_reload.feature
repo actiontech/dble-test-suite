@@ -66,7 +66,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
           <property name="heartbeatPeriodMillis">2000</property>
         </dbInstance>
     </dbGroup>
@@ -109,7 +109,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="user1" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="user1" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -132,7 +132,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -150,7 +150,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
           <property name="heartbeatPeriodMillis">2000</property>
         </dbInstance>
     </dbGroup>
@@ -213,7 +213,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
           <property name="heartbeatPeriodMillis">120000</property>
         </dbInstance>
     </dbGroup>
@@ -280,7 +280,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
           <property name="heartbeatPeriodMillis">120000</property>
           <property name="evictorShutdownTimeoutMillis">120000</property>
         </dbInstance>
@@ -345,7 +345,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
         </dbInstance>
     </dbGroup>
     """
@@ -370,7 +370,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
         </dbInstance>
     </dbGroup>
     """
@@ -386,7 +386,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true" disabled="false">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="false">
         </dbInstance>
     </dbGroup>
     """
@@ -402,7 +402,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
         </dbInstance>
     </dbGroup>
     """
@@ -422,7 +422,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
         </dbInstance>
     </dbGroup>
     """
@@ -434,7 +434,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true" disabled="false">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="false">
         </dbInstance>
     </dbGroup>
     """
@@ -451,7 +451,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
         </dbInstance>
     </dbGroup>
     """
@@ -473,7 +473,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to \[172.100.9.5:3307\] setError
+    heartbeat to \[172.100.9.5:3306\] setError
     """
     Given prepare a thread run btrace script "BtraceSelectGlobalVars1.java" in "dble-1"
 #    sleep 2s for wait btrace in working
@@ -501,5 +501,5 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to \[172.100.9.5:3307\] setError
+    heartbeat to \[172.100.9.5:3306\] setError
     """

@@ -16,7 +16,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     """
     \"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
-    \"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
+    \"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
     \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]}\],
     \"schema\":\[
@@ -45,7 +45,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" disableHA='false' >
         <heartbeat errorRetryCount="0" timeout="10" >select user()</heartbeat>
-        <dbInstance name="hostM1" password="EZGuPOlq+lyYvtnAHPYN7NOido4idWDJfdH0aAWsXzfPhxDw0FWIDoYtxy0LL45slFFtLXl9NukyJujadQEoUA==" usingDecrypt="true" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="EZGuPOlq+lyYvtnAHPYN7NOido4idWDJfdH0aAWsXzfPhxDw0FWIDoYtxy0LL45slFFtLXl9NukyJujadQEoUA==" usingDecrypt="true" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
             <property name="testOnCreate">true</property>
             <property name="testOnBorrow">false</property>
             <property name="testOnReturn">true</property>
@@ -225,7 +225,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     \"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user()\",\"timeout\":10,\"errorRetryCount\":0},
     \"dbInstance\":\[
-    {\"name\":\"hostM1\",\"url\":\"172.100.9.5:3307\",\"password\":
+    {\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":
     \"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"usingDecrypt\":\"true\",\"primary\":true,
     \"property\":\[
     {\"value\":\"true\",\"name\":\"testOnCreate\"},{\"value\":\"false\",\"name\":\"testOnBorrow\"},{\"value\":\"true\",\"name\":\"testOnReturn\"},
@@ -355,7 +355,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" disableHA='false' >
         <heartbeat errorRetryCount="0" timeout="10" >select user()</heartbeat>
-        <dbInstance name="hostM1" password="EZGuPOlq+lyYvtnAHPYN7NOido4idWDJfdH0aAWsXzfPhxDw0FWIDoYtxy0LL45slFFtLXl9NukyJujadQEoUA==" usingDecrypt="true" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="EZGuPOlq+lyYvtnAHPYN7NOido4idWDJfdH0aAWsXzfPhxDw0FWIDoYtxy0LL45slFFtLXl9NukyJujadQEoUA==" usingDecrypt="true" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
             <property name="testOnCreate">true</property>
             <property name="testOnBorrow">false</property>
             <property name="testOnReturn">true</property>
@@ -535,7 +535,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     \"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user()\",\"timeout\":10,\"errorRetryCount\":0},
     \"dbInstance\":\[
-    {\"name\":\"hostM1\",\"url\":\"172.100.9.5:3307\",\"password\":\"
+    {\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":\"
     ,\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"usingDecrypt\":\"true\",\"primary\":true,
     \"property\":\[
     {\"value\":\"true\",\"name\":\"testOnCreate\"},{\"value\":\"false\",\"name\":\"testOnBorrow\"},{\"value\":\"true\",\"name\":\"testOnReturn\"},
@@ -925,7 +925,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
     {\"dbGroup\":\[
-    {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},\"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
+    {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},\"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},\"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1},
     \"dbInstance\":\[{\"name\":\"hostM3\",\"url\":\"172.100.9.1:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":99,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,
@@ -1002,7 +1002,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
     {\"dbGroup\":\[
-    {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},\"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
+    {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},\"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},\"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]}\],
     \"schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",

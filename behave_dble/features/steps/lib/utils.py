@@ -122,7 +122,7 @@ def update_file_content(context, mysql_version, host_name, mysql_type, sed_str=N
     else:
         node = get_node(host_name)
 
-    mysql_cnf_path = get_mysql_cnf_path(mysql_version, mysql_type)
+    mysql_cnf_path = get_mysql_cnf_path(node.install_path)
 
     # replace all vars in file name with corresponding node attribute value
     vars = re.findall(r'\{(.*?)\}', mysql_cnf_path, re.I)
@@ -133,11 +133,15 @@ def update_file_content(context, mysql_version, host_name, mysql_type, sed_str=N
     update_file_with_sed(sed_str, mysql_cnf_path, node)
 
 
-def get_mysql_cnf_path(version='5.7.25', type='single'):
-    prefix = version.replace('.', '_')
-    if type == 'single':
-        prefix = 'msb_' + prefix
-    return f"/root/sandboxes/{prefix}/my.sandbox.cnf"
+# def get_mysql_cnf_path(version='5.7.25', type='single'):
+#     prefix = version.replace('.', '_')
+#     if type == 'single':
+#         prefix = 'msb_' + prefix
+#     return f"/root/sandboxes/{prefix}/my.sandbox.cnf"
+
+def get_mysql_cnf_path(install_path):
+    return install_path + '/my.sandbox.cnf'
+
 
 
 @Given('update file content "{filename}" in "{host_name}" with sed cmds')

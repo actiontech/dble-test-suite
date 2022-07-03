@@ -89,7 +89,7 @@ class MySQLObject(object):
             self.connect_test()
 
     def update_config(self, sed_str):
-        mysql_cnf_path = get_mysql_cnf_path(self._mysql_meta.mysql_version,"single")
+        mysql_cnf_path = get_mysql_cnf_path(self._mysql_meta.install_path)
         update_file_with_sed(sed_str, mysql_cnf_path, self._mysql_meta)
 
     def connect_test(self):

@@ -104,7 +104,7 @@ Feature: test some import nodes attr in sharding.xml
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="15" minCon="3" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="15" minCon="3" primary="true">
           <property name="connectionTimeout">4000</property>
           </dbInstance>
       </dbGroup>
@@ -142,7 +142,7 @@ Feature: test some import nodes attr in sharding.xml
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="3" minCon="1" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="3" minCon="1" primary="true">
           <property name="connectionTimeout">4000</property>
           </dbInstance>
       </dbGroup>
@@ -212,7 +212,7 @@ Feature: test some import nodes attr in sharding.xml
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="4" minCon="0" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="4" minCon="0" primary="true">
         </dbInstance>
     </dbGroup>
 
@@ -243,7 +243,7 @@ Feature: test some import nodes attr in sharding.xml
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="1" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="1" primary="true">
            <property name="timeBetweenEvictionRunsMillis">1000</property>
            <property name="heartbeatPeriodMillis">300000000</property>
         </dbInstance>
@@ -276,7 +276,7 @@ Feature: test some import nodes attr in sharding.xml
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="3" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="3" primary="true">
             <property name="timeBetweenEvictionRunsMillis">1000</property>
             <property name="heartbeatPeriodMillis">300000000</property>
         </dbInstance>
@@ -321,7 +321,7 @@ Feature: test some import nodes attr in sharding.xml
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
             <property name="timeBetweenEvictionRunsMillis">1000</property>
             <property name="heartbeatPeriodMillis">300000000</property>
         </dbInstance>

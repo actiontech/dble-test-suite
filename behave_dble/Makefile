@@ -26,3 +26,6 @@ remove_venv:
 
 venv:
 	pipenv shell
+
+reset_mysql:
+	pipenv run behave feature/setup.feature --tags=@Initialize_mysql

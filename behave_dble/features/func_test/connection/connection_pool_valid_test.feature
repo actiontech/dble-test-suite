@@ -9,7 +9,7 @@ Feature: test connection pool
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="11" minCon="5" primary="true" readWeight="1"  id="xx1">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="11" minCon="5" primary="true" readWeight="1"  id="xx1">
              <property name="connectionTimeout">abc</property>
              <property name="connectionHeartbeatTimeout">30</property>
              <property name="testOnCreate">-1</property>
@@ -41,7 +41,7 @@ Feature: test connection pool
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="20" minCon="5" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="5" primary="true">
              <property name="testOnBorrow">true</property>
              <property name="connectionHeartbeatTimeout">2000</property>
              <property name="timeBetweenEvictionRunsMillis">180000</property>
@@ -117,7 +117,7 @@ Feature: test connection pool
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="20" minCon="5" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="5" primary="true">
              <property name="testOnReturn">true</property>
              <property name="connectionHeartbeatTimeout">2000</property>
              <property name="timeBetweenEvictionRunsMillis">180000</property>
@@ -182,7 +182,7 @@ Feature: test connection pool
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="20" minCon="3" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="3" primary="true">
              <property name="testOnCreate">true</property>
              <property name="connectionHeartbeatTimeout">2000</property>
              <property name="timeBetweenEvictionRunsMillis">180000</property>
@@ -245,7 +245,7 @@ Feature: test connection pool
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="10" minCon="5" primary="true" readWeight="1" id="dbInstance1">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="10" minCon="5" primary="true" readWeight="1" id="dbInstance1">
              <property name="testWhileIdle">true</property>
              <property name="timeBetweenEvictionRunsMillis">5000</property>
         </dbInstance>
@@ -279,7 +279,7 @@ Feature: test connection pool
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="10" minCon="3" primary="true" id="dbInstance1">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="10" minCon="3" primary="true" id="dbInstance1">
              <property name="testOnBorrow">true</property>
              <property name="connectionTimeout">4000</property>
              <property name="heartbeatPeriodMillis">180000</property>
@@ -326,7 +326,7 @@ Feature: test connection pool
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="20" minCon="10" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="10" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="timeBetweenEvictionRunsMillis">180000</property>
         </dbInstance>

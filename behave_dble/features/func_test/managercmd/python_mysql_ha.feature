@@ -150,7 +150,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
         <dbInstance name="slave1" url="172.100.9.6:3308" user="test" password="111111" maxCon="1000" minCon="10"/>
     </dbGroup>
 

@@ -112,7 +112,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="100" minCon="10" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="10" primary="true">
           </dbInstance>
           <dbInstance name="hosts1" password="111111" url="172.100.9.6:3307" user="test" maxCon="100" minCon="10" primary="false">
           </dbInstance>

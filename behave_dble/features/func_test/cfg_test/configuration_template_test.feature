@@ -32,7 +32,7 @@ Feature: use template to generate configuration file, check function is normal
     """
     Given update file content "{install_dir}/dble/conf/db.xml" in "dble-1" with sed cmds
     """
-    s/ip1:3306/172.100.9.5:3307/
+    s/ip1:3306/172.100.9.5:3306/
     s/ip2:3306/172.100.9.6:3306/
     s/ip3:3306/172.100.9.6:3307/
     s/ip4:3306/172.100.9.6:3308/
