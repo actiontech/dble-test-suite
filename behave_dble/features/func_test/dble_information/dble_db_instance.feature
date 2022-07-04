@@ -43,9 +43,11 @@ Feature:  dble_db_instance table test
       | evictor_shutdown_timeout_millis   | int(11)      | YES    |       | 10000     |         |
       | idle_timeout                      | int(11)      | YES    |       | 600000    |         |
       | heartbeat_period_millis           | int(11)      | YES    |       | 10000     |         |
+      | flow_high_level                   | int(11)      | YES    |       | 4194304   |         |
+      | flow_low_level                    | int(11)      | YES    |       | 262144    |         |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                               | expect        | db               |
-      | conn_0 | False   | desc dble_db_instance             | length{(34)}  | dble_information |
+      | conn_0 | False   | desc dble_db_instance             | length{(36)}  | dble_information |
       | conn_0 | False   | select * from dble_db_instance    | length{(2)}   | dble_information |
   #case change db.xml and reload
     Given delete the following xml segment
@@ -108,10 +110,10 @@ Feature:  dble_db_instance table test
       | conn_0 | False   | select name,db_group,addr,port from dble_db_instance   | dble_information |
     Then check resultset "dble_db_instance_2" has lines with following column values
       | name-0 | db_group-1 | addr-2      | port-3 |
-      | M1     | ha_group1  | 172.100.9.5 | 3307   |
+      | M1     | ha_group1  | 172.100.9.5 | 3306   |
       | s1     | ha_group1  | 172.100.9.1 | 3307   |
-      | s2     | ha_group1  | 172.100.9.2 | 3307   |
-      | M2     | ha_group2  | 172.100.9.6 | 3307   |
+      | s2     | ha_group1  | 172.100.9.6 | 3307   |
+      | M2     | ha_group2  | 172.100.9.6 | 3306   |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_3"
       | conn   | toClose | sql                                                                                                        | db               |
       | conn_0 | False   | select user,encrypt_configured,disabled,read_weight,max_conn_count,min_conn_count,id from dble_db_instance | dble_information |

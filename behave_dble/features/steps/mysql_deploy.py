@@ -26,7 +26,7 @@ from steps.lib.DBUtil import DBUtil
 LOGGER = logging.getLogger('root')
 use_step_matcher('cfparse')
 
-INIT_SCOPE = ('Standalone', 'group1', 'group2')
+INIT_SCOPE = ('Standalone', 'group1', 'group2','group3')
 
 
 @given('I clean mysql deploy environment')
@@ -60,12 +60,12 @@ def deploy_mysqls(context: Context):
     conf = f'--sandbox-directory {mysql_sandbox} --port-as-server-id --remote-access % --bind-address 0.0.0.0' \
            f' -c skip-name-resolve --gtid'
     mysql_cnf_list = [
-        "default_authentication_plugin=mysql_native_password",
+        # "default_authentication_plugin=mysql_native_password",
         "secure_file_priv=",
-        "sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES",
-        "session_track_schema=1",
-        "session_track_state_change=1",
-        "session_track_system_variables=\"*\"",
+        # "sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES",
+        # "session_track_schema=1",
+        # "session_track_state_change=1",
+        # "session_track_system_variables=\"*\"",
     ]
     mysql_cnf_param = ' '.join(["--my-cnf-options={}".format(x) for x in mysql_cnf_list])
 

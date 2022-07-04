@@ -16,14 +16,14 @@ Feature:  show databases/use dble_information/show tables [like]
 #case  begin query with error shcema or not exists schema
       | conn_0 | False   | desc dble_infor.version                | Unknown database 'dble_infor'                                          |
       | conn_0 | False   | describe schema1.version               | Unknown database 'schema1'                                             |
-      | conn_0 | False   | select * from schema1.version          | get error call manager command: schema schema1 doesn't exist!           |
+      | conn_0 | False   | select * from schema1.version          | get error call manager command: schema schema1 doesn't exist!          |
 #case show databases correct or erroneous spelling
       | conn_0 | False   | show database                          | Unsupported statement                                                  |
       | conn_0 | False   | show databasesl                        | Unsupported statement                                                  |
-      | conn_0 | False   | show databases                         | has{(('dble_information',),)}                                              |
+      | conn_0 | False   | show databases                         | has{(('dble_information',),)}                                          |
 #case query with  correct schema
-      | conn_0 | False   | desc dble_information.version          | has{(('version', 'varchar(64)', 'NO', 'PRI', None, ''),)}                 |
-      | conn_0 | False   | describe dble_information.version      | has{(('version', 'varchar(64)', 'NO', 'PRI', None, ''),)}                 |
+      | conn_0 | False   | desc dble_information.version          | has{(('version', 'varchar(64)', 'NO', 'PRI', None, ''),)}              |
+      | conn_0 | False   | describe dble_information.version      | has{(('version', 'varchar(64)', 'NO', 'PRI', None, ''),)}              |
       | conn_0 | False   | select * from dble_information.version | success                                                                |
 #case use dble_information correct or erroneous spelling
       | conn_0 | False   | use dble_informatio                    | Unknown database 'dble_informatio'                                     |
@@ -32,7 +32,7 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | False   | show table                             | Unsupported statement                                                  |
       | conn_0 | False   | show full tables                       | Unsupported statement                                                  |
       | conn_0 | False   | show columns from version              | Unsupported statement                                                  |
-      | conn_0 | False   | show tables                            | success                                                           |
+      | conn_0 | False   | show tables                            | success                                       |
       | conn_0 | False   | show tables like '%s%'                 | success                                       |
       | conn_0 | False   | show tables like 'version'             | has{(('version',),)}                          |
 #case desc/describe
@@ -63,54 +63,60 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn   | toClose | sql                       | db               |
       | conn_0 | False   | show tables               | dble_information |
     Then check resultset "tables_1" has lines with following column values
-      | Tables_in_dble_information-0 |
-      | backend_connections          |
-      | backend_variables            |
-      | dble_algorithm               |
-      | dble_blacklist               |
-      | dble_child_table             |
-      | dble_config                  |
-      | dble_db_group                |
-      | dble_db_instance             |
-      | dble_ddl_lock                |
-      | dble_entry                   |
-      | dble_entry_db_group          |
-      | dble_entry_schema            |
-      | dble_entry_table_privilege   |
-      | dble_global_table            |
-      | dble_processor               |
-      | dble_reload_status           |
-      | dble_rw_split_entry          |
-      | dble_schema                  |
-      | dble_sharding_node           |
-      | dble_sharding_table          |
-      | dble_status                  |
-      | dble_table                   |
-      | dble_table_sharding_node     |
-      | dble_thread_pool             |
-      | dble_thread_pool_task        |
-      | dble_thread_usage            |
-      | dble_variables               |
-      | dble_xa_recover              |
-      | dble_xa_session              |
-      | processlist                  |
-      | session_connections          |
-      | session_variables            |
+      | Tables_in_dble_information-0                          |
+      | backend_connections                                   |
+      | backend_connections_associate_thread                  |
+      | backend_variables                                     |
+      | dble_algorithm                                        |
+      | dble_blacklist                                        |
+      | dble_child_table                                      |
+      | dble_cluster_renew_thread                             |
+      | dble_config                                           |
+      | dble_db_group                                         |
+      | dble_db_instance                                      |
+      | dble_ddl_lock                                         |
+      | dble_entry                                            |
+      | dble_entry_db_group                                   |
+      | dble_entry_schema                                     |
+      | dble_entry_table_privilege                            |
+      | dble_flow_control                                     |
+      | dble_global_table                                     |
+      | dble_processor                                        |
+      | dble_reload_status                                    |
+      | dble_rw_split_entry                                   |
+      | dble_schema                                           |
+      | dble_sharding_node                                    |
+      | dble_sharding_table                                   |
+      | dble_status                                           |
+      | dble_table                                            |
+      | dble_table_sharding_node                              |
+      | dble_thread_pool                                      |
+      | dble_thread_pool_task                                 |
+      | dble_thread_usage                                     |
+      | dble_variables                                        |
+      | dble_xa_recover                                       |
+      | dble_xa_session                                       |
+      | processlist                                           |
+      | session_connections                                   |
+      | session_connections_active_ratio                      |
+      | session_connections_associate_thread                  |
+      | session_variables                                     |
       | sql_log                                               |
-      | sql_log_by_tx_digest_by_entry_by_user                 |
-      | sql_log_by_tx_by_entry_by_user                        |
-      | sql_log_by_digest_by_entry_by_user                    |
       | sql_statistic_by_associate_tables_by_entry_by_user    |
       | sql_statistic_by_frontend_by_backend_by_entry_by_user |
       | sql_statistic_by_table_by_user_by_entry               |
       | version                                               |
+      | sql_log_by_tx_digest_by_entry_by_user                 |
+      | sql_log_by_tx_by_entry_by_user                        |
+      | sql_log_by_digest_by_entry_by_user                    |
+
     Then check resultset "tables_1" has not lines with following column values
       | Tables_in_dble_information-0 |
       | demotest1                    |
       | demotest2                    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect       | db               |
-      | conn_0 | False   | show tables                          | length{(42)} | dble_information |
+      | conn_0 | False   | show tables                          | length{(45)} | dble_information |
  #case The query needs to be printed in the log，when management commands not supported by druid github:issues/1977
     Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql          | expect                |

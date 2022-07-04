@@ -17,7 +17,7 @@ Feature: Deploy DBLE test environment
     Given I create mysql test user
     Given I create databases named db1, db2, db3, db4 on group1, group2, Standalone
 
-  @install_dble
+  @use.with_dble_topo=single
   Scenario: Initialize the single DBLE
     Given I create symbolic link for mysql in dble-1
     Given a clean environment in all dble nodes
@@ -26,7 +26,6 @@ Feature: Deploy DBLE test environment
     Then Start dble in "dble-1"
 
 
-  #@use.with_dble_topo=cluster
   # Scenario: Initialize the cluster DBLE
   #   Given I clean dble deploy environment
   #   Given I install dble cluster
@@ -34,12 +33,12 @@ Feature: Deploy DBLE test environment
   #   Given I start the dble cluster
 
 
-#   @skip_restart
-#   Scenario: install zk cluster #1
-#     Given stop dble cluster and zk service
-#     Given a clean environment in all dble nodes
-#     Given install dble in all dble nodes
-#     Given replace config files in all dbles with command line config
-#     Given config zookeeper cluster in all dble nodes with "local zookeeper host"
-#     Given reset dble registered nodes in zk
-#     Then start dble in order
+  # @use.with_dble_topo=cluster
+  # Scenario: install zk cluster #1
+  #   Given stop dble cluster and zk service
+  #   Given a clean environment in all dble nodes
+  #   Given install dble in all dble nodes
+  #   Given replace config files in all dbles with command line config
+  #   Given config zookeeper cluster in all dble nodes with "local zookeeper host"
+  #   Given reset dble registered nodes in zk
+  #   Then start dble in order

@@ -28,7 +28,7 @@ Feature: heartbeat basic test
     """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.1:3306" user="test" maxCon="4" minCon="3" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.1:3307" user="test" maxCon="4" minCon="3" primary="true">
            <property name="heartbeatPeriodMillis">2000</property>
         </dbInstance>
      </dbGroup>

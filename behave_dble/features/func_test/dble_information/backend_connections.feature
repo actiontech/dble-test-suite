@@ -162,7 +162,7 @@ Feature:  backend_connections test
     Then check resultset "backend_connections_4" has lines with following column values
       | db_group_name-0 | db_instance_name-1 | remote_addr-2 |
       | ha_group2       | hostM2             | 172.100.9.6   |
-      | ha_group2       | hostS1             | 172.100.9.2   |
+      | ha_group2       | hostS1             | 172.100.9.6   |
     Then check resultset "backend_connections_4" has not lines with following column values
       | db_group_name-0 | db_instance_name-1 | remote_addr-2 |
       | ha_group1       | hostM1             | 172.100.9.5   |
@@ -268,6 +268,7 @@ Feature:  backend_connections test
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
     #sleep 5s to wait connections idle timeout and into scaling period
     Given sleep "5" seconds
+    ####这个btrace的检测是使用行数的，后续如果失败联系开发更改方法的行数
     Then check btrace "BtraceAboutConnection.java" output in "dble-1"
       """
         get into evict

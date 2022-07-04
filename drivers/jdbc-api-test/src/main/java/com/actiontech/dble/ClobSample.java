@@ -30,11 +30,7 @@
  */
 package com.actiontech.dble;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -110,7 +106,6 @@ public class ClobSample extends InterfaceTest{
 			print_debug("Wrote the following: " + clobWriter.toString());
 			print_debug("MySQL, setting String in Clob object with setString method");
 			myClob.setString(1, str);
-			myClob.setString(1, str);
 			print_debug("Length of Clob: " + myClob.length());
 			String sql = "INSERT INTO COFFEE_DESCRIPTIONS VALUES(?,?)";
 			mysql_pstmt = this.mysqlConn.prepareStatement(sql);
@@ -131,12 +126,15 @@ public class ClobSample extends InterfaceTest{
 			if (dble_pstmt != null) { dble_pstmt.close(); }
 		}
 	}
+	
+	private String readFile(String fileName, Writer writerArg) throws IOException {
 
-	private String readFile(String fileName,
-			Writer writerArg) throws FileNotFoundException,
-	IOException {
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		InputStream resourceAsStream = classLoader.getResourceAsStream(fileName);
+		assert resourceAsStream != null;
+		InputStreamReader inputStreamReader = new InputStreamReader(resourceAsStream);
+		BufferedReader br = new BufferedReader(inputStreamReader);
 
-		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		String nextLine = "";
 		StringBuffer sb = new StringBuffer();
 		while ((nextLine = br.readLine()) != null) {

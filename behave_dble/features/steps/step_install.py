@@ -277,16 +277,10 @@ def stop_dble_in_node(context, node):
         cmd_kill_guard = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $3}' | xargs -r kill -9"
         rc1, sto1, ste1 = ssh_client.exec_command(cmd_kill_guard)
 
-        dble_core_pid = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | wc -l"
-        rc2, sto2, ste2 = ssh_client.exec_command(dble_core_pid)
-        dble_core_exist = str(sto2) == '1'
-        if dble_core_exist:
-            cmd_kill_core = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | xargs -r kill -9"
-            rc3, sto3, ste3 = ssh_client.exec_command(cmd_kill_core)
-        else:
-            ste3 = ''
+        cmd_kill_core = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | xargs -r kill -9"
+        rc2, sto2, ste2 = ssh_client.exec_command(cmd_kill_core)
 
-        assert_that(len(ste1) == 0 and len(ste3) == 0, "kill dble process fail for:{0},{1}".format(ste1, ste2))
+        assert_that(len(ste1) == 0 and len(ste2) == 0, "kill dble process fail for:{0},{1}".format(ste1, ste2))
 
     if dble_dir_exist:
         datetime = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())

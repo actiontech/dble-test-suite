@@ -1,5 +1,6 @@
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
+from cmath import inf
 import logging
 import os
 import shutil
@@ -92,12 +93,12 @@ def init_meta(context, flag):
         DbleMeta.dbles = tuple(nodes)
     elif flag == "mysqls":
         nodes = []
-        for k, v in context.cfg_mysql.items():
-            for ck, cv in context.cfg_mysql[k].items():
+        for k, _ in context.cfg_mysql.items():
+            for _, cv in context.cfg_mysql[k].items():
                 cfg_dic = {}
                 cfg_dic.update(cv)
                 cfg_dic.update(context.cfg_server)
-
+                
                 node = MySQLMeta(cfg_dic)
                 nodes.append(node)
         MySQLMeta.mysqls = tuple(nodes)
@@ -262,9 +263,7 @@ def create_ssh_client(context: Context) -> Dict[str, SSHClient]:
         for _, info in group_info.items():
             ssh_client = SSHClient(
                 info['ip'], context.constant['ssh_user'], context.constant['ssh_password'])
-            # 默认环境未创建group-3容器，需要时自行调用connect()，并维护ssh连接
-            if group in ['Standalone', 'group1', 'group2']:
-                logger.info("check steps")
+            if group in ['Standalone', 'group1', 'group2','group3']:
                 ssh_client.connect()
             ssh_clients[f'{group}'] = ssh_client
             # 一个group只用建立一个连接
