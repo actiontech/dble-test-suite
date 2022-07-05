@@ -62,12 +62,12 @@ Feature: reload @@config_all -fr
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" url="172.100.9.5:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true" readWeight="1">
         </dbInstance>
-        <dbInstance name="hostS1" url="172.100.9.6:3307" user="test" password="errpwd" maxCon="1000" minCon="10" readWeight="2">
+        <dbInstance name="hostS1" url="172.100.9.6:3306" user="test" password="errpwd" maxCon="1000" minCon="10" readWeight="2">
         </dbInstance>
     </dbGroup>
     <dbGroup name="ha_group2" rwSplitMode="0" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" url="172.100.9.4:3307" user="test" password="111111" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" url="172.100.9.4:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -88,7 +88,7 @@ Feature: reload @@config_all -fr
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" url="172.100.9.5:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true" readWeight="1" id="xx1">
         </dbInstance>
-        <dbInstance name="hostS1" url="172.100.9.6:3307" user="test" password="111111" maxCon="1000" minCon="10" readWeight="2" disabled="true">
+        <dbInstance name="hostS1" url="172.100.9.6:3306" user="test" password="111111" maxCon="1000" minCon="10" readWeight="2" disabled="true">
         </dbInstance>
     </dbGroup>
     """

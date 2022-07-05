@@ -238,7 +238,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
      """
      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
      </dbGroup>
      """

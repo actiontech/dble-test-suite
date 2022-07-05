@@ -61,7 +61,7 @@ services:
       - 3306:3306
     networks:
       dble-net:
-        ipv4_address: 172.100.9.10
+        ipv4_address: 172.100.9.4
         ipv6_address: 2001::10
     volumes:
       - mysql_cgroup:/sys/fs/cgroup

@@ -130,7 +130,7 @@ cfg_mysql:
   Standalone:
   #mysql for comparing query result
     inst-1:
-      ip: 172.100.9.10
+      ip: 172.100.9.4
       port: 3306
       hostname: mysql
       user: test

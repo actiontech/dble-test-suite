@@ -85,7 +85,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
 
     <dbGroup rwSplitMode="2" name="ha_group4" delayThreshold="500" disableHA='true'>
         <heartbeat>show slave status</heartbeat>
-        <dbInstance name="hostM4" password="111111" url="172.100.9.10:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" disabled="true">
+        <dbInstance name="hostM4" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" disabled="true">
             <property name="testOnCreate">true</property>
             <property name="testOnBorrow">false</property>
             <property name="testWhileIdle">true</property>
@@ -247,7 +247,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     {\"value\":\"100000\",\"name\":\"evictorShutdownTimeoutMillis\"}\]}\]},
     {\"rwSplitMode\":2,\"name\":\"ha_group4\",\"delayThreshold\":500,\"disableHA\":\"true\",\"heartbeat\":{\"value\":\"show slave status\"},
     \"dbInstance\":\[
-    {\"name\":\"hostM4\",\"url\":\"172.100.9.10:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"readWeight\":\"1\",\"primary\":true,
+    {\"name\":\"hostM4\",\"url\":\"172.100.9.10:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"readWeight\":\"1\",\"primary\":true,
     \"property\":\[
     {\"value\":\"true\",\"name\":\"testOnCreate\"},{\"value\":\"false\",\"name\":\"testOnBorrow\"},
     {\"value\":\"true\",\"name\":\"testWhileIdle\"},{\"value\":\"50000\",\"name\":\"connectionTimeout\"},{\"value\":\"500\",\"name\":\"connectionHeartbeatTimeout\"}\]},
@@ -395,7 +395,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
 
     <dbGroup rwSplitMode="2" name="ha_group4" delayThreshold="500" disableHA='true'>
         <heartbeat>show slave status</heartbeat>
-        <dbInstance name="hostM4" password="111111" url="172.100.9.10:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" disabled="true">
+        <dbInstance name="hostM4" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" disabled="true">
             <property name="testOnCreate">true</property>
             <property name="testOnBorrow">false</property>
             <property name="testWhileIdle">true</property>
@@ -557,7 +557,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     {\"value\":\"100000\",\"name\":\"evictorShutdownTimeoutMillis\"}\]}\]},
     {\"rwSplitMode\":2,\"name\":\"ha_group4\",\"delayThreshold\":500,\"disableHA\":\"true\",\"heartbeat\":{\"value\":\"show slave status\"},
     \"dbInstance\":\[
-    {\"name\":\"hostM4\",\"url\":\"172.100.9.10:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"readWeight\":\"1\",\"primary\":true,
+    {\"name\":\"hostM4\",\"url\":\"172.100.9.10:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"readWeight\":\"1\",\"primary\":true,
     \"property\":\[
     {\"value\":\"true\",\"name\":\"testOnCreate\"},{\"value\":\"false\",\"name\":\"testOnBorrow\"},
     {\"value\":\"true\",\"name\":\"testWhileIdle\"},{\"value\":\"50000\",\"name\":\"connectionTimeout\"},{\"value\":\"500\",\"name\":\"connectionHeartbeatTimeout\"}\]},

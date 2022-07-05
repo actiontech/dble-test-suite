@@ -103,7 +103,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
     """
     <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
@@ -195,7 +195,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
     """
     <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
