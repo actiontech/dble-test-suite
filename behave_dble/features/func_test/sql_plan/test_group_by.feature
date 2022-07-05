@@ -215,7 +215,7 @@ Feature: test group by
       | dn2 | BASE SQL | select name from sharding_2_t1 group by name |
 
   @NORMAL
-  Scenario: Scenario: the version of all backend mysql nodes are mixed with 5.7.* and 8.0.* #3
+  Scenario: the version of all backend mysql nodes are mixed with 5.7.* and 8.0.* #3
         Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
