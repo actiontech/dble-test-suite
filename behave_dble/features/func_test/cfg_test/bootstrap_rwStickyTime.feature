@@ -1050,7 +1050,7 @@ Feature: test rwStickyTime on rwSplit mode
       | rwS1 | 111111 | conn_0 | False   | select SQL_SMALL_RESULT count(*),age from testtb group by age | success | testdb |
       | rwS1 | 111111 | conn_0 | true    | select id from testtb where age = 38                          | success | testdb |
 
-    Then check following text exist "Y" in file "/root/sandboxes/msb_5_7_25/data/mysql-master2.log" in host "mysql-master2"
+    Then check following text exist "Y" in file "/root/sandboxes/sandbox//master/data/mysql-2.log" in host "mysql-master2"
        """
        drop database if exists testdb
        create database testdb
@@ -1066,19 +1066,19 @@ Feature: test rwStickyTime on rwSplit mode
        select count(\*) from testtb where 1=1
        show tables
        """
-    Then check following text exist "N" in file "/root/sandboxes/msb_5_7_25/data/mysql-master2.log" in host "mysql-master2"
+    Then check following text exist "N" in file "/root/sandboxes/sandbox/master/data/mysql-2.log" in host "mysql-master2"
        """
        select id from testtb where age = 28
        select id from testtb where age = 38
        select SQL_SMALL_RESULT count(\*),age from testtb group by age
        """
-    Then check following text exist "Y" in file "/root/sandboxes/msb_5_7_25/data/dble-2.log" in host "mysql-slave1"
+    Then check following text exist "Y" in file "/root/sandboxes/sandbox/node1/data/mysql-2.log" in host "mysql-slave1"
        """
        select id from testtb where age = 28
        select id from testtb where age = 38
        select SQL_SMALL_RESULT count(\*),age from testtb group by age
        """
-    Then check following text exist "N" in file "/root/sandboxes/msb_5_7_25/data/dble-2.log" in host "mysql-slave1"
+    Then check following text exist "N" in file "/root/sandboxes/sandbox/node1/data/mysql-2.log" in host "mysql-slave1"
        """
        select id from testtb where age = 18
        show tables

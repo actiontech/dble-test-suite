@@ -244,7 +244,7 @@ Feature: config db config files incorrect and restart dble or reload configs
       shardingNodeDbGroup [ha_group2] define error ,all dbInstance database type must be MYSQL
       """
 
-  @TRIVIAL
+  @TRIVIAL @use.with_mysql_version=8.0
   Scenario: rwSplitUser with dbInstance database type must be MYSQL #13
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
