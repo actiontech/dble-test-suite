@@ -127,11 +127,20 @@ cfg_mysql:
       version: *mysql_version
 
       
-  Standalone:
+  compare:
   #mysql for comparing query result
     inst-1:
       ip: 172.100.9.4
       port: 3306
+      hostname: mysql
+      user: test
+      password: 111111
+      install_path: /root/sandboxes/sandbox
+      version: *mysql_version
+
+    inst-2:
+      ip: 172.100.9.4
+      port: 3307
       hostname: mysql
       user: test
       password: 111111

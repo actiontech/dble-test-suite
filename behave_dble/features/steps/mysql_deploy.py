@@ -26,7 +26,7 @@ from steps.lib.DBUtil import DBUtil
 LOGGER = logging.getLogger('root')
 use_step_matcher('cfparse')
 
-INIT_SCOPE = ('Standalone', 'group1', 'group2','group3')
+INIT_SCOPE = ('compare', 'group1', 'group2','group3')
 
 
 @given('I clean mysql deploy environment')
@@ -34,12 +34,7 @@ def delete_mysqls(context: Context):
     for name, ssh_conn in context.ssh_clients.items():
         if name in INIT_SCOPE:
             delete_mysql(ssh_conn)
-        
-        # =get_ssh(context.cfg_mysql[name])
-    # for name, ssh_conn in context.ssh_client.items():
-        # if name in INIT_SCOPE:
-        
-
+                
 
 @log_it
 def delete_mysql(ssh_conn: SSHClient):
@@ -169,7 +164,7 @@ def create_mysql_test_user(context: Context):
     for group, group_info in context.cfg_mysql.items():
         # group1 
         # group2
-        # Standalone 
+        # compare 
         if group in INIT_SCOPE:
             ssh_conn = context.ssh_clients[group]
             if len(group_info) == 1:

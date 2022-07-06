@@ -537,7 +537,7 @@ def step_impl(context,host1,role,host2,oscmd="cd /root/sandboxes/sandbox/data"):
     if host2.startswith('mysql'):
         node_=get_node(host2)
         install_path = node_.install_path
-        oscmd = f"cd {install_path} + '/data'"
+        oscmd = f"cd {install_path}/data"
     # if host2.startswith('mysql8'):
         # oscmd = "cd /root/sandboxes/msb_8_0_18/data"
 
