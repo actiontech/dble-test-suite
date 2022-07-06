@@ -512,7 +512,7 @@ def step_impl(context,result,value):
 
 @Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql')
 @Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql after "{oscmd}"')
-def step_impl(context,host1,role,host2,oscmd="cd /root/sandboxes/msb_5_7_25/data"):
+def step_impl(context,host1,role,host2,oscmd="cd /root/sandboxes/sandbox/data"):
     user = ''
     password = ''
     port = ''
@@ -534,8 +534,12 @@ def step_impl(context,host1,role,host2,oscmd="cd /root/sandboxes/msb_5_7_25/data
     ip = node.ip
 
     ssh = get_ssh(host2)
-    if host2.startswith('mysql8'):
-        oscmd = "cd /root/sandboxes/msb_8_0_18/data"
+    if host2.startswith('mysql'):
+        node_=get_node(host2)
+        install_path = node_.install_path
+        oscmd = f"cd {install_path} + '/data'"
+    # if host2.startswith('mysql8'):
+        # oscmd = "cd /root/sandboxes/msb_8_0_18/data"
 
     sql_cmd_str = context.text.strip()
     sql_cmd_list = sql_cmd_str.splitlines()

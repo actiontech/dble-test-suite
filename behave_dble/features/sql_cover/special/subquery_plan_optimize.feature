@@ -4,7 +4,7 @@
 Feature: subquery execute plan should be optimized for ER/Global table join #dble github issue #685 #1057
   As developer suggestion, the "explain ...(query)" resultset line count can indicate whether the query plan is optimized
 
-  @NORMAL @restore_mysql_config @current
+  @NORMAL @restore_mysql_config @current @skip @use.with_mysql_version=5.7
   Scenario: check ER tables subquery execute plan optimized #1
     """
     {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0},'mysql-slave1':{'lower_case_table_names':0},'mysql-slave2':{'lower_case_table_names':0}}}

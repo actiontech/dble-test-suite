@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 Feature: shardingNode's lettercase is insensitive, that should not be affected by lower_case_table_names
 
-  @NORMAL @restore_mysql_config
+  @NORMAL @restore_mysql_config @skip @use.with_mysql_version=5.7
   Scenario: shardingNode's lettercase is insensitive, but reference to the shardingNode name must consistent #1
    """
     {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}}}

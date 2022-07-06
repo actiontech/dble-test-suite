@@ -6,7 +6,7 @@ Feature: config sharding config files incorrect and restart dble or reload confi
 
 
 
-  @NORMAL @restore_mysql_config
+  @NORMAL @restore_mysql_config @use.with_mysql_version=5.7 @skip
   Scenario: config sharding property, reload the configs #5
    """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}

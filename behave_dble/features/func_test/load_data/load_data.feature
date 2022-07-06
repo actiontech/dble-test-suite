@@ -12,7 +12,7 @@ Feature: connect dble in mysql-master1, and execute cmd "load data" with relativ
     """
     Given execute oscmd in "mysql-master1"
     """
-    echo -e '20,20\n30,30' > /root/sandboxes/msb_5_7_25/data/test.txt
+    echo -e '20,20\n30,30' > /root/sandboxes/sandbox/master/data/test.txt
     """
     Given connect "dble-1" with user "test" in "mysql-master1" to execute sql
     """
@@ -37,7 +37,7 @@ Feature: connect dble in mysql-master1, and execute cmd "load data" with relativ
     Given connect "dble-1" with user "test" in "mysql-master1" to execute sql
     """
     load data infile '/opt/dble/test.txt' into table schema1.test fields terminated by ',' lines terminated by '\n'
-    load data local infile '/root/sandboxes/msb_5_7_25/data/test.txt' into table schema1.test fields terminated by ',' lines terminated by '\n'
+    load data local infile '/root/sandboxes/sandbox/master/data/test.txt' into table schema1.test fields terminated by ',' lines terminated by '\n'
     """
     Then execute sql in "dble-1" in "user" mode
       | sql                | expect                                             | db      |
@@ -48,7 +48,7 @@ Feature: connect dble in mysql-master1, and execute cmd "load data" with relativ
     """
     Given execute oscmd in "mysql-master1"
     """
-    rm -rf /root/sandboxes/msb_5_7_25/data/test.txt
+    rm -rf /root/sandboxes/sandbox/master/data/test.txt
     """
 
   #DBLE0REQ-1587

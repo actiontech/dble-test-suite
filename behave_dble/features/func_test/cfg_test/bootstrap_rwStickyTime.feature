@@ -1099,7 +1099,7 @@ Feature: test rwStickyTime on rwSplit mode
       | rwS1 | 111111 | conn_0 | False   | select sleep(6)                           | success | testdb |
       | rwS1 | 111111 | conn_0 | true    | select sum(age) from testtb               | success | testdb |
 
-    Then check following text exist "Y" in file "/root/sandboxes/msb_5_7_25/data/mysql-master2.log" in host "mysql-master2"
+    Then check following text exist "Y" in file "/root/sandboxes/sandbox/master/data/mysql-2.log" in host "mysql-master2"
        """
        begin
        update testtb set id = 43 where age = 21
@@ -1109,15 +1109,15 @@ Feature: test rwStickyTime on rwSplit mode
        select id from testtb order by id limit 3
        select last_insert_id()
        """
-    Then check following text exist "N" in file "/root/sandboxes/msb_5_7_25/data/mysql-master2.log" in host "mysql-master2"
+    Then check following text exist "N" in file "/root/sandboxes/sandbox/master/data/mysql-2.log" in host "mysql-master2"
        """
        select sum(age) from testtb
        """
-    Then check following text exist "Y" in file "/root/sandboxes/msb_5_7_25/data/dble-2.log" in host "mysql-slave1"
+    Then check following text exist "Y" in file "/root/sandboxes/sandbox/node1/data/mysql-2.log" in host "mysql-slave1"
        """
        select sum(age) from testtb
        """
-    Then check following text exist "N" in file "/root/sandboxes/msb_5_7_25/data/dble-2.log" in host "mysql-slave1"
+    Then check following text exist "N" in file "/root/sandboxes/sandbox/node1/data/mysql-2.log" in host "mysql-slave1"
        """
        update testtb set id = 43 where age = 21
        select sleep(6)

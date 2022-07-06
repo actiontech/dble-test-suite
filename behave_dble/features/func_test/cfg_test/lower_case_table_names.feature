@@ -8,7 +8,7 @@ Feature: check collation/lower_case_table_names works right for dble
 #  lower_case_table_names=1,CHARACTER SET utf8 COLLATE utf8_bin is case sensitive, from issue 1229
 #  lower_case_table_names=1,CHARACTER SET utf8 COLLATE latin1_swedish_ci is case insensitive, from issue 1229
 
-  @BLOCKER @restore_mysql_config
+  @BLOCKER @restore_mysql_config @use.with_mysql_version=5.7 @skip
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive#1
    """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0},'mysql-slave1':{'lower_case_table_names':0},'mysql-slave2':{'lower_case_table_names':0}}}
@@ -162,7 +162,7 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)          |error totally whack | schema1 |
       | conn_1 | True    |select s.id from DbTest.`Test_Table` s where s.name='aa'                  |success             | schema1 |
 
-  @BLOCKER @restore_mysql_config
+  @BLOCKER @restore_mysql_config @use.with_mysql_version=5.7 @skip
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive #3
   """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0},'mysql-slave1':{'lower_case_table_names':0},'mysql-slave2':{'lower_case_table_names':0}}}
@@ -212,7 +212,7 @@ Feature: check collation/lower_case_table_names works right for dble
       | test_user | 111111 | conn_0 | False   | delete from aly_test                            | success |
       | test_user | 111111 | conn_0 | true    | show create table aly_test                      | success |
 
-  @BLOCKER @restore_mysql_config
+  @BLOCKER @restore_mysql_config @use.with_mysql_version=5.7 @skip
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive #4
   """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0},'mysql-slave1':{'lower_case_table_names':0},'mysql-slave2':{'lower_case_table_names':0}}}
