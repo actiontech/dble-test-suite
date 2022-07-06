@@ -5,7 +5,7 @@
 
 
 Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
-
+  @hybrid_deploy
   Scenario: writeHost mysql < 8.0, readHost mysql >= 8.0 #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -97,7 +97,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
       | conn_3 | False   | select * from sharding_4_t1 | has{((1,'1'), (2,'2'), (4,'4'), (3,'3'))} | schema1 |
       | conn_3 | True    | commit                      | success                                   | schema1 |
 
-
+  @hybrid_deploy
   Scenario: writeHost mysql >= 8.0, readHost mysql < 8.0 #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
