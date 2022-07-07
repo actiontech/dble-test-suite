@@ -239,7 +239,8 @@ def step_impl(context,hostname,num=None,rs_name=None):
 
     rc, stdout, stderr = ssh.exec_command(cmd)
     stderr =  stderr.lower()
-    assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)
+    # assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)
+    assert_that(rc, equal_to(0), stderr) 
     if num is not None:
         assert int(stdout) >= int(num), "expect {0} less than result {1} ,but not ".format(num, int(stdout))
 
