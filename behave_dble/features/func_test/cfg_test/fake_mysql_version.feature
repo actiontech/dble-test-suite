@@ -5,7 +5,7 @@
 
 # for DBLE0REQ-189
 Feature: test fakeMySQLVersion support mysql8.0
-  @hybrid_deploy
+  @skip
   Scenario: check fakeMySQLVersion is 5.7 #1
 # fakeMySQLVersion is 5.7.13, backend mysql version is 5.7.13, mysql client version is 5.7.13
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -90,7 +90,7 @@ Feature: test fakeMySQLVersion support mysql8.0
     drop table if exists schema1.sharding_4_t1
     """
   
-  @hybrid_deploy
+  @skip
   Scenario: check fakeMySQLVersion is 8.0 #2
 # fakeMySQLVersion is 8.0.21, backend mysql version is 5.7.13
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds

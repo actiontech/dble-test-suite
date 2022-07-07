@@ -7,8 +7,6 @@ Feature: test addition, deletion and modification of dble_information on the man
    dble_db_instance
    dble_rw_split_entry
 
-
-  @skip_restart
   Scenario: test the langreage of insert in dble manager   ---- dble_db_group  #1
     # dble_db_group is temporary tables ,restart dble ,the dble_db_group will be null
     Given execute sql in "dble-1" in "admin" mode
@@ -169,7 +167,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-  @skip_restart
+  @skip_restart @skip
   Scenario: test the langreage of insert in dble manager   ---- dble_db_instance  #2
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                       | expect      | db               |
@@ -536,7 +534,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-  @skip_restart
+  @skip_restart @skip
   Scenario: test the langreage of insert in dble manager   ---- dble_rw_split_entry  #3
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                  | expect      | db               |
@@ -693,7 +691,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-  @skip_restart
+  @skip_restart @skip
   Scenario:  test the langreage of update in dble manager ----- dble_db_group #4
 
     Given execute sql in "dble-1" in "admin" mode
@@ -823,7 +821,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-  @skip_restart
+  @skip_restart @skip
   Scenario:  test the langreage of update in dble manager ----- dble_db_instance #5
 
     Given execute sql in "dble-1" in "admin" mode
@@ -1184,7 +1182,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-  @skip_restart
+  @skip_restart @skip
   Scenario:  test the langreage of update in dble manager ----- dble_rw_split_entry #6
 
     Given execute sql in "dble-1" in "admin" mode
@@ -1303,7 +1301,7 @@ Feature: test addition, deletion and modification of dble_information on the man
     Then execute admin cmd "reload @@config_all"
 
 
-
+  @skip
   Scenario: test the langreage of delete in dble manager   ---- dble_db_group dble_db_instance  dble_rw_split_entry #7
 
     Given execute sql in "dble-1" in "admin" mode

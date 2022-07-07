@@ -5,7 +5,7 @@
 
 
 Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
-  @hybrid_deploy
+  @skip
   Scenario: writeHost mysql < 8.0, readHost mysql >= 8.0 #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -97,7 +97,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
       | conn_3 | False   | select * from sharding_4_t1 | has{((1,'1'), (2,'2'), (4,'4'), (3,'3'))} | schema1 |
       | conn_3 | True    | commit                      | success                                   | schema1 |
 
-  @hybrid_deploy
+  @skip
   Scenario: writeHost mysql >= 8.0, readHost mysql < 8.0 #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -189,15 +189,15 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
       | conn_3 | False   | select * from sharding_4_t1 | has{((1,'1'), (2,'2'), (4,'4'), (3,'3'))} | schema1 |
       | conn_3 | True    | commit                      | success                                   | schema1 |
 
-
+  @use.with_mysql_version=8.0
   Scenario: writeHost and readHost mysql >= 8.0 #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10">
+        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
     </dbGroup>
     """
@@ -281,7 +281,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
       | conn_3 | False   | select * from sharding_4_t1 | has{((1,'1'), (2,'2'), (4,'4'), (3,'3'))} | schema1 |
       | conn_3 | True    | commit                      | success                                   | schema1 |
 
-
+  @use.with_mysql_version=5.7
   Scenario: writeHost and readHost mysql < 8.0 #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """

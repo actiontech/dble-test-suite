@@ -85,7 +85,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
 
     <dbGroup rwSplitMode="2" name="ha_group4" delayThreshold="500" disableHA='true'>
         <heartbeat>show slave status</heartbeat>
-        <dbInstance name="hostM4" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" disabled="true">
+        <dbInstance name="hostM4" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" disabled="true">
             <property name="testOnCreate">true</property>
             <property name="testOnBorrow">false</property>
             <property name="testWhileIdle">true</property>
@@ -93,8 +93,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
             <property name="connectionHeartbeatTimeout">500</property>
 
         </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="false" readWeight="12" />
-        <dbInstance name="hostS2" password="111111" usingDecrypt="false" url="172.100.9.12:3307" user="test" maxCon="1000" minCon="10" primary="false" readWeight="2" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="1000" minCon="10" primary="false" readWeight="12" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -247,12 +246,11 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     {\"value\":\"100000\",\"name\":\"evictorShutdownTimeoutMillis\"}\]}\]},
     {\"rwSplitMode\":2,\"name\":\"ha_group4\",\"delayThreshold\":500,\"disableHA\":\"true\",\"heartbeat\":{\"value\":\"show slave status\"},
     \"dbInstance\":\[
-    {\"name\":\"hostM4\",\"url\":\"172.100.9.10:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"readWeight\":\"1\",\"primary\":true,
+    {\"name\":\"hostM4\",\"url\":\"172.100.9.4:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"readWeight\":\"1\",\"primary\":true,
     \"property\":\[
     {\"value\":\"true\",\"name\":\"testOnCreate\"},{\"value\":\"false\",\"name\":\"testOnBorrow\"},
     {\"value\":\"true\",\"name\":\"testWhileIdle\"},{\"value\":\"50000\",\"name\":\"connectionTimeout\"},{\"value\":\"500\",\"name\":\"connectionHeartbeatTimeout\"}\]},
-    {\"name\":\"hostS1\",\"url\":\"172.100.9.11:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"readWeight\":\"12\",\"primary\":false},
-    {\"name\":\"hostS2\",\"url\":\"172.100.9.12:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"usingDecrypt\":\"false\",\"readWeight\":\"2\",\"primary\":false}\]}\],
+    {\"name\":\"hostS1\",\"url\":\"172.100.9.4:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"readWeight\":\"12\",\"primary\":false}\]}\],
     \"schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
@@ -349,7 +347,6 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     """
 
 
-
    Scenario: test modify dble's config xml and reload dble #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -395,7 +392,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
 
     <dbGroup rwSplitMode="2" name="ha_group4" delayThreshold="500" disableHA='true'>
         <heartbeat>show slave status</heartbeat>
-        <dbInstance name="hostM4" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" disabled="true">
+        <dbInstance name="hostM4" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" disabled="true">
             <property name="testOnCreate">true</property>
             <property name="testOnBorrow">false</property>
             <property name="testWhileIdle">true</property>
@@ -403,8 +400,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
             <property name="connectionHeartbeatTimeout">500</property>
 
         </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="false" readWeight="12" />
-        <dbInstance name="hostS2" password="111111" usingDecrypt="false" url="172.100.9.12:3307" user="test" maxCon="1000" minCon="10" primary="false" readWeight="2" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="1000" minCon="10" primary="false" readWeight="12" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -557,12 +553,11 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     {\"value\":\"100000\",\"name\":\"evictorShutdownTimeoutMillis\"}\]}\]},
     {\"rwSplitMode\":2,\"name\":\"ha_group4\",\"delayThreshold\":500,\"disableHA\":\"true\",\"heartbeat\":{\"value\":\"show slave status\"},
     \"dbInstance\":\[
-    {\"name\":\"hostM4\",\"url\":\"172.100.9.10:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"readWeight\":\"1\",\"primary\":true,
+    {\"name\":\"hostM4\",\"url\":\"172.100.9.4:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"readWeight\":\"1\",\"primary\":true,
     \"property\":\[
     {\"value\":\"true\",\"name\":\"testOnCreate\"},{\"value\":\"false\",\"name\":\"testOnBorrow\"},
     {\"value\":\"true\",\"name\":\"testWhileIdle\"},{\"value\":\"50000\",\"name\":\"connectionTimeout\"},{\"value\":\"500\",\"name\":\"connectionHeartbeatTimeout\"}\]},
-    {\"name\":\"hostS1\",\"url\":\"172.100.9.11:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"readWeight\":\"12\",\"primary\":false},
-    {\"name\":\"hostS2\",\"url\":\"172.100.9.12:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"usingDecrypt\":\"false\",\"readWeight\":\"2\",\"primary\":false}\]}\],
+    {\"name\":\"hostS1\",\"url\":\"172.100.9.4:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"readWeight\":\"12\",\"primary\":false}\]}\],
     \"schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[

@@ -6,7 +6,7 @@
 
 Feature: check txIsolation supports tx_/transaction_ variables
 
-  @restore_mysql_service @hybrid_deploy
+  @skip
   Scenario: writeHost mysql < 8.0, readHost mysql >= 8.0 #1
   """
     {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}, 'mysql8-slave1':{'start_mysql':1}}}
@@ -104,7 +104,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     heartbeat to [[]172.100.9.11:3307[]] setOK
     """
 
-  @restore_mysql_service @hybrid_deploy
+  @skip
   Scenario: writeHost mysql >= 8.0, readHost mysql < 8.0 #2
   """
     {'restore_mysql_service':{'mysql8-master2':{'start_mysql':1}, 'mysql-slave1':{'start_mysql':1}}}
@@ -203,25 +203,25 @@ Feature: check txIsolation supports tx_/transaction_ variables
     """
 
 
-  @restore_mysql_service
+  @restore_mysql_service @use.with_mysql_version=8.0
   Scenario: writeHost and readHost mysql >= 8.0 #3
   """
-    {'restore_mysql_service':{'mysql8-master2':{'start_mysql':1}, 'mysql8-slave1':{'start_mysql':1}}}
+    {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}, 'mysql-slave1':{'start_mysql':1}}}
   """
 # check isolation、autocommit
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10">
+        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
     </dbGroup>
     """
@@ -233,10 +233,10 @@ Feature: check txIsolation supports tx_/transaction_ variables
     $a -DtxIsolation=1
     """
     Then restart dble in "dble-1" success
-    Then execute sql in "mysql8-master2"
+    Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                                | expect                                |
       | conn_0 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
-    Then execute sql in "mysql8-slave1"
+    Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                                | expect                                |
       | conn_1 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
 
@@ -274,41 +274,41 @@ Feature: check txIsolation supports tx_/transaction_ variables
     | conn_4 | True    | commit                                                  | success                                              | schema1 |
 
 # stop, start writeHost
-    Given stop mysql in host "mysql8-master2"
+    Given stop mysql in host "mysql-master2"
     Given sleep "40" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.10:3307[]] setError
+    heartbeat to [[]172.100.9.6:3306[]] setError
     """
-    Given start mysql in host "mysql8-master2"
+    Given start mysql in host "mysql-master2"
     Given sleep "40" seconds
-    Then execute sql in "mysql8-master2"
+    Then execute sql in "mysql-master2"
     | conn   | toClose | sql                                                                                | expect                                |
     | conn_5 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.10:3307[]] setOK
+    heartbeat to [[]172.100.9.6:3306[]] setOK
     """
 
 # stop, start readHost
-    Given stop mysql in host "mysql8-slave1"
+    Given stop mysql in host "mysql-slave1"
     Given sleep "40" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.11:3307[]] setError
+    heartbeat to [[]172.100.9.6:3307[]] setError
     """
-    Given start mysql in host "mysql8-slave1"
+    Given start mysql in host "mysql-slave1"
     Given sleep "40" seconds
-    Then execute sql in "mysql8-slave1"
+    Then execute sql in "mysql-slave1"
     | conn   | toClose | sql                                                                                | expect                                |
     | conn_6 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.11:3307[]] setOK
+    heartbeat to [[]172.100.9.6:3307[]] setOK
     """
 
 
-  @restore_mysql_service
+  @restore_mysql_service @use.with_mysql_version=5.7
   Scenario: writeHost and readHost mysql < 8.0 #4
   """
     {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}, 'mysql-slave1':{'start_mysql':1}}}

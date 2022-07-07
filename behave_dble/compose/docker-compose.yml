@@ -82,3 +82,31 @@ services:
       - dble_1_cgroup:/sys/fs/cgroup
       - /share:/share
     working_dir: /opt
+  dble-2:
+    image: dble/dble_test_dble:latest
+    container_name: dble-2
+    hostname: dble-2
+    privileged: true
+    stdin_open: true
+    tty: true
+    networks:
+      dble-net:
+        ipv4_address: 172.100.9.2
+        ipv6_address: 2001::12
+    volumes:
+      - /share:/share
+    working_dir: /opt
+  dble-3:
+    image: dble/dble_test_dble:latest
+    container_name: dble-3
+    hostname: dble-3
+    privileged: true
+    stdin_open: true
+    tty: true
+    networks:
+      dble-net:
+        ipv4_address: 172.100.9.3
+        ipv6_address: 2001::13
+    volumes:
+      - /share:/share
+    working_dir: /opt

@@ -244,13 +244,13 @@ Feature: config db config files incorrect and restart dble or reload configs
       shardingNodeDbGroup [ha_group2] define error ,all dbInstance database type must be MYSQL
       """
 
-  @TRIVIAL @use.with_mysql_version=8.0
+  @TRIVIAL
   Scenario: rwSplitUser with dbInstance database type must be MYSQL #13
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" databaseType="mysql"/>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" databaseType="mysql"/>
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -263,7 +263,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all" get the following output
@@ -275,8 +275,8 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" databaseType="clickhouse"/>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" databaseType="clickhouse"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all" get the following output
@@ -288,8 +288,8 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all" get the following output
@@ -301,8 +301,8 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" databaseType="clickhouse"/>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" databaseType="clickhouse"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all" get the following output
