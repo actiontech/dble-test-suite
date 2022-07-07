@@ -66,7 +66,7 @@ def before_all(context):
     
     init_meta(context, "mysqls")
     context.ssh_clients = create_ssh_client(context)
-    context.ssh_sftp = get_sftp(context.cfg_dble['single']['dble-1']['hostname'])
+    context.ssh_client = get_ssh(context.cfg_dble['single']['dble-1']['hostname'])
     context.ssh_sftp = get_sftp(context.cfg_dble['single']['dble-1']['hostname'])
     try:
         para_dble_conf = context.config.userdata.pop('dble_conf')

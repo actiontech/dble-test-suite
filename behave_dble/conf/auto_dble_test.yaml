@@ -127,7 +127,7 @@ cfg_mysql:
       version: *mysql_version
 
       
-  compare:
+  compare_mysql:
   #mysql for comparing query result
     inst-1:
       ip: 172.100.9.4
@@ -135,16 +135,16 @@ cfg_mysql:
       hostname: mysql
       user: test
       password: 111111
-      install_path: /root/sandboxes/sandbox
+      install_path: /root/sandboxes/sandbox/master
       version: *mysql_version
 
     inst-2:
       ip: 172.100.9.4
       port: 3307
-      hostname: mysql
+      hostname: mysql-slave3
       user: test
       password: 111111
-      install_path: /root/sandboxes/sandbox
+      install_path: /root/sandboxes/sandbox/node1
       version: *mysql_version
        
 cfg_zookeeper:

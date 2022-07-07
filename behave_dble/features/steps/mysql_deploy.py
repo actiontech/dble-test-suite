@@ -26,7 +26,7 @@ from steps.lib.DBUtil import DBUtil
 LOGGER = logging.getLogger('root')
 use_step_matcher('cfparse')
 
-INIT_SCOPE = ('compare', 'group1', 'group2','group3')
+INIT_SCOPE = ('compare_mysql', 'group1', 'group2','group3')
 
 
 @given('I clean mysql deploy environment')
@@ -57,6 +57,7 @@ def deploy_mysqls(context: Context):
     mysql_cnf_list = [
         # "default_authentication_plugin=mysql_native_password",
         "secure_file_priv=",
+        "local-infile=1",
         # "sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES",
         # "session_track_schema=1",
         # "session_track_state_change=1",
@@ -66,7 +67,7 @@ def deploy_mysqls(context: Context):
 
     single_cmd = f'dbdeployer deploy single {mysql_version} --port 3306 {conf} {mysql_cnf_param}'
     repl_cmd = f'dbdeployer deploy replication --topology=master-slave {mysql_version} --base-port 3305 ' \
-               f'--concurrent {conf}'
+               f'--concurrent {conf} {mysql_cnf_param}'
 
     for group, info in context.cfg_mysql.items():
         if group in INIT_SCOPE:
@@ -197,7 +198,8 @@ def create_mysql_test_user(context: Context):
                 lines = ['[client]\n',
                          f"user={context.cfg_mysql[group][inst]['user']}\n",
                          f"password={context.cfg_mysql[group][inst]['password']}\n",
-                         f"socket=/tmp/mysql_sandbox{context.cfg_mysql[group][inst]['port']}.sock\n"]
+                         f"socket=/tmp/mysql_sandbox{context.cfg_mysql[group][inst]['port']}.sock\n",
+                          "local-infile=1"]
                 with open(f'{mysql_cnf}/{group}_{inst}.cnf', 'w', encoding='utf8') as f:
                     f.writelines(lines)
 

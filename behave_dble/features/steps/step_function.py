@@ -212,15 +212,15 @@ def step_impl(context, filename):
     assert len(stderr)==0, "rm file in dble fail for {0}".format(stderr)
 
     # remove file in compare mysql
-    dble_node_ssh = get_ssh(context.cfg_mysql['compare_mysql']['master1']['hostname'])
-    rc, stdout, stderr = dble_node_ssh.exec_command(cmd)
+    dble_node_ssh = get_ssh(context.cfg_mysql['compare_mysql']['inst-1']['hostname'])
+    rc, _, stderr = dble_node_ssh.exec_command(cmd)
     assert len(stderr)==0, "rm file in compare mysql fail for {0}".format(stderr)
 
 @Given ('delete file "{filename}" on "{hostname}"')
 def step_impl(context,filename,hostname):
     cmd = "rm -rf {0}".format(filename)
     ssh = get_ssh(hostname)
-    rc, stdout, stderr = ssh.exec_command(cmd)
+    _, _, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr)==0 ,"get err {0} with deleting {1}".format(stderr,filename))
 
 

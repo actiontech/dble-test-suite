@@ -16,7 +16,7 @@ Feature: Deploy DBLE test environment
     Given I reset the mysql uuid
     Given I create mysql test user
     Given I create databases named db1, db2, db3, db4 on group1, group2
-    Given I create databases named schema1,schema2,schema3,testdb,db1,db2,db3,db4 on compare
+    Given I create databases named schema1,schema2,schema3,testdb,db1,db2,db3,db4 on compare_mysql
 
 
   @use.with_dble_topo=single

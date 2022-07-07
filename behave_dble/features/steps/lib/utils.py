@@ -263,7 +263,7 @@ def create_ssh_client(context: Context) -> Dict[str, SSHClient]:
         for _, info in group_info.items():
             ssh_client = SSHClient(
                 info['ip'], context.constant['ssh_user'], context.constant['ssh_password'])
-            if group in ['compare', 'group1', 'group2','group3']:
+            if group in ['compare_mysql', 'group1', 'group2','group3']:
                 ssh_client.connect()
             ssh_clients[f'{group}'] = ssh_client
             # 一个group只用建立一个连接
