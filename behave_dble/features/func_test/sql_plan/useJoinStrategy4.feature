@@ -3,7 +3,6 @@
 # Created by wangjuan at 2022/5/10
 Feature: check useJoinStrategy
 
-  @skip_restart
   @delete_mysql_tables
   Scenario: check useJoinStrategy - globalTable + singleTable + shardingTable #1
   """
@@ -487,7 +486,6 @@ Feature: check useJoinStrategy
       | conn_0  | true     | SELECT * FROM Employee_2 a LEFT JOIN Dept b on a.name=b.manager left join Level c on a.level=c.levelname where a.empid=3401 or b.deptid=2 or c.salary=15000 order by a.name | schema1 |
 
 
-  @skip_restart
   @delete_mysql_tables
   Scenario: check useJoinStrategy - globalTable + shardingTable + shardingTable #2
   """
@@ -996,7 +994,6 @@ Feature: check useJoinStrategy
       | conn_0  | true     | SELECT * FROM Employee_2 a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on b.manager=c.name where a.empid=3401 or b.deptid=3 or c.age>20 order by a.name | schema1 |
 
 
-  @skip_restart
   @delete_mysql_tables
   Scenario: check useJoinStrategy - singleTable + shardingTable + shardingTable #3
   """
@@ -1554,7 +1551,6 @@ Feature: check useJoinStrategy
       | conn_0  | true     | SELECT * FROM Employee_2 a LEFT JOIN Dept b on a.name=b.manager INNER JOIN Level c on a.level=c.levelname where a.empid=3401 or b.deptid=2 or c.salary=15000 order by a.name | schema1 |
 
 
-  @skip_restart
   @delete_mysql_tables
   Scenario: check useJoinStrategy - singleTable + singleTable + globalTable #4
   """

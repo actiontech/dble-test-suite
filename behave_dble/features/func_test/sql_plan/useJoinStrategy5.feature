@@ -3,8 +3,7 @@
 # Created by wangjuan at 2022/5/10
 Feature: check useJoinStrategy
 
-  @skip_restart
-#  @delete_mysql_tables
+  @delete_mysql_tables
   Scenario: check useJoinStrategy right join & right join - shardingTable + shardingTable + shardingTable #1
   """
   {'delete_mysql_tables': {'mysql-master1': ['db1'], 'mysql-master2': ['db1'], 'mysql':['schema1']}}

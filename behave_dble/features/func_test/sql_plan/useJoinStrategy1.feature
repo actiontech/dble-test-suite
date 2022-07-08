@@ -9,7 +9,6 @@
 
 Feature: check useJoinStrategy
 
-  @skip_restart
   @delete_mysql_tables
   Scenario: check useJoinStrategy left join & left join - shardingTable + shardingTable + shardingTable #1
   """
