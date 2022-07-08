@@ -13,7 +13,7 @@ Feature: show_dbinstance
        | show @@dbinstance |
      Then check resultset "sql_rs" has lines with following column values
         | NAME-1 | HOST-2         |  PORT-3 | ACTIVE-5  | IDLE-6  |
-        | hostM1 | 172.100.9.5   | 3307     |    0      |      0    |
+        | hostM1 | 172.100.9.5   | 3306     |    0      |      0    |
     Given start mysql in host "mysql-master1"
 
   Scenario: github issue #1064 #2
@@ -31,4 +31,4 @@ Feature: show_dbinstance
       | show @@dbinstance |
     Then check resultset "sql_rs2" has lines with following column values
         | NAME-1 | HOST-2        |  PORT-3  | ACTIVE-5 |
-        | hostM1 | 172.100.9.5   | 3307     |    0     |
+        | hostM1 | 172.100.9.5   | 3306     |    0     |

@@ -100,7 +100,7 @@ Feature: reload @@config_all -f
        <heartbeat>show slave status()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-        <dbInstance name="slave1" url="172.100.9.6:3306" user="test" password="111111" maxCon="1000" minCon="10" >
+        <dbInstance name="slave1" url="172.100.9.6:3307" user="test" password="111111" maxCon="1000" minCon="10" >
         </dbInstance>
      </dbGroup>
     """

@@ -43,8 +43,8 @@ Feature: test high-availability related commands
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
     | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-10 |
-    | ha_group2  | hostM2   | 172.100.9.6   | 3307   | W    |      0   | true        |
-    | ha_group1  | hostM1   | 172.100.9.5   | 3307   | W    |      0   | false       |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W    |      0   | true        |
+    | ha_group1  | hostM1   | 172.100.9.5   | 3306   | W    |      0   | false       |
     #Given update "bootstrap.cnf" from "dble-1"
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -63,9 +63,9 @@ Feature: test high-availability related commands
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
     | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-10 |
-    | ha_group2  | hostM2   | 172.100.9.6   | 3307   | W    |      0   |  true      |
-    | ha_group2  | slave1   | 172.100.9.2   | 3307   | R    |      0   |  true       |
-    | ha_group1  | hostM1   | 172.100.9.5   | 3307   | W    |      0   |  false      |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W    |      0   |  true      |
+    | ha_group2  | slave1   | 172.100.9.6   | 3307   | R    |      0   |  true       |
+    | ha_group1  | hostM1   | 172.100.9.5   | 3306   | W    |      0   |  false      |
     Then execute admin cmd "dbGroup @@switch name='ha_group2' master='slave1'"
     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM2','disabled':'true'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'slave1','disabled':'true'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
@@ -74,16 +74,16 @@ Feature: test high-availability related commands
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
     | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-10 |
-    | ha_group2  | hostM2   | 172.100.9.6   | 3307   | R      |      0   | true        |
-    | ha_group2  | slave1   | 172.100.9.2   | 3307   | W      |      0   | true        |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      0   | true        |
+    | ha_group2  | slave1   | 172.100.9.6   | 3307   | W      |      0   | true        |
     Then execute admin cmd "dbGroup @@enable name='ha_group2'"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
       | sql               |
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
     | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5| DISABLED-10 |
-    | ha_group2  | hostM2   | 172.100.9.6   | 3307   | R      |     0   | false       |
-    | ha_group2  | slave1   | 172.100.9.2   | 3307   | W      |     0   | false       |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |     0   | false       |
+    | ha_group2  | slave1   | 172.100.9.6   | 3307   | W      |     0   | false       |
 
 #    dble-2 is slave1's server
     Then execute sql in "mysql-slave1"
@@ -104,8 +104,8 @@ Feature: test high-availability related commands
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
     | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-10 |
-    | ha_group2  | hostM2   | 172.100.9.6   | 3307   | R      |      0   | false       |
-    | ha_group2  | slave1   | 172.100.9.2   | 3307   | W      |      0   | true        |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      0   | false       |
+    | ha_group2  | slave1   | 172.100.9.6   | 3307   | W      |      0   | true        |
     Then execute admin cmd "dbGroup @@switch name='ha_group2' master='hostM2'"
     Given Restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
@@ -113,8 +113,8 @@ Feature: test high-availability related commands
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
     | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-10 |
-    | ha_group2  | hostM2   | 172.100.9.6   | 3307   | W      |      0   | false       |
-    | ha_group2  | slave1   | 172.100.9.2   | 3307   | R      |      0   | true        |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W      |      0   | false       |
+    | ha_group2  | slave1   | 172.100.9.6   | 3307   | R      |      0   | true        |
 
 
 
