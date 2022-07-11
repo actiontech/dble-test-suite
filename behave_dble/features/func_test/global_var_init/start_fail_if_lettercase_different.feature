@@ -3,10 +3,11 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/3/13 下午12:14
 # @Author  : irene-coming
+@use.with_mysql_version=5.7
 Feature: dble start fail if global var lower_case_table_names are not consistent in all dbGroups
 #  lower_case_table_names default value in mysql under linux is 0
 
-  @restore_mysql_config @skip @use.with_mysql_version=5.7
+  @restore_mysql_config
   Scenario: dble start fail if global var lower_case_table_names of dbInstance are not consistent in 2 dbGroups #1
     """
     {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}}}
@@ -22,7 +23,7 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     The values of lower_case_table_names for backend MySQLs are different
     """
 
-  @restore_mysql_config @skip @use.with_mysql_version=5.7
+  @restore_mysql_config
   Scenario: dble start fail if global var lower_case_table_names are not consistent between dbInstance and dbInstance #2
     """
     {'restore_mysql_config':{'mysql-master2':{'lower_case_table_names':0}}}
@@ -47,7 +48,7 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     The values of lower_case_table_names for backend MySQLs are different
     """
 
-  @restore_mysql_config @skip @use.with_mysql_version=5.7
+  @restore_mysql_config
   Scenario: dble reload fail if global var lower_case_table_names are not consistent between new added writehost and the old ones' #3
     """
     {'restore_mysql_config':{'mysql-master2':{'lower_case_table_names':0}}}
@@ -116,7 +117,7 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     hasStr{these MySQL's value is not 0 :ha_group2:hostM2}
     """
-  @restore_mysql_config @restore_mysql_service @skip @use.with_mysql_version=5.7
+  @restore_mysql_config @restore_mysql_service
   Scenario: backend mysql heartbeat fail, restore the mysql but its lower_case_table_names are different with the running backend mysqls, then heartbeat to this backend mysql fail #4
     """
     {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}},'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}

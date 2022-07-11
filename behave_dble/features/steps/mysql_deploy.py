@@ -33,6 +33,7 @@ INIT_SCOPE = ('compare_mysql', 'group1', 'group2','group3')
 def delete_mysqls(context: Context):
     for name, ssh_conn in context.ssh_clients.items():
         if name in INIT_SCOPE:
+            LOGGER.info(f'delete {name}')
             delete_mysql(ssh_conn)
                 
 
@@ -71,6 +72,7 @@ def deploy_mysqls(context: Context):
 
     for group, info in context.cfg_mysql.items():
         if group in INIT_SCOPE:
+            LOGGER.info(f'install {group}')
             ssh_conn = context.ssh_clients[group]
             if len(info) == 1:
                 rc, sto, ste = ssh_conn.exec_command(single_cmd)

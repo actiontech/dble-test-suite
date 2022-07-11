@@ -9,13 +9,22 @@ from steps.lib.DbleMeta import DbleMeta
 from steps.lib.MySQLMeta import MySQLMeta
 from steps.lib.MySQLObject import MySQLObject
 from steps.lib.DbleObject import DbleObject
-from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,reset_repl, get_sftp,get_ssh, create_ssh_client,init_log_directory
+from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,reset_repl, get_sftp,get_ssh, create_ssh_client,init_log_directory,handle_env_variables
 from steps.mysql_steps import restart_mysql
 from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
 from behave.contrib.scenario_autoretry import patch_scenario_with_autoretry
+from behave.tag_matcher import ActiveTagMatcher, setup_active_tag_values
 
 logger = logging.getLogger('root')
+
+active_tag_value_provider = {
+        'mysql_version': '5.7',
+        'dble_topo': 'single'
+    }
+
+active_tag_matcher = ActiveTagMatcher(active_tag_value_provider)
+
 
 def init_dble_conf(context, para_dble_conf):
     para_dble_conf_lower = para_dble_conf.lower()
@@ -27,13 +36,13 @@ def init_dble_conf(context, para_dble_conf):
     context.dble_conf = conf
 
 
-def config_env_vars(context, key_list):
-    for key in key_list:
-        value = os.getenv(key)
-        if value is not None:
-            setattr(context, key, value)
-        else:
-            logger.debug("environment variable {0} is not configured".format(key))
+# def config_env_vars(context, key_list):
+#     for key in key_list:
+#         value = os.getenv(key)
+#         if value is not None:
+#             setattr(context, key, value)
+#         else:
+#             logger.debug("environment variable {0} is not configured".format(key))
 
 
 def before_all(context):
@@ -48,14 +57,20 @@ def before_all(context):
     logger.info('*' * 30)
     logger.info('Enter hook before_all')
 
-    test_config = context.config.userdata["test_config"].lower() #"./conf/auto_dble_test.yaml"
+
+    ud = context.config.userdata
+    test_config = ud["test_config"].lower() #"./conf/auto_dble_test.yaml"
     #convert auto_dble_test.yaml attr to context attr
     parsed = load_yaml_config("./conf/"+test_config)
     for name, values in parsed.items():
         setattr(context, name, values)
+        
+    handle_env_variables(context, ud)
+    setup_active_tag_values(active_tag_value_provider, context.test_conf)
 
-    context.userDebug = context.config.userdata["user_debug"].lower() == "true"
-    context.is_cluster = context.config.userdata["is_cluster"].lower() == "true"
+
+    context.userDebug = ud["user_debug"].lower() == "true"
+    context.is_cluster = ud["is_cluster"].lower() == "true"
     if context.is_cluster:
         init_meta(context, "cluster")
     else:
@@ -66,24 +81,25 @@ def before_all(context):
     
     init_meta(context, "mysqls")
     context.ssh_clients = create_ssh_client(context)
+    # optimize later
     context.ssh_client = get_ssh(context.cfg_dble['single']['dble-1']['hostname'])
     context.ssh_sftp = get_sftp(context.cfg_dble['single']['dble-1']['hostname'])
     try:
-        para_dble_conf = context.config.userdata.pop('dble_conf')
+        para_dble_conf = ud.pop('dble_conf')
     except KeyError:
         raise KeyError('Not define userdata dble_conf, usage: behave -D dble_conf=XXX ...')
     init_dble_conf(context, para_dble_conf)
-    reinstall = context.config.userdata["reinstall"].lower() == "true"
-    reset = context.config.userdata["reset"].lower() == "true"
+    reinstall = ud["reinstall"].lower() == "true"
+    reset = ud["reset"].lower() == "true"
 
     logger.info("run test with environment reinstall: {0}, reset: {1}".format(reinstall, reset))
 
-    context.need_download = context.config.userdata["install_from_local"].lower() != "true"
-    context.ftp_user = context.config.userdata["ftp_user"]
-    context.ftp_passwd = context.config.userdata["ftp_passwd"]
+    context.need_download = ud["install_from_local"].lower() != "true"
+    context.ftp_user = ud["ftp_user"]
+    context.ftp_passwd = ud["ftp_passwd"]
 
-    ci_env_vars_list = ["ftp_user", "ftp_passwd"]
-    config_env_vars(context, ci_env_vars_list)
+    # ci_env_vars_list = ["ftp_user", "ftp_passwd"]
+    # config_env_vars(context, ci_env_vars_list)
 
     if reinstall:
         install_dble_in_all_nodes(context)
@@ -112,19 +128,28 @@ def after_all(context):
     logger.info('*       Exit hook after_all, DBLE TEST END        *')
     logger.info('*' * 30)
 
+
 def before_feature(context, feature):
     logger.info('*' * 30)
     logger.info('Feature start: <{0}><{1}>'.format(feature.filename,feature.name))
+
+
+    if active_tag_matcher.should_exclude_with(feature.tags):
+        feature.skip(reason="DISABLED ACTIVE-TAG")
+        
+    else:
+        if context.test_conf['auto_retry']:
+            for scenario in feature.scenarios:
+                patch_scenario_with_autoretry(scenario, max_attempts=context.test_conf['auto_retry'])
 
     if "setup" in feature.tags:
         # delete the begin and end """
         for desc in feature.description[1:-1]:
             logger.info(desc)
             context.execute_steps(desc)
+            
+    logger.info('Exit hook <before_feature>')
 
-    for scenario in feature.scenarios:
-        if "autoretry" in scenario.effective_tags:
-            patch_scenario_with_autoretry(scenario, max_attempts=3)
 
 def after_feature(context, feature):
     logger.info('Feature end: <{0}><{1}>'.format(feature.filename,feature.name))
@@ -133,6 +158,10 @@ def after_feature(context, feature):
 def before_scenario(context, scenario):
     logger.info('#' * 30)
     logger.info('Scenario start: <{0}>'.format(scenario.name))
+    if active_tag_matcher.should_exclude_with(scenario.effective_tags):
+        scenario.skip("DISABLED ACTIVE-TAG")
+        
+    logger.info('Exit hook <before_scenario>')
 
 def after_scenario(context, scenario):
     logger.info('Enter hook after_scenario')
@@ -170,7 +199,7 @@ def after_scenario(context, scenario):
     stop_scenario_for_failed = context.config.stop and scenario.status == "failed"
     if not stop_scenario_for_failed and not "skip_restart" in scenario.tags and not context.userDebug:
         reset_dble(context)
-
+    logger.info('Exit hook <after_scenario>')
     logger.info('after_scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
 

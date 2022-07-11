@@ -4,9 +4,10 @@
 # Created by wangjuan at 2020/12/21
 
 # for DBLE0REQ-189
+@use.with_mysql_version=8.0
 Feature: check mysql 8.0 authentication plugin
 
-  @restore_mysql_config @use.with_mysql_version=8.0
+  @restore_mysql_config
   Scenario: check mysql 8.0 default authentication plugin #1
   """
     {'restore_mysql_config':{'mysql-master1':{'default_authentication_plugin':'mysql_native_password'}}}
@@ -76,7 +77,7 @@ Feature: check mysql 8.0 authentication plugin
     """
     Given restart mysql in "mysql-master1"
 
-  @restore_mysql_config @use.with_mysql_version=8.0
+  @restore_mysql_config
   Scenario: check mysql 8.0 mysql_native_password authentication plugin #2
   """
     {'restore_mysql_config':{'mysql-master1':{'default_authentication_plugin':'mysql_native_password'}}}
@@ -153,7 +154,7 @@ Feature: check mysql 8.0 authentication plugin
     """
     Given restart mysql in "mysql-master1"
 
-  @restore_mysql_config @use.with_mysql_version=8.0
+  @restore_mysql_config
   Scenario: check mysql 8.0 sha256_password Authentication Plugin #3
   """
     {'restore_mysql_config':{'mysql-master1':{'default_authentication_plugin':'mysql_native_password'}}}

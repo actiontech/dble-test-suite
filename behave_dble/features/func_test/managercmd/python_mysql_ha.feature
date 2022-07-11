@@ -232,9 +232,9 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
     Then check resultset "1" has lines with following column values
       | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3307   | true      | 0                   | 10                | 1000             | false      |
-      | hostS1 | ha_group2  | 172.100.9.2 | 3307   | false     | 0                   | 0                 | 1000             | false      |
-      | hostS2 | ha_group2  | 172.100.9.3 | 3307   | false     | 0                   | 0                 | 1000             | false      |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 10                | 1000             | false      |
+      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 0                 | 1000             | false      |
+      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 0                 | 1000             | false      |
 
     Given execute linux command in "behave"
       """
@@ -248,9 +248,9 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
     Then check resultset "3" has lines with following column values
       | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 10                | 1000             | false      |
-      | hostS1 | ha_group2  | 172.100.9.2 | 3307   | true      | 0                   | 10                | 1000             | false      |
-      | hostS2 | ha_group2  | 172.100.9.3 | 3307   | false     | 0                   | 0                 | 1000             | false      |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 10                | 1000             | false      |
+      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | true      | 0                   | 10                | 1000             | false      |
+      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 0                 | 1000             | false      |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                          | expect      | db      |
@@ -284,9 +284,9 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
     Then check resultset "1" has lines with following column values
       | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3307   | true      | 0                   | 3                 | 10               | false      |
-      | hostS1 | ha_group2  | 172.100.9.2 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS2 | ha_group2  | 172.100.9.3 | 3307   | false     | 0                   | 3                 | 10               | false      |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 3                 | 10               | false      |
+      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
+      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 3                 | 10               | false      |
     Given execute linux command in "behave"
       """
       bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
@@ -298,9 +298,9 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
     Then check resultset "1" has lines with following column values
       | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS1 | ha_group2  | 172.100.9.2 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS2 | ha_group2  | 172.100.9.3 | 3307   | true      | 0                   | 3                 | 10               | false      |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 3                 | 10               | false      |
+      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
+      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | true      | 0                   | 3                 | 10               | false      |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                          | expect      | db      |
       | conn_1 | False   | drop table if exists test    | success     | schema1 |
@@ -334,9 +334,9 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
     Then check resultset "1" has lines with following column values
       | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3307   | true      | 0                   | 3                 | 10               | false      |
-      | hostS1 | ha_group2  | 172.100.9.2 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS2 | ha_group2  | 172.100.9.3 | 3307   | false     | 0                   | 3                 | 10               | false      |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 3                 | 10               | false      |
+      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
+      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 3                 | 10               | false      |
     Given execute linux command in "behave"
       """
       bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
@@ -348,9 +348,9 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
     Then check resultset "1" has lines with following column values
       | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS1 | ha_group2  | 172.100.9.2 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS2 | ha_group2  | 172.100.9.3 | 3307   | true      | 0                   | 3                 | 10               | false      |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 3                 | 10               | false      |
+      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
+      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | true      | 0                   | 3                 | 10               | false      |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                          | expect      | db      |
       | conn_1 | False   | drop table if exists test    | success     | schema1 |
@@ -384,9 +384,9 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
     Then check resultset "1" has lines with following column values
       | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3307   | true      | 0                   | 3                 | 10               | false      |
-      | hostS1 | ha_group2  | 172.100.9.2 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS2 | ha_group2  | 172.100.9.3 | 3307   | false     | 0                   | 3                 | 10               | false      |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 3                 | 10               | false      |
+      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
+      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 3                 | 10               | false      |
     Given execute linux command in "behave"
       """
       bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
@@ -398,9 +398,9 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
     Then check resultset "1" has lines with following column values
       | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS1 | ha_group2  | 172.100.9.2 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS2 | ha_group2  | 172.100.9.3 | 3307   | true      | 0                   | 3                 | 10               | false      |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 3                 | 10               | false      |
+      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
+      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | true      | 0                   | 3                 | 10               | false      |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                          | expect      | db      |
       | conn_1 | False   | drop table if exists test    | success     | schema1 |

@@ -27,7 +27,15 @@ Feature: Deploy DBLE test environment
     Given replace config files in "dble-1" with command line config
     Then Start dble in "dble-1"
 
-
+  @use.with_dble_topo=cluster
+  Scenario: install zk cluster #1
+    Given stop dble cluster and zk service
+    Given a clean environment in all dble nodes
+    Given install dble in all dble nodes
+    Given replace config files in all dbles with command line config
+    Given config zookeeper cluster in all dble nodes with "local zookeeper host"
+    Given reset dble registered nodes in zk
+    Then start dble in order
   # Scenario: Initialize the cluster DBLE
   #   Given I clean dble deploy environment
   #   Given I install dble cluster
@@ -35,12 +43,3 @@ Feature: Deploy DBLE test environment
   #   Given I start the dble cluster
 
 
-  # @use.with_dble_topo=cluster
-  # Scenario: install zk cluster #1
-  #   Given stop dble cluster and zk service
-  #   Given a clean environment in all dble nodes
-  #   Given install dble in all dble nodes
-  #   Given replace config files in all dbles with command line config
-  #   Given config zookeeper cluster in all dble nodes with "local zookeeper host"
-  #   Given reset dble registered nodes in zk
-  #   Then start dble in order

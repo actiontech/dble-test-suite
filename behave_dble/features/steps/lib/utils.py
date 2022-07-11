@@ -8,7 +8,8 @@ import time
 from functools import wraps
 from logging import config
 from pprint import pformat
-
+from environs import Env
+from behave.userdata import UserData
 import re
 import yaml
 from behave import *
@@ -345,3 +346,87 @@ def init_log_directory(symbolic: bool = True) -> str:
     os.chdir(cwd)
 
     return os.path.join(logs_dir, symbolic_link)
+
+
+@log_it
+def handle_env_variable(context: Context, userdata: UserData, var: str, default_value=None, method: str = 'str',
+                        check: Optional[Callable[..., None]] = None):
+    method = method.lower()
+    upper = var.upper()
+    lower = var.lower()
+    env = Env()
+    # if os.path.exists('resource/secret/.env'):
+        # logger.debug('USE ENVIRONMENT resource/secret/.env')
+        # env.read_env('resource/secret/.env')
+    # else:
+        # logger.debug('DO NOT EXIST resource/secret/.env')
+    assert_that(method, is_in(['str', 'bool', 'int']))
+    env_method = {'str': env.str,
+                  'bool': env.bool,
+                  'int': env.int}
+    ud_method = {'bool': userdata.getbool,
+                 'int': userdata.getint}
+    built_in_method = {'str': str,
+                       'bool': bool,
+                       'int': int}
+
+    # 所有使用的环境变量必须已DBLE_为前缀
+    with env.prefixed("DBLE_"):
+        if default_value is None:
+            var = env_method[method](upper, context.test_conf.get(lower))
+        else:
+            var = env_method[method](upper, default_value)
+    if method == 'str':
+        context.test_conf[lower] = userdata.pop(upper, var)
+    else:
+        context.test_conf[lower] = ud_method[method](upper, var)
+        userdata.pop(upper, None)
+
+    logger.info(f"{upper}=<{context.test_conf.get(lower)}> \n"
+                f'priority 1: behave -D {upper}=xxx\n'
+                f'priority 2: behave.ini - behave.userdata.{upper}\n'
+                f'priority 3: os environment DBLE_{upper}\n'
+                # f'priority 4: resource/secret/.env DBLE_{upper}\n'
+                f'priority 5: conf/config.yml - test_conf.{lower}')
+
+    if check is None:
+        assert_that(context.test_conf[lower],
+                    instance_of(built_in_method[method]))
+    else:
+        check()
+
+
+@log_it 
+def handle_env_variables(context: Context, userdata: UserData):
+    handle_env_variable(context, userdata, 'time_weight', method='int')
+    # handle_env_variable(context, userdata, 'auto_retry', method='int')
+    handle_env_variable(context, userdata, 'dble_version')
+    # handle_env_variable(context, userdata, 'dble_package_timestamp')
+    handle_env_variable(context, userdata, 'dble_remote_host')
+    handle_env_variable(context, userdata, 'dble_remote_path')
+
+    def dble_topo_check() -> None:
+        assert_that(context.test_conf['dble_topo'], is_in(['single', 'cluster']), 'Not support dble topo')
+
+    handle_env_variable(context, userdata, 'dble_topo', 'single', check=dble_topo_check)
+
+    def mysql_version_check() -> None:
+        assert_that(context.test_conf['mysql_version'], is_in(['5.7', '8.0']), 'Not support mysql version')
+
+    handle_env_variable(context, userdata, 'mysql_version', check=mysql_version_check)
+
+    def dble_conf_check() -> None:
+        assert_that(context.test_conf['dble_conf'], is_in(['default', 'global', 'mixed', 'nosharding', 'sharding']),
+                    'Not support dble conf')
+
+    handle_env_variable(context, userdata, 'dble_conf', check=dble_conf_check)
+
+    def ftp_user_check() -> None:
+        assert_that(context.test_conf['ftp_user'], any_of(instance_of(str), none()))  # type: ignore
+
+    handle_env_variable(context, userdata, 'ftp_user', check=ftp_user_check)
+
+    def ftp_password_check() -> None:
+        assert_that(context.test_conf['ftp_password'], any_of(instance_of(str), none()))  # type: ignore
+
+    handle_env_variable(context, userdata, 'ftp_password', check=ftp_password_check)
