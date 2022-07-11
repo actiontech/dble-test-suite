@@ -384,6 +384,7 @@ Feature: test slow query log related manager command
      Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                 | expect  | db      |
       | conn_0 | False   | select * from test where id in (select id from n1 where id =(select * from s1 where id=1))          | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
      COMPLEX_QUERY
@@ -396,6 +397,7 @@ Feature: test slow query log related manager command
      Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                            | expect  | db      |
       | conn_0 | False   | select * from sharding_2_t1 where id >(select t.id from test t inner join s1 s on t.id=s.id where s.id =1)     | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
      COMPLEX_QUERY
