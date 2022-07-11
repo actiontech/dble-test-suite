@@ -98,8 +98,8 @@ def before_all(context):
     context.ftp_user = ud["ftp_user"]
     context.ftp_passwd = ud["ftp_passwd"]
 
-    # ci_env_vars_list = ["ftp_user", "ftp_passwd"]
-    # config_env_vars(context, ci_env_vars_list)
+    ci_env_vars_list = ["ftp_user", "ftp_passwd"]
+    config_env_vars(context, ci_env_vars_list)
 
     if reinstall:
         install_dble_in_all_nodes(context)
