@@ -36,13 +36,13 @@ def init_dble_conf(context, para_dble_conf):
     context.dble_conf = conf
 
 
-# def config_env_vars(context, key_list):
-#     for key in key_list:
-#         value = os.getenv(key)
-#         if value is not None:
-#             setattr(context, key, value)
-#         else:
-#             logger.debug("environment variable {0} is not configured".format(key))
+def config_env_vars(context, key_list):
+    for key in key_list:
+        value = os.getenv(key)
+        if value is not None:
+            setattr(context, key, value)
+        else:
+            logger.debug("environment variable {0} is not configured".format(key))
 
 
 def before_all(context):
