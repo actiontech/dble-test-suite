@@ -1,9 +1,10 @@
-# ifndef DBLE_DBLE_TOPO
-# 	DBLE_DBLE_TOPO = single
-# endif
+ifndef DBLE_DBLE_TOPO
+	DBLE_DBLE_TOPO = single
+endif
 
 PWD = $(shell pwd)
-DOCKER_COMPOSE_FILE = docker-compose.yml
+DOCKER_COMPOSE_FILE = docker-compose_${DBLE_DBLE_TOPO}.yml
+
 
 start_env:
 	pipenv run behave features/setup.feature --tags=@Initialize_mysql

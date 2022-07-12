@@ -61,6 +61,11 @@ def before_all(context):
     ud = context.config.userdata
     test_config = ud["test_config"].lower() #"./conf/auto_dble_test.yaml"
     #convert auto_dble_test.yaml attr to context attr
+    try:
+        test_config = ud.pop('test_config')
+    except KeyError:
+        raise KeyError('Not define test_config') from KeyError
+    
     parsed = load_yaml_config("./conf/"+test_config)
     for name, values in parsed.items():
         setattr(context, name, values)
@@ -184,7 +189,7 @@ def after_scenario(context, scenario):
 
     if not context.userDebug:
         if "init_dble_meta" in scenario.tags:
-            init_meta(context, "dble")
+            init_meta(context, "single")
 
         if "restore_sys_time" in scenario.tags:
             restore_sys_time()

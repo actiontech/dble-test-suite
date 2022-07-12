@@ -13,13 +13,12 @@ Feature: Deploy DBLE test environment
     Given I deploy mysql
     Given I reset the mysql uuid
     Given I create mysql test user
-    Given I create databases named db1, db2, db3, db4 on group1, group2
+    Given I create databases named db1, db2, db3, db4 on group1, group2, group3
     Given I create databases named schema1,schema2,schema3,testdb,db1,db2,db3,db4 on compare_mysql
 
 
   @use.with_dble_topo=single
   Scenario: Initialize the single DBLE
-    Given I create symbolic link for mysql in dble-1
     Given a clean environment in all dble nodes
     Given install dble in "dble-1"
     Given replace config files in "dble-1" with command line config
@@ -34,10 +33,5 @@ Feature: Deploy DBLE test environment
     Given config zookeeper cluster in all dble nodes with "local zookeeper host"
     Given reset dble registered nodes in zk
     Then start dble in order
-  # Scenario: Initialize the cluster DBLE
-  #   Given I clean dble deploy environment
-  #   Given I install dble cluster
-  #   Given I update dble cluster config file use dble conf
-  #   Given I start the dble cluster
-
+    Given I create symbolic link for mysql in dble-2,dble-3
 

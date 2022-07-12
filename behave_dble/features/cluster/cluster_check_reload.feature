@@ -960,8 +960,8 @@ Feature: test "reload @@config" in zk cluster
         | conn_14 | true      | show @@shardingnodes where schema=schema1 and table=sharding   |  dble_information  |
       Then check resultset "1C" has lines with following column values
         | NAME-0 | SEQUENCE-1 | HOST-2        | PORT-3 | PHYSICAL_SCHEMA-4 | USER-5 | PASSWORD-6 |
-        | dn3    | 0          | 172.100.9.5   | 3307   | db2               | test   | 111111     |
-        | dn4    | 1          | 172.100.9.6   | 3307   | db2               | test   | 111111     |
+        | dn3    | 0          | 172.100.9.5   | 3306   | db2               | test   | 111111     |
+        | dn4    | 1          | 172.100.9.6   | 3306   | db2               | test   | 111111     |
       Then execute sql in "dble-2" in "admin" mode
         | conn    | toClose   | sql                                                           | db               | expect      |
         | conn_24 | true      | show @@shardingnodes where schema=schema1 and table=sharding  | dble_information | length{(0)} |
@@ -996,8 +996,8 @@ Feature: test "reload @@config" in zk cluster
         | conn_26 | true      | show @@shardingnodes where schema=schema1 and table=sharding   |  dble_information  |
       Then check resultset "2B" has lines with following column values
         | NAME-0 | SEQUENCE-1 | HOST-2        | PORT-3 | PHYSICAL_SCHEMA-4 | USER-5 | PASSWORD-6 |
-        | dn3    | 0          | 172.100.9.5   | 3307   | db2               | test   | 111111     |
-        | dn4    | 1          | 172.100.9.6   | 3307   | db2               | test   | 111111     |
+        | dn3    | 0          | 172.100.9.5   | 3306   | db2               | test   | 111111     |
+        | dn4    | 1          | 172.100.9.6   | 3306   | db2               | test   | 111111     |
       Given execute single sql in "dble-3" in "admin" mode and save resultset in "3B"
         | conn    | toClose   | sql                                                            |  db                |
         | conn_36 | true      | show @@shardingnodes where schema=schema1 and table=sharding   |  dble_information  |
@@ -1103,8 +1103,8 @@ Feature: test "reload @@config" in zk cluster
         | conn_2D | true      | show @@shardingnodes where schema=schema1 and table=sharding_2   |  dble_information  |
       Then check resultset "2d" has lines with following column values
         | NAME-0 | SEQUENCE-1 | HOST-2        | PORT-3 | PHYSICAL_SCHEMA-4 | USER-5 | PASSWORD-6 |
-        | dn1    | 0          | 172.100.9.5   | 3307   | db1               | test   | 111111     |
-        | dn2    | 1          | 172.100.9.6   | 3307   | db1               | test   | 111111     |
+        | dn1    | 0          | 172.100.9.5   | 3306   | db1               | test   | 111111     |
+        | dn2    | 1          | 172.100.9.6   | 3306   | db1               | test   | 111111     |
 
       Given delete file "/opt/dble/BtraceCluster.java" on "dble-1"
       Given delete file "/opt/dble/BtraceCluster.java.log" on "dble-1"

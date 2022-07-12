@@ -72,7 +72,6 @@ def deploy_mysqls(context: Context):
 
     for group, info in context.cfg_mysql.items():
         if group in INIT_SCOPE:
-            LOGGER.info(f'install {group}')
             ssh_conn = context.ssh_clients[group]
             if len(info) == 1:
                 rc, sto, ste = ssh_conn.exec_command(single_cmd)
@@ -215,7 +214,6 @@ def create_mysql_test_user(context: Context):
 
                 lines = []
                 for inst_, inst_info_ in group_info.items():
-                    LOGGER.info('ins=== {}'.format(inst_))
                     idx = inst_.split('-')[1]
                     lines.append(f'alias mysql{idx}=\'mysql -u{inst_info_["user"]} -p{inst_info_["password"]}'
                                  f' -S /tmp/mysql_sandbox{inst_info_["port"]}.sock\'\n')
