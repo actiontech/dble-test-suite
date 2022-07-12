@@ -258,20 +258,20 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     \"schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
-    {\"type\":\"SingleTable\",\"properties\":{\"name\":\"sharding_1_t1\",\"shardingNode\":\"dn5\",\"sqlMaxLimit\":100}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"incrementColumn\":\"id2\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"sqlRequiredSharding\":true,\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_nonuniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_enum_string_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+    {\"type\":\"SingleTable\",\"properties\":{\"name\":\"sharding_1_t1\",\"shardingNode\":\"dn5\",\"sqlMaxLimit\":100,\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"incrementColumn\":\"id2\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"sqlRequiredSharding\":true,\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_nonuniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_enum_string_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",
     \"childTable\":\[
-    {\"name\":\"er_child\",\"joinColumn\":\"id\",\"parentColumn\":\"id\",\"incrementColumn\":\"id3\",\"sqlMaxLimit\":-1}\],\"name\":\"er_parent\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"date_default_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_date_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]},
+    {\"name\":\"er_child\",\"joinColumn\":\"id\",\"parentColumn\":\"id\",\"incrementColumn\":\"id3\",\"sqlMaxLimit\":-1,\"specifyCharset\":false}\],\"name\":\"er_parent\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"date_default_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_date_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
     {\"name\":\"schema2\",\"sqlMaxLimit\":-1,
     \"table\":\[
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"/5 \* \* \* \* ? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"/10 \* \* \* \* ?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\"}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200}}\]},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"/5 \* \* \* \* ? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"/10 \* \* \* \* ?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200,\"specifyCharset\":false}}\]},
     {\"name\":\"schema3\",\"shardingNode\":\"dn5\"}\],
     \"shardingNode\":\[
     {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},
@@ -353,20 +353,20 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     \"schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
-    {\"type\":\"SingleTable\",\"properties\":{\"name\":\"sharding_1_t1\",\"shardingNode\":\"dn5\",\"sqlMaxLimit\":100}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"incrementColumn\":\"id2\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"sqlRequiredSharding\":true,\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_nonuniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_enum_string_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+    {\"type\":\"SingleTable\",\"properties\":{\"name\":\"sharding_1_t1\",\"shardingNode\":\"dn5\",\"sqlMaxLimit\":100,\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"incrementColumn\":\"id2\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"sqlRequiredSharding\":true,\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_nonuniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_enum_string_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",
     \"childTable\":\[
-    {\"name\":\"er_child\",\"joinColumn\":\"id\",\"parentColumn\":\"id\",\"incrementColumn\":\"id3\",\"sqlMaxLimit\":-1}\],\"name\":\"er_parent\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"date_default_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_date_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]},
+    {\"name\":\"er_child\",\"joinColumn\":\"id\",\"parentColumn\":\"id\",\"incrementColumn\":\"id3\",\"sqlMaxLimit\":-1,\"specifyCharset\":false}\],\"name\":\"er_parent\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"date_default_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_date_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
     {\"name\":\"schema2\",\"sqlMaxLimit\":-1,
     \"table\":\[
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"/5 \* \* \* \* ? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"/10 \* \* \* \* ?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\"}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200}}\]},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"/5 \* \* \* \* ? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"/10 \* \* \* \* ?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200,\"specifyCharset\":false}}\]},
     {\"name\":\"schema3\",\"shardingNode\":\"dn5\"}\],
     \"shardingNode\":\[
     {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},
@@ -448,20 +448,20 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     \"schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
-    {\"type\":\"SingleTable\",\"properties\":{\"name\":\"sharding_1_t1\",\"shardingNode\":\"dn5\",\"sqlMaxLimit\":100}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"incrementColumn\":\"id2\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"sqlRequiredSharding\":true,\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_nonuniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_enum_string_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+    {\"type\":\"SingleTable\",\"properties\":{\"name\":\"sharding_1_t1\",\"shardingNode\":\"dn5\",\"sqlMaxLimit\":100,\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"incrementColumn\":\"id2\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"sqlRequiredSharding\":true,\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_nonuniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_enum_string_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",
     \"childTable\":\[
-    {\"name\":\"er_child\",\"joinColumn\":\"id\",\"parentColumn\":\"id\",\"incrementColumn\":\"id3\",\"sqlMaxLimit\":-1}\],\"name\":\"er_parent\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"date_default_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_date_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]},
+    {\"name\":\"er_child\",\"joinColumn\":\"id\",\"parentColumn\":\"id\",\"incrementColumn\":\"id3\",\"sqlMaxLimit\":-1,\"specifyCharset\":false}\],\"name\":\"er_parent\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"date_default_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_date_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
     {\"name\":\"schema2\",\"sqlMaxLimit\":-1,
     \"table\":\[
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"/5 \* \* \* \* ? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"/10 \* \* \* \* ?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\"}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200}}\]},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"/5 \* \* \* \* ? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"/10 \* \* \* \* ?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200,\"specifyCharset\":false}}\]},
     {\"name\":\"schema3\",\"shardingNode\":\"dn5\"}\],
     \"shardingNode\":\[
     {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},
@@ -512,20 +512,20 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {\"schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
-    {\"type\":\"SingleTable\",\"properties\":{\"name\":\"sharding_1_t1\",\"shardingNode\":\"dn5\",\"sqlMaxLimit\":100}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"incrementColumn\":\"id2\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"sqlRequiredSharding\":true,\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_nonuniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_enum_string_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+    {\"type\":\"SingleTable\",\"properties\":{\"name\":\"sharding_1_t1\",\"shardingNode\":\"dn5\",\"sqlMaxLimit\":100,\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"incrementColumn\":\"id2\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"sqlRequiredSharding\":true,\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_nonuniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_enum_string_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",
     \"childTable\":\[
-    {\"name\":\"er_child\",\"joinColumn\":\"id\",\"parentColumn\":\"id\",\"incrementColumn\":\"id3\",\"sqlMaxLimit\":-1}\],\"name\":\"er_parent\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"date_default_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_date_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]},
+    {\"name\":\"er_child\",\"joinColumn\":\"id\",\"parentColumn\":\"id\",\"incrementColumn\":\"id3\",\"sqlMaxLimit\":-1,\"specifyCharset\":false}\],\"name\":\"er_parent\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"date_default_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_date_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
     {\"name\":\"schema2\",\"sqlMaxLimit\":-1,
     \"table\":\[
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"/5 \* \* \* \* ? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"/10 \* \* \* \* ?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\"}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200}}\]},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"/5 \* \* \* \* ? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"/10 \* \* \* \* ?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200,\"specifyCharset\":false}}\]},
     {\"name\":\"schema3\",\"shardingNode\":\"dn5\"}\],
     \"shardingNode\":\[
     {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},
@@ -868,31 +868,31 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
     """
-    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\"}
+    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
     """
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Given sleep "1" seconds
+    Given sleep "2" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
-    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\"}
+    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
     """
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_2 | True    | select * from dble_config   | dble_information |
-    Given sleep "1" seconds
+    Given sleep "2" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
     """
-    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\"}
+    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
     """
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_3 | True    | select * from dble_config   | dble_information |
-    Given sleep "1" seconds
+    Given sleep "2" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
     """
-    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\"}
+    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
     """
      Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect            | db               |
@@ -971,12 +971,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
-    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]},
+    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
     {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",
     \"table\":\[
-    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\"}}
+    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}}
     """
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
@@ -987,12 +987,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
-    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]},
+    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
     {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",
     \"table\":\[
-    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\"}}
+    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}}
     """
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
@@ -1003,12 +1003,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
-    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]},
+    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
     {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",
     \"table\":\[
-    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\"}}
+    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}}
     """
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
@@ -1019,12 +1019,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
-    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
-    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]},
+    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
+    {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
     {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",
     \"table\":\[
-    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\"}}
+    {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}}
     """
      Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect               | db               |
