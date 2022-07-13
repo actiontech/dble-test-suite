@@ -10,6 +10,7 @@ Feature: test hint with left2inner/right2inner
   #Sampling some cases combined with other hints for testing, including Scenario#3
   #test with left2inner/right2inner combine with -DuseNewJoinOptimizer Scenario#4
 
+  @skip #skip about DBLE0REQ-1658
   Scenario: use shardingTale to test part of hint with left2inner/right2inner to achieve left/right join transform to inner join, verify query plan and resultSet   #1
 
     Given delete the following xml segment
@@ -188,6 +189,7 @@ Feature: test hint with left2inner/right2inner
     # Why change to use singleTable?
     # Some types of subqueries are inconvenient to know the correctness of the transformation from the query plan and results
     # Use singleTable can make sure all sql sent to one node, and that will be convenient to know the correctness of the transformation from the query plan
+  @skip #skip about DBLE0REQ-1658
   Scenario: use singleTable to test another part of hint with left2inner/right2inner to achieve left/right join transform to inner join, verify query plan and resultSet   #2
     Given delete the following xml segment
       | file          | parent         | child                  |
@@ -310,7 +312,7 @@ Feature: test hint with left2inner/right2inner
       | conn_1 | false    | drop table if exists Info           | schema1  | success|
       | conn_1 | true     | drop table if exists Level          | schema1  | success|
 
-
+  @skip #skip about DBLE0REQ-1658
   Scenario: Sampling some cases combined with other hints for testing      #3
     Given delete the following xml segment
       | file          | parent         | child                  |
@@ -541,7 +543,7 @@ Feature: test hint with left2inner/right2inner
       | conn_1 | false    | drop table if exists Info           | schema1  | success|
       | conn_1 | true     | drop table if exists Level          | schema1  | success|
 
-
+  @skip #skip about DBLE0REQ-1658
   Scenario: test with useNewJoinOptimizer=true, left join transform to inner join may lead to other possibilities of query plan  #4
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
