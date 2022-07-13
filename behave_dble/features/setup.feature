@@ -36,3 +36,7 @@ Feature: Deploy DBLE test environment
     Then start dble in order
     Given I create symbolic link for mysql in dble-2,dble-3
 
+  @skip_restart @restore_dble_config
+  Scenario: do nothing but reset dble with command line config
+
+

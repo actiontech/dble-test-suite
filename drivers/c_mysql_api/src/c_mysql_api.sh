@@ -4,7 +4,7 @@ DIR="$( cd "$( dirname "$0" )" && pwd )"
 cd ${DIR}/../../../behave_dble/compose/docker-build-behave && bash resetReplication.sh
 
 #restart dble
-cd ${DIR}/../../../behave_dble&&pipenv run behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
+cd ${DIR}/../../../behave_dble&&pipenv run behave --stop -D dble_conf=sql_cover_sharding features/setup.feature --tags=@restore_dble_config
 
 #compile code
 cd ${DIR} && make clean && make
