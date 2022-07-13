@@ -3,7 +3,7 @@ set -e
 base_dir=$( dirname ${BASH_SOURCE[0]} )
 #clean mysqld before testing, including: drop none-sys databases, reset replication relation, prepare uproxy wanted database and table for delay checking
 
-mysql_version_line=`sed -n '5p' ../../conf/auto_dble_test.yaml`
+mysql_version_line=`sed -n '5p' ${base_dir}../../conf/auto_dble_test.yaml`
 mysql_version=${mysql_version_line: 33: 3}
 
 if [ ${mysql_version} = "5.7" ]; then
