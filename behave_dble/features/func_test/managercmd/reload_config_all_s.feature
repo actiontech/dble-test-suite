@@ -5,6 +5,7 @@
 #2.19.11.0#dble-7850
 Feature: reload @@config_all -s
 
+  @skip # skip about DBLE0REQ-1793
   Scenario: execute manager cmd "reload @@config_all -s" after change user of dbInstance and password of dbInstance #1
     Given delete the following xml segment
       | file       | parent         | child              |

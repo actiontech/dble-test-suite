@@ -823,7 +823,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-  @skip_restart
+  @skip_restart @skip # skip about DBLE0REQ-1793
   Scenario:  test the langreage of update in dble manager ----- dble_db_instance #5
 
     Given execute sql in "dble-1" in "admin" mode
@@ -1303,7 +1303,7 @@ Feature: test addition, deletion and modification of dble_information on the man
     Then execute admin cmd "reload @@config_all"
 
 
-
+  @skip # skip about DBLE0REQ-1793
   Scenario: test the langreage of delete in dble manager   ---- dble_db_group dble_db_instance  dble_rw_split_entry #7
 
     Given execute sql in "dble-1" in "admin" mode

@@ -53,7 +53,7 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | False   | drop table if exists test  | schema1 |
       | conn_0 | True    | create table test(id int)  | schema1 |
 
-  @restore_mysql_service
+  @restore_mysql_service @skip # skip about DBLE0REQ-1793
   Scenario: # some of the backend nodes was disconnected   #2
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}

@@ -40,7 +40,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
 
 
 
-  @restore_mysql_service
+  @restore_mysql_service @skip # skip about DBLE0REQ-1793
   Scenario: when useOuterHa is false, mysql not slave, can`t change mysql master ,but python script run #2
      """
      {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
@@ -213,6 +213,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
 
+  @skip # skip about DBLE0REQ-1793
   Scenario: don't use "disable/enable", can change mysql master and active idle DBLE0REQ-816   #5
     # rwSplitMode="0"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
