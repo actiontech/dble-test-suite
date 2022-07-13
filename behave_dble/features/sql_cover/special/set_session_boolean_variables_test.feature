@@ -1020,8 +1020,8 @@ Feature: dble support execute set @@variables=true/false test;
       | conn_0 | False    | show  variables like "transaction_read_only";                | hasStr{'OFF'}   | schema1 |
       | conn_0 | True     | select @@transaction_read_only;                              | has{((0,),)} | schema1 |
 
-
-  Scenario: dble support execute set tx_read_only test #22
+  @use.with_mysql_version=5.7
+  Scenario: dble support execute set tx_read_only test #22.1
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                 | expect       | db      |
       | conn_0 | False    | set tx_read_only=1;                                 | success      | schema1 |
@@ -1059,6 +1059,53 @@ Feature: dble support execute set @@variables=true/false test;
       | conn_0 | False    | select @@tx_read_only;                              | has{((1,),)} | schema1 |
       | conn_0 | False    | set tx_read_only=off;                               | success      | schema1 |
       | conn_0 | False    | show  variables like "tx_read_only";                | hasStr{'OFF'}   | schema1 |
+      | conn_0 | False    | select @@tx_read_only;                              | has{((0,),)} | schema1 |
+      | conn_0 | False    | set tx_read_only=1;                                 | success      | schema1 |
+      | conn_0 | False    | show  variables like "tx_read_only";                | hasStr{'ON'}    | schema1 |
+      | conn_0 | False    | select @@tx_read_only;                              | has{((1,),)} | schema1 |
+      | conn_0 | False    | set tx_read_only=0;                                 | success      | schema1 |
+      | conn_0 | False    | show  variables like "tx_read_only";                | hasStr{'OFF'}   | schema1 |
+      | conn_0 | True     | select @@tx_read_only;                              | has{((0,),)} | schema1 |
+
+  @use.with_mysql_version=8.0
+  Scenario: dble support execute set tx_read_only test #22.2
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                                 | expect       | db      |
+      | conn_0 | False    | set tx_read_only=1;                                 | success      | schema1 |
+      | conn_0 | False    | show variables like "transaction_read_only";        | hasStr{'ON'}    | schema1 |
+      | conn_0 | False    | select @@tx_read_only;                              | has{((1,),)} | schema1 |
+      | conn_0 | False    | set tx_read_only=false;                             | success      | schema1 |
+      | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'OFF'}   | schema1 |
+      | conn_0 | False    | select @@tx_read_only;                              | has{((0,),)} | schema1 |
+      | conn_0 | False    | set tx_read_only=TRUE;                              | success      | schema1 |
+      | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'ON'}    | schema1 |
+      | conn_0 | False    | select @@tx_read_only;                              | has{((1,),)} | schema1 |
+      | conn_0 | False    | set tx_read_only=FALSE;                             | success      | schema1 |
+      | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'OFF'}   | schema1 |
+      | conn_0 | False    | select @@tx_read_only;                              | has{((0,),)} | schema1 |
+      | conn_0 | False    | set tx_read_only=True;                              | success      | schema1 |
+      | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'ON'}    | schema1 |
+      | conn_0 | False    | select @@tx_read_only;                              | has{((1,),)} | schema1 |
+      | conn_0 | False    | set tx_read_only=False;                             | success      | schema1 |
+      | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'OFF'}   | schema1 |
+      | conn_0 | False    | select @@tx_read_only;                              | has{((0,),)} | schema1 |
+      | conn_0 | False    | set tx_read_only=ON;                                | success      | schema1 |
+      | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'ON'}    | schema1 |
+      | conn_0 | False    | select @@tx_read_only;                              | has{((1,),)} | schema1 |
+      | conn_0 | False    | set tx_read_only=OFF;                               | success      | schema1 |
+      | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'OFF'}   | schema1 |
+      | conn_0 | False    | select @@tx_read_only;                              | has{((0,),)} | schema1 |
+      | conn_0 | False    | set tx_read_only=On;                                | success      | schema1 |
+      | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'ON'}    | schema1 |
+      | conn_0 | False    | select @@tx_read_only;                              | has{((1,),)} | schema1 |
+      | conn_0 | False    | set tx_read_only=Off;                               | success      | schema1 |
+      | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'OFF'}   | schema1 |
+      | conn_0 | False    | select @@tx_read_only;                              | has{((0,),)} | schema1 |
+      | conn_0 | False    | set tx_read_only=on;                                | success      | schema1 |
+      | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'ON'}    | schema1 |
+      | conn_0 | False    | select @@tx_read_only;                              | has{((1,),)} | schema1 |
+      | conn_0 | False    | set tx_read_only=off;                               | success      | schema1 |
+      | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'OFF'}   | schema1 |
       | conn_0 | False    | select @@tx_read_only;                              | has{((0,),)} | schema1 |
       | conn_0 | False    | set tx_read_only=1;                                 | success      | schema1 |
       | conn_0 | False    | show  variables like "tx_read_only";                | hasStr{'ON'}    | schema1 |
