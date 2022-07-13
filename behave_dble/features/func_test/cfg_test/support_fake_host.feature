@@ -5,7 +5,7 @@
 # DBLE0REQ-225
 Feature: db.xml support fake host
 
-  @init_dble_meta
+  @init_dble_meta @skip # skip about DBLE0REQ-1793
   Scenario: The managerPort/serverPort does not use the default value, fake host use the default managerPort/serverPort #1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -367,6 +367,7 @@ Feature: db.xml support fake host
       | conn_0 | true    | select * from backend_connections              | length{(0)} | dble_information |
 
 
+   @skip # skip about DBLE0REQ-1793
   Scenario: fake host doesn't support ipv6 and local ip address #10
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
