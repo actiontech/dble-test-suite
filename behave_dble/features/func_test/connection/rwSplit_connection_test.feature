@@ -8,7 +8,7 @@
 
 Feature: connection test in rwSplit mode
 
-     @skip_restart
+     @skip_restart @skip # skip about DBLE0REQ-1793
      Scenario: [testOnBorrow=false] when connection already has been obtained, old dbGroup will delay to close        #1
 
        Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -111,6 +111,7 @@ Feature: connection test in rwSplit mode
      Given delete file "/opt/dble/BtraceRwSelect.java" on "dble-1"
      Given delete file "/opt/dble/BtraceRwSelect.java" on "dble-1"
 
+   @skip # skip about DBLE0REQ-1793
    Scenario: [testOnBorrow = true] when connection already has been obtained, old dbGroup will delay to close        #2
 
      Given delete the following xml segment
@@ -197,7 +198,7 @@ Feature: connection test in rwSplit mode
        |user| conn   | toClose | sql                                     | expect  |
        |rwS1| conn_1 | true    | drop database testdb                    | success |
 
-
+  @skip # skip about DBLE0REQ-1793
   Scenario: When the front connection is bound with the dbGroup and trigger reload less ten times, result can return correctly      #3
 
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -279,8 +280,8 @@ Feature: connection test in rwSplit mode
     Given delete file "/opt/dble/BtraceSelectRWDbGroup.java" on "dble-1"
     Given delete file "/opt/dble/BtraceSelectRWDbGroup.java.log" on "dble-1"
 
-
-   Scenario: When the front connection is bound with the dbGroup, reload is triggered multiple times and the dbgroup connection is obtained recursively ten times    #4
+    @skip # skip about DBLE0REQ-1793
+    Scenario: When the front connection is bound with the dbGroup, reload is triggered multiple times and the dbgroup connection is obtained recursively ten times    #4
 
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
         """

@@ -255,7 +255,7 @@ Feature: We will check readonly status on both master and slave even if the hear
      Given turn off general log in "mysql-master3"
 
 
-   @restore_global_setting
+   @restore_global_setting @skip # skip about DBLE0REQ-1793
   Scenario: all heartbeat SQL -- select user() & show slave status & select @@read_only;add slave mysql on db.xml & reload @@config_all; (1.2.4 & 2.2.4 & 3.2.4). #4
      """
      {'restore_global_setting':{'mysql-master1':{'general_log':0},'mysql-master2':{'general_log':0},'mysql-master3':{'general_log':0},'mysql-slave1':{'general_log':0},'mysql-slave2':{'general_log':0},'mysql':{'general_log':0}}}

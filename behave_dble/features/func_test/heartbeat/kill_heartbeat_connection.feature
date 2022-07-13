@@ -171,7 +171,7 @@ Feature: heartbeat basic test
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
 
 
-  @btrace
+  @btrace  @skip # skip about DBLE0REQ-1793
   Scenario: heartbeat connection is recover failed in retry 'errorRetryCount' times, the heartbeat will set as error,and the connection pool is available in retry period #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """

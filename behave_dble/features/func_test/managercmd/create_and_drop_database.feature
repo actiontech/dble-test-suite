@@ -70,7 +70,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
 
 
 
-  @NORMAL
+  @NORMAL @skip # skip about DBLE0REQ-1793
   Scenario: "create database @@..." for part of used shardingNode #2
     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
     """
@@ -164,7 +164,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
 
 
 
-  @NORMAL
+  @NORMAL @skip # skip about DBLE0REQ-1793
   Scenario: "create database @@..." for shardingNode of style 'dn$x-y' #3
     Given delete the following xml segment
       |file        | parent          | child               |
