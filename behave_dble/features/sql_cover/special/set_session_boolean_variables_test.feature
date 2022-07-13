@@ -1108,10 +1108,10 @@ Feature: dble support execute set @@variables=true/false test;
       | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'OFF'}   | schema1 |
       | conn_0 | False    | select @@tx_read_only;                              | has{((0,),)} | schema1 |
       | conn_0 | False    | set tx_read_only=1;                                 | success      | schema1 |
-      | conn_0 | False    | show  variables like "tx_read_only";                | hasStr{'ON'}    | schema1 |
+      | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'ON'}    | schema1 |
       | conn_0 | False    | select @@tx_read_only;                              | has{((1,),)} | schema1 |
       | conn_0 | False    | set tx_read_only=0;                                 | success      | schema1 |
-      | conn_0 | False    | show  variables like "tx_read_only";                | hasStr{'OFF'}   | schema1 |
+      | conn_0 | False    | show  variables like "transaction_read_only";       | hasStr{'OFF'}   | schema1 |
       | conn_0 | True     | select @@tx_read_only;                              | has{((0,),)} | schema1 |
 
 
