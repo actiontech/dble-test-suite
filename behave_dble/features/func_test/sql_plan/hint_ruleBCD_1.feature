@@ -5,7 +5,7 @@
 # DBLE0REQ-1470, DBLE0REQ-1471, DBLE0REQ-1472
 Feature: test hint
 
-  @delete_mysql_tables
+  @delete_mysql_tables @skip #skip about DBLE0REQ-1658
   Scenario: rule B, C, D -> shardingTable + shardingTable + shardingTable -> left join & left join #1
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
@@ -1513,7 +1513,7 @@ Feature: test hint
       | conn    | toClose  | sql                                                                                                                    | db      |
       | conn_1  | true     | /*#dble:plan=a \| b \| c & d */ SELECT a.name,a.deptname,b.manager,c.country,d.levelname FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name LEFT JOIN Level d on a.level=d.levelname and d.levelname='P8' order by a.name | schema1 |
 
-  @delete_mysql_tables
+  @delete_mysql_tables @skip #skip about DBLE0REQ-1658
   Scenario: rule B, C, D -> shardingTable + shardingTable + singleTable -> left join & left join #2
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
@@ -2069,7 +2069,7 @@ Feature: test hint
       | conn_1  | False    | /*#dble:plan=(c, a, b) */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Level c on a.level=c.levelname and c.salary=10000 order by a.name   | schema1 | can't use '{node=c}' node for root. Because exists some left join relations point to this node. |
       | conn_1  | True     | /*#dble:plan=c \| b \| a */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Level c on a.level=c.levelname and c.salary=10000 order by a.name | schema1 | can't use '{node=c}' node for root. Because exists some left join relations point to this node. |
 
-  @delete_mysql_tables
+  @delete_mysql_tables @skip #skip about DBLE0REQ-1658
   Scenario: rule B, C, D -> shardingTable + shardingTable + globalTable -> left join & left join #3
   """
   {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
@@ -2440,7 +2440,7 @@ Feature: test hint
       | conn_1  | False    | /*#dble:plan=(c, a, b) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on b.manager=c.name and c.country='China' order by a.name   | schema1 | can't use '{node=c}' node for root. Because exists some left join relations point to this node. |
       | conn_1  | True     | /*#dble:plan=c \| b \| a */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on b.manager=c.name and c.country='China' order by a.name | schema1 | can't use '{node=c}' node for root. Because exists some left join relations point to this node. |
 
-  @delete_mysql_tables
+  @delete_mysql_tables @skip #skip about DBLE0REQ-1658
   Scenario: rule B, C, D -> shardingTable + globalTable + singleTable -> left join & left join #4
   """
   {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
@@ -2680,7 +2680,7 @@ Feature: test hint
       | conn_1  | False    | /*#dble:plan=(c, a, b) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on b.manager=c.name and c.country='China' order by a.name   | schema1 | can't use '{node=c}' node for root. Because exists some left join relations point to this node. |
       | conn_1  | True     | /*#dble:plan=c \| b \| a */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on b.manager=c.name and c.country='China' order by a.name | schema1 | can't use '{node=c}' node for root. Because exists some left join relations point to this node. |
 
-  @delete_mysql_tables
+  @delete_mysql_tables @skip #skip about DBLE0REQ-1658
   Scenario: rule B, C, D -> shardingTable + singleTable + singleTable -> left join & left join #5
   """
   {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
@@ -3038,7 +3038,7 @@ Feature: test hint
       | conn_1  | False    | /*#dble:plan=(c, a, b) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and c.country='China' order by a.name   | schema1 | can't use '{node=c}' node for root. Because exists some left join relations point to this node. |
       | conn_1  | True     | /*#dble:plan=c \| b \| a */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name and c.country='China' order by a.name | schema1 | can't use '{node=c}' node for root. Because exists some left join relations point to this node. |
 
-  @delete_mysql_tables
+  @delete_mysql_tables @skip #skip about DBLE0REQ-1658
   Scenario: rule B, C, D -> shardingTable + globalTable + globalTable -> left join & left join #6
   """
   {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}

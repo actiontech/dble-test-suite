@@ -991,7 +991,8 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       | conn_1 | True    | drop table if exists sharding_4_t1;drop table if exists no_sharding_t1;drop table if exists single_t1         | success | schema1 |
 
 
-    #add for http://10.186.18.11/jira/browse/DBLE0REQ-1474
+  @skip #skip about DBLE0REQ-1658
+  #add for http://10.186.18.11/jira/browse/DBLE0REQ-1474
   Scenario: inSubQueryTransformToJoin=false & use /*!dble:plan=$in2join*/ to achieve in to join         #4
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -1464,6 +1465,7 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       | conn_1 | False   | /*!dble:plan=$in2join*/select * from sharding_4_t1 where exists (select id from no_sharding_t1 where code=1) order by name desc      | equal{((8,'dd',18),(4,'d',4),(7,'cc',17),(3,'c',3),(6,'bb',16),(2,'b',2),(5,'aa',15),(1,'a',1))} | schema1 |
       | conn_1 | True    | drop table if exists sharding_4_t1;drop table if exists no_sharding_t1;drop table if exists single_t1         | success | schema1 |
 
+  @skip #skip about DBLE0REQ-1658
   #add for http://10.186.18.11/jira/browse/DBLE0REQ-1474
   Scenario: inSubQueryTransformToJoin=true & use /*!dble:plan=$in2join*/  used in same time should not conflict        #5
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds

@@ -4,7 +4,7 @@
 # Created by chenhuiming at 2022/2/10
 Feature: test with hint plan A
 
-  @delete_mysql_tables
+  @delete_mysql_tables @skip #skip about DBLE0REQ-1658
   Scenario: shardingTable  + shardingTable  +  shardingTable                              #1
   """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
