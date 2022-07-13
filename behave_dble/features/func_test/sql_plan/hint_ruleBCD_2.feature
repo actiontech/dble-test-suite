@@ -5,7 +5,7 @@
 # DBLE0REQ-1470, DBLE0REQ-1471, DBLE0REQ-1472
 Feature: test hint
 
-  @delete_mysql_tables
+  @delete_mysql_tables @skip #skip about DBLE0REQ-1658
   Scenario: rule B, C, D -> shardingTable + shardingTable + shardingTable -> left join & inner join #1
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
@@ -2498,7 +2498,7 @@ Feature: test hint
       | conn    | toClose  | sql                                                                                                                    | db      |
       | conn_1  | true     | /*#dble:plan=b \| a & c \| d */ SELECT a.name,a.deptname,b.manager,c.country,d.levelname FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on a.name=c.name LEFT JOIN Level d on a.level=d.levelname and d.levelname='P8' order by a.name | schema1 |
 
-   @delete_mysql_tables
+   @delete_mysql_tables @skip #skip about DBLE0REQ-1658
   Scenario: rule B, C, D -> singleTable + shardingTable + shardingTable -> left join & inner join #2
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
@@ -3003,7 +3003,7 @@ Feature: test hint
       | conn    | toClose  | sql                                                                                                                    | db      |
       | conn_1  | true     | /*#dble:plan=b & a & c */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager LEFT JOIN Info c on b.manager=c.name and c.country='China' order by a.name | schema1 |
 
-   @delete_mysql_tables
+   @delete_mysql_tables @skip #skip about DBLE0REQ-1658
   Scenario: rule B, C, D -> singleTable + singleTable + globalTable -> left join & inner join #3
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}

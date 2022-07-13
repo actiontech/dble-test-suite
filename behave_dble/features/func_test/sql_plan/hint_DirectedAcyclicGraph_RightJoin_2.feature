@@ -4,7 +4,7 @@
 # Created by zhangqian at 2022/03/01
 Feature: test with joinStrategyType
 
-  @delete_mysql_tables
+  @delete_mysql_tables @skip #skip about DBLE0REQ-1658
   Scenario: shardingTable  + shardingTable  +  globalTable  Directed Acyclic Graph && right join   #1
   """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
@@ -1864,7 +1864,7 @@ Feature: test with joinStrategyType
       | conn_0 | False   | explain /*!dble:plan=a\|c\|b */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name;  | can't use '{node=a}' node for root. Because exists some left join relations point to this node. | schema1 |
       | conn_0 | True    | explain /*!dble:plan=(c\|a)&b */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | You are using wrong hint. please check the node 'a',there are no previous nodes connect to it.  | schema1 |
 
-  @delete_mysql_tables
+  @delete_mysql_tables @skip #skip about DBLE0REQ-1658
   Scenario: shardingTable  + shardingTable  +  singleTable  Directed Acyclic Graph && right join   #2
   """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
