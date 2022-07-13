@@ -15,13 +15,13 @@ ssh root@${1}  "mysql -e \"grant replication slave on *.* to 'repl'@'%';\""
 sleep 5s
 
 echo "==================  reset slave ${2}  =================="
-ssh root@${2}  "mysql2 -e \"reset master;stop slave;reset slave all;set global gtid_purged='';\" "
-ssh root@${2}  "mysql2 -e \"change master to master_host='${master_ip}', master_port=3306, master_user='repl', master_password='111111', master_auto_position=1;\""
-ssh root@${2}  "mysql2 -e \"start slave;\" "
+ssh root@${2}  "mysql -utest -p111111 -S /tmp/mysql_sandbox3307.sock -e \"reset master;stop slave;reset slave all;set global gtid_purged='';\" "
+ssh root@${2}  "mysql -utest -p111111 -S /tmp/mysql_sandbox3307.sock -e \"change master to master_host='${master_ip}', master_port=3306, master_user='repl', master_password='111111', master_auto_position=1;\""
+ssh root@${2}  "mysql -utest -p111111 -S /tmp/mysql_sandbox3307.sock -e \"start slave;\" "
 
 if [ $# -eq 3 ]; then
     echo "==================  reset slave ${3}  =================="
-    ssh root@${3}  "mysql3 -e \"reset master;stop slave;reset slave all;set global gtid_purged='';\" "
-    ssh root@${3}  "mysql3 -e \"change master to master_host='${master_ip}', master_port=3306, master_user='repl', master_password='111111', master_auto_position=1;\""
-    ssh root@${3}  "mysql3 -e \"start slave;\" "
+    ssh root@${3}  "mysql -utest -p111111 -S /tmp/mysql_sandbox3308.sock -e \"reset master;stop slave;reset slave all;set global gtid_purged='';\" "
+    ssh root@${3}  "mysql -utest -p111111 -S /tmp/mysql_sandbox3308.sock -e \"change master to master_host='${master_ip}', master_port=3306, master_user='repl', master_password='111111', master_auto_position=1;\""
+    ssh root@${3}  "mysql -utest -p111111 -S /tmp/mysql_sandbox3308.sock -e \"start slave;\" "
 fi
