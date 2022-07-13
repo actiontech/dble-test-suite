@@ -9,6 +9,8 @@ from functools import wraps
 from logging import config
 from pprint import pformat
 from environs import Env
+import shlex
+import subprocess
 from behave.userdata import UserData
 import re
 import yaml
@@ -243,6 +245,29 @@ def delete_all_mysql_tables(context):
         logger.info(out_bytes.decode('utf-8'))
 
 
+def exec_command(cmd: Union[str, List[str]], capture_output: bool = True, shell: bool = False, text: bool = True,
+                 **other_run_kwargs) -> Tuple[int, str, str]:
+    """
+    本地调用子进程
+
+    :param cmd: 要执行的命令。如果调用的命令里包含管道符'|'则需要设置shell为True
+    :param capture_output: 如果 capture_output 设为 true,stdout 和 stderr 将会被捕获
+    :param shell: 是否将命令直接通过shell执行
+    :param text: std、ste是否以文本的形式返回
+    :param other_run_kwargs: run支持的其他参数, https://docs.python.org/zh-cn/3.7/library/subprocess.html#subprocess.run
+    :return: (re, 标准输出, 标准错误输出)
+    """
+    logger.info(f'Execute command: <{cmd}>')
+    if not shell and isinstance(cmd, str):
+        cmd = shlex.split(cmd)
+    cp = subprocess.run(cmd, capture_output=capture_output,
+                        shell=shell, text=text, **other_run_kwargs)
+    result = (cp.returncode, cp.stdout.strip('\n'), cp.stderr.strip('\n'))
+    logger.debug(
+        f'Return code <{result[0]}>, Stdout: <{result[1]}>, Stderr <{result[2]}>')
+    return result
+
+
 def create_ssh_client(context: Context) -> Dict[str, SSHClient]:
     """
     向测试容器建立ssh连接
@@ -355,11 +380,11 @@ def handle_env_variable(context: Context, userdata: UserData, var: str, default_
     upper = var.upper()
     lower = var.lower()
     env = Env()
-    # if os.path.exists('resource/secret/.env'):
-        # logger.debug('USE ENVIRONMENT resource/secret/.env')
-        # env.read_env('resource/secret/.env')
-    # else:
-        # logger.debug('DO NOT EXIST resource/secret/.env')
+    if os.path.exists('conf/secret/.env'):
+        logger.debug('USE ENVIRONMENT behave_dble/conf/secret/.env')
+        env.read_env('conf/secret/.env')
+    else:
+        logger.debug('DO NOT EXIST behave_dble/conf/secret/.env')
     assert_that(method, is_in(['str', 'bool', 'int']))
     env_method = {'str': env.str,
                   'bool': env.bool,
@@ -386,8 +411,8 @@ def handle_env_variable(context: Context, userdata: UserData, var: str, default_
                 f'priority 1: behave -D {upper}=xxx\n'
                 f'priority 2: behave.ini - behave.userdata.{upper}\n'
                 f'priority 3: os environment DBLE_{upper}\n'
-                # f'priority 4: resource/secret/.env DBLE_{upper}\n'
-                f'priority 5: conf/config.yml - test_conf.{lower}')
+                f'priority 4: behave_dble/conf/secret/.env DBLE_{upper}\n'
+                f'priority 5: conf/aute_dble_test.yaml - test_conf.{lower}')
 
     if check is None:
         assert_that(context.test_conf[lower],
@@ -399,7 +424,7 @@ def handle_env_variable(context: Context, userdata: UserData, var: str, default_
 @log_it 
 def handle_env_variables(context: Context, userdata: UserData):
     handle_env_variable(context, userdata, 'time_weight', method='int')
-    # handle_env_variable(context, userdata, 'auto_retry', method='int')
+    handle_env_variable(context, userdata, 'auto_retry', method='int')
     handle_env_variable(context, userdata, 'dble_version')
     # handle_env_variable(context, userdata, 'dble_package_timestamp')
     handle_env_variable(context, userdata, 'dble_remote_host')

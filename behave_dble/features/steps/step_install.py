@@ -8,11 +8,11 @@ import logging
 import MySQLdb
 from behave import *
 from hamcrest import *
-
+from behave.runner import Context
 from steps.lib.DbleMeta import DbleMeta
 from steps.lib.DBUtil import *
-from steps.lib.utils import get_node, get_ssh
-
+from steps.lib.utils import get_node, get_ssh, create_dir,exec_command
+# from lib.utils import wait_for, create_dir
 LOGGER = logging.getLogger('root')
 
 
@@ -36,81 +36,62 @@ def unistall_dble_by_hostname(context, hostname):
     uninstall_dble_in_node(context, node)
 
 
-def get_dble_install_packet_name(context, version):
-    dble_packet = context.cfg_dble['packet_name']
 
-    if dble_packet.find("{0}") != -1:
-        download_host = context.cfg_dble['download_host']
-        download_path = f"{download_host}/actiontech/dble/releases/tag/{version}/tag/"
-        cmd = "curl -s '" + download_path + "' | grep '\-linux.tar.gz' | awk -F '-linux.tar.gz' '{print $1}' | awk -F 'dble-' '{print $2}' | awk 'NR==1' "
-        retry = 0
-        while retry < 5:
-            packet_name = subprocess.check_output(cmd, shell=True)
-            if isinstance(packet_name, bytes):
-                packet_name = packet_name.decode("utf-8").strip("\n")
-            packet_name = packet_name.strip("\n")
-
-            if packet_name:
-                context.logger.debug("get dble latest packet name {0}".format(packet_name))
-                break
-            retry = retry + 1
-            time.sleep(2)
-
-        dble_packet = dble_packet.format(packet_name)
-
-    LOGGER.debug("dble packet to install: {0}".format(dble_packet))
-    return dble_packet
+# inner or outer
+def download_type(context: Context) -> str:
+    if context.test_conf.get('ftp_user') \
+            and context.test_conf.get('ftp_password') \
+            and context.test_conf.get('dble_remote_host').startswith('ftp'):
+        return 'ftp'
+    return 'http'
 
 
-def get_download_version(context):
-    version = ""
-    packet_name = context.cfg_dble['packet_name']
+def download_dble_package(context: Context) -> str:
+    dble_remote_path = context.test_conf["dble_remote_path"].format(
+        DBLE_VERSION=context.test_conf['dble_version'],
+        DBLE_PACKAGE_TIMESTAMP=context.test_conf['dble_package_timestamp'])
+    remote_path = f'{context.test_conf["dble_remote_host"]}{dble_remote_path}'
 
-    if packet_name.find("{0}") != -1:
-        download_host = context.cfg_dble['download_host']
-        cmd = "curl -s '" + download_host + "/actiontech/dble/releases/latest' | awk -F '/' '{print $8}'"
-        version = subprocess.check_output(cmd, shell=True)
-        if isinstance(version, bytes):
-            version = version.decode("utf-8")
-        version = version.strip("\n")
-    return version
+    package_name = os.path.basename(remote_path)
+    local_path = os.path.join(context.cfg_sys['share_path_docker'], package_name)
 
+    if not os.path.exists(local_path):
+        kwargs = {'l': local_path,
+                  'r': remote_path}
+        if download_type(context) == 'http':
+            cmd = 'wget -q -O {l} {r}'.format(**kwargs)
+            rc, _, ste = exec_command(cmd)
+            assert_that(rc, equal_to(0), ste)
+        else:
+            kwargs.update({'u': context.test_conf['ftp_user'],
+                           'p': context.test_conf['ftp_password']})
 
-def get_download_ftp_path(context, version):
-    ftp_path = context.cfg_dble['ftp_path']
-    ftp_address = context.config.userdata["ftp_address"]
-    packet_name = context.cfg_dble['packet_name']
-
-    if packet_name.find("{0}") != -1:
-        # github
-        download_host = context.cfg_dble['download_host']
-        ftp_path = ftp_path.format(download_host, version)
+            cmd = 'wget -q -O {l} --ftp-user={u} --ftp-password={p} {r}'.format(
+                **kwargs)
+            rc, _, ste = exec_command(cmd)
+            assert_that(rc, equal_to(0), ste)
     else:
-        # ftp
-        ftp_path = ftp_path.format(ftp_address)
+        LOGGER.debug('DBLE package is existing, not need download')
 
-    LOGGER.debug("download dble ftp path : {0}".format(ftp_path))
-    return ftp_path
+    return local_path
 
 
 def install_dble_in_node(context, node):
-    version = get_download_version(context)
-    dble_packet = get_dble_install_packet_name(context, version)
-
     if context.need_download:
-        download_dble(context, dble_packet, version)
+        dble_packet = download_dble_package(context)
+    else:
+        dble_packet = os.path.join(context.cfg_sys['share_path_docker'], "actiontech-dble.tar.gz")
 
     ssh_client = node.ssh_conn
 
     cmd = "cd {0} && rm -rf dble".format(node.install_dir)
-    rc, sto, ste = ssh_client.exec_command(cmd)
+    rc, _, ste = ssh_client.exec_command(cmd)
     assert_that(len(ste) == 0, "exec with command:{0}, got err:{1}".format(cmd, ste))
 
 
-    cmd = "cd {0} && tar xf {1} -C {2}".format(context.cfg_sys['share_path_docker'], dble_packet, node.install_dir)
-    rc, sto, ste = ssh_client.exec_command(cmd)
-    assert_that(len(ste) == 0, "exec with command:{0}, got err:{1}".format(cmd, ste))
-
+    cmd = "tar xf {0} -C {1}".format(dble_packet, node.install_dir)
+    rc, _, ste = ssh_client.exec_command(cmd)
+    assert_that(rc, equal_to(0), f"install dble failed, got err:{ste}"), 
 
 
 @Given('install dble in "{hostname}"')
@@ -125,36 +106,6 @@ def install_dble_in_all_nodes(context):
         install_dble_in_node(context, node)
 
 
-def download_dble(context, dble_packet_name, version):
-    LOGGER.debug("delete local dble packet")
-    rpm_local_path = "{0}/{1}".format(context.cfg_sys['share_path_docker'],
-                                      dble_packet_name)
-    ftp_path = get_download_ftp_path(context, version)
-    rpm_ftp_url = "{0}{1}".format(ftp_path,
-                                  dble_packet_name)
-    cmd = 'rm -rf {0}'.format(rpm_local_path)
-    exit_status = os.system(cmd)
-    LOGGER.debug("cmd:{0}, exit_status:{1}".format(cmd, exit_status))
-
-    if context.cfg_dble['packet_name'].find("{0}") == -1:
-        cmd = 'cd {0} && wget --user={2} --password={3} -nv {1}'.format(
-            context.cfg_sys['share_path_docker'], rpm_ftp_url,
-            context.ftp_user, context.ftp_passwd)
-    else:
-        cmd = 'cd {0} && wget {1}'.format(context.cfg_sys['share_path_docker'], rpm_ftp_url)
-
-    # sleep 10s to wait download over
-    LOGGER.debug("download cmd is : {0}".format(cmd))
-    os.popen(cmd)
-    time.sleep(10)
-
-    cmd = "find {0} -maxdepth 1 -name {1} | wc -l".format(context.cfg_sys['share_path_docker'],
-                                                          dble_packet_name)
-    LOGGER.debug(cmd)
-    str = os.popen(cmd).read()
-    assert_that(str.strip(), equal_to('1'), "Download dble tar fail")
-
-
 def set_dbles_log_level(context, nodes, log_level):
     for node in nodes:
         set_dble_log_level(context, node, log_level)
@@ -164,7 +115,7 @@ def set_dble_log_level(context, node, log_level):
     ssh_client = node.ssh_conn
     str_awk = "awk 'FS=\" \" {print $2}'"
     cmd = "cat {0}/dble/conf/log4j2.xml | grep -e '<asyncRoot*' | {1} | cut -d= -f2 ".format(node.install_dir, str_awk)
-    rc, sto, ste = ssh_client.exec_command(cmd)
+    _, sto, _ = ssh_client.exec_command(cmd)
 
     if log_level in sto:
         LOGGER.debug("dble log level is already: {0}, do nothing!".format(log_level))

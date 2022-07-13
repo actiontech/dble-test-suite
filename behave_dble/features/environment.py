@@ -36,15 +36,6 @@ def init_dble_conf(context, para_dble_conf):
     context.dble_conf = conf
 
 
-def config_env_vars(context, key_list):
-    for key in key_list:
-        value = os.getenv(key)
-        if value is not None:
-            setattr(context, key, value)
-        else:
-            logger.debug("environment variable {0} is not configured".format(key))
-
-
 def before_all(context):
     context.current_log = init_log_directory()
 
@@ -59,10 +50,8 @@ def before_all(context):
 
 
     ud = context.config.userdata
-    test_config = ud["test_config"].lower() #"./conf/auto_dble_test.yaml"
-    #convert auto_dble_test.yaml attr to context attr
     try:
-        test_config = ud.pop('test_config')
+        test_config = ud.pop('test_config') #"./conf/auto_dble_test.yaml"
     except KeyError:
         raise KeyError('Not define test_config') from KeyError
     
@@ -71,21 +60,17 @@ def before_all(context):
         setattr(context, name, values)
         
     handle_env_variables(context, ud)
+    logger.info(f"test conf is {context.test_conf}")
     setup_active_tag_values(active_tag_value_provider, context.test_conf)
 
 
     context.userDebug = ud["user_debug"].lower() == "true"
-    context.is_cluster = ud["is_cluster"].lower() == "true"
-    if context.is_cluster:
-        init_meta(context, "cluster")
-    else:
-        init_meta(context, "single")
-        for node in DbleMeta.dbles:
-            disable_cluster_config_in_node(context, node)
+    init_meta(context, context.test_conf['dble_topo'])
 
+    for node in DbleMeta.dbles:
+        disable_cluster_config_in_node(context, node)
     
     init_meta(context, "mysqls")
-    context.ssh_clients = create_ssh_client(context)
     # optimize later
     context.ssh_client = get_ssh(context.cfg_dble['single']['dble-1']['hostname'])
     context.ssh_sftp = get_sftp(context.cfg_dble['single']['dble-1']['hostname'])
@@ -100,11 +85,6 @@ def before_all(context):
     logger.info("run test with environment reinstall: {0}, reset: {1}".format(reinstall, reset))
 
     context.need_download = ud["install_from_local"].lower() != "true"
-    context.ftp_user = ud["ftp_user"]
-    context.ftp_passwd = ud["ftp_passwd"]
-
-    ci_env_vars_list = ["ftp_user", "ftp_passwd"]
-    config_env_vars(context, ci_env_vars_list)
 
     if reinstall:
         install_dble_in_all_nodes(context)
@@ -138,7 +118,6 @@ def before_feature(context, feature):
     logger.info('*' * 30)
     logger.info('Feature start: <{0}><{1}>'.format(feature.filename,feature.name))
 
-
     if active_tag_matcher.should_exclude_with(feature.tags):
         feature.skip(reason="DISABLED ACTIVE-TAG")
         
@@ -156,7 +135,7 @@ def before_feature(context, feature):
     logger.info('Exit hook <before_feature>')
 
 
-def after_feature(context, feature):
+def after_feature(context, feature):        
     logger.info('Feature end: <{0}><{1}>'.format(feature.filename,feature.name))
     logger.info('*' * 30)
 
@@ -165,11 +144,15 @@ def before_scenario(context, scenario):
     logger.info('Scenario start: <{0}>'.format(scenario.name))
     if active_tag_matcher.should_exclude_with(scenario.effective_tags):
         scenario.skip("DISABLED ACTIVE-TAG")
-        
+    if "Initialize_mysql" in scenario.tags:
+        context.ssh_clients = create_ssh_client(context)   
     logger.info('Exit hook <before_scenario>')
 
 def after_scenario(context, scenario):
     logger.info('Enter hook after_scenario')
+    if "Initialize_mysql" in scenario.tags:
+        for _, ssh_client in context.ssh_clients.items():
+            ssh_client.close()
     #clear conns in case of the same name conn is used in after test cases
     for i in range(0, 10):
         conn_name = "conn_{0}".format(i)

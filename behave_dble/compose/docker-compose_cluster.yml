@@ -26,7 +26,7 @@ volumes:
 
 services:
   mysql-1:
-    image: reg.actiontech.com/actiontech/centos7-dbdeployer
+    image: reg.actiontech.com/actiontech/dble_test_mysql
     container_name: mysql-1
     hostname: mysql-1
     privileged: true
@@ -44,7 +44,7 @@ services:
      
 
   mysql-2:
-    image: reg.actiontech.com/actiontech/centos7-dbdeployer
+    image: reg.actiontech.com/actiontech/dble_test_mysql
     container_name: mysql-2
     hostname: mysql-2
     privileged: true
@@ -62,7 +62,7 @@ services:
 
 
   mysql:
-    image: reg.actiontech.com/actiontech/centos7-dbdeployer
+    image: reg.actiontech.com/actiontech/dble_test_mysql
     container_name: mysql
     hostname: mysql
     privileged: true
@@ -79,7 +79,7 @@ services:
       - /share:/share
 
   dble-1:
-    image: dble/dble_test_dble:latest
+    image: reg.actiontech.com/actiontech/dble_test_dble
     container_name: dble-1
     hostname: dble-1
     privileged: true
@@ -93,9 +93,13 @@ services:
       - dble_1_cgroup:/sys/fs/cgroup
       - /share:/share
     working_dir: /opt
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_INIT_LIMIT: 10
+      ZOO_SERVERS: server.1=dble-1:2888:3888;2181 server.2=dble-2:2888:3888;2181 server.3=dble-3:2888:3888;2181
 
   dble-2:
-    image: dble/dble_test_dble:latest
+    image: reg.actiontech.com/actiontech/dble_test_dble
     container_name: dble-2
     hostname: dble-2
     privileged: true
@@ -109,9 +113,13 @@ services:
       - dble_2_cgroup:/sys/fs/cgroup
       - /share:/share
     working_dir: /opt
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_INIT_LIMIT: 10
+      ZOO_SERVERS: server.1=dble-1:2888:3888;2181 server.2=dble-2:2888:3888;2181 server.3=dble-3:2888:3888;2181
 
   dble-3:
-    image: dble/dble_test_dble:latest
+    image: reg.actiontech.com/actiontech/dble_test_dble
     container_name: dble-3
     hostname: dble-3
     privileged: true
@@ -125,6 +133,10 @@ services:
       - dble_3_cgroup:/sys/fs/cgroup
       - /share:/share
     working_dir: /opt
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_INIT_LIMIT: 10
+      ZOO_SERVERS: server.1=dble-1:2888:3888;2181 server.2=dble-2:2888:3888;2181 server.3=dble-3:2888:3888;2181
 
   # zk-1:
   #   # 有Log4Shell CVE not detected标签的最低版本
@@ -142,8 +154,8 @@ services:
   #     - zk_1_datalog:/datalog
   #   environment:
   #     ZOO_MY_ID: 1
-  #     ZOO_INIT_LIMIT: 10
-  #     ZOO_SERVERS: server.1=zk-1:2888:3888;2181 server.2=zk-2:2888:3888;2181 server.3=zk-3:2888:3888;2181
+      # ZOO_INIT_LIMIT: 10
+      # ZOO_SERVERS: server.1=zk-1:2888:3888;2181 server.2=zk-2:2888:3888;2181 server.3=zk-3:2888:3888;2181
 
   # zk-2:
   #   image: zookeeper:3.4.14
@@ -160,8 +172,8 @@ services:
   #     - zk_2_datalog:/datalog
   #   environment:
   #     ZOO_MY_ID: 2
-  #     ZOO_INIT_LIMIT: 10
-  #     ZOO_SERVERS: server.1=zk-1:2888:3888;2181 server.2=zk-2:2888:3888;2181 server.3=zk-3:2888:3888;2181
+  #   ZOO_INIT_LIMIT: 10
+  #   ZOO_SERVERS: server.1=zk-1:2888:3888;2181 server.2=zk-2:2888:3888;2181 server.3=zk-3:2888:3888;2181
 
   # zk-3:
   #   image: zookeeper:3.4.14

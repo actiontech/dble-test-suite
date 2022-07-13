@@ -7,7 +7,7 @@
 
 Feature: Deploy DBLE test environment
 
-  @Initialize_mysql
+  @Initialize_mysql @skip_restart
   Scenario: Initialize the MySQL
     Given I clean mysql deploy environment
     Given I deploy mysql
@@ -17,14 +17,15 @@ Feature: Deploy DBLE test environment
     Given I create databases named schema1,schema2,schema3,testdb,db1,db2,db3,db4 on compare_mysql
 
 
-  @use.with_dble_topo=single
+  @use.with_dble_topo=single @skip_restart
   Scenario: Initialize the single DBLE
     Given a clean environment in all dble nodes
     Given install dble in "dble-1"
     Given replace config files in "dble-1" with command line config
     Then Start dble in "dble-1"
 
-  @use.with_dble_topo=cluster
+
+  @use.with_dble_topo=cluster @skip_restart
   Scenario: install zk cluster #1
     Given stop dble cluster and zk service
     Given a clean environment in all dble nodes

@@ -76,7 +76,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                       | expect                                |
       | conn_0 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
-    Then execute sql in "mysql8-slave1"
+    Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                                | expect                                |
       | conn_1 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
 
@@ -257,10 +257,10 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
     txIsolation=1
     """
 
-    Then execute sql in "mysql8-master2"
+    Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                       | expect                                |
       | conn_0 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
-    Then execute sql in "mysql8-slave1"
+    Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                                | expect                                |
       | conn_1 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
 

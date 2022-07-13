@@ -119,7 +119,7 @@ cfg_mysql:
   group3:
     inst-1:
       ip: 172.100.9.1
-      port: 3307
+      port: 3306
       hostname: mysql-master3
       user: test
       password: 111111

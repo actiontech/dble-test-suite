@@ -59,7 +59,7 @@ def deploy_mysqls(context: Context):
         # "default_authentication_plugin=mysql_native_password",
         "secure_file_priv=",
         "local-infile=1",
-        # "sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES",
+        "sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES",
         # "session_track_schema=1",
         # "session_track_state_change=1",
         # "session_track_system_variables=\"*\"",
