@@ -49,7 +49,7 @@ Feature: test with useNewJoinOptimizer=true
      #create table used in comparing mysql
     Then execute sql in "mysql" in "mysql" mode
       | conn   | toClose  | sql                       | db | expect               |
-      | conn_0 | False    | drop table if exists Employee;drop table if exists Dept;drop table if exists Level;drop table if exists Info                                               | success | schema1 |
+      | conn_0 | False    | drop table if exists Employee;drop table if exists Dept;drop table if exists Level;drop table if exists Info                                               | schema1  | success|
       | conn_0 | false    | create table Employee (name varchar(250) not null,empid int not null,deptname varchar(250) not null,level varchar(250) not null)engine=innodb charset=utf8 | schema1  | success|
       | conn_0 | false    | create table Dept(deptname varchar(250) not null,deptid int not null,manager varchar(250) not null)engine=innodb charset=utf8                              | schema1  | success|
       | conn_0 | false    | create table Level(levelname varchar(250) not null,levelid int not null,salary int not null)engine=innodb charset=utf8                                     | schema1  | success|
@@ -61,7 +61,7 @@ Feature: test with useNewJoinOptimizer=true
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                       | db | expect               |
-      | conn_0 | False    | drop table if exists Employee;drop table if exists Dept;drop table if exists Level;drop table if exists Info                                               | success | schema1 |
+      | conn_0 | False    | drop table if exists Employee;drop table if exists Dept;drop table if exists Level;drop table if exists Info                                               | schema1  | success|
       | conn_0 | false    | create table Employee (name varchar(250) not null,empid int not null,deptname varchar(250) not null,level varchar(250) not null)engine=innodb charset=utf8 | schema1  | success|
       | conn_0 | false    | create table Dept(deptname varchar(250) not null,deptid int not null,manager varchar(250) not null)engine=innodb charset=utf8                              | schema1  | success|
       | conn_0 | false    | create table Level(levelname varchar(250) not null,levelid int not null,salary int not null)engine=innodb charset=utf8                                     | schema1  | success|
