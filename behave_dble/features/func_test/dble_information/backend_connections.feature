@@ -267,7 +267,8 @@ Feature:  backend_connections test
         """
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
     #sleep 5s to wait connections idle timeout and into scaling period
-    Given sleep "7" seconds
+    Given sleep "5" seconds
+    ####这个btrace的检测是使用行数的，后续如果失败联系开发更改方法的行数
     Then check btrace "BtraceAboutConnection.java" output in "dble-1"
       """
         get into evict
