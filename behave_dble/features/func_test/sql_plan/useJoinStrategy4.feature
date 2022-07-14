@@ -1551,7 +1551,7 @@ Feature: check useJoinStrategy
       | conn_0  | true     | SELECT * FROM Employee_2 a LEFT JOIN Dept b on a.name=b.manager INNER JOIN Level c on a.level=c.levelname where a.empid=3401 or b.deptid=2 or c.salary=15000 order by a.name | schema1 |
 
 
-  @delete_mysql_tables
+  @delete_mysql_tables @skip
   Scenario: check useJoinStrategy - singleTable + singleTable + globalTable #4
   """
   {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2'], 'mysql-master2': ['db1', 'db2'], 'mysql':['schema1']}}
