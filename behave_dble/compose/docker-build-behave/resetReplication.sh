@@ -33,16 +33,11 @@ for((i=0; i<count_all; i=i+1)); do
       && ssh root@${mysql_install_all[$i]}  "mysql -utest -p111111 -S /tmp/mysql_sandbox3306.sock < /deleteDb.sql" \
       && ssh root@${mysql_install_all[$i]}  "mysql -utest -p111111 -S /tmp/mysql_sandbox3307.sock < /deleteDb.sql" \
       && ssh root@${mysql_install_all[$i]}  "mysql -utest -p111111 -S /tmp/mysql_sandbox3308.sock < /deleteDb.sql"
-  elif [ ${mysql_install_all[$i]} = "mysql-master1" ]; then
+  else
     	ssh root@${mysql_install_all[$i]}  "/root/sandboxes/sandbox/restart" \
 	    && scp ${base_dir}/deleteDb.sql "root@${mysql_install_all[$i]}:/" \
 	    && sleep 5s \
       && ssh root@${mysql_install_all[$i]}  "mysql -utest -p111111 -S /tmp/mysql_sandbox3306.sock < /deleteDb.sql"
-  else
-      ssh root@${mysql_install_all[$i]}  "/root/sandboxes/sandbox/restart" \
-	    && scp ${base_dir}/deleteDb.sql "root@${mysql_install_all[$i]}:/" \
-	    && sleep 5s \
-      && ssh root@${mysql_install_all[$i]}  "mysql -utest -p111111 -S /tmp/mysql_sandbox3307.sock < /deleteDb.sql"
 	fi
 done
 
