@@ -22,7 +22,6 @@ from steps.lib.DbleMeta import DbleMeta
 from steps.lib.MySQLMeta import MySQLMeta
 from steps.lib.SSHUtil import SSHClient
 
-
 logger = logging.getLogger('root')
 
 
@@ -52,7 +51,7 @@ def log_it(func):
 #         with open(logging_cfg_file, 'rt') as f:
 #             dict_config = yaml.load(f.read(), Loader=yaml.FullLoader)
 #         logging.config.dictConfig(dict_config)
-        
+
 def setup_logging(logging_path: str):
     """
     读取logging配置
@@ -66,6 +65,7 @@ def setup_logging(logging_path: str):
     config.dictConfig(dict_config)
     logging.debug(f'Setup logging configfile=<{logging_path}>')
 
+
 @log_it
 def load_yaml_config(config_path):
     with open(config_path, 'r') as f:
@@ -77,12 +77,12 @@ def load_yaml_config(config_path):
 def init_meta(context, flag):
     if flag == "single":
         nodes = []
-        for _,childNode in context.cfg_dble[flag].items():
+        for _, childNode in context.cfg_dble[flag].items():
             cfg_dic = {}
             cfg_dic.update(childNode)
             cfg_dic.update(context.cfg_server)
             node = DbleMeta(cfg_dic)
-        
+
         DbleMeta.dbles = (node,)
     elif flag == "cluster":
         nodes = []
@@ -101,7 +101,7 @@ def init_meta(context, flag):
                 cfg_dic = {}
                 cfg_dic.update(cv)
                 cfg_dic.update(context.cfg_server)
-                
+
                 node = MySQLMeta(cfg_dic)
                 nodes.append(node)
         MySQLMeta.mysqls = tuple(nodes)
@@ -145,7 +145,6 @@ def update_file_content(context, mysql_version, host_name, mysql_type, sed_str=N
 
 def get_mysql_cnf_path(install_path):
     return install_path + '/my.sandbox.cnf'
-
 
 
 @Given('update file content "{filename}" in "{host_name}" with sed cmds')
@@ -230,21 +229,6 @@ def reset_repl(context):
         logger.info(out_bytes.decode('utf-8'))
 
 
-# delete backend mysql tables from db1 ~ db4
-@Given('delete all backend mysql tables')
-def delete_all_mysql_tables(context):
-    global out_bytes
-    import subprocess
-    try:
-        out_bytes = subprocess.check_output(['bash', 'delete_all_mysql_tables.sh'])
-    except subprocess.CalledProcessError as e:
-        out_bytes = e.output
-        out_bytes = out_bytes.decode('utf-8')
-        assert False, "delete_all_mysql_tables.sh script run with failure,output: {0}".format(out_bytes)
-    finally:
-        logger.info(out_bytes.decode('utf-8'))
-
-
 def exec_command(cmd: Union[str, List[str]], capture_output: bool = True, shell: bool = False, text: bool = True,
                  **other_run_kwargs) -> Tuple[int, str, str]:
     """
@@ -277,7 +261,6 @@ def create_ssh_client(context: Context) -> Dict[str, SSHClient]:
     """
     ssh_clients = {}
     dble_topo = context.test_conf['dble_topo']
-    
 
     for name, info in context.cfg_dble[dble_topo].items():
         ssh_client = SSHClient(
@@ -289,7 +272,7 @@ def create_ssh_client(context: Context) -> Dict[str, SSHClient]:
         for _, info in group_info.items():
             ssh_client = SSHClient(
                 info['ip'], context.constant['ssh_user'], context.constant['ssh_password'])
-            if group in ['compare_mysql', 'group1', 'group2','group3']:
+            if group in ['compare_mysql', 'group1', 'group2', 'group3']:
                 ssh_client.connect()
             ssh_clients[f'{group}'] = ssh_client
             # 一个group只用建立一个连接
@@ -421,7 +404,7 @@ def handle_env_variable(context: Context, userdata: UserData, var: str, default_
         check()
 
 
-@log_it 
+@log_it
 def handle_env_variables(context: Context, userdata: UserData):
     handle_env_variable(context, userdata, 'time_weight', method='int')
     handle_env_variable(context, userdata, 'auto_retry', method='int')

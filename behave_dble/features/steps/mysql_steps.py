@@ -7,7 +7,6 @@ import logging
 from threading import Thread
 
 from steps.lib.Flag import Flag
-from steps.lib.MySQLObject import MySQLObject
 from steps.lib.DbleObject import DbleObject
 from steps.lib.PostQueryCheck import PostQueryCheck
 from steps.lib.PreQueryPrepare import PreQueryPrepare
@@ -25,53 +24,60 @@ logger = logging.getLogger('root')
 @Given('restart mysql in "{host_name}" with sed cmds to update mysql config')
 @Given('restart mysql in "{host_name}"')
 def restart_mysql(context, host_name, sed_str=None):
-    if not sed_str and context.text is not None and len(context.text)>0:
+    if not sed_str and context.text is not None and len(context.text) > 0:
         sed_str = context.text
 
     mysql = ObjectFactory.create_mysql_object(host_name)
     # this is temp for debug stop mysql fail
-    execute_sql_in_host(host_name,{'sql':'show processlist'})
+    execute_sql_in_host(host_name, {'sql': 'show processlist'})
     # end debug stop mysql fail
     mysql.restart(sed_str)
+
 
 @Given('stop mysql in host "{host_name}"')
 def stop_mysql(context, host_name):
     mysql = ObjectFactory.create_mysql_object(host_name)
 
     # this is temp for debug stop mysql fail
-    execute_sql_in_host(host_name,{'sql':'show processlist'})
+    execute_sql_in_host(host_name, {'sql': 'show processlist'})
     # end debug stop mysql fail
 
     mysql.stop()
 
+
 @Given('start mysql in host "{host_name}"')
 def start_mysql(context, host_name, sed_str=None):
-    if not sed_str and context.text is not None and len(context.text)>0:
+    if not sed_str and context.text is not None and len(context.text) > 0:
         sed_str = context.text
 
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.start(sed_str)
 
+
 @Given('turn on general log in "{host_name}"')
-def step_impl(context,host_name):
+def step_impl(context, host_name):
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.turn_on_general_log()
 
+
 @Given('turn off general log in "{host_name}"')
-def turn_off_general_log(context,host_name):
+def turn_off_general_log(context, host_name):
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.turn_off_general_log()
 
+
 @Then('check general log in host "{host_name}" has not "{query}"')
-def step_impl(context,host_name, query):
+def step_impl(context, host_name, query):
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.check_query_in_general_log(query, expect_exist=False)
 
+
 @Then('check general log in host "{host_name}" has "{query}"')
 @Then('check general log in host "{host_name}" has "{query}" occured "{occur_times_expr}" times')
-def step_impl(context,host_name, query, occur_times_expr=None):
+def step_impl(context, host_name, query, occur_times_expr=None):
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.check_query_in_general_log(query, expect_exist=True, expect_occur_times_expr=occur_times_expr)
+
 
 @Given('execute sql in "{host_name}"')
 @Then('execute sql in "{host_name}"')
@@ -79,8 +85,9 @@ def step_impl(context, host_name):
     for row in context.table:
         execute_sql_in_host(host_name, row.as_dict())
 
+
 def execute_sql_in_host(host_name, info_dic, mode="mysql"):
-    if mode in ["admin", "user"]:#query to dble
+    if mode in ["admin", "user"]:  # query to dble
         obj = ObjectFactory.create_dble_object(host_name)
         query_meta = QueryMeta(info_dic, mode, obj._dble_meta)
     else:
@@ -106,7 +113,7 @@ def step_impl(context, host_name, num, concur="100", mode_name="user"):
     info_dic = row.as_dict()
     concur = min(int(concur), num)
 
-    tasks_per_thread = int(num/concur)
+    tasks_per_thread = int(num / concur)
     mod_tasks = num % concur
     timestamp = int(round(time.time() * 1000))
 
@@ -114,12 +121,12 @@ def step_impl(context, host_name, num, concur="100", mode_name="user"):
         my_dic = info_dic.copy()
         my_dic["conn"] = "concurr_conn_{0}_{1}".format(timestamp, i)
         my_dic["toClose"] = "False"
-        last_count = tasks_count-1
+        last_count = tasks_count - 1
         sql_raw = my_dic["sql"]
         for k in range(int(tasks_count)):
-            if k==last_count:
+            if k == last_count:
                 my_dic["toClose"] = "true"
-            id = base_id+k
+            id = base_id + k
             my_dic["sql"] = sql_raw.format(id)
             # logger.debug("debug1, my_dic:{}, conn:{}".format(my_dic["sql"], my_dic["conn"]))
             try:
@@ -135,7 +142,7 @@ def step_impl(context, host_name, num, concur="100", mode_name="user"):
             tasks_count = tasks_per_thread + 1
         else:
             tasks_count = tasks_per_thread
-        base_id = i*tasks_per_thread
+        base_id = i * tasks_per_thread
         thd = Thread(target=do_thread_tasks, args=(host_name, info_dic, base_id, tasks_count, Flag))
         thd.start()
         thd.join()
@@ -186,7 +193,7 @@ def step_impl(context, host_name, exclude_conn_ids=None):
 @Given('kill mysql conns in "{host_name}" in "{conn_ids}"')
 def step_impl(context, host_name, conn_ids):
     conn_ids = getattr(context, conn_ids, None)
-    assert len(conn_ids)>0, "no conns in '{}' to kill".format(conn_ids)
+    assert len(conn_ids) > 0, "no conns in '{}' to kill".format(conn_ids)
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.kill_conns(conn_ids)
 
@@ -199,36 +206,36 @@ def step_impl(context, host_name, num, concur="100", mode_name="user"):
     info_dic = row.as_dict()
     concur = min(int(concur), num)
 
-    tasks_per_thread = int(num/concur)
-    mod_tasks = num%concur
+    tasks_per_thread = int(num / concur)
+    mod_tasks = num % concur
     timestamp = int(round(time.time() * 1000))
 
     def do_thread_tasks(host_name, info_dic, base_id, tasks_count, eflag):
         my_dic = info_dic.copy()
-        my_dic["conn"] = "concurr_conn_{0}_{1}".format(timestamp,i)
+        my_dic["conn"] = "concurr_conn_{0}_{1}".format(timestamp, i)
         my_dic["toClose"] = "False"
-        last_count = tasks_count-1
+        last_count = tasks_count - 1
         sql_raw = my_dic["sql"]
         for k in range(int(tasks_count)):
-            if k==last_count:
+            if k == last_count:
                 my_dic["toClose"] = "False"
-            id = base_id+k
+            id = base_id + k
             my_dic["sql"] = sql_raw.format(id)
             # logger.debug("debug1, my_dic:{}, conn:{}".format(my_dic["sql"], my_dic["conn"]))
             try:
-              if mode_name == "admin":
-                execute_sql_in_host(host_name, my_dic, "admin")
-              else:
-                execute_sql_in_host(host_name, my_dic, "user")
+                if mode_name == "admin":
+                    execute_sql_in_host(host_name, my_dic, "admin")
+                else:
+                    execute_sql_in_host(host_name, my_dic, "user")
             except Exception as e:
-              eflag.exception = e
+                eflag.exception = e
 
     for i in range(concur):
         if i < mod_tasks:
             tasks_count = tasks_per_thread + 1
         else:
             tasks_count = tasks_per_thread
-        base_id = i*tasks_per_thread
+        base_id = i * tasks_per_thread
         thd = Thread(target=do_thread_tasks, args=(host_name, info_dic, base_id, tasks_count, Flag))
         thd.start()
         thd.join()
@@ -250,3 +257,23 @@ def step_impl(context, mode_name, seconds, host_name):
             break
     context.logger.info("execute sql for {0} seconds in {1} complete".format(seconds, host_name))
 
+
+# delete backend mysql tables from db1 ~ db4
+# slave mysql table do not need to delete for reason master mysql table has been deleted
+@Given('delete all backend mysql tables')
+def delete_all_mysql_tables(context):
+    mysql_install_all = ["mysql", "mysql-master1", "mysql-master2", "mysql-master3"]
+    databases = ["db1", "db2", "db3", "db4"]
+    for mysql_hostname in mysql_install_all:
+        for db in databases:
+            generate_drop_tables_sql = "select concat('drop table if exists ',table_schema,'.',table_name,';') from information_schema.TABLES where table_schema='{0}'".format(
+                db)
+            res1, err1 = execute_sql_in_host(mysql_hostname, {"sql": generate_drop_tables_sql}, "mysql")
+            assert err1 is None, "general drop table sql failed: {}".format(err1)
+            if len(res1) != 0:
+                for sql_element in res1:
+                    drop_table_sql = sql_element[0]
+                    res2, err2 = execute_sql_in_host(mysql_hostname, {"sql": drop_table_sql}, "mysql")
+                    assert err2 is None, "execute drop table sql failed: {}".format(err2)
+        logger.debug("{0} tables has been delete success".format(mysql_hostname))
+    logger.info("all required tables has been delete success")

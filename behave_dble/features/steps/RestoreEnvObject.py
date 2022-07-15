@@ -168,10 +168,12 @@ class RestoreEnvObject(object):
        
                 for database in paras[host_name]:
                     generate_drop_tables_sql = "select concat('drop table if exists ',table_schema,'.',table_name,';') from information_schema.TABLES where table_schema='{0}'".format(database)
-                    res, err = execute_sql_in_host(host_name, {"sql": generate_drop_tables_sql}, mode)
-                    for sql_element in res:
+                    res1, err1 = execute_sql_in_host(host_name, {"sql": generate_drop_tables_sql}, mode)
+                    assert err1 is None, "general drop table sql failed: {}".format(err1)
+                    for sql_element in res1:
                         drop_table_sql = sql_element[0]
-                        execute_sql_in_host(host_name, {"sql": drop_table_sql}, mode)
+                        res2, err2 = execute_sql_in_host(host_name, {"sql": drop_table_sql}, mode)
+                        assert err2 is None, "execute drop table sql failed: {}".format(err2)
                 logger.debug("{0} tables has been delete success".format(host_name))
 
             logger.info("all required tables has been delete success")
