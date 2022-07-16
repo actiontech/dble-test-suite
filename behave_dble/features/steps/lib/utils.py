@@ -433,7 +433,7 @@ def handle_env_variables(context: Context, userdata: UserData):
     def dble_topo_check() -> None:
         assert_that(context.test_conf['dble_topo'], is_in(['single', 'cluster']), 'Not support dble topo')
 
-    handle_env_variable(context, userdata, 'dble_topo', 'single', check=dble_topo_check)
+    handle_env_variable(context, userdata, 'dble_topo', check=dble_topo_check)
 
     def mysql_version_check() -> None:
         assert_that(context.test_conf['mysql_version'], is_in(['5.7', '8.0']), 'Not support mysql version')

@@ -422,7 +422,7 @@ def disable_cluster_config_in_node(context, node):
     cmd = "[ -f {0} ] && sed -i 's/clusterEnable=.*/clusterEnable=false/g' {0}".format(conf_file)
 
     ssh_client = node.ssh_conn
-    rc, sto, ste = ssh_client.exec_command(cmd)
+    _, _, ste = ssh_client.exec_command(cmd)
     assert_that(ste, is_(""), "expect std err empty, but was:{0}".format(ste))
 
 

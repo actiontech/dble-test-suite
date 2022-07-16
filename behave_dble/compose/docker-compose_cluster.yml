@@ -93,10 +93,6 @@ services:
       - dble_1_cgroup:/sys/fs/cgroup
       - /share:/share
     working_dir: /opt
-    environment:
-      ZOO_MY_ID: 1
-      ZOO_INIT_LIMIT: 10
-      ZOO_SERVERS: server.1=dble-1:2888:3888;2181 server.2=dble-2:2888:3888;2181 server.3=dble-3:2888:3888;2181
 
   dble-2:
     image: reg.actiontech.com/actiontech/dble_test_dble
@@ -113,10 +109,6 @@ services:
       - dble_2_cgroup:/sys/fs/cgroup
       - /share:/share
     working_dir: /opt
-    environment:
-      ZOO_MY_ID: 2
-      ZOO_INIT_LIMIT: 10
-      ZOO_SERVERS: server.1=dble-1:2888:3888;2181 server.2=dble-2:2888:3888;2181 server.3=dble-3:2888:3888;2181
 
   dble-3:
     image: reg.actiontech.com/actiontech/dble_test_dble
@@ -133,10 +125,6 @@ services:
       - dble_3_cgroup:/sys/fs/cgroup
       - /share:/share
     working_dir: /opt
-    environment:
-      ZOO_MY_ID: 3
-      ZOO_INIT_LIMIT: 10
-      ZOO_SERVERS: server.1=dble-1:2888:3888;2181 server.2=dble-2:2888:3888;2181 server.3=dble-3:2888:3888;2181
 
   # zk-1:
   #   # 有Log4Shell CVE not detected标签的最低版本

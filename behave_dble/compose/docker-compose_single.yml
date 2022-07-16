@@ -1,7 +1,8 @@
-version: '2.1'
+version: '2.2'
 networks:
   dble-net:
     driver: bridge
+    enable_ipv6: true
     ipam:
       config:
         - subnet: 172.100.9.0/24
@@ -17,7 +18,7 @@ volumes:
 
 services:
   mysql-1:
-    image: reg.actiontech.com/actiontech/centos7-dbdeployer
+    image: reg.actiontech.com/actiontech/dble_test_mysql
     container_name: mysql-1
     hostname: mysql-1
     privileged: true
@@ -34,7 +35,7 @@ services:
       - /share:/share
 
   mysql-2:
-    image: reg.actiontech.com/actiontech/centos7-dbdeployer
+    image: reg.actiontech.com/actiontech/dble_test_mysql
     container_name: mysql-2
     hostname: mysql-2
     privileged: true
@@ -51,7 +52,7 @@ services:
       - /share:/share
 
   mysql:
-    image: reg.actiontech.com/actiontech/centos7-dbdeployer
+    image: reg.actiontech.com/actiontech/dble_test_mysql
     container_name: mysql
     hostname: mysql
     privileged: true
@@ -68,7 +69,7 @@ services:
       - /share:/share
 
   dble-1:
-    image: dble/dble_test_dble:latest
+    image: reg.actiontech.com/actiontech/dble_test_dble
     container_name: dble-1
     hostname: dble-1
     privileged: true

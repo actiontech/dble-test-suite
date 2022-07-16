@@ -9,7 +9,8 @@ from steps.lib.DbleMeta import DbleMeta
 from steps.lib.MySQLMeta import MySQLMeta
 from steps.lib.MySQLObject import MySQLObject
 from steps.lib.DbleObject import DbleObject
-from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,reset_repl, get_sftp,get_ssh, create_ssh_client,init_log_directory,handle_env_variables
+from steps.lib.utils import setup_logging, load_yaml_config, init_meta, restore_sys_time, reset_repl, get_sftp, get_ssh, \
+    create_ssh_client, init_log_directory, handle_env_variables
 from steps.mysql_steps import restart_mysql
 from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
@@ -19,16 +20,17 @@ from behave.tag_matcher import ActiveTagMatcher, setup_active_tag_values
 logger = logging.getLogger('root')
 
 active_tag_value_provider = {
-        'mysql_version': '5.7',
-        'dble_topo': 'single'
-    }
+    'mysql_version': '5.7',
+    'dble_topo': 'single'
+}
 
 active_tag_matcher = ActiveTagMatcher(active_tag_value_provider)
 
 
 def init_dble_conf(context, para_dble_conf):
     para_dble_conf_lower = para_dble_conf.lower()
-    if para_dble_conf_lower in ["sql_cover_mixed", "sql_cover_global", "template", "sql_cover_nosharding","sql_cover_sharding"]:
+    if para_dble_conf_lower in ["sql_cover_mixed", "sql_cover_global", "template", "sql_cover_nosharding",
+                                "sql_cover_sharding"]:
         conf = "{0}{1}".format(context.cfg_sys['dble_conf_dir_in_behave'], para_dble_conf_lower)
     else:
         assert False, 'cmdline dble_conf\'s value can only be one of ["template", "sql_cover_mixed", "sql_cover_global", "sql_cover_nosharding","sql_cover_sharding"]'
@@ -48,28 +50,26 @@ def before_all(context):
     logger.info('*' * 30)
     logger.info('Enter hook before_all')
 
-
     ud = context.config.userdata
     try:
-        test_config = ud.pop('test_config') #"./conf/auto_dble_test.yaml"
+        test_config = ud.pop('test_config')  # "./conf/auto_dble_test.yaml"
     except KeyError:
         raise KeyError('Not define test_config') from KeyError
-    
-    parsed = load_yaml_config("./conf/"+test_config)
+
+    parsed = load_yaml_config("./conf/" + test_config)
     for name, values in parsed.items():
         setattr(context, name, values)
-        
+
     handle_env_variables(context, ud)
     logger.info(f"test conf is {context.test_conf}")
     setup_active_tag_values(active_tag_value_provider, context.test_conf)
-
 
     context.userDebug = ud["user_debug"].lower() == "true"
     init_meta(context, context.test_conf['dble_topo'])
 
     for node in DbleMeta.dbles:
         disable_cluster_config_in_node(context, node)
-    
+
     init_meta(context, "mysqls")
     # optimize later
     context.ssh_client = get_ssh(context.cfg_dble['single']['dble-1']['hostname'])
@@ -95,9 +95,11 @@ def before_all(context):
         logger.info('give new install')
     logger.info('Exit hook <{0}>'.format('before_all'))
 
+
 def reset_dble(context):
     replace_config(context)
     restart_dbles(context, DbleMeta.dbles)
+
 
 def after_all(context):
     logger.info('Enter hook <{0}>'.format('after_all'))
@@ -116,11 +118,11 @@ def after_all(context):
 
 def before_feature(context, feature):
     logger.info('*' * 30)
-    logger.info('Feature start: <{0}><{1}>'.format(feature.filename,feature.name))
+    logger.info('Feature start: <{0}><{1}>'.format(feature.filename, feature.name))
 
     if active_tag_matcher.should_exclude_with(feature.tags):
         feature.skip(reason="DISABLED ACTIVE-TAG")
-        
+
     else:
         if context.test_conf['auto_retry']:
             for scenario in feature.scenarios:
@@ -131,13 +133,14 @@ def before_feature(context, feature):
         for desc in feature.description[1:-1]:
             logger.info(desc)
             context.execute_steps(desc)
-            
+
     logger.info('Exit hook <before_feature>')
 
 
-def after_feature(context, feature):        
-    logger.info('Feature end: <{0}><{1}>'.format(feature.filename,feature.name))
+def after_feature(context, feature):
+    logger.info('Feature end: <{0}><{1}>'.format(feature.filename, feature.name))
     logger.info('*' * 30)
+
 
 def before_scenario(context, scenario):
     logger.info('#' * 30)
@@ -145,15 +148,16 @@ def before_scenario(context, scenario):
     if active_tag_matcher.should_exclude_with(scenario.effective_tags):
         scenario.skip("DISABLED ACTIVE-TAG")
     if "Initialize_mysql" in scenario.tags:
-        context.ssh_clients = create_ssh_client(context)   
+        context.ssh_clients = create_ssh_client(context)
     logger.info('Exit hook <before_scenario>')
+
 
 def after_scenario(context, scenario):
     logger.info('Enter hook after_scenario')
     if "Initialize_mysql" in scenario.tags:
         for _, ssh_client in context.ssh_clients.items():
             ssh_client.close()
-    #clear conns in case of the same name conn is used in after test cases
+    # clear conns in case of the same name conn is used in after test cases
     for i in range(0, 10):
         conn_name = "conn_{0}".format(i)
         if hasattr(context, conn_name):
@@ -191,8 +195,10 @@ def after_scenario(context, scenario):
     logger.info('after_scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
 
+
 def before_step(context, step):
     logger.debug(step.name)
+
 
 def after_step(context, step):
     # logger.info('{0}, status:{1}'.format(step.name, step.status))
@@ -200,7 +206,3 @@ def after_step(context, step):
         logger.error('Failing step location: {0}, status:{1}'.format(step.location, step.status))
     else:
         logger.info('{0}, status:{1}'.format(step.name, step.status))
-
-
-
-
