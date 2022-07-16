@@ -3,11 +3,11 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 @setup
 Feature: sharding table sql cover test
-"""
-Given rm old logs "sql_cover_sharding" if exists
-Given reset replication and none system databases
-Given reset views in "dble-1" if exists
-"""
+# """
+# Given rm old logs "sql_cover_sharding" if exists
+# Given reset replication and none system databases
+# Given reset views in "dble-1" if exists
+# """
 
    Scenario:cover empty line in file, no line in file, chinese character in file, special character in file for sql syntax: load data [local] infile ...#1
      Given set sql cover log dir "sql_cover_sharding"

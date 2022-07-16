@@ -3,11 +3,11 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 @setup
 Feature: mixed type tables sql cover test
-"""
-Given rm old logs "sql_cover_mixed" if exists
-Given reset replication and none system databases
-Given reset views in "dble-1" if exists
-"""
+# """
+# Given rm old logs "sql_cover_mixed" if exists
+# Given reset replication and none system databases
+# Given reset views in "dble-1" if exists
+# """
     Scenario Outline:sql cover for mixed table types #2
       Given set sql cover log dir "sql_cover_mixed"
       Then execute sql in file "<filename>"

@@ -36,7 +36,7 @@ run_cluster_case: up
 	features/install_uninstall/stop_dble_cluster.feature
 
 run_func_stable_case: up
-	pipenv run behave -Dreset=true -D dble_conf=template features/setup.feature \
+	pipenv run behave -D dble_conf=template features/setup.feature \
 	features/func_test/global_var_init/ \
 	features/func_test/load_data/  \
 	features/func_test/safety/  \
@@ -49,9 +49,12 @@ run_func_stable_case: up
 	features/func_test/heartbeat/ \
 	features/func_test/metalock/
 
+run_cfg_case: up
+	pipenv run behave -D dble_conf=template features/setup.feature \
+	features/func_test/cfg_test/
 
 run_func_unstable_case: up
-	pipenv run behave -Dreset=true -D dble_conf=template features/setup.feature \
+	pipenv run behave -D dble_conf=template features/setup.feature \
 	features/func_test/flow_control/ \
 	features/func_test/connection/  \
 	features/func_test/ddl/  \
@@ -71,14 +74,14 @@ run_sql_support_special: up
 	pipenv run behave -Dreset=false -D dble_conf=sql_cover_mixed features/setup.feature \
 	features/sql_cover/special/
 
-run_sql_support_global: 
-	pipenv run behave -D dble_conf=sql_cover_global features/sql_cover/sql_global.feature
+run_sql_support_global: up
+	pipenv run behave -D dble_conf=sql_cover_global features/setup.feature features/sql_cover/sql_global.feature
 
-run_sql_support_no_sharding:
-	pipenv run behave -D dble_conf=sql_cover_nosharding features/sql_cover/sql_nosharding.feature
+run_sql_support_no_sharding:up
+	pipenv run behave -D dble_conf=sql_cover_nosharding features/setup.feature features/sql_cover/sql_nosharding.feature
 
-run_sql_support_sharding:
-	pipenv run behave -D dble_conf=sql_cover_sharding features/sql_cover/sql_sharding.feature	
+run_sql_support_sharding: up
+	pipenv run behave -D dble_conf=sql_cover_sharding features/setup.feature features/sql_cover/sql_sharding.feature	
 
-run_sql_support_special:
-	pipenv run behave -D dble_conf=sql_cover_mixed features/sql_cover/sql_mixed.featur
+run_sql_support_mix: up
+	pipenv run behave -D dble_conf=sql_cover_mixed  features/setup.feature features/sql_cover/sql_mixed.featur
