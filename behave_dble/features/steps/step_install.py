@@ -55,23 +55,23 @@ def download_dble_package(context: Context) -> str:
     package_name = os.path.basename(remote_path)
     local_path = os.path.join(context.cfg_sys['share_path_docker'], package_name)
 
-    if not os.path.exists(local_path):
-        kwargs = {'l': local_path,
-                  'r': remote_path}
-        if download_type(context) == 'http':
-            cmd = 'wget -q -O {l} {r}'.format(**kwargs)
-            rc, _, ste = exec_command(cmd)
-            assert_that(rc, equal_to(0), ste)
-        else:
-            kwargs.update({'u': context.test_conf['ftp_user'],
-                           'p': context.test_conf['ftp_password']})
-
-            cmd = 'wget -q -O {l} --ftp-user={u} --ftp-password={p} {r}'.format(
-                **kwargs)
-            rc, _, ste = exec_command(cmd)
-            assert_that(rc, equal_to(0), ste)
+    # if not os.path.exists(local_path):
+    kwargs = {'l': local_path,
+                'r': remote_path}
+    if download_type(context) == 'http':
+        cmd = 'wget -q -O {l} {r}'.format(**kwargs)
+        rc, _, ste = exec_command(cmd)
+        assert_that(rc, equal_to(0), ste)
     else:
-        LOGGER.debug('DBLE package is existing, not need download')
+        kwargs.update({'u': context.test_conf['ftp_user'],
+                        'p': context.test_conf['ftp_password']})
+
+        cmd = 'wget -q -O {l} --ftp-user={u} --ftp-password={p} {r}'.format(
+            **kwargs)
+        rc, _, ste = exec_command(cmd)
+        assert_that(rc, equal_to(0), ste)
+    # else:
+    #     LOGGER.debug('DBLE package is existing, not need download')
 
     return local_path
 
