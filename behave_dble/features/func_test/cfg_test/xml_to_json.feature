@@ -719,7 +719,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1},
     \"dbInstance\":\[
-    {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":99,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
+    {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":99,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
     {\"value\":\"30000\",\"name\":\"connectionTimeout\"},
     {\"value\":\"20\",\"name\":\"connectionHeartbeatTimeout\"},
@@ -736,7 +736,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\">select 1</heartbeat>
-        <dbInstance name=\"hostM3\" url=\"172.100.9.1:3307\" password=\"111111\" user=\"test\" maxCon=\"99\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
+        <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"99\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
             <property name=\"connectionHeartbeatTimeout\">20</property>
             <property name=\"testOnCreate\">false</property>
@@ -770,7 +770,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":1000}
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user()\",\"timeout\":1,\"errorRetryCount\":1},
     \"dbInstance\":\[
-    {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":999,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"id\":\"hostM3\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
+    {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":999,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"id\":\"hostM3\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
     {\"value\":\"30000\",\"name\":\"connectionTimeout\"},
     {\"value\":\"20\",\"name\":\"connectionHeartbeatTimeout\"},
@@ -787,7 +787,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
         <heartbeat timeout=\"1\" errorRetryCount=\"1\">select user()</heartbeat>
-        <dbInstance name=\"hostM3\" url=\"172.100.9.1:3307\" password=\"111111\" user=\"test\" maxCon=\"999\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" id=\"hostM3\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
+        <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"999\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" id=\"hostM3\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
             <property name=\"connectionHeartbeatTimeout\">20</property>
             <property name=\"testOnCreate\">false</property>
@@ -822,7 +822,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":1000}
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user()\",\"timeout\":1,\"errorRetryCount\":1},
-    {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":999,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"id\":\"hostM3\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\"
+    {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":999,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"id\":\"hostM3\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\"
     {\"value\":\"30000\",\"name\":\"connectionTimeout\"},
     {\"value\":\"20\",\"name\":\"connectionHeartbeatTimeout\"},
     {\"value\":\"false\",\"name\":\"testOnCreate\"},
@@ -838,7 +838,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
         <heartbeat timeout=\"1\" errorRetryCount=\"1\">select user()</heartbeat>
-        <dbInstance name=\"hostM3\" url=\"172.100.9.1:3307\" password=\"111111\" user=\"test\" maxCon=\"999\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" id=\"hostM3\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
+        <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"999\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" id=\"hostM3\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
             <property name=\"connectionHeartbeatTimeout\">20</property>
             <property name=\"testOnCreate\">false</property>
@@ -923,7 +923,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},\"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},\"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1},
-    \"dbInstance\":\[{\"name\":\"hostM3\",\"url\":\"172.100.9.1:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":99,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,
+    \"dbInstance\":\[{\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":99,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,
     \"property\":\[
     {\"value\":\"30000\",\"name\":\"connectionTimeout\"},{\"value\":\"20\",\"name\":\"connectionHeartbeatTimeout\"},{\"value\":\"false\",\"name\":\"testOnCreate\"},{\"value\":\"false\",\"name\":\"testOnBorrow\"},{\"value\":\"false\",\"name\":\"testOnReturn\"},
     {\"value\":\"false\",\"name\":\"testWhileIdle\"},{\"value\":\"30000\",\"name\":\"timeBetweenEvictionRunsMillis\"},{\"value\":\"10000\",\"name\":\"evictorShutdownTimeoutMillis\"},{\"value\":\"600000\",\"name\":\"idleTimeout\"},{\"value\":\"10000\",\"name\":\"heartbeatPeriodMillis\"},{\"value\":\"4194304\",\"name\":\"flowHighLevel\"},{\"value\":\"262144\",\"name\":\"flowLowLevel\"}\]}\]}\],

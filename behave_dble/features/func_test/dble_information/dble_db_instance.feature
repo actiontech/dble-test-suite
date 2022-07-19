@@ -70,7 +70,7 @@ Feature:  dble_db_instance table test
              <property name="heartbeatPeriodMillis">20000</property>
         </dbInstance>
 
-        <dbInstance name="s1" password="111111" url="172.100.9.1:3307" user="test" maxCon="100" minCon="10" readWeight="2" >
+        <dbInstance name="s1" password="111111" url="172.100.9.1:3306" user="test" maxCon="100" minCon="10" readWeight="2" >
              <property name="connectionTimeout">5000</property>
              <property name="connectionHeartbeatTimeout">10</property>
              <property name="testOnCreate">true</property>

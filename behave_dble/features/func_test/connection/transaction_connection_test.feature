@@ -158,7 +158,7 @@ Feature: Transaction query error due to connection used error
       """
          <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.1:3307" user="test" maxCon="1000" minCon="10" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
           </dbInstance>
         </dbGroup>
          <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >

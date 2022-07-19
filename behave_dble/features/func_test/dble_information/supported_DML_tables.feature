@@ -247,7 +247,7 @@ Feature: test addition, deletion and modification of dble_information on the man
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
     \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
     {\"rwSplitMode\":1,\"name\":\"ha_group3\",\"delayThreshold\":-1,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":60,\"errorRetryCount\":1},
-    \"dbInstance\":\[{\"name\":\"hostM3\",\"url\":\"172.100.9.1:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"usingDecrypt\":\"false\",\"disabled\":\"true\",\"id\":\"hostM3\",\"readWeight\":\"1\",\"primary\":true,
+    \"dbInstance\":\[{\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"usingDecrypt\":\"false\",\"disabled\":\"true\",\"id\":\"hostM3\",\"readWeight\":\"1\",\"primary\":true,
     \"property\":\[{\"value\":\"30000\",\"name\":\"connectionTimeout\"},{\"value\":\"200\",\"name\":\"connectionHeartbeatTimeout\"},{\"value\":\"false\",\"name\":\"testOnCreate\"},
     {\"value\":\"false\",\"name\":\"testOnBorrow\"},{\"value\":\"false\",\"name\":\"testOnReturn\"},{\"value\":\"false\",\"name\":\"testWhileIdle\"},{\"value\":\"1\",\"name\":\"timeBetweenEvictionRunsMillis\"},
     {\"value\":\"1\",\"name\":\"evictorShutdownTimeoutMillis\"},{\"value\":\"1\",\"name\":\"idleTimeout\"},{\"value\":\"1\",\"name\":\"heartbeatPeriodMillis\"},{\"value\":\"4194304\",\"name\":\"flowHighLevel\"},{\"value\":\"262144\",\"name\":\"flowLowLevel\"}\]

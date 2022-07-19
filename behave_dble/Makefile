@@ -61,10 +61,6 @@ run_func_unstable_case: up
 	features/func_test/xa_transaction/ \
 	features/func_test/Large_Packet/
 
-run_func_case: up
-	pipenv run behave -Dreset=false -D dble_conf=template features/setup.feature \
-	features/func_test
-
 run_managercmd_case: up
 	pipenv run behave -Dreset=false -D dble_conf=template features/setup.feature \
 	features/func_test/dble_information/ \
