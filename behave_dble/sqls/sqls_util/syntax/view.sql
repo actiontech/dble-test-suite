@@ -122,6 +122,12 @@ select count(*) from (select * from view_test) a
 select * from schema2.test2 union select * from view_test
 select * from schema2.test2 where id<(select count(*) from view_test)
 drop view view_test
+##################github issue 998#############################
+drop table if exists test1
+create or replace view test1 as select id from schema2.test2
+drop table if exists schema2.test2
+drop table if exists test1
+drop view test1
 #####################issue:827###################################
 CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARACTER SET = utf8
 create view view_test as select name,pad from test1

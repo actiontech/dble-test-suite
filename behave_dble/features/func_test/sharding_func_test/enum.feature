@@ -1,7 +1,7 @@
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 Feature: Enum sharding function test suits
-  @smoke
+  @BLOCKER
   Scenario: Enum sharding function #1
     #test: type:integer not default node
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"

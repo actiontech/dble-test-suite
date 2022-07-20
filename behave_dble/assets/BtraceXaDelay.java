@@ -27,7 +27,6 @@ public final class BtraceXaDelay {
     public static void delayBeforeXaEnd(String rrnName, String xaId) throws Exception {
         BTraceUtils.println("before xa end " + xaId + " in " + rrnName);
         Thread.sleep(100L);
-
     }
 
     @OnMethod(
