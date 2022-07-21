@@ -7,8 +7,8 @@ import logging
 from behave import *
 from hamcrest import *
 from lib.DBUtil import DBUtil
-from lib.Node import get_node
-from lib.XMLUtil import add_child_in_text, delete_child_node, get_xml_from_str, add_child_in_xml,change_node_properties
+from lib.Node import get_node, get_sftp
+from lib.XMLUtil import add_child_in_string, delete_child_node, get_xml_from_str, add_child_in_xml,change_root_node_properties
 
 LOGGER = logging.getLogger('steps.reload')
 

@@ -22,25 +22,6 @@
                 <include>wrapper-linux*</include>
             </includes>
         </fileSet>
-        <fileSet>
-            <directory>target/generated-resources/appassembler/jsw/jdbc-api-test/lib</directory>
-            <outputDirectory>jdbc-api-test/lib</outputDirectory>
-            <includes>
-                <include>*.jar</include>
-                <include>libwrapper-linux*</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>src/main/resources</directory>
-            <outputDirectory>jdbc-api-test/conf</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/logs</directory>
-            <outputDirectory>jdbc-api-test/logs</outputDirectory>
-            <excludes>
-                <exclude>**/*</exclude>
-            </excludes>
-        </fileSet>
     </fileSets>
 
 </assembly>
