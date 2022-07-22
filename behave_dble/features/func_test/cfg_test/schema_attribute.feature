@@ -292,7 +292,7 @@ Feature: test some import nodes attr in schema.xml
       | test | 111111 | conn_0 | False   | select * from test_table                                 | success | schema1 |
       | test | 111111 | conn_1 | False   | begin                                                       | success | schema1 |
       | test | 111111 | conn_1 | False   | select * from test_table                                 | success | schema1 |
-      | test | 111111 | conn_2 | False   | set @x = 1                                                 | error totally whack | schema1 |
+      | test | 111111 | conn_2 | False   | set @x = 1                                                 | can't get backend connection for sql :set @x = 1 the max active Connections size can not be max than maxCon for data host[172.100.9.5.hostM1] | schema1 |
       | test | 111111 | conn_0 | True    | commit                                                      | success | schema1 |
       | test | 111111 | conn_1 | True    | commit                                                      | success | schema1 |
       | test | 111111 | conn_2 | True    | set @x = 1                                                 | success | schema1 |

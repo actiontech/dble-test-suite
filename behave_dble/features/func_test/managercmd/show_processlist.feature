@@ -66,7 +66,7 @@ Feature: #test show @@processlist
       | test | 111111 | conn_1 | False    | select * from test_shard       | success   |  schema1  |
     Then execute sql in "dble-1" in "admin" mode
       | user  | passwd | conn   | toClose | sql                    | expect                  | db     |
-      | root  | 111111 | conn_2 | True    | show @@processlist   | error totally whack   |         |
+      | root  | 111111 | conn_2 | True    | show @@processlist     | backend connection acquisition exception! |         |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose  | sql                    | expect    | db         |
       | test | 111111 | conn_1 | True    | commit                  | success   |  schema1  |
