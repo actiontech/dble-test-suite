@@ -24,7 +24,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | conn   | toClose  | sql                         | expect   |
       | conn_0 | False    | drop database if exists da1 | success  |
       | conn_0 | True     | drop database if exists da2 | success  |
-    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all -r"
     Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
       | sql                 |
@@ -70,7 +70,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
 
 
 
-  @NORMAL @skip # skip about DBLE0REQ-1793
+  @NORMAL
   Scenario: "create database @@..." for part of used shardingNode #2
     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
     """
@@ -89,7 +89,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | conn   | toClose  | sql                          | expect   |
       | conn_0 | False    | drop database if exists da11 | success  |
       | conn_0 | True     | drop database if exists da21 | success  |
-    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all -r"
     Then execute admin cmd "create database @@shardingNode ='dn1,dn2'"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
       | sql                 |
@@ -164,7 +164,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
 
 
 
-  @NORMAL @skip # skip about DBLE0REQ-1793
+  @NORMAL
   Scenario: "create database @@..." for shardingNode of style 'dn$x-y' #3
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -189,7 +189,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | conn   | toClose  | sql                          | expect   |
       | conn_0 | False    | drop database if exists da00 | success  |
       | conn_0 | True     | drop database if exists da01 | success  |
-    Then execute admin cmd "reload @@config_all" get the following output
+    Then execute admin cmd "reload @@config_all -r" get the following output
     Then execute admin cmd "create database @@shardingNode ='dn10,dn11,dn20,dn21'"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
       | sql                 |
@@ -234,24 +234,24 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       
   @NORMAL
   Scenario: add new dbGroup & "create database @@..." & "show @@shardingnode" when sharding  #4
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
-     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3307" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-     </dbGroup>
-     """
-     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
-     """
-        <schema shardingNode="dn6" name="schema2" sqlMaxLimit="100"/>
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <dbInstance name="hostM1" password="111111" url="172.100.9.4:3307" user="test" maxCon="1000" minCon="10" primary="true">
+      </dbInstance>
+    </dbGroup>
+    """
+    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
+    """
+    <schema shardingNode="dn6" name="schema2" sqlMaxLimit="100"/>
 
-        <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-        <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-        <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-        <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-        <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
-        <shardingNode dbGroup="ha_group3" database="db4" name="dn6" />
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
+    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
+    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
+    <shardingNode dbGroup="ha_group3" database="db4" name="dn6" />
     """
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                         | expect   |
@@ -265,7 +265,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
     Then execute sql in "mysql"
       | conn   | toClose  | sql                         | expect   |
       | conn_0 | False    | drop database if exists db4 | success  |
-     Then execute admin cmd "reload @@config_all"
+     Then execute admin cmd "reload @@config_all -r"
      Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5,dn6'"
      Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
       | sql                        |
@@ -290,18 +290,18 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
     Then execute sql in "mysql"
       | conn   | toClose  | sql                        | expect          |
       | conn_0 | True     | show databases like 'db4'  | has{('db4',),}  |
-     Given delete the following xml segment
+    Given delete the following xml segment
        |file          | parent          | child                   |
        |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}        |
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-     """
-     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-     </schema>
-     """
-    Then execute admin cmd "reload @@config_all"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+      <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+      <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+      <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    </schema>
+    """
+    Then execute admin cmd "reload @@config_all -r"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
       | sql                        |
       | show @@shardingNode        |
@@ -309,8 +309,8 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
        | NAME-0 | DB_GROUP-1        | SCHEMA_EXISTS-2 | ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
        | dn1    | ha_group1/db1     | true            | 0        | 0      | 1000   | 0         | -1              |
        | dn2    | ha_group2/db1     | true            | 0        | 0      | 1000   | 0         | -1              |
-       | dn3    | ha_group1/db2     | true            | 0        | 0      | 1000   | 0         | -1              |
-       | dn4    | ha_group2/db2     | true            | 0        | 0      | 1000   | 0         | -1              |
+       | dn3    | ha_group1/db2     | true            | 0        | 1      | 1000   | 0         | -1              |
+       | dn4    | ha_group2/db2     | true            | 0        | 1      | 1000   | 0         | -1              |
        | dn5    | ha_group1/db3     | true            | 0        | 0      | 1000   | 0         | -1              |
      #CASE show @@shardingNodes where schema=? and table=?;
      Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
@@ -330,8 +330,8 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
        | NAME-0 | DB_GROUP-1      | SCHEMA_EXISTS-2 |ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
        | dn1  | ha_group1/db1     | true            |      0  |    0   | 1000   |       0   |            -1   |
        | dn2  | ha_group2/db1     | true            |      0  |    0   | 1000   |       0   |            -1   |
-       | dn3  | ha_group1/db2     | true            |      0  |    0   | 1000   |       0   |            -1   |
-       | dn4  | ha_group2/db2     | true            |      0  |    0   | 1000   |       0   |            -1   |
+       | dn3  | ha_group1/db2     | true            |      0  |    1   | 1000   |       0   |            -1   |
+       | dn4  | ha_group2/db2     | true            |      0  |    1   | 1000   |       0   |            -1   |
        | dn5  | ha_group1/db3     | true            |      0  |    0   | 1000   |       0   |            -1   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                          | expect                            |

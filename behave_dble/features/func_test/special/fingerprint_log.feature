@@ -707,26 +707,26 @@ Feature: check fingerprint log
     """
     Given delete file "/tmp/fingerprint.log" on "dble-1"
 
-  @restore_global_setting @skip # skip about DBLE0REQ-1793
+  @restore_global_setting
   Scenario: check fingerprint on client side #2
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
-           <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true"/>
-           <dbInstance name="hostS2" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10" />
-       </dbGroup>
-    """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
+  """
     /-DinstanceName/d
     $a -DinstanceName=instance-test
     """
     Then restart dble in "dble-1" success
     Given turn on general log in "mysql-master1"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
+    <heartbeat>select user()</heartbeat>
+    <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true"/>
+    <dbInstance name="hostS2" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10" />
+    </dbGroup>
+    """
     Given record current dble log line number in "log_linenu"
     Then execute admin cmd "reload @@config_all"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"

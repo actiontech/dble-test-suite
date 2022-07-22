@@ -5,7 +5,6 @@
 #2.19.11.0#dble-7850
 Feature: reload @@config_all -s
 
-  @skip # skip about DBLE0REQ-1793
   Scenario: execute manager cmd "reload @@config_all -s" after change user of dbInstance and password of dbInstance #1
     Given delete the following xml segment
       | file       | parent         | child              |
@@ -28,11 +27,17 @@ Feature: reload @@config_all -s
         </dbInstance>
     </dbGroup>
     """
-    Then execute admin cmd "reload @@config_all -s"
     Then execute admin cmd "reload @@config_all" get the following output
     """
     there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group1.hostS1]}
     """
+    Given record current dble log line number in "log_linenu"
+    Then execute admin cmd "reload @@config_all -s"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    there are some dbInstance connection failed, pls check these dbInstance:{dbInstance\[ha_group1.hostS1\]}
+    """
+    Then execute admin cmd "reload @@config_all"
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """

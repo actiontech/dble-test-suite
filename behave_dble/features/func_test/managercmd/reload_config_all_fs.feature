@@ -49,7 +49,13 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | 172.100.9.5 |
       | 172.100.9.6 |
 
-    # 3 reload @@config_all -fs : open transaction, add bad dbInstance, execute 'reload @@config_all -fs', transaction closed successfully
+    # 3 reload @@config_all -fs : open transaction, add read dbInstance, execute 'reload @@config_all -fs', transaction successfully
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                             | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1              | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int)              | schema1 |
+      | conn_0 | False   | begin                                           | schema1 |
+      | conn_0 | False   | insert into sharding_4_t1 values(1),(2),(3),(4) | schema1 |
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -60,12 +66,6 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
          </dbInstance>
       </dbGroup>
     """
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                             | db      |
-      | conn_0 | False   | drop table if exists sharding_4_t1              | schema1 |
-      | conn_0 | False   | create table sharding_4_t1(id int)              | schema1 |
-      | conn_0 | False   | begin                                           | schema1 |
-      | conn_0 | False   | insert into sharding_4_t1 values(1),(2),(3),(4) | schema1 |
     Then execute admin cmd "reload @@config_all -fs"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_D"
       | sql            |
@@ -77,11 +77,22 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
     Then check resultset "rs_D" has not lines with following column values
       | HOST-3      |
       | 172.100.9.2 |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs"
+      | conn   | toClose | sql               |
+      | conn_3 | false   | show @@heartbeat  |
+    Then check resultset "heartbeat_rs" has lines with following column values
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RS_MESSAGE-10                                                                                                                  |
+      | hostM1 | 172.100.9.5 | 3307   | ok        | None                                                                                                                           |
+      | hostS1 | 172.100.9.2 | 3307   | error     | connection Error//heartbeat conn for sql[/*# from=1 reason=heartbeat*/select user()] is closed, due to abnormal connection     |
+      | hostM2 | 172.100.9.6 | 3307   | ok        | None                                                                                                                           |
     Then execute sql in "dble-1" in "user" mode
-      | sql                                      | expect      | db      |
-      | select * from sharding_4_t1 where id = 2 | length{(0)} | schema1 |
+      | conn   | toClose | sql                                      | expect      | db      |
+      | conn_0 | False   | select * from sharding_4_t1 where id = 2 | length{(1)} | schema1 |
+      | conn_2 | False   | select * from sharding_4_t1 where id = 2 | length{(0)} | schema1 |
+      | conn_0 | True    | commit                                   | success     | schema1 |
+      | conn_2 | True    | select * from sharding_4_t1 where id = 2 | length{(1)} | schema1 |
 
-    # 4 reload @@config_all -f -s : open transaction, add bad dbInstance, execute 'reload @@config_all -f -s', transaction closed successfully
+    # 4 reload @@config_all -f -s : open transaction, add write dbInstance, execute 'reload @@config_all -f -s', transaction closed successfully
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | db      |
       | conn_1 | false   | drop table if exists sharding_4_t1              | schema1 |
@@ -108,6 +119,16 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | HOST-3      |
       | 172.100.9.6 |
       | 172.100.9.2 |
+    Given sleep "2" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs"
+      | conn   | toClose | sql               |
+      | conn_3 | false   | show @@heartbeat  |
+    Then check resultset "heartbeat_rs" has lines with following column values
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RS_MESSAGE-10                                                                                                                  |
+      | hostM1 | 172.100.9.5 | 3307   | ok        | None                                                                                                                           |
+      | hostS1 | 172.100.9.2 | 3307   | error     | connection Error//heartbeat conn for sql[/*# from=1 reason=heartbeat*/select user()] is closed, due to abnormal connection     |
+      | hostM2 | 172.100.9.4 | 3307   | ok        | None                                                                                                                           |
     Then execute sql in "dble-1" in "user" mode
-      | sql                                      | expect      | db      |
-      | select * from sharding_4_t1 where id = 2 | length{(0)} | schema1 |
+      | conn   | toClose | sql                                      | expect                                       | db      |
+      | conn_1 | True    | select * from sharding_4_t1 where id = 2 | Lost connection to MySQL server during query | schema1 |
+      | conn_2 | True    | select * from sharding_4_t1 where id = 2 | length{(0)}                                  | schema1 |
