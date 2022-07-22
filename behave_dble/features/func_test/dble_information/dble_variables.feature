@@ -18,7 +18,7 @@ Feature:  dble_variables test
      """
     Then restart dble in "dble-1" success
   #case desc dble_variables
-   Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_1"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_1"
       | conn   | toClose | sql                 | db               |
       | conn_0 | False   | desc dble_variables | dble_information |
     Then check resultset "dble_variables_1" has lines with following column values
@@ -30,7 +30,7 @@ Feature:  dble_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(126)}     | dble_information |
+      | conn_0 | False   | select * from dble_variables    | length{(127)}     | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
@@ -163,7 +163,7 @@ Feature:  dble_variables test
       | gmsslOcaPem                             | null                            | Secondary certificate of GMSSL                                                                                                                                                                                       | true        |
       | district                                | null                            | The location of the DBLE                                                                                                                                                                                             | true        |
       | dataCenter                              | null                            | The data center where the DBLE resides                                                                                                                                                                               | true        |
-
+      | groupConcatMaxLen                       | 1024                            | The maximum permitted result length in bytes for the GROUP_CONCAT() function. The default is 1024.                                                                                                                   | true        |
   #case supported select limit /order by/ where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                               | expect       | db               |
@@ -171,7 +171,7 @@ Feature:  dble_variables test
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(20)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(20)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(126)}| dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(127)}| dble_information |
   #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                             | db               |
@@ -216,7 +216,7 @@ Feature:  dble_variables test
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
       | false       | 20      |
-      | true        | 106     |
+      | true        | 107     |
 
   #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
@@ -240,8 +240,8 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('xalog',),)}   | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('',),)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(109)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(107)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(110)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(108)}        | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
   #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
