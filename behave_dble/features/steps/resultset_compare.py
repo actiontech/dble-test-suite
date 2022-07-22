@@ -120,7 +120,7 @@ def step_impl(context, rs_name):
                     elif expect_col.rfind("//") != -1:
                         expect = expect_col.split("//")
                         for x in expect:
-                            if str(real_col) == str(x):
+                            if str(real_col).strip() == str(x).strip():
                                 # context.logger.debug("isFound:true")
                                 isFound = True
                                 # context.logger.info("col index:{0}, expect col:{1}, real_col:{2}".format(i, x, real_col))
@@ -136,7 +136,7 @@ def step_impl(context, rs_name):
                     elif check_line:
                         isFound = (str(real_col) == str(expect_col)) and (real_line == expect_line)
                     else:
-                        isFound = (str(real_col) == str(expect_col))
+                        isFound = (str(real_col).strip() == str(expect_col).strip())
                         # context.logger.debug("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
                 if not isFound: break
             if isFound: break
