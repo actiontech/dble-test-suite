@@ -239,9 +239,9 @@ Feature: We will check readonly status on both master and slave even if the hear
         | show @@dbinstance |
      Then check resultset "show_ds_rs" has lines with following column values
         | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-10 |
-        | ha_group1  | hostM1   | 172.100.9.5   | 3307   | W      |      0   | false       |
-        | ha_group2  | hostM2   | 172.100.9.6   | 3307   | W      |      0   | false       |
-        | ha_group3  | hostM3   | 172.100.9.1   | 3307   | W      |      0   | false       |
+        | ha_group1  | hostM1   | 172.100.9.5   | 3306   | W      |      0   | false       |
+        | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W      |      0   | false       |
+        | ha_group3  | hostM3   | 172.100.9.1   | 3306   | W      |      0   | false       |
 
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
      """

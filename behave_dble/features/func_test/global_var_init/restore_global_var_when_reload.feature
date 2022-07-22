@@ -248,11 +248,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     Given execute linux command in "mysql-master1" and save result in "backendIds_master1"
     """
-    grep -i "INSERT INTO sharding_2_t1" {node:install_path}/data/mysql-master1.log | awk '{print $2}'
+    grep -i "INSERT INTO sharding_2_t1" {node:install_path}/data/mysql-1.log | awk '{print $2}'
     """
     Given execute linux command in "mysql-master2" and save result in "backendIds_master2"
     """
-    grep -i "INSERT INTO sharding_2_t1" {node:install_path}/data/mysql-master2.log | awk '{print $2}'
+    grep -i "INSERT INTO sharding_2_t1" {node:install_path}/data/mysql-2.log | awk '{print $2}'
     """
     Given merge resultset of "heartbeat_master1" and "backendIds_master1" into "ids_to_kill_master1"
     Given merge resultset of "heartbeat_master2" and "backendIds_master2" into "ids_to_kill_master2"
@@ -316,11 +316,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     Given execute linux command in "mysql-master1" and save result in "backendIds_master1"
     """
-    grep -i "INSERT INTO sharding_2_t1" {node:install_path}/data/mysql-master1.log | awk '{print $2}'
+    grep -i "INSERT INTO sharding_2_t1" {node:install_path}/data/mysql-1.log | awk '{print $2}'
     """
     Given execute linux command in "mysql-master2" and save result in "backendIds_master2"
     """
-    grep -i "INSERT INTO sharding_2_t1" {node:install_path}/data/mysql-master2.log | awk '{print $2}'
+    grep -i "INSERT INTO sharding_2_t1" {node:install_path}/data/mysql-2.log | awk '{print $2}'
     """
     Given merge resultset of "heartbeat_master1" and "backendIds_master1" into "ids_to_kill_master1"
     Given merge resultset of "heartbeat_master2" and "backendIds_master2" into "ids_to_kill_master2"

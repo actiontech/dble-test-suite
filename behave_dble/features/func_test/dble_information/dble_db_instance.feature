@@ -111,7 +111,7 @@ Feature:  dble_db_instance table test
     Then check resultset "dble_db_instance_2" has lines with following column values
       | name-0 | db_group-1 | addr-2      | port-3 |
       | M1     | ha_group1  | 172.100.9.5 | 3306   |
-      | s1     | ha_group1  | 172.100.9.1 | 3307   |
+      | s1     | ha_group1  | 172.100.9.1 | 3306   |
       | s2     | ha_group1  | 172.100.9.6 | 3307   |
       | M2     | ha_group2  | 172.100.9.6 | 3306   |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_3"

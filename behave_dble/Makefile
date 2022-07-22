@@ -3,6 +3,7 @@ ifndef DBLE_DBLE_TOPO
 endif
 
 PWD = $(shell pwd)
+DRIVER_DIR = $(shell dirname ${PWD})
 DOCKER_COMPOSE_FILE = docker-compose_${DBLE_DBLE_TOPO}.yml
 
 up: down
@@ -80,4 +81,27 @@ run_sql_support_sharding: up
 	pipenv run behave -D dble_conf=sql_cover_sharding features/setup.feature features/sql_cover/sql_sharding.feature	
 
 run_sql_support_mix: up
-	pipenv run behave -D dble_conf=sql_cover_mixed  features/setup.feature features/sql_cover/sql_mixed.featur
+	pipenv run behave -D dble_conf=sql_cover_mixed  features/setup.feature features/sql_cover/sql_mixed.feature
+
+run_connector_dotnet: up
+	pipenv run behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
+	bash ${DRIVER_DIR}/drivers/Connector-.Net/run_connector_dotnet.sh
+
+run_connector_J: up
+	pipenv run behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
+	bash ${DRIVER_DIR}/drivers/Connector-J/run_connector_J.sh
+
+run_jdbc_api_test:
+	bash ${DRIVER_DIR}/drivers/java/sh/jdbc-api-test-start.sh
+
+run_multiQuery: up
+	pipenv run behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
+	bash ${DRIVER_DIR}/drivers/c_mysql_api/multi-queries/multiQuery.sh
+
+run_connector_cpp: up
+	pipenv run behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
+	bash ${DRIVER_DIR}/drivers/Connector-cpp/run_connector_cpp.sh
+
+run_c_mysql_api: up
+	pipenv run behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
+	bash ${DRIVER_DIR}/drivers/c_mysql_api/src/c_mysql_api.sh
