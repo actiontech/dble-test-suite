@@ -179,10 +179,10 @@ Feature: test config in server.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user         | passwd | conn   | toClose | sql      | expect  | db     |
-        | test         | 111111 | conn_0 | False    | create table if not exists test_table_1(id int) |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | show tables |error totally whack | schema1 |
+        | user         | passwd | conn   | toClose  | sql                                               | expect  | db     |
+        | test         | 111111 | conn_0 | False    | create table if not exists test_table_1(id int)   | The statement is unsafe SQL, reject for user 'test' | schema1 |
+        | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; | The statement is unsafe SQL, reject for user 'test' | schema1 |
+        | test         | 111111 | conn_0 | False    | show tables                                       | The statement is unsafe SQL, reject for user 'test' | schema1 |
 
   @CRITICAL
   Scenario: config "user" attr "maxCon" (front-end maxCon) greater than 0 #8
