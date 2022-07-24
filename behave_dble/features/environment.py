@@ -56,19 +56,18 @@ def before_all(context):
     except KeyError:
         raise KeyError('Not define test_config') from KeyError
 
-    parsed = load_yaml_config("./conf/" + test_config)
+    parsed = load_yaml_config("./conf/"+ test_config)
     for name, values in parsed.items():
         setattr(context, name, values)
 
     handle_env_variables(context, ud)
-    logger.info(f"test conf is {context.test_conf}")
     setup_active_tag_values(active_tag_value_provider, context.test_conf)
 
     context.userDebug = ud["user_debug"].lower() == "true"
     init_meta(context, context.test_conf['dble_topo'])
-
-    for node in DbleMeta.dbles:
-        disable_cluster_config_in_node(context, node)
+    if context.test_conf['dble_topo']=="single":
+        for node in DbleMeta.dbles:
+            disable_cluster_config_in_node(context, node)
 
     init_meta(context, "mysqls")
     # optimize later
@@ -201,7 +200,6 @@ def before_step(context, step):
 
 
 def after_step(context, step):
-    # logger.info('{0}, status:{1}'.format(step.name, step.status))
     if step.status == "failed":
         logger.error('Failing step location: {0}, status:{1}'.format(step.location, step.status))
     else:
