@@ -119,15 +119,22 @@ def step_impl(context, kv_map_str, file):
 def add_xml_segment(context, kv_map_str, file):
     fullpath = get_abs_path(context, file)
     kv_map = eval(kv_map_str)
-    add_child_in_text(fullpath, kv_map, context.text)
+    add_child_in_string(fullpath, kv_map, context.text)
     upload_and_replace_conf(context, file)
 
 @Given('add attribute "{kv_map_str}" to rootnode in "{file}"')
 def add_attr_to_node(context, file, kv_map_str):
     fullpath = get_abs_path(context, file)
     kv_map = eval(kv_map_str)
-    change_node_properties(fullpath, kv_map)
+    change_root_node_properties(fullpath, kv_map)
     upload_and_replace_conf(context, file)
+
+@Given('add current version from var "{var_name}" to rootnode in "{file}"')
+def step_impl(context, var_name, file):
+    current_version=getattr(context, var_name)
+    kv_map_str= "{{'version':'{0}'}}".format(current_version)
+
+    add_attr_to_node(context, file, kv_map_str)
 
 @Given('delete the following xml segment')
 def delete_xml_segment(context):
