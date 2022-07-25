@@ -31,7 +31,7 @@ venv:
 reset_mysql:
 	pipenv run behave features/setup.feature --tags=@Initialize_mysql
 
-used_in_local: create_venv
+used_in_local: create_venv up
 	pipenv run behave features/setup.feature
 
 run_cluster_case: up
