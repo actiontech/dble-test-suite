@@ -4,7 +4,7 @@
 
     # @skip_restart
     # Scenario: do setups
-
+@setup
 Feature: Deploy DBLE test environment
 
   @Initialize_mysql @skip_restart

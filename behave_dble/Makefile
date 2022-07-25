@@ -35,10 +35,10 @@ used_in_local: create_venv up
 	pipenv run behave features/setup.feature
 
 run_cluster_case: up
+	bash ${PWD}/compose/docker-build-behave/init_cluster_conf.sh
 	pipenv run behave features/setup.feature \
-	features/cluster/ \
-	features/install_uninstall/stop_dble_cluster.feature
-
+	features/cluster/ 
+	
 run_func_stable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
 	features/func_test/global_var_init/ \

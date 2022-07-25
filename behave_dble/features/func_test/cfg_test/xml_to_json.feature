@@ -708,7 +708,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                    | expect         | db               |
       | conn_0 | true    | insert into dble_db_group(name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('ha_group3','select 1',0,1,0,100,'false')                                                             | success        | dble_information |
-      | conn_0 | true    | insert into dble_db_instance(name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM3','ha_group3','172.100.9.1','3307','test','111111','false','true','1','99')         | success        | dble_information |
+      | conn_0 | true    | insert into dble_db_instance(name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM3','ha_group3','172.100.9.1','3306','test','111111','false','true','1','99')         | success        | dble_information |
       | conn_0 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw1','111111','false','100','ha_group3')                                                                                 | success        | dble_information |
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
@@ -869,7 +869,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                    | expect         | db               |
       | conn_0 | true    | insert into dble_db_group(name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('ha_group4','select 1',0,1,2,100,'false')                                                             | success        | dble_information |
-      | conn_0 | true    | insert into dble_db_instance(name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM4','ha_group4','172.100.9.2','3307','test','111111','false','true','1','100')        | success        | dble_information |
+      | conn_0 | true    | insert into dble_db_instance(name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM4','ha_group4','172.100.9.6','3307','test','111111','false','true','1','100')        | success        | dble_information |
       | conn_0 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw1','111111','false','100','ha_group4')                                                                                 | success        | dble_information |
 
     Given delete file "/opt/dble/BtraceAboutxmlJson.java" on "dble-1"
@@ -912,7 +912,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                                                                                                                             | expect          | db               |
       | conn_0 | false   | insert into dble_db_group(name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('ha_group3','select 1',0,1,0,100,'false')                                                      | success         | dble_information |
-      | conn_0 | false   | insert into dble_db_instance(name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM3','ha_group3','172.100.9.1','3307','test','111111','false','true','1','99')  | success         | dble_information |
+      | conn_0 | false   | insert into dble_db_instance(name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM3','ha_group3','172.100.9.1','3306','test','111111','false','true','1','99')  | success         | dble_information |
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
