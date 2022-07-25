@@ -4,7 +4,7 @@ endif
 
 PWD = $(shell pwd)
 DRIVER_DIR = $(shell dirname ${PWD})
-DOCKER_COMPOSE_FILE = docker-compose_${DBLE_DBLE_TOPO}.yml
+DOCKER_COMPOSE_FILE = docker-compose-${DBLE_DBLE_TOPO}.yml
 
 up: down
 	docker-compose -f ${PWD}/compose/${DOCKER_COMPOSE_FILE} up -d
@@ -30,6 +30,9 @@ venv:
 
 reset_mysql:
 	pipenv run behave features/setup.feature --tags=@Initialize_mysql
+
+used_in_local: create_venv
+	pipenv run behave features/setup.feature
 
 run_cluster_case: up
 	pipenv run behave features/setup.feature \
