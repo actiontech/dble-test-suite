@@ -1,0 +1,60 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">
+<dble:sharding xmlns:dble="http://dble.cloud/">
+    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+        <globalTable name="t0" shardingNode="dn1,dn2" />
+        <globalTable name="t1" shardingNode="dn1,dn2" />
+        <globalTable name="t2" shardingNode="dn1,dn2" />
+        <globalTable name="t3" shardingNode="dn1,dn2" />
+        <globalTable name="t4" shardingNode="dn1,dn2" />
+        <globalTable name="t5" shardingNode="dn1,dn2" />
+        <globalTable name="t6" shardingNode="dn1,dn2" />
+        <globalTable name="t7" shardingNode="dn1,dn2" />
+        <globalTable name="t8" shardingNode="dn1,dn2" />
+        <globalTable name="t9" shardingNode="dn1,dn2" />
+        <globalTable name="d1" shardingNode="dn1,dn2" />
+        <globalTable name="d2" shardingNode="dn1,dn2" />
+        <globalTable name="tt1" shardingNode="dn1,dn2" />
+        <globalTable name="tt2" shardingNode="dn1,dn2" />
+        <globalTable name="tt3" shardingNode="dn1,dn2" />
+        <globalTable name="tt4" shardingNode="dn1,dn2" />
+        <globalTable name="tp1" shardingNode="dn1,dn2"  />
+        <globalTable name="tp2" shardingNode="dn1,dn2"  />
+        <globalTable name="tp3" shardingNode="dn1,dn2"  />
+        <globalTable name="tp4" shardingNode="dn1,dn2"  />
+        <globalTable name="tp5" shardingNode="dn1,dn2"  />
+        <globalTable name="tp6" shardingNode="dn1,dn2"  />
+        <globalTable name="tp7" shardingNode="dn1,dn2"  />
+        <globalTable name="tp8" shardingNode="dn1,dn2"  />
+        <globalTable name="ct1" shardingNode="dn1,dn2"  />
+        <globalTable name="ct2" shardingNode="dn1,dn2"  />
+        <globalTable name="ct3" shardingNode="dn1,dn2"  />
+        <globalTable name="at1" shardingNode="dn1,dn2"  />
+        <globalTable name="at2" shardingNode="dn1,dn2"  />
+        <globalTable name="at3" shardingNode="dn1,dn2"  />
+        <globalTable name="at4" shardingNode="dn1,dn2"  />
+        <globalTable name="at5" shardingNode="dn1,dn2"  />
+        <globalTable name="at6" shardingNode="dn1,dn2"  />
+        <globalTable name="t34" shardingNode="dn1,dn2"  />
+        <globalTable name="t345" shardingNode="dn1,dn2"  />
+        <globalTable name="t67" shardingNode="dn1,dn2"  />
+        <globalTable name="td1" shardingNode="dn1,dn2"  />
+        <globalTable name="td2" shardingNode="dn1,dn2"  />
+        <globalTable name="td3" shardingNode="dn1,dn2"  />
+        <globalTable name="td4" shardingNode="dn1,dn2"  />
+        <globalTable name="td5" shardingNode="dn1,dn2"  />
+        <globalTable name="ts1" shardingNode="dn1,dn2"  />
+        <globalTable name="ts2" shardingNode="dn1,dn2"  />
+        <globalTable name="ts3" shardingNode="dn1,dn2"  />
+        <globalTable name="ts4" shardingNode="dn1,dn2"  />
+        <globalTable name="ts5" shardingNode="dn1,dn2"  />
+        <globalTable name="tu1" shardingNode="dn1,dn2"  />
+    </schema>
+
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
+    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
+    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
+
+</dble:sharding>

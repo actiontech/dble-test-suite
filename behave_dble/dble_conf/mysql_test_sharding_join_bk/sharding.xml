@@ -1,0 +1,78 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">
+<dble:sharding xmlns:dble="http://dble.cloud/">
+    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+        <shardingTable name="t0" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="t2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="t3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="t4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="t5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="t6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="t7" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="t8" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="t9" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="d1" shardingNode="dn1,dn2" function="partbydate" shardingColumn="id"/>
+        <shardingTable name="d2" shardingNode="dn1,dn2" function="partbydate" shardingColumn="id"/>
+        <shardingTable name="tt1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="a1"/>
+        <shardingTable name="tt2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="a1"/>
+        <shardingTable name="tt3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="c1"/>
+        <shardingTable name="tt4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="c2"/>
+        <shardingTable name="tp1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="c"/>
+        <shardingTable name="tp2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="a"/>
+        <shardingTable name="tp3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="b"/>
+        <shardingTable name="tp4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="y"/>
+        <shardingTable name="tp5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="y"/>
+        <shardingTable name="tp6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="d"/>
+        <shardingTable name="tp7" shardingNode="dn1,dn2" function="hash-two" shardingColumn="e"/>
+        <shardingTable name="tp8" shardingNode="dn1,dn2" function="hash-two" shardingColumn="f"/>
+        <shardingTable name="ct1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="Document_ID"/>
+        <shardingTable name="ct2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="Contractor_ID"/>
+        <shardingTable name="ct3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="Language_ID"/>
+        <shardingTable name="at1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="c"/>
+        <shardingTable name="at2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="a"/>
+        <shardingTable name="at3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="b"/>
+        <shardingTable name="at4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="y"/>
+        <shardingTable name="at5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="y"/>
+        <shardingTable name="at6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="a"/>
+        <shardingTable name="t34" shardingNode="dn1,dn2" function="hash-two" shardingColumn="a3"/>
+        <shardingTable name="t345" shardingNode="dn1,dn2" function="hash-two" shardingColumn="a3"/>
+        <shardingTable name="t67" shardingNode="dn1,dn2" function="hash-two" shardingColumn="a6"/>
+        <shardingTable name="td1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id1"/>
+        <shardingTable name="td2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id2"/>
+        <shardingTable name="td3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id3"/>
+        <shardingTable name="td4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id2"/>
+        <shardingTable name="td5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id1"/>
+        <shardingTable name="ts1" shardingNode="dn1,dn2" function="func_hashString" shardingColumn="sid"/>
+        <shardingTable name="ts2" shardingNode="dn1,dn2" function="func_hashString" shardingColumn="sid"/>
+        <shardingTable name="ts3" shardingNode="dn1,dn2" function="func_hashString" shardingColumn="sid3"/>
+        <shardingTable name="ts4" shardingNode="dn1,dn2" function="func_hashString" shardingColumn="sid4"/>
+        <shardingTable name="ts5" shardingNode="dn1,dn2" function="func_hashString" shardingColumn="id"/>
+        <shardingTable name="tu1" shardingNode="dn1,dn2" function="func_hashString" shardingColumn="usr_id"/>
+    </schema>
+
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
+    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
+    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
+
+    <function class="Hash" name="hash-two">
+        <property name="partitionCount">2</property>
+        <property name="partitionLength">1</property>
+    </function>
+
+    <function name="partbydate" class="date">
+           <property name="dateFormat">yyyy-MM-dd</property>
+           <property name="sBeginDate">2001-08-01</property>
+           <property name="sPartionDay">10</property>
+           <property name="defaultNode">0</property>
+    </function>
+
+    <function name="func_hashString" class="StringHash">
+        <property name="partitionCount">2</property>
+        <property name="partitionLength">128</property>
+        <property name="hashSlice">0:</property>
+    </function>
+
+</dble:sharding>
