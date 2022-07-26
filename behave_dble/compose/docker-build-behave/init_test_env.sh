@@ -25,11 +25,3 @@ ssh_copy_id_to_all(){
   done
 }
 ssh_copy_id_to_all
-
-#config zookeeper's myid
-dble_install=("dble-1" "dble-2" "dble-3")
-count=${#dble_install[@]}
-for((i=0; i<3; i=i+1)); do
-  myid=`expr ${i} + 1`
-  ssh root@${dble_install[$i]}  "echo '${myid}'> /opt/zookeeper/data/myid"
-done
