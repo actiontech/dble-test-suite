@@ -193,7 +193,7 @@ def get_encrypt(context, string):
 
 @Given('get config xml version from template config and named as "{var_version}"')
 def step_impl(context, var_version):
-    node = get_node("dble-1")
+    node = get_node(context.dbles, "dble-1")
     cmd_server_version = "grep '<dble:server' {0}/dble/conf/server_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(node.install_dir)
     cmd_schema_version = "grep '<dble:schema' {0}/dble/conf/schema_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(node.install_dir)
     cmd_rule_version = "grep '<dble:rule' {0}/dble/conf/rule_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(node.install_dir)
