@@ -1,8 +1,9 @@
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
+@use.with_mysql_version=5.7
 Feature: shardingNode's lettercase is insensitive, that should not be affected by lower_case_table_names
 
-  @NORMAL @restore_mysql_config
+  @NORMAL @restore_mysql_config 
   Scenario: shardingNode's lettercase is insensitive, but reference to the shardingNode name must consistent #1
    """
     {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}}}
@@ -24,7 +25,7 @@ Feature: shardingNode's lettercase is insensitive, that should not be affected b
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="9" minCon="3" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="9" minCon="3" primary="true">
         </dbInstance>
     </dbGroup>
     """

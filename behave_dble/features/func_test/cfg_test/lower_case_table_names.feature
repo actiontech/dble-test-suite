@@ -2,13 +2,14 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhaohongjie at 2018/10/15
 # Modified by wujinling at 2019/09/17
+@use.with_mysql_version=5.7
 Feature: check collation/lower_case_table_names works right for dble
 #  lower_case_table_names=0, case sensitive
 #  lower_case_table_names=1, case insensitive
 #  lower_case_table_names=1,CHARACTER SET utf8 COLLATE utf8_bin is case sensitive, from issue 1229
 #  lower_case_table_names=1,CHARACTER SET utf8 COLLATE latin1_swedish_ci is case insensitive, from issue 1229
 
-  @BLOCKER @restore_mysql_config
+  @BLOCKER @restore_mysql_config 
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive#1
    """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0},'mysql-slave1':{'lower_case_table_names':0},'mysql-slave2':{'lower_case_table_names':0}}}

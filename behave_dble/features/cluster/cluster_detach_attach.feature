@@ -150,8 +150,8 @@ Feature: check single dble detach or attach from cluster
     """
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true"/>
-        <dbInstance name="hostS2" url="172.100.9.2:3307" user="test" password="111111" maxCon="1000" minCon="10"/>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostS2" url="172.100.9.6:3307" user="test" password="111111" maxCon="1000" minCon="10"/>
      </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -188,9 +188,9 @@ Feature: check single dble detach or attach from cluster
       | show @@dbinstance |
     Then check resultset "Res_A" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | false       |
-      | ha_group2  | hostS2 | 172.100.9.2 | 3307   | R     | 0        | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | W     | 0        | false       |
+      | ha_group2  | hostS2 | 172.100.9.6 | 3307   | R     | 0        | false       |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                               | expect                                                |
       | conn_1 | False     | dbGroup @@enable name='ha_group1' | cluster is detached, you should attach cluster first. |
@@ -200,9 +200,9 @@ Feature: check single dble detach or attach from cluster
       | show @@dbinstance |
     Then check resultset "Res_B" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | false       |
-      | ha_group2  | hostS2 | 172.100.9.2 | 3307   | R     | 0        | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | W     | 0        | false       |
+      | ha_group2  | hostS2 | 172.100.9.6 | 3307   | R     | 0        | false       |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                                                                           | expect                                                |
       | conn_1 | False     | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | cluster is detached, you should attach cluster first. |
@@ -242,9 +242,9 @@ Feature: check single dble detach or attach from cluster
       | show @@dbinstance |
     Then check resultset "Res_C" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | true        |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | false       |
-      | ha_group2  | hostS2 | 172.100.9.2 | 3307   | R     | 0        | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | true        |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | W     | 0        | false       |
+      | ha_group2  | hostS2 | 172.100.9.6 | 3307   | R     | 0        | false       |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                               | expect  |
       | conn_1 | False     | dbGroup @@enable name='ha_group1' | success |
@@ -254,9 +254,9 @@ Feature: check single dble detach or attach from cluster
       | show @@dbinstance |
     Then check resultset "Res_D" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | R     | 0        | false       |
-      | ha_group2  | hostS2 | 172.100.9.2 | 3307   | W     | 0        | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | false       |
+      | ha_group2  | hostS2 | 172.100.9.6 | 3307   | W     | 0        | false       |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                                                                           | expect  |
       | conn_1 | False     | dbGroup @@switch name='ha_group2' master='hostM2'                             | success |
@@ -1150,7 +1150,7 @@ Feature: check single dble detach or attach from cluster
 
     # check cluster manager command
     Given prepare a thread run btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
-    Given sleep "3" seconds
+    Given sleep "5" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach6.java" output in "dble-1"
     """

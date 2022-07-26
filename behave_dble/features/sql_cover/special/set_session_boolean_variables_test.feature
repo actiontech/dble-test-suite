@@ -1020,8 +1020,8 @@ Feature: dble support execute set @@variables=true/false test;
       | conn_0 | False    | show  variables like "transaction_read_only";                | hasStr{'OFF'}   | schema1 |
       | conn_0 | True     | select @@transaction_read_only;                              | has{((0,),)} | schema1 |
 
-
-  Scenario: dble support execute set tx_read_only test #22
+  @use.with_mysql_version=5.7
+  Scenario: dble support execute set tx_read_only test #22.1
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                 | expect       | db      |
       | conn_0 | False    | set tx_read_only=1;                                 | success      | schema1 |

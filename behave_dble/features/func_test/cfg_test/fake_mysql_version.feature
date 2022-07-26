@@ -5,7 +5,7 @@
 
 # for DBLE0REQ-189
 Feature: test fakeMySQLVersion support mysql8.0
-
+  @skip
   Scenario: check fakeMySQLVersion is 5.7 #1
 # fakeMySQLVersion is 5.7.13, backend mysql version is 5.7.13, mysql client version is 5.7.13
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -21,7 +21,7 @@ Feature: test fakeMySQLVersion support mysql8.0
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -89,7 +89,8 @@ Feature: test fakeMySQLVersion support mysql8.0
     delete from schema1.sharding_4_t1
     drop table if exists schema1.sharding_4_t1
     """
-
+  
+  @skip
   Scenario: check fakeMySQLVersion is 8.0 #2
 # fakeMySQLVersion is 8.0.21, backend mysql version is 5.7.13
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -187,7 +188,7 @@ Feature: test fakeMySQLVersion support mysql8.0
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """

@@ -11,20 +11,20 @@ handlers:
     class: logging.FileHandler
     level: DEBUG
     formatter: simple
-    filename: logs/behave_debug.log
+    filename: logs/log/behave_debug.log
     mode: a
-  info_file_handler:
-    class: logging.FileHandler
-    level: INFO
-    formatter: simple
-    filename: logs/behave_info.log
-    mode: a
-  error_file_handler:
-    class: logging.FileHandler
-    level: ERROR
-    formatter: simple
-    filename: logs/behave_error.log
-    mode: a
+  # info_file_handler:
+  #   class: logging.FileHandler
+  #   level: INFO
+  #   formatter: simple
+  #   filename: logs/log/behave_info.log
+  #   mode: a
+  # error_file_handler:
+  #   class: logging.FileHandler
+  #   level: ERROR
+  #   formatter: simple
+  #   filename: logs/log/behave_error.log
+  #   mode: a
 
 loggers:
   # filter paramiko low level log
@@ -37,5 +37,5 @@ loggers:
     level: DEBUG
     handlers:
       - debug_file_handler
-      - info_file_handler
-      - error_file_handler
+      # - info_file_handler
+      # - error_file_handler

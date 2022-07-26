@@ -10,8 +10,8 @@ Feature: test user.xml blacklist  -- including sharding user & rwSplit user
       """
         <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-          <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+          <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+          <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
         </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -90,8 +90,8 @@ Feature: test user.xml blacklist  -- including sharding user & rwSplit user
       """
         <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-          <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+          <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+          <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
         </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -161,8 +161,8 @@ Feature: test user.xml blacklist  -- including sharding user & rwSplit user
       """
         <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-          <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+          <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+          <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
         </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -211,8 +211,8 @@ Feature: test user.xml blacklist  -- including sharding user & rwSplit user
       """
         <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-          <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+          <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+          <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
         </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -288,8 +288,8 @@ Feature: test user.xml blacklist  -- including sharding user & rwSplit user
       """
         <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-          <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+          <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+          <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
         </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -381,8 +381,8 @@ Feature: test user.xml blacklist  -- including sharding user & rwSplit user
       """
         <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-          <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+          <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+          <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
         </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -461,8 +461,8 @@ Feature: test user.xml blacklist  -- including sharding user & rwSplit user
       """
         <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-          <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+          <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+          <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
         </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -614,8 +614,8 @@ Feature: test user.xml blacklist  -- including sharding user & rwSplit user
       """
         <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-          <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+          <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+          <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
         </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -676,13 +676,13 @@ Feature: test user.xml blacklist  -- including sharding user & rwSplit user
 
 
   Scenario: test user.xml blacklist  -- some operation on dble's documentation  #9
-    Given delete file "/test.txt" on "mysql8-master2"
+    Given delete file "/test.txt" on "mysql"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
         <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-          <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+          <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+          <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
         </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -773,15 +773,15 @@ Feature: test user.xml blacklist  -- including sharding user & rwSplit user
       | rwSp2   | 111111   | conn_3 | False   | update test set id=2 where id = 1 and hujh = hujh/*lxxt*/     | Intercepted by suspected configuration [selectWhereAlwayTrueCheck,selectHavingAlwayTrueCheck,deleteWhereAlwayTrueCheck,updateWhereAlayTrueCheck,conditionAndAlwayTrueAllow] in the blacklist of user 'rwSp2', so it is considered unsafe SQL                     | db1 |
       | rwSp2   | 111111   | conn_3 | true    | drop table if exists test                    | success | db1 |
 
-    Given delete file "/test.txt" on "mysql8-master2"
+    Given delete file "/test.txt" on "mysql"
 
   Scenario: test user.xml blacklist  -- some operation on dble's documentation  #10
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
         <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-          <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+          <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+          <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
         </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"

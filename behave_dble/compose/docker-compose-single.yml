@@ -1,0 +1,85 @@
+version: '2.2'
+networks:
+  dble-net:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: 172.100.9.0/24
+          gateway: 172.100.9.8
+        - subnet: 2001::/120
+          gateway: 2001::8
+
+volumes:
+  mysql_1_cgroup: {}
+  mysql_2_cgroup: {}
+  mysql_cgroup: {}
+  dble_1_cgroup: {}
+
+services:
+  mysql-1:
+    image: reg.actiontech.com/actiontech/dble_test_mysql
+    container_name: mysql-1
+    hostname: mysql-1
+    privileged: true
+    stdin_open: true
+    tty: true
+    ports:
+      - 13306:3306
+    networks:
+      dble-net:
+        ipv4_address: 172.100.9.5
+        ipv6_address: 2001::1
+    volumes:
+      - mysql_1_cgroup:/sys/fs/cgroup
+      - /share:/share
+
+  mysql-2:
+    image: reg.actiontech.com/actiontech/dble_test_mysql
+    container_name: mysql-2
+    hostname: mysql-2
+    privileged: true
+    stdin_open: true
+    tty: true
+    ports:
+      - 23306:3306
+    networks:
+      dble-net:
+        ipv4_address: 172.100.9.6
+        ipv6_address: 2001::2
+    volumes:
+      - mysql_2_cgroup:/sys/fs/cgroup
+      - /share:/share
+
+  mysql:
+    image: reg.actiontech.com/actiontech/dble_test_mysql
+    container_name: mysql
+    hostname: mysql
+    privileged: true
+    stdin_open: true
+    tty: true
+    ports:
+      - 3306:3306
+    networks:
+      dble-net:
+        ipv4_address: 172.100.9.4
+        ipv6_address: 2001::10
+    volumes:
+      - mysql_cgroup:/sys/fs/cgroup
+      - /share:/share
+
+  dble-1:
+    image: reg.actiontech.com/actiontech/dble_test_dble
+    container_name: dble-1
+    hostname: dble-1
+    privileged: true
+    stdin_open: true
+    tty: true
+    networks:
+      dble-net:
+        ipv4_address: 172.100.9.1
+        ipv6_address: 2001::11
+    volumes:
+      - dble_1_cgroup:/sys/fs/cgroup
+      - /share:/share
+    working_dir: /opt

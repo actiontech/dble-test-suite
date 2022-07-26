@@ -76,8 +76,8 @@ Feature: when reload hang,emergency means to deal with it
        | conn_0 | False     |  show @@shardingNodes where schema=schema1 and table=sharding       |   dble_information|
      Then check resultset "D" has lines with following column values
        | NAME-0 |SEQUENCE-1 | HOST-2         | PORT-3   | PHYSICAL_SCHEMA-4 |  USER-5 | PASSWORD-6 |
-       | dn3    | 0         | 172.100.9.5    | 3307     |   db2             |  test   | 111111     |
-       | dn4    | 1         | 172.100.9.6    | 3307     |   db2             |  test   | 111111     |
+       | dn3    | 0         | 172.100.9.5    | 3306     |   db2             |  test   | 111111     |
+       | dn4    | 1         | 172.100.9.6    | 3306     |   db2             |  test   | 111111     |
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       [RL][0-SELF_RELOAD]
