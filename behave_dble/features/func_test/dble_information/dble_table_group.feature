@@ -4,7 +4,7 @@
 
 Feature:  dble_table test
 
-  @skip_restart  @restore_mysql_config @skip @use.with_mysql_version=5.7
+  @skip_restart  @restore_mysql_config @use.with_mysql_version=5.7
   Scenario:  dble_table  table #1
    """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}
