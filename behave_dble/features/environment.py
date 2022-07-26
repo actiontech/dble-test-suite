@@ -127,16 +127,17 @@ def before_feature(context, feature):
             for scenario in feature.scenarios:
                 patch_scenario_with_autoretry(scenario, max_attempts=context.test_conf['auto_retry'])
 
+
     if "setup" in feature.tags:
-        # delete the begin and end """
-        for desc in feature.description[1:-1]:
-            logger.info(desc)
-            context.execute_steps(desc)
+        context.ssh_clients = create_ssh_client(context)
 
     logger.info('Exit hook <before_feature>')
 
 
 def after_feature(context, feature):
+    if "setup" in feature.tags:
+        for _, ssh_client in context.ssh_clients.items():
+            ssh_client.close()
     logger.info('Feature end: <{0}><{1}>'.format(feature.filename, feature.name))
     logger.info('*' * 30)
 
@@ -146,16 +147,11 @@ def before_scenario(context, scenario):
     logger.info('Scenario start: <{0}>'.format(scenario.name))
     if active_tag_matcher.should_exclude_with(scenario.effective_tags):
         scenario.skip("DISABLED ACTIVE-TAG")
-    if "Initialize_mysql" in scenario.tags:
-        context.ssh_clients = create_ssh_client(context)
     logger.info('Exit hook <before_scenario>')
 
 
 def after_scenario(context, scenario):
     logger.info('Enter hook after_scenario')
-    if "Initialize_mysql" in scenario.tags:
-        for _, ssh_client in context.ssh_clients.items():
-            ssh_client.close()
     # clear conns in case of the same name conn is used in after test cases
     for i in range(0, 10):
         conn_name = "conn_{0}".format(i)
