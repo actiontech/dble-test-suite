@@ -78,8 +78,6 @@ cfg_dble:
       manager_user: root
       manager_password: 111111
       manager_port: 9066
-  packet_name: actiontech-dble.tar.gz
-  ftp_path: ftp://{0}/actiontech-dble/qa/9.9.9.9/
   sql_cover_log: sql_cover_log
 cfg_mysql:
   group1:
