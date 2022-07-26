@@ -11,7 +11,7 @@ test_conf:
 
 
 constant:
-  docker_compose_path: compose/docker-compose_{DBLE_TOPO}.yml
+  docker_compose_path: compose/docker-compose-{DBLE_TOPO}.yml
   ssh_user: root
   ssh_password: sshpass
   dble_home: /opt/dble
