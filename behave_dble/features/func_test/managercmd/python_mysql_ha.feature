@@ -40,7 +40,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
 
 
 
-  @restore_mysql_service @skip # skip about DBLE0REQ-1793
+  @restore_mysql_service
   Scenario: when useOuterHa is false, mysql not slave, can`t change mysql master ,but python script run #2
      """
      {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
@@ -53,7 +53,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
      """
     Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master2"
-    Then execute admin cmd "reload @@config" get the following output
+    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all -r" get the following output
       """
       Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]}
       """
@@ -213,7 +214,6 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
 
-  @skip # skip about DBLE0REQ-1793
   Scenario: don't use "disable/enable", can change mysql master and active idle DBLE0REQ-816   #5
     # rwSplitMode="0"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -227,7 +227,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
        <dbInstance name="hostS2" password="111111" url="172.100.9.3:3307" user="test" maxCon="1000" minCon="10" />
     </dbGroup>
     """
-    Then execute admin cmd "reload @@config"
+    Then execute admin cmd "reload @@config_all"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
       | conn   | toClose | sql                                                                                                                      | db               |
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
@@ -279,7 +279,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
        </dbInstance>
     </dbGroup>
     """
-    Then execute admin cmd "reload @@config"
+    Then execute admin cmd "reload @@config_all -r"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
       | conn   | toClose | sql                                                                                                                      | db               |
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
@@ -329,7 +329,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
        </dbInstance>
     </dbGroup>
     """
-    Then execute admin cmd "reload @@config"
+    Then execute admin cmd "reload @@config_all -r"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
       | conn   | toClose | sql                                                                                                                      | db               |
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
@@ -379,7 +379,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
        </dbInstance>
     </dbGroup>
     """
-    Then execute admin cmd "reload @@config"
+    Then execute admin cmd "reload @@config_all -r"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
       | conn   | toClose | sql                                                                                                                      | db               |
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
