@@ -7,8 +7,8 @@ networks:
       config:
         - subnet: 172.100.9.0/24
           gateway: 172.100.9.8
-        - subnet: 2001::/120
-          gateway: 2001::8
+        - subnet: 2001:3984:3989::/64
+          gateway: 2001:3984:3989::1
 
 volumes:
   mysql_1_cgroup: {}
@@ -29,7 +29,7 @@ services:
     networks:
       dble-net:
         ipv4_address: 172.100.9.5
-        ipv6_address: 2001::1
+        ipv6_address: 2001:3984:3989::15
     volumes:
       - mysql_1_cgroup:/sys/fs/cgroup
       - /share:/share
@@ -46,7 +46,7 @@ services:
     networks:
       dble-net:
         ipv4_address: 172.100.9.6
-        ipv6_address: 2001::2
+        ipv6_address: 2001:3984:3989::16
     volumes:
       - mysql_2_cgroup:/sys/fs/cgroup
       - /share:/share
@@ -63,7 +63,7 @@ services:
     networks:
       dble-net:
         ipv4_address: 172.100.9.4
-        ipv6_address: 2001::10
+        ipv6_address: 2001:3984:3989::14
     volumes:
       - mysql_cgroup:/sys/fs/cgroup
       - /share:/share
@@ -78,7 +78,7 @@ services:
     networks:
       dble-net:
         ipv4_address: 172.100.9.1
-        ipv6_address: 2001::11
+        ipv6_address: 2001:3984:3989::11
     volumes:
       - dble_1_cgroup:/sys/fs/cgroup
       - /share:/share
