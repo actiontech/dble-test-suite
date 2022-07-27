@@ -53,7 +53,7 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | False   | drop table if exists test  | schema1 |
       | conn_0 | True    | create table test(id int)  | schema1 |
 
-  @restore_mysql_service @skip # skip about DBLE0REQ-1793
+  @restore_mysql_service
   Scenario: # some of the backend nodes was disconnected   #2
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
@@ -71,7 +71,7 @@ Feature: #mysql node disconnected,check the change of dble
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                 | expect                                                            |
       | conn_0 | False   | dryrun              | hasStr{Can't connect to [dbInstance[ha_group1.hostM1]]}           |
-      | conn_0 | True    | reload @@config_all | there are some dbInstance connection failed                       |
+      | conn_0 | True    | reload @@config_all | Reload config failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect               | db      |

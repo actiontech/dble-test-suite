@@ -5,7 +5,7 @@
 # DBLE0REQ-225
 Feature: db.xml support fake host
 
-  @init_dble_meta @skip # skip about DBLE0REQ-1793
+  @init_dble_meta
   Scenario: The managerPort/serverPort does not use the default value, fake host use the default managerPort/serverPort #1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -28,7 +28,7 @@ Feature: db.xml support fake host
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload config failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly
+    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group1.hostM1]},{dbInstance[ha_group2.hostM2]}
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -367,7 +367,6 @@ Feature: db.xml support fake host
       | conn_0 | true    | select * from backend_connections              | length{(0)} | dble_information |
 
 
-   @skip # skip about DBLE0REQ-1793
   Scenario: fake host doesn't support ipv6 and local ip address #10
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -394,7 +393,8 @@ Feature: db.xml support fake host
     </dbGroup>
     """
     Then restart dble in "dble-1" success
-    Then execute admin cmd "reload @@config_all" get the following output
+    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all -r" get the following output
     """
     Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
     """
@@ -407,7 +407,8 @@ Feature: db.xml support fake host
     </dbGroup>
     """
     Then restart dble in "dble-1" success
-    Then execute admin cmd "reload @@config_all" get the following output
+    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all -r" get the following output
     """
     Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
     """

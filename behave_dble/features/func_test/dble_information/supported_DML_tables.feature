@@ -823,7 +823,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-  @skip_restart @skip # skip about DBLE0REQ-1793
+  @skip_restart
   Scenario:  test the langreage of update in dble manager ----- dble_db_instance #5
 
     Given execute sql in "dble-1" in "admin" mode
@@ -848,28 +848,28 @@ Feature: test addition, deletion and modification of dble_information on the man
       | conn_0 | true    | select name,db_group,addr,port,user,encrypt_configured,primary,disabled,min_conn_count,max_conn_count,read_weight,id from dble_db_instance            | dble_information |
     Then check resultset "dble_db_instance_1" has lines with following column values
       | name-0  | db_group-1 | addr-2       | port-3 | user-4 | encrypt_configured-5 | primary-6 | disabled-7 | min_conn_count-8 | max_conn_count-9 | read_weight-10 | id-11 |
-      | hostS52 | ha_group5  | 172.100.9.12 | 3307   | test   | false                | false     | false      | 0                | 1000             | 3              | test  |
-      | hostM5  | ha_group5  | 172.100.9.10 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | hostS51 | ha_group5  | 172.100.9.11 | 3307   | test   | false                | false     | false      | 0                | 1000             | 3              | test  |
-      | hostM9  | ha_group9  | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | hostM12 | ha_group12 | 172.100.9.1  | 3307   | test   | false                | true      | false      | 9                | 1000             | 3              | test  |
-      | 0B03    | 0B03       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | hostM2  | ha_group2  | 172.100.9.6  | 3307   | test   | false                | true      | false      | 10               | 1000             | 3              | test  |
-      | 0B02    | 0B02       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | 0B05    | 0B05       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | 0B051   | 0B05       | 172.100.9.10 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test  |
-      | hostM4  | ha_group4  | 172.100.9.5  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | 0B04    | 0B04       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | hostM6  | ha_group6  | 172.100.9.9  | 3307   | test   | false                | true      | false      | 4                | 1000             | 3              | test  |
-      | hostM10 | ha_group10 | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | hostM3  | ha_group3  | 172.100.9.1  | 3307   | test   | false                | true      | true       | 10               | 1000             | 3              | test  |
-      | hostS31 | ha_group3  | 172.100.9.2  | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test  |
-      | hostS32 | ha_group3  | 172.100.9.3  | 3307   | test   | false                | false     | true       | 2                | 1000             | 3              | test  |
-      | hostM8  | ha_group8  | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | hostS11 | ha_group11 | 172.100.9.10 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test  |
-      | hostM11 | ha_group11 | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | hostM7  | ha_group7  | 172.100.9.3  | 3307   | test   | true                 | true      | false      | 4                | 1000             | 3              | test  |
-      | hostM1  | ha_group1  | 172.100.9.5  | 3307   | test   | false                | true      | false      | 10               | 100              | 3              | test  |
+      | hostS52 | ha_group5  | 172.100.9.12 | 3307   | test   | false                | false     | false      | 0                | 1000             | 3              | test3 |
+      | hostM5  | ha_group5  | 172.100.9.10 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | hostS51 | ha_group5  | 172.100.9.11 | 3307   | test   | false                | false     | false      | 0                | 1000             | 3              | test3 |
+      | hostM9  | ha_group9  | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | hostM12 | ha_group12 | 172.100.9.1  | 3307   | test   | false                | true      | false      | 9                | 1000             | 3              | test3 |
+      | 0B03    | 0B03       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | hostM2  | ha_group2  | 172.100.9.6  | 3307   | test   | false                | true      | false      | 10               | 1000             | 3              | test3 |
+      | 0B02    | 0B02       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | 0B05    | 0B05       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | 0B051   | 0B05       | 172.100.9.10 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test3 |
+      | hostM4  | ha_group4  | 172.100.9.5  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | 0B04    | 0B04       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | hostM6  | ha_group6  | 172.100.9.9  | 3307   | test   | false                | true      | false      | 4                | 1000             | 3              | test3 |
+      | hostM10 | ha_group10 | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | hostM3  | ha_group3  | 172.100.9.1  | 3307   | test   | false                | true      | true       | 10               | 1000             | 3              | test3 |
+      | hostS31 | ha_group3  | 172.100.9.2  | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test3 |
+      | hostS32 | ha_group3  | 172.100.9.3  | 3307   | test   | false                | false     | true       | 2                | 1000             | 3              | test3 |
+      | hostM8  | ha_group8  | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | hostS11 | ha_group11 | 172.100.9.10 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test3 |
+      | hostM11 | ha_group11 | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | hostM7  | ha_group7  | 172.100.9.3  | 3307   | test   | true                 | true      | false      | 4                | 1000             | 3              | test3 |
+      | hostM1  | ha_group1  | 172.100.9.5  | 3307   | test   | false                | true      | false      | 10               | 100              | 3              | test3 |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_2"
       | conn   | toClose | sql                            | db               |
@@ -1303,7 +1303,6 @@ Feature: test addition, deletion and modification of dble_information on the man
     Then execute admin cmd "reload @@config_all"
 
 
-  @skip # skip about DBLE0REQ-1793
   Scenario: test the langreage of delete in dble manager   ---- dble_db_group dble_db_instance  dble_rw_split_entry #7
 
     Given execute sql in "dble-1" in "admin" mode
@@ -1347,23 +1346,23 @@ Feature: test addition, deletion and modification of dble_information on the man
       | conn_0 | true    | select name,db_group,addr,port,user,encrypt_configured,primary,disabled,min_conn_count,max_conn_count,read_weight,id from dble_db_instance            | dble_information |
     Then check resultset "dble_db_instance_1" has lines with following column values
       | name-0  | db_group-1 | addr-2       | port-3 | user-4 | encrypt_configured-5 | primary-6 | disabled-7 | min_conn_count-8 | max_conn_count-9 | read_weight-10 | id-11 |
-      | hostS52 | ha_group5  | 172.100.9.12 | 3307   | test   | false                | false     | false      | 0                | 1000             | 3              | test  |
-      | hostM5  | ha_group5  | 172.100.9.10 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | hostS51 | ha_group5  | 172.100.9.11 | 3307   | test   | false                | false     | false      | 0                | 1000             | 3              | test  |
-      | hostM12 | ha_group12 | 172.100.9.1  | 3307   | test   | false                | true      | false      | 9                | 1000             | 3              | test  |
-      | 0B03    | 0B03       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | hostM2  | ha_group2  | 172.100.9.6  | 3307   | test   | false                | true      | false      | 10               | 1000             | 3              | test  |
-      | 0B02    | 0B02       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | hostM4  | ha_group4  | 172.100.9.5  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | 0B04    | 0B04       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | hostM6  | ha_group6  | 172.100.9.9  | 3307   | test   | false                | true      | false      | 4                | 1000             | 3              | test  |
-      | hostM3  | ha_group3  | 172.100.9.1  | 3307   | test   | false                | true      | true       | 10               | 1000             | 3              | test  |
-      | hostS31 | ha_group3  | 172.100.9.2  | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test  |
-      | hostS32 | ha_group3  | 172.100.9.3  | 3307   | test   | false                | false     | true       | 2                | 1000             | 3              | test  |
-      | hostS11 | ha_group11 | 172.100.9.10 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test  |
-      | hostM11 | ha_group11 | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
-      | hostM7  | ha_group7  | 172.100.9.3  | 3307   | test   | true                 | true      | false      | 4                | 1000             | 3              | test  |
-      | hostM1  | ha_group1  | 172.100.9.5  | 3307   | test   | false                | true      | true       | 10               | 100              | 3              | test  |
+      | hostS52 | ha_group5  | 172.100.9.12 | 3307   | test   | false                | false     | false      | 0                | 1000             | 3              | test3 |
+      | hostM5  | ha_group5  | 172.100.9.10 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | hostS51 | ha_group5  | 172.100.9.11 | 3307   | test   | false                | false     | false      | 0                | 1000             | 3              | test3 |
+      | hostM12 | ha_group12 | 172.100.9.1  | 3307   | test   | false                | true      | false      | 9                | 1000             | 3              | test3 |
+      | 0B03    | 0B03       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | hostM2  | ha_group2  | 172.100.9.6  | 3307   | test   | false                | true      | false      | 10               | 1000             | 3              | test3 |
+      | 0B02    | 0B02       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | hostM4  | ha_group4  | 172.100.9.5  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | 0B04    | 0B04       | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | hostM6  | ha_group6  | 172.100.9.9  | 3307   | test   | false                | true      | false      | 4                | 1000             | 3              | test3 |
+      | hostM3  | ha_group3  | 172.100.9.1  | 3307   | test   | false                | true      | true       | 10               | 1000             | 3              | test3 |
+      | hostS31 | ha_group3  | 172.100.9.2  | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test3 |
+      | hostS32 | ha_group3  | 172.100.9.3  | 3307   | test   | false                | false     | true       | 2                | 1000             | 3              | test3 |
+      | hostS11 | ha_group11 | 172.100.9.10 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test3 |
+      | hostM11 | ha_group11 | 172.100.9.9  | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | hostM7  | ha_group7  | 172.100.9.3  | 3307   | test   | true                 | true      | false      | 4                | 1000             | 3              | test3 |
+      | hostM1  | ha_group1  | 172.100.9.5  | 3307   | test   | false                | true      | true       | 10               | 100              | 3              | test3 |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_rw_split_entry_1"
       | conn   | toClose | sql                                          | db               |
@@ -1420,7 +1419,7 @@ Feature: test addition, deletion and modification of dble_information on the man
       | conn_0 | false   | delete from dble_db_instance where max_conn_count BETWEEN 0 AND 2                                | unknown error:not supportted yet!        | dble_information |
       | conn_0 | false   | delete from dble_rw_split_entry where max_conn_count BETWEEN 0 AND 2                             | unknown error:not supportted yet!        | dble_information |
 
-      | conn_0 | false   | delete from dble_db_group where active ='true'                                 | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_db_user`(`db_group`) REFERENCES `dble_db_group`(`name`)        | dble_information |
+      | conn_0 | false   | delete from dble_db_group where active ='true'                                 | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_rw_split_entry`(`db_group`) REFERENCES `dble_db_group`(`name`)        | dble_information |
       | conn_0 | false   | delete from dble_db_group where name ='ha_group2'                              | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_db_instance`(`db_group`) REFERENCES `dble_db_group`(`name`)    | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
