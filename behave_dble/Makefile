@@ -95,7 +95,7 @@ run_connector_J: up
 	bash ${DRIVER_DIR}/drivers/Connector-J/run_connector_J.sh
 
 run_jdbc_api_test:
-	bash ${DRIVER_DIR}/drivers/java/sh/jdbc-api-test-start.sh
+	bash ${DRIVER_DIR}/drivers/jdbc-api-test/jdbc-api-test-start.sh
 
 run_multiQuery: up
 	pipenv run behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
