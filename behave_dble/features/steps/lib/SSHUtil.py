@@ -1,18 +1,15 @@
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-import paramiko
 import logging
-from .Logging import Logging
+from tkinter import EXCEPTION
+from . Logging import Logging
 from typing import List, Optional, Tuple
 import os
 import paramiko
-
-LOGGER = logging.getLogger('root')
-
-
+import time
+LOGGER = logging.getLogger()
 class NotInitializedConnectionError(Exception):
     pass
-
 
 class SSHClient:
     def __init__(self, host: str, user: str, password: str):
@@ -25,11 +22,22 @@ class SSHClient:
         self._ssh = paramiko.SSHClient()
         self._ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         default = {'hostname': self._host, 'port': 22, 'username': self._user, 'password': self._password,
-                   'timeout': 60}
+                'timeout': 60}
         if kwargs and isinstance(kwargs, dict):
             default.update(kwargs)
         LOGGER.debug(f'Create ssh connect : <{default}>')
-        self._ssh.connect(**default)  # type: ignore
+        retry = 10
+        while retry > 0:
+            try:
+                self._ssh.connect(**default)
+            except Exception as e:
+                retry -= 1
+                time.sleep(2)
+                LOGGER.debug(f'create connect: <{default}> failed { 10- retry} times \n {e}')
+                continue
+            else:
+                LOGGER.debug(f'connect success <{default}>')
+                break
 
     def exec_command(self, command: str, timeout: int = 60, **kwargs) -> Tuple[int, str, str]:
         if self._ssh is not None:
@@ -39,8 +47,7 @@ class SSHClient:
             rc = stdout.channel.recv_exit_status()
             sto = stdout.read().decode().strip('\n')
             ste = stderr.read().decode().strip('\n')
-            LOGGER.debug(
-                f'<{self._host}>: Execute command: <{command}> Return code: <{rc}>, Stdout: <{sto}>, Stderr: <{ste}>')
+            LOGGER.debug(f'<{self._host}>: Execute command: <{command}> Return code: <{rc}>, Stdout: <{sto}>, Stderr: <{ste}>')
             return rc, sto, ste
         raise NotInitializedConnectionError('Not Initialized ssh Connection')
 
@@ -76,6 +83,7 @@ class SSHClient:
                     self.exec_command(f'[ -d {dp} ] && echo 0 || mkdir -p {dp}')
                 LOGGER.info(f'<{self._host}>: sftp put local <{local_fp}> to remote <{remote_fp}>')
                 sftp.put(local_fp, remote_fp)
+
 
     def get_dir(self, remote_dir: str, local_dir: str):
         LOGGER.info(f'<{self._host}>: sftp get remote dir <{remote_dir}> to local dir <{local_dir}>')
@@ -136,6 +144,7 @@ class SSHClient:
         return self._host
 
 
+
 class SFTPClient(Logging):
     def __init__(self, host, user, password, port=22):
         super(SFTPClient, self).__init__()
@@ -149,7 +158,7 @@ class SFTPClient(Logging):
         try:
             self.logger.info('Create ssh sftp client for ip <{0}>'.format(self._host))
             t = paramiko.Transport((self._host, self.port))
-            t.connect(username=self._user, password=self._password)
+            t.connect(username = self._user, password = self._password)
             self._sftp_ssh = paramiko.SFTPClient.from_transport(t)
         except Exception as e:
             raise
