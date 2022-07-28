@@ -91,7 +91,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       $a\-DfrontSocketSoRcvbuf=-1048576
       $a\-DfrontSocketSoSndbuf=-4194304
     """
-
+    # 不同环境默认值不同，可能导致案例失败， 如 backendProcessorExecutor，backendProcessors 默认值为宿主机核数
     Then restart dble in "dble-1" failed for
       """
       sequenceHandlerType value is 20, it will use default value:2

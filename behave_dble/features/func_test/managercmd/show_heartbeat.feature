@@ -81,7 +81,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     Then check resultset "16" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
       | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 5000      | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | time_out  | 0       | 5000      | false  | None          |
       | hostS1 | 172.100.9.6 | 3307   | time_out  | 0       | 5000      | false  | None          |
       | hostS2 | 172.100.9.6 | 3308   | init      | 0       | 5000      | true   | None          |
 
@@ -174,7 +174,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6  | STOP-9 | RS_MESSAGE-10    |
       | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 10000      | false  | None             |
       | hostS1 | 172.100.9.6 | 3307   | ok        | 0       | idle     | 10000      | false  | None             |
-      | hostS2 | 172.100.9.6 | 3307   | ok        | 0       | idle     | 10000      | false  | None             |
+      | hostS2 | 172.100.9.6 | 3308   | ok        | 0       | idle     | 10000      | false  | None             |
 
 # case 4 :set master down to check RS_CODE
     Given stop mysql in host "mysql-master2"
@@ -199,8 +199,8 @@ Feature: #test show @@heartbeat DBLE0REQ-167
 #case set master iptables to check master RS_CODE is "time_out"
     Given execute oscmd in "mysql-master2"
       """
-       iptables -A INPUT -s 172.100.9.1 -j DROP
-       iptables -A OUTPUT -d 172.100.9.1 -j DROP
+       iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
+       iptables -A OUTPUT -d 172.100.9.1 -p tcp --dport 3306 -j DROP
       """
     Given sleep "20" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "43"
