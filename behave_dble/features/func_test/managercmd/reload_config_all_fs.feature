@@ -77,13 +77,14 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
     Then check resultset "rs_D" has not lines with following column values
       | HOST-3      |
       | 172.100.9.2 |
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs"
       | conn   | toClose | sql               |
       | conn_3 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RS_MESSAGE-10                                                                                                                        |
       | hostM1 | 172.100.9.5 | 3307   | ok        | None                                                                                                                                 |
-      | hostS1 | 172.100.9.2 | 3307   | error     | heartbeat connection Error//heartbeat conn for sql[/*# from=1 reason=heartbeat*/select user()] is closed, due to abnormal connection |
+      | hostS1 | 172.100.9.2 | 3307   | error     | connection Error//heartbeat conn for sql[/*# from=1 reason=heartbeat*/select user()] is closed, due to abnormal connection |
       | hostM2 | 172.100.9.6 | 3307   | ok        | None                                                                                                                                 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                      | expect      | db      |
@@ -126,7 +127,7 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
     Then check resultset "heartbeat_rs" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RS_MESSAGE-10                                                                                                                        |
       | hostM1 | 172.100.9.5 | 3307   | ok        | None                                                                                                                                 |
-      | hostS1 | 172.100.9.2 | 3307   | error     | heartbeat connection Error//heartbeat conn for sql[/*# from=1 reason=heartbeat*/select user()] is closed, due to abnormal connection |
+      | hostS1 | 172.100.9.2 | 3307   | error     | connection Error//heartbeat conn for sql[/*# from=1 reason=heartbeat*/select user()] is closed, due to abnormal connection |
       | hostM2 | 172.100.9.4 | 3307   | ok        | None                                                                                                                                 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                      | expect                                       | db      |
