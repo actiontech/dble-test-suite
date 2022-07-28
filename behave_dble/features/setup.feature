@@ -17,7 +17,7 @@ Feature: Deploy DBLE test environment
     Given I create databases named schema1,schema2,schema3,testdb,db1,db2,db3,db4 on compare_mysql
 
 
-  @use.with_dble_topo=single @skip_restart
+  @use.with_dble_topo=single
   Scenario: Initialize the single DBLE
     Given a clean environment in all dble nodes
     Given install dble in "dble-1"
@@ -25,7 +25,7 @@ Feature: Deploy DBLE test environment
     Then Start dble in "dble-1"
 
 
-  @use.with_dble_topo=cluster @skip_restart
+  @use.with_dble_topo=cluster
   Scenario: install zk cluster #1
     Given stop dble cluster and zk service
     Given a clean environment in all dble nodes
@@ -36,7 +36,6 @@ Feature: Deploy DBLE test environment
     Then start dble in order
     Given I create symbolic link for mysql in dble-2,dble-3
 
-  @skip_restart @restore_dble_config
-  Scenario: do nothing but reset dble with command line config
+
 
 

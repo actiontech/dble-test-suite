@@ -1,17 +1,14 @@
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import logging
-import os
-import configparser
 from pprint import pformat
 from steps.RestoreEnvObject import RestoreEnvObject
 from steps.lib.DbleMeta import DbleMeta
 from steps.lib.MySQLMeta import MySQLMeta
 from steps.lib.MySQLObject import MySQLObject
-from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,reset_repl, get_sftp,get_ssh \
+from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,reset_repl, get_sftp,get_ssh,\
     create_ssh_client, init_log_directory, handle_env_variables
-from steps.mysql_steps import restart_mysql
-from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
+from steps.step_install import replace_config, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
 from behave.contrib.scenario_autoretry import patch_scenario_with_autoretry
 from behave.tag_matcher import ActiveTagMatcher, setup_active_tag_values
@@ -158,15 +155,10 @@ def after_scenario(context, scenario):
             conn = getattr(context, conn_name)
             conn.close()
             delattr(context, conn_name)
-    for conn_id, conn in MySQLObject.mysql_long_live_conns.items():
+    for conn_id,conn in MySQLObject.long_live_conns.items():
         logger.debug("to close mysql conn: {}".format(conn_id))
         conn.close()
-    for conn_id, conn in DbleObject.dble_long_live_conns.items():
-        logger.debug("to close dble conn: {}".format(conn_id))
-        conn.close()
-
-    MySQLObject.mysql_long_live_conns.clear()
-    DbleObject.dble_long_live_conns.clear()
+    MySQLObject.long_live_conns.clear()
 
     if not context.userDebug:
         if "init_dble_meta" in scenario.tags:
