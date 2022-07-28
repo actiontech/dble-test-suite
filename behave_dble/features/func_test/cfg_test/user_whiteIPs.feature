@@ -504,9 +504,9 @@ Feature: check whiteIPs in user.xml
     mysql -P9066 -uroot1 -h2001:3984:3989::11 -e "show @@version"
     """
 # managerUser - multiple IP
-    Given execute linux command in "dble-1" and contains exception "Access denied for user 'root1' with host '2001:3984:3989:0:0:0:0:11'"
+    Given execute linux command in "dble-1" and contains exception "Access denied for user 'root2' with host '2001:3984:3989:0:0:0:0:11'"
     """
-    mysql -P{node:manager_port} -uroot1 -h2001:3984:3989:0000:0000:0000:0000:0011 -e "show @@version"
+    mysql -P{node:manager_port} -uroot2 -h2001:3984:3989:0000:0000:0000:0000:0011 -e "show @@version"
     """
     Given execute linux command in "mysql-slave1"
     """

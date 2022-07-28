@@ -245,6 +245,7 @@ Feature: heartbeat basic test
     mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
+    Given sleep "1" seconds
     #DBLE0REQ-960
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """

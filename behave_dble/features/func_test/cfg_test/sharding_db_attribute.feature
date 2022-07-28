@@ -109,7 +109,7 @@ Feature: test some import nodes attr in sharding.xml
           </dbInstance>
       </dbGroup>
     """
-    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all -r"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                | expect  | db      |
       | conn_0 | False    | drop table if exists test_table    | success | schema1 |
