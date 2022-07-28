@@ -2,6 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhaohongjie at 2018/10/15
 # Modified by wujinling at 2019/09/17
+@use.with_mysql_version=5.7
 Feature: check collation/lower_case_table_names works right for dble
 #  lower_case_table_names=0, case sensitive
 #  lower_case_table_names=1, case insensitive

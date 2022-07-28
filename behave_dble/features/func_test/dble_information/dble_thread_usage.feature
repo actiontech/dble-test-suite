@@ -4,7 +4,7 @@
 
 Feature:  dble_thread_usage table test
 
-    Scenario:  dble_thread_usage  table #1
+  Scenario:  dble_thread_usage  table #1
   #case desc dble_thread_usage
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_usage_1"
       | conn   | toClose | sql                    | db               |

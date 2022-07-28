@@ -19,8 +19,8 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM3" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-      <dbInstance name="hostS3" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+      <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+      <dbInstance name="hostS3" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -81,10 +81,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_1" has lines with following column values
       | entry-0 | user-1 | backend_host-3 | backend_port-4 | sharding_node-5 | db_instance-6 | tx_count-7 | tx_rows-8 | sql_insert_count-10 | sql_insert_rows-11 | sql_update_count-13 | sql_update_rows-14 | sql_delete_count-16 | sql_delete_rows-17 | sql_select_count-19 | sql_select_rows-20 |
-      | 2       | test   | 172.100.9.6    | 3307           | dn2             | hostM2        | 8          | 5         | 1                   | 1                  | 2                   | 1                  | 1                   | 1                  | 2                   | 2                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn1             | hostM1        | 7          | 5         | 1                   | 1                  | 2                   | 2                  | 1                   | 1                  | 1                   | 1                  |
-      | 2       | test   | 172.100.9.6    | 3307           | dn4             | hostM2        | 8          | 4         | 1                   | 1                  | 1                   | 1                  | 2                   | 1                  | 2                   | 1                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn3             | hostM1        | 8          | 8         | 2                   | 2                  | 1                   | 2                  | 2                   | 2                  | 1                   | 2                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn2             | hostM2        | 8          | 5         | 1                   | 1                  | 2                   | 1                  | 1                   | 1                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 7          | 5         | 1                   | 1                  | 2                   | 2                  | 1                   | 1                  | 1                   | 1                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 8          | 4         | 1                   | 1                  | 1                   | 1                  | 2                   | 1                  | 2                   | 1                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn3             | hostM1        | 8          | 8         | 2                   | 2                  | 1                   | 2                  | 2                   | 2                  | 1                   | 2                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_2"
       | conn   | toClose | sql                                                                 | db               |
       | conn_0 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -134,13 +134,13 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | True    | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_11" has lines with following column values
       | entry-0 | user-1 | backend_host-3 | backend_port-4 | sharding_node-5 | db_instance-6 | tx_count-7 | tx_rows-8 | sql_insert_count-10 | sql_insert_rows-11 | sql_update_count-13 | sql_update_rows-14 | sql_delete_count-16 | sql_delete_rows-17 | sql_select_count-19 | sql_select_rows-20 |
-      | 2       | test   | 172.100.9.6    | 3307           | dn2             | hostM2        | 8          | 5         | 1                   | 1                  | 2                   | 1                  | 1                   | 1                  | 2                   | 2                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn1             | hostM1        | 7          | 5         | 1                   | 1                  | 2                   | 2                  | 1                   | 1                  | 1                   | 1                  |
-      | 2       | test   | 172.100.9.6    | 3307           | dn4             | hostM2        | 8          | 4         | 1                   | 1                  | 1                   | 1                  | 2                   | 1                  | 2                   | 1                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn3             | hostM1        | 8          | 8         | 2                   | 2                  | 1                   | 2                  | 2                   | 2                  | 1                   | 2                  |
-      | 3       | test1  | 172.100.9.6    | 3307           | dn2             | hostM2        | 7          | 3         | 1                   | 1                  | 2                   | 1                  | 0                   | 0                  | 1                   | 1                  |
-      | 3       | test1  | 172.100.9.5    | 3307           | dn1             | hostM1        | 7          | 3         | 1                   | 1                  | 1                   | 1                  | 1                   | 0                  | 1                   | 1                  |
-      | 3       | test1  | 172.100.9.5    | 3307           | dn5             | hostM1        | 6          | 8         | 1                   | 2                  | 1                   | 2                  | 1                   | 2                  | 1                   | 2                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn2             | hostM2        | 8          | 5         | 1                   | 1                  | 2                   | 1                  | 1                   | 1                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 7          | 5         | 1                   | 1                  | 2                   | 2                  | 1                   | 1                  | 1                   | 1                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 8          | 4         | 1                   | 1                  | 1                   | 1                  | 2                   | 1                  | 2                   | 1                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn3             | hostM1        | 8          | 8         | 2                   | 2                  | 1                   | 2                  | 2                   | 2                  | 1                   | 2                  |
+      | 3       | test1  | 172.100.9.6    | 3306           | dn2             | hostM2        | 7          | 3         | 1                   | 1                  | 2                   | 1                  | 0                   | 0                  | 1                   | 1                  |
+      | 3       | test1  | 172.100.9.5    | 3306           | dn1             | hostM1        | 7          | 3         | 1                   | 1                  | 1                   | 1                  | 1                   | 0                  | 1                   | 1                  |
+      | 3       | test1  | 172.100.9.5    | 3306           | dn5             | hostM1        | 6          | 8         | 1                   | 2                  | 1                   | 2                  | 1                   | 2                  | 1                   | 2                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_21"
       | conn   | toClose | sql                                                                 | db               |
       | conn_0 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -203,15 +203,15 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | True    | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_12" has lines with following column values
       | entry-0 | user-1 | backend_host-3 | backend_port-4 | sharding_node-5 | db_instance-6 | tx_count-7 | tx_rows-8 | sql_insert_count-10 | sql_insert_rows-11 | sql_update_count-13 | sql_update_rows-14 | sql_delete_count-16 | sql_delete_rows-17 | sql_select_count-19 | sql_select_rows-20 |
-      | 2       | test   | 172.100.9.6    | 3307           | dn2             | hostM2        | 8          | 5         | 1                   | 1                  | 2                   | 1                  | 1                   | 1                  | 2                   | 2                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn1             | hostM1        | 7          | 5         | 1                   | 1                  | 2                   | 2                  | 1                   | 1                  | 1                   | 1                  |
-      | 2       | test   | 172.100.9.6    | 3307           | dn4             | hostM2        | 8          | 4         | 1                   | 1                  | 1                   | 1                  | 2                   | 1                  | 2                   | 1                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn3             | hostM1        | 8          | 8         | 2                   | 2                  | 1                   | 2                  | 2                   | 2                  | 1                   | 2                  |
-      | 3       | test1  | 172.100.9.6    | 3307           | dn2             | hostM2        | 7          | 3         | 1                   | 1                  | 2                   | 1                  | 0                   | 0                  | 1                   | 1                  |
-      | 3       | test1  | 172.100.9.5    | 3307           | dn1             | hostM1        | 7          | 3         | 1                   | 1                  | 1                   | 1                  | 1                   | 0                  | 1                   | 1                  |
-      | 3       | test1  | 172.100.9.5    | 3307           | dn5             | hostM1        | 6          | 8         | 1                   | 2                  | 1                   | 2                  | 1                   | 2                  | 1                   | 2                  |
-      | 4       | split1 | 172.100.9.10   | 3307           | -               | hostM3        | 10         | 10        | 1                   | 2                  | 1                   | 1                  | 1                   | 1                  | 2                   | 3                  |
-      | 5       | split2 | 172.100.9.10   | 3307           | -               | hostM3        | 10         | 10        | 1                   | 2                  | 1                   | 1                  | 1                   | 1                  | 2                   | 3                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn2             | hostM2        | 8          | 5         | 1                   | 1                  | 2                   | 1                  | 1                   | 1                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 7          | 5         | 1                   | 1                  | 2                   | 2                  | 1                   | 1                  | 1                   | 1                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 8          | 4         | 1                   | 1                  | 1                   | 1                  | 2                   | 1                  | 2                   | 1                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn3             | hostM1        | 8          | 8         | 2                   | 2                  | 1                   | 2                  | 2                   | 2                  | 1                   | 2                  |
+      | 3       | test1  | 172.100.9.6    | 3306           | dn2             | hostM2        | 7          | 3         | 1                   | 1                  | 2                   | 1                  | 0                   | 0                  | 1                   | 1                  |
+      | 3       | test1  | 172.100.9.5    | 3306           | dn1             | hostM1        | 7          | 3         | 1                   | 1                  | 1                   | 1                  | 1                   | 0                  | 1                   | 1                  |
+      | 3       | test1  | 172.100.9.5    | 3306           | dn5             | hostM1        | 6          | 8         | 1                   | 2                  | 1                   | 2                  | 1                   | 2                  | 1                   | 2                  |
+      | 4       | split1 | 172.100.9.4    | 3306           | -               | hostM3        | 10         | 10        | 1                   | 2                  | 1                   | 1                  | 1                   | 1                  | 2                   | 3                  |
+      | 5       | split2 | 172.100.9.4    | 3306           | -               | hostM3        | 10         | 10        | 1                   | 2                  | 1                   | 1                  | 1                   | 1                  | 2                   | 3                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_22"
       | conn   | toClose | sql                                                                 | db               |
       | conn_0 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -252,10 +252,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_13" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 2       | test   | 172.100.9.5    | 3307           | dn3             | hostM1        | 2          | 0         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 0                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn1             | hostM1        | 2          | 0         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 0                  |
-      | 2       | test   | 172.100.9.6    | 3307           | dn2             | hostM2        | 2          | 0         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 0                  |
-      | 2       | test   | 172.100.9.6    | 3307           | dn4             | hostM2        | 2          | 0         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 0                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn3             | hostM1        | 2          | 0         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 0                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 2          | 0         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 0                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn2             | hostM2        | 2          | 0         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 0                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 2          | 0         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 0                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_23"
       | conn   | toClose | sql                                                                 | db               |
       | conn_0 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -297,8 +297,8 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_14" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 2       | test   | 172.100.9.5    | 3307           | dn1             | hostM1        | 1          | 1         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 1                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn5             | hostM1        | 1          | 1         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 1                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 1          | 1         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 1                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn5             | hostM1        | 1          | 1         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 1                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_24"
       | conn   | toClose | sql                                                                 | db               |
       | conn_0 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -324,8 +324,8 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM3" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-      <dbInstance name="hostS3" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+      <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+      <dbInstance name="hostS3" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -395,10 +395,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | True    | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_11" has lines with following column values
       | entry-0 | user-1 | backend_host-3 | backend_port-4 | sharding_node-5 | db_instance-6 | tx_count-7 | tx_rows-8 | sql_insert_count-10 | sql_insert_rows-11 | sql_update_count-13 | sql_update_rows-14 | sql_delete_count-16 | sql_delete_rows-17 | sql_select_count-19 | sql_select_rows-20 |
-      | 2       | test   | 172.100.9.6    | 3307           | dn2             | hostM2        | 15         | 16        | 1                   | 1                  | 2                   | 2                  | 2                   | 3                  | 10                  | 10                 |
-      | 2       | test   | 172.100.9.5    | 3307           | dn1             | hostM1        | 14         | 14        | 1                   | 1                  | 2                   | 2                  | 2                   | 3                  | 9                   | 8                  |
-      | 2       | test   | 172.100.9.6    | 3307           | dn4             | hostM2        | 11         | 11        | 1                   | 1                  | 2                   | 2                  | 1                   | 2                  | 7                   | 6                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn3             | hostM1        | 11         | 11        | 1                   | 1                  | 2                   | 2                  | 1                   | 2                  | 7                   | 6                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn2             | hostM2        | 15         | 16        | 1                   | 1                  | 2                   | 2                  | 2                   | 3                  | 10                  | 10                 |
+      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 14         | 14        | 1                   | 1                  | 2                   | 2                  | 2                   | 3                  | 9                   | 8                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 11         | 11        | 1                   | 1                  | 2                   | 2                  | 1                   | 2                  | 7                   | 6                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn3             | hostM1        | 11         | 11        | 1                   | 1                  | 2                   | 2                  | 1                   | 2                  | 7                   | 6                  |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_21"
       | conn   | toClose | sql                                                                 | db               |
@@ -468,9 +468,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | True    | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_12" has lines with following column values
       | entry-0 | user-1 | backend_host-3 | backend_port-4 | sharding_node-5 | db_instance-6 | tx_count-7 | tx_rows-8 | sql_insert_count-10 | sql_insert_rows-11 | sql_update_count-13 | sql_update_rows-14 | sql_delete_count-16 | sql_delete_rows-17 | sql_select_count-19 | sql_select_rows-20 |
-      | 3       | test1  | 172.100.9.5    | 3307           | dn1             | hostM1        | 4          | 4         | 0                   | 0                  | 1                   | 1                  | 0                   | 0                  | 3                   | 3                  |
-      | 3       | test1  | 172.100.9.6    | 3307           | dn2             | hostM2        | 4          | 3         | 0                   | 0                  | 0                   | 0                  | 1                   | 1                  | 3                   | 2                  |
-      | 3       | test1  | 172.100.9.5    | 3307           | dn5             | hostM1        | 6          | 16        | 1                   | 2                  | 2                   | 8                  | 1                   | 0                  | 2                   | 6                  |
+      | 3       | test1  | 172.100.9.5    | 3306           | dn1             | hostM1        | 4          | 4         | 0                   | 0                  | 1                   | 1                  | 0                   | 0                  | 3                   | 3                  |
+      | 3       | test1  | 172.100.9.6    | 3306           | dn2             | hostM2        | 4          | 3         | 0                   | 0                  | 0                   | 0                  | 1                   | 1                  | 3                   | 2                  |
+      | 3       | test1  | 172.100.9.5    | 3306           | dn5             | hostM1        | 6          | 16        | 1                   | 2                  | 2                   | 8                  | 1                   | 0                  | 2                   | 6                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_22"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -526,7 +526,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | True    | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_13" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 4       | split1 | 172.100.9.10   | 3307           | -               | hostM3        | 9          | 22        | 1                  | 2                 | 3                   | 6                  | 2                   | 2                  | 3                   | 12                 |
+      | 4       | split1 | 172.100.9.4    | 3306           | -               | hostM3        | 9          | 22        | 1                  | 2                 | 3                   | 6                  | 2                   | 2                  | 3                   | 12                 |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_23"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -568,7 +568,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | True    | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_14" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 2       | test   | 172.100.9.5    | 3307           | dn5             | hostM1        | 2          | 8         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 6                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn5             | hostM1        | 2          | 8         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 6                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_24"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -642,7 +642,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | True    | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_11" has lines with following column values
       | entry-0 | user-1 | backend_host-3 | backend_port-4 | sharding_node-5 | db_instance-6 | tx_count-7 | tx_rows-8 | sql_insert_count-10 | sql_insert_rows-11 | sql_update_count-13 | sql_update_rows-14 | sql_delete_count-16 | sql_delete_rows-17 | sql_select_count-19 | sql_select_rows-20 |
-      | 2       | test   | 172.100.9.5    | 3307           | dn1             | hostM1        | 4          | 4         | 1                   | 1                  | 1                   | 1                  | 1                   | 1                  | 1                   | 1                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 4          | 4         | 1                   | 1                  | 1                   | 1                  | 1                   | 1                  | 1                   | 1                  |
     Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_21"
       | conn   | toClose | sql                                                                 | db               |
@@ -753,10 +753,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_11" has lines with following column values
       | entry-0 | user-1 | backend_host-3 | backend_port-4 | sharding_node-5 | db_instance-6 | tx_count-7 | tx_rows-8 | sql_insert_count-10 | sql_insert_rows-11 | sql_update_count-13 | sql_update_rows-14 | sql_delete_count-16 | sql_delete_rows-17 | sql_select_count-19 | sql_select_rows-20 |
-      | 2       | test   | 172.100.9.6    | 3307           | dn2             | hostM2        | 7          | 10        | 2                   | 2                  | 2                   | 2                  | 4                   | 4                  | 2                   | 2                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn1             | hostM1        | 8          | 8         | 1                   | 1                  | 3                   | 1                  | 4                   | 4                  | 2                   | 2                  |
-      | 2       | test   | 172.100.9.6    | 3307           | dn4             | hostM2        | 6          | 8         | 1                   | 1                  | 2                   | 2                  | 3                   | 3                  | 2                   | 2                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn3             | hostM1        | 6          | 8         | 1                   | 1                  | 1                   | 1                  | 3                   | 3                  | 3                   | 3                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn2             | hostM2        | 7          | 10        | 2                   | 2                  | 2                   | 2                  | 4                   | 4                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 8          | 8         | 1                   | 1                  | 3                   | 1                  | 4                   | 4                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 6          | 8         | 1                   | 1                  | 2                   | 2                  | 3                   | 3                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn3             | hostM1        | 6          | 8         | 1                   | 1                  | 1                   | 1                  | 3                   | 3                  | 3                   | 3                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_21"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -821,8 +821,8 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     #1 more than one rwSplitUsers can use the same dbGroup
@@ -872,7 +872,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_12" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 1       | rwS1   | 172.100.9.10   | 3307           | -               | hostM1        | 4          | 4         | 1                  | 1                 | 2                   | 1                  | 1                   | 0                  | 1                   | 2                  |
+      | 1       | rwS1   | 172.100.9.4    | 3306           | -               | hostM1        | 4          | 4         | 1                  | 1                 | 2                   | 1                  | 1                   | 0                  | 1                   | 2                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_22"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -904,7 +904,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_13" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 1       | rwS1   | 172.100.9.10   | 3307           | -               | hostM1        | 8          | 10        | 2                  | 3                 | 4                   | 3                  | 2                   | 1                  | 2                   | 3                  |
+      | 1       | rwS1   | 172.100.9.4    | 3306           | -               | hostM1        | 8          | 10        | 2                  | 3                 | 4                   | 3                  | 2                   | 1                  | 2                   | 3                  |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_23"
       | conn   | toClose | sql                                                                 | db               |
@@ -933,7 +933,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_13" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 1       | rwS1   | 172.100.9.10   | 3307           | -               | hostM1        | 11         | 15        | 2                  | 3                 | 4                   | 3                  | 4                   | 6                  | 2                   | 3                  |
+      | 1       | rwS1   | 172.100.9.4    | 3306           | -               | hostM1        | 11         | 15        | 2                  | 3                 | 4                   | 3                  | 4                   | 6                  | 2                   | 3                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_23"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | true    | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -971,7 +971,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_14" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 1       | rwS1   | 172.100.9.10   | 3307           | -               | hostM1        | 3          | 5         | 1                  | 2                 | 1                   | 0                  | 2                   | 3                  | 1                   | 0                  |
+      | 1       | rwS1   | 172.100.9.4    | 3306           | -               | hostM1        | 3          | 5         | 1                  | 2                 | 1                   | 0                  | 2                   | 3                  | 1                   | 0                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_24"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -1084,10 +1084,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | True    | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_11" has lines with following column values
       | entry-0 | user-1 | backend_host-3 | backend_port-4 | sharding_node-5 | db_instance-6 | tx_count-7 | tx_rows-8 | sql_insert_count-10 | sql_insert_rows-11 | sql_update_count-13 | sql_update_rows-14 | sql_delete_count-16 | sql_delete_rows-17 | sql_select_count-19 | sql_select_rows-20 |
-      | 2       | test   | 172.100.9.6    | 3307           | dn2             | hostM2        | 3          | 4         | 1                   | 1                  | 1                   | 1                  | 1                   | 1                  | 1                   | 1                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn1             | hostM1        | 3          | 3         | 0                   | 0                  | 0                   | 0                  | 2                   | 2                  | 1                   | 1                  |
-      | 2       | test   | 172.100.9.6    | 3307           | dn4             | hostM2        | 2          | 2         | 0                   | 0                  | 0                   | 0                  | 1                   | 1                  | 1                   | 1                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn3             | hostM1        | 2          | 2         | 0                   | 0                  | 0                   | 0                  | 1                   | 1                  | 1                   | 1                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn2             | hostM2        | 3          | 4         | 1                   | 1                  | 1                   | 1                  | 1                   | 1                  | 1                   | 1                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 3          | 3         | 0                   | 0                  | 0                   | 0                  | 2                   | 2                  | 1                   | 1                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 2          | 2         | 0                   | 0                  | 0                   | 0                  | 1                   | 1                  | 1                   | 1                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn3             | hostM1        | 2          | 2         | 0                   | 0                  | 0                   | 0                  | 1                   | 1                  | 1                   | 1                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_21"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -1203,10 +1203,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_11" has lines with following column values
       | entry-0 | user-1 | backend_host-3 | backend_port-4 | sharding_node-5 | db_instance-6 | tx_count-7 | tx_rows-8 | sql_insert_count-10 | sql_insert_rows-11 | sql_update_count-13 | sql_update_rows-14 | sql_delete_count-16 | sql_delete_rows-17 | sql_select_count-19 | sql_select_rows-20 |
-      | 2       | test   | 172.100.9.6    | 3307           | dn2             | hostM2        | 5          | 5         | 2                   | 2                  | 0                   | 0                  | 1                   | 1                  | 2                   | 2                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn1             | hostM1        | 5          | 5         | 2                   | 2                  | 1                   | 1                  | 0                   | 0                  | 2                   | 2                  |
-      | 2       | test   | 172.100.9.6    | 3307           | dn4             | hostM2        | 5          | 5         | 2                   | 2                  | 1                   | 1                  | 0                   | 0                  | 2                   | 2                  |
-      | 2       | test   | 172.100.9.5    | 3307           | dn3             | hostM1        | 5          | 5         | 2                   | 2                  | 0                   | 0                  | 1                   | 1                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn2             | hostM2        | 5          | 5         | 2                   | 2                  | 0                   | 0                  | 1                   | 1                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 5          | 5         | 2                   | 2                  | 1                   | 1                  | 0                   | 0                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 5          | 5         | 2                   | 2                  | 1                   | 1                  | 0                   | 0                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn3             | hostM1        | 5          | 5         | 2                   | 2                  | 0                   | 0                  | 1                   | 1                  | 2                   | 2                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_21"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -1277,8 +1277,8 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM3" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-      <dbInstance name="hostS3" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+      <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+      <dbInstance name="hostS3" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -1341,7 +1341,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | True    | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_11" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 2       | test   | 172.100.9.5    | 3307           | dn5             | hostM1        | 3          | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 2                   | 1                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn5             | hostM1        | 3          | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 2                   | 1                  |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_21"
       | conn   | toClose | sql                                                                 | db               |
@@ -1382,7 +1382,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | True    | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_12" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 2       | test   | 172.100.9.5    | 3307           | dn5             | hostM1        | 4          | 0         | 1                  | 0                 | 1                   | 0                  | 1                   | 0                  | 1                   | 0                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn5             | hostM1        | 4          | 0         | 1                  | 0                 | 1                   | 0                  | 1                   | 0                  | 1                   | 0                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_22"
       | conn   | toClose | sql                                                                 | db               |
       | conn_0 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -1449,7 +1449,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | True    | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_13" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 2       | test   | 172.100.9.5    | 3307           | dn1             | hostM1        | 1          | 0         | 0                  | 0                 | 1                   | 0                  | 0                   | 0                  | 0                   | 0                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 1          | 0         | 0                  | 0                 | 1                   | 0                  | 0                   | 0                  | 0                   | 0                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_23"
       | conn   | toClose | sql                                                                 | db               |
       | conn_0 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -1506,7 +1506,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | True    | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_14" has lines with following column values
       | entry-0 | user-1   | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 4       | split1   | 172.100.9.10   | 3307           |  -              | hostM3        | 6          | 0         | 0                  | 0                 | 0                   | 0                  | 1                   | 0                  | 4                   | 0                  |
+      | 4       | split1   | 172.100.9.4    | 3306           |  -              | hostM3        | 6          | 0         | 0                  | 0                 | 0                   | 0                  | 1                   | 0                  | 4                   | 0                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_24"
       | conn   | toClose | sql                                                                 | db               |
       | conn_0 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |

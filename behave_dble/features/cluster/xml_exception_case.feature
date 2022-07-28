@@ -21,15 +21,15 @@ Feature: test xml
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true"/>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10"/>
-        <dbInstance name="hostS2" password="111111" url="172.100.9.3:3307" user="test" maxCon="1000" minCon="10"/>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10"/>
+        <dbInstance name="hostS2" password="111111" url="172.100.9.6:3308" user="test" maxCon="1000" minCon="10"/>
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -57,5 +57,6 @@ Feature: test xml
       | conn    | toClose | sql                                  | expect       | db      |
       | conn_1  | false   | drop table if exists test            | success      | schema1 |
       | conn_1  | false   | create table test (id int)           | success      | schema1 |
-      | conn_1  | false   | create view view_test as select * from test             | success      | schema1 |
-      | conn_1  | true    | select * from view_test                                 | success      | schema1 |
+      | conn_1  | false   | create view view_test as select * from test         | success | schema1 |
+      | conn_1  | false   | select * from view_test              | success      | schema1 |
+      | conn_1  | true    | drop view if exists view_test        | success      | schema1 |

@@ -694,7 +694,9 @@ Feature: general log test
       /\*!dble:shardingNode=dn1\*/ delete from sharding_4_t1 where id=66
       Quit
       """
+
     Given delete file "/opt/dble/general/general.log" on "dble-1"
+
 
   Scenario: check general log records - rwSplitUser #8
     Given delete file "/opt/dble/general/general.log" on "dble-1"
@@ -702,8 +704,8 @@ Feature: general log test
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"

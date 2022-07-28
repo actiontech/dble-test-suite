@@ -4,6 +4,7 @@
 # @Time    : 2020/4/1 PM1:53
 # @Author  : irene-coming
 from steps.lib.SSHUtil import SSHClient, SFTPClient
+from paramiko.ssh_exception import NoValidConnectionsError
 
 class ServerMeta(object):
     def __init__(self, config_dic):
@@ -35,9 +36,12 @@ class ServerMeta(object):
     def ssh_conn(self):
         if self._ssh_conn is None:
             self._ssh_conn = SSHClient(self.ip, self.ssh_user, self.ssh_password)
-            self._ssh_conn.connect()
+            try:
+                self._ssh_conn.connect()
+                assert self._ssh_conn is not None, "get ssh to {0} fail".format(self._ip)
+            except NoValidConnectionsError as e:
+                pass
 
-            assert self._ssh_conn is not None, "get ssh to {0} fail".format(self._ip)
         return self._ssh_conn
 
     @ssh_conn.setter

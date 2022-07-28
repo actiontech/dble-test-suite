@@ -397,8 +397,8 @@ sql_log_by_tx_digest_by_entry_by_user
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     #1 more than one rwSplitUsers can use the same dbGroup
@@ -481,8 +481,8 @@ sql_log_by_tx_digest_by_entry_by_user
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -612,7 +612,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(0)}  | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information |
 
-
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  | db      |
       | conn_1 | False   | drop view if exists view_test                    | success | schema1 |
@@ -620,7 +619,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | select * from view_test                          | success | schema1 |
       | conn_1 | False   | drop view view_test                              | success | schema1 |
       | conn_1 | False   | truncate  test1                                  | success | schema1 |
-
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
@@ -693,8 +691,8 @@ sql_log_by_tx_digest_by_entry_by_user
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     #1 more than one rwSplitUsers can use the same dbGroup
@@ -1527,8 +1525,8 @@ sql_log_by_tx_digest_by_entry_by_user
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     #1 more than one rwSplitUsers can use the same dbGroup
@@ -2118,8 +2116,8 @@ sql_log_by_tx_digest_by_entry_by_user
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM3" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-      <dbInstance name="hostS3" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+      <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+      <dbInstance name="hostS3" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -2522,8 +2520,8 @@ sql_log_by_tx_digest_by_entry_by_user
       """
       <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS3" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+        <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS3" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
       </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"

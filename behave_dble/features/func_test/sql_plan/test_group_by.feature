@@ -3,15 +3,15 @@
 # Created by wujinling at 2020/12/21
 
 Feature: test group by
-  @NORMAL
+  @use.with_mysql_version=5.7
   Scenario: the version of all backend mysql nodes are 5.7.* #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
           """
            <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
               <heartbeat>select user()</heartbeat>
-              <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
+              <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
               </dbInstance>
-              <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10" primary="false"/>
+              <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false"/>
            </dbGroup>
           """
     Then execute admin cmd "reload @@config_all"
@@ -106,23 +106,8 @@ Feature: test group by
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                    |
       | dn2 | BASE SQL | select name from sharding_2_t1 group by name |
 
-  @NORMAL
-  Scenario: Scenario: the version of all backend mysql nodes are 8.0.* #2
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-      <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
-      </dbInstance>
-      </dbGroup>
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-      <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
-      </dbInstance>
-      <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="false"/>
-    </dbGroup>
-    """
-    Then execute admin cmd "reload @@config_all"
+  @use.with_mysql_version=8.0
+  Scenario: the version of all backend mysql nodes are 8.0.* #2
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                                                                                   | expect                                          | db      |
       | conn_0 | False    | drop table if exists sharding_4_t1                                                                                                | success                                         | schema1 |
@@ -214,8 +199,8 @@ Feature: test group by
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                    |
       | dn2 | BASE SQL | select name from sharding_2_t1 group by name |
 
-  @NORMAL
-  Scenario: Scenario: the version of all backend mysql nodes are mixed with 5.7.* and 8.0.* #3
+  @skip
+  Scenario: the version of all backend mysql nodes are mixed with 5.7.* and 8.0.* #3
         Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -225,9 +210,9 @@ Feature: test group by
       </dbGroup>
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
+      <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
       </dbInstance>
-      <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"

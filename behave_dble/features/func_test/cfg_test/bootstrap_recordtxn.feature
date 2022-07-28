@@ -3,6 +3,7 @@
 # Created by wangjuan at 2021/7/14
 
 Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
+    #about http://10.186.18.11/jira/browse/DBLE0REQ-853
 
   Scenario: check recordTxn #1
     Given delete file "/opt/dble/txlogs/server-tx.log" on "dble-1"

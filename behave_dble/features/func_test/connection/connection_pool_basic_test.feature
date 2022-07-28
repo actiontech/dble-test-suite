@@ -34,7 +34,7 @@ Feature: connection pool basic test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="10" minCon="4" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="10" minCon="4" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="timeBetweenEvictionRunsMillis">180000</property>
         </dbInstance>
@@ -90,14 +90,14 @@ Feature: connection pool basic test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
              <property name="idleTimeout">5000</property>
         </dbInstance>
     </dbGroup>
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
              <property name="idleTimeout">5000</property>
         </dbInstance>
     </dbGroup>
@@ -120,7 +120,7 @@ Feature: connection pool basic test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="100" minCon="10" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="10" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="timeBetweenEvictionRunsMillis">5000</property>
         </dbInstance>
@@ -147,7 +147,7 @@ Feature: connection pool basic test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="100" minCon="10" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="10" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="timeBetweenEvictionRunsMillis">5000</property>
         </dbInstance>
@@ -180,7 +180,7 @@ Feature: connection pool basic test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="20" minCon="4" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="4" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="idleTimeout">3000</property>
              <property name="timeBetweenEvictionRunsMillis">5000</property>
@@ -189,7 +189,7 @@ Feature: connection pool basic test
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="20" minCon="4" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="20" minCon="4" primary="true">
              <property name="idleTimeout">3000</property>
         </dbInstance>
     </dbGroup>
@@ -231,7 +231,7 @@ Feature: connection pool basic test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="20" minCon="6" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="6" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="idleTimeout">5000</property>
              <property name="timeBetweenEvictionRunsMillis">5000</property>
@@ -240,7 +240,7 @@ Feature: connection pool basic test
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="20" minCon="6" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="20" minCon="6" primary="true">
              <property name="idleTimeout">5000</property>
         </dbInstance>
     </dbGroup>
@@ -278,7 +278,7 @@ Feature: connection pool basic test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="20" minCon="6" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="6" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="idleTimeout">1000</property>
              <property name="timeBetweenEvictionRunsMillis">5000</property>
@@ -287,7 +287,7 @@ Feature: connection pool basic test
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="20" minCon="6" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="20" minCon="6" primary="true">
              <property name="idleTimeout">1000</property>
         </dbInstance>
     </dbGroup>
@@ -326,7 +326,7 @@ Feature: connection pool basic test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="20" minCon="6" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="6" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="idleTimeout">60000</property>
              <property name="timeBetweenEvictionRunsMillis">3000</property>
@@ -374,7 +374,7 @@ Feature: connection pool basic test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="20" minCon="4" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="4" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="idleTimeout">1000</property>
              <property name="timeBetweenEvictionRunsMillis">30000</property>
@@ -426,7 +426,7 @@ Feature: connection pool basic test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="20" minCon="4" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="4" primary="true">
              <property name="idleTimeout">-1</property>
              <property name="timeBetweenEvictionRunsMillis">0</property>
              <property name="evictorShutdownTimeoutMillis">-5000000000000000000000</property>
@@ -442,7 +442,7 @@ Feature: connection pool basic test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="20" minCon="4" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="4" primary="true">
              <property name="idleTimeout">abc</property>
              <property name="timeBetweenEvictionRunsMillis">2$</property>
              <property name="evictorShutdownTimeoutMillis">%3a</property>

@@ -232,3 +232,38 @@ def step_impl(context, host_name, num, concur="100", mode_name="user"):
 
         if Flag.exception:
             raise Flag.exception
+
+
+@Then('execute "{mode_name}" sql for "{seconds}" seconds in "{host_name}"')
+def step_impl(context, mode_name, seconds, host_name):
+    execute_seconds = int(seconds)
+    current_time_before_execute = int(time.time())
+    while True:
+        current_time_in_execute = int(time.time())
+        if current_time_in_execute - current_time_before_execute < execute_seconds:
+            for row in context.table:
+                execute_sql_in_host(host_name, row.as_dict(), mode_name)
+        else:
+            break
+    context.logger.info("execute sql for {0} seconds in {1} complete".format(seconds, host_name))
+
+
+# delete backend mysql tables from db1 ~ db4
+# slave mysql table do not need to delete for reason master mysql table has been deleted
+@Given('delete all backend mysql tables')
+def delete_all_mysql_tables(context):
+    mysql_install_all = ["mysql", "mysql-master1", "mysql-master2", "mysql-master3"]
+    databases = ["db1", "db2", "db3", "db4"]
+    for mysql_hostname in mysql_install_all:
+        for db in databases:
+            generate_drop_tables_sql = "select concat('drop table if exists ',table_schema,'.',table_name,';') from information_schema.TABLES where table_schema='{0}'".format(
+                db)
+            res1, err1 = execute_sql_in_host(mysql_hostname, {"sql": generate_drop_tables_sql}, "mysql")
+            assert err1 is None, "general drop table sql failed: {}".format(err1)
+            if len(res1) != 0:
+                for sql_element in res1:
+                    drop_table_sql = sql_element[0]
+                    res2, err2 = execute_sql_in_host(mysql_hostname, {"sql": drop_table_sql}, "mysql")
+                    assert err2 is None, "execute drop table sql failed: {}".format(err2)
+        logger.debug("{0} tables has been delete success".format(mysql_hostname))
+    logger.info("all required tables has been delete success")

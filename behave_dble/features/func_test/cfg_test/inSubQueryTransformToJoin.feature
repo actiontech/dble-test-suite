@@ -3,8 +3,9 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wangjuan at 2021/7/28
 
-# DBLE0REQ-1055
 Feature: test inSubQueryTransformToJoin in bootstrap.cnf
+  #1 & #2 & #3 add for DBLE0REQ-1055
+  #4 & #5 add for DBLE0REQ-1474
 
   Scenario: check inSubQueryTransformToJoin in bootstrap.cnf - illegal values #1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds

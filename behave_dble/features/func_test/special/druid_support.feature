@@ -44,25 +44,8 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
     mysql -P8066 -utest -h172.100.9.1 -Dschema1 -e "create table test(id int, name varchar(20)) ENGINE=PERFORMANCE_SCHEMA"
     """
 
-
+  @use.with_mysql_version=8.0
   Scenario: check [CONSTRAINT [symbol]] CHECK (expr) [[NOT] ENFORCED] - mysql8.0 #2
-    Given delete the following xml segment
-      | file          | parent           | child                   |
-      | db.xml        | {'tag':'root'}   | {'tag':'dbGroup'}       |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-     </dbGroup>
-     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-     </dbGroup>
-     """
-    Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                            | expect                                               | db      |
       | conn_1 | False   | drop table if exists sharding_4_t1                             | success                                              | schema1 |
@@ -83,24 +66,8 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
       | conn_1 | False   | drop table if exists sharding_4_t1                             | success                                              | schema1 |
       | conn_1 | True    | drop table if exists no_sharding_t1                            | success                                              | schema1 |
 
-
+  @use.with_mysql_version=8.0
   Scenario: check select FOR SHARE/SKIP LOCKED - mysql8.0 #3
-    Given delete the following xml segment
-      | file          | parent           | child                   |
-      | db.xml        | {'tag':'root'}   | {'tag':'dbGroup'}       |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-     </dbGroup>
-     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-     </dbGroup>
-     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
@@ -189,24 +156,8 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
       | conn_2 | True    | drop table if exists sharding_4_t1                        | success | schema1 |
       | conn_1 | True    | drop table if exists single_t1                            | success | schema1 |
 
-
-  Scenario: complex query #4
-    Given delete the following xml segment
-      | file          | parent           | child                   |
-      | db.xml        | {'tag':'root'}   | {'tag':'dbGroup'}       |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-     </dbGroup>
-     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-     </dbGroup>
-     """
+  @use.with_mysql_version=8.0
+  Scenario: complex query  - mysql8.0 #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">

@@ -212,15 +212,15 @@ def step_impl(context, filename):
     assert len(stderr)==0, "rm file in dble fail for {0}".format(stderr)
 
     # remove file in compare mysql
-    dble_node_ssh = get_ssh(context.cfg_mysql['compare_mysql']['master1']['hostname'])
-    rc, stdout, stderr = dble_node_ssh.exec_command(cmd)
+    dble_node_ssh = get_ssh(context.cfg_mysql['compare_mysql']['inst-1']['hostname'])
+    rc, _, stderr = dble_node_ssh.exec_command(cmd)
     assert len(stderr)==0, "rm file in compare mysql fail for {0}".format(stderr)
 
 @Given ('delete file "{filename}" on "{hostname}"')
 def step_impl(context,filename,hostname):
     cmd = "rm -rf {0}".format(filename)
     ssh = get_ssh(hostname)
-    rc, stdout, stderr = ssh.exec_command(cmd)
+    _, _, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr)==0 ,"get err {0} with deleting {1}".format(stderr,filename))
 
 
@@ -239,7 +239,8 @@ def step_impl(context,hostname,num=None,rs_name=None):
 
     rc, stdout, stderr = ssh.exec_command(cmd)
     stderr =  stderr.lower()
-    assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)
+    # assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)
+    assert_that(rc, equal_to(0), stderr)
     if num is not None:
         assert int(stdout) >= int(num), "expect {0} less than result {1} ,but not ".format(num, int(stdout))
 
@@ -512,7 +513,7 @@ def step_impl(context,result,value):
 
 @Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql')
 @Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql after "{oscmd}"')
-def step_impl(context,host1,role,host2,oscmd="cd /root/sandboxes/msb_5_7_25/data"):
+def step_impl(context,host1,role,host2,oscmd="cd /root/sandboxes/sandbox/data"):
     user = ''
     password = ''
     port = ''
@@ -534,8 +535,12 @@ def step_impl(context,host1,role,host2,oscmd="cd /root/sandboxes/msb_5_7_25/data
     ip = node.ip
 
     ssh = get_ssh(host2)
-    if host2.startswith('mysql8'):
-        oscmd = "cd /root/sandboxes/msb_8_0_18/data"
+    if host2.startswith('mysql'):
+        node_=get_node(host2)
+        install_path = node_.install_path
+        oscmd = f"cd {install_path}/data"
+    # if host2.startswith('mysql8'):
+        # oscmd = "cd /root/sandboxes/msb_8_0_18/data"
 
     sql_cmd_str = context.text.strip()
     sql_cmd_list = sql_cmd_str.splitlines()

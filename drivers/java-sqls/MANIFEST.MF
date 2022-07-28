@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: com.demo.jdbc.Main
-Class-Path: mysql-connector-java-5.1.39-bin.jar  jsch-0.1.54.jar ini4j-0.5.4.jar
