@@ -108,7 +108,7 @@ Feature: connection leak test
        /synAndDoExecute/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
-    Given sleep "5" seconds
+    Given sleep "3" seconds
     Given prepare a thread execute sql "insert into table_c set id =5,name ="xx"" with "conn_0"
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
       """
