@@ -1,14 +1,6 @@
 #!/bin/bash
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-
-# echo '=======                 restore the running environment              ======='
-# cd ${DIR}/../../behave_dble/compose/docker-build-behave && bash resetReplication.sh
-
-# echo '=======           restart dble with sql_cover_sharding               ======='
-# cd ${DIR}/../../behave_dble && pipenv run behave --stop -D dble_conf=sql_cover_sharding features/setup.feature --tags=@restore_dble_config
-
-
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 echo '=======                       package                                ======='
 cd ${DIR} && /usr/local/apache-maven/bin/mvn -DskipTest clean package assembly:assembly
