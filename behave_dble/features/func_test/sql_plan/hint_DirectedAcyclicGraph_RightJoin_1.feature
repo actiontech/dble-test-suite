@@ -2,7 +2,6 @@
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhangqian at 2022/02/16
-
 Feature: test with joinStrategyType
 
   @delete_mysql_tables @skip #skip about DBLE0REQ-1658

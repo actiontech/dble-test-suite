@@ -151,8 +151,8 @@ Feature:  backend_connections test
      """
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1"/>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10" readWeight="2"/>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1"/>
+        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" readWeight="2"/>
      </dbGroup>
      """
     Then execute admin cmd "reload @@config"
@@ -162,7 +162,7 @@ Feature:  backend_connections test
     Then check resultset "backend_connections_4" has lines with following column values
       | db_group_name-0 | db_instance_name-1 | remote_addr-2 |
       | ha_group2       | hostM2             | 172.100.9.6   |
-      | ha_group2       | hostS1             | 172.100.9.2   |
+      | ha_group2       | hostS1             | 172.100.9.6   |
     Then check resultset "backend_connections_4" has not lines with following column values
       | db_group_name-0 | db_instance_name-1 | remote_addr-2 |
       | ha_group1       | hostM1             | 172.100.9.5   |
@@ -187,7 +187,7 @@ Feature:  backend_connections test
       """
         <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
             <heartbeat>select user()</heartbeat>
-            <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="100" minCon="10" primary="true">
+            <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="10" primary="true">
                  <property name="testWhileIdle">true</property>
                  <property name="timeBetweenEvictionRunsMillis">3000</property>
             </dbInstance>
@@ -222,7 +222,7 @@ Feature:  backend_connections test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="20" minCon="4" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="4" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="idleTimeout">3000</property>
              <property name="timeBetweenEvictionRunsMillis">5000</property>
@@ -231,7 +231,7 @@ Feature:  backend_connections test
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="20" minCon="4" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="20" minCon="4" primary="true">
              <property name="idleTimeout">3000</property>
         </dbInstance>
     </dbGroup>

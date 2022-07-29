@@ -22,8 +22,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -225,8 +225,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -465,8 +465,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -695,8 +695,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="3" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -935,8 +935,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -977,8 +977,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="3" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -1012,8 +1012,8 @@ Feature: test rwStickyTime on rwSplit mode
     """
       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -1050,7 +1050,7 @@ Feature: test rwStickyTime on rwSplit mode
       | rwS1 | 111111 | conn_0 | False   | select SQL_SMALL_RESULT count(*),age from testtb group by age | success | testdb |
       | rwS1 | 111111 | conn_0 | true    | select id from testtb where age = 38                          | success | testdb |
 
-    Then check following text exist "Y" in file "/root/sandboxes/msb_5_7_25/data/mysql-master2.log" in host "mysql-master2"
+    Then check following text exist "Y" in file "/root/sandboxes/sandbox/master/data/mysql-2.log" in host "mysql-master2"
        """
        drop database if exists testdb
        create database testdb
@@ -1066,19 +1066,19 @@ Feature: test rwStickyTime on rwSplit mode
        select count(\*) from testtb where 1=1
        show tables
        """
-    Then check following text exist "N" in file "/root/sandboxes/msb_5_7_25/data/mysql-master2.log" in host "mysql-master2"
+    Then check following text exist "N" in file "/root/sandboxes/sandbox/master/data/mysql-2.log" in host "mysql-master2"
        """
        select id from testtb where age = 28
        select id from testtb where age = 38
        select SQL_SMALL_RESULT count(\*),age from testtb group by age
        """
-    Then check following text exist "Y" in file "/root/sandboxes/msb_5_7_25/data/dble-2.log" in host "mysql-slave1"
+    Then check following text exist "Y" in file "/root/sandboxes/sandbox/node1/data/mysql-2.log" in host "mysql-slave1"
        """
        select id from testtb where age = 28
        select id from testtb where age = 38
        select SQL_SMALL_RESULT count(\*),age from testtb group by age
        """
-    Then check following text exist "N" in file "/root/sandboxes/msb_5_7_25/data/dble-2.log" in host "mysql-slave1"
+    Then check following text exist "N" in file "/root/sandboxes/sandbox/node1/data/mysql-2.log" in host "mysql-slave1"
        """
        select id from testtb where age = 18
        show tables
@@ -1099,7 +1099,7 @@ Feature: test rwStickyTime on rwSplit mode
       | rwS1 | 111111 | conn_0 | False   | select sleep(6)                           | success | testdb |
       | rwS1 | 111111 | conn_0 | true    | select sum(age) from testtb               | success | testdb |
 
-    Then check following text exist "Y" in file "/root/sandboxes/msb_5_7_25/data/mysql-master2.log" in host "mysql-master2"
+    Then check following text exist "Y" in file "/root/sandboxes/sandbox/master/data/mysql-2.log" in host "mysql-master2"
        """
        begin
        update testtb set id = 43 where age = 21
@@ -1109,15 +1109,15 @@ Feature: test rwStickyTime on rwSplit mode
        select id from testtb order by id limit 3
        select last_insert_id()
        """
-    Then check following text exist "N" in file "/root/sandboxes/msb_5_7_25/data/mysql-master2.log" in host "mysql-master2"
+    Then check following text exist "N" in file "/root/sandboxes/sandbox/master/data/mysql-2.log" in host "mysql-master2"
        """
        select sum(age) from testtb
        """
-    Then check following text exist "Y" in file "/root/sandboxes/msb_5_7_25/data/dble-2.log" in host "mysql-slave1"
+    Then check following text exist "Y" in file "/root/sandboxes/sandbox/node1/data/mysql-2.log" in host "mysql-slave1"
        """
        select sum(age) from testtb
        """
-    Then check following text exist "N" in file "/root/sandboxes/msb_5_7_25/data/dble-2.log" in host "mysql-slave1"
+    Then check following text exist "N" in file "/root/sandboxes/sandbox/node1/data/mysql-2.log" in host "mysql-slave1"
        """
        update testtb set id = 43 where age = 21
        select sleep(6)

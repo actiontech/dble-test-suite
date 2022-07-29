@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2020/12/11
 
-
+@skip
 Feature: test "ha" in zk cluster
   ######case points:
   #  1.ClusterEnable=true && useOuterHa=true && needSyncHa=true,check "dbgroup"
@@ -36,9 +36,9 @@ Feature: test "ha" in zk cluster
       """
          <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
             <heartbeat>select user()</heartbeat>
-             <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true"/>
-             <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10" />
-             <dbInstance name="hostS2" password="111111" url="172.100.9.3:3307" user="test" maxCon="1000" minCon="10" />
+             <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
+             <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" />
+             <dbInstance name="hostS2" password="111111" url="172.100.9.6:3308" user="test" maxCon="1000" minCon="10" />
          </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -122,10 +122,10 @@ Feature: test "ha" in zk cluster
       | show @@dbinstance |
     Then check resultset "Res_A" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 1000   | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | 1000   | false       |
-      | ha_group2  | hostS1 | 172.100.9.2 | 3307   | R     | 0        | 1000   | false       |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3307   | R     | 0        | 1000   | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | W     | 0        | 1000   | false       |
+      | ha_group2  | hostS1 | 172.100.9.6 | 3307   | R     | 0        | 1000   | false       |
+      | ha_group2  | hostS2 | 172.100.9.6 | 3308   | R     | 0        | 1000   | false       |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_B"
       | sql               |
       | show @@dbinstance |
@@ -156,46 +156,46 @@ Feature: test "ha" in zk cluster
     #case check disable change to "true"
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_D"
       | sql               |
       | show @@dbinstance |
     Then check resultset "Res_D" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 1000   | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | false       |
       | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | 1000   | true        |
       | ha_group2  | hostS1 | 172.100.9.2 | 3307   | R     | 0        | 1000   | true        |
       | ha_group2  | hostS2 | 172.100.9.3 | 3307   | R     | 0        | 1000   | true        |
@@ -234,7 +234,7 @@ Feature: test "ha" in zk cluster
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
-      the dbInstance\[172.100.9.6:3307\] is disable. Please check the dbInstance disable status
+      the dbInstance\[172.100.9.6:3306\] is disable. Please check the dbInstance disable status
       """
     Given delete file "/tmp/dble_user_query.log" on "dble-1"
     Given execute sqls in "dble-1" at background
@@ -243,7 +243,7 @@ Feature: test "ha" in zk cluster
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
-      the dbInstance\[172.100.9.6:3307\] is disable. Please check the dbInstance disable status
+      the dbInstance\[172.100.9.6:3306\] is disable. Please check the dbInstance disable status
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect                                                                                                | db      |
@@ -258,32 +258,32 @@ Feature: test "ha" in zk cluster
       | conn_2  | False   | insert into sharding2 values (1,1)       | success                                                                                  | schema1 |
       | conn_2  | False   | insert into sharding2 values (2,2)       | success                                                                                  | schema1 |
       | conn_2  | False   | select * from sharding2                  | length{(2)}                                                                              | schema1 |
-      | conn_2  | False   | insert into sharding4 values (1,1)       | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema1 |
-      | conn_2  | False   | insert into sharding4 values (3,3)       | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema1 |
+      | conn_2  | False   | insert into sharding4 values (1,1)       | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status  | schema1 |
+      | conn_2  | False   | insert into sharding4 values (3,3)       | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status  | schema1 |
       | conn_2  | False   | insert into sharding4 values (2,2)       | success                                                                                  | schema1 |
       | conn_2  | False   | insert into sharding4 values (4,4)       | success                                                                                  | schema1 |
-      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema1 |
+      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status  | schema1 |
       | conn_2  | False   | select * from sharding4                  | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema1 |
       | conn_2  | False   | select * from sharding4 where id=2       | length{(1)}                                                                              | schema1 |
       | conn_2  | False   | select * from sharding4 where id=1       | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema1 |
       | conn_2  | False   | insert into child1 values (1,1)          | success                                                                                  | schema1 |
       | conn_2  | False   | insert into child1 values (2,2)          | success                                                                                  | schema1 |
       | conn_2  | true    | select * from child1                     | length{(2)}                                                                              | schema1 |
-      | conn_21 | False   | insert into sharding21 values (1,1)      | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema3 |
-      | conn_21 | False   | insert into sharding21 values (2,2)      | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema3 |
+      | conn_21 | False   | insert into sharding21 values (1,1)      | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status  | schema3 |
+      | conn_21 | False   | insert into sharding21 values (2,2)      | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status  | schema3 |
       | conn_21 | true    | select * from sharding21                 | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema3 |
     Then execute sql in "dble-3" in "user" mode
       | conn    | toClose | sql                                   | expect                                                                                   | db      |
       | conn_3  | False   | insert into sing1 values (1)          | success                                                                                  | schema1 |
       | conn_3  | False   | select * from sing1                   | length{(1)}                                                                              | schema1 |
-      | conn_3  | False   | insert into sing2 values (1)          | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema1 |
+      | conn_3  | False   | insert into sing2 values (1)          | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status  | schema1 |
       | conn_3  | False   | select * from sing2                   | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema1 |
       | conn_3  | False   | insert into no_sharding1 values (1,1) | success                                                                                  | schema1 |
       | conn_3  | true    | select * from no_sharding1            | length{(1)}                                                                              | schema1 |
-      | conn_31 | False   | insert into no_sharding2 values (1,1) | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema3 |
+      | conn_31 | False   | insert into no_sharding2 values (1,1) | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status  | schema3 |
       | conn_31 | true    | select * from no_sharding2            | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema3 |
       | conn_32 | False   | show tables                           | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema2 |
-      | conn_32 | False   | insert into vertical1 values (1)      | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema2 |
+      | conn_32 | False   | insert into vertical1 values (1)      | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status  | schema2 |
       | conn_32 | true    | select * from  vertical1              | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema2 |
     #case change master to slave1 on mysql group
     Given execute linux command in "behave"
@@ -295,36 +295,36 @@ Feature: test "ha" in zk cluster
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS1'"
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_1"
       | sql               |
@@ -368,39 +368,39 @@ Feature: test "ha" in zk cluster
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_4"
       | sql               |
@@ -502,33 +502,33 @@ Feature: test "ha" in zk cluster
     Then execute admin cmd "dbGroup @@disable name = 'ha_group2' instance = 'hostS1'"
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_D"
       | sql               |
@@ -565,7 +565,7 @@ Feature: test "ha" in zk cluster
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
-      the dbInstance\[172.100.9.2:3307\] is disable. Please check the dbInstance disable status
+      the dbInstance\[172.100.9.6:3307\] is disable. Please check the dbInstance disable status
       """
     Given delete file "/tmp/dble_user_query.log" on "dble-1"
     Given execute sqls in "dble-1" at background
@@ -574,7 +574,7 @@ Feature: test "ha" in zk cluster
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
-      the dbInstance\[172.100.9.2:3307\] is disable. Please check the dbInstance disable status
+      the dbInstance\[172.100.9.6:3307\] is disable. Please check the dbInstance disable status
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect      | db      |
@@ -587,32 +587,32 @@ Feature: test "ha" in zk cluster
       | conn_2  | False   | insert into sharding2 values (1,1)       | success                                                                                  | schema1 |
       | conn_2  | False   | insert into sharding2 values (2,2)       | success                                                                                  | schema1 |
       | conn_2  | False   | select * from sharding2                  | length{(6)}                                                                              | schema1 |
-      | conn_2  | False   | insert into sharding4 values (1,1)       | the dbInstance[172.100.9.2:3307] is disable. Please check the dbInstance disable status  | schema1 |
-      | conn_2  | False   | insert into sharding4 values (3,3)       | the dbInstance[172.100.9.2:3307] is disable. Please check the dbInstance disable status  | schema1 |
+      | conn_2  | False   | insert into sharding4 values (1,1)       | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema1 |
+      | conn_2  | False   | insert into sharding4 values (3,3)       | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema1 |
       | conn_2  | False   | insert into sharding4 values (2,2)       | success                                                                                  | schema1 |
       | conn_2  | False   | insert into sharding4 values (4,4)       | success                                                                                  | schema1 |
-      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | the dbInstance[172.100.9.2:3307] is disable. Please check the dbInstance disable status  | schema1 |
+      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema1 |
       | conn_2  | False   | select * from sharding4                  | length{(8)}                                                                              | schema1 |
       | conn_2  | False   | select * from sharding4 where id=2       | length{(3)}                                                                              | schema1 |
       | conn_2  | False   | select * from sharding4 where id=1       | length{(1)}                                                                              | schema1 |
       | conn_2  | False   | insert into child1 values (1,1)          | success                                                                                  | schema1 |
       | conn_2  | False   | insert into child1 values (2,2)          | success                                                                                  | schema1 |
       | conn_2  | true    | select * from child1                     | length{(5)}                                                                              | schema1 |
-      | conn_21 | False   | insert into sharding21 values (1,1)      | the dbInstance[172.100.9.2:3307] is disable. Please check the dbInstance disable status  | schema3 |
-      | conn_21 | False   | insert into sharding21 values (2,2)      | the dbInstance[172.100.9.2:3307] is disable. Please check the dbInstance disable status  | schema3 |
+      | conn_21 | False   | insert into sharding21 values (1,1)      | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema3 |
+      | conn_21 | False   | insert into sharding21 values (2,2)      | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema3 |
       | conn_21 | true    | select * from sharding21                 | length{(2)}                                                                              | schema3 |
     Then execute sql in "dble-3" in "user" mode
       | conn    | toClose | sql                                   | expect                                                                                   | db      |
       | conn_3  | False   | insert into sing1 values (1)          | success                                                                                  | schema1 |
       | conn_3  | False   | select * from sing1                   | length{(3)}                                                                              | schema1 |
-      | conn_3  | False   | insert into sing2 values (1)          | the dbInstance[172.100.9.2:3307] is disable. Please check the dbInstance disable status  | schema1 |
+      | conn_3  | False   | insert into sing2 values (1)          | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema1 |
       | conn_3  | False   | select * from sing2                   | length{(1)}                                                                              | schema1 |
       | conn_3  | False   | insert into no_sharding1 values (1,1) | success                                                                                  | schema1 |
       | conn_3  | true    | select * from no_sharding1            | length{(3)}                                                                              | schema1 |
-      | conn_31 | False   | insert into no_sharding2 values (1,1) | the dbInstance[172.100.9.2:3307] is disable. Please check the dbInstance disable status  | schema3 |
+      | conn_31 | False   | insert into no_sharding2 values (1,1) | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema3 |
       | conn_31 | true    | select * from no_sharding2            | length{(1)}                                                                              | schema3 |
       | conn_32 | False   | show tables                           | success                                                                                  | schema2 |
-      | conn_32 | False   | insert into vertical1 values (1)      | the dbInstance[172.100.9.2:3307] is disable. Please check the dbInstance disable status  | schema2 |
+      | conn_32 | False   | insert into vertical1 values (1)      | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema2 |
       | conn_32 | true    | select * from  vertical1              | length{(1)}                                                                              | schema2 |
     #case change master to slave2 on mysql group
     Given execute linux command in "behave"
@@ -625,36 +625,36 @@ Feature: test "ha" in zk cluster
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_1"
       | sql               |
@@ -699,33 +699,33 @@ Feature: test "ha" in zk cluster
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"hostS2\" url=\"172.100.9.3:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
+      <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name=\"hostS1\" url=\"172.100.9.2:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
+      <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
       """
     Given execute single sql in "dble-3" in "admin" mode and save resultset in "Res_5"
       | sql               |

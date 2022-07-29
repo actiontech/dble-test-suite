@@ -86,10 +86,10 @@ Feature: test mysql one node down
     """
     Given stop mysql in host "mysql-master1"
     Given sleep "15" seconds
-     # ERROR 3009 (HY000) at line 1: java.io.IOException: the dbInstance[172.100.9.5:3307] can't reach. Please check the dbInstance is accessible
+     # ERROR 3009 (HY000) at line 1: java.io.IOException: the dbInstance[172.100.9.5:3306] can't reach. Please check the dbInstance is accessible
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
-      the dbInstance\[172.100.9.5:3307\] can
+      the dbInstance\[172.100.9.5:3306\] can
       t reach. Please check the dbInstance is accessible
       """
     Given stop btrace script "BtraceAddMetaLock.java" in "dble-1"
@@ -118,10 +118,10 @@ Feature: test mysql one node down
     """
     Given stop mysql in host "mysql-master1"
     Given sleep "15" seconds
-     # ERROR 3009 (HY000) at line 1: java.io.IOException: the dbInstance[172.100.9.5:3307] can't reach. Please check the dbInstance is accessible
+     # ERROR 3009 (HY000) at line 1: java.io.IOException: the dbInstance[172.100.9.5:3306] can't reach. Please check the dbInstance is accessible
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
-      the dbInstance\[172.100.9.5:3307\] can
+      the dbInstance\[172.100.9.5:3306\] can
       t reach. Please check the dbInstance is accessible
       """
     Given stop btrace script "BtraceAddMetaLock.java" in "dble-1"
@@ -198,7 +198,7 @@ Feature: test mysql one node down
     Given sleep "6" seconds
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
-      the dbInstance\[172.100.9.5:3307\] can't reach. Please check the dbInstance is accessible
+      the dbInstance\[172.100.9.5:3306\] can't reach. Please check the dbInstance is accessible
       """
     Given start mysql in host "mysql-master1"
     Given sleep "30" seconds

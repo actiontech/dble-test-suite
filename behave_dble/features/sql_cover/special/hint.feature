@@ -164,9 +164,9 @@ Feature: verify hint sql
     """
     <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" >
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" >
         </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10" readWeight="2">
+        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" readWeight="2">
         </dbInstance>
     </dbGroup>
     """
@@ -258,9 +258,9 @@ Feature: verify hint sql
     """
     <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" >
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" >
         </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10" readWeight="2">
+        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" readWeight="2">
         </dbInstance>
     </dbGroup>
     """
@@ -434,7 +434,6 @@ Feature: verify hint sql
       | conn   | toClose  | sql                                                  | expect           |
       | conn_2 | false    | set global log_bin_trust_function_creators = 1       | success          |
       | conn_2 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'ON'),)}  |
-
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                                                                  | expect                               | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                                                                                                                                                                                                                                                                                                   | success                              | schema1 |

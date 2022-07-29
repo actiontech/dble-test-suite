@@ -133,9 +133,9 @@ Feature: test addition, deletion and modification of dble_information on the man
       """
       {\"dbGroup\":\[
       {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
-      \"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
+      \"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
       {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
-      \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]
+      \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]
       """
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
@@ -169,7 +169,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-  @skip_restart
+  @skip_restart @skip
   Scenario: test the langreage of insert in dble manager   ---- dble_db_instance  #2
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                       | expect      | db               |
@@ -245,24 +245,24 @@ Feature: test addition, deletion and modification of dble_information on the man
     """
     {\"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
-    \"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
+    \"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
-    \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
+    \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
     {\"rwSplitMode\":1,\"name\":\"ha_group3\",\"delayThreshold\":-1,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":60,\"errorRetryCount\":1},
-    \"dbInstance\":\[{\"name\":\"hostM3\",\"url\":\"172.100.9.1:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"usingDecrypt\":\"false\",\"disabled\":\"true\",\"id\":\"hostM3\",\"readWeight\":\"1\",\"primary\":true,
+    \"dbInstance\":\[{\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"usingDecrypt\":\"false\",\"disabled\":\"true\",\"id\":\"hostM3\",\"readWeight\":\"1\",\"primary\":true,
     \"property\":\[{\"value\":\"30000\",\"name\":\"connectionTimeout\"},{\"value\":\"200\",\"name\":\"connectionHeartbeatTimeout\"},{\"value\":\"false\",\"name\":\"testOnCreate\"},
     {\"value\":\"false\",\"name\":\"testOnBorrow\"},{\"value\":\"false\",\"name\":\"testOnReturn\"},{\"value\":\"false\",\"name\":\"testWhileIdle\"},{\"value\":\"1\",\"name\":\"timeBetweenEvictionRunsMillis\"},
     {\"value\":\"1\",\"name\":\"evictorShutdownTimeoutMillis\"},{\"value\":\"1\",\"name\":\"idleTimeout\"},{\"value\":\"1\",\"name\":\"heartbeatPeriodMillis\"},{\"value\":\"4194304\",\"name\":\"flowHighLevel\"},{\"value\":\"262144\",\"name\":\"flowLowLevel\"}\]
-    {\"name\":\"hostS31\",\"url\":\"172.100.9.2:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":10,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"id\":\"hostS31\",\"readWeight\":\"2\",\"primary\":false,
+    {\"name\":\"hostS31\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":10,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"id\":\"hostS31\",\"readWeight\":\"2\",\"primary\":false,
     \"property\":\[{\"value\":\"3\",\"name\":\"connectionTimeout\"},{\"value\":\"1\",\"name\":\"connectionHeartbeatTimeout\"},{\"value\":\"true\",\"name\":\"testOnCreate\"},{\"value\":\"true\",\"name\":\"testOnBorrow\"},
     {\"value\":\"true\",\"name\":\"testOnReturn\"},{\"value\":\"true\",\"name\":\"testWhileIdle\"},{\"value\":\"2\",\"name\":\"timeBetweenEvictionRunsMillis\"},{\"value\":\"2\",\"name\":\"evictorShutdownTimeoutMillis\"},
     {\"value\":\"2\",\"name\":\"idleTimeout\"},{\"value\":\"2\",\"name\":\"heartbeatPeriodMillis\"},{\"value\":\"4194304\",\"name\":\"flowHighLevel\"},{\"value\":\"262144\",\"name\":\"flowLowLevel\"}\]
-    {\"name\":\"hostS32\",\"url\":\"172.100.9.3:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":99,\"minCon\":2,\"usingDecrypt\":\"false\",\"disabled\":\"true\",\"id\":\"hostS32\",\"readWeight\":\"3\",\"primary\":false,
+    {\"name\":\"hostS32\",\"url\":\"172.100.9.6:3308\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":99,\"minCon\":2,\"usingDecrypt\":\"false\",\"disabled\":\"true\",\"id\":\"hostS32\",\"readWeight\":\"3\",\"primary\":false,
     \"property\":\[{\"value\":\"5\",\"name\":\"connectionTimeout\"},{\"value\":\"2\",\"name\":\"connectionHeartbeatTimeout\"},{\"value\":\"false\",\"name\":\"testOnCreate\"},{\"value\":\"false\",\"name\":\"testOnBorrow\"},
     {\"value\":\"false\",\"name\":\"testOnReturn\"},{\"value\":\"false\",\"name\":\"testWhileIdle\"},{\"value\":\"1\",\"name\":\"timeBetweenEvictionRunsMillis\"},{\"value\":\"1\",\"name\":\"evictorShutdownTimeoutMillis\"},
     {\"value\":\"1\",\"name\":\"idleTimeout\"},{\"value\":\"1\",\"name\":\"heartbeatPeriodMillis\"},{\"value\":\"4194304\",\"name\":\"flowHighLevel\"},{\"value\":\"262144\",\"name\":\"flowLowLevel\"}\]
     {\"rwSplitMode\":2,\"name\":\"ha_group4\",\"delayThreshold\":1000,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 2\",\"timeout\":100,\"errorRetryCount\":1},
-    \"dbInstance\":\[{\"name\":\"hostM4\",\"url\":\"172.100.9.5:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":99,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,
+    \"dbInstance\":\[{\"name\":\"hostM4\",\"url\":\"172.100.9.5:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":99,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,
     \"property\":\[{\"value\":\"30000\",\"name\":\"connectionTimeout\"},{\"value\":\"20\",\"name\":\"connectionHeartbeatTimeout\"},{\"value\":\"false\",\"name\":\"testOnCreate\"},{\"value\":\"false\",\"name\":\"testOnBorrow\"},
     {\"value\":\"false\",\"name\":\"testOnReturn\"},{\"value\":\"false\",\"name\":\"testWhileIdle\"},{\"value\":\"30000\",\"name\":\"timeBetweenEvictionRunsMillis\"},{\"value\":\"10000\",\"name\":\"evictorShutdownTimeoutMillis\"},
     {\"value\":\"600000\",\"name\":\"idleTimeout\"},{\"value\":\"10000\",\"name\":\"heartbeatPeriodMillis\"},{\"value\":\"4194304\",\"name\":\"flowHighLevel\"},{\"value\":\"262144\",\"name\":\"flowLowLevel\"}\]
@@ -285,7 +285,7 @@ Feature: test addition, deletion and modification of dble_information on the man
     {\"value\":\"false\",\"name\":\"testOnReturn\"},{\"value\":\"false\",\"name\":\"testWhileIdle\"},{\"value\":\"30000\",\"name\":\"timeBetweenEvictionRunsMillis\"},{\"value\":\"10000\",\"name\":\"evictorShutdownTimeoutMillis\"},
     {\"value\":\"600000\",\"name\":\"idleTimeout\"},{\"value\":\"10000\",\"name\":\"heartbeatPeriodMillis\"},{\"value\":\"4194304\",\"name\":\"flowHighLevel\"},{\"value\":\"262144\",\"name\":\"flowLowLevel\"}\]
     {\"rwSplitMode\":1,\"name\":\"ha_group7\",\"delayThreshold\":-1,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 3\",\"timeout\":0,\"errorRetryCount\":1},
-    \"dbInstance\":\[{\"name\":\"hostM7\",\"url\":\"172.100.9.3:3307\",\"password\":
+    \"dbInstance\":\[{\"name\":\"hostM7\",\"url\":\"172.100.9.6:3308\",\"password\":
     \",\"user\":\"test\",\"maxCon\":9,\"minCon\":4,\"usingDecrypt\":\"true\",\"disabled\":\"false\",\"id\":\"hostM7\",\"readWeight\":\"0\",\"primary\":true,
     \"property\":\[{\"value\":\"30000\",\"name\":\"connectionTimeout\"},{\"value\":\"20\",\"name\":\"connectionHeartbeatTimeout\"},{\"value\":\"false\",\"name\":\"testOnCreate\"},{\"value\":\"false\",\"name\":\"testOnBorrow\"},
     {\"value\":\"false\",\"name\":\"testOnReturn\"},{\"value\":\"false\",\"name\":\"testWhileIdle\"},{\"value\":\"30000\",\"name\":\"timeBetweenEvictionRunsMillis\"},{\"value\":\"10000\",\"name\":\"evictorShutdownTimeoutMillis\"},
@@ -318,7 +318,7 @@ Feature: test addition, deletion and modification of dble_information on the man
       | conn_0 | false    | insert into dble_in.dble_db_instance set name='hostM6',db_group='ha_group6',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=4,max_conn_count=9                              | Unknown database 'dble_in'                                            | dble_information |
       | conn_0 | false    | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count,active_conn_count) value ('host1','group1','172.100.9.5',3307,'test','111111','false','true',1,99,0)                 | Column 'active_conn_count' is not writable                            | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM6',db_group='ha_group6',addr='172.100.9.8',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=4,max_conn_count=9                                      | Duplicate entry 'hostM6-ha_group6' for key 'PRIMARY'                  | dble_information |
-      | conn_0 | false    | insert into DBLE_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostS4','ha_group4','172.100.9.5',3307,'test','111111','false','true',1,99)                                 | dbGroup[ha_group4]'s child url [172.100.9.5:3307]  duplicated!        | dble_information |
+      | conn_0 | false    | insert into DBLE_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostS4','ha_group4','172.100.9.5',3307,'test','111111','false','true',1,99)                                 | dbGroup[ha_group4]'s child url [172.100.9.5:3306]  duplicated!        | dble_information |
       | conn_0 | false    | insert into DBLE_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostS4','ha_group4','172.100.9.2',3307,'test','111111','false','true',1,99)                                 | dbGroup[ha_group4] has multi primary instance!                        | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM8',db_group='ha_group8',addr='172.100.9.8',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9                                      | there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group8.hostM8]}    | dble_information |
 #DBLE0REQ-1101
@@ -536,7 +536,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-  @skip_restart
+  @skip_restart @skip
   Scenario: test the langreage of insert in dble manager   ---- dble_rw_split_entry  #3
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                  | expect      | db               |
@@ -693,7 +693,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-  @skip_restart
+  @skip_restart @skip
   Scenario:  test the langreage of update in dble manager ----- dble_db_group #4
 
     Given execute sql in "dble-1" in "admin" mode
@@ -823,7 +823,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-  @skip_restart
+  @skip_restart @skip
   Scenario:  test the langreage of update in dble manager ----- dble_db_instance #5
 
     Given execute sql in "dble-1" in "admin" mode
@@ -952,7 +952,7 @@ Feature: test addition, deletion and modification of dble_information on the man
       | conn_0 | false    | update dble_db_instance set min_conn_=10 where db_group='ha_group1'                                  | Unknown column 'min_conn_' in 'field list'                          | dble_information |
       | conn_0 | false    | update dble_db_instance st disabled='false' where min_conn_count=0                                   | You have an error in your SQL syntax                                | dble_information |
       | conn_0 | false    | update dble_db_instance set disabled='false' where active='false'                                    | unknown error:field not found:active                                | dble_information |
-      | conn_0 | false    | update dble_db_instance set addr='172.100.9.3' where db_group='ha_group3'                            | dbGroup[ha_group3]'s child url [172.100.9.3:3307]  duplicated!      | dble_information |
+      | conn_0 | false    | update dble_db_instance set addr='172.100.9.3' where db_group='ha_group3'                            | dbGroup[ha_group3]'s child url [172.100.9.6:3308]  duplicated!      | dble_information |
       #### addr
       | conn_0 | false   | update dble_db_instance set addr=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set addr='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
@@ -1184,7 +1184,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-  @skip_restart
+  @skip_restart @skip
   Scenario:  test the langreage of update in dble manager ----- dble_rw_split_entry #6
 
     Given execute sql in "dble-1" in "admin" mode
@@ -1303,6 +1303,7 @@ Feature: test addition, deletion and modification of dble_information on the man
     Then execute admin cmd "reload @@config_all"
 
 
+  @skip
   Scenario: test the langreage of delete in dble manager   ---- dble_db_group dble_db_instance  dble_rw_split_entry #7
 
     Given execute sql in "dble-1" in "admin" mode

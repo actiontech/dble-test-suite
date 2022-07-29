@@ -32,11 +32,11 @@ Feature: connection test in rwSplit mode
           """
             <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
               <heartbeat>select user()</heartbeat>
-              <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3" primary="true">
+              <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
                   <property name="testOnBorrow">false</property>
               </dbInstance>
 
-              <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="10" minCon="3">
+              <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3">
                   <property name="testOnBorrow">false</property>
               </dbInstance>
             </dbGroup>
@@ -87,7 +87,7 @@ Feature: connection test in rwSplit mode
        #use delete dbInstance to trigger reload
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                          |expect               | db      |
-        | conn_2 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.2',3307,'test','111111','false','false',1,99) | success            | dble_information   |
+        | conn_2 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.6',3307,'test','111111','false','false',1,99) | success            | dble_information   |
      #btrace sleep 5s
      Given sleep "8" seconds
      Then check sql thread output in "res"
@@ -121,11 +121,11 @@ Feature: connection test in rwSplit mode
           """
             <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
               <heartbeat>select user()</heartbeat>
-              <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3" primary="true">
+              <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
                   <property name="testOnBorrow">true</property>
               </dbInstance>
 
-              <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="10" minCon="3">
+              <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3">
                   <property name="testOnBorrow">true</property>
               </dbInstance>
             </dbGroup>
@@ -170,7 +170,7 @@ Feature: connection test in rwSplit mode
      #use add dbInstance to trigger reload
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                           |expect              | db      |
-        | conn_4 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.2',3307,'test','111111','false','false',1,99)  | success           | dble_information   |
+        | conn_4 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.6',3307,'test','111111','false','false',1,99)  | success           | dble_information   |
      #btrace sleep 5s
      Given sleep "8" seconds
      Then check sql thread output in "res"
@@ -220,9 +220,9 @@ Feature: connection test in rwSplit mode
           """
             <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
               <heartbeat>select user()</heartbeat>
-              <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3" primary="true">
+              <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
               </dbInstance>
-              <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="10" minCon="3">
+              <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3">
               </dbInstance>
             </dbGroup>
           """
@@ -260,7 +260,7 @@ Feature: connection test in rwSplit mode
      Given prepare a thread execute sql "select * from test" with "conn_1"
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                                         | db      |
-        | conn_2 | true    | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.2',3307,'test','111111','false','false',1,99)            | dble_information   |
+        | conn_2 | true    | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.6',3307,'test','111111','false','false',1,99)            | dble_information   |
       #because btrace sleep 5s
      Given sleep "10" seconds
      Then check sql thread output in "res"
@@ -302,8 +302,8 @@ Feature: connection test in rwSplit mode
           """
             <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
               <heartbeat>select user()</heartbeat>
-              <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3" primary="true"/>
-              <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="10" minCon="3"/>
+              <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true"/>
+              <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3"/>
             </dbGroup>
           """
       Given Restart dble in "dble-1" success
@@ -329,7 +329,7 @@ Feature: connection test in rwSplit mode
      Then execute "admin" sql for "60" seconds in "dble-1"
         | conn   | toClose | sql                                                         | db      |
         | conn_2 | False   | delete from dble_db_instance where name='hostM2'            | dble_information   |
-        | conn_2 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.2',3307,'test','111111','false','false',1,99)| dble_information|
+        | conn_2 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.6',3307,'test','111111','false','false',1,99)| dble_information|
 
      #if check failed, should first try add BtraceSelectRWDbGroup.java sleep time
      Then check sql thread output in "err"

@@ -5,7 +5,7 @@
 #2.19.11.0#dble-7853
 Feature: reload @@config_all and recycl pool
 
-  Scenario: modifiy dbGroup url and execute reload @@config_all #1
+  Scenario: modify dbGroup url and execute reload @@config_all #1
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1              | schema1 |
@@ -47,7 +47,7 @@ Feature: reload @@config_all and recycl pool
 
     Given update file content "{install_dir}/dble/conf/db.xml" in "dble-1" with sed cmds
     """
-    s/172.100.9.4/172.100.9.2/g
+    s/172.100.9.4/172.100.9.1/g
     """
     Then execute admin cmd "reload @@config_all"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_C"
@@ -55,8 +55,8 @@ Feature: reload @@config_all and recycl pool
       | show @@backend |
     Then check resultset "rs_C" has lines with following column values
       | HOST-3      | STATE-10 |
-      | 172.100.9.2 | IDLE       |
-      | 172.100.9.2 | IDLE       |
+      | 172.100.9.1 | IDLE       |
+      | 172.100.9.1 | IDLE       |
       | 172.100.9.5 | IDLE       |
       | 172.100.9.5 | IN USE        |
       | 172.100.9.6 | IN USE        |
@@ -77,8 +77,8 @@ Feature: reload @@config_all and recycl pool
       | HOST-3      | STATE-10 |
       | 172.100.9.6 | IDLE       |
       | 172.100.9.6 | IDLE        |
-      | 172.100.9.2 | IDLE       |
-      | 172.100.9.2 | IDLE        |
+      | 172.100.9.1 | IDLE       |
+      | 172.100.9.1 | IDLE        |
     Then check resultset "rs_D" has not lines with following column values
       | HOST-3      |
       | 172.100.9.5 |

@@ -126,7 +126,7 @@ public class ClobSample extends InterfaceTest{
 			if (dble_pstmt != null) { dble_pstmt.close(); }
 		}
 	}
-
+	
 	private String readFile(String fileName, Writer writerArg) throws IOException {
 
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

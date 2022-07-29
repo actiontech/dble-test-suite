@@ -238,7 +238,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM1" password="111111" url="172.100.9.4:3307" user="test" maxCon="1000" minCon="10" primary="true">
+      <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true">
       </dbInstance>
     </dbGroup>
     """
@@ -318,10 +318,10 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | show @@shardingNodes where schema = schema1 and table = test        |
      Then check resultset "C" has lines with following column values
        | NAME-0 | SEQUENCE-1 | HOST-2        | PORT-3 | PHYSICAL_SCHEMA-4 | USER-5 | PASSWORD-6 |
-       | dn1    | 0          | 172.100.9.5   | 3307   | db1               | test   | 111111     |
-       | dn2    | 1          | 172.100.9.6   | 3307   | db1               | test   | 111111     |
-       | dn3    | 2          | 172.100.9.5   | 3307   | db2               | test   | 111111     |
-       | dn4    | 3          | 172.100.9.6   | 3307   | db2               | test   | 111111     |
+       | dn1    | 0          | 172.100.9.5   | 3306   | db1               | test   | 111111     |
+       | dn2    | 1          | 172.100.9.6   | 3306   | db1               | test   | 111111     |
+       | dn3    | 2          | 172.100.9.5   | 3306   | db2               | test   | 111111     |
+       | dn4    | 3          | 172.100.9.6   | 3306   | db2               | test   | 111111     |
      #CASE show @@shardingNode where schema=?
      Given execute single sql in "dble-1" in "admin" mode and save resultset in "D"
        | conn   | toClose  | sql                                               | db               |

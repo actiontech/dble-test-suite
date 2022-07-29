@@ -28,7 +28,7 @@ Feature: heartbeat basic test
     """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="4" minCon="3" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.1:3306" user="test" maxCon="4" minCon="3" primary="true">
            <property name="heartbeatPeriodMillis">2000</property>
         </dbInstance>
      </dbGroup>
@@ -54,11 +54,11 @@ Feature: heartbeat basic test
       | show @@backend |
     Then check resultset "rs_A" has lines with following column values
       | HOST-3       | USED_FOR_HEARTBEAT-22    |
-      | 172.100.9.5  | false                     |
-      | 172.100.9.5  | false                     |
-      | 172.100.9.5  | false                     |
-      | 172.100.9.5  | false                     |
-      | 172.100.9.5  | true                      |
+      | 172.100.9.1  | false                     |
+      | 172.100.9.1  | false                     |
+      | 172.100.9.1  | false                     |
+      | 172.100.9.1  | false                     |
+      | 172.100.9.1  | true                      |
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql              | expect  | db       |
      | test | 111111 | conn_1 | True     | commit           | success | schema1  |
@@ -88,7 +88,7 @@ Feature: heartbeat basic test
     """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
         <heartbeat timeout="4">select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
            <property name="heartbeatPeriodMillis">5000</property>
         </dbInstance>
      </dbGroup>
@@ -124,7 +124,7 @@ Feature: heartbeat basic test
     Given sleep "10" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to \[172.100.9.5:3307\] setTimeout
+    heartbeat to \[172.100.9.5:3306\] setTimeout
     """
 
 
@@ -140,7 +140,7 @@ Feature: heartbeat basic test
     """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
         <heartbeat errorRetryCount="0">select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
            <property name="heartbeatPeriodMillis">3000</property>
         </dbInstance>
      </dbGroup>
@@ -158,7 +158,7 @@ Feature: heartbeat basic test
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to \[172.100.9.5:3307\] setError
+    heartbeat to \[172.100.9.5:3306\] setError
     """
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                         | expect              | db      |
@@ -183,7 +183,7 @@ Feature: heartbeat basic test
     """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
         <heartbeat errorRetryCount="3" timeout="300">select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
            <property name="heartbeatPeriodMillis">180000</property>
         </dbInstance>
      </dbGroup>
@@ -279,7 +279,7 @@ Feature: heartbeat basic test
     """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
         <heartbeat errorRetryCount="3" timeout="300">select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
            <property name="heartbeatPeriodMillis">120000</property>
         </dbInstance>
      </dbGroup>
@@ -343,7 +343,7 @@ Feature: heartbeat basic test
     """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to \[172.100.9.5:3307\] setError
+    heartbeat to \[172.100.9.5:3306\] setError
     """
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                         | expect  | db     |

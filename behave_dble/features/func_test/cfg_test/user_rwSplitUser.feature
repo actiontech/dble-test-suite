@@ -63,7 +63,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -75,7 +75,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" databaseType="MYSQL"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" databaseType="MYSQL"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -94,7 +94,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.1:3307" user="test" maxCon="1000" minCon="10" primary="true" >
+        <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true" >
         </dbInstance>
     </dbGroup>
     """
@@ -115,7 +115,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" />
+        <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true" />
     </dbGroup>
     """
      Then execute admin cmd "reload @@config_all"
@@ -148,7 +148,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" />
+        <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true" />
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -164,7 +164,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" />
+        <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -193,7 +193,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" />
+        <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -214,7 +214,7 @@ Feature: test config in user.xml  ---  rwSplitUser
       """
       <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" />
+          <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true" />
       </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml" with duplicate name
@@ -233,7 +233,7 @@ Feature: test config in user.xml  ---  rwSplitUser
       """
       <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10" primary="true" />
+          <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true" />
       </dbGroup>
       """
      Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -260,7 +260,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="true" >
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" >
              <property name="timeBetweenEvictionRunsMillis">10</property>
         </dbInstance>
     </dbGroup>
@@ -276,7 +276,7 @@ Feature: test config in user.xml  ---  rwSplitUser
 
 
   @TRIVIAL
-  Scenario: rwSplitUser user supporte management cmd success    #13
+  Scenario: rwSplitUser user support management cmd success    #13
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -291,8 +291,8 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     <dbGroup rwSplitMode="2" name="ha_group3" delayThreshold="100" >
         <heartbeat>show slave status</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS1" password="111111" url="172.100.9.12:3307" user="test" maxCon="100" minCon="10" primary="false" />
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     Given Restart dble in "dble-1" success
@@ -433,8 +433,8 @@ Feature: test config in user.xml  ---  rwSplitUser
       | rwS1  | 111111 | conn_1 | False   | select user()      | success  |
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
     """
-     <dbInstance name=\"hostM1\" url=\"172.100.9.11:3307\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"false\"/>
-     <dbInstance name=\"hostS1\" url=\"172.100.9.12:3307\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"true\"/>
+     <dbInstance name=\"hostM1\" url=\"172.100.9.4:3306\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"false\"/>
+     <dbInstance name=\"hostS1\" url=\"172.100.9.4:3307\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"true\"/>
     """
 
 #########   fresh conn
