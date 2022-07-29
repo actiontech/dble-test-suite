@@ -1,4 +1,4 @@
-From ubuntu:18.04
+FROM ubuntu:18.04
 MAINTAINER Jolie <wujinling@actionsky.com>
 
 #set CST timezone
