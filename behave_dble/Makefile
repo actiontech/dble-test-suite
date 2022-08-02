@@ -32,7 +32,12 @@ reset_mysql:
 	pipenv run behave features/setup.feature --tags=@Initialize_mysql
 
 used_in_local: create_venv up
+ifeq ($(DBLE_DBLE_TOPO),single)
 	pipenv run behave features/setup.feature
+else
+	bash ${PWD}/compose/docker-build-behave/init_cluster_conf.sh
+	pipenv run behave features/setup.feature
+endif
 
 run_cluster_case: up
 	bash ${PWD}/compose/docker-build-behave/init_cluster_conf.sh

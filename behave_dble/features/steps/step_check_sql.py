@@ -367,16 +367,16 @@ def step_impl(context, sql_cover_log):
     if os.path.exists(sql_cover_log):
         shutil.rmtree(sql_cover_log)
 
-@Given('reset views in "{dblelist}" if exists')
-def step_impl(context, dblelist):
-    import subprocess
-    try:
-        out_bytes = subprocess.check_output(['bash', 'compose/docker-build-behave/resetView.sh', dblelist])
-    except subprocess.CalledProcessError as e:
-        out_bytes = e.output  # Output generated before error
-        context.logger.debug(out_bytes.decode('utf-8'))
-    finally:
-        context.logger.debug(out_bytes.decode('utf-8'))
+@Given('reset views in "{dblehost}" if exists')
+def step_impl(context, dblehost):
+    node = get_node(dblehost)
+    ssh_client = node.ssh_conn
+    clean_dble_viewConf = "rm -rf /opt/dble/viewConf > /dev/null 2>&1"
+    clean_zk_viewConf = "cd /opt/zookeeper/bin && (sh zkCli.sh deleteall /dble >/dev/null 2>&1)"
+    rc1, sto1, ste1 = ssh_client.exec_command(clean_dble_viewConf)
+    rc1, sto1, ste2 = ssh_client.exec_command(clean_zk_viewConf)
+    assert len(ste1) == 0 and len(ste2) == 0, "remove viewConf in {} failed".format(dblehost)
+
 
 @Then('execute sql in file "{filename}"')
 @Then('execute sql in "{filename}" to check read-write-split work fine and log dest slave')
