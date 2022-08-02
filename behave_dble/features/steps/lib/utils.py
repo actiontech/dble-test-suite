@@ -356,7 +356,6 @@ def init_log_directory(symbolic: bool = True) -> str:
     return os.path.join(logs_dir, symbolic_link)
 
 
-@log_it
 def handle_env_variable(context: Context, userdata: UserData, var: str, default_value=None, method: str = 'str',
                         check: Optional[Callable[..., None]] = None):
     method = method.lower()
@@ -404,7 +403,6 @@ def handle_env_variable(context: Context, userdata: UserData, var: str, default_
         check()
 
 
-@log_it
 def handle_env_variables(context: Context, userdata: UserData):
     handle_env_variable(context, userdata, 'time_weight', method='int')
     handle_env_variable(context, userdata, 'auto_retry', method='int')
