@@ -392,6 +392,8 @@ def conf_zk_in_node(context, node, hosts_form):
     zk_server_port = context.cfg_zookeeper['port']
 
     myid = node.host_name.split("-")[1]
+    ssh_client.exec_command("echo {} > /opt/zookeeper/data/myid".format(myid))
+
     zk_server_id = "zookeeper-{0}".format(myid)
     zk_server_ip = context.cfg_zookeeper[zk_server_id]['ip']
     # LOGGER.info("zk_server_ip:{0}".format(zk_server_ip))
