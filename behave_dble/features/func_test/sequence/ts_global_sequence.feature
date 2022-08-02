@@ -55,7 +55,7 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
         s/instanceId=.*/instanceId=33/
     """
 
-  @restore_sys_time
+  @restore_sys_time @skip
   Scenario: when "system time" less than "sequenceStartTime + 69years", execute insert sql will error
     note: this scenerio has issue: https://github.com/actiontech/dble/issues/1665  #2
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
