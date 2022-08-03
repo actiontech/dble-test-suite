@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2020/12/11
 
-@skip
+
 Feature: test "ha" in zk cluster
   ######case points:
   #  1.ClusterEnable=true && useOuterHa=true && needSyncHa=true,check "dbgroup"
@@ -196,9 +196,9 @@ Feature: test "ha" in zk cluster
     Then check resultset "Res_D" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | DISABLED-10 |
       | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | 1000   | true        |
-      | ha_group2  | hostS1 | 172.100.9.2 | 3307   | R     | 0        | 1000   | true        |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3307   | R     | 0        | 1000   | true        |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | W     | 0        | 1000   | true        |
+      | ha_group2  | hostS1 | 172.100.9.6 | 3307   | R     | 0        | 1000   | true        |
+      | ha_group2  | hostS2 | 172.100.9.6 | 3308   | R     | 0        | 1000   | true        |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_E"
       | sql               |
       | show @@dbinstance |
@@ -286,10 +286,8 @@ Feature: test "ha" in zk cluster
       | conn_32 | False   | insert into vertical1 values (1)      | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status  | schema2 |
       | conn_32 | true    | select * from  vertical1              | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema2 |
     #case change master to slave1 on mysql group
-    Given execute linux command in "behave"
-      """
-      bash ./compose/docker-build-behave/ChangeMaster.sh dble-2 mysql-master2 dble-3
-      """
+    Given change the primary instance of mysql group named "group2" to "mysql-slave1"
+
     ###  heartbeatPeriodMillis  default 10s,  let restore heartbeat
     Given sleep "10" seconds
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS1'"
@@ -331,10 +329,10 @@ Feature: test "ha" in zk cluster
       | show @@dbinstance |
     Then check resultset "Res_1" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 1000   | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | R     | 0        | 1000   | true        |
-      | ha_group2  | hostS1 | 172.100.9.2 | 3307   | W     | 0        | 1000   | true        |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3307   | R     | 0        | 1000   | true        |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | true        |
+      | ha_group2  | hostS1 | 172.100.9.6 | 3307   | W     | 0        | 1000   | true        |
+      | ha_group2  | hostS2 | 172.100.9.6 | 3308   | R     | 0        | 1000   | true        |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_2"
       | sql               |
       | show @@dbinstance |
@@ -407,10 +405,10 @@ Feature: test "ha" in zk cluster
       | show @@dbinstance |
     Then check resultset "Res_4" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 1000   | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | R     | 0        | 1000   | false       |
-      | ha_group2  | hostS1 | 172.100.9.2 | 3307   | W     | 0        | 1000   | false       |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3307   | R     | 0        | 1000   | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | false       |
+      | ha_group2  | hostS1 | 172.100.9.6 | 3307   | W     | 0        | 1000   | false       |
+      | ha_group2  | hostS2 | 172.100.9.6 | 3308   | R     | 0        | 1000   | false       |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_5"
       | sql               |
       | show @@dbinstance |
@@ -468,10 +466,10 @@ Feature: test "ha" in zk cluster
       | show @@dbinstance |
     Then check resultset "Res_A" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 1000   | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | R     | 0        | 1000   | false       |
-      | ha_group2  | hostS1 | 172.100.9.2 | 3307   | W     | 0        | 1000   | false       |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3307   | R     | 0        | 1000   | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | false       |
+      | ha_group2  | hostS1 | 172.100.9.6 | 3307   | W     | 0        | 1000   | false       |
+      | ha_group2  | hostS2 | 172.100.9.6 | 3308   | R     | 0        | 1000   | false       |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_B"
       | sql               |
       | show @@dbinstance |
@@ -535,10 +533,10 @@ Feature: test "ha" in zk cluster
       | show @@dbinstance |
     Then check resultset "Res_D" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 1000   | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | R     | 0        | 1000   | false       |
-      | ha_group2  | hostS1 | 172.100.9.2 | 3307   | W     | 0        | 1000   | true        |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3307   | R     | 0        | 1000   | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | false       |
+      | ha_group2  | hostS1 | 172.100.9.6 | 3307   | W     | 0        | 1000   | true        |
+      | ha_group2  | hostS2 | 172.100.9.6 | 3308   | R     | 0        | 1000   | false       |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_E"
       | sql               |
       | show @@dbinstance |
@@ -615,10 +613,8 @@ Feature: test "ha" in zk cluster
       | conn_32 | False   | insert into vertical1 values (1)      | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status  | schema2 |
       | conn_32 | true    | select * from  vertical1              | length{(1)}                                                                              | schema2 |
     #case change master to slave2 on mysql group
-    Given execute linux command in "behave"
-      """
-      bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
-     """
+    Given change the primary instance of mysql group named "group2" to "mysql-slave2"
+
     ###  heartbeatPeriodMillis  default 10s,  let restore heartbeat
     Given sleep "10" seconds
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
@@ -661,10 +657,10 @@ Feature: test "ha" in zk cluster
       | show @@dbinstance |
     Then check resultset "Res_1" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 1000   | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | R     | 0        | 1000   | false       |
-      | ha_group2  | hostS1 | 172.100.9.2 | 3307   | R     | 0        | 1000   | true        |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3307   | W     | 0        | 1000   | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | false       |
+      | ha_group2  | hostS1 | 172.100.9.6 | 3307   | R     | 0        | 1000   | true        |
+      | ha_group2  | hostS2 | 172.100.9.6 | 3308   | W     | 0        | 1000   | false       |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_2"
       | sql               |
       | show @@dbinstance |
@@ -732,10 +728,10 @@ Feature: test "ha" in zk cluster
       | show @@dbinstance |
     Then check resultset "Res_5" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | DISABLED-10  |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 1000   | false        |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | R     | 0        | 1000   | false        |
-      | ha_group2  | hostS1 | 172.100.9.2 | 3307   | R     | 0        | 1000   | false        |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3307   | W     | 0        | 1000   | false        |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | false        |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | false        |
+      | ha_group2  | hostS1 | 172.100.9.6 | 3307   | R     | 0        | 1000   | false        |
+      | ha_group2  | hostS2 | 172.100.9.6 | 3308   | W     | 0        | 1000   | false        |
     #case query dml sql will be success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect      | db      |
@@ -771,10 +767,6 @@ Feature: test "ha" in zk cluster
       | conn_32 | true    | select * from  vertical1              | length{(2)} | schema2 |
 
 
-
   Scenario: restore mysql binlog and clear table  #3
 
-    Given execute linux command in "behave"
-      """
-      bash ./compose/docker-build-behave/resetReplication.sh
-      """
+    Given restore mysql replication of the mysql group named "group2" to the initial state
