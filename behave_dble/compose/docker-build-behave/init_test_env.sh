@@ -4,19 +4,30 @@ base_dir=$( dirname ${BASH_SOURCE[0]} )
 echo ${base_dir}
 
 #ssh with no pwd
-sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@dble-1:/root/.ssh/authorized_keys
-sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@dble-2:/root/.ssh/authorized_keys
-sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@dble-3:/root/.ssh/authorized_keys
-sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql:/root/.ssh/authorized_keys
-sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql-master1:/root/.ssh/authorized_keys
-sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql-master2:/root/.ssh/authorized_keys
-sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@driver-test:/root/.ssh/authorized_keys
+mysql_ips=("172.100.9.1" "172.100.9.2" "172.100.9.3" "172.100.9.4" "172.100.9.5" "172.100.9.6")
+Hostname=("dble-1" "dble-2" "dble-3" "mysql" "mysql-1" "mysql-2")
 
+auto_ssh_copy_id(){
+   expect -c "set timeout -1;
+   spawn ssh-copy-id -i root@$1;
+   expect {
+    *(yes/no)* {send -- yes\r;exp_continue;}
+    *assword:* {send -- $2\r;exp_continue;}
+    eof   {exit 0;}
+   }";
+}
+
+ssh_copy_id_to_all(){
+  for((i=0; i<=5; i=i+1)); do
+    #  ssh-keygen -f "/root/.ssh/known_hosts" -R ${mysql_ips[$i]}
+     # ssh-keygen -f "/root/.ssh/known_hosts" -R ${Hostname[$i]}
+      echo "${mysql_ips[$i]}  ${Hostname[$i]}" >> /etc/hosts
+      auto_ssh_copy_id ${Hostname[$i]} sshpass
+  done
+}
+ssh_copy_id_to_all
 #init mysql passwd
-mysql_install=("mysql" "mysql-master1" "mysql-master2" "dble-1" "dble-2" "dble-3")
-count=${#mysql_install[@]}
+count=${#Hostname[@]}
 for((i=0; i<count; i=i+1)); do
-    ssh root@${mysql_install[$i]}  "bash /usr/local/bin/mysql_init.sh"
+    ssh root@${Hostname[$i]}  "bash /usr/local/bin/mysql_init.sh"
 done
-
-bash /docker-build/resetReplication.sh

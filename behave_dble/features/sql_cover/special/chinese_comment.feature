@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhaohongjie at 2018/9/20
 Feature: verify issue 92 #Enter feature name here
-
+  @skip
   Scenario: #1 todo not complete yet #1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -17,7 +17,7 @@ Feature: verify issue 92 #Enter feature name here
       | conn_0 | True    | drop table sharding_4_t1                                                                                                       | success | schema1 | utf8mb4 |
 
 
-  @restore_mysql_config
+  @restore_mysql_config @skip
   Scenario: check support utf8mb4: case from issue DBLE0REQ-582 #2
    """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}
