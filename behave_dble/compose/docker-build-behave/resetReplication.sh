@@ -31,7 +31,7 @@ for((i=4; i<6; i=i+1)); do
 	echo "reset slave ${mysql_install[$i]}"
 	ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"stop slave; reset slave;\" "
 	ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"reset master; set global gtid_purged='';\" "
-    ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -e \"change master to master_host='172.100.9.6', master_user='repl', master_password='111111', master_auto_position=1\""
+    ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -e \"change master to master_host='172.100.9.6', master_user='repl',master_port=3306, master_password='111111', master_auto_position=1\""
 	ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"start slave;\" "
 done
 

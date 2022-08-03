@@ -13,21 +13,21 @@ Feature: verify hint sql
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                         | expect  | db      |
-      | test | 111111 | new    | False   | drop table if exists test_table                                                                             | success | schema1 |
-      | test | 111111 | new    | False   | drop table if exists test_index                                                                             | success | schema1 |
+      | test | 111111 | conn_0 | False   | drop table if exists test_table                                                                             | success | schema1 |
+      | test | 111111 | conn_0 | False   | drop table if exists test_index                                                                             | success | schema1 |
       | test | 111111 | conn_0 | False   | /*!dble:datanode=dn1*/ create table test_table(id int,name varchar(20))                                     | success | schema1 |
       | test | 111111 | conn_0 | False   | /*!dble:datanode=dn1*/ create table test_index(id int,name varchar(20),index ddd (name) KEY_BLOCK_SIZE = 1) | success | schema1 |
       | test | 111111 | conn_0 | True    | /*!dble:datanode=dn1*/ insert into test_table values(2,'test2')                                             | success | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                      | expect                  | db  |
-      | test | 111111 | new    | False   | show tables              | has{('test_table'),}    | db1 |
-      | test | 111111 | new    | False   | show tables              | has{('test_index'),}    | db1 |
+      | test | 111111 | conn_0 | False   | show tables              | has{('test_table'),}    | db1 |
+      | test | 111111 | conn_0 | False   | show tables              | has{('test_index'),}    | db1 |
       | test | 111111 | conn_0 | True    | select * from test_table | has{(2L, 'test2'),}     | db1 |
-      | test | 111111 | new    | False   | show tables              | hasnot{('test_table'),} | db2 |
-      | test | 111111 | new    | False   | show tables              | hasnot{('test_index'),} | db2 |
+      | test | 111111 | conn_1 | False   | show tables              | hasnot{('test_table'),} | db2 |
+      | test | 111111 | conn_1 | True    | show tables              | hasnot{('test_index'),} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                  | expect                                   | db      |
-      | test | 111111 | new    | False   | /*!dble:datanod=dn1*/ drop table test_table                                                          | Not supported hint sql type : datanod    | schema1 |
+      | test | 111111 | conn_0 | False   | /*!dble:datanod=dn1*/ drop table test_table                                                          | Not supported hint sql type : datanod    | schema1 |
       | test | 111111 | conn_0 | False   | /*#dble:datanode=dn1*/ drop table test_table                                                         | success                                  | schema1 |
       | test | 111111 | conn_0 | False   | drop table if exists test_shard                                                                      | success                                  | schema1 |
       | test | 111111 | conn_0 | False   | create table test_table (id int ,name varchar(20))                                                   | success                                  | schema1 |
@@ -39,36 +39,36 @@ Feature: verify hint sql
       | test | 111111 | conn_0 | True    | /*!dble:datanode=dn1*/ update test_table set name = 'dn1'                                            | success                                  | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn | toClose | sql                      | expect                                   | db  |
-      | test | 111111 | new  | True    | select * from test_table | has{(2,'dn1'),(4,'dn1')}                 | db1 |
-      | test | 111111 | new  | True    | select * from test_table | has{(1,'test_table1'),(3,'test_table3')} | db2 |
+      | test | 111111 | new  | False    | select * from test_table | has{(2,'dn1'),(4,'dn1')}                 | db1 |
+      | test | 111111 | new  | True     | select * from test_table | has{(1,'test_table1'),(3,'test_table3')} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn | toClose | sql                                           | expect  | db      |
       | test | 111111 | new  | True    | /*!dble:datanode=dn1*/ delete from test_table | success | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn | toClose | sql                      | expect                                   | db  |
-      | test | 111111 | new  | True    | select * from test_table | length{(0)}                              | db1 |
+      | test | 111111 | new  | False   | select * from test_table | length{(0)}                              | db1 |
       | test | 111111 | new  | True    | select * from test_table | has{(1,'test_table1'),(3,'test_table3')} | db2 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn | toClose | sql                                                                                     | expect  | db      |
-      | test | 111111 | new  | True    | /*!dble:datanode=dn1*/ insert into test_table select id,name from test_shard where id>4 | success | schema1 |
+      | user | passwd | conn  | toClose | sql                                                                                     | expect  | db      |
+      | test | 111111 | conn_0| True    | /*!dble:datanode=dn1*/ insert into test_table select id,name from test_shard where id>4 | success | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn | toClose | sql                      | expect                     | db  |
-      | test | 111111 | new  | True    | select * from test_table | has{(6, 'test_shard6')}    | db1 |
+      | test | 111111 | new  | False   | select * from test_table | has{(6, 'test_shard6')}    | db1 |
       | test | 111111 | new  | True    | select * from test_table | hasnot{(6, 'test_shard6')} | db2 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn | toClose | sql                                                                                   | expect  | db      |
-      | test | 111111 | new  | True    | /*!dble:datanode=dn3*/ replace test_table select id,name from test_shard where id < 7 | success | schema1 |
+      | user | passwd | conn   | toClose | sql                                                                                   | expect  | db      |
+      | test | 111111 | conn_0 | True    | /*!dble:datanode=dn3*/ replace test_table select id,name from test_shard where id < 7 | success | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn | toClose | sql                      | expect                     | db  |
-      | test | 111111 | new  | True    | select * from test_table | hasnot{(5, 'test_shard5')} | db1 |
+      | test | 111111 | new  | False   | select * from test_table | hasnot{(5, 'test_shard5')} | db1 |
       | test | 111111 | new  | True    | select * from test_table | has{(5, 'test_shard5')}    | db2 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn | toClose | sql                                                             | expect    | db      |
-      | test | 111111 | new  | True    | /*!dble:datanode=dn3*/ select count(*) from test_shard          | has{(2),} | schema1 |
-      | test | 111111 | new  | True    | /*!dble:datanode=dn1*/ alter table test_table add c varchar(20) | success   | schema1 |
+      | user | passwd | conn    | toClose  | sql                                                             | expect    | db      |
+      | test | 111111 | conn_0  | False    | /*!dble:datanode=dn3*/ select count(*) from test_shard          | has{(2),} | schema1 |
+      | test | 111111 | conn_0  | True     | /*!dble:datanode=dn1*/ alter table test_table add c varchar(20) | success   | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn | toClose | sql             | expect       | db  |
-      | test | 111111 | new  | True    | desc test_table | length{(3)}} | db1 |
+      | test | 111111 | new  | False   | desc test_table | length{(3)}} | db1 |
       | test | 111111 | new  | True    | desc test_table | length{(2)}} | db2 |
 
   @NORMAL
@@ -82,7 +82,7 @@ Feature: verify hint sql
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                                      | expect  | db      |
-      | test | 111111 | new    | False   | drop table if exists test_table                                                                                                          | success | schema1 |
+      | test | 111111 | conn_0 | False   | drop table if exists test_table                                                                                                          | success | schema1 |
       | test | 111111 | conn_0 | False   | drop table if exists test_index                                                                                                          | success | schema1 |
       | test | 111111 | conn_0 | False   | drop table if exists test_shard                                                                                                          | success | schema1 |
       | test | 111111 | conn_0 | False   | create table test_shard(id int,name varchar(20))                                                                                         | success | schema1 |
@@ -92,11 +92,11 @@ Feature: verify hint sql
       | test | 111111 | conn_0 | True    | /*!dble:sql=select id from test_shard where id =4*/ insert into test_table values(2,'test2')                                             | success | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                      | expect                  | db  |
-      | test | 111111 | new    | False   | show tables              | has{('test_table'),}    | db1 |
+      | test | 111111 | conn_0 | False   | show tables              | has{('test_table'),}    | db1 |
       | test | 111111 | conn_0 | False   | show tables              | has{('test_index'),}    | db1 |
       | test | 111111 | conn_0 | True    | select * from test_table | has{(2L, 'test2'),}     | db1 |
-      | test | 111111 | new    | False   | show tables              | hasnot{('test_table'),} | db2 |
-      | test | 111111 | conn_0 | True    | show tables              | hasnot{('test_index'),} | db2 |
+      | test | 111111 | conn_1 | False   | show tables              | hasnot{('test_table'),} | db2 |
+      | test | 111111 | conn_1 | True    | show tables              | hasnot{('test_index'),} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                | expect                                                                       | db      |
       | test | 111111 | conn_0 | False   | /*!dble:sql=select id from test_shard where id =4*/ drop table test_table                                          | success                                                                      | schema1 |
@@ -110,37 +110,37 @@ Feature: verify hint sql
       | test | 111111 | conn_0 | True    | /*!dble:sql=select id from test_shard where id =4*/ update test_table set name = 'dn1'                             | success                                                                      | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                      | expect                                   | db  |
-      | test | 111111 | conn_0 | True    | select * from test_table | has{(2,'dn1'),(4,'dn1')}                 | db1 |
+      | test | 111111 | conn_0 | False   | select * from test_table | has{(2,'dn1'),(4,'dn1')}                 | db1 |
       | test | 111111 | conn_0 | True    | select * from test_table | has{(1,'test_table1'),(3,'test_table3')} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                        | expect  | db      |
       | test | 111111 | conn_0 | True    | /*!dble:sql=select id from test_shard where id =4*/ delete from test_table | success | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                      | expect                                   | db  |
-      | test | 111111 | conn_0 | True    | select * from test_table | length{(0)}                              | db1 |
+      | test | 111111 | conn_0 | False   | select * from test_table | length{(0)}                              | db1 |
       | test | 111111 | conn_0 | True    | select * from test_table | has{(1,'test_table1'),(3,'test_table3')} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                  | expect  | db      |
       | test | 111111 | conn_0 | True    | /*!dble:sql=select id from test_shard where id =4*/ insert into test_table select id,name from test_shard where id>4 | success | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                      | expect                     | db  |
-      | test | 111111 | conn_0 | True    | select * from test_table | has{(6, 'test_shard6')}    | db1 |
+      | test | 111111 | conn_0 | False   | select * from test_table | has{(6, 'test_shard6')}    | db1 |
       | test | 111111 | conn_0 | True    | select * from test_table | hasnot{(6, 'test_shard6')} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                | expect  | db      |
       | test | 111111 | conn_0 | True    | /*!dble:sql=select id from test_shard where id =5*/ replace test_table select id,name from test_shard where id < 7 | success | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                      | expect                     | db  |
-      | test | 111111 | conn_0 | True    | select * from test_table | hasnot{(5, 'test_shard5')} | db1 |
+      | test | 111111 | conn_0 | False   | select * from test_table | hasnot{(5, 'test_shard5')} | db1 |
       | test | 111111 | conn_0 | True    | select * from test_table | has{(5, 'test_shard5')}    | db2 |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                          | expect    | db      |
-      | test | 111111 | conn_0 | True    | /*!dble:sql=select id from test_shard where id =5*/ select count(*) from test_shard          | has{(2),} | schema1 |
+      | test | 111111 | conn_0 | False   | /*!dble:sql=select id from test_shard where id =5*/ select count(*) from test_shard          | has{(2),} | schema1 |
       | test | 111111 | conn_0 | True    | /*!dble:sql=select id from test_shard where id =4*/ alter table test_table add c varchar(20) | success   | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql             | expect       | db  |
-      | test | 111111 | conn_0 | True    | desc test_table | length{(3)}} | db1 |
+      | test | 111111 | conn_0 | False   | desc test_table | length{(3)}} | db1 |
       | test | 111111 | conn_0 | True    | desc test_table | length{(2)}} | db2 |
 
   @TRIVIAL @current
@@ -194,7 +194,7 @@ Feature: verify hint sql
       | test | 111111 | conn_0 | True    | /*!dble:db_type=master*/select * from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
       | user | passwd | conn   | toClose | sql                                                                          | expect      | db |
-      | test | 111111 | conn_0 | True    | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |    |
+      | test | 111111 | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |    |
       | test | 111111 | conn_0 | True    | truncate table mysql.general_log                                             | success     |    |
     Then execute sql in "mysql-master2"
       | user | passwd | conn   | toClose | sql                                                                          | expect      | db |
@@ -205,7 +205,7 @@ Feature: verify hint sql
       | test | 111111 | conn_0 | True    | /*!dble:db_type=slave*/select * from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
       | user | passwd | conn   | toClose | sql                                                                          | expect      | db |
-      | test | 111111 | conn_0 | True    | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |    |
+      | test | 111111 | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |    |
       | test | 111111 | conn_0 | True    | truncate table mysql.general_log                                             | success     |    |
     Then execute sql in "mysql-master2"
       | user | passwd | conn   | toClose | sql                                                                          | expect      | db |
@@ -216,7 +216,7 @@ Feature: verify hint sql
       | test | 111111 | conn_0 | True    | /*!dble:db_type=master*/select count(*) from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
       | user | passwd | conn   | toClose | sql                                                                                     | expect      | db |
-      | test | 111111 | conn_0 | True    | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%' | length{(0)} |    |
+      | test | 111111 | conn_0 | False   | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%' | length{(0)} |    |
       | test | 111111 | conn_0 | True    | truncate table mysql.general_log                                                        | success     |    |
     Then execute sql in "mysql-master2"
       | user | passwd | conn   | toClose | sql                                                                                     | expect      | db |
@@ -227,7 +227,7 @@ Feature: verify hint sql
       | test | 111111 | conn_0 | True    | /*!dble:db_type=slave*/select count(*) from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
       | user | passwd | conn   | toClose | sql                                                                                     | expect      | db |
-      | test | 111111 | conn_0 | True    | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%' | length{(2)} |    |
+      | test | 111111 | conn_0 | False   | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%' | length{(2)} |    |
       | test | 111111 | conn_0 | True    | set global log_output='file'                                                            | success     |    |
     Then execute sql in "mysql-master2"
       | user | passwd | conn   | toClose | sql                                                                                     | expect      | db |
@@ -465,22 +465,22 @@ Feature: verify hint sql
     #from issue: 1032
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                    | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1                                                                             | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test1(id int not null, name varchar(40), depart varchar(40),role varchar(30),code int(4)) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create view view_tt as select name,depart,role from test1                                              | success | schema1 |
+      | test | 111111 | conn_0 | False   | drop table if exists test1                                                                             | success | schema1 |
+      | test | 111111 | conn_0 | False   | create table test1(id int not null, name varchar(40), depart varchar(40),role varchar(30),code int(4)) | success | schema1 |
+      | test | 111111 | conn_0 | False   | create view view_tt as select name,depart,role from test1                                              | success | schema1 |
       | test | 111111 | conn_0 | True    | /* ApplicationName=DBeaver 5.2.4 - Main */drop view view_tt                                            | success | schema1 |
     #from issue: 842
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                | expect                | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists sharding_4_t1 | success               | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test1         | success               | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2         | success               | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3         | success               | schema1 |
-      | test | 111111 | conn_0 | True    | create table sharding_4_t1(id int) | success               | schema1 |
-      | test | 111111 | conn_0 | True    | create table test1(id int)         | success               | schema1 |
-      | test | 111111 | conn_0 | True    | create table test2(id int)         | success               | schema1 |
-      | test | 111111 | conn_0 | True    | create table test3(id int)         | success               | schema1 |
-      | test | 111111 | conn_0 | True    | SHOW FULL TABLES FROM `schema1`    | hasStr{sharding_4_t1} | schema1 |
+      | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1 | success               | schema1 |
+      | test | 111111 | conn_0 | False   | drop table if exists test1         | success               | schema1 |
+      | test | 111111 | conn_0 | False   | drop table if exists test2         | success               | schema1 |
+      | test | 111111 | conn_0 | False   | drop table if exists test3         | success               | schema1 |
+      | test | 111111 | conn_0 | False   | create table sharding_4_t1(id int) | success               | schema1 |
+      | test | 111111 | conn_0 | False   | create table test1(id int)         | success               | schema1 |
+      | test | 111111 | conn_0 | False   | create table test2(id int)         | success               | schema1 |
+      | test | 111111 | conn_0 | False   | create table test3(id int)         | success               | schema1 |
+      | test | 111111 | conn_0 | False   | SHOW FULL TABLES FROM `schema1`    | hasStr{sharding_4_t1} | schema1 |
       | test | 111111 | conn_0 | True    | SHOW FULL TABLES FROM schema1      | hasStr{sharding_4_t1} | schema1 |
     #from issue:829
     Then execute sql in "dble-1" in "user" mode
@@ -489,8 +489,8 @@ Feature: verify hint sql
     #from issue:824
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                 | expect      | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists sharding_4_t1                  | success     | schema1 |
-      | test | 111111 | conn_0 | True    | create table sharding_4_t1(id int,name varchar(30)) | success     | schema1 |
+      | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1                  | success     | schema1 |
+      | test | 111111 | conn_0 | False   | create table sharding_4_t1(id int,name varchar(30)) | success     | schema1 |
       | test | 111111 | conn_0 | True    | show table status like 'sharding_4_t1'              | length{(1)} | schema1 |
 
   Scenario: support multi-statement in procedure   author:wujinling #9
@@ -524,11 +524,11 @@ Feature: verify hint sql
 
     Then execute sql in "dble-1" in "test" mode
       | user | passwd | conn   | toClose | sql                                                                                                                                                                                                                                                                                                                                  | expect                               | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists sharding_4_t1                                                                                                                                                                                                                                                                                                   | success                              | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test1                                                                                                                                                                                                                                                                                                           | success                              | schema1 |
-      | test | 111111 | conn_0 | True    | create table sharding_4_t1 (id int ,name varchar(20))                                                                                                                                                                                                                                                                                | success                              | schema1 |
-      | test | 111111 | conn_0 | True    | create table test1 (id int ,name varchar(20))                                                                                                                                                                                                                                                                                        | success                              | schema1 |
-      | test | 111111 | conn_0 | True    | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4),(5,5)                                                                                                                                                                                                                                                                        | success                              | schema1 |
+      | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1                                                                                                                                                                                                                                                                                                   | success                              | schema1 |
+      | test | 111111 | conn_0 | False   | drop table if exists test1                                                                                                                                                                                                                                                                                                           | success                              | schema1 |
+      | test | 111111 | conn_0 | False   | create table sharding_4_t1 (id int ,name varchar(20))                                                                                                                                                                                                                                                                                | success                              | schema1 |
+      | test | 111111 | conn_0 | False   | create table test1 (id int ,name varchar(20))                                                                                                                                                                                                                                                                                        | success                              | schema1 |
+      | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4),(5,5)                                                                                                                                                                                                                                                                        | success                              | schema1 |
       | test | 111111 | conn_0 | False   | /*#dble:datanode=dn1*/drop function if exists test1                                                                                                                                                                                                                                                                                  | success                              | schema1 |
       | test | 111111 | conn_0 | False   | /*#dble:datanode=dn1*/drop function if exists test_get                                                                                                                                                                                                                                                                               | success                              | schema1 |
       | test | 111111 | conn_0 | False   | /*#dble:datanode=dn1*/CREATE FUNCTION test1(v_id int) RETURNS VARCHAR(255) BEGIN DECLARE x VARCHAR(255) DEFAULT ''; select name into x from sharding_4_t1 where id =v_id; RETURN x; END                                                                                                                                              | success                              | schema1 |
