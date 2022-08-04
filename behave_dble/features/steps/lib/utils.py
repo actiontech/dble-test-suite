@@ -215,18 +215,18 @@ def get_sftp(host):
     return node.sftp_conn
 
 
-@Given('reset replication and none system databases')
+@Given('rebuild all mysql group')
 def reset_repl(context):
-    global out_bytes
-    import subprocess
-    try:
-        out_bytes = subprocess.check_output(['bash', 'compose/docker-build-behave/resetReplication.sh'])
-        logger.debug("script resetReplication.sh run success!")
-    except subprocess.CalledProcessError as e:
-        out_bytes = e.output  # Output generated before error
-        assert False, "resetReplication.sh script run with failure,output: {0}".format(out_bytes.decode('utf-8'))
-    finally:
-        logger.info(out_bytes.decode('utf-8'))
+    context.ssh_clients = create_ssh_client(context)
+    context.execute_steps(
+        u'''
+        Given I clean mysql deploy environment
+        Given I deploy mysql
+        Given I reset the mysql uuid
+        Given I create mysql test user
+        Given I create databases named db1, db2, db3, db4 on group1, group2, group3
+        Given I create databases named schema1,schema2,schema3,testdb,db1,db2,db3,db4 on compare_mysql
+        ''')
 
 
 def exec_command(cmd: Union[str, List[str]], capture_output: bool = True, shell: bool = False, text: bool = True,
