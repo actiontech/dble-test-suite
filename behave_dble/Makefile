@@ -1,5 +1,8 @@
 PWD = $(shell pwd)
 
+create_vene:
+	pipenv install
+	
 resetRp:
 	bash $(PWD)/compose/docker-build-behave/resetReplication.sh
 
