@@ -64,6 +64,7 @@ Feature: connection leak test
     Given delete file "/opt/dble/BtraceLineDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceLineDelay.java.log" on "dble-1"
 
+  @auto_retry
   Scenario: two case explained below (06 regression added)                            #2
     Given delete the following xml segment
       | file             | parent         | child                   |
