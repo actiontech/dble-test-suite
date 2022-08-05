@@ -2,7 +2,6 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2021/1/6
 
-@skip
 Feature: test python script "custom_mysql_ha.py" to change mysql master
 
   todo: add check dble.log has disable @@/dbgroup @@switch/enable @@
@@ -37,7 +36,6 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | sql                      | expect            |
       | show @@custom_mysql_ha   | has{(('0',),)}    |
     Given start mysql in host "mysql-master2"
-
 
 
   @restore_mysql_service
@@ -176,7 +174,6 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | conn_1 | True    | drop table if exists test             | success     | schema1 |
 
 
-
   @restore_mysql_service
   Scenario: when useOuterHa is false, mysql has two slave, python script can change mysql master #4
      """
@@ -214,6 +211,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
       """
 
+
   Scenario: don't use "disable/enable", can change mysql master and active idle DBLE0REQ-816   #5
     # rwSplitMode="0"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -237,10 +235,9 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 0                 | 1000             | false      |
       | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 0                 | 1000             | false      |
 
-    Given execute linux command in "behave"
-      """
-      bash ./compose/docker-build-behave/ChangeMaster.sh dble-2 mysql-master2 dble-3
-      """
+##### change msater to  hostS1  172.100.9.6:3307
+    Given change the primary instance of mysql group named "group2" to "mysql-slave1"
+
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS1'"
     Given sleep "5" seconds
       #timeBetweenEvictionRunsMillis is 5s,so hostS1 and hostM2(former master) idle_conn_count is 10
@@ -259,10 +256,9 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | conn_1 | False   | create table test (id int)   | success     | schema1 |
       | conn_1 | true    | insert into test values (1)  | success     | schema1 |
 
-     Given execute linux command in "behave"
-      """
-      bash ./compose/docker-build-behave/ChangeMaster.sh mysql-master2 dble-2 dble-3
-      """
+##### change msater to  mysql-master2
+    Given change the primary instance of mysql group named "group2" to "mysql-master2"
+
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostM2'"
 
     # rwSplitMode="1"
@@ -288,10 +284,10 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 3                 | 10               | false      |
       | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
       | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 3                 | 10               | false      |
-    Given execute linux command in "behave"
-      """
-      bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
-      """
+
+##### change msater to  hostS2
+    Given change the primary instance of mysql group named "group2" to "mysql-slave2"
+
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
     Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
@@ -309,10 +305,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | conn_1 | true    | insert into test values (1)  | success     | schema1 |
 
 
-     Given execute linux command in "behave"
-      """
-      bash ./compose/docker-build-behave/ChangeMaster.sh mysql-master2 dble-2 dble-3
-      """
+##### change msater to  mysql-master2
+    Given change the primary instance of mysql group named "group2" to "mysql-master2"
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostM2'"
 
     # rwSplitMode="2"
@@ -338,10 +332,10 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 3                 | 10               | false      |
       | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
       | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 3                 | 10               | false      |
-    Given execute linux command in "behave"
-      """
-      bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
-      """
+
+##### change msater to  hostS2
+    Given change the primary instance of mysql group named "group2" to "mysql-slave2"
+
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
     Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
@@ -358,11 +352,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | conn_1 | False   | create table test (id int)   | success     | schema1 |
       | conn_1 | true    | insert into test values (1)  | success     | schema1 |
 
+    Given change the primary instance of mysql group named "group2" to "mysql-master2"
 
-     Given execute linux command in "behave"
-      """
-      bash ./compose/docker-build-behave/ChangeMaster.sh mysql-master2 dble-2 dble-3
-      """
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostM2'"
 
     # rwSplitMode="3"
@@ -388,10 +379,9 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 3                 | 10               | false      |
       | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
       | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 3                 | 10               | false      |
-    Given execute linux command in "behave"
-      """
-      bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
-      """
+
+    Given change the primary instance of mysql group named "group2" to "mysql-slave2"
+
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
     Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
@@ -411,10 +401,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
 
 
   Scenario: in autotest ,Need to manually kill the python3 process #6
-     Given execute linux command in "behave"
-      """
-      bash ./compose/docker-build-behave/ChangeMaster.sh mysql-master2 dble-2 dble-3
-      """
+    Given change the primary instance of mysql group named "group2" to "mysql-master2"
+
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostM2'"
 
     Given execute linux command in "dble-1"
