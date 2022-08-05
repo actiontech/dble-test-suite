@@ -6,6 +6,7 @@
 import logging
 from threading import Thread
 
+from steps.lib.utils import get_node
 from steps.lib.Flag import Flag
 from steps.lib.MySQLObject import MySQLObject
 from steps.lib.PostQueryCheck import PostQueryCheck
@@ -267,3 +268,29 @@ def delete_all_mysql_tables(context):
                     assert err2 is None, "execute drop table sql failed: {}".format(err2)
         logger.debug("{0} tables has been delete success".format(mysql_hostname))
     logger.info("all required tables has been delete success")
+
+
+@given('change the primary instance of mysql group named "{group_name}" to "{hostname}"')
+@given('restore mysql replication of the mysql group named "{group_name}" to the initial state')
+def step_impl(context, group_name, hostname=""):
+
+    if hostname == "":
+        hostname = context.cfg_mysql[group_name]["inst-1"]["hostname"]
+
+    node = get_node(hostname)
+    master_ip = node.ip
+    master_port = node.mysql_port
+
+    reset_sql = "reset master;stop slave;reset slave all;"
+    change_to_new_master = "change master to master_host='{0}', master_port={1},master_user='rsandbox',master_password='rsandbox',master_auto_position=1;".format(master_ip, master_port)
+    start_slave = "start slave;"
+
+    execute_sql_in_host(hostname, {"sql": reset_sql})
+
+    for _, info in context.cfg_mysql[group_name].items():
+        if info["hostname"] != hostname:
+            execute_sql_in_host(info["hostname"], {"sql": reset_sql})
+            execute_sql_in_host(info["hostname"], {"sql": change_to_new_master})
+            execute_sql_in_host(info["hostname"], {"sql": start_slave})
+
+    logger.info("{0} primary instance has been changed to {1} success".format(group_name, hostname))
