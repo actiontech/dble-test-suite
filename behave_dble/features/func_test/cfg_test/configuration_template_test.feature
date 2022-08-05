@@ -34,16 +34,16 @@ Feature: use template to generate configuration file, check function is normal
     """
     s/ip1:3306/172.100.9.5:3306/
     s/ip2:3306/172.100.9.6:3306/
-    s/ip3:3306/172.100.9.6:3307/
-    s/ip4:3306/172.100.9.6:3308/
     s/your_user/test/g
     s/your_psw/111111/g
+    31,42d
     """
     Given update file content "{install_dir}/dble/conf/user.xml" in "dble-1" with sed cmds
     """
     s/shardingUser name="root"/shardingUser name="test"/
     s/managerUser name="man1"/managerUser name="root"/
     s/\<password="[0-9]\{6\}"/password="111111"/g
+    31d
     """
     Then Restart dble in "dble-1" success
 
@@ -57,5 +57,3 @@ Feature: use template to generate configuration file, check function is normal
       | conn_0 | True    | drop table if exists tb_global2     | success                                                                        | testdb |
       | conn_0 | True    | create table tb_hash_string(id int) | success                                                                        | testdb |
       | conn_0 | True    | create table tb_global2(id int)     | success                                                                        | testdb |
-     #for issue http://10.186.18.11/jira/browse/DBLE0REQ-328
-     # | conn_0 | True    | show all tables                     | hasStr{(('tb_global2', 'GLOBAL TABLE'), ('tb_hash_string', 'SHARDING TABLE'))} | testdb |

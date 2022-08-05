@@ -35,7 +35,6 @@ used_in_local: create_venv up
 	pipenv run behave features/setup.feature
 
 run_cluster_case: up
-	bash ${PWD}/compose/docker-build-behave/init_cluster_conf.sh
 	pipenv run behave features/setup.feature \
 	features/cluster/ 
 	
