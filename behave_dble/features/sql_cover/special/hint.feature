@@ -92,11 +92,11 @@ Feature: verify hint sql
       | test | 111111 | conn_0 | True    | /*!dble:sql=select id from test_shard where id =4*/ insert into test_table values(2,'test2')                                             | success | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                      | expect                  | db  |
-      | test | 111111 | conn_0 | False   | show tables              | has{('test_table'),}    | db1 |
-      | test | 111111 | conn_0 | False   | show tables              | has{('test_index'),}    | db1 |
-      | test | 111111 | conn_0 | True    | select * from test_table | has{(2L, 'test2'),}     | db1 |
-      | test | 111111 | conn_1 | False   | show tables              | hasnot{('test_table'),} | db2 |
-      | test | 111111 | conn_1 | True    | show tables              | hasnot{('test_index'),} | db2 |
+      | test | 111111 | conn_1 | False   | show tables              | has{('test_table'),}    | db1 |
+      | test | 111111 | conn_1 | False   | show tables              | has{('test_index'),}    | db1 |
+      | test | 111111 | conn_1 | False   | select * from test_table | has{(2L, 'test2'),}     | db1 |
+      | test | 111111 | conn_2 | False   | show tables              | hasnot{('test_table'),} | db2 |
+      | test | 111111 | conn_2 | False   | show tables              | hasnot{('test_index'),} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                | expect                                                                       | db      |
       | test | 111111 | conn_0 | False   | /*!dble:sql=select id from test_shard where id =4*/ drop table test_table                                          | success                                                                      | schema1 |
@@ -110,29 +110,29 @@ Feature: verify hint sql
       | test | 111111 | conn_0 | True    | /*!dble:sql=select id from test_shard where id =4*/ update test_table set name = 'dn1'                             | success                                                                      | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                      | expect                                   | db  |
-      | test | 111111 | conn_0 | False   | select * from test_table | has{(2,'dn1'),(4,'dn1')}                 | db1 |
-      | test | 111111 | conn_0 | True    | select * from test_table | has{(1,'test_table1'),(3,'test_table3')} | db2 |
+      | test | 111111 | conn_1 | False    | select * from test_table | has{(2,'dn1'),(4,'dn1')}                 | db1 |
+      | test | 111111 | conn_2 | False    | select * from test_table | has{(1,'test_table1'),(3,'test_table3')} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                        | expect  | db      |
-      | test | 111111 | conn_0 | True    | /*!dble:sql=select id from test_shard where id =4*/ delete from test_table | success | schema1 |
+      | test | 111111 | conn_0 | False    | /*!dble:sql=select id from test_shard where id =4*/ delete from test_table | success | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                      | expect                                   | db  |
-      | test | 111111 | conn_0 | False   | select * from test_table | length{(0)}                              | db1 |
-      | test | 111111 | conn_0 | True    | select * from test_table | has{(1,'test_table1'),(3,'test_table3')} | db2 |
+      | test | 111111 | conn_1 | False    | select * from test_table | length{(0)}                              | db1 |
+      | test | 111111 | conn_2 | False    | select * from test_table | has{(1,'test_table1'),(3,'test_table3')} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                  | expect  | db      |
-      | test | 111111 | conn_0 | True    | /*!dble:sql=select id from test_shard where id =4*/ insert into test_table select id,name from test_shard where id>4 | success | schema1 |
+      | test | 111111 | conn_0 | False    | /*!dble:sql=select id from test_shard where id =4*/ insert into test_table select id,name from test_shard where id>4 | success | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                      | expect                     | db  |
-      | test | 111111 | conn_0 | False   | select * from test_table | has{(6, 'test_shard6')}    | db1 |
-      | test | 111111 | conn_0 | True    | select * from test_table | hasnot{(6, 'test_shard6')} | db2 |
+      | test | 111111 | conn_1 | False   | select * from test_table | has{(6, 'test_shard6')}    | db1 |
+      | test | 111111 | conn_2 | False    | select * from test_table | hasnot{(6, 'test_shard6')} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                | expect  | db      |
       | test | 111111 | conn_0 | True    | /*!dble:sql=select id from test_shard where id =5*/ replace test_table select id,name from test_shard where id < 7 | success | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                      | expect                     | db  |
-      | test | 111111 | conn_0 | False   | select * from test_table | hasnot{(5, 'test_shard5')} | db1 |
-      | test | 111111 | conn_0 | True    | select * from test_table | has{(5, 'test_shard5')}    | db2 |
+      | test | 111111 | conn_1 | True    | select * from test_table | hasnot{(5, 'test_shard5')} | db1 |
+      | test | 111111 | conn_2 | True    | select * from test_table | has{(5, 'test_shard5')}    | db2 |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                          | expect    | db      |
@@ -140,8 +140,8 @@ Feature: verify hint sql
       | test | 111111 | conn_0 | True    | /*!dble:sql=select id from test_shard where id =4*/ alter table test_table add c varchar(20) | success   | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql             | expect       | db  |
-      | test | 111111 | conn_0 | False   | desc test_table | length{(3)}} | db1 |
-      | test | 111111 | conn_0 | True    | desc test_table | length{(2)}} | db2 |
+      | test | 111111 | conn_1 | True    | desc test_table | length{(3)}} | db1 |
+      | test | 111111 | conn_2 | True    | desc test_table | length{(2)}} | db2 |
 
   @TRIVIAL @current
   Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 1 #3
