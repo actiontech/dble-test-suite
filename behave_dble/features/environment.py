@@ -121,12 +121,10 @@ def before_feature(context, feature):
 
     if active_tag_matcher.should_exclude_with(feature.tags):
         feature.skip(reason="DISABLED ACTIVE-TAG")
-
     else:
-        if context.test_conf['auto_retry']:
-            for scenario in feature.scenarios:
-                patch_scenario_with_autoretry(scenario, max_attempts=context.test_conf['auto_retry'])
-
+        for scenario in feature.scenarios:
+            if "auto_retry" in scenario.tags:
+                patch_scenario_with_autoretry(scenario, max_attempts=context.test_conf['auto_retry'] + 1)
 
     if "setup" in feature.tags:
         context.ssh_clients = create_ssh_client(context)
