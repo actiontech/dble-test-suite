@@ -14,7 +14,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-        <property name="sequnceHandlerType">3</property>
+        <property name="sequnceHandlerType">2</property>
     """
     Then get resultset of user cmd "select sysdate()" named "sysTime"
     Given change file "sequence_distributed_conf.properties" in "dble-1" locate "install_dir" with sed cmds
