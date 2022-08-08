@@ -10,6 +10,8 @@ Feature: test slow query log related manager command
         | conn_0 | False   | show @@slow_query_log   | has{(('1',),)}  |
         | conn_0 | False   | disable @@slow_query_log| success      |
         | conn_0 | True    | show @@slow_query_log   | has{(('0',),)}  |
+
+
   @NORMAL
   Scenario: test "show @@slow_query.time", "reload @@slow_query.time", "show @@slow_query.flushperid", "reload @@slow_query.flushperid", "show @@slow_query.flushsize", "reload @@slow_query.flushsize" #2
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -38,6 +40,7 @@ Feature: test slow query log related manager command
         | conn_0 | False   | show @@slow_query.flushsize           | has{(('5',),)}    |
         | conn_0 | False   | reload @@slow_query.flushsize = 50    | success        |
         | conn_0 | True    | show @@slow_query.flushsize           | has{(('50',),)}   |
+
 
   @NORMAL
   Scenario: check slow query log written in assigned file #3
@@ -412,8 +415,6 @@ Feature: test slow query log related manager command
       | conn_0 | true    | drop table if exists schema2.v1                 | success | schema1 |
 
 
-
-
   Scenario: enable slow log function and execute sql, failed sql will not be logged to slow log; successful SQL will be logged to slow log #5
     Given delete file "/opt/dble/slowQuery" on "dble-1"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -502,7 +503,7 @@ Feature: test slow query log related manager command
       delete from test
       """
 
-    @skip_restart
+
   Scenario: Added Inner_Execute, SIMPLE_QUERY properties #7
       Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
        """
@@ -513,7 +514,6 @@ Feature: test slow query log related manager command
        | conn   | toClose | sql                                   | expect         |
        | conn_0 | False   | enable @@slow_query_log               | success        |
        | conn_0 | False   | reload @@slow_query.time = 0          | success        |
-       | conn_0 | False   | show @@slow_query.time                | has{(('0',),)} |
 
 ###################case:use schema1
     Then execute sql in "dble-1" in "user" mode
@@ -554,7 +554,7 @@ Feature: test slow query log related manager command
       | user          | passwd | conn   | toClose | sql         | expect   |
       | test1:tenant1 | 111111 | conn_2 | False   | show tables | success  |
 
-#    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+#    Then check the occur times of following key in file "/opt/dble/slowlogs/slow-query.log" in "dble-1"
 #      | key                    | occur_times |
 #      | Query_time             | 2        |
 #      | Lock_time              | 2        |
@@ -585,7 +585,7 @@ Feature: test slow query log related manager command
       | test1:tenant1 | 111111 | conn_2 | False   | show tables | success      |
 #      | test1:tenant1 | 111111 | conn_2 | False   | show trace  | length{(4)}  |
 
-#    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+#    Then check the occur times of following key in file "/opt/dble/slowlogs/slow-query.log" in "dble-1"
 #      | key                    | occur_times |
 #      | Query_time             | 6        |
 #      | Lock_time              | 6        |
@@ -598,5 +598,68 @@ Feature: test slow query log related manager command
       """
       Result_Fetch
       """
+    Then check following text exist "N" in file "/opt/dble/logs/wrapper.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
 
 
+  Scenario: commit rollback #8
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                         | expect  | db      |
+      | conn_1 | False   | drop table if exists test   | success | schema1 |
+      | conn_1 | False   | create table test (id int)  | success | schema1 |
+
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                   | expect         |
+      | conn_0 | False   | enable @@slow_query_log               | success        |
+      | conn_0 | False   | reload @@slow_query.time = 0          | success        |
+
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                         | expect  | db      |
+      | conn_1 | False   | begin                       | success | schema1 |
+      | conn_1 | False   | insert into test values (1) | success | schema1 |
+      | conn_1 | False   | rollback                    | success | schema1 |
+
+    Then check the occur times of following key in file "/opt/dble/slowlogs/slow-query.log" in "dble-1"
+      | key                    | occur_times |
+      | Query_time             | 3        |
+      | Lock_time              | 3        |
+      | Rows_sent              | 3        |
+      | Rows_examined          | 3        |
+      | Read_SQL               | 3        |
+      | Inner_Execute          | 2        |
+      | Write_Client           | 3        |
+      | SIMPLE_QUERY           | 2        |
+    Given record current dble log "/opt/dble/slowlogs/slow-query.log" line number in "log_1"
+#####sleep just create time to check "commit"  Write_Client time
+    Given sleep "5" seconds
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                         | expect  | db      |
+      | conn_1 | False   | commit                      | success | schema1 |
+###### check   Write_Client <  5s
+    Then check following text exist "Y" in file "/opt/dble/slowlogs/slow-query.log" after line "log_1" in host "dble-1"
+    """
+    Write_Client: 0.00
+    commit
+    """
+    Then check the occur times of following key in file "/opt/dble/slowlogs/slow-query.log" in "dble-1"
+      | key                    | occur_times |
+      | Query_time             | 4        |
+      | Lock_time              | 4        |
+      | Rows_sent              | 4        |
+      | Rows_examined          | 4        |
+      | Read_SQL               | 4        |
+      | Inner_Execute          | 3        |
+      | Write_Client           | 4        |
+      | SIMPLE_QUERY           | 3        |
+    Then check following text exist "N" in file "/opt/dble/logs/wrapper.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
