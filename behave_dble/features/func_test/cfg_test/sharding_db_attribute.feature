@@ -99,13 +99,13 @@ Feature: test some import nodes attr in sharding.xml
       <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
       <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
     """
-    #set connectionTimeout=4000ms in case the 15 created connections commit after 5s.
+    #set connectionTimeout: In the implementation, sleep for five seconds after each connection is obtained, and it is necessary to ensure that there is no connection reuse
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
           <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="15" minCon="3" primary="true">
-          <property name="connectionTimeout">4000</property>
+          <property name="connectionTimeout">2000</property>
           </dbInstance>
       </dbGroup>
     """
@@ -118,7 +118,8 @@ Feature: test some import nodes attr in sharding.xml
     Then create "16" conn while maxCon="15" finally close all conn
     """
     Connection is not available
-   """
+    """
+
   @NORMAL
   Scenario: if "dbGroup" node attr "maxCon" less than or equal the count of related dbGroups, maxCon will be equal dbGroups; A DDL will take 1 more than we can see, the invisible one is used to take ddl metadata #5
     Given delete the following xml segment
