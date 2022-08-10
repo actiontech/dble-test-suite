@@ -4,7 +4,7 @@
 Feature: if childnodes value of system in server.xml are invalid, replace them with default values
   only check part of system childnodes, not all, list from https://github.com/actiontech/dble/issues/579
 
-  @NORMAL
+  @NORMAL @skip #1888
   Scenario: config all system property, some values are illegal, start dble success #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
