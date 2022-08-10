@@ -42,7 +42,7 @@ Feature: test "check xml version warning message in dble.log and dryrun"
       version=\"9.9.9.0\"
      """
   @current
-  Scenario: check xml version warning  message in dryrun and dble.log when the version number：x.y is incorrect #2
+  Scenario: check xml version warning  message in dryrun and dble.log when the version number:x.y is incorrect #2
     Given add attribute "{"version":"1.0"}" to rootnode in "user.xml"
     Given add attribute "{"version":"1.1"}" to rootnode in "db.xml"
     Then execute admin cmd "reload @@config_all"
