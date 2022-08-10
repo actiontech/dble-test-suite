@@ -7,3 +7,4 @@ behave_dble/dble_conf/sql_cover/.DS_Store
 features/.DS_Store
 drivers/jdbc-api-test/target
 drivers/java-interface/dbletest/
+.vscode/
