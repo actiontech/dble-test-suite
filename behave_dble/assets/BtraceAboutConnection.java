@@ -54,7 +54,7 @@ public final class BtraceAboutConnection {
     }
 
     @OnMethod(
-            clazz = "com.actiontech.dble.net.connection.PooledConnection",
+            clazz = "com.actiontech.dble.backend.pool.ConnectionPool",
 //             location=@Location(value=Kind.LINE,line=373) for 3.22.01
             location=@Location(value=Kind.LINE,line=382)
 
