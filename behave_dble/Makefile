@@ -3,7 +3,7 @@ DRIVER_DIR = $(shell dirname ${PWD})
 
 
 run_sql_support_special:
-	pipenv run behave -D dble_conf=sql_cover_mixed features/install_uninstall/install_dble.feature \
+	pipenv run behave -Dreset=true -D dble_conf=sql_cover_mixed features/install_uninstall/install_dble.feature \
 	features/sql_cover/special/
 
 run_sql_support_global:
