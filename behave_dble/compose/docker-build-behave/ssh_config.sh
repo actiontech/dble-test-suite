@@ -14,7 +14,7 @@ auto_ssh_copy_id(){
 }
 
 ssh_copy_id_to_all(){
-  for((i=0; i<=5; i=i+1)); do
+  for((i=0; i<=9; i=i+1)); do
    #   ssh-keygen -f "/root/.ssh/known_hosts" -R ${mysql_ips[$i]}
    #   ssh-keygen -f "/root/.ssh/known_hosts" -R ${Hostname[$i]}
       echo "${mysql_ips[$i]}  ${Hostname[$i]}" >> /etc/hosts 
