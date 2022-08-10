@@ -8,6 +8,7 @@ Feature: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostT
   Scenario: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostTimeStat on, and then execute query success #1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
+    $a\-DbackendProcessors=12
     $a\-DusePerformanceMode=1
     $a\-DusingAIO=1
     $a\-DuseThreadUsageStat=1

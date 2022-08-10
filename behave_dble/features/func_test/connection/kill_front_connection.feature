@@ -203,4 +203,4 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                       | expect                     | db      |
-      | conn_3 | True    | delete from sharding_4_t1 | MySQL server has gone away | schema1 |
+      | conn_3 | True    | delete from sharding_4_t1 | Lost connection to MySQL server during query | schema1 |

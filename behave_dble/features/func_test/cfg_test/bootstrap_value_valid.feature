@@ -91,16 +91,15 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       $a\-DfrontSocketSoRcvbuf=-1048576
       $a\-DfrontSocketSoSndbuf=-4194304
     """
+    # 不同环境默认值不同，可能导致案例失败， 如 backendProcessorExecutor，backendProcessors 默认值为宿主机核数
     Then restart dble in "dble-1" failed for
     """
       Property \[ autocommit \] '-3' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       property \[ backSocketNoDelay \] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       Property \[ backSocketSoRcvbuf \] '-4194304' in bootstrap.cnf is illegal, you may need use the default value 4194304 replaced
       Property \[ backSocketSoSndbuf \] '-1048576' in bootstrap.cnf is illegal, you may need use the default value 1048576 replaced
-      Property \[ backendProcessorExecutor \] '-4' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
-      Property \[ backendProcessors \] '-3' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
-      Property \[ processorExecutor \] '-3' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
-      Property \[ writeToBackendExecutor \] '-4' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
+      Property \[ backendProcessorExecutor \] '-4' in bootstrap.cnf is illegal, you may need use the default value 80 replaced
+      Property \[ backendProcessors \] '-3' in bootstrap.cnf is illegal, you may need use the default value 80 replaced
       Property \[ complexExecutor \] '-4' in bootstrap.cnf is illegal, you may need use the default value 8 replaced
       Property \[ charset \] 'utf-8' in bootstrap.cnf is illegal, use utf8mb4 replaced
       property \[ bufferPoolChunkSize \] '-32767' in bootstrap.cnf is illegal, you may need use the default value 4096 replaced
