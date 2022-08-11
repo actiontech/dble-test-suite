@@ -8,7 +8,7 @@
 
 Feature: connection test in rwSplit mode
 
-     @skip_restart @skip # skip about DBLE0REQ-1793
+     @skip_restart
      Scenario: [testOnBorrow=false] when connection already has been obtained, old dbGroup will delay to close        #1
 
        Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -78,13 +78,13 @@ Feature: connection test in rwSplit mode
      Given sleep "5" seconds
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1"
         """
-          \[background task\]recycle old group\`ha_group2\` resulttrue
+          \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
         """
 
      Given record current dble log line number in "log_num_2"
      Given prepare a thread execute sql "select * from test" with "conn_1"
 
-       #use delete dbInstance to trigger reload
+       #use add dbInstance to trigger reload
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                          |expect               | db      |
         | conn_2 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.6',3307,'test','111111','false','false',1,99) | success            | dble_information   |
@@ -97,9 +97,9 @@ Feature: connection test in rwSplit mode
 
        #make sure the check log happens 5 seconds after the dbGroup is dropped, because the connection recycle timer task happens every 5 seconds
      Given sleep "5" seconds
-     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_2" in host "dble-1"
+     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_2" in host "dble-1"
         """
-          \[background task\]recycle old group\`ha_group2\` resulttrue
+          \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
         """
      Then check btrace "BtraceRwSelect.java" output in "dble-1" with "2" times
        """
@@ -111,7 +111,6 @@ Feature: connection test in rwSplit mode
      Given delete file "/opt/dble/BtraceRwSelect.java" on "dble-1"
      Given delete file "/opt/dble/BtraceRwSelect.java" on "dble-1"
 
-   @skip # skip about DBLE0REQ-1793
    Scenario: [testOnBorrow = true] when connection already has been obtained, old dbGroup will delay to close        #2
 
      Given delete the following xml segment
@@ -161,11 +160,11 @@ Feature: connection test in rwSplit mode
      Given sleep "5" seconds
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1"
         """
-          \[background task\]recycle old group\`ha_group2\` resulttrue
+          \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
         """
 
-     Given record current dble log line number in "log_num_4"
      Given prepare a thread execute sql "select * from test" with "conn_3"
+     Given record current dble log line number in "log_num_4"
 
      #use add dbInstance to trigger reload
      Then execute sql in "dble-1" in "admin" mode
@@ -180,9 +179,9 @@ Feature: connection test in rwSplit mode
 
      #make sure the check log happens 5 seconds after the dbGroup is dropped, because the connection recycle timer task happens every 5 seconds
      Given sleep "5" seconds
-     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_4" in host "dble-1"
+     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_4" in host "dble-1"
         """
-          \[background task\]recycle old group\`ha_group2\` resulttrue
+          \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
         """
 
      Then check btrace "BtraceRwSelect.java" output in "dble-1" with "2" times
@@ -198,7 +197,6 @@ Feature: connection test in rwSplit mode
        |user| conn   | toClose | sql                                     | expect  |
        |rwS1| conn_1 | true    | drop database testdb                    | success |
 
-  @skip # skip about DBLE0REQ-1793
   Scenario: When the front connection is bound with the dbGroup and trigger reload less ten times, result can return correctly      #3
 
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -268,10 +266,10 @@ Feature: connection test in rwSplit mode
           (1,)
         """
 
-     Then check btrace "BtraceSelectRWDbGroup.java" output in "dble-1" with "4" times
-        """
-          get into reSelectRWDbGroup
-        """
+    Then check btrace "BtraceSelectRWDbGroup.java" output in "dble-1" with "2" times
+      """
+        get into reSelectRWDbGroup
+      """
     Given stop Btrace script "BtraceSelectRWDbGroup.java" in "dble-1"
     Given destroy Btrace threads list
     Then execute sql in "dble-1" in "user" mode
@@ -280,7 +278,6 @@ Feature: connection test in rwSplit mode
     Given delete file "/opt/dble/BtraceSelectRWDbGroup.java" on "dble-1"
     Given delete file "/opt/dble/BtraceSelectRWDbGroup.java.log" on "dble-1"
 
-    @skip # skip about DBLE0REQ-1793
     Scenario: When the front connection is bound with the dbGroup, reload is triggered multiple times and the dbgroup connection is obtained recursively ten times    #4
 
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -319,36 +316,45 @@ Feature: connection test in rwSplit mode
        |rwS1| conn_1 | False   | insert into test values(1)              | success | testdb    |
        |rwS1| conn_1 | False   | select * from test                      | success | testdb    |
 
-     Given delete file "/opt/dble/BtraceSelectRWDbGroup.java" on "dble-1"
-     Given delete file "/opt/dble/BtraceSelectRWDbGroup.java.log" on "dble-1"
-     Given prepare a thread run Btrace script "BtraceSelectRWDbGroup.java" in "dble-1"
+     Then execute sql in "mysql-slave1"
+      | conn   | toClose | sql                             | expect  |
+      | conn_0 | True    | set global max_connections=200  | success |
+
+     Given delete file "/opt/dble/BtraceRwSplitSession.java" on "dble-1"
+     Given delete file "/opt/dble/BtraceRwSplitSession.java.log" on "dble-1"
+     Given prepare a thread run Btrace script "BtraceRwSplitSession.java" in "dble-1"
      Given sleep "5" seconds
      Given prepare a thread execute sql "select * from test" with "conn_1"
 
-     #every time need 5 seconds,make sure execute time more than 11*5
-     Then execute "admin" sql for "60" seconds in "dble-1"
+     #every time need 2 seconds,make sure execute time more than 11*2
+     Then execute "admin" sql for "24" seconds in "dble-1"
         | conn   | toClose | sql                                                         | db      |
         | conn_2 | False   | delete from dble_db_instance where name='hostM2'            | dble_information   |
         | conn_2 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.6',3307,'test','111111','false','false',1,99)| dble_information|
 
-     #if check failed, should first try add BtraceSelectRWDbGroup.java sleep time
+     #if check failed, should first try add BtraceRwSplitSession.java sleep time
      Then check sql thread output in "err"
         """
           is always invalid, pls check reason
         """
 
-     #recursion 10 times still not obtain invalid dbGroup connection, and eleventh return error, enter BtraceSelectRWDbGroup total 11 times
-     Then check Btrace "BtraceSelectRWDbGroup.java" output in "dble-1" with "11" times
+     #recursion 10 times still not obtain invalid dbGroup connection, and eleventh return error, enter BtraceRwSplitSession total 11 times
+     Then check Btrace "BtraceRwSplitSession.java" output in "dble-1" with "11" times
         """
-          get into reSelectRWDbGroup
+          get into bindRwSplitSession
         """
-    Given stop Btrace script "BtraceSelectRWDbGroup.java" in "dble-1"
-    Given destroy Btrace threads list
-    Then execute sql in "dble-1" in "user" mode
+     Given stop Btrace script "BtraceRwSplitSession.java" in "dble-1"
+     Given destroy Btrace threads list
+
+     Then execute sql in "dble-1" in "user" mode
        |user| conn   | toClose | sql                                     | expect  |
        |rwS1| conn_1 | true    | drop database testdb                    | success |
 
-    Given delete file "/opt/dble/BtraceSelectRWDbGroup.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceSelectRWDbGroup.java.log" on "dble-1"
+     Then execute sql in "mysql-slave1"
+       | conn   | toClose | sql                             | expect  |
+       | conn_0 | True    | set global max_connections=151  | success |
+
+      Given delete file "/opt/dble/BtraceRwSplitSession.java" on "dble-1"
+      Given delete file "/opt/dble/BtraceRwSplitSession.java.log" on "dble-1"
 
 
