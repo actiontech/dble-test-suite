@@ -554,14 +554,14 @@ Feature: test slow query log related manager command
       | user          | passwd | conn   | toClose | sql         | expect   |
       | test1:tenant1 | 111111 | conn_2 | False   | show tables | success  |
 
-#    Then check the occur times of following key in file "/opt/dble/slowlogs/slow-query.log" in "dble-1"
-#      | key                    | occur_times |
-#      | Query_time             | 2        |
-#      | Lock_time              | 2        |
-#      | Rows_sent              | 2        |
-#      | Rows_examined          | 2        |
-#      | Read_SQL               | 2        |
-#      | Inner_Execute          | 2        |
+    Then check the occur times of following key in file "/opt/dble/slowlogs/slow-query.log" in "dble-1"
+      | key                    | occur_times |
+      | Query_time             | 2        |
+      | Lock_time              | 2        |
+      | Rows_sent              | 2        |
+      | Rows_examined          | 2        |
+      | Read_SQL               | 2        |
+      | Inner_Execute          | 2        |
 #      | Write_Client           | 2        |
     Then check following text exist "N" in file "/opt/dble/slowlogs/slow-query.log" in host "dble-1"
       """
@@ -583,17 +583,18 @@ Feature: test slow query log related manager command
       | test1:tenant1 | 111111 | conn_2 | False   | set trace=1 | success      |
       | test1:tenant1 | 111111 | conn_2 | False   | show trace  | length{(4)}  |
       | test1:tenant1 | 111111 | conn_2 | False   | show tables | success      |
-#      | test1:tenant1 | 111111 | conn_2 | False   | show trace  | length{(4)}  |
+      | test1:tenant1 | 111111 | conn_2 | False   | show trace  | length{(4)}  |
 
-#    Then check the occur times of following key in file "/opt/dble/slowlogs/slow-query.log" in "dble-1"
-#      | key                    | occur_times |
-#      | Query_time             | 6        |
-#      | Lock_time              | 6        |
-#      | Rows_sent              | 6        |
-#      | Rows_examined          | 6        |
-#      | Read_SQL               | 6        |
-#      | Inner_Execute          | 6        |
-#      | Write_Client           | 6        |
+    Then check the occur times of following key in file "/opt/dble/slowlogs/slow-query.log" in "dble-1"
+      | key                    | occur_times |
+      | Query_time             | 6        |
+      | Lock_time              | 6        |
+      | Rows_sent              | 6        |
+      | Rows_examined          | 6        |
+      | Read_SQL               | 6        |
+      | Inner_Execute          | 6        |
+      | Write_Client           | 6        |
+
     Then check following text exist "N" in file "/opt/dble/slowlogs/slow-query.log" in host "dble-1"
       """
       Result_Fetch
