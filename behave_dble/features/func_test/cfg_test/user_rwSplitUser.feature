@@ -428,6 +428,8 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_2 | False   | dbGroup @@switch name='ha_group3' master='hostS1'             | success  |
       | conn_2 | False   | dbGroup @@enable name='ha_group3'                             | success  |
       | conn_2 | False   | dbGroup @@events                                              | success  |
+   #need to wait for the heartbeat to return to normal,due to DBLE0REQ-1847
+    Given sleep "1" seconds
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                | expect   |
       | rwS1  | 111111 | conn_1 | False   | select user()      | success  |
