@@ -137,10 +137,10 @@ Feature:  dble_db_instance table test
       | conn_0 | False   | select last_heartbeat_ack,heartbeat_status,heartbeat_failure_in_last_5min from dble_db_instance | dble_information |
     Then check resultset "dble_db_instance_5" has lines with following column values
       | last_heartbeat_ack-0 | heartbeat_status-1 | heartbeat_failure_in_last_5min-2 |
-      | ok                   | idle               | 0                                |
-      | ok                   | idle               | 0                                |
-      | init                 | idle               | 0                                |
-      | ok                   | idle               | 0                                |
+      | OK                   | idle               | 0                                |
+      | OK                   | idle               | 0                                |
+      | INIT                 | idle               | 0                                |
+      | OK                   | idle               | 0                                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_6"
       | conn   | toClose | sql                                                                                                                                                                                 | db               |
       | conn_0 | False   | select connection_timeout,connection_heartbeat_timeout,time_between_eviction_runs_millis,evictor_shutdown_timeout_millis,idle_timeout,heartbeat_period_millis from dble_db_instance | dble_information |
