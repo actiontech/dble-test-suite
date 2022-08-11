@@ -232,9 +232,9 @@ Feature: check whiteIPs in user.xml
     <shardingUser name="test2" password="111111" schemas="schema1" whiteIPs="172.100.9.5,172.100.9.6"/>
     <shardingUser name="test3" password="111111" schemas="schema1" whiteIPs="172.100.9.1-172.100.9.4,172.100.9.5"/>
 
-    <rwSplitUser name="split1" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.6"/>
-    <rwSplitUser name="split2" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.5,172.100.9.6"/>
-    <rwSplitUser name="split3" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.1-172.100.9.4,172.100.9.5"/>
+    <rwSplitUser name="split1" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.2"/>
+    <rwSplitUser name="split2" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.3,172.100.9.5"/>
+    <rwSplitUser name="split3" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.1-172.100.9.2,172.100.9.4-172.100.9.6,172.100.9.10"/>
     """
     Then execute admin cmd "reload @@config_all"
 

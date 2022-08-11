@@ -119,7 +119,7 @@ Feature: connection leak test
     Given sleep "5" seconds
     Then check sql thread output in "err"
       """
-        1105, "java.io.IOException: the dbInstance[172.100.9.5:3307] can't reach. Please check the dbInstance status"
+        1105, "java.io.IOException: the dbInstance[172.100.9.5:3306] can't reach. Please check the dbInstance status"
       """
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
