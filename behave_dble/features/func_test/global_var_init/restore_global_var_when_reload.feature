@@ -172,7 +172,8 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
 #    a heartbeat period is 2, 5 means wait more than 2 heartbeat period
     Given sleep "5" seconds
-    Then check general log in host "mysql-master1" has "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" occured ">2" times
+    # optimize by DBLE0REQ-1868 since 3.22.07.0
+    Then check general log in host "mysql-master1" has "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" occured "1" times
 
   @restore_global_setting
   Scenario:config autocommit/txIsolation to not default value, and backend mysql values are different, dble will set backend same as dble configed #6
