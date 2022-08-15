@@ -36,19 +36,19 @@ Feature: test addition, deletion and modification of dble_information on the man
       | conn   | toClose | sql                         | db               |
       | conn_0 | true    | select * from dble_db_group | dble_information |
     Then check resultset "dble_db_group_1" has lines with following column values
-      | name-0     | heartbeat_stmt-1   | heartbeat_timeout-2 | heartbeat_retry-3 | rw_split_mode-4 | delay_threshold-5 | disable_ha-6 | active-7 |
-      | ha_group1  | select user()      | 0                   | 1                 | 0               | 100               | false        | true     |
-      | ha_group2  | select user()      | 0                   | 1                 | 0               | 100               | false        | true     |
-      | ha_group3  | select 1           | 60                  | 1                 | 1               | -1                | false        | false    |
-      | ha_group4  | select 2           | 100                 | 1                 | 2               | 1000              | false        | false    |
-      | ha_group5  | show slave status  | 88                  | 1                 | 2               | 999               | true         | false    |
-      | ha_group6  | select @@read_only | 1                   | 2                 | 0               | -1                | true         | false    |
-      | ha_group7  | select 3           | 0                   | 1                 | 1               | -1                | false        | false    |
-      | ha_group8  | select 4           | 0                   | 1                 | 2               | -1                | false        | false    |
-      | ha_group9  | select 5           | 0                   | 1                 | 1               | -1                | false        | false    |
-      | ha_group10 | select user        | 0                   | 1                 | 2               | -1                | true         | false    |
-      | ha_group11 | select 6           | 0                   | 1                 | 3               | -1                | false        | false    |
-      | ha_group12 | select 7           | 100                 | 1                 | 3               | 1000              | false        | false    |
+      | name-0     | heartbeat_stmt-1   | heartbeat_timeout-2 | heartbeat_retry-3 | heartbeat_keep_alive-4 | rw_split_mode-5 | delay_threshold-6 | disable_ha-7 | active-8 |
+      | ha_group1  | select user()      | 0                   | 1                 | 60                     | 0               | 100               | false        | true     |
+      | ha_group2  | select user()      | 0                   | 1                 | 60                     | 0               | 100               | false        | true     |
+      | ha_group3  | select 1           | 60                  | 1                 | 60                     | 1               | -1                | false        | false    |
+      | ha_group4  | select 2           | 100                 | 1                 | 60                     | 2               | 1000              | false        | false    |
+      | ha_group5  | show slave status  | 88                  | 1                 | 60                     | 2               | 999               | true         | false    |
+      | ha_group6  | select @@read_only | 1                   | 2                 | 60                     | 0               | -1                | true         | false    |
+      | ha_group7  | select 3           | 0                   | 1                 | 60                     | 1               | -1                | false        | false    |
+      | ha_group8  | select 4           | 0                   | 1                 | 60                     | 2               | -1                | false        | false    |
+      | ha_group9  | select 5           | 0                   | 1                 | 60                     | 1               | -1                | false        | false    |
+      | ha_group10 | select user        | 0                   | 1                 | 60                     | 2               | -1                | true         | false    |
+      | ha_group11 | select 6           | 0                   | 1                 | 60                     | 3               | -1                | false        | false    |
+      | ha_group12 | select 7           | 100                 | 1                 | 60                     | 3               | 1000              | false        | false    |
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                                                                                                                    | expect                                                                                 | db               |
@@ -58,7 +58,7 @@ Feature: test addition, deletion and modification of dble_information on the man
       | conn_0 | false   | insert IGNORE into dble_db_group (name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('dbGroup4','select 1',0,1,1,100,'false')                                      | update syntax error, not support insert with syntax                                    | dble_information |
       | conn_0 | false   | insert into dble_db_group (name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('dbGroup4','select 1',0,1,1,100,'false') ON DUPLICATE KEY UPDATE heartbeat_timeout=1 | update syntax error, not support insert with syntax                                    | dble_information |
       | conn_0 | false   | insert dble_db_group name select name from dble_db_instance                                                                                                                                                            | Insert syntax error,not support insert ... select                                      | dble_information |
-      | conn_0 | false   | insert into dble_db_group value ('group1','select 1',-1,1,1,100,'false','ture')                                                                                                                                        | Column 'active' is not writable                                                        | dble_information |
+      | conn_0 | false   | insert into dble_db_group value ('group1','select 1',-1,1,60,1,100,'false','ture')                                                                                                                                        | Column 'active' is not writable                                                     | dble_information |
       | conn_0 | false   | insert into dble_db_group values ('group2',100,'select 2',1,2,1000,'false')                                                                                                                                            | Column count doesn't match value count at row 1                                        | dble_information |
       | conn_0 | false   | insert into dble_in.dble_db_group (name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('group3','select 1',0,1,1,100,'false')                                       | Unknown database 'dble_in'                                                             | dble_information |
       | conn_0 | false   | insert into dble_db_group(name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('ha_group3','select 1',0,1,1,100,'false')                                             | Duplicate entry 'ha_group3' for key 'PRIMARY'                                          | dble_information |
