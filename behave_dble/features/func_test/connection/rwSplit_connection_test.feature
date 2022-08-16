@@ -81,8 +81,8 @@ Feature: connection test in rwSplit mode
           \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
         """
 
-     Given record current dble log line number in "log_num_2"
      Given prepare a thread execute sql "select * from test" with "conn_1"
+     Given record current dble log line number in "log_num_2"
 
        #use add dbInstance to trigger reload
      Then execute sql in "dble-1" in "admin" mode
@@ -318,7 +318,7 @@ Feature: connection test in rwSplit mode
 
      Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                             | expect  |
-      | conn_0 | True    | set global max_connections=200  | success |
+      | conn_0 | True    | set global max_connections=500  | success |
 
      Given delete file "/opt/dble/BtraceRwSplitSession.java" on "dble-1"
      Given delete file "/opt/dble/BtraceRwSplitSession.java.log" on "dble-1"
