@@ -3,7 +3,7 @@
 # Created by maofei at 2019/4/16
 Feature: #mysql node disconnected,check the change of dble
   # Enter feature description here
-  @skip #issue-1888
+
   Scenario: # only one mysql node and it was disconnected    #1
     Given delete the following xml segment
       |file        | parent          | child               |
