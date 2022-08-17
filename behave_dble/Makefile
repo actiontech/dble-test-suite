@@ -38,7 +38,7 @@ run_managercmd_case: resetRp
 	features/func_test/managercmd/
 
 run_cluster:
-	pipenv run behave -Dis_cluster=true -Dreset=true features/install_uninstall/single_dble_and_zk_cluster.feature \
+	pipenv run behave -Dis_cluster=true -Dreset=false features/install_uninstall/single_dble_and_zk_cluster.feature \
 	features/install_uninstall/install_dble_cluster.feature \
 	features/cluster/ \
 	features/install_uninstall/stop_dble_cluster.feature
