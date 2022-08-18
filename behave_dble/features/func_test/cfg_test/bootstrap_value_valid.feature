@@ -229,7 +229,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     These properties in bootstrap.cnf or bootstrap.dynamic.cnf are not recognized: testcon
     """
 
-  @restore_global_setting
+  @restore_global_setting @skip_restart
   Scenario:config  MaxPacketSize in bootstrap.cnf, dble will get the lower value of MaxPacketSize and (max_allowed_packet-1024) #8
   """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
@@ -265,7 +265,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    $a\-DmaxPacketSize=5000000
+    s/-DmaxPacketSize=6291456/-DmaxPacketSize=5000000/
     """
     Then restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
