@@ -68,7 +68,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 5000      | false  | None           |
       | hostS1 | 172.100.9.6 | 3307   | ok        | 0       | idle     | 5000      | false  | None           |
       | hostS2 | 172.100.9.6 | 3308   | init      | 0       | idle     | 5000      | true   | None           |
-#case one slave set iptables to check slave RS_CODE is "time_out"
+#case one slave set iptables to check slave RS_CODE is "timeout"
     Given execute oscmd in "mysql-slave1"
       """
       iptables -A INPUT -s 172.100.9.1 -j DROP
@@ -81,8 +81,8 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     Then check resultset "16" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
       | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | time_out  | 0       | 5000      | false  | None          |
-      | hostS1 | 172.100.9.6 | 3307   | time_out  | 0       | 5000      | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | timeout  | 0       | 5000      | false  | None          |
+      | hostS1 | 172.100.9.6 | 3307   | timeout  | 0       | 5000      | false  | None          |
       | hostS2 | 172.100.9.6 | 3308   | init      | 0       | 5000      | true   | None          |
 
     Given execute oscmd in "mysql-slave1"
@@ -196,7 +196,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 10000      | false  | None             |
       | hostS1 | 172.100.9.6 | 3307   | ok        | 0       | idle     | 10000      | false  | None             |
       | hostS2 | 172.100.9.6 | 3308   | ok        | 0       | idle     | 10000      | false  | None             |
-#case set master iptables to check master RS_CODE is "time_out"
+#case set master iptables to check master RS_CODE is "timeout"
     Given execute oscmd in "mysql-master2"
       """
        iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
@@ -208,7 +208,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "43" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM2 | 172.100.9.6 | 3306   | time_out  | 0       | 10000     | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | timeout  | 0       | 10000     | false  | None          |
       | hostS1 | 172.100.9.6 | 3307   | ok        | 0       | 10000     | false  | None          |
       | hostS2 | 172.100.9.6 | 3308   | ok        | 0       | 10000     | false  | None          |
     Given execute oscmd in "mysql-master2"
