@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+mysqlclient = "==1.4.2"
+behave = "==1.2.6"
+environs = "*"
+paramiko = "==2.4.2"
+pyhamcrest = "*"
+pymysql = "*"
+pyyaml = "*"
+allure-behave = "*"
+lxml = "*"
+pip = "*"
+cryptography = "==2.3.0"
+
+[dev-packages]
+pylint = "*"
+types-paramiko = "*"
+types-PyMySQL = "*"
+types-PyYAML = "*"
+autopep8 = "*"
+
+[requires]
+python_version = "2.7"

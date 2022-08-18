@@ -1,8 +1,16 @@
-version: '2'
+version: '2.2'
 networks:
-  default:
-    external:
-       name: dble_test
+  dble-net:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: 172.100.9.0/24
+          gateway: 172.100.9.8
+        - subnet: 2001:3984:3989::/64
+          gateway: 2001:3984:3989::1
+
+
 services:
     dble-1:
         image: dble/dble_test_general:latest
@@ -14,14 +22,14 @@ services:
         command: ["dble","1"]
         volumes:
             - /opt/dble-1:/init_assets
-            - /opt/share:/share
+            - /share:/share
         ports:
             - "7121:9066"
             - "7131:8066"
             - "7141:3306"
             - "7151:22"
         networks:
-            default:
+            dble-net:
               ipv4_address: 172.100.9.1
               ipv6_address: 2001:3984:3989::11
         dns: 114.114.114.114
@@ -36,14 +44,14 @@ services:
         command: ["dble","2"]
         volumes:
             - /opt/dble-2:/init_assets
-            - /opt/share:/share
+            - /share:/share
         ports:
             - "7122:9066"
             - "7132:8066"
             - "7142:3306"
             - "7152:22"
         networks:
-            default:
+            dble-net:
               ipv4_address: 172.100.9.2
               ipv6_address: 2001:3984:3989::12
         dns: 114.114.114.114
@@ -58,14 +66,14 @@ services:
         command: ["dble","3"]
         volumes:
             - /opt/dble-3:/init_assets
-            - /opt/share:/share
+            - /share:/share
         ports:
             - "7123:9066"
             - "7133:8066"
             - "7143:3306"
             - "7153:22"
         networks:
-            default:
+            dble-net:
               ipv4_address: 172.100.9.3
               ipv6_address: 2001:3984:3989::13
         dns: 114.114.114.114
@@ -80,12 +88,12 @@ services:
         command: ["mysql","4"]
         volumes:
             - /opt/mysql:/init_assets
-            - /opt/share:/share
+            - /share:/share
         ports:
             - "7144:3306"
             - "7154:22"
         networks:
-            default:
+            dble-net:
               ipv4_address: 172.100.9.4
               ipv6_address: 2001:3984:3989::14
         dns: 114.114.114.114
@@ -100,12 +108,12 @@ services:
         tty: true
         volumes:
             - /opt/mysql-master1:/init_assets
-            - /opt/share:/share
+            - /share:/share
         ports:
             - "7145:3306"
             - "7155:22"
         networks:
-            default:
+            dble-net:
               ipv4_address: 172.100.9.5
               ipv6_address: 2001:3984:3989::15
         dns: 114.114.114.114
@@ -120,48 +128,16 @@ services:
         tty: true
         volumes:
             - /opt/mysql-master2:/init_assets
-            - /opt/share:/share
+            - /share:/share
         ports:
             - "7146:3306"
             - "7156:22"
         networks:
-            default:
+            dble-net:
               ipv4_address: 172.100.9.6
               ipv6_address: 2001:3984:3989::16
         dns: 114.114.114.114
         working_dir: /opt
-    c-plus-driver:
-        image: dble/dble_test_driver:latest
-        container_name: driver-test
-        hostname: driver-test
-        privileged: true
-        stdin_open: true
-        tty: true
-        volumes:
-            - /opt/c-plus-driver:/init_assets
-            - /opt/share:/share
-        networks:
-            default:
-              ipv4_address: 172.100.9.7
-              ipv6_address: 2001:3984:3989::17
-        dns: 114.114.114.114
-        working_dir: /opt
-    behave:
-        image: dble/dble_test_client:latest
-        container_name: behave
-        hostname: behave
-        privileged: true
-        stdin_open: true
-        tty: true
-        volumes:
-            - /opt/behave:/init_assets
-            - /opt/share:/share
-        networks:
-            default:
-              ipv4_address: 172.100.9.8
-              ipv6_address: 2001:3984:3989::18
-        dns: 114.114.114.114
-        working_dir: /init_assets
 
     mysql8-master1:
         image: dble/dble_test_mysql8:latest
@@ -172,13 +148,13 @@ services:
         command: ["mysql","9"]
         tty: true
         volumes:
-        - /opt/mysql8-master1:/init_assets
-        - /opt/share:/share
+            - /opt/mysql8-master1:/init_assets
+            - /share:/share
         ports:
         - "7241:3306"
         - "7251:22"
         networks:
-            default:
+            dble-net:
                 ipv4_address: 172.100.9.9
                 ipv6_address: 2001:3984:3989::19
         dns: 114.114.114.114
@@ -192,13 +168,13 @@ services:
         command: ["mysql","10"]
         tty: true
         volumes:
-        - /opt/mysql8-master2:/init_assets
-        - /opt/share:/share
+            - /opt/mysql8-master2:/init_assets
+            - /share:/share
         ports:
         - "7242:3306"
         - "7252:22"
         networks:
-            default:
+            dble-net:
                 ipv4_address: 172.100.9.10
                 ipv6_address: 2001:3984:3989::20
         dns: 114.114.114.114
@@ -212,13 +188,13 @@ services:
         command: ["mysql","11"]
         tty: true
         volumes:
-        - /opt/mysql8-slave1:/init_assets
-        - /opt/share:/share
+            - /opt/mysql8-slave1:/init_assets
+            - /share:/share
         ports:
         - "7243:3306"
         - "7253:22"
         networks:
-            default:
+            dble-net:
                 ipv4_address: 172.100.9.11
                 ipv6_address: 2001:3984:3989::21
         dns: 114.114.114.114
@@ -233,13 +209,13 @@ services:
         command: ["mysql","12"]
         tty: true
         volumes:
-        - /opt/mysql8-slave2:/init_assets
-        - /opt/share:/share
+            - /opt/mysql8-slave2:/init_assets
+            - /share:/share
         ports:
         - "7244:3306"
         - "7254:22"
         networks:
-            default:
+            dble-net:
                 ipv4_address: 172.100.9.12
                 ipv6_address: 2001:3984:3989::22
         dns: 114.114.114.114
