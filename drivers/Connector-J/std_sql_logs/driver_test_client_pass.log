@@ -160,11 +160,11 @@
 [false]
 ===file:assets/sql/driver_test_client.sql,id:95,sql:INSERT INTO test_shard VALUES (11111,'a','b','???','???');===
 [(1366): Incorrect string value: '\xEF\xBF\xBD\xEF\xBF\xBD...' for column 'c3' at row 1]
-===file:assets/sql/driver_test_client.sql,id:96,sql:SELECT CONCAT(c1,c2),c3 FROM test_shard;===
+===file:assets/sql/driver_test_client.sql,id:96,sql:SELECT CONCAT(c1, c2),c3 FROM test_shard;===
 []
 ===file:assets/sql/driver_test_client.sql,id:97,sql:set names 'utf8';===
 [false]
-===file:assets/sql/driver_test_client.sql,id:98,sql:SELECT CONCAT(c1,c2),c3 FROM test_shard;===
+===file:assets/sql/driver_test_client.sql,id:98,sql:SELECT CONCAT(c1, c2),c3 FROM test_shard;===
 []
 ===file:assets/sql/driver_test_client.sql,id:100,sql:prepare stmt from 'insert into schema2.test2 values(111,111,"test???id???1",111)';===
 [false]

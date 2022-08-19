@@ -1,8 +1,9 @@
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhaohongjie at 2018/9/20
+@skip # DBLE0REQ-1801
 Feature: verify issue 92 #Enter feature name here
-
+  @skip
   Scenario: #1 todo not complete yet #1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -32,18 +33,26 @@ Feature: verify issue 92 #Enter feature name here
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
      """
-   Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+   Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-       <shardingTable name="shard12" function="fixed_uniform_string" shardingNode="dn1,dn2,dn3,dn4" shardingColumn="ben_tim12"/>
-       <singleTable name="shard13" shardingNode="dn1" />
+    <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
+       <table name="shard12" dataNode="dn1,dn2,dn3,dn4" rule="string_hash_rule" />
+       <table name="shard13" dataNode="dn1"/>
     </schema>
-
-     <function name="fixed_uniform_string" class="StringHash">
-        <property name="partitionCount">4</property>
-        <property name="partitionLength">256</property>
-        <property name="hashSlice">0:8</property>
-     </function>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    """
+        <tableRule name="string_hash_rule">
+            <rule>
+                <columns>ben_tim12</columns>
+                <algorithm>string_hash_func</algorithm>
+            </rule>
+        </tableRule>
+        <function class="stringhash" name="string_hash_func">
+            <property name="partitionCount">4</property>
+            <property name="partitionLength">256</property>
+            <property name="hashSlice">0:2</property>
+        </function>
     """
     #coz DBLE0REQ-688
     Given Restart dble in "dble-1" success

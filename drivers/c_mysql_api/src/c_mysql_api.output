@@ -123,7 +123,7 @@ connect success    *****pass! mysql_real_connect create conn with no default db 
     0 rows affected
     More results exist
     Could not execute statement
-    pass! multi-queries without ';' in the last query, and queries before the last end with a \0 fail, err: sql syntax error, no terminated. IDENTIFIER
+    pass! multi-queries without ';' in the last query, and queries before the last end with a \0 fail, err: sql syntax error, no terminated. ERROR
     pass! multi-queries without ';' in the last query, and last query start with \0 success.
     print multi resultsets:
     0 rows affected
@@ -131,20 +131,20 @@ connect success    *****pass! mysql_real_connect create conn with no default db 
     0 rows affected
     More results exist
     Could not execute statement
-    pass! 'select 1\0,2', err: sql syntax error, no terminated. IF
-    pass! 'select 1,\02', err: sql syntax error, no terminated. EXISTS
-    pass! 'select '1,\02'', err: sql syntax error, no terminated. EXISTS
-    pass! '\0select '1'', err: syntax error, error in :'elect '1,'
+    pass! 'select 1\0,2', err: syntax error. pos 9, line 1, column 9, token ERROR
+    pass! 'select 1,\02', err: ERROR. pos 10, line 1, column 10, token ERROR
+    pass! 'select '1,\02'', err: sql syntax error, no terminated. IDENTIFIER
+    pass! '\0select '1'', err: syntax error, error in :'\0select '1'
 ==>write prepare statement related test suites
-    create new conn!
-    host:172.100.9.1, use:test, passwd:111111, port:8066
+    create new conn! 
+    host:172.100.9.1, use:test, passwd:111111, port:8066 
     prepare INSERT statement successful
     total parameters in INSERT: 3
-    pass! write ps execute get the same result as expect.
+    pass! write ps execute get the same result as expect. 
     pass! execute write prepare success.
 ==>read prepare statement related test suites
-    create new conn!
-    host:172.100.9.1, use:test, passwd:111111, port:8066
+    create new conn! 
+    host:172.100.9.1, use:test, passwd:111111, port:8066 
     create new ps success!
     pass! execute ps get the same result as expect.
     pass! read prepare execute correctly
