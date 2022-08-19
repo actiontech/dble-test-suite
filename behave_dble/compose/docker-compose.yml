@@ -14,7 +14,7 @@ services:
         command: ["dble","1"]
         volumes:
             - /opt/dble-1:/init_assets
-            - /opt/share:/share
+            - /share:/share
         ports:
             - "7131:8066"
             - "7141:3306"
