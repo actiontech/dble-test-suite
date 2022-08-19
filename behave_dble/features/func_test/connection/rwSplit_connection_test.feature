@@ -318,7 +318,7 @@ Feature: connection test in rwSplit mode
 
      Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                             | expect  |
-      | conn_0 | True    | set global max_connections=500  | success |
+      | conn_0 | True    | set global max_connections=1000 | success |
 
      Given delete file "/opt/dble/BtraceRwSplitSession.java" on "dble-1"
      Given delete file "/opt/dble/BtraceRwSplitSession.java.log" on "dble-1"
