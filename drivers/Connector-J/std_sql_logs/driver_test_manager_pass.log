@@ -50,8 +50,6 @@
 []
 ===file:assets/sql/driver_test_manager.sql,id:31,sql:show @@datasource===
 [{EXECUTE=203, DATAHOST=172.100.9.5, PORT=3306, ACTIVE=4, IDLE=1, READ_LOAD=105, SIZE=1000, HOST=172.100.9.5, WRITE_LOAD=70, W/R=W, NAME=hostM1}, {EXECUTE=209, DATAHOST=172.100.9.6, PORT=3306, ACTIVE=3, IDLE=1, READ_LOAD=115, SIZE=1000, HOST=172.100.9.6, WRITE_LOAD=74, W/R=W, NAME=hostM2}]
-===file:assets/sql/driver_test_manager.sql,id:32,sql:show @@datasource.cluster===
-[]
 ===file:assets/sql/driver_test_manager.sql,id:33,sql:show @@datasource.synstatus===
 []
 ===file:assets/sql/driver_test_manager.sql,id:34,sql:show @@datasource.syndetail where name=172.100.9.1===
@@ -114,12 +112,6 @@
 []
 ===file:assets/sql/driver_test_manager.sql,id:63,sql:SHOW VARIABLES WHERE Variable_name ='language' OR Variable_name = 'net_write_timeout' OR Variable_name = 'interactive_timeout' OR Variable_name = 'wait_timeout' OR Variable_name = 'character_set_client' OR Variable_name = 'character_set_connection' OR Variable_name = 'character_set' OR Variable_name = 'character_set_server' OR Variable_name = 'tx_isolation' OR Variable_name = 'transaction_isolation' OR Variable_name = 'character_set_results' OR Variable_name = 'timezone' OR Variable_name = 'time_zone' OR Variable_name = 'system_time_zone' OR Variable_name = 'lower_case_table_names' OR Variable_name = 'max_allowed_packet' OR Variable_name = 'net_buffer_length' OR Variable_name = 'sql_mode' OR Variable_name = 'query_cache_type' OR Variable_name = 'query_cache_size' OR Variable_name = 'init_connect';===
 [{Value=latin1, Variable_name=character_set_client}, {Value=latin1, Variable_name=character_set_connection}, {Value=latin1, Variable_name=character_set_results}, {Value=latin1, Variable_name=character_set_server}, {Value=, Variable_name=init_connect}, {Value=28800, Variable_name=interactive_timeout}, {Value=0, Variable_name=lower_case_table_names}, {Value=4194304, Variable_name=max_allowed_packet}, {Value=16384, Variable_name=net_buffer_length}, {Value=60, Variable_name=net_write_timeout}, {Value=1048576, Variable_name=query_cache_size}, {Value=OFF, Variable_name=query_cache_type}, {Value=STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION, Variable_name=sql_mode}, {Value=CST, Variable_name=system_time_zone}, {Value=SYSTEM, Variable_name=time_zone}, {Value=REPEATABLE-READ, Variable_name=tx_isolation}, {Value=28800, Variable_name=wait_timeout}]
-===file:assets/sql/driver_test_manager.sql,id:64,sql:switch @@datasource datahost===
-[false]
-===file:assets/sql/driver_test_manager.sql,id:65,sql:switch @@datasource 172.100.9.5===
-[false]
-===file:assets/sql/driver_test_manager.sql,id:66,sql:switch @@datasource datahost$0-4===
-[false]
 ===file:assets/sql/driver_test_manager.sql,id:69,sql:stop @@heartbeat datahost:5000===
 [false]
 ===file:assets/sql/driver_test_manager.sql,id:70,sql:reload @@config===
@@ -147,8 +139,6 @@
 ===file:assets/sql/driver_test_manager.sql,id:81,sql:reload @@query_cf=aly_test&id===
 [false]
 ===file:assets/sql/driver_test_manager.sql,id:82,sql:reload @@query_cf=NULL===
-[false]
-===file:assets/sql/driver_test_manager.sql,id:83,sql:rollback @@config===
 [false]
 ===file:assets/sql/driver_test_manager.sql,id:84,sql:offline===
 [false]

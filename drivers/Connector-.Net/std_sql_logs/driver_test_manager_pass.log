@@ -116,12 +116,6 @@ dble: []
 dble: [(2,"NULL","NULL","test","172.100.9.8:35782","NULL","NULL","0","","NULL"),(3,"NULL","NULL","root","172.100.9.8:50900","NULL","NULL","0","","NULL"),]
 ===file:assets/sql/driver_test_manager.sql,id:65,sql:SHOW VARIABLES WHERE Variable_name ='language' OR Variable_name = 'net_write_timeout' OR Variable_name = 'interactive_timeout' OR Variable_name = 'wait_timeout' OR Variable_name = 'character_set_client' OR Variable_name = 'character_set_connection' OR Variable_name = 'character_set' OR Variable_name = 'character_set_server' OR Variable_name = 'tx_isolation' OR Variable_name = 'transaction_isolation' OR Variable_name = 'character_set_results' OR Variable_name = 'timezone' OR Variable_name = 'time_zone' OR Variable_name = 'system_time_zone' OR Variable_name = 'lower_case_table_names' OR Variable_name = 'max_allowed_packet' OR Variable_name = 'net_buffer_length' OR Variable_name = 'sql_mode' OR Variable_name = 'query_cache_type' OR Variable_name = 'query_cache_size' OR Variable_name = 'init_connect';===
 dble: [("character_set_client","utf8"),("character_set_connection","utf8"),("character_set_results","utf8"),("character_set_server","latin1"),("init_connect",""),("interactive_timeout","28800"),("lower_case_table_names","0"),("max_allowed_packet","4194304"),("net_buffer_length","16384"),("net_write_timeout","60"),("query_cache_size","1048576"),("query_cache_type","OFF"),("sql_mode","IGNORE_SPACE,STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION"),("system_time_zone","CST"),("time_zone","SYSTEM"),("tx_isolation","REPEATABLE-READ"),("wait_timeout","28800"),]
-===file:assets/sql/driver_test_manager.sql,id:66,sql:switch @@datasource datahost===
-dble: []
-===file:assets/sql/driver_test_manager.sql,id:67,sql:switch @@datasource 172.100.9.5===
-dble: []
-===file:assets/sql/driver_test_manager.sql,id:68,sql:switch @@datasource datahost$0-4===
-dble: []
 ===file:assets/sql/driver_test_manager.sql,id:71,sql:stop @@heartbeat datahost:5000===
 dble: []
 ===file:assets/sql/driver_test_manager.sql,id:72,sql:reload @@config===
@@ -149,8 +143,6 @@ dble: []
 ===file:assets/sql/driver_test_manager.sql,id:83,sql:reload @@query_cf=aly_test&id===
 dble: []
 ===file:assets/sql/driver_test_manager.sql,id:84,sql:reload @@query_cf=NULL===
-dble: []
-===file:assets/sql/driver_test_manager.sql,id:85,sql:rollback @@config===
 dble: []
 ===file:assets/sql/driver_test_manager.sql,id:88,sql:file @@list===
 dble: [("1 : wrapper.conf  time:2019-10-25 11:52"),("2 : cacheservice.properties  time:2019-10-25 11:51"),("3 : dbseq.sql  time:2019-10-25 11:51"),("4 : dnindex.properties  time:2019-10-25 15:12"),("5 : ehcache.xml  time:2019-10-25 11:51"),("6 : myid.properties  time:2019-10-25 15:11"),("7 : partition-enum.txt  time:2019-10-25 11:51"),("8 : partition-number-range.txt  time:2019-10-25 11:51"),("9 : partition-pattern.txt  time:2019-10-25 11:51"),("10 : rule_template.xml  time:2019-10-25 11:51"),("11 : schema_template.xml  time:2019-10-25 11:51"),("12 : sequence_conf.properties  time:2019-10-25 11:51"),("13 : sequence_db_conf.properties  time:2019-10-25 11:51"),("14 : sequence_distributed_conf.properties  time:2019-10-25 11:51"),("15 : sequence_time_conf.properties  time:2019-10-25 11:51"),("16 : server_template.xml  time:2019-10-25 11:51"),("17 : template_table.sql  time:2019-10-25 11:51"),("18 : log4j2.xml  time:2019-10-25 15:11"),("19 : rule.xml  time:2019-10-25 15:11"),("20 : server.xml  time:2019-10-25 15:11"),("21 : schema.xml  time:2019-10-25 15:11"),]
