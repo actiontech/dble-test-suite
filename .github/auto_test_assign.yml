@@ -8,9 +8,10 @@ addAssignees: false
 reviewers:
   - wangjuan-action
   - wjl1619
-#  - quexiuping
+  - quexiuping
   - Dinosauria
-  - jndxcaiwei
+  - huimchenwell
+  - KlawzZ
 
 # A number of reviewers added to the pull request
 # Set 0 to add all the reviewers (default: 0)
