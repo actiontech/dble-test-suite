@@ -83,7 +83,7 @@ Feature: connection pool basic test
     """
 
 
-  @CRITICAL
+  @CRITICAL  @auto_retry
   Scenario: test initial connection pool: except heartbeat connection the other connection is in idle status #3
     # sleep time > idle time,because Connection pool initialization #DBLE0REQ-1132
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -103,12 +103,12 @@ Feature: connection pool basic test
     </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
-    Given sleep "6" seconds
+    Given sleep "8" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                             | expect        | db                |
       | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((20,),)}  | dble_information  |
     Then execute admin cmd "reload @@config_all -r"
-    Given sleep "6" seconds
+    Given sleep "8" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                             | expect        | db                |
       | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((20,),)}  | dble_information  |

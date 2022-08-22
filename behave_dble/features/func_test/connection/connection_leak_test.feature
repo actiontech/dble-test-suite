@@ -101,7 +101,7 @@ Feature: connection leak test
         | conn_0  | False     | create table table_b(id int,name varchar(40))   | schema1     | success  |
         | conn_0  | False     | create table table_c(name varchar(40),id int)   | schema1     | success  |
         | conn_0  | False     | insert into table_b set id = 1,name = "xx"      | schema1     | success  |
-          Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
@@ -111,9 +111,10 @@ Feature: connection leak test
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Given sleep "5" seconds
     Given prepare a thread execute sql "insert into table_c set id =5,name ="xx"" with "conn_0"
-    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
+    Given sleep "2" seconds
+    Then check following text exist "Y" in file "/opt/dble/BtraceClusterDelay.java.log" in host "dble-1"
       """
-       get into query
+      get into query
       """
     Given restart mysql in "mysql-master1"
     Given sleep "5" seconds
