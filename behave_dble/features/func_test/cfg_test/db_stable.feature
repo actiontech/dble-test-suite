@@ -5,11 +5,11 @@ Feature: db config stable test
 
   Background delete default configs not must，reload @@config_all success
     Given delete the following xml segment
-      |file        | parent          | child               |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-      |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
-      |user.xml  |{'tag':'root'}   | {'tag':'shardingUser', 'kv_map':{'name':'test'}}  |
+      | file          | parent           | child                                             |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'schema'}                                  |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'shardingNode'}                            |
+      | db.xml        | {'tag':'root'}   | {'tag':'dbGroup'}                                 |
+      | user.xml      | {'tag':'root'}   | {'tag':'shardingUser', 'kv_map':{'name':'test'}}  |
     Then execute admin cmd "reload @@config_all"
     Given Restart dble in "dble-1" success
 
@@ -31,7 +31,7 @@ Feature: db config stable test
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
+          <heartbeat>select 1</heartbeat>
           <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="10" primary="true">
           </dbInstance>
       </dbGroup>
@@ -46,6 +46,8 @@ Feature: db config stable test
      <shardingUser name="test" password="111111" schemas="schema1" readOnly="false"/>
     """
     Then execute admin cmd "reload @@config_all"
+    # add sleeptime because Waiting for the recovery of the backend mysql heartbeat
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "user" mode
       | sql      |
       | select 2 |
