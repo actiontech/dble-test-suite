@@ -92,7 +92,7 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn_2 | False   | xa rollback 'host_xa_test'          |
       | conn_2 | True    | xa rollback 'Dble_Server.1.db1.db2' |
 
-  @restore_xa_recover
+  @restore_xa_recover @auto_retry
   Scenario: check xa transactions in mysql #2
     """
     {'restore_xa_recover':['mysql-master1', 'mysql-master2']}
