@@ -127,7 +127,12 @@ Feature: test ddl refactor
 
    Scenario: Multiple ddl is executed concurrently, the id in the dble log is correct #5
      #### dble-9042
-    Given execute sql "2345" times in "dble-1" together use 2345 connection not close
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                      | expect                                 | db               |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='frontWorker'                   | success                                | dble_information |
+      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='frontWorker'     | has{(('frontWorker', 4, 4),)}          | dble_information |
+
+    Given execute sql "2345" times in "dble-1" together use 1000 connection not close
       | sql                                                                          | db      |
       | drop table if exists sharding_4_t1;create table sharding_4_t1(id int)        | schema1 |
 
