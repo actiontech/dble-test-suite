@@ -309,23 +309,23 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
 
 
-
+  @auto_retry
   Scenario: test "frontWorker"  #4
   # on bootstrap.cnf the default value : -DfrontWorker=1
   # check dble.log has one frontWorker0
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
       $a  -DuseThreadUsageStat=1
       """
-   Then restart dble in "dble-1" success
-   Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
+    Then restart dble in "dble-1" success
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql         | db        |
       | select 1    | schema1   |
-   Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       \[0-frontWorker\]
-      """
-   Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """ 
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       \[1-frontWorker1\]
       \[2-frontWorker2\]
@@ -357,10 +357,10 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       frontWorker=4
       """
 
-    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
-      | sql         | db        |
-      | select 1    | schema1   |
-   Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Given execute "user" sql "200" times in "dble-1" together use 100 connection not close
+      | sql                | db        |
+      | select user()      | schema1   |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       \[0-frontWorker\]
       \[1-frontWorker\]
