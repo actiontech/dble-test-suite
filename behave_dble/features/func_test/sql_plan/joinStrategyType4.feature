@@ -5,7 +5,7 @@
 
 Feature: check useJoinStrategy
 
-  @delete_mysql_tables @skip_restart
+  @delete_mysql_tables
   Scenario: check useJoinStrategy - globalTable + singleTable + shardingTable #1
   """
   {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2'], 'mysql-master2': ['db1', 'db2'], 'mysql':['schema1']}}

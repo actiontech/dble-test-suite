@@ -3710,7 +3710,7 @@ Feature: test hint
       | conn    | toClose  | sql                                                                                                                    | db      |
       | conn_1  | true     | /*#dble:plan=(c, a, b) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.deptname=b.deptname INNER JOIN Info c on a.deptname=c.deptname and c.country='China' order by a.name | schema1 |
 
-  @delete_mysql_tables @skip_restart
+  @delete_mysql_tables
   Scenario: rule B, C, D -> globalTable + singleTable + singleTable -> inner join & inner join #3
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
