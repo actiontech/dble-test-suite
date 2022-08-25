@@ -3,6 +3,8 @@
 # Created by wangjuan at 2022/2/10
 
 # DBLE0REQ-1470, DBLE0REQ-1471, DBLE0REQ-1472
+
+@skip
 Feature: test hint
 
   @delete_mysql_tables @skip #skip about DBLE0REQ-1658
@@ -3708,7 +3710,7 @@ Feature: test hint
       | conn    | toClose  | sql                                                                                                                    | db      |
       | conn_1  | true     | /*#dble:plan=(c, a, b) */ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.deptname=b.deptname INNER JOIN Info c on a.deptname=c.deptname and c.country='China' order by a.name | schema1 |
 
-  @delete_mysql_tables
+  @delete_mysql_tables @skip_restart
   Scenario: rule B, C, D -> globalTable + singleTable + singleTable -> inner join & inner join #3
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}

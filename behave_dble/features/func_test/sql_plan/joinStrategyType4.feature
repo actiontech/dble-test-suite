@@ -1,9 +1,11 @@
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wangjuan at 2022/5/10
+
+
 Feature: check useJoinStrategy
 
-  @delete_mysql_tables
+  @delete_mysql_tables @skip_restart
   Scenario: check useJoinStrategy - globalTable + singleTable + shardingTable #1
   """
   {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2'], 'mysql-master2': ['db1', 'db2'], 'mysql':['schema1']}}
@@ -59,7 +61,7 @@ Feature: check useJoinStrategy
       | conn_0 | False   | create table Employee_1 (name varchar(250) not null,empid int not null,deptname varchar(250) not null,level varchar(250) not null)engine=innodb charset=utf8 | success | schema1 |
       | conn_0 | False   | create table Employee_2 (name varchar(250) not null,empid int not null,deptname varchar(250) not null,level varchar(250) not null)engine=innodb charset=utf8 | success | schema1 |
       | conn_1 | False   | create table Dept(deptname varchar(250) not null,deptid int not null,manager varchar(250) not null)engine=innodb charset=utf8 | success | schema1 |
-      | conn_1 | False   | create table Level(levelname varchar(250) not null,levelid int not null,salary int not null)engine=innodb charset=utf8 | success | schema1 |
+      | conn_1 | False   | create table Level(levelname varchar(250) not null,levelid int not null,salary int not null)engine=innodb charset=utf8        | success | schema1 |
       | conn_1 | False   | create table Info(name varchar(250) not null,age int not null,country varchar(250) not null,deptname varchar(250) not null)engine=innodb charset=utf8 | success | schema1 |
       | conn_1 | False   | insert into Employee_1 values('Harry',3415,'Finance','P7'),('Sally',2242,'Sales','P7'),('George',3401,'Finance','P8'),('Harriet',2202,'Sales','P8'),('Mary',1257,'Human Resources','P7'),('LiLi',9527,'Human Resources','P9'),('Tom',7012,'Market','P9'),('Tony',3052,'Market','P10'),('Jessi',7948,'Finance','P8') | success | schema1 |
       | conn_1 | False   | insert into Employee_2 values('Harry',3415,'Finance','P7'),('Sally',2242,'Sales','P7'),('George',3401,'Finance','P8'),('Harriet',2202,'Sales','P8'),('Mary',1257,'Human Resources','P7'),('LiLi',9527,'Human Resources','P9'),('Tom',7012,'Market','P9'),('Tony',3052,'Market','P10'),('Jessi',7948,'Finance','P8') | success | schema1 |
@@ -73,16 +75,16 @@ Feature: check useJoinStrategy
       | conn_0 | false   | explain SELECT * FROM Employee_1 a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Level c on a.level=c.levelname order by a.name | schema1|
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1                | SQL/REF-2                                                                                             |
-      | dn1_0             | BASE SQL              | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee_1` `a` left join  `Dept` `b` on `a`.`name` = `b`.`manager` order by `a`.`level` ASC |
-      | merge_1           | MERGE                 | dn1_0                                                                                                                                                                                                    |
-      | shuffle_field_1   | SHUFFLE_FIELD         | merge_1                                                                                                                                                                                                  |
-      | dn1_1             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC              |
-      | dn2_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC              |
-      | merge_and_order_1 | MERGE_AND_ORDER       | dn1_1; dn2_0                                                                                                                                                                                             |
-      | shuffle_field_3   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                                                        |
-      | join_1            | JOIN                  | shuffle_field_1; shuffle_field_3                                                                                                                                                                         |
-      | order_1           | ORDER                 | join_1                                                                                                                                                                                                   |
-      | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                                                  |
+      | dn1_0             | BASE SQL              | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee_1` `a` left join  `Dept` `b` on `a`.`name` = `b`.`manager` where 1=1  order by `a`.`level` ASC |
+      | merge_1           | MERGE                 | dn1_0                                                                                                                                                                                                             |
+      | shuffle_field_1   | SHUFFLE_FIELD         | merge_1                                                                                                                                                                                                           |
+      | dn1_1             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC                       |
+      | dn2_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC                       |
+      | merge_and_order_1 | MERGE_AND_ORDER       | dn1_1; dn2_0                                                                                                                                                                                                      |
+      | shuffle_field_3   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                                                                 |
+      | join_1            | JOIN                  | shuffle_field_1; shuffle_field_3                                                                                                                                                                                  |
+      | order_1           | ORDER                 | join_1                                                                                                                                                                                                            |
+      | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                                                           |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn    | toClose  | sql | db  |
       | conn_0  | true     | SELECT * FROM Employee_1 a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Level c on a.level=c.levelname order by a.name | schema1 |
@@ -103,7 +105,7 @@ Feature: check useJoinStrategy
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                                     |
       | dn1_1             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
       | dn2_0//dn2_1      | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC |
-      | merge_and_order_1 | MERGE_AND_ORDER       | dn1_1; dn2_0//dn1_1; dn2_1                                                                                                                                                               |
+      | merge_and_order_1 | MERGE_AND_ORDER       | dn1_1; dn2_0//dn1_1; dn2_1                                                                                                                                                                  |
       | shuffle_field_5   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                                           |
       | join_2            | JOIN                  | shuffle_field_2; shuffle_field_5                                                                                                                                                            |
       | order_2           | ORDER                 | join_2                                                                                                                                                                                      |
@@ -116,10 +118,10 @@ Feature: check useJoinStrategy
     #ab, ac: singleTable, globalTable same node & left join & left join & no ER & where a => table c nestLoop
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                         | db |
-      | conn_0 | false   | explain SELECT * FROM Employee_1 a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Level c on a.level=c.levelname where a.empid=3401 order by a.name | schema1|
+      | conn_0 | false   | explain SELECT * FROM Employee_1 a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Level c on a.level=c.levelname where a.empid=3401 order by a.name | schema1 |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1                | SQL/REF-2                                                                                                                                                        |
-      | dn1_0             | BASE SQL              | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee_1` `a` left join  `Dept` `b` on `a`.`name` = `b`.`manager` where `a`.`empid` = 3401 order by `a`.`level` ASC |
+      | dn1_0             | BASE SQL              | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee_1` `a` left join  `Dept` `b` on `a`.`name` = `b`.`manager` where `a`.`empid` = 3401 order by `a`.`level` ASC     |
       | merge_1           | MERGE                 | dn1_0                                                                                                                                                                                                                               |
       | shuffle_field_1   | SHUFFLE_FIELD         | merge_1                                                                                                                                                                                                                             |
       | dn1_1             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` where `c`.`levelname` in ('{NEED_TO_REPLACE}') ORDER BY `c`.`levelname` ASC                                         |
@@ -157,16 +159,16 @@ Feature: check useJoinStrategy
       | conn_0 | false   | explain SELECT * FROM Employee_1 a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Level c on a.level=c.levelname where c.salary=15000 order by a.name | schema1|
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                   |
-      | dn1_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee_1` `a` left join  `Dept` `b` on `a`.`name` = `b`.`manager` order by `a`.`level` ASC |
-      | merge_1           | MERGE           | dn1_0                                                                                                                                                                                                    |
-      | dn1_1             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` where `c`.`salary` = 15000 ORDER BY `c`.`levelname` ASC                                                                            |
-      | dn2_0             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` where `c`.`salary` = 15000 ORDER BY `c`.`levelname` ASC                                                                            |
-      | merge_and_order_1 | MERGE_AND_ORDER | dn1_1; dn2_0                                                                                                                                                                                             |
-      | shuffle_field_2   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                        |
-      | join_1            | JOIN            | merge_1; shuffle_field_2                                                                                                                                                                                 |
-      | where_filter_1    | WHERE_FILTER    | join_1                                                                                                                                                                                                   |
-      | order_1           | ORDER           | where_filter_1                                                                                                                                                                                           |
-      | shuffle_field_1   | SHUFFLE_FIELD   | order_1                                                                                                                                                                                                  |
+      | dn1_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee_1` `a` left join  `Dept` `b` on `a`.`name` = `b`.`manager` where 1=1  order by `a`.`level` ASC |
+      | merge_1           | MERGE           | dn1_0                                                                                                                                                                                                             |
+      | dn1_1             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` where `c`.`salary` = 15000 ORDER BY `c`.`levelname` ASC                                                                                       |
+      | dn2_0             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` where `c`.`salary` = 15000 ORDER BY `c`.`levelname` ASC                                                                                       |
+      | merge_and_order_1 | MERGE_AND_ORDER | dn1_1; dn2_0                                                                                                                                                                                                      |
+      | shuffle_field_2   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                 |
+      | join_1            | JOIN            | merge_1; shuffle_field_2                                                                                                                                                                                          |
+      | where_filter_1    | WHERE_FILTER    | join_1                                                                                                                                                                                                            |
+      | order_1           | ORDER           | where_filter_1                                                                                                                                                                                                    |
+      | shuffle_field_1   | SHUFFLE_FIELD   | order_1                                                                                                                                                                                                           |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn    | toClose  | sql | db  |
       | conn_0  | true     | SELECT * FROM Employee_1 a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Level c on a.level=c.levelname where c.salary=15000 order by a.name | schema1 |
