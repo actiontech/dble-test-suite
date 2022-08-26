@@ -44,7 +44,7 @@ Feature: test ddl refactor
       | drop table if exists sharding_4_t1 | success  | schema1 |
 
 
-  @current
+  @current @skip #doing ddl problem
   Scenario: check warning log when the time of hang>60s   #3
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect   | db      |
