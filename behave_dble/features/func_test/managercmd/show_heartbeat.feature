@@ -8,8 +8,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
   Scenario: use show @@heartbeat in 9066 to check rs_code #1
     """
     {'restore_mysql_service':{'mysql-slave1':{'start_mysql':1},'mysql-master2':{'start_mysql':1}}}
-    {'restore_network':'mysql-master2'}
-    {'restore_network':'mysql-slave1'}
+    {'restore_network':'mysql-master2,mysql-slave1'}
     """
 # set rwSplitMode=0 ,one slave disabled="true"
     Given delete the following xml segment
@@ -82,7 +81,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
       | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
       | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 5000      | false  | None          |
-      | hostS1 | 172.100.9.2 | 3306   | time_out  | 0       | 5000      | false  | None          |
+      | hostS1 | 172.100.9.2 | 3306   | timeout  | 0       | 5000      | false  | None          |
       | hostS2 | 172.100.9.3 | 3306   | init      | 0       | 5000      | true   | None          |
 
     Given execute oscmd in "mysql-slave1"
@@ -208,7 +207,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "43" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM2 | 172.100.9.6 | 3306   | time_out  | 0       | 10000     | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | 10000     | false  | None          |
       | hostS1 | 172.100.9.2 | 3306   | ok        | 0       | 10000     | false  | None          |
       | hostS2 | 172.100.9.3 | 3306   | ok        | 0       | 10000     | false  | None          |
     Given execute oscmd in "mysql-master2"
