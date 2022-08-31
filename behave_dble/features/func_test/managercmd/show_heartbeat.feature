@@ -8,8 +8,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
   Scenario: use show @@heartbeat in 9066 to check rs_code #1
     """
     {'restore_mysql_service':{'mysql-slave1':{'start_mysql':1},'mysql-master2':{'start_mysql':1}}}
-    {'restore_network':'mysql-master2'}
-    {'restore_network':'mysql-slave1'}
+    {'restore_network':'mysql-master2,mysql-slave1'}
     """
 # set rwSplitMode=0 ,one slave disabled="true"
     Given delete the following xml segment
