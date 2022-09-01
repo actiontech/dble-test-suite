@@ -73,7 +73,7 @@ Feature: check useJoinStrategy
       | conn_0 | false   | explain SELECT * FROM Employee_1 a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Level c on a.level=c.levelname order by a.name | schema1|
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
-      | dn1_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee_1` `a` left join  `Dept` `b` on `a`.`name` = `b`.`manager` order by `a`.`level` ASC |
+      | dn1_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee_1` `a` left join  `Dept` `b` on `a`.`name` = `b`.`manager` where 1=1  order by `a`.`level` ASC |
       | merge_1           | MERGE           | dn1_0                                                                                                                                                                                                  |
       | dn1_1             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` ORDER BY `c`.`levelname` ASC                                                                                                       |
       | dn2_0             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` ORDER BY `c`.`levelname` ASC                                                                                                       |
@@ -152,7 +152,7 @@ Feature: check useJoinStrategy
       | conn_0 | false   | explain SELECT * FROM Employee_1 a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Level c on a.level=c.levelname where c.salary=15000 order by a.name | schema1|
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                   |
-      | dn1_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee_1` `a` left join  `Dept` `b` on `a`.`name` = `b`.`manager` order by `a`.`level` ASC |
+      | dn1_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee_1` `a` left join  `Dept` `b` on `a`.`name` = `b`.`manager` where 1=1  order by `a`.`level` ASC |
       | merge_1           | MERGE           | dn1_0                                                                                                                                                                                                  |
       | dn1_1             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` where `c`.`salary` = 15000 ORDER BY `c`.`levelname` ASC                                                                            |
       | dn2_0             | BASE SQL        | select `c`.`levelname`,`c`.`levelid`,`c`.`salary` from  `Level` `c` where `c`.`salary` = 15000 ORDER BY `c`.`levelname` ASC                                                                            |
