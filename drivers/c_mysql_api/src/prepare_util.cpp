@@ -45,14 +45,18 @@ MYSQL_STMT * create_stmt_and_prepare(MYSQL* conn, char* param1){
  }
 
 void execStmtAndCmp(MYSQL_STMT *stmt, MYSQL *conn, char* expect){
-    const size_t OUTSIZE = 64;
-    char out_buf[OUTSIZE];
+//    const size_t OUTSIZE = 64;
+//    char out_buf[OUTSIZE];
+    int out_buf;
+//    unsigned long length[1];
+
 
     MYSQL_BIND result[1];
     memset(result, 0, sizeof(result));
     result[0].buffer_type = MYSQL_TYPE_LONG;
-    result[0].buffer = out_buf;
-    result[0].buffer_length = OUTSIZE;
+    result[0].buffer = (char *)&out_buf;
+    //result[0].buffer_length = OUTSIZE;
+    //result[0].length = &length[0];
 
     unsigned long type = CURSOR_TYPE_READ_ONLY;
     mysql_stmt_attr_set(stmt, STMT_ATTR_CURSOR_TYPE, (void*)&type);
@@ -67,16 +71,23 @@ void execStmtAndCmp(MYSQL_STMT *stmt, MYSQL *conn, char* expect){
     }else{
         if (IS_DEBUG) printf("++++++++++++ fetch result: +++++++++++++\n");
         do{
-        		if (IS_DEBUG) printf("val = %s\n", out_buf);
+                      if (IS_DEBUG) printf("val = %d\n", out_buf);
         }while (mysql_stmt_fetch(stmt) == 0);
     }
 
-    if(strcmp(out_buf, expect)){
-        printf(" expect '%s', but get '%s'\n", expect, out_buf);
-        exit(1);
-    }else{
+    while(!mysql_stmt_fetch(stmt)) {
+        printf(" %d\n", out_buf);
         printf("    pass! execute ps get the same result as expect.\n");
+
     }
+
+
+//    if(strcmp((char *)&out_buf, expect)){
+//        printf(" expect '%s', but get '%s'\n", expect, (char *)&out_buf);
+//        exit(1);
+//    }else{
+//        printf("    pass! execute ps get the same result as expect.\n");
+//    }
 }
 
 void close_stmt(MYSQL_STMT *stmt){

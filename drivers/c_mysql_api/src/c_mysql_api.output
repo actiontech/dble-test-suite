@@ -6,7 +6,7 @@ IS_DEBUG: 0, argc:1
     pass! after change user, show tables failed. Error: No database selected
     pass! execute ps created before reset connection failed. Error: Incorrect arguments to EXECUTE
     pass! no default db, 'show tables' get Error:No database selected, Error no: 1046
-    pass! mysql_real_escape_string, Failed to insert row, Error: syntax error, error in :'is this','binary data: \0\r\n'', expect IDENTIFIER, actual IDENTIFIER pos 4, line 1, column 5, token IDENTIFIER null
+    pass! mysql_real_escape_string, Failed to insert row, Error: druid not support sql syntax, the reason is syntax error, error in :'What is this','binary data: \0\r\n', pos 4, line 1, column 6, token IDENTIFIER is
 debug 1
     *****pass! change user success during read ps statement!*****
     pass! After change user, the new db has no table 'sharding_4_t1'
@@ -100,15 +100,10 @@ connect success    *****pass! mysql_real_connect create conn with no default db 
     local_infile_error
     local_infile_end
 ==>mysql_sqlstate test suites
-    pass! query 'use schema1/*a*/', mysql_sqlstate: HY000
-    pass! send query to admin port, mysql_sqlstate: HY000
+    pass! query 'use schema1/*a*/', success
+    pass! send query 'show databases' to admin port, success
 ==> mysql_stat test suites
     pass! mysql_stat: Unknown command
-==>mysql_thread_id && mysql_warning_count test suites
-    create new conn! 
-    host:172.100.9.1, use:test, passwd:111111, port:8066 
-    pass! after kill thread_id by mysql_thread_id query get 'lost connection to ...'
-    pass! mysql_warning_count: 0
 ==>mysql_use_result && mysql_field_count && mysql_fetch_row && mysql_fetch_field_direct && mysql_free_result test suites
     pass! mysql_use_result 
     pass! mysql_field_count:1 
@@ -123,7 +118,7 @@ connect success    *****pass! mysql_real_connect create conn with no default db 
     0 rows affected
     More results exist
     Could not execute statement
-    pass! multi-queries without ';' in the last query, and queries before the last end with a \0 fail, err: sql syntax error, no terminated. IDENTIFIER
+    pass! multi-queries without ';' in the last query, and queries before the last end with a \0 fail, err: druid not support sql syntax, the reason is sql syntax error, no terminated. ERROR
     pass! multi-queries without ';' in the last query, and last query start with \0 success.
     print multi resultsets:
     0 rows affected
@@ -131,30 +126,26 @@ connect success    *****pass! mysql_real_connect create conn with no default db 
     0 rows affected
     More results exist
     Could not execute statement
-    pass! 'select 1\0,2', err: sql syntax error, no terminated. IF
-    pass! 'select 1,\02', err: sql syntax error, no terminated. EXISTS
-    pass! 'select '1,\02'', err: sql syntax error, no terminated. EXISTS
-    pass! '\0select '1'', err: syntax error, error in :'elect '1,'
+    pass! 'select 1\0,2', err: druid not support sql syntax, the reason is syntax error. pos 9, line 1, column 9, token ERROR
+    pass! 'select 1,\02', err: druid not support sql syntax, the reason is ERROR. pos 10, line 1, column 10, token ERROR
+    pass! 'select '1,\02'', err: druid not support sql syntax, the reason is sql syntax error, no terminated. IDENTIFIER
+    pass! '\0select '1'', err: druid not support sql syntax, the reason is syntax error, error in :'\0select '1'
 ==>write prepare statement related test suites
-    create new conn!
-    host:172.100.9.1, use:test, passwd:111111, port:8066
+    create new conn! 
+    host:172.100.9.1, use:test, passwd:111111, port:8066 
     prepare INSERT statement successful
     total parameters in INSERT: 3
-    pass! write ps execute get the same result as expect.
+    pass! write ps execute get the same result as expect. 
     pass! execute write prepare success.
 ==>read prepare statement related test suites
-    create new conn!
-    host:172.100.9.1, use:test, passwd:111111, port:8066
+    create new conn! 
+    host:172.100.9.1, use:test, passwd:111111, port:8066 
     create new ps success!
-    pass! execute ps get the same result as expect.
     pass! read prepare execute correctly
     *****two read ps should not affact each other*****
     create new ps success!
-    pass! execute ps get the same result as expect.
     close one ps.
-    pass! execute ps get the same result as expect.
     *****read ps should correctly in transaction*****
     start transaction.
-    pass! execute ps get the same result as expect.
     commit.
 !!!Test Over!!!
