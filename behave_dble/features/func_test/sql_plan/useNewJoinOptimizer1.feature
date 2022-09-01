@@ -1380,8 +1380,8 @@ Feature: test with useNewJoinOptimizer=true
          | conn    | toClose | sql                                                         | db|
          | conn_2 | false   | explain SELECT * FROM Employee a INNER JOIN Dept b LEFT JOIN Info c on b.deptname=c.deptname order by a.name  | schema1|
     Then check resultset "B" has lines with following column values
-        | SHARDING_NODE-0     | TYPE-1            | SQL/REF-2                                                                                         |
-        | dn3_0             | BASE SQL        | select `b`.`deptname`,`b`.`deptid`,`b`.`manager`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Dept` `b` left join  `Info` `c` on `b`.`deptname` = `c`.`deptname` |
+        | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                         |
+        | dn3_0             | BASE SQL        | select `b`.`deptname`,`b`.`deptid`,`b`.`manager`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Dept` `b` left join  `Info` `c` on `b`.`deptname` = `c`.`deptname` where 1=1 |
         | merge_1           | MERGE           | dn3_0                                                                                                                                                                        |
         | dn1_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  `Employee` `a` ORDER BY `a`.`name` ASC                                                                        |
         | dn2_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  `Employee` `a` ORDER BY `a`.`name` ASC                                                                        |
