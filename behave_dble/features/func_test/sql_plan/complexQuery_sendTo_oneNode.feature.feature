@@ -117,17 +117,17 @@ Feature: following complex queries are able to send one datanode
       | distinct_1         | DISTINCT              | merge_1                                                                                                                   |
       | shuffle_field_1    | SHUFFLE_FIELD         | distinct_1                                                                                                                |
       | in_sub_query_1     | IN_SUB_QUERY          | shuffle_field_1                                                                                                           |
-      | dn1_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-      | dn2_1              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-      | dn3_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-      | dn4_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn1_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order`                                                 |
+      | dn2_1              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order`                                                 |
+      | dn3_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order`                                                 |
+      | dn4_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order`                                                 |
       | merge_2            | MERGE                 | dn1_0; dn2_1; dn3_0; dn4_0                                                                                                |
       | shuffle_field_2    | SHUFFLE_FIELD         | merge_2                                                                                                                   |
       | /*AllowDiff*/dn1_1 | BASE SQL(May No Need) | in_sub_query_1; select `test_global`.`id`,`test_global`.`cc` from  `test_global`                                          |
       | merge_3            | MERGE                 | /*AllowDiff*/dn1_1                                                                                                        |
       | join_1             | JOIN                  | shuffle_field_2; merge_3                                                                                                  |
-      | shuffle_field_3    | SHUFFLE_FIELD         | join_1                                                                                                                    |
-
+      | where_filter_1     | WHERE_FILTER          | join_1                                                                                                                    |
+      | shuffle_field_3    | SHUFFLE_FIELD         | where_filter_1                                                                                                            |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_7"
       | conn   | toClose | sql                                                                        |
       | conn_0 | False   | explain select * from aly_order where id=(select 1)                        |
@@ -376,16 +376,18 @@ Feature: following complex queries are able to send one datanode
       | distinct_1      | DISTINCT              | merge_1                                                                                                                   |
       | shuffle_field_1 | SHUFFLE_FIELD         | distinct_1                                                                                                                |
       | in_sub_query_1  | IN_SUB_QUERY          | shuffle_field_1                                                                                                           |
-      | dn1_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-      | dn2_1           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-      | dn3_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-      | dn4_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn1_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order`                                                 |
+      | dn2_1           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order`                                                 |
+      | dn3_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order`                                                 |
+      | dn4_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order`                                                 |
       | merge_2         | MERGE                 | dn1_0; dn2_1; dn3_0; dn4_0                                                                                                |
       | shuffle_field_2 | SHUFFLE_FIELD         | merge_2                                                                                                                   |
       | dn1_1           | BASE SQL(May No Need) | in_sub_query_1; select `test_global_1`.`id`,`test_global_1`.`cc` from  `test_global_1`                                    |
       | merge_3         | MERGE                 | dn1_1                                                                                                                     |
       | join_1          | JOIN                  | shuffle_field_2; merge_3                                                                                                  |
-      | shuffle_field_3 | SHUFFLE_FIELD         | join_1                                                                                                                    |
+      | where_filter_1  | WHERE_FILTER          | join_1                                                                                                                    |
+      | shuffle_field_3 | SHUFFLE_FIELD         | where_filter_1                                                                                                            |
+  
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_32"
       | conn   | toClose | sql                                                                                                            |
       | conn_0 | True    | explain select * from aly_test a,  test_global_1 where a.c=test_global_1.cc and a.id =3 and test_global_1.id=1 |

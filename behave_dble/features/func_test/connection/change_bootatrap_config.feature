@@ -357,9 +357,9 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       processorExecutor=4
       """
 
-    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
-      | sql         | db        |
-      | select 1    | schema1   |
+    Given execute "user" sql "200" times in "dble-1" together use 100 connection not close
+      | sql                | db        |
+      | select user()      | schema1   |
    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       \[BusinessExecutor0\]
