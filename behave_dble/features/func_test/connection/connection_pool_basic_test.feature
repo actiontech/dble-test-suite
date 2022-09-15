@@ -159,10 +159,17 @@ Feature: connection pool basic test
       | conn_0 | False   | drop table if exists sharding_4_t1                     | success                    | schema1 |
       | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))    | success                    | schema1 |
       | conn_0 | True    | insert into sharding_4_t1 values(2,2)                  | success                    | schema1 |
+    # query all connections except heartbeat
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                | expect         | db                |
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' | length{(20)}   | dble_information  |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                    | expect                     | db      |
       | conn_1 | False   | begin                                                  | success                    | schema1 |
       | conn_1 | False   | select * from sharding_4_t1                            | success                    | schema1 |
       | conn_2 | False   | begin                                                  | success                    | schema1 |
       | conn_2 | False   | select * from sharding_4_t1                            | success                    | schema1 |
+    # query idle connections
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                 | expect         | db                |
       | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'                 | length{(12)}   | dble_information  |
