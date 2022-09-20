@@ -7,6 +7,23 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
 
   @NORMAL
   Scenario: "create/drop database @@..." for all used shardingnode #1
+     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+     """
+     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="timeBetweenEvictionRunsMillis">2000</property>
+          <property name="idleTimeout">2000</property>
+        </dbInstance>
+     </dbGroup>
+     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="timeBetweenEvictionRunsMillis">2000</property>
+          <property name="idleTimeout">2000</property>
+        </dbInstance>
+     </dbGroup>
+     """
      Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
      """
         <shardingNode dbGroup="ha_group1" database="da1" name="dn1" />
@@ -25,6 +42,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | conn_0 | False    | drop database if exists da1 | success  |
       | conn_0 | True     | drop database if exists da2 | success  |
     Then execute admin cmd "reload @@config_all"
+    Given sleep "5" seconds
     Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
       | sql                 |
@@ -80,6 +98,23 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
         <shardingNode dbGroup="ha_group2" database="da21" name="dn4" />
         <shardingNode dbGroup="ha_group1" database="da31" name="dn5" />
     """
+     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+     """
+     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="timeBetweenEvictionRunsMillis">2000</property>
+          <property name="idleTimeout">2000</property>
+        </dbInstance>
+     </dbGroup>
+     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="timeBetweenEvictionRunsMillis">2000</property>
+          <property name="idleTimeout">2000</property>
+        </dbInstance>
+     </dbGroup>
+     """
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                          | expect   |
       | conn_0 | False    | drop database if exists da11 | success  |
@@ -90,6 +125,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | conn_0 | False    | drop database if exists da11 | success  |
       | conn_0 | True     | drop database if exists da21 | success  |
     Then execute admin cmd "reload @@config_all"
+    Given sleep "5" seconds
     Then execute admin cmd "create database @@shardingNode ='dn1,dn2'"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
       | sql                 |
@@ -180,6 +216,23 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
         <shardingNode dbGroup="ha_group2" database="da0$0-1" name="dn2$0-1" />
         <shardingNode dbGroup="ha_group1" database="da31" name="dn5" />
      """
+     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+     """
+     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="timeBetweenEvictionRunsMillis">2000</property>
+          <property name="idleTimeout">2000</property>
+        </dbInstance>
+     </dbGroup>
+     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="timeBetweenEvictionRunsMillis">2000</property>
+          <property name="idleTimeout">2000</property>
+        </dbInstance>
+     </dbGroup>
+     """
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                          | expect   |
       | conn_0 | False    | drop database if exists da00 | success  |
@@ -189,7 +242,8 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | conn   | toClose  | sql                          | expect   |
       | conn_0 | False    | drop database if exists da00 | success  |
       | conn_0 | True     | drop database if exists da01 | success  |
-    Then execute admin cmd "reload @@config_all" get the following output
+    Then execute admin cmd "reload @@config_all"
+    Given sleep "5" seconds
     Then execute admin cmd "create database @@shardingNode ='dn10,dn11,dn20,dn21'"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
       | sql                 |
@@ -235,10 +289,26 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
   @NORMAL
   Scenario: add new dbGroup & "create database @@..." & "show @@shardingnode" when sharding  #4
      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
+     """ 
+     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="timeBetweenEvictionRunsMillis">2000</property>
+          <property name="idleTimeout">2000</property>
+        </dbInstance>
+     </dbGroup>
+     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="timeBetweenEvictionRunsMillis">2000</property>
+          <property name="idleTimeout">2000</property>
+        </dbInstance>
+     </dbGroup>
      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="timeBetweenEvictionRunsMillis">2000</property>
+          <property name="idleTimeout">2000</property>
         </dbInstance>
      </dbGroup>
      """
@@ -265,12 +335,13 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
     Then execute sql in "mysql"
       | conn   | toClose  | sql                         | expect   |
       | conn_0 | False    | drop database if exists db4 | success  |
-     Then execute admin cmd "reload @@config_all"
-     Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5,dn6'"
-     Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
+    Then execute admin cmd "reload @@config_all"
+    Given sleep "5" seconds
+    Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5,dn6'"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
       | sql                        |
       | show @@shardingNode        |
-     Then check resultset "A" has lines with following column values
+    Then check resultset "A" has lines with following column values
        | NAME-0 | DB_GROUP-1        | SCHEMA_EXISTS-2 | ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
        | dn1    | ha_group1/db1     | true            | 0        | 0      | 1000   | 0         | -1              |
        | dn2    | ha_group2/db1     | true            | 0        | 0      | 1000   | 0         | -1              |
@@ -290,10 +361,10 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
     Then execute sql in "mysql"
       | conn   | toClose  | sql                        | expect          |
       | conn_0 | True     | show databases like 'db4'  | has{('db4',),}  |
-     Given delete the following xml segment
+    Given delete the following xml segment
        |file          | parent          | child                   |
        |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}        |
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
      """
      <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
         <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
@@ -302,6 +373,7 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
      </schema>
      """
     Then execute admin cmd "reload @@config_all"
+    Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
       | sql                        |
       | show @@shardingNode        |
