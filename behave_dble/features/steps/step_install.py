@@ -11,7 +11,7 @@ from hamcrest import *
 from behave.runner import Context
 from steps.lib.DbleMeta import DbleMeta
 from steps.lib.DBUtil import *
-from steps.lib.utils import get_node, get_ssh, create_dir,exec_command
+from steps.lib.utils import get_node, get_ssh, create_dir, exec_command, wait_for
 # from lib.utils import wait_for, create_dir
 LOGGER = logging.getLogger('root')
 
@@ -220,18 +220,21 @@ def stop_dble_in_node(context, node):
     dble_install_path = node.install_dir
     dble_pid_exist, dble_dir_exist = check_dble_exist(ssh_client, dble_install_path)
 
+    @wait_for(context, text="Stop dble failed! dble process still exists", duration=6, interval=1)
+    def condition(ssh_client):
+        cmd = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | wc -l"
+        rc, sto, ste = ssh_client.exec_command(cmd)
+        if len(ste) == 0:
+            return str(sto) == '0'
+        return False
+
     if dble_pid_exist:
         # stop dble gracefully to generate .exec for code coverage
-        # stop_dble_cmd="{0}/dble/bin/dble stop".format(dble_install_path)
-        # rc1, sto1, ste1 = ssh_client.exec_command(stop_dble_cmd)
-        # assert_that(len(ste1) == 0, "stop dble fail for:{0}".format(ste1))
-        cmd_kill_guard = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $3}' | xargs -r kill -9"
-        rc1, sto1, ste1 = ssh_client.exec_command(cmd_kill_guard)
+        stop_dble_cmd = "{0}/dble/bin/dble stop".format(dble_install_path)
+        rc1, sto1, ste1 = ssh_client.exec_command(stop_dble_cmd)
+        assert_that(len(ste1) == 0, "stop dble fail for:{0}".format(ste1))
 
-        cmd_kill_core = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | xargs -r kill -9"
-        rc2, sto2, ste2 = ssh_client.exec_command(cmd_kill_core)
-
-        assert_that(len(ste1) == 0 and len(ste2) == 0, "kill dble process fail for:{0},{1}".format(ste1, ste2))
+        condition(ssh_client)
 
     if dble_dir_exist:
         datetime = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
