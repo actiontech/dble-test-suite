@@ -30,7 +30,7 @@ Feature:  dble_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(129)}     | dble_information |
+      | conn_0 | False   | select * from dble_variables    | length{(130)}     | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
@@ -60,6 +60,7 @@ Feature:  dble_variables test
       | tableByUserByEntryTableSize             | 1024                            | TableByUserByEntry table size, the default is 1024                                                                                                                                                                   | false       |
       | sqlLogTableSize                         | 1024                            | SqlLog table size, the default is 1024                                                                                                                                                                               | false       |
       | samplingRate                            | 0                               | Sampling rate, the default is 0, it is a percentage                                                                                                                                                                  | false       |
+      | xaIdCheckPeriod                         | 300s                            | The period for check xaId, the default is 300 second                                                                                                                                                                 | false       |
       | clusterEnable                           | false                           | Whether enable the cluster mode                                                                                                                                                                                      | true        |
       | showBinlogStatusTimeout                 | 60000ms                         | The time out from show @@binlog.status.The default value is 60000ms                                                                                                                                                  | true        |
       | sequenceHandlerType                     | Local TimeStamp(like Snowflake) | Global Sequence Type. The default is Local TimeStamp(like Snowflake)                                                                                                                                                 | true        |
@@ -171,9 +172,9 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                               | expect       | db               |
       | conn_0 | False   | select * from dble_variables limit 10                             | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(20)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(20)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(129)}| dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(21)} | dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(21)} | dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(130)}| dble_information |
   #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                             | db               |
@@ -191,6 +192,7 @@ Feature:  dble_variables test
       | conn_0 | False   | select * from dble_variables where read_only like  '%fals%'  order by variable_name desc limit 10 | dble_information |
     Then check resultset "dble_variables_4" has lines with following column values
       | variable_name-0                         | variable_value-1               | read_only-3 |
+      | xaIdCheckPeriod                         | 300s                           | false       |
       | tableByUserByEntryTableSize             | 1024                           | false       |
       | sqlSlowTime                             | 100ms                          | false       |
       | sqlLogTableSize                         | 1024                           | false       |
@@ -200,7 +202,6 @@ Feature:  dble_variables test
       | generalLogFile                          | /opt/dble/general/general.log  | false       |
       | frontendByBackendByEntryByUserTableSize | 1024                           | false       |
       | flushSlowLogSize                        | 1000                           | false       |
-      | flushSlowLogPeriod                      | 1s                             | false       |
   #case supported select field from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_5"
       | conn   | toClose | sql                                                | db               |
@@ -217,7 +218,7 @@ Feature:  dble_variables test
       | conn_0 | False   | select read_only,count(*) from dble_variables group by read_only | dble_information |
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
-      | false       | 20      |
+      | false       | 21      |
       | true        | 109     |
 
   #case supported select field from dble_variables where XXX  DBLE0REQ-485
@@ -243,8 +244,8 @@ Feature:  dble_variables test
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('xalog',),)}   | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('',),)}        | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(112)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(110)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(111)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(18)}         | dble_information |
   #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
       | conn_0 | False   | update dble_variables set comment='sqlSlowTime1' where variable_value='true' | Access denied for table 'dble_variables' | dble_information |
