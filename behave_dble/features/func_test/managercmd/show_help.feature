@@ -9,7 +9,7 @@ Feature: test show @@help
   Scenario: test "show @@help" #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(114)}  | dble_information |
+      | conn_0 | False   | show @@help             | length{(116)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
@@ -80,6 +80,8 @@ Feature: test show @@help
       | reload @@user_stat                                                                                  | Reset show @@sql  @@sql.sum @@sql.slow                                            |
       | reload @@query_cf[=table&column]                                                                    | Reset show @@sql.condition                                                        |
       | release @@reload_metadata                                                                           | Release reload process , unlock the config meta lock                              |
+      | reload @@load_data.num=?                                                                            | Set the value of maxRowSizeToFile                                                 |
+      | reload @@xaIdCheck.period=?                                                                         | Set the period for check xaId, the unit is second                                 |
       | offline                                                                                             | Change Server status to OFF                                                       |
       | online                                                                                              | Change Server status to ON                                                        |
       | flow_control @@show                                                                                 | Show the current config of the flow control                                       |
