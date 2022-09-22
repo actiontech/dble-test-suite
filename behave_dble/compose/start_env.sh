@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mkdir /opt/behave/
-cd /opt/behave/ && git clone -b 3.21.06 https://github.com/actiontech/dble-test-suite.git
+cd /opt/behave/ && git clone -b 3.21.02 https://github.com/actiontech/dble-test-suite.git
 cd /opt/behave/dble-test-suite/behave_dble/compose/
 #docker network create --gateway 172.100.9.253 --subnet 172.100.9.0/24 dble_test
 #docker network create -d bridge --ipv6 --subnet "2001:3984:3989::/64" --gateway "2001:3984:3989::1" --gateway 172.100.9.253 --subnet 172.100.9.0/24 dble_test
