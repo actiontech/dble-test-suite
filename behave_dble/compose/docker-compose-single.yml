@@ -79,8 +79,8 @@ services:
     stdin_open: true
     tty: true
     ports:
-      - 8066:8066
-      - 9066:9066   
+      - 18066:8066
+      - 19066:9066   
     networks:
       dble-net:
         ipv4_address: 172.100.9.1
