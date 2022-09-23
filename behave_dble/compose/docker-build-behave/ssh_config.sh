@@ -2,7 +2,7 @@
 
 mysql_ips=("172.100.9.1" "172.100.9.2" "172.100.9.3" "172.100.9.4" "172.100.9.5" "172.100.9.6" "172.100.9.9" "172.100.9.10" "172.100.9.11" "172.100.9.12")
 Hostname=("dble-1" "dble-2" "dble-3" "mysql" "mysql-master1" "mysql-master2" "mysql8-master1" "mysql8-master2" "mysql8-slave1" "mysql8-slave2")
-
+count=${#Hostname[@]}
 auto_ssh_copy_id(){
    expect -c "set timeout -1;
    spawn ssh-copy-id -i root@$1;
@@ -14,10 +14,19 @@ auto_ssh_copy_id(){
 }
 
 ssh_copy_id_to_all(){
-  for((i=0; i<=9; i=i+1)); do
-   #   ssh-keygen -f "/root/.ssh/known_hosts" -R ${mysql_ips[$i]}
-   #   ssh-keygen -f "/root/.ssh/known_hosts" -R ${Hostname[$i]}
-      echo "${mysql_ips[$i]}  ${Hostname[$i]}" >> /etc/hosts 
+  for((i=0; i< count; i=i+1)); do
+      docker ps 1>/dev/null 2>/dev/null
+      if [ $? != 0 ];then
+          echo "==========清除密钥信息=========="
+          ssh-keygen -f "/root/.ssh/known_hosts" -R ${mysql_ips[$i]}
+          ssh-keygen -f "/root/.ssh/known_hosts" -R ${Hostname[$i]}
+      fi
+      
+      grep ${mysql_ips[$i]} ${Hostname[$i]} /etc/hosts 1>/dev/null 2>/dev/null
+      if [ $? != 0 ];then
+        echo ${mysql_ips[$i]}  ${Hostname[$i]} >> /etc/hosts
+      fi
+
       auto_ssh_copy_id ${Hostname[$i]} sshpass
   done
 }

@@ -16,12 +16,5 @@ lxml = "*"
 pip = "*"
 cryptography = "==2.3.0"
 
-[dev-packages]
-pylint = "*"
-types-paramiko = "*"
-types-PyMySQL = "*"
-types-PyYAML = "*"
-autopep8 = "*"
-
 [requires]
-python_version = "2.7"
+python_version = "2.7.18"
