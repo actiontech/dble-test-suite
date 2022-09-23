@@ -43,6 +43,8 @@ services:
     tty: true
     ports:
       - 23306:3306
+      - 23307:3307
+      - 23308:3308
     networks:
       dble-net:
         ipv4_address: 172.100.9.6
@@ -60,6 +62,7 @@ services:
     tty: true
     ports:
       - 3306:3306
+      - 3307:3307
     networks:
       dble-net:
         ipv4_address: 172.100.9.4
@@ -75,6 +78,9 @@ services:
     privileged: true
     stdin_open: true
     tty: true
+    ports:
+      - 8066:8066
+      - 9066:9066   
     networks:
       dble-net:
         ipv4_address: 172.100.9.1
