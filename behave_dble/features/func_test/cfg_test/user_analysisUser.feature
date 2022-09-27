@@ -3,7 +3,6 @@
 # Created by quexiuping at 2021/04/07
 
 
-  @skip
 Feature: test config in user.xml  ---  analysisUser
 
 
@@ -62,7 +61,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="CLICKHOUSE"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="CLICKHOUSE"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -75,7 +74,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -87,7 +86,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="mysql"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="mysql"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -99,7 +98,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType=" "/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType=" "/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -111,7 +110,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="null"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="null"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -123,7 +122,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="abc"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="abc"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -135,7 +134,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="-1"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="-1"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -147,7 +146,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="9.9"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="9.9"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -191,7 +190,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
     </dbGroup>
     """
      Then execute admin cmd "reload @@config_all"
@@ -224,7 +223,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -240,7 +239,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -269,7 +268,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -290,7 +289,7 @@ Feature: test config in user.xml  ---  analysisUser
       """
       <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
       </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml" with duplicate name
@@ -309,7 +308,7 @@ Feature: test config in user.xml  ---  analysisUser
       """
       <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
       </dbGroup>
       """
      Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -336,7 +335,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse">
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse">
              <property name="timeBetweenEvictionRunsMillis">10</property>
         </dbInstance>
     </dbGroup>
@@ -367,8 +366,8 @@ Feature: test config in user.xml  ---  analysisUser
     """
     <dbGroup rwSplitMode="2" name="ha_group3" delayThreshold="100" >
         <heartbeat>select 1</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.13:9004" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.14:9004" user="test" maxCon="100" minCon="10" primary="false" databaseType="clickhouse"/>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.10:9004" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostS1" password="111111" url="172.100.9.11:9004" user="test" maxCon="100" minCon="10" primary="false" databaseType="clickhouse"/>
     </dbGroup>
     """
     Given Restart dble in "dble-1" success
@@ -514,8 +513,8 @@ Feature: test config in user.xml  ---  analysisUser
       | ana1  | 111111 | conn_1 | False   | select user()      | success  |
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
     """
-     <dbInstance name=\"hostM1\" url=\"172.100.9.13:9004\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"false\" databaseType=\"clickhouse\"/>
-     <dbInstance name=\"hostS1\" url=\"172.100.9.14:9004\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"true\" databaseType=\"clickhouse\"/>
+     <dbInstance name=\"hostM1\" url=\"172.100.9.10:9004\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"false\" databaseType=\"clickhouse\"/>
+     <dbInstance name=\"hostS1\" url=\"172.100.9.11:9004\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"true\" databaseType=\"clickhouse\"/>
     """
 
 #########   fresh conn

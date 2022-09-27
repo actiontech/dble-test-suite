@@ -83,3 +83,32 @@ services:
       - dble_1_cgroup:/sys/fs/cgroup
       - /share:/share
     working_dir: /opt
+
+  clickhouse-1:
+      image: dble/dble_test_clickhouse
+      container_name: clickhouse-server_1
+      hostname: clickhouse-server_1
+      privileged: true
+      stdin_open: true
+      tty: true
+      ports:
+          - "18123:8123"
+          - "19000:9000"
+          - "19004:9004"
+      networks:
+          dble-net:
+            ipv4_address: 172.100.9.10
+  clickhouse-2:
+      image: dble/dble_test_clickhouse
+      container_name: clickhouse-server_2
+      hostname: clickhouse-server_2
+      privileged: true
+      stdin_open: true
+      tty: true
+      ports:
+          - "28123:8123"
+          - "29000:9000"
+          - "29004:9004"
+      networks:
+          dble-net:
+            ipv4_address: 172.100.9.11
