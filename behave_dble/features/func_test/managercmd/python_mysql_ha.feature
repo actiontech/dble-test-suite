@@ -407,5 +407,5 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
 
     Given execute linux command in "dble-1"
       """
-      kill -9 `ps -ef | grep python3 |grep -v grep | awk '{print $2}'`
+      ps -ef | grep python3 |grep -v grep | awk '{print $2}' | xargs -r kill -9
       """
