@@ -105,11 +105,15 @@ Feature: test some import nodes attr in sharding.xml
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
           <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="15" minCon="3" primary="true">
-          <property name="connectionTimeout">2000</property>
+             <property name="connectionTimeout">3000</property>
+             <property name="timeBetweenEvictionRunsMillis">2000</property>
+             <property name="idleTimeout">2000</property>
           </dbInstance>
       </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
+    ###### DBLE0REQ-1925
+    Given sleep "5" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                | expect  | db      |
       | conn_0 | False    | drop table if exists test_table    | success | schema1 |
