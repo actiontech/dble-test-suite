@@ -30,7 +30,7 @@ Feature:  dble_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(130)}     | dble_information |
+      | conn_0 | False   | select * from dble_variables    | length{(139)}     | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
@@ -167,14 +167,23 @@ Feature:  dble_variables test
       | groupConcatMaxLen                       | 1024                            | The maximum permitted result length in bytes for the GROUP_CONCAT() function. The default is 1024.                                                                                                                   | true        |
       | enableAsyncRelease                      | 0                               | Whether enable async release . default value is 0(off).                                                                                                                                                              | true        |
       | releaseTimeout                          | 600000                          | time wait for release ,unit is ms,  default value is 10mins                                                                                                                                                          | true        |
+      | enableSqlDumpLog                        | 0                                           | Whether enable sqlDumpLog, the default value is 0(off)                                                                                                                                                   | false       |
+      | sqlDumpLogBasePath                      | sqldump                                     | The base path of sqldump log, the default value is 'sqldump'                                                                                                                                             | true        |
+      | sqlDumpLogFileName                      | sqldump.log                                 | The sqldump log file name, the default value is 'sqldump.log'                                                                                                                                            | true        |
+      | sqlDumpLogCompressFilePattern           | ${date:yyyy-MM}/sqldump-%d{MM-dd}-%i.log.gz | The compression of sqldump log file, the default value is '${date:yyyy-MM}/sqldump-%d{MM-dd}-%i.log.gz'                                                                                                  | true        |
+      | sqlDumpLogOnStartupRotate               | 1                                           | The onStartup of rotate policy, the default value is 1                                                                                                                                                   | true        |
+      | sqlDumpLogSizeBasedRotate               | 52428800(byte)                              | The sizeBased of rotate policy, the default value is '50 MB'                                                                                                                                             | true        |
+      | sqlDumpLogTimeBasedRotate               | 1                                           | The timeBased of rotate policy, the default value is 1                                                                                                                                                   | true        |
+      | sqlDumpLogDeleteFileAge                 | 90d                                         | The expiration time deletion strategy, the default value is '90d'                                                                                                                                        | true        |
+      | sqlDumpLogCompressFilePath              | */sqldump-*.log.gz                          | The compression of sqldump log file path, the default value is '*/sqldump-*.log.gz'                                                                                                                      | true        |
   #case supported select limit /order by/ where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                               | expect       | db               |
       | conn_0 | False   | select * from dble_variables limit 10                             | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(21)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(21)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(130)}| dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(22)} | dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(22)} | dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(139)}| dble_information |
   #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                             | db               |
@@ -218,8 +227,8 @@ Feature:  dble_variables test
       | conn_0 | False   | select read_only,count(*) from dble_variables group by read_only | dble_information |
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
-      | false       | 21      |
-      | true        | 109     |
+      | false       | 22      |
+      | true        | 117     |
 
   #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
@@ -243,8 +252,8 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('xalog',),)}   | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('',),)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(112)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(111)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(121)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(120)}        | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(18)}         | dble_information |
   #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
