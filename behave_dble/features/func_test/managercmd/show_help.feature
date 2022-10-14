@@ -9,7 +9,7 @@ Feature: test show @@help
   Scenario: test "show @@help" #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(116)}  | dble_information |
+      | conn_0 | False   | show @@help             | length{(118)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
@@ -131,6 +131,8 @@ Feature: test show @@help
       | drop @@statistic_queue.usage                                                                        | Drop the queue usage                                                              |
       | start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]]                            | Start monitoring queue usage, Unit: (s,m/min,h)                                   |
       | stop @@statistic_queue_monitor                                                                      | Stop monitoring queue usage                                                       |
+      | enable @@sqldump_sql                                                                                | Turn on the sqldump log                                                           |
+      | disable @@sqldump_sql                                                                               | Turn off the sqldump log                                                          |
 
 
     Then check resultset "rs_A" has not lines with following column values
