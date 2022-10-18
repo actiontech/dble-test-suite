@@ -83,7 +83,7 @@ SELECT t1.f1->>'$**.a',cast(json_unquote(json_extract(t1.f1,'$**.a')) as char),c
 SELECT t1.f1->>'$[0][0][0].a',cast(json_unquote(json_extract(t1.f1,'$[0][0][0].a')) as char),cast(t1.f1->>'$[0][0][0].a' as char) <=> cast(json_unquote(json_extract(t1.f1,'$[0][0][0].a')) as char),t2.addr->'$.province[0]' FROM schema1.test1 t1,sharding_4_t2 t2 where t1.id=t2.id order by t1.id;
 SELECT t1.f1->>'$[*].b',cast(json_unquote(json_extract(t1.f1,'$[*].b')) as char),cast(t1.f1->>'$[*].b' as char) <=> cast(json_unquote(json_extract(t1.f1,'$[*].b')) as char),t2.addr->'$.province[0]' FROM schema1.test1 t1,sharding_4_t2 t2 where t1.id=t2.id order by t1.id;
 SELECT t1.f1->>'$[*].a',cast(json_unquote(json_extract(t1.f1,'$[*].a')) as char),cast(t1.f1->>'$[*].a' as char) <=> cast(json_unquote(json_extract(t1.f1,'$[*].a')) as char),t2.addr->'$.province[0]' FROM schema1.test1 t1,sharding_4_t2 t2 where t1.id=t2.id order by t1.id;
-#drop table if exists sharding_4_t2;
-#drop table if exists sharding_1_t3;
-#drop table if exists global_4_t1;
-#drop table if exists schema1.test1;
+drop table if exists sharding_4_t2;
+drop table if exists sharding_1_t3;
+drop table if exists global_4_t1;
+drop table if exists schema1.test1;
