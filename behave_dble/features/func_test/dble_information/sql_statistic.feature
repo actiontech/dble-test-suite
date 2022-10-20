@@ -1127,7 +1127,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       """
 
 
-
+@skip_restart
   Scenario: implict commit test #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -1158,25 +1158,36 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
+      #tx/0/0
       | conn_0 | False    | begin                                                                           | success | schema1 |
-      #dn1-insert/1/1-tx/1/1, dn2-insert/1/1-tx/1/1, dn3-insert/1/1-tx/1/1, dn4-insert/1/1-tx/1/1
+      #dn-1234 insert/1/1   tx/0/0
       | conn_0 | False    | insert into sharding_4_t1 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | success | schema1 |
+      # dn-1234 insert/1/1  dn-1234 tx/1/1
       | conn_0 | False    | create table sharding_4_t2(id int, name varchar(20))                            | success | schema1 |
-      | conn_0 | False    | begin                                                                           | success | schema1 |
-      #dn1-insert/1/1-tx/1/1, dn2-insert/1/1-tx/1/1, dn3-insert/1/1-tx/1/1, dn4-insert/1/1-tx/1/1
+      # dn-1234 insert/1/1  dn-1234 tx/1/1
+     | conn_0 | False    | begin                                                                           | success | schema1 |
+      #dn-1234 insert/2/2   dn-1234 tx/1/1
       | conn_0 | False    | insert into sharding_4_t2 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | success | schema1 |
+      #dn-1234 insert/2/2   dn-1234 tx/2/2
       | conn_0 | False    | create index index_name1 on sharding_4_t1 (name)                                | success | schema1 |
+      #dn-1234 insert/2/2   dn-1234 tx/2/2
       | conn_0 | False    | begin                                                                           | success | schema1 |
-      #dn1-update/1/1-tx/1/1, dn2-tx/1/0, dn3-tx/1/0, dn4-tx/1/0
+      #dn1-update/1/1  insert/2/2  dn-1234 tx/2/2
       | conn_0 | False    | update sharding_4_t1 set name='dn1' where id=4                                  | success | schema1 |
+      #dn1-update/1/1  dn-1234 insert/2/2  dn1-tx/3/3  dn-234 tx/3/2
       | conn_0 | False    | drop index index_name1 on sharding_4_t1                                         | success | schema1 |
+
+      #dn1-update/1/1  dn-1234 insert/2/2  dn1-tx/3/3  dn-234 tx/3/2
       | conn_0 | False    | begin                                                                           | success | schema1 |
-      #dn1-select/1/1-tx/1/1, dn2-select/1/1-tx/1/1, dn3-select/1/1-tx/1/1, dn4-select/1/1-tx/1/1
+      #dn1-update/1/1  dn-1234 insert/2/2  dn-1234 select/1/1  dn1-tx/3/3  dn-234 tx/3/2
       | conn_0 | False    | select * from sharding_4_t1                                                     | success | schema1 |
+      #dn1-update/1/1  dn-1234 insert/2/2  dn-1234 select/1/1 dn1-tx/4/4  dn-234 tx/4/3
       | conn_0 | False    | begin                                                                           | success | schema1 |
+      #dn1-update/1/1  dn-1234 insert/2/2  dn-1234 select/1/1 dn1-tx/4/4  dn-234 tx/4/3
       | conn_0 | False    | begin                                                                           | success | schema1 |
-       #dn4-update/1/1-tx/1/1
+      #dn1-update/1/1  dn4-update/1/1  dn-1234 insert/2/2  dn-1234 select/1/1   dn1-tx/4/4  dn-234 tx/4/3
       | conn_0 | False    | update sharding_4_t1 set name='dn4' where id=3                                  | success | schema1 |
+
       | conn_0 | False    | start transaction                                                               | success | schema1 |
       | conn_0 | False    | begin                                                                           | success | schema1 |
       | conn_0 | False    | set autocommit=0                                                                | success | schema1 |
