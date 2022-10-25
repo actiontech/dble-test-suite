@@ -145,6 +145,7 @@ DROP TABLE if EXISTS test1;
 CREATE TABLE test1(id int primary key, f1 JSON);
 INSERT INTO test1 VALUES (1,'{"a":1}'), (2,'{"a":3}'), (3,'{"a":2}'), (4,'{"a":11, "b":3}'), (5,'{"a":33, "b":1}'), (6,'{"a":22,"b":2}');
 SELECT f1->"$.a",f1->"$.b" FROM test1 WHERE f1->"$.b" > 1 order by id;
+SELECT f1->"$.a", f1->"$.b" FROM test1 ORDER BY id;
 SELECT MAX(f1->"$.a"), f1->"$.b" FROM test1 GROUP BY f1->"$.b";
 INSERT INTO test1 VALUES (7,'{"t":"a"}'),(8,'{"t":"b"}'),(9,'{"t":"c"}');
 SELECT f1->"$.t" FROM test1 WHERE f1->"$.t" <> 'NULL' order by id;
@@ -172,4 +173,4 @@ SELECT f1->>'$**.a',cast(json_unquote(json_extract(f1,'$**.a')) as char),cast(f1
 SELECT f1->>'$[0][0][0].a',cast(json_unquote(json_extract(f1,'$[0][0][0].a')) as char),cast(f1->>'$[0][0][0].a' as char) <=> cast(json_unquote(json_extract(f1,'$[0][0][0].a')) as char) FROM test1 order by id;
 SELECT f1->>'$[*].b',cast(json_unquote(json_extract(f1,'$[*].b')) as char),cast(f1->>'$[*].b' as char) <=> cast(json_unquote(json_extract(f1,'$[*].b')) as char) FROM test1 order by id;
 SELECT f1->>'$[*].a',cast(json_unquote(json_extract(f1,'$[*].a')) as char),cast(f1->>'$[*].a' as char) <=> cast(json_unquote(json_extract(f1,'$[*].a')) as char) FROM test1 order by id;
-DROP TABLE if exists test1;
+DROP TABLE if EXISTS test1;

@@ -40,15 +40,15 @@ mysql:[(('[2]',), ('[2]',), ('[1, 2]',), ('[3, 1, 2, 5]',))]
 ===file:sqls_util/syntax/json_function_util.sql, id:119, sql:[SELECT data->'$**.b' FROM test1 WHERE data->'$**.b' is not null ORDER BY data->'$**.b';]===
 dble:[(('[1, 2]',), ('[2]',), ('[2]',), ('[3, 1, 2, 5]',))]
 mysql:[(('[2]',), ('[2]',), ('[1, 2]',), ('[3, 1, 2, 5]',))]
-===file:sqls_util/syntax/json_function_util.sql, id:157, sql:[SELECT json_extract(COUNT(*),"$.t") FROM test1;]===
+===file:sqls_util/syntax/json_function_util.sql, id:158, sql:[SELECT json_extract(COUNT(*),"$.t") FROM test1;]===
 dble:[((None,),)]
 mysql:[None]
 mysql err:(3146, 'Invalid data type for JSON data in argument 1 to function json_extract; a JSON string or JSON type is required.')
-===file:sqls_util/syntax/json_function_util.sql, id:158, sql:[SELECT COUNT(*)->>"$.t" FROM test1;]===
+===file:sqls_util/syntax/json_function_util.sql, id:159, sql:[SELECT COUNT(*)->>"$.t" FROM test1;]===
 dble:[((None,),)]
 mysql:[None]
 mysql err:(1064, 'You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near \'->>"$.t" FROM test1\' at line 1')
-===file:sqls_util/syntax/json_function_util.sql, id:160, sql:[SELECT MIN(f1)->>"$[1]" FROM test1;]===
+===file:sqls_util/syntax/json_function_util.sql, id:161, sql:[SELECT MIN(f1)->>"$[1]" FROM test1;]===
 dble:[((None,),)]
 mysql:[None]
 mysql err:(1064, 'You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near \'->>"$[1]" FROM test1\' at line 1')
