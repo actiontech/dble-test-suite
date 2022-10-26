@@ -3,9 +3,10 @@
 linux Centos7 ，基础环境依赖自行安装: docker, docker-compose, git, wget
 
 ### 二、搭建测试环境
+    注：目前自动化环境采用docker in docker 模式部署，用户可根据实际需求自行调整
 
-1. 部署behave运行环境容器
-
+1. 部署外层behave运行环境容器
+    
 
     docker run -itd --privileged --restart=always --name="behave" --hostname="behave" \
     -v /data/docker/volumes/autotest-dble/1:/var/lib/docker \
