@@ -9,8 +9,6 @@ Feature: test hint with left2inner/right2inner
   #use two different types of table to test hint with left2inner, reason is in line 180, including Scenario#1 and Scenario#2
   #Sampling some cases combined with other hints for testing, including Scenario#3
   #test with left2inner/right2inner combine with -DuseNewJoinOptimizer Scenario#4
-
-  @skip #skip about DBLE0REQ-1658
   Scenario: use shardingTale to test part of hint with left2inner/right2inner to achieve left/right join transform to inner join, verify query plan and resultSet   #1
 
     Given delete the following xml segment
@@ -189,7 +187,6 @@ Feature: test hint with left2inner/right2inner
     # Why change to use singleTable?
     # Some types of subqueries are inconvenient to know the correctness of the transformation from the query plan and results
     # Use singleTable can make sure all sql sent to one node, and that will be convenient to know the correctness of the transformation from the query plan
-  @skip #skip about DBLE0REQ-1658
   Scenario: use singleTable to test another part of hint with left2inner/right2inner to achieve left/right join transform to inner join, verify query plan and resultSet   #2
     Given delete the following xml segment
       | file          | parent         | child                  |
@@ -225,16 +222,16 @@ Feature: test hint with left2inner/right2inner
       | conn   | toClose | sql                                                                                                                                                                                 | db     |
       | conn_1 | false   | explain /*!dble:plan=$left2inner*/select * from Employee a left join Dept b on (select c.deptname from Employee c left join Info d on c.deptname=d.deptname where c.empid=7021)=b.deptname  | schema1|
     Then check resultset "rs_A" has lines with following column values
-      | SHARDING_NODE-0            | TYPE-1    | SQL/REF-2                                                                                                                                                                                                                                                         |
-      | dn1                        | BASE SQL  | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` join  `Dept` `b` on ( SELECT c.deptname FROM Employee c  INNER JOIN Info d ON c.deptname = d.deptname WHERE c.empid = 7021 ) = b.deptname |
+      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                                                                                                                                                                                                                                   |
+      | dn1             | BASE SQL | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` join  `Dept` `b` on ( SELECT c.deptname FROM Employee c  INNER JOIN Info d ON c.deptname = d.deptname WHERE c.empid = 7021 ) = b.deptname where 1=1 |
 
     #left join appeared in in subquery transform to inner join
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_B"
       | conn   | toClose | sql                                                                                                                                                             | db     |
       | conn_1 | false   | explain /*!dble:plan=$left2inner*/select deptname from Employee where deptname in (select a.deptname from Employee a left join Dept b on a.deptname=b.deptname) | schema1|
     Then check resultset "rs_B" has lines with following column values
-      | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2                                                                                                                                                                                                     |
-      | dn1              | BASE SQL | select `Employee`.`deptname` from  `Employee` where `Employee`.`deptname` in (select  distinct `a`.`deptname` as `autoalias_scalar` from  `Employee` `a` join  `Dept` `b` on `a`.`deptname` = `b`.`deptname`) |
+      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                                                                                                                                                                                |
+      | dn1             | BASE SQL | select `Employee`.`deptname` from  `Employee` where `Employee`.`deptname` in (select  distinct `a`.`deptname` as `autoalias_scalar` from  `Employee` `a` join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` where 1=1 ) |
 
      #left join appeared in order by subquery transform to inner join
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_C"
@@ -265,8 +262,8 @@ Feature: test hint with left2inner/right2inner
       | conn   | toClose | sql                                                                                                                                                                                           | db     |
       | conn_1 | false   | explain /*!dble:plan=$left2inner*/select * from Employee where Employee.deptname=any(select a.deptname from Employee a left join Dept b on a.deptname=b.deptname) order by Employee.deptname  | schema1|
     Then check resultset "rs_F" has lines with following column values
-      | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2                                                                                                                                                                                                                                           |
-      | dn1              | BASE SQL | select `Employee`.`name`,`Employee`.`empid`,`Employee`.`deptname`,`Employee`.`level` from  `Employee` where `Employee`.`deptname` in (select  distinct `a`.`deptname` as `autoalias_scalar` from  `Employee` `a` join  `Dept` `b` on `a`.`deptname` = `b`.`deptname`) order by `Employee`.`deptname` ASC |
+      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                                                                                                                                                                                                                                                                           |
+      | dn1             | BASE SQL | select `Employee`.`name`,`Employee`.`empid`,`Employee`.`deptname`,`Employee`.`level` from  `Employee` where `Employee`.`deptname` in (select  distinct `a`.`deptname` as `autoalias_scalar` from  `Employee` `a` join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` where 1=1 ) order by `Employee`.`deptname` ASC |
 
     #left join appeared in some subquery transform to inner join
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_G"
@@ -274,7 +271,7 @@ Feature: test hint with left2inner/right2inner
       | conn_1 | false   | explain /*!dble:plan=$left2inner*/select * from Employee where Employee.deptname=some(select a.deptname from Employee a left join Dept b on a.deptname=b.deptname) order by Employee.deptname  | schema1|
     Then check resultset "rs_G" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2                                                                                                                                                                                                                                           |
-      | dn1           | BASE SQL | select `Employee`.`name`,`Employee`.`empid`,`Employee`.`deptname`,`Employee`.`level` from  `Employee` where `Employee`.`deptname` in (select  distinct `a`.`deptname` as `autoalias_scalar` from  `Employee` `a` join  `Dept` `b` on `a`.`deptname` = `b`.`deptname`) order by `Employee`.`deptname` ASC |
+      | dn1           | BASE SQL | select `Employee`.`name`,`Employee`.`empid`,`Employee`.`deptname`,`Employee`.`level` from  `Employee` where `Employee`.`deptname` in (select  distinct `a`.`deptname` as `autoalias_scalar` from  `Employee` `a` join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` where 1=1 ) order by `Employee`.`deptname` ASC |
 
     #left join appeared in all subquery transform to inner join
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_H"
@@ -282,7 +279,7 @@ Feature: test hint with left2inner/right2inner
       | conn_1 | false   | explain /*!dble:plan=$left2inner*/select * from Employee where Employee.deptname=all(select a.deptname from Employee a left join Dept b on a.deptname=b.deptname) order by Employee.deptname  | schema1|
     Then check resultset "rs_H" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2                                                                                                                                                                                                                                           |
-      | dn1              | BASE SQL | select `Employee`.`name`,`Employee`.`empid`,`Employee`.`deptname`,`Employee`.`level` from  `Employee` where `Employee`.`deptname`= all (select `a`.`deptname` as `autoalias_scalar` from  `Employee` `a` join  `Dept` `b` on `a`.`deptname` = `b`.`deptname`) order by `Employee`.`deptname` ASC |
+      | dn1              | BASE SQL | select `Employee`.`name`,`Employee`.`empid`,`Employee`.`deptname`,`Employee`.`level` from  `Employee` where `Employee`.`deptname`= all (select `a`.`deptname` as `autoalias_scalar` from  `Employee` `a` join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` where 1=1 ) order by `Employee`.`deptname` ASC |
 
     #left join appeared in exists subquery transform to inner join
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_I"
@@ -312,7 +309,7 @@ Feature: test hint with left2inner/right2inner
       | conn_1 | false    | drop table if exists Info           | schema1  | success|
       | conn_1 | true     | drop table if exists Level          | schema1  | success|
 
-  @skip #skip about DBLE0REQ-1658
+
   Scenario: Sampling some cases combined with other hints for testing      #3
     Given delete the following xml segment
       | file          | parent         | child                  |
@@ -543,7 +540,7 @@ Feature: test hint with left2inner/right2inner
       | conn_1 | false    | drop table if exists Info           | schema1  | success|
       | conn_1 | true     | drop table if exists Level          | schema1  | success|
 
-  @skip #skip about DBLE0REQ-1658
+
   Scenario: test with useNewJoinOptimizer=true, left join transform to inner join may lead to other possibilities of query plan  #4
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
