@@ -3,28 +3,40 @@
 linux Centos7 ，基础环境依赖自行安装: docker, docker-compose, git, wget
 
 ### 二、搭建测试环境
+    注：目前自动化环境采用docker in docker 模式部署，用户可根据实际需求自行调整
 
-     wget https://raw.githubusercontent.com/actiontech/dble-test-suite/master/behave_dble/compose/start_env.sh
-     bash start_env.sh
-
-    注：之前下载过的请先关闭所有docker并删除，删除所有相关image和network，重新下载start_env.sh并bash，删除docker和image脚本如下
+1. 部署外层behave运行环境容器
     
-    cd /opt/behave/dble-test-suite/behave_dble/compose/
-    docker-compose down -v
-    docker network rm dble_test
-    docker rmi $(docker images | grep dble/ | awk '{print $3}')
-    rm -rf /opt/behave/ /opt/dble-* /opt/mysql* /opt/c-plus-driver /opt/share
 
+    docker run -itd --privileged --restart=always --name="behave" --hostname="behave" \
+    -v /data/docker/volumes/autotest-dble/1:/var/lib/docker \
+    -v /share:/share \
+    dble/dble_test_behave:latest
 
+2. 下载 dble-test-suite 自动化测试代码至本地
+    
+
+    docker exec -it behave bash
+    cd && git clone https://github.com/actiontech/dble-test-suite.git
+    
+    注： 如果dble安装包存放于在内网FTP上，可通过 behave.ini 文件配置ftp信息来下载包
+    FTP_USER=xx
+    FTP_PASSWORD=xx
+    DBLE_REMOTE_HOST=xx
+    DBLE_REMOTE_PATH=xx
+
+3. 环境部署 （自动化环境通过 DBLE_DBLE_TOPO 识别single 或cluster ，默认single）
+   1. 单机环境
+     
+      cd /dble_test_suite/behave_dble && make used_in_local
+   2. 集群环境
+       
+       export DBLE_DBLE_TOPO=cluster\
+       cd /dble_test_suite/behave_dble && make used_in_local
 
 ### 三、执行测试
 
-     wget https://raw.githubusercontent.com/actiontech/dble-test-suite/master/behave_dble/compose/start_dble_test.sh
-     bash start_dble_test.sh
-
-    注：该脚本覆盖了全部功能feature和全局表sql_cover的测试
-
-### 四、driver测试步骤请参考各driver下的readme.md
+        cd /dble_test_suite/behave_dble ,根据需要通过make执行相关case
 
 
 
