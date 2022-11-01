@@ -7,7 +7,7 @@ create_vene:
 	pipenv install
 
 resetRp:
-	bash $(PWD)/compose/docker-build-behave/resetReplication.sh
+	bash $(PWD)/compose/docker-build-behave/resetReplication.sh func_test
 
 run_cfg_case: resetRp
 	pipenv run behave -Dreset=true -D dble_conf=template features/install_uninstall/install_dble.feature \
