@@ -349,12 +349,12 @@ Feature: sharding basic config test
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
-        <schema shardingNode="dn1" name="test1" sqlMaxLimit="100">
+      <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
         <globalTable name="test" shardingNode="dn1,dn2"/>
-        </schema>
+      </schema>
 
-        <shardingNode dbGroup="dbGroup1" database="db1" name="dn1"/>
-        <shardingNode dbGroup="dbGroup2" database="db1" name="dn2"/>
+      <shardingNode dbGroup="ha_group1" database="db1" name="dn1"/>
+      <shardingNode dbGroup="dbGroup2" database="db1" name="dn2"/>
       """
 
     Then execute admin cmd "reload @@config_all" get the following output
