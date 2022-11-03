@@ -347,7 +347,7 @@ Feature: sharding basic config test
       | sharding.xml  | {'tag':'root'}   | {'tag':'schema'}        |
       | sharding.xml  | {'tag':'root'}   | {'tag':'shardingNode'}  |
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
         <schema shardingNode="dn1" name="test1" sqlMaxLimit="100">
         <globalTable name="test" shardingNode="dn1,dn2"/>
@@ -359,9 +359,9 @@ Feature: sharding basic config test
 
     Then execute admin cmd "reload @@config_all" get the following output
       """
-      Reload config failure
+      Reload config failure.The reason is sharding json to map occurred  parse errors, The detailed errors are as follows. The dbGroup[dbGroup2] associated with ShardingNode[dn2] does not exist
       """
     Then Restart dble in "dble-1" failed for
       """
-      Invalid content was found starting with element 'schema'. One of '{dbGroup}' is expected.
+      The dbGroup\[dbGroup2\] associated with ShardingNode\[dn2\] does not exist
       """
