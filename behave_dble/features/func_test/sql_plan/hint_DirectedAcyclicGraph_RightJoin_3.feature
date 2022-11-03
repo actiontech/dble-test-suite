@@ -628,7 +628,7 @@ Feature: test hint
       | conn_0 | false   | explain /*!dble:plan=(b, c) & a*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
     Then check resultset "rs_28" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1                | SQL/REF-2                                                                                                                                                                          |
-      | dn3_0             | BASE SQL              | select `b`.`manager`,`c`.`country`,`c`.`name` from  `Dept` `b` join  `Info` `c` on `b`.`manager` = `c`.`name` order by `b`.`manager` ASC,`c`.`name` ASC                            |
+      | dn3_0             | BASE SQL              | select `b`.`manager`,`c`.`country`,`c`.`name` from  `Dept` `b` join  `Info` `c` on `b`.`manager` = `c`.`name` where 1=1  order by `b`.`manager` ASC,`c`.`name` ASC                            |
       | merge_1           | MERGE                 | dn3_0                                                                                                                                                                              |
       | shuffle_field_1   | SHUFFLE_FIELD         | merge_1                                                                                                                                                                            |
       | dn1_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `a`.`name`,`a`.`deptname` from  `Employee` `a` where `a`.`name` in ('{NEED_TO_REPLACE}') ORDER BY `a`.`name` ASC,`a`.`name` ASC |
@@ -696,7 +696,7 @@ Feature: test hint
       | conn_0 | false   | explain /*!dble:plan=(c, b) \| a*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Info c on a.name=c.name and b.manager=c.name ORDER BY a.name; | schema1 |
     Then check resultset "rs_31" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                               |
-      | dn3_0             | BASE SQL        | select `b`.`manager`,`c`.`country`,`c`.`name` from  `Info` `c` join  `Dept` `b` on `c`.`name` = `b`.`manager` order by `c`.`name` ASC,`b`.`manager` ASC |
+      | dn3_0             | BASE SQL        | select `b`.`manager`,`c`.`country`,`c`.`name` from  `Info` `c` join  `Dept` `b` on `c`.`name` = `b`.`manager` where 1=1  order by `c`.`name` ASC,`b`.`manager` ASC |
       | merge_1           | MERGE           | dn3_0                                                                                                                                                   |
       | dn1_0             | BASE SQL        | select `a`.`name`,`a`.`deptname` from  `Employee` `a` ORDER BY `a`.`name` ASC,`a`.`name` ASC                                                            |
       | dn2_0             | BASE SQL        | select `a`.`name`,`a`.`deptname` from  `Employee` `a` ORDER BY `a`.`name` ASC,`a`.`name` ASC                                                            |
@@ -918,7 +918,7 @@ Feature: test hint
       | conn_0 | false   | explain /*!dble:plan=(b, c) & a*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
     Then check resultset "rs_39" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1                | SQL/REF-2                                                                                                                                                           |
-      | dn3_0             | BASE SQL              | select `b`.`manager`,`c`.`country` from  `Dept` `b` join  `Info` `c` on `b`.`manager` = `c`.`name` order by `b`.`manager` ASC                                       |
+      | dn3_0             | BASE SQL              | select `b`.`manager`,`c`.`country` from  `Dept` `b` join  `Info` `c` on `b`.`manager` = `c`.`name` where 1=1  order by `b`.`manager` ASC                                       |
       | merge_1           | MERGE                 | dn3_0                                                                                                                                                               |
       | shuffle_field_1   | SHUFFLE_FIELD         | merge_1                                                                                                                                                             |
       | dn1_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `a`.`name`,`a`.`deptname` from  `Employee` `a` where `a`.`name` in ('{NEED_TO_REPLACE}') ORDER BY `a`.`name` ASC |
@@ -938,7 +938,7 @@ Feature: test hint
       | conn_0 | false   | explain /*!dble:plan=(c, b) \| a*/ SELECT a.name,a.deptname,b.manager,c.country FROM Employee a RIGHT JOIN Dept b ON a.name=b.manager INNER JOIN Info c ON b.manager=c.name ORDER BY a.name; | schema1 |
     Then check resultset "rs_40" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                     |
-      | dn3_0             | BASE SQL        | select `b`.`manager`,`c`.`country` from  `Info` `c` join  `Dept` `b` on `c`.`name` = `b`.`manager` order by `b`.`manager` ASC |
+      | dn3_0             | BASE SQL        | select `b`.`manager`,`c`.`country` from  `Info` `c` join  `Dept` `b` on `c`.`name` = `b`.`manager` where 1=1  order by `b`.`manager` ASC |
       | merge_1           | MERGE           | dn3_0                                                                                                                         |
       | dn1_0             | BASE SQL        | select `a`.`name`,`a`.`deptname` from  `Employee` `a` ORDER BY `a`.`name` ASC                                                 |
       | dn2_0             | BASE SQL        | select `a`.`name`,`a`.`deptname` from  `Employee` `a` ORDER BY `a`.`name` ASC                                                 |
