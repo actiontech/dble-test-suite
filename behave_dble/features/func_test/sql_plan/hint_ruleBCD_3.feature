@@ -5102,7 +5102,7 @@ Feature: test hint
       | conn_1 | False   | explain /*!dble:plan=(a, b) & c */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Level c on a.level=c.levelname and c.salary=10000 order by a.name | success | schema1 |
     Then check resultset "join_rs1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1                | SQL/REF-2                                                                                                                                                                                                  |
-      | dn1_0           | BASE SQL              | select `a`.`name`,`a`.`deptname`,`b`.`manager`,`a`.`level` from  `Employee` `a` join  `Dept` `b` on `a`.`name` = `b`.`manager` order by `a`.`level` ASC                                                    |
+      | dn1_0           | BASE SQL              | select `a`.`name`,`a`.`deptname`,`b`.`manager`,`a`.`level` from  `Employee` `a` join  `Dept` `b` on `a`.`name` = `b`.`manager` where 1=1  order by `a`.`level` ASC                                                    |
       | merge_1         | MERGE                 | dn1_0                                                                                                                                                                                                      |
       | shuffle_field_1 | SHUFFLE_FIELD         | merge_1                                                                                                                                                                                                    |
       | dn4_0           | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where  ( `c`.`salary` = 10000 AND `c`.`levelname` in ('{NEED_TO_REPLACE}')) ORDER BY `c`.`levelname` ASC |
@@ -5120,7 +5120,7 @@ Feature: test hint
       | conn_1 | False   | explain /*!dble:plan=(a, b) \| c */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Level c on a.level=c.levelname and c.salary=10000 order by a.name | success | schema1 |
     Then check resultset "join_rs1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                                                                                                                               |
-      | dn1_0           | BASE SQL      | select `a`.`name`,`a`.`deptname`,`b`.`manager`,`a`.`level` from  `Employee` `a` join  `Dept` `b` on `a`.`name` = `b`.`manager` order by `a`.`level` ASC |
+      | dn1_0           | BASE SQL      | select `a`.`name`,`a`.`deptname`,`b`.`manager`,`a`.`level` from  `Employee` `a` join  `Dept` `b` on `a`.`name` = `b`.`manager` where 1=1  order by `a`.`level` ASC |
       | merge_1         | MERGE         | dn1_0                                                                                                                                                   |
       | dn4_0           | BASE SQL      | select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`salary` = 10000 order by `c`.`levelname` ASC                                           |
       | merge_2         | MERGE         | dn4_0                                                                                                                                                   |
@@ -5136,7 +5136,7 @@ Feature: test hint
       | conn_1 | False   | explain /*!dble:plan=(b, a) & c */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Level c on a.level=c.levelname and c.salary=10000 order by a.name | success | schema1 |
     Then check resultset "join_rs1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1                | SQL/REF-2                                                                                                                                                                                                  |
-      | dn1_0           | BASE SQL              | select `a`.`name`,`a`.`deptname`,`b`.`manager`,`a`.`level` from  `Dept` `b` join  `Employee` `a` on `b`.`manager` = `a`.`name` order by `a`.`level` ASC                                                    |
+      | dn1_0           | BASE SQL              | select `a`.`name`,`a`.`deptname`,`b`.`manager`,`a`.`level` from  `Dept` `b` join  `Employee` `a` on `b`.`manager` = `a`.`name` where 1=1  order by `a`.`level` ASC                                                    |
       | merge_1         | MERGE                 | dn1_0                                                                                                                                                                                                      |
       | shuffle_field_1 | SHUFFLE_FIELD         | merge_1                                                                                                                                                                                                    |
       | dn4_0           | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `c`.`salary`,`c`.`levelname` from  `Level` `c` where  ( `c`.`salary` = 10000 AND `c`.`levelname` in ('{NEED_TO_REPLACE}')) ORDER BY `c`.`levelname` ASC |
@@ -5154,7 +5154,7 @@ Feature: test hint
       | conn_1 | False   | explain /*!dble:plan=(b, a) \| c */ SELECT a.name,a.deptname,b.manager,c.salary FROM Employee a INNER JOIN Dept b on a.name=b.manager INNER JOIN Level c on a.level=c.levelname and c.salary=10000 order by a.name | success | schema1 |
     Then check resultset "join_rs1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                                                                                                                               |
-      | dn1_0           | BASE SQL      | select `a`.`name`,`a`.`deptname`,`b`.`manager`,`a`.`level` from  `Dept` `b` join  `Employee` `a` on `b`.`manager` = `a`.`name` order by `a`.`level` ASC |
+      | dn1_0           | BASE SQL      | select `a`.`name`,`a`.`deptname`,`b`.`manager`,`a`.`level` from  `Dept` `b` join  `Employee` `a` on `b`.`manager` = `a`.`name` where 1=1  order by `a`.`level` ASC |
       | merge_1         | MERGE         | dn1_0                                                                                                                                                   |
       | dn4_0           | BASE SQL      | select `c`.`salary`,`c`.`levelname` from  `Level` `c` where `c`.`salary` = 10000 order by `c`.`levelname` ASC                                           |
       | merge_2         | MERGE         | dn4_0                                                                                                                                                   |
