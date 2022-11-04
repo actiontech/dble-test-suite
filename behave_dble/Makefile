@@ -29,7 +29,7 @@ venv:
 	pipenv shell
 
 reset_mysql:
-	pipenv run behave features/setup.feature --tags=@Initialize_mysql global_var_init
+	pipenv run behave features/setup.feature --tags=@Initialize_mysql
 
 used_in_local: create_venv up
 	pipenv run behave features/setup.feature
