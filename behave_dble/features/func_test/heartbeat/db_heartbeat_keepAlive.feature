@@ -26,9 +26,9 @@ Feature: check keepAlive
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs1" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
@@ -65,9 +65,9 @@ Feature: check keepAlive
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs3" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                              | expect      |
       | conn_0 | False   | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} |
@@ -108,9 +108,9 @@ Feature: check keepAlive
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs5" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                              | expect      |
       | conn_0 | False   | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} |
@@ -136,9 +136,9 @@ Feature: check keepAlive
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs6" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
@@ -175,9 +175,9 @@ Feature: check keepAlive
       | conn   | toClose | sql               |
       | conn_0 | True    | show @@heartbeat  |
     Then check resultset "heartbeat_rs8" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                              | expect      |
       | conn_0 | True    | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} |
@@ -218,9 +218,9 @@ Feature: check keepAlive
       | conn   | toClose | sql               |
       | conn_0 | True    | show @@heartbeat  |
     Then check resultset "heartbeat_rs10" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                              | expect      |
       | conn_0 | True    | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} |
@@ -246,9 +246,9 @@ Feature: check keepAlive
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs11" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
@@ -283,9 +283,9 @@ Feature: check keepAlive
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs13" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 0         | false  | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                              | expect      |
       | conn_0 | True    | select * from dble_information.backend_connections where used_for_heartbeat='true' and db_instance_name='hostM2' | length{(1)} |
