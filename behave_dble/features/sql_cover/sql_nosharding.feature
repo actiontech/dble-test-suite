@@ -16,7 +16,7 @@ Feature: nosharding table sql cover test
      Given clear dirty data yield by sql
      Given clean loaddata.sql used data
 
-    Scenario Outline:sql cover for nosharding table #2
+   Scenario Outline:sql cover for nosharding table #2
       Given set sql cover log dir "sql_cover_nosharding"
       Then execute sql in file "<filename>"
       Given clear dirty data yield by sql
@@ -49,11 +49,12 @@ Feature: nosharding table sql cover test
         | sqls_util/syntax/union.sql                            |
         | sqls_util/syntax/update_syntax.sql                    |
         | sqls_util/syntax/view.sql                             |
+        | sqls_util/syntax/json_function_util.sql               |
         | sqls_util/transaction/lock.sql                        |
         | sqls_util/transaction/trx_ddl_dml.sql                 |
         | sqls_util/transaction/trx_isolation.sql               |
         | sqls_util/transaction/trx_syntax.sql                  |
-        | sqls_util/transaction/trx_savepoint.sql                  |
+        | sqls_util/transaction/trx_savepoint.sql               |
         | sqls_util/dev_dealed/cross_db.sql                     |
         | special_nosharding/select/join_no_sharding.sql        |
         | special_nosharding/select/reference_no_sharding.sql   |
