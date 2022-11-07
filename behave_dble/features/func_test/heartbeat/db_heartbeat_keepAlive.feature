@@ -22,6 +22,7 @@ Feature: check keepAlive
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs1"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -132,6 +133,7 @@ Feature: check keepAlive
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs6"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -242,6 +244,7 @@ Feature: check keepAlive
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs11"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
