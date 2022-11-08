@@ -55,7 +55,7 @@ Feature: check keepAlive
     #print log and mysqlId change
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1"
     """
-      \[heartbeat\]connect timeout，the connection may be unreachable for a long time due to TCP retransmission
+      \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
     Given execute oscmd in "mysql-master2"
     """
@@ -98,7 +98,7 @@ Feature: check keepAlive
     #print log and mysqlId change
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_2" in host "dble-1"
     """
-      \[heartbeat\]connect timeout，the connection may be unreachable for a long time due to TCP retransmission
+      \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
     Given execute oscmd in "mysql-master2"
     """
@@ -166,7 +166,7 @@ Feature: check keepAlive
     #print log and mysqlId change
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1"
     """
-      \[heartbeat\]connect timeout，the connection may be unreachable for a long time due to TCP retransmission
+      \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
     Given execute oscmd in "mysql-master2"
     """
@@ -209,7 +209,7 @@ Feature: check keepAlive
     #print log and mysqlId change
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_4" in host "dble-1"
     """
-      \[heartbeat\]connect timeout，the connection may be unreachable for a long time due to TCP retransmission
+      \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
     Given execute oscmd in "mysql-master2"
     """
@@ -275,7 +275,7 @@ Feature: check keepAlive
     #print log and mysqlId change
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_5" in host "dble-1"
     """
-      \[heartbeat\]connect timeout，the connection may be unreachable for a long time due to TCP retransmission
+      \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
     Given execute oscmd in "mysql-master2"
     """
