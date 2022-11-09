@@ -28,7 +28,7 @@ ssh_copy_id_to_all(){
       sudo grep "${mysql_ips[$i]} ${Hostname[$i]}" /etc/hosts 1>/dev/null 2>/dev/null
       if [ $? != 0 ];then
         echo "==== hostname写入hosts文件 ===="
-        sudo echo ${mysql_ips[$i]} ${Hostname[$i]} >> /etc/hosts
+        echo "${mysql_ips[$i]} ${Hostname[$i]}" | sudo tee -a /etc/hosts
       fi
 
       auto_ssh_copy_id ${Hostname[$i]} sshpass
