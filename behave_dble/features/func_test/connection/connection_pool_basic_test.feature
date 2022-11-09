@@ -83,22 +83,24 @@ Feature: connection pool basic test
     """
 
 
-  @CRITICAL  @auto_retry
+  @CRITICAL
   Scenario: test initial connection pool: except heartbeat connection the other connection is in idle status #3
-    # sleep time > idle time,because Connection pool initialization #DBLE0REQ-1132
+    # sleep time > idle time + timeBetweenEvictionRunsMillis, because Connection pool initialization #DBLE0REQ-1132, DBLE0REQ-1925
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-             <property name="idleTimeout">5000</property>
+             <property name="idleTimeout">3000</property>
+             <property name="timeBetweenEvictionRunsMillis">4000</property>
         </dbInstance>
     </dbGroup>
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-             <property name="idleTimeout">5000</property>
+             <property name="idleTimeout">3000</property>
+             <property name="timeBetweenEvictionRunsMillis">4000</property>
         </dbInstance>
     </dbGroup>
      """
