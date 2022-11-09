@@ -1,11 +1,15 @@
 #!/bin/bash
+DIR="$( cd "$( dirname "$0" )" && pwd )"
 
-mkdir /opt/behave/
-cd /opt/behave/ && git clone https://github.com/actiontech/dble-test-suite.git
-cd /opt/behave/dble-test-suite/behave_dble/compose/
-docker network create --gateway 172.100.9.8 --subnet 172.100.9.0/24 dble_test
+echo "==========安装容器=========="
 docker-compose -f docker-compose.yml up -d --force
-#docker exec driver-test sh -c "/etc/init.d/ssh start"
-docker exec -it behave bash "/docker-build/init_test_env.sh"
+echo "==========容器部署成功=========="
 
-/bin/bash
+echo "==========免密配置=========="
+bash ${DIR}/docker-build-behave/ssh_config.sh
+echo "==========免密配置完成=========="
+
+echo "==========mysql实例部署=========="
+bash ${DIR}/docker-build-behave/init_test_env.sh
+echo "==========mysql实例部署完成=========="
+
