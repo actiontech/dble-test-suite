@@ -340,6 +340,7 @@ Feature: sharding basic config test
       | conn_0 | False   | show @@Algorithm where schema='schema-1' and table='test-1'      |
       | conn_0 | True    | show @@shardingNode where schema='schema-1' and table='test-1'      |
 
+
   Scenario: config with fake dbGroup in shardingNode in shardingNode.xml, expect restart failed #12
  ### DBLE0REQ-1265
     Given delete the following xml segment
@@ -360,7 +361,6 @@ Feature: sharding basic config test
     Then execute admin cmd "reload @@config_all" get the following output
       """
       Reload config failure
-      The dbGroup[dbGroup2] associated with ShardingNode[dn2] does not exist
       """
     Then Restart dble in "dble-1" failed for
       """
