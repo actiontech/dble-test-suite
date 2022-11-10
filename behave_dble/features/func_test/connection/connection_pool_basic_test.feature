@@ -152,10 +152,12 @@ Feature: connection pool basic test
         <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="10" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="timeBetweenEvictionRunsMillis">5000</property>
+             <property name="idleTimeout">3000</property>
         </dbInstance>
      </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
+    Given sleep "9" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                    | expect                     | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                     | success                    | schema1 |
@@ -197,6 +199,7 @@ Feature: connection pool basic test
     </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
+    Given sleep "9" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect                     | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                        | success                    | schema1 |
@@ -235,7 +238,7 @@ Feature: connection pool basic test
         <heartbeat>select user()</heartbeat>
         <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="6" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
-             <property name="idleTimeout">5000</property>
+             <property name="idleTimeout">3000</property>
              <property name="timeBetweenEvictionRunsMillis">5000</property>
         </dbInstance>
      </dbGroup>
@@ -248,6 +251,7 @@ Feature: connection pool basic test
     </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
+    Given sleep "9" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                 | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                  | success | schema1 |
@@ -295,6 +299,7 @@ Feature: connection pool basic test
     </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
+    Given sleep "7" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                 | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                  | success | schema1 |
