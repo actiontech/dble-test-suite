@@ -7,6 +7,7 @@ import logging
 import re
 import operator
 import collections
+import time
 
 from steps.lib.ObjectFactory import ObjectFactory
 from hamcrest import *
@@ -63,6 +64,18 @@ class PostQueryCheck(object):
                 logger.debug(
                     "sql: {0}, expect resultSet:{1}, length equal to real resultSet length:{2}".format(self._sql, eval(expectRS), len(self._real_res)))
                 assert_that(len(self._real_res), equal_to(eval(expectRS)), "sql:{0}, resultSet records count is not as expected".format(self._sql))
+                break
+
+            retrycheckObj = re.search(r"retrycheck\{(.*?)\}", self._expect, re.I)
+            if retrycheckObj:
+                assert_that(self._real_err is None, "sql: {0}, expect query success, but failed for '{1}'".format(self._sql, self._real_err))
+                expectRS = retrycheckObj.group(1)
+                if eval(expectRS) == len(self._real_res):
+                    logger.debug("sql: {0}, expect resultSet:{1}, equal to real resultSet length:{2}".format(self._sql, eval(expectRS), len(self._real_res)))
+                else:
+                    time.sleep(2)
+                    logger.debug("sql: {0}, expect resultSet:{1}, real resultSet length:{2}".format(self._sql, eval(expectRS), len(self._real_res)))
+                    assert_that(len(self._real_res), equal_to(eval(expectRS)), "sql:{0}, resultSet records count is not as expected".format(self._sql))
                 break
 
             matchObj = re.search(r"match\{(.*?)\}", self._expect, re.I)
