@@ -62,6 +62,18 @@ class PostQueryCheck(object):
                 assert_that(len(self._real_res), equal_to(eval(expectRS)), "sql resultset records count is not as expected")
                 break
 
+            retrycheckObj = re.search(r"retrycheck\{(.*?)\}", self._expect, re.I)
+            if retrycheckObj:
+                assert_that(self._real_err is None, "sql: {0}, expect query success, but failed for '{1}'".format(self._sql, self._real_err))
+                expectRS = retrycheckObj.group(1)
+                if eval(expectRS) == len(self._real_res):
+                    logger.debug("sql: {0}, expect resultSet:{1}, equal to real resultSet length:{2}".format(self._sql, eval(expectRS), len(self._real_res)))
+                else:
+                    time.sleep(2)
+                    logger.debug("sql: {0}, expect resultSet:{1}, real resultSet length:{2}".format(self._sql, eval(expectRS), len(self._real_res)))
+                    assert_that(len(self._real_res), equal_to(eval(expectRS)), "sql:{0}, resultSet records count is not as expected".format(self._sql))
+                break
+
             matchObj = re.search(r"match\{(.*?)\}", self._expect, re.I)
             if matchObj:
                 assert_that(self._real_err is None, "expect query success, but failed for '{0}'".format(self._real_err))
