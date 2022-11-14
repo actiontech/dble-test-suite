@@ -135,13 +135,13 @@ Feature: connection pool basic test
     """
     Given kill mysql conns in "mysql-master1" in "dble_idle_connections"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                             | expect        | db                |
-      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((10,),)}  | dble_information  |
+      | conn   | toClose | sql                                                                                      | expect        | db                |
+      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'      | length{(10)}  | dble_information  |
     #sleep 5s to go into scaling period
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                             | expect       | db                |
-      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((20,),)} | dble_information  |
+      | conn   | toClose | sql                                                                                      | expect       | db                |
+      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'      | length{(20)} | dble_information  |
 
   @CRITICAL
   Scenario: connection expansion: use the active connections until the idle connections less than minCon, after timeBetweenEvictionRunsMillis the connections will increase to minCon #5
@@ -221,13 +221,13 @@ Feature: connection pool basic test
       | conn_4 | False   | commit                                                    | success                    | schema1 |
       | conn_5 | False   | commit                                                    | success                    | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                             | expect        | db                |
-      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'      | has{((20,),)}  | dble_information  |
-    #sleep 5s to wait connections idle timeout and into scaling period
-    Given sleep "5" seconds
+      | conn   | toClose | sql                                                                                      | expect        | db                |
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle'      | length{(20)}  | dble_information  |
+    #sleep 8s to wait connections idle timeout and into scaling period
+    Given sleep "8" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                            | expect        | db                |
-      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'     | has{((14,),)}  | dble_information  |
+      | conn   | toClose | sql                                                                                     | expect        | db                |
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle'     | length{(14)}  | dble_information  |
 
 
   @CRITICAL
@@ -423,7 +423,7 @@ Feature: connection pool basic test
     Given sleep "30" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_C"
       | conn   | toClose | sql                                                                                                                                      | expect        | db                |
-      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5'                 | has{((4,),)}   | dble_information  |
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5'                 | length{(4)}   | dble_information  |
 
   @TRIVIAL @skip
     # due to when use illegal values,the dble can't reload success and restart dble success  DBLE0REQ-920
