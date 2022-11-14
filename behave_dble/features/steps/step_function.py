@@ -223,6 +223,12 @@ def step_impl(context,filename,hostname):
     _, _, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr)==0 ,"get err {0} with deleting {1}".format(stderr,filename))
 
+@Given ('execute oscmd "{oscmd}" on "{hostname}"')
+def step_impl(context,oscmd,hostname):
+    cmd = "{0}".format(oscmd)
+    ssh = get_ssh(hostname)
+    _, _, stderr = ssh.exec_command(cmd)
+    assert_that(len(stderr)==0 ,"get err {0} with execute {1}".format(stderr,oscmd))
 
 @Then('execute oscmd in "{hostname}" by parameter from resultset "{rs_name}"')
 @Given('execute oscmd in "{hostname}" and "{num}" less than result')
