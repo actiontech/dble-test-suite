@@ -521,6 +521,8 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | ON            |
       | samplingRate             | 0             |
       | queueMonitor             | monitoring    |
+    # sleep one intervalTime
+    Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(1)}   | dble_information   |
