@@ -401,7 +401,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
       | rwS1 | 111111 | conn_3 | true    | drop table if exists test_table               | success | db1 |
 
-
+  @skip # DBLE0REQ-1994
   Scenario: test samplingRate=100 and complex sql   #5
     #CASE PREPARE env
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
