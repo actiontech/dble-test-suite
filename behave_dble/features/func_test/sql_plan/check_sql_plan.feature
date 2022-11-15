@@ -135,14 +135,14 @@ Feature: check sql plan
       | conn_1 | False   | explain select a.* from single_t1 a, (select 1) as b | length{(1)} | schema1 |
     Then check resultset "rs2" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                |
-      | dn1             | BASE SQL | SELECT a.* FROM single_t1 a, (   SELECT 1  ) b LIMIT 100 |
+      | dn1             | BASE SQL | SELECT a.* FROM single_t1 a, ( SELECT 1 ) b LIMIT 100 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs3"
       | conn   | toClose | sql                                                      | expect      | db      |
       | conn_1 | False   | explain select a.* from single_t1 a join (select 1) as b | length{(1)} | schema1 |
     Then check resultset "rs3" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                     |
-      | dn1             | BASE SQL | SELECT a.* FROM single_t1 a  JOIN (   SELECT 1  ) b LIMIT 100 |
+      | dn1             | BASE SQL | SELECT a.* FROM single_t1 a JOIN ( SELECT 1 ) b LIMIT 100 |
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect  | db      |
       | conn_1 | True    | drop table if exists single_t1 | success | schema1 |
