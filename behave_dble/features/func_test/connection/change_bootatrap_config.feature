@@ -18,7 +18,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
     Then restart dble in "dble-1" success
     # keepAlivetime is 60s, 'complexExecutor' heartbeat and 9066 cmd would use it
-    Given sleep "62" seconds
+    Given sleep "65" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_pool_1"
       | conn   | toClose | sql                            | db                |
       | conn_0 | False   | select * from dble_thread_pool | dble_information  |

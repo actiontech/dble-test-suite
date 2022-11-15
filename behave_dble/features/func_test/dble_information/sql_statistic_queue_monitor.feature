@@ -513,6 +513,8 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                        | expect   | db               |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = 2H and intervalTime = 1S;    | success  | dble_information |
+    # sleep one intervalTime
+    Given sleep "1" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_20"
       | conn   | toClose  | sql                             | db               |
       | conn_0 | False    | show @@statistic;               | dble_information |
@@ -521,8 +523,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | ON            |
       | samplingRate             | 0             |
       | queueMonitor             | monitoring    |
-    # sleep one intervalTime
-    Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(1)}   | dble_information   |
@@ -531,7 +531,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                                    | expect   | db               |
       | conn_0 | False    | reload @@samplingRate = 0;             | success  | dble_information |
     # sleep 1s，check the monitoring status.
-      # Since the sampling statistics are still runningn, the queue monitoring status is still continuing
+      # Since the sampling statistics are still running, the queue monitoring status is still continuing
     Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
