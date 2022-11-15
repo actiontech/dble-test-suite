@@ -5,6 +5,7 @@
   #DBLE0REQ-911
 Feature: The impact of testing operators on shardingTable routing
 
+  @skip_restart
   Scenario: group by and order by‘s sharding column condition should not take as routing condition   #1
 
     #prepare the test sharding table
@@ -111,6 +112,8 @@ Feature: The impact of testing operators on shardingTable routing
       | limit_1           | LIMIT           | merge_and_order_1                                                                                                                              |
       | shuffle_field_1   | SHUFFLE_FIELD   | limit_1                                                                                                                                        |
 
+
+
   Scenario: Extract some operators as where sharding column condition to verify no impact on routing     #2
      # not
     Given execute sql in "dble-1" in "user" mode
@@ -143,12 +146,12 @@ Feature: The impact of testing operators on shardingTable routing
       | conn_9   | true    | explain  select * from sharding_2_t1 where id = 1 or 1 = 1    | schema1 |
     Then check resultset "I" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                   |
-      | dn1               | BASE SQL        | SELECT * FROM sharding_2_t1 WHERE id = 1  OR 1 = 1 LIMIT 100 |
-      | dn2               | BASE SQL        | SELECT * FROM sharding_2_t1 WHERE id = 1  OR 1 = 1 LIMIT 100 |
+      | dn1               | BASE SQL        | SELECT * FROM sharding_2_t1 WHERE id = 1 OR 1 = 1 LIMIT 100 |
+      | dn2               | BASE SQL        | SELECT * FROM sharding_2_t1 WHERE id = 1 OR 1 = 1 LIMIT 100 |
     # EXISTS
     Given execute sql in "dble-1" in "user" mode
-      | conn     | toClose | sql                                                                                      | db    | expect                                    |
-      | conn_10  | False   | select * from sharding_2_t1 where EXISTS (select * from sharding_2_t1 where id=1)        |schema1| has{((1,1),(2,2),(3,3),(4,4),(5,5))}      |
+      | conn     | toClose | sql                                                                                      | db      | expect                                    |
+      | conn_10  | False   | select * from sharding_2_t1 where EXISTS (select * from sharding_2_t1 where id=1)        | schema1 | has{((1,1),(2,2),(3,3),(4,4),(5,5))}      |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "J"
       | conn      | toClose | sql                                                                                            | db      |
       | conn_10   | true    | explain  select * from sharding_2_t1 where EXISTS (select * from sharding_2_t1 where id=1)     | schema1 |
