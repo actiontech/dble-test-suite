@@ -2,6 +2,10 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2020/9/23 change by quexiuping 2021/5/7
 
+
+
+  @skip
+  ####DBLE0TASK-2096
 Feature: test addition, deletion and modification of dble_information on the management side
    dble_db_group
    dble_db_instance
@@ -169,7 +173,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-  @skip_restart @skip
+  @skip_restart
   Scenario: test the langreage of insert in dble manager   ---- dble_db_instance  #2
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                       | expect      | db               |

@@ -3,7 +3,8 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  show databases/use dble_information/show tables [like]
-  @skip_restart
+
+
   Scenario:  show databases/use dble_information/show tables [like] #1
 
     Then execute sql in "dble-1" in "admin" mode
@@ -71,7 +72,7 @@ Feature:  show databases/use dble_information/show tables [like]
       | dble_blacklist                                        |
       | dble_child_table                                      |
       | dble_cluster_renew_thread                             |
-      | dble_config                                            |
+      | dble_config                                           |
       | dble_db_group                                         |
       | dble_db_instance                                      |
       | dble_ddl_lock                                         |
@@ -79,8 +80,9 @@ Feature:  show databases/use dble_information/show tables [like]
       | dble_entry_db_group                                   |
       | dble_entry_schema                                     |
       | dble_entry_table_privilege                            |
-      | dble_flow_control                                      |
+      | dble_flow_control                                     |
       | dble_global_table                                     |
+      | dble_memory_resident                                  |
       | dble_processor                                        |
       | dble_reload_status                                    |
       | dble_rw_split_entry                                   |
@@ -118,7 +120,7 @@ Feature:  show databases/use dble_information/show tables [like]
       | demotest2                    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect       | db               |
-      | conn_0 | False   | show tables                          | length{(47)} | dble_information |
+      | conn_0 | False   | show tables                          | length{(48)} | dble_information |
  #case The query needs to be printed in the log，when management commands not supported by druid github:issues/1977
     Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql          | expect                |

@@ -1831,12 +1831,13 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_41 | False   | update test_table1 set age =33 where id=1          | success | db2 |
       | rwS1 | 111111 | conn_41 | False   | delete from test_table1 where id=5                 | success | db2 |
       | rwS1 | 111111 | conn_41 | False   | update test_table1 set age =44 where id=100        | success | db2 |
+  ##### 事务没结束，不落盘
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect       | db               |
-      | conn_0 | False   | select * from sql_log                                 | length{(2)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(2)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(2)}  | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(2)}  | dble_information |
+      | conn   | toClose | sql                                                   | expect           | db               |
+      | conn_0 | False   | select * from sql_log                                 | retrycheck{(0)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | retrycheck{(0)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | retrycheck{(0)}  | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | retrycheck{(0)}  | dble_information |
 
      Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose | sql                                 | expect  | db  |
@@ -1844,6 +1845,14 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_31 | true    | drop table if exists test_table     | success | db1 |
       | rwS1 | 111111 | conn_41 | False   | commit                              | success | db2 |
       | rwS1 | 111111 | conn_41 | true    | drop table if exists test_table1    | success | db2 |
+
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                   | expect           | db               |
+      | conn_0 | False   | select * from sql_log                                 | retrycheck{(12)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | retrycheck{(4)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | retrycheck{(9)}  | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | retrycheck{(4)}  | dble_information |
+
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -1950,7 +1959,6 @@ sql_log_by_tx_digest_by_entry_by_user
       exception occurred when the statistics were recorded
       Exception processing
       """
-
 
 
 
@@ -2100,7 +2108,6 @@ sql_log_by_tx_digest_by_entry_by_user
       exception occurred when the statistics were recorded
       Exception processing
       """
-
 
 
 
@@ -2407,7 +2414,6 @@ sql_log_by_tx_digest_by_entry_by_user
 
 
 
-
   Scenario: test samplingRate=100 and special case  ---- shardinguse   #12
     Then execute admin cmd "reload @@samplingRate=100"
     Then execute admin cmd "reload @@statistic_table_size =10000000 where table ='sql_log'"
@@ -2513,15 +2519,14 @@ sql_log_by_tx_digest_by_entry_by_user
 
 
 
-
   Scenario: test samplingRate=100 and special case  ---- rwSplitUser   #13
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
       <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS3" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
+        <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="10000" minCon="10" primary="true" />
+        <dbInstance name="hostS3" password="111111" url="172.100.9.4:3307" user="test" maxCon="10000" minCon="10" primary="false" />
       </dbGroup>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -2540,9 +2545,9 @@ sql_log_by_tx_digest_by_entry_by_user
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               |
       | conn_0 | False   | select * from sql_log                               | length{(4000)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)}  | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}     | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}     | dble_information |
       | conn_0 | true    | truncate table sql_log                              | success         | dble_information |
 
     Given execute sql "1000" times in "dble-1" together use 1000 connection not close
@@ -2551,9 +2556,9 @@ sql_log_by_tx_digest_by_entry_by_user
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               |
       | conn_0 | False   | select * from sql_log                               | length{(3000)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)}  | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}     | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}     | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -2562,28 +2567,29 @@ sql_log_by_tx_digest_by_entry_by_user
       exception occurred when the statistics were recorded
       Exception processing
       """
+
     Given Restart dble in "dble-1" success
 
     #### case1 begin ;select
-    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
+    Given execute sql "100" times in "dble-1" together use 100 connection not close
       | user   | passwd | sql                            | db    |
       | split1 | 111111 | begin;select 3;select 1        | db1   |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect         | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(3000)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}    | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+      | conn_0 | False   | select * from sql_log                               | length{(0)}    | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(0)}    | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(0)}    | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(0)}    | dble_information |
       | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
 
-    Given execute sql "1000" times in "dble-1" at concurrent 1000
+    Given execute sql "100" times in "dble-1" at concurrent 100
       | user   | passwd | sql                                 | db    |
       | split1 | 111111 | begin;select 3;select user()        | db1   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(4000)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log                               | length{(400)}   | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(100)}   | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(4)}     | dble_information |
       | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
 
@@ -2712,7 +2718,6 @@ sql_log_by_tx_digest_by_entry_by_user
     Then execute sql in "dble-1" in "user" mode
       | toClose | sql                                         | expect   | db      |
       | true    | drop table if exists test                   | success  | schema1 |
-
 
 
 
