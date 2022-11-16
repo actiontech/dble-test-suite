@@ -30,7 +30,7 @@ Feature:  dble_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(118)}     | dble_information |
+      | conn_0 | False   | select * from dble_variables    | length{(120)}     | dble_information |
     #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
@@ -155,6 +155,9 @@ Feature:  dble_variables test
       | gmsslRcaPem                             | null                            | Root certificate of GMSSL                                                                                                                                                                                            | true        |
       | gmsslOcaPem                             | null                            | Secondary certificate of GMSSL                                                                                                                                                                                       | true        |
       | groupConcatMaxLen                       | 1024                            | The maximum permitted result length in bytes for the GROUP_CONCAT() function. The default is 1024.                                                                                                                   | true        |
+      | enableAsyncRelease                      | 1                               | Whether enable async release . default value is 1(off).                                                                                                                                                              | true      |
+      | releaseTimeout                          | 10                              | time wait for release ,unit is ms,  default value is 10 ms                                                                                                                                                           | true      |
+
       #case supported select limit /order by/ where like
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                               | expect       | db               |
@@ -162,7 +165,7 @@ Feature:  dble_variables test
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(20)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(20)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(118)}| dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(120)}| dble_information |
     #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                             | db               |
@@ -207,7 +210,7 @@ Feature:  dble_variables test
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
       | false       | 20      |
-      | true        | 98      |
+      | true        | 100     |
 
     #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
@@ -231,8 +234,8 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('xalog',),)}   | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('',),)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(101)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(98)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(103)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(100)}        | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
     #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
