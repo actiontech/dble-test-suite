@@ -1,11 +1,10 @@
 # Copyright (C) 2016-2022 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-# Created by wujinling at 2022/11/11
+# Created by wujinling at 2022/11/16
 
 Feature: connection pool basic test - heartbeat create connections
   @CRITICAL
   Scenario: test initial connection pool: except heartbeat connection the other connection is in idle status #1
-    # sleep time > idle time + timeBetweenEvictionRunsMillis, because Connection pool initialization #DBLE0REQ-1132, DBLE0REQ-1925
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
