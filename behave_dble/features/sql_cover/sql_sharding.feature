@@ -43,7 +43,7 @@ Feature: sharding table sql cover test
         | sqls_util/syntax/set_server_var_util.sql              |
         | sqls_util/syntax/show.sql                             |
         | sqls_util/syntax/show_dble.sql                        |
-#        | sqls_util/syntax/sys_function_util.sql                |
+        | sqls_util/syntax/sys_function_util.sql                |
         | sqls_util/syntax/truncate.sql                         |
         | sqls_util/syntax/union.sql                            |
         | sqls_util/syntax/update_syntax.sql                    |
