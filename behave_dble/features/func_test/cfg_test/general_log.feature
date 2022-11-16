@@ -584,7 +584,7 @@ Feature: general log test
     Given delete file "/opt/dble/general/general.log" on "dble-1"
 
   Scenario: check general log records - sharding user #7
-    Given delete file "/opt/dble/general/general.log" on "dble-1"
+    Given delete file " /opt/dble/logs/general/general-test.log" on "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn1" name="schema2">
@@ -597,6 +597,13 @@ Feature: general log test
     """
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "enable @@general_log"
+    Then execute admin cmd "reload @@general_log_file=/opt/dble/logs/general/general-test.log"
+
+    # debug code
+    Given turn on general log in "mysql-master1"
+    Given turn on general log in "mysql-master2"
+    # debug code
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                          | expect                           | db      |
       | conn_1 | False   | select version()                                                             | success                          | schema1 |
@@ -649,7 +656,20 @@ Feature: general log test
       #global table
       #single table
 
-    Then check following text exist "Y" in file "/opt/dble/general/general.log" in host "dble-1"
+    # debug code
+    Given execute oscmd in "mysql-master1"
+     """
+     cp /usr/local/mysql/data/mysql-master1.log /usr/local/mysql/data/mysql-master1-general-test.log
+     """
+     Given execute oscmd in "mysql-master2"
+     """
+     cp /usr/local/mysql/data/mysql-master2.log /usr/local/mysql/data/mysql-master2-general-test.log
+     """
+    Given turn off general log in "mysql-master1"
+    Given turn off general log in "mysql-master2"
+    # debug code
+
+    Then check following text exist "Y" in file " /opt/dble/logs/general/general-test.log" in host "dble-1"
       """
       \/FAKE_PATH\/mysqld, Version: FAKE_VERSION. started with:
       Tcp port: 3320  Unix socket: FAKE_SOCK
@@ -697,9 +717,20 @@ Feature: general log test
       /\*!dble:shardingNode=dn1\*/ delete from sharding_4_t1 where id=66
       Quit
       """
-    Given delete file "/opt/dble/general/general.log" on "dble-1"
+#    Given delete file " /opt/dble/logs/general/general-test.log" on "dble-1"
 
   Scenario: check general log records - rwSplitUser #8
+    # debug code
+    Given execute oscmd in "mysql-master1"
+     """
+     cp /usr/local/mysql/data/mysql-master1.log /usr/local/mysql/data/mysql-master1-general-test.log
+     """
+     Given execute oscmd in "mysql-master2"
+     """
+     cp /usr/local/mysql/data/mysql-master2.log /usr/local/mysql/data/mysql-master2-general-test.log
+     """
+    # debug code
+
     Given delete file "/opt/dble/general/general.log" on "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
