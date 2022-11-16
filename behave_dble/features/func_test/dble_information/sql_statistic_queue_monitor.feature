@@ -512,7 +512,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     # start @@statistic_queue_monitor
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                        | expect   | db               |
-      | conn_0 | False    | start @@statistic_queue_monitor observeTime = 2H and intervalTime = 1S;    | success  | dble_information |
+      | conn_0 | False    | start @@statistic_queue_monitor observeTime = 2H and intervalTime = 2S;    | success  | dble_information |
     # sleep one intervalTime
     Given sleep "1" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_20"
@@ -532,7 +532,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | reload @@samplingRate = 0;             | success  | dble_information |
     # sleep 1s，check the monitoring status.
       # Since the sampling statistics are still running, the queue monitoring status is still continuing
-    Given sleep "1" seconds
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(2)}   | dble_information   |
@@ -551,7 +551,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                                      | expect   | db                 |
       | conn_0 | False    | disable @@statistic;                     | success  | dble_information   |
     # sleep 1s，an intervalTime cycle,Check the monitoring output, there is no new addition, the queue monitoring stops
-    Given sleep "1" seconds
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(2)}   | dble_information   |
