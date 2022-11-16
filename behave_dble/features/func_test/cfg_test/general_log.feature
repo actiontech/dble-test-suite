@@ -584,7 +584,7 @@ Feature: general log test
     Given delete file "/opt/dble/general/general.log" on "dble-1"
 
   Scenario: check general log records - sharding user #7
-    Given delete file " /opt/dble/logs/general/general-test.log" on "dble-1"
+#    Given delete file "/opt/dble/logs/general/general-test.log" on "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn1" name="schema2">
