@@ -3,8 +3,8 @@
 # Created by wujinling at 2022/11/16
 
 Feature: connection pool basic test - heartbeat create connections
-  @CRITICAL
-  Scenario: test initial connection pool: except heartbeat connection the other connection is in idle status #1
+  @CRITICAL @btrace
+  Scenario: test initial connection pool: except heartbeat will not create connections  #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -35,19 +35,21 @@ Feature: connection pool basic test - heartbeat create connections
     Given destroy btrace threads list
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    complexQueryWorker\] (com.actiontech.dble.backend.pool.ConnectionPool.fillPool(ConnectionPool.java:205)) \- need add
+    complexQueryWorker\] \(com.actiontech.dble.backend.pool.ConnectionPool.*\- need add
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    \[connection-pool-evictor-thread\] (com.actiontech.dble.backend.pool.ConnectionPool.fillPool(ConnectionPool.java:205)) \- need add
+    \[connection-pool-evictor-thread\] \(com.actiontech.dble.backend.pool.ConnectionPool.*\- need add
     """
-#    Given sleep "8" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                   | expect        | db                |
       | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'     | balance{10}    | dble_information  |
 
   @CRITICAL @restore_mysql_service
-  Scenario: test initial connection pool: except heartbeat connection the other connection is in idle status #2
+  Scenario: expect heartbeat create connections when heartbeat status changes from Error to OK #2
+    """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -71,14 +73,17 @@ Feature: connection pool basic test - heartbeat create connections
     Given sleep "10" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    complexQueryWorker\] (com.actiontech.dble.backend.pool.ConnectionPool.fillPool(ConnectionPool.java:205)) \- need add
+    complexQueryWorker\] \(com.actiontech.dble.backend.pool.ConnectionPool.*\- need add
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                    | expect       | db                |
       | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'      | length{(4)}  | dble_information  |
 
   @CRITICAL @restore_network
-  Scenario: test initial connection pool: except heartbeat connection the other connection is in idle status #3
+  Scenario: expect heartbeat create connections when heartbeat status changes from Timeout to OK #3
+    """
+    {'restore_network':'mysql-master1'}
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -113,7 +118,7 @@ Feature: connection pool basic test - heartbeat create connections
     Given sleep "10" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    complexQueryWorker\] (com.actiontech.dble.backend.pool.ConnectionPool.fillPool(ConnectionPool.java:205)) \- need add
+    complexQueryWorker\] \(com.actiontech.dble.backend.pool.ConnectionPool.*\- need add
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                    | expect       | db                |
