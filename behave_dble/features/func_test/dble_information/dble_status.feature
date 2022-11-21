@@ -564,8 +564,11 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn_1 | True    | drop table if exists test | schema1 |
 
 
-
+  @restore_view
   Scenario: check questions/transactions error sql and implict commit - shardingUser #5
+   """
+   {'restore_view':{'dble-1':{'schema1':'view1'}}}
+   """
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                        | expect  | db       |
      | conn_1 | False   | use schema1                | success | schema1  |
@@ -1400,7 +1403,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | split | 111111 | conn_1 | False   | rollback    | success |
      Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                             | db               |
-     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '8',), ('transactions', '5',))} | dble_information |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '8',), ('transactions', '4',))} | dble_information |
    # 1064 error in transaction, questions + 2, transactions + 1
      Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql            | expect  |
@@ -1408,7 +1411,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | split | 111111 | conn_1 | False   | drop db test_1 | You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'db test_1' at line 1 |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                              | db               |
-     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '10',), ('transactions', '6',))} | dble_information |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '10',), ('transactions', '5',))} | dble_information |
    # other error in transaction, questions + 2, transactions + 1
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                 | expect                           |
@@ -1416,14 +1419,14 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | split | 111111 | conn_1 | False   | create index id_index on test_1(id) | Table 'db1.test_1' doesn't exist |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                              | db               |
-     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '12',), ('transactions', '7',))} | dble_information |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '12',), ('transactions', '6',))} | dble_information |
    # compare with show @@questions
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_8"
      | conn   | toClose | sql              | db                |
      | conn_0 | True    | show @@questions | dble_information  |
    Then check resultset "dble_status_8" has lines with following column values
      | Questions-0 | Transactions-1 |
-     | 12           | 7             |
+     | 12           | 6             |
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                         | db      |
      | split | 111111 | conn_1 | True    | drop table if exists test_1 | schema1 |
