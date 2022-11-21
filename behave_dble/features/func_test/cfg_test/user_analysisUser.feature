@@ -398,14 +398,14 @@ Feature: test config in user.xml  ---  analysisUser
       | conn_0 | False   | show @@dbinstance                                                 | length{(4)}   |
       | conn_0 | False   | show @@dbinstance where shardingNode = "dn3"                      | length{(1)}   |
       | conn_0 | False   | show @@dbinstance.syndetail WHERE name = "hostM1"                 | length{(0)}   |
-      | conn_0 | False   | show @@processor                                                  | length{(81)}  |
+      | conn_0 | False   | show @@processor                                                  | success       |
       | conn_0 | False   | show @@command                                                    | length{(1)}   |
       | conn_0 | False   | show @@connection                                                 | length{(2)}   |
       | conn_0 | False   | show @@cache                                                      | length{(2)}   |
       | conn_0 | False   | show @@sql.condition                                              | length{(2)}   |
       | conn_0 | False   | show @@heartbeat                                                  | length{(4)}   |
       | conn_0 | False   | show @@heartbeat.detail  where name='hostM1'                      | success       |
-      | conn_0 | False   | show @@sysparam                                                   | length{(138)} |
+      | conn_0 | False   | show @@sysparam                                                   | length{(139)} |
       | conn_0 | False   | show @@white                                                      | length{(3)}   |
       | conn_0 | False   | show @@directmemory                                               | length{(1)}   |
       | conn_0 | False   | show @@command.count                                              | length{(1)}   |
@@ -413,7 +413,7 @@ Feature: test config in user.xml  ---  analysisUser
       | conn_0 | False   | show @@backend.old                                                | length{(0)}   |
       | conn_0 | False   | show @@binlog.status                                              | length{(2)}   |
       | conn_0 | False   | show @@help                                                       | length{(121)} |
-      | conn_0 | False   | show @@thread_used                                                | length{(50)}  |
+      | conn_0 | False   | show @@thread_used                                                | success       |
       | conn_0 | False   | show @@algorithm where schema='schema1' and table='sharding_4_t1' | length{(5)}   |
       | conn_0 | False   | show @@ddl                                                        | length{(0)}   |
       | conn_0 | False   | show @@reload_status                                              | length{(0)}   |
