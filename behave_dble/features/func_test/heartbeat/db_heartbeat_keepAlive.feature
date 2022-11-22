@@ -39,9 +39,9 @@ Feature: check keepAlive
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs2" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 |STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle    | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | idle    | 0         | false  | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | 0         | false  | None          |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                              | expect      |
       | conn_0 | False   | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} |
@@ -88,9 +88,9 @@ Feature: check keepAlive
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs4" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 |STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle    | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | idle    | 0         | false  | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | 0         | false  | None          |
     Given record current dble log line number in "log_num_2"
 
     # case 1.2: sleep less than keepAlive
@@ -150,9 +150,9 @@ Feature: check keepAlive
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs7" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 |STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle    | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | idle    | 0         | false  | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | 0         | false  | None          |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                              | expect      |
       | conn_0 | False   | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} |
@@ -199,9 +199,9 @@ Feature: check keepAlive
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs9" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 |STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle    | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | idle    | 0         | false  | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | 0         | false  | None          |
     Given record current dble log line number in "log_num_4"
 
     # case 2.2: sleep less than keepAlive
@@ -261,9 +261,9 @@ Feature: check keepAlive
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs12" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 |STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle    | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | idle    | 0         | false  | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | 0         | false  | None          |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                              | expect      |
       | conn_0 | True    | select * from dble_information.backend_connections where used_for_heartbeat='true' and db_instance_name='hostM2' | length{(1)} |
