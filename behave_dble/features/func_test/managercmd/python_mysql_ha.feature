@@ -110,8 +110,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
-      <dbInstance name=\"slave1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"\/>
+      <dbInstance name=\"slave1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"\/>
       """
 
      Then execute sql in "dble-1" in "user" mode
@@ -135,8 +135,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"NxbH9imEoi3INzkFiiSvGbfXOCzN4COTL0vJdyUZyiEW4+lGFgRagpXDeg/7yzVhRkv4jfxuRTRiux7I3iRDOg==\" user=\"test\" maxCon=\"1000\" minCon=\"10\" usingDecrypt=\"true\" primary=\"false\"/>
-      <dbInstance name=\"slave1\" url=\"172.100.9.6:3307\" password=\"cDswIroIVCCGE376ivg0JtCq22RAqdiMkVzHmiJRtP3S1gb8OsSbA58MjqzGR3cvt4oCBv1B2Z/PpnKAU5wQlQ==\" user=\"test\" maxCon=\"1000\" minCon=\"10\" usingDecrypt=\"true\" primary=\"true\"/>
+      <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"NxbH9imEoi3INzkFiiSvGbfXOCzN4COTL0vJdyUZyiEW4\+lGFgRagpXDeg\/7yzVhRkv4jfxuRTRiux7I3iRDOg==\" user=\"test\" maxCon=\"1000\" minCon=\"10\" usingDecrypt=\"true\" primary=\"false\"\/>
+      <dbInstance name=\"slave1\" url=\"172.100.9.6:3307\" password=\"cDswIroIVCCGE376ivg0JtCq22RAqdiMkVzHmiJRtP3S1gb8OsSbA58MjqzGR3cvt4oCBv1B2Z\/PpnKAU5wQlQ==\" user=\"test\" maxCon=\"1000\" minCon=\"10\" usingDecrypt=\"true\" primary=\"true\"\/>
       """
     Given start mysql in host "mysql-master2"
 

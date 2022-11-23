@@ -74,7 +74,7 @@ Feature: on zookeeper to check start config
     Then check following text exist "Y" in file "/tmp/dble_conf_db.log" in host "dble-1"
       """
       {\"dbGroup\":\[
-      {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+      {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
       \"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
       {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":1000,\"heartbeat\":{\"value\":\"select 5\"},
       \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1111,\"minCon\":22,\"primary\":true}
