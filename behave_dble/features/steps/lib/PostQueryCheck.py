@@ -5,6 +5,7 @@
 # @Author  : irene-coming
 import logging
 import re
+import time
 
 from steps.lib.ObjectFactory import ObjectFactory
 from hamcrest import *
