@@ -46,8 +46,8 @@ Feature: Keep slow log on, dble may occur oom
       Then check following text exist "Y" in file "/opt/dble/slowlogs/slow-query.log" in host "dble-1"
       """
       drop table if exists sharding_2_t1
-      create table sharding_2_t1(id int , name varchar(12))
-      insert into sharding_2_t1 value (1,1)
+      create table sharding_2_t1\(id int , name varchar\(12\)\)
+      insert into sharding_2_t1 value \(1,1\)
       dble:shardingnode=dn1
       select \* from sharding_2_t1
       dn1_First_Result_Fetch
@@ -97,8 +97,8 @@ Feature: Keep slow log on, dble may occur oom
       Then check following text exist "N" in file "/opt/dble/slowlogs/slow-query.log" in host "dble-1"
       """
       drop table if exists sharding_2_t1
-      create table sharding_2_t1(id int , name varchar(12))
-      insert into sharding_2_t1 value (1,1)
+      create table sharding_2_t1\(id int , name varchar\(12\)\)
+      insert into sharding_2_t1 value \(1,1\)
       SINGLE_NODE_QUERY
       """
     Then execute sql in "dble-1" in "user" mode

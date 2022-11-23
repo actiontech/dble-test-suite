@@ -80,11 +80,11 @@ Feature: test slow query log related manager command
       Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
       """
       drop table if exists a_test
-      create table a_test(id int)
-      alter table a_test add name char(20)
-      insert into a_test values(1,20)
+      create table a_test\(id int\)
+      alter table a_test add name char\(20\)
+      insert into a_test values\(1,20\)
       select id from a_test
-      select count(id) from a_test
+      select count\(id\) from a_test
       delete from a_test
       """
       Then execute sql in "dble-1" in "admin" mode
@@ -102,11 +102,11 @@ Feature: test slow query log related manager command
       Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
       """
       drop table if exists a_test
-      create table a_test(id int)
+      create table a_test\(id int\)
       alter table a_test add age int
-      insert into a_test values(1,20)
+      insert into a_test values\(1,20\)
       select id from a_test
-      select count(id) from a_test
+      select count\(id\) from a_test
       delete from a_test
       """
      Then execute sql in "dble-1" in "admin" mode
@@ -121,12 +121,12 @@ Feature: test slow query log related manager command
      Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
      drop table if exists a_test
-     create table a_test(id int(10) unsigned NOT NULL,name char(1))
-     insert into a_test values(3,3)
+     create table a_test\(id int\(10\) unsigned NOT NULL,name char\(1\)\)
+     insert into a_test values\(3,3\)
      """
      Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
-     insert into a_test values(1,1),(2,1111)
+     insert into a_test values\(1,1\),\(2,1111\)
      """
   # case to check xa query log written in assigned file
      Then execute sql in "dble-1" in "user" mode
@@ -201,7 +201,7 @@ Feature: test slow query log related manager command
        | conn_0 | False    | select sleep(1)            | success            | schema1 |
      Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
-     select sleep(1)
+     select sleep\(1\)
      SINGLE_NODE_QUERY
      """
    # case singletable
@@ -220,8 +220,8 @@ Feature: test slow query log related manager command
     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
      drop table if exists s1
-     create table s1 (id int)
-     insert into s1 values (1),(2)
+     create table s1 \(id int\)
+     insert into s1 values \(1\),\(2\)
      select id from s1
      update s1 set id=3
      delete from s1
@@ -253,8 +253,8 @@ Feature: test slow query log related manager command
     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
      drop table if exists test
-     create table test (id int)
-     insert into test values (1),(2),(3),(4)
+     create table test \(id int\)
+     insert into test values \(1\),\(2\),\(3\),\(4\)
      select id from test
      update test set id=3
      delete from test
@@ -288,8 +288,8 @@ Feature: test slow query log related manager command
     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
      drop table if exists sharding_2_t1
-     create table sharding_2_t1 (id int,code int)
-     insert into sharding_2_t1 values (1,1),(2,2)
+     create table sharding_2_t1 \(id int,code int\)
+     insert into sharding_2_t1 values \(1,1\),\(2,2\)
      select id,code from sharding_2_t1
      update sharding_2_t1 set code=3
      delete from sharding_2_t1
@@ -322,8 +322,8 @@ Feature: test slow query log related manager command
     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
      drop table if exists n1
-     create table n1 (id int)
-     insert into n1 values (1),(2),(3),(4)
+     create table n1 \(id int\)
+     insert into n1 values \(1\),\(2\),\(3\),\(4\)
      select id from n1
      update n1 set id=3
      delete from n1
@@ -355,8 +355,8 @@ Feature: test slow query log related manager command
     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
      drop table if exists v1
-     create table v1 (id int)
-     insert into v1 values (1),(2),(3),(4)
+     create table v1 \(id int\)
+     insert into v1 values \(1\),\(2\),\(3\),\(4\)
      select id from v1
      update v1 set id=3
      delete from v1
@@ -433,12 +433,12 @@ Feature: test slow query log related manager command
       | conn_0 | True    | insert into sharding_4_t1 values(1,1,1,1)                                                                                                                                                 | success                                  | schema1 |
     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
     """
-    CREATE TABLE sharding_4_t1(id int(10) unsigned NOT NULL,t_id int(10) unsigned NOT NULL DEFAULT \"0\",name char(1) NOT NULL DEFAULT \"\",pad int(11) NOT NULL,PRIMARY KEY (id),KEY k_1 (t_id))
-    insert into sharding_4_t1 values(1,1,1,1)
+    CREATE TABLE sharding_4_t1\(id int\(10\) unsigned NOT NULL,t_id int\(10\) unsigned NOT NULL DEFAULT \"0\",name char\(1\) NOT NULL DEFAULT \"\",pad int\(11\) NOT NULL,PRIMARY KEY \(id\),KEY k_1 \(t_id\)\)
+    insert into sharding_4_t1 values\(1,1,1,1\)
     """
     Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
     """
-    insert into sharding_4_t1 values(1,1,1,1),(2,2,\"test_2\",2),(3,3,\"test_3\",4),(4,4,4,3),(5,5,\"test...5\",1),(6,6,\"test6\",6)
+    insert into sharding_4_t1 values\(1,1,1,1\),\(2,2,\"test_2\",2\),\(3,3,\"test_3\",4\),\(4,4,4,3\),\(5,5,\"test...5\",1\),\(6,6,\"test6\",6\)
     """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -485,8 +485,8 @@ Feature: test slow query log related manager command
      Then check following text exist "N" in file "/opt/dble/slowlogs/slow-query.log" in host "dble-1"
       """
       drop table if exists test
-      create table test(id int)
-      insert into test values (1)
+      create table test\(id int\)
+      insert into test values \(1\)
       delete from test
       """
      Then execute sql in "dble-1" in "user" mode
@@ -498,8 +498,8 @@ Feature: test slow query log related manager command
      Then check following text exist "Y" in file "/opt/dble/slowlogs/slow-query.log" in host "dble-1"
       """
       drop table if exists test
-      create table test(id int)
-      insert into test values (1)
+      create table test\(id int\)
+      insert into test values \(1\)
       delete from test
       """
 
