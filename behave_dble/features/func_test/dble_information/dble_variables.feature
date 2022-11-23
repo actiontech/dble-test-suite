@@ -167,7 +167,7 @@ Feature:  dble_variables test
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(20)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(20)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(122)}| dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(124)}| dble_information |
   #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                             | db               |
