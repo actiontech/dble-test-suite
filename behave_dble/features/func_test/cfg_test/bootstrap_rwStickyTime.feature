@@ -1056,35 +1056,35 @@ Feature: test rwStickyTime on rwSplit mode
        create database testdb
        use testdb
        drop table if exists testtb
-       create table testtb(id int,age int)
-       insert into testtb values (1,1),(2,2)
+       create table testtb\(id int,age int\)
+       insert into testtb values \(1,1\),\(2,2\)
        update testtb set id = 3 where age = 2
        select id from testtb where age = 18
-       select sleep(6)
+       select sleep\(6\)
        delete from testtb where age = 2
        select id from testtb where age between 1 and 5
-       select count(\*) from testtb where 1=1
+       select count\(\*\) from testtb where 1=1
        show tables
        """
     Then check following text exist "N" in file "/root/sandboxes/sandbox/master/data/mysql-2.log" in host "mysql-master2"
        """
        select id from testtb where age = 28
        select id from testtb where age = 38
-       select SQL_SMALL_RESULT count(\*),age from testtb group by age
+       select SQL_SMALL_RESULT count\(\*\),age from testtb group by age
        """
     Then check following text exist "Y" in file "/root/sandboxes/sandbox/node1/data/mysql-2.log" in host "mysql-slave1"
        """
        select id from testtb where age = 28
        select id from testtb where age = 38
-       select SQL_SMALL_RESULT count(\*),age from testtb group by age
+       select SQL_SMALL_RESULT count\(\*\),age from testtb group by age
        """
     Then check following text exist "N" in file "/root/sandboxes/sandbox/node1/data/mysql-2.log" in host "mysql-slave1"
        """
        select id from testtb where age = 18
        show tables
-       select sleep(6)
+       select sleep\(6\)
        select id from testtb where age between 1 and 5
-       select count(\*) from testtb where 1=1
+       select count\(\*\) from testtb where 1=1
        """
 
     Then execute sql in "dble-1" in "user" mode
@@ -1103,27 +1103,27 @@ Feature: test rwStickyTime on rwSplit mode
        """
        begin
        update testtb set id = 43 where age = 21
-       select sleep(6)
+       select sleep\(6\)
        select id,age from testtb order by null
        commit
        select id from testtb order by id limit 3
-       select last_insert_id()
+       select last_insert_id\(\)
        """
     Then check following text exist "N" in file "/root/sandboxes/sandbox/master/data/mysql-2.log" in host "mysql-master2"
        """
-       select sum(age) from testtb
+       select sum\(age\) from testtb
        """
     Then check following text exist "Y" in file "/root/sandboxes/sandbox/node1/data/mysql-2.log" in host "mysql-slave1"
        """
-       select sum(age) from testtb
+       select sum\(age\) from testtb
        """
     Then check following text exist "N" in file "/root/sandboxes/sandbox/node1/data/mysql-2.log" in host "mysql-slave1"
        """
        update testtb set id = 43 where age = 21
-       select sleep(6)
+       select sleep\(6\)
        select id,age from testtb order by null
        select id from testtb order by id limit 3
-       select last_insert_id()
+       select last_insert_id\(\)
        """
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                       | expect  | db     |

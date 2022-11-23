@@ -4,6 +4,7 @@
 # http://10.186.18.11/jira/browse/DBLE0REQ-1374
 Feature: support rownum sql
 
+
   Scenario: check enableRoutePenetration and routePenetrationRules in bootstrap.cnf #1
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs1"
       | sql             |
@@ -168,8 +169,8 @@ Feature: support rownum sql
     the query select id from sharding_2_t1 match the route penetration rule, will direct route
     the query select id from sharding_2_t1 where id>6 match the route penetration regex
     the query select id from sharding_2_t1 where id>6 match the route penetration rule, will direct route
-    the query select \* from sharding_2_t1 where id in (select id from sharding_2_t1) match the route penetration regex
-    the query select \* from sharding_2_t1 where id in (select id from sharding_2_t1) match the route penetration rule, will direct route
+    the query select \* from sharding_2_t1 where id in \(select id from sharding_2_t1\) match the route penetration regex
+    the query select \* from sharding_2_t1 where id in \(select id from sharding_2_t1\) match the route penetration rule, will direct route
     """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
@@ -209,8 +210,8 @@ Feature: support rownum sql
     the query select id FROM sharding_2_t1 match the route penetration rule, will direct route
     the query select id from sharding_2_t1 where id>6 match the route penetration regex
     the query select id from sharding_2_t1 where id>6 match the route penetration rule, will direct route
-    the query select \* from sharding_2_t1 where id in (select id from sharding_2_t1) match the route penetration regex
-    the query select \* from sharding_2_t1 where id in (select id from sharding_2_t1) match the route penetration rule, will direct route
+    the query select \* from sharding_2_t1 where id in \(select id from sharding_2_t1\) match the route penetration regex
+    the query select \* from sharding_2_t1 where id in \(select id from sharding_2_t1\) match the route penetration rule, will direct route
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -245,8 +246,8 @@ Feature: support rownum sql
     """
     the query select id from sharding_2_t1 where id>6 match the route penetration regex
     the query select id from sharding_2_t1 where id>6 match the route penetration rule, will direct route
-    the query select \* from sharding_2_t1 where id in (select id from sharding_2_t1) match the route penetration regex
-    the query select \* from sharding_2_t1 where id in (select id from sharding_2_t1) match the route penetration rule, will direct route
+    the query select \* from sharding_2_t1 where id in \(select id from sharding_2_t1\) match the route penetration regex
+    the query select \* from sharding_2_t1 where id in \(select id from sharding_2_t1\) match the route penetration rule, will direct route
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -278,8 +279,8 @@ Feature: support rownum sql
     the query select id FROM sharding_2_t1 match the route penetration rule, will direct route
     the query select id from sharding_2_t1 where id>6 match the route penetration regex
     the query select id from sharding_2_t1 where id>6 match the route penetration rule, will direct route
-    the query select \* from sharding_2_t1 where id in (select id from sharding_2_t1) match the route penetration regex
-    the query select \* from sharding_2_t1 where id in (select id from sharding_2_t1) match the route penetration rule, will direct route
+    the query select \* from sharding_2_t1 where id in \(select id from sharding_2_t1\) match the route penetration regex
+    the query select \* from sharding_2_t1 where id in \(select id from sharding_2_t1\) match the route penetration rule, will direct route
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -317,8 +318,8 @@ Feature: support rownum sql
     the query select id FROM sharding_2_t1 match the route penetration rule, will direct route
     the query select id from sharding_2_t1 where id>6 match the route penetration regex
     the query select id from sharding_2_t1 where id>6 match the route penetration rule, will direct route
-    the query select \* from sharding_2_t1 where id in (select id from sharding_2_t1) match the route penetration regex
-    the query select \* from sharding_2_t1 where id in (select id from sharding_2_t1) match the route penetration rule, will direct route
+    the query select \* from sharding_2_t1 where id in \(select id from sharding_2_t1\) match the route penetration regex
+    the query select \* from sharding_2_t1 where id in \(select id from sharding_2_t1\) match the route penetration rule, will direct route
     the query select id as rownum from sharding_2_t1 match the route penetration regex
     the query select id as rownum from sharding_2_t1 match the route penetration rule, will direct route
     the query select \* from sharding_2_t1 as rownum match the route penetration regex
@@ -338,6 +339,8 @@ Feature: support rownum sql
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect  | db      |
       | conn_1 | True    | drop table if exists sharding_2_t1  | success | schema1 |
+
+
 
   Scenario: check rownum sql - one table #2
     Given delete the following xml segment
@@ -445,11 +448,13 @@ Feature: support rownum sql
       | conn_2 | False    | explain select parent_id, code, count(0), @rownum:=1 from sharding_2_t1 group by parent_id, code having parent_id > 1 | success | schema1 |
     Then check resultset "rownum_rs8" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1              | BASE SQL | SELECT parent_id, code, count(0)  , @rownum := 1 FROM sharding_2_t1 GROUP BY parent_id, code HAVING parent_id > 1 LIMIT 100 |
-      | dn2              | BASE SQL | SELECT parent_id, code, count(0)  , @rownum := 1 FROM sharding_2_t1 GROUP BY parent_id, code HAVING parent_id > 1 LIMIT 100 |
+      | dn1              | BASE SQL | SELECT parent_id, code, count(0) , @rownum := 1 FROM sharding_2_t1 GROUP BY parent_id, code HAVING parent_id > 1 LIMIT 100 |
+      | dn2              | BASE SQL | SELECT parent_id, code, count(0) , @rownum := 1 FROM sharding_2_t1 GROUP BY parent_id, code HAVING parent_id > 1 LIMIT 100 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                              | expect  | db      |
       | conn_2 | True    | drop table if exists sharding_2_t1;drop table if exists global_2_t1;drop table if exists single_t1               | success | schema1 |
+
+
 
   Scenario: check rownum sql - shardingTable + shardingTable - same shardingNode and same function #3
     Given delete the following xml segment
@@ -507,15 +512,15 @@ Feature: support rownum sql
       | conn_2 | False   | explain select a.id, a.parent_id, a.code, @rownum:=@rownum-1 from sharding_2_t1 a, (select @rownum:=0) r order by a.id | success | schema1 |
     Then check resultset "rownum_rs1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1              | BASE SQL | SELECT a.id, a.parent_id, a.code  , @rownum := @rownum - 1 FROM sharding_2_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
-      | dn2              | BASE SQL | SELECT a.id, a.parent_id, a.code  , @rownum := @rownum - 1 FROM sharding_2_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
+      | dn1              | BASE SQL | SELECT a.id, a.parent_id, a.code , @rownum := @rownum - 1 FROM sharding_2_t1 a, ( SELECT @rownum := 0 ) r ORDER BY a.id LIMIT 100 |
+      | dn2              | BASE SQL | SELECT a.id, a.parent_id, a.code , @rownum := @rownum - 1 FROM sharding_2_t1 a, ( SELECT @rownum := 0 ) r ORDER BY a.id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs2"
       | conn   | toClose | sql                                             | expect  | db      |
       | conn_2 | False   | explain select id, parent_id, code, @rownum:=@rownum-1 from sharding_2_t1, (select @rownum:=0) r order by id | success | schema1 |
     Then check resultset "rownum_rs2" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1              | BASE SQL | SELECT id, parent_id, code  , @rownum := @rownum - 1 FROM sharding_2_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
-      | dn2              | BASE SQL | SELECT id, parent_id, code  , @rownum := @rownum - 1 FROM sharding_2_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
+      | dn1              | BASE SQL | SELECT id, parent_id, code , @rownum := @rownum - 1 FROM sharding_2_t1, ( SELECT @rownum := 0 ) r ORDER BY id LIMIT 100 |
+      | dn2              | BASE SQL | SELECT id, parent_id, code , @rownum := @rownum - 1 FROM sharding_2_t1, ( SELECT @rownum := 0 ) r ORDER BY id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs3"
       | conn   | toClose | sql                                                                                                                                | expect  | db      |
       | conn_2 | False   | explain select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1,sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id desc | success | schema1 |
@@ -596,6 +601,8 @@ Feature: support rownum sql
       | conn   | toClose | sql                                                                     | expect  | db      |
       | conn_2 | True    | drop table if exists sharding_2_t1;drop table if exists sharding_2_t2   | success | schema1 |
 
+
+
   Scenario: check rownum sql - shardingTable + shardingTable - same shardingNode and different function #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -642,28 +649,28 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     the query select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1,sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id desc match the route penetration regex
-    the query select a.*,@rownum:=@rownum+1 from (select t1.id,t2.shard_value from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id) a,(select @rownum:=0) r match the route penetration regex
+    the query select a.\*,@rownum:=@rownum\+1 from \(select t1.id,t2.shard_value from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id\) a,\(select @rownum:=0\) r match the route penetration regex
     the query select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1,sharding_2_t2 t2 where t1.id=t2.parent_id and t1.id=2 match the route penetration regex
-    the query select id,shard_value,@rownum:=1 from sharding_2_t2 where parent_id in (select id from sharding_2_t1 where id>1) match the route penetration regex
+    the query select id,shard_value,@rownum:=1 from sharding_2_t2 where parent_id in \(select id from sharding_2_t1 where id>1\) match the route penetration regex
     the query select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id where t2.parent_id>1 order by t2.id desc match the route penetration regex
     the query select t2.parent_id,t1.code,t1.status,@rownum:=1 from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 match the route penetration regex
-    the query select a.*,@rownum:=@rownum+1 from (select id,shard_value from sharding_2_t2 where parent_id in (select id from sharding_2_t1 where id=2)) a,(select @rownum:=0) r match the route penetration regex
-    the query select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from sharding_2_t2) and status=1 match the route penetration regex
+    the query select a.\*,@rownum:=@rownum\+1 from \(select id,shard_value from sharding_2_t2 where parent_id in \(select id from sharding_2_t1 where id=2\)\) a,\(select @rownum:=0\) r match the route penetration regex
+    the query select id,parent_id as rownum from sharding_2_t1 where id in \(select parent_id from sharding_2_t2\) and status=1 match the route penetration regex
     the query select t2.id,t2.shard_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id and t1.id=1 match the route penetration regex
-    the query select t1.shard_name,t2.parent_id,count(0) as abcrownum from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration regex
+    the query select t1.shard_name,t2.parent_id,count\(0\) as abcrownum from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration regex
     """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     the query select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1,sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id desc match the route penetration rule, will direct route
-    the query select a.*,@rownum:=@rownum+1 from (select t1.id,t2.shard_value from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id) a,(select @rownum:=0) r match the route penetration rule, will direct route
+    the query select a.\*,@rownum:=@rownum+1 from \(select t1.id,t2.shard_value from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id\) a,\(select @rownum:=0\) r match the route penetration rule, will direct route
     the query select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1,sharding_2_t2 t2 where t1.id=t2.parent_id and t1.id=2 match the route penetration rule, will direct route
-    the query select id,shard_value,@rownum:=1 from sharding_2_t2 where parent_id in (select id from sharding_2_t1 where id>1) match the route penetration rule, will direct route
+    the query select id,shard_value,@rownum:=1 from sharding_2_t2 where parent_id in \(select id from sharding_2_t1 where id>1\) match the route penetration rule, will direct route
     the query select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id where t2.parent_id>1 order by t2.id desc match the route penetration rule, will direct route
     the query select t2.parent_id,t1.code,t1.status,@rownum:=1 from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 match the route penetration rule, will direct route
-    the query select a.*,@rownum:=@rownum+1 from (select id,shard_value from sharding_2_t2 where parent_id in (select id from sharding_2_t1 where id=2)) a,(select @rownum:=0) r match the route penetration rule, will direct route
-    the query select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from sharding_2_t2) and status=1 match the route penetration rule, will direct route
+    the query select a.\*,@rownum:=@rownum+1 from \(select id,shard_value from sharding_2_t2 where parent_id in \(select id from sharding_2_t1 where id=2\)\) a,\(select @rownum:=0\) r match the route penetration rule, will direct route
+    the query select id,parent_id as rownum from sharding_2_t1 where id in \(select parent_id from sharding_2_t2\) and status=1 match the route penetration rule, will direct route
     the query select t2.id,t2.shard_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id and t1.id=1 match the route penetration rule, will direct route
-    the query select t1.shard_name,t2.parent_id,count(0) as abcrownum from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration rule, will direct route
+    the query select t1.shard_name,t2.parent_id,count\(0\) as abcrownum from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration rule, will direct route
     """
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs0"
       | conn   | toClose | sql                                                                                                                     | expect  | db      |
@@ -714,6 +721,8 @@ Feature: support rownum sql
       | conn   | toClose | sql                                                                     | expect  | db      |
       | conn_2 | True    | drop table if exists sharding_2_t1;drop table if exists sharding_2_t2   | success | schema1 |
 
+
+
   Scenario: check rownum sql - shardingTable + shardingTable - different shardingNode and same function #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -760,15 +769,15 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     the query select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1,sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id desc match the route penetration regex
-    the query select a.*,@rownum:=@rownum+1 from (select t1.id,t2.shard_value from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id) a,(select @rownum:=0) r match the route penetration regex
+    the query select a.\*,@rownum:=@rownum\+1 from \(select t1.id,t2.shard_value from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id\) a,\(select @rownum:=0\) r match the route penetration regex
     the query select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1,sharding_2_t2 t2 where t1.id=t2.parent_id and t1.id=2 match the route penetration regex
-    the query select id,shard_value,@rownum:=1 from sharding_2_t2 where parent_id in (select id from sharding_2_t1 where id>1) match the route penetration regex
+    the query select id,shard_value,@rownum:=1 from sharding_2_t2 where parent_id in \(select id from sharding_2_t1 where id>1\) match the route penetration regex
     the query select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id where t2.parent_id>1 order by t2.id desc match the route penetration regex
     the query select t2.parent_id,t1.code,t1.status,@rownum:=1 from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 match the route penetration regex
-    the query select a.*,@rownum:=@rownum+1 from (select id,shard_value from sharding_2_t2 where parent_id in (select id from sharding_2_t1 where id=2)) a,(select @rownum:=0) r match the route penetration regex
-    the query select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from sharding_2_t2) and status=1 match the route penetration regex
+    the query select a.\*,@rownum:=@rownum\+1 from \(select id,shard_value from sharding_2_t2 where parent_id in \(select id from sharding_2_t1 where id=2\)\) a,\(select @rownum:=0\) r match the route penetration regex
+    the query select id,parent_id as rownum from sharding_2_t1 where id in \(select parent_id from sharding_2_t2\) and status=1 match the route penetration regex
     the query select t2.id,t2.shard_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id and t1.id=1 match the route penetration regex
-    the query select t1.shard_name,t2.parent_id,count(0) as abcrownum from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration regex
+    the query select t1.shard_name,t2.parent_id,count\(0\) as abcrownum from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration regex
     """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
@@ -832,6 +841,8 @@ Feature: support rownum sql
       | conn   | toClose | sql                                                                  | expect  | db      |
       | conn_2 | True   | drop table if exists sharding_2_t1;drop table if exists sharding_2_t2 | success | schema1 |
 
+
+
   Scenario: check rownum sql - shardingTable + shardingTable - different shardingNode and different function #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -878,15 +889,15 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     the query select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1,sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id desc match the route penetration regex
-    the query select a.*,@rownum:=@rownum+1 from (select t1.id,t2.shard_value from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id) a,(select @rownum:=0) r match the route penetration regex
+    the query select a.\*,@rownum:=@rownum\+1 from \(select t1.id,t2.shard_value from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id\) a,\(select @rownum:=0\) r match the route penetration regex
     the query select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1,sharding_2_t2 t2 where t1.id=t2.parent_id and t1.id=2 match the route penetration regex
-    the query select id,shard_value,@rownum:=1 from sharding_2_t2 where parent_id in (select id from sharding_2_t1 where id>1) match the route penetration regex
+    the query select id,shard_value,@rownum:=1 from sharding_2_t2 where parent_id in \(select id from sharding_2_t1 where id>1\) match the route penetration regex
     the query select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id where t2.parent_id>1 order by t2.id desc match the route penetration regex
     the query select t2.parent_id,t1.code,t1.status,@rownum:=1 from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 match the route penetration regex
-    the query select a.*,@rownum:=@rownum+1 from (select id,shard_value from sharding_2_t2 where parent_id in (select id from sharding_2_t1 where id=2)) a,(select @rownum:=0) r match the route penetration regex
-    the query select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from sharding_2_t2) and status=1 match the route penetration regex
+    the query select a.\*,@rownum:=@rownum\+1 from \(select id,shard_value from sharding_2_t2 where parent_id in \(select id from sharding_2_t1 where id=2\)\) a,\(select @rownum:=0\) r match the route penetration regex
+    the query select id,parent_id as rownum from sharding_2_t1 where id in \(select parent_id from sharding_2_t2\) and status=1 match the route penetration regex
     the query select t2.id,t2.shard_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join sharding_2_t2 t2 on t1.id=t2.parent_id and t1.id=1 match the route penetration regex
-    the query select t1.shard_name,t2.parent_id,count(0) as abcrownum from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration regex
+    the query select t1.shard_name,t2.parent_id,count\(0\) as abcrownum from sharding_2_t1 t1, sharding_2_t2 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration regex
     """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
@@ -904,6 +915,8 @@ Feature: support rownum sql
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                    | expect  | db      |
       | conn_2 | True    | drop table if exists sharding_2_t1;drop table if exists sharding_2_t2  | success | schema1 |
+
+
 
   Scenario: check rownum sql - shardingTable + globalTable - same shardingNode #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -956,13 +969,13 @@ Feature: support rownum sql
       | conn_2 | False   | explain select a.id,a.code,@rownum:=@rownum-1 from global_2_t1 a, (select @rownum:=0) r order by a.id | success | schema1 |
     Then check resultset "rownum_rs1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1//dn2         | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM global_2_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
+      | dn1//dn2         | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM global_2_t1 a, ( SELECT @rownum := 0 ) r ORDER BY a.id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs2"
       | conn   | toClose | sql                                             | expect  | db      |
       | conn_2 | False   | explain select id, code, @rownum:=@rownum-1 from global_2_t1, (select @rownum:=0) r order by id | success | schema1 |
     Then check resultset "rownum_rs2" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1//dn2         | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM global_2_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
+      | dn1//dn2         | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM global_2_t1, ( SELECT @rownum := 0 ) r ORDER BY id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs3"
       | conn   | toClose | sql                                                                                                                               | expect  | db      |
       | conn_2 | False   | explain select t1.id,t2.global_value,@rownum:=1 from sharding_2_t1 t1,global_2_t1 t2 where t1.id=t2.parent_id order by t2.id desc | success | schema1 |
@@ -1043,6 +1056,8 @@ Feature: support rownum sql
       | conn   | toClose | sql                                                                  | expect  | db      |
       | conn_2 | True    | drop table if exists sharding_2_t1;drop table if exists global_2_t1  | success | schema1 |
 
+
+
   Scenario: check rownum sql - shardingTable + globalTable - different shardingNode #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -1091,13 +1106,13 @@ Feature: support rownum sql
       | conn_2 | False   | explain select a.id,a.code,@rownum:=@rownum-1 from global_2_t1 a, (select @rownum:=0) r order by a.id | success | schema1 |
     Then check resultset "rownum_rs1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn3//dn4         | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM global_2_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
+      | dn3//dn4         | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM global_2_t1 a, ( SELECT @rownum := 0 ) r ORDER BY a.id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs2"
       | conn   | toClose | sql                                             | expect  | db      |
       | conn_2 | False   | explain select id, code, @rownum:=@rownum-1 from global_2_t1, (select @rownum:=0) r order by id | success | schema1 |
     Then check resultset "rownum_rs2" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn3//dn4         | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM global_2_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
+      | dn3//dn4         | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM global_2_t1, ( SELECT @rownum := 0 ) r ORDER BY id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs3"
       | conn   | toClose | sql                                                                                                                               | expect  | db      |
       | conn_2 | False   | explain select t1.id,t2.global_value,@rownum:=1 from sharding_2_t1 t1,global_2_t1 t2 where t1.id=t2.parent_id order by t2.id desc | success | schema1 |
@@ -1178,6 +1193,8 @@ Feature: support rownum sql
       | conn   | toClose | sql                                                                  | expect  | db      |
       | conn_2 | True    | drop table if exists sharding_2_t1;drop table if exists global_2_t1  | success | schema1 |
 
+
+
   Scenario: check rownum sql - shardingTable + singleTable - same shardingNode #9
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -1225,18 +1242,18 @@ Feature: support rownum sql
       | conn_2 | False   | select t1.shard_name,t2.parent_id,count(0) as abcrownum from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id | has{(('sharding_2_t1_2', 2, 3),)} | schema1 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
      """
-     the query select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from single_t1) and status=1 match the route penetration regex
-     the query select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from single_t1) and status=1 match the route penetration rule, will direct route
+     the query select id,parent_id as rownum from sharding_2_t1 where id in \(select parent_id from single_t1\) and status=1 match the route penetration regex
+     the query select id,parent_id as rownum from sharding_2_t1 where id in \(select parent_id from single_t1\) and status=1 match the route penetration rule, will direct route
      the query select t2.id,t2.single_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id and t1.id=1 match the route penetration regex
-     the query select t1.shard_name,t2.parent_id,count(0) as abcrownum from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration regex
-     the query select t1.shard_name,t2.parent_id,count(0) as abcrownum from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration rule, will direct route
+     the query select t1.shard_name,t2.parent_id,count\(0\) as abcrownum from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration regex
+     the query select t1.shard_name,t2.parent_id,count\(0\) as abcrownum from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration rule, will direct route
      """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
      """
-     the query select a.id,a.code,@rownum:=@rownum+1 from single_t1 a, (select @rownum:=0) r order by a.id match the route penetration regex
-     the query select a.id,a.code,@rownum:=@rownum+1 from single_t1 a, (select @rownum:=0) r order by a.id match the route penetration rule, will direct route
-     the query select id, code, @rownum:=@rownum+1 from single_t1, (select @rownum:=0) r order by id match the route penetration regex
-     the query select id, code, @rownum:=@rownum+1 from single_t1, (select @rownum:=0) r order by id match the route penetration rule, will direct route
+     the query select a.id,a.code,@rownum:=@rownum\+1 from single_t1 a, \(select @rownum:=0\) r order by a.id match the route penetration regex
+     the query select a.id,a.code,@rownum:=@rownum\+1 from single_t1 a, \(select @rownum:=0\) r order by a.id match the route penetration rule, will direct route
+     the query select id, code, @rownum:=@rownum\+1 from single_t1, \(select @rownum:=0\) r order by id match the route penetration regex
+     the query select id, code, @rownum:=@rownum\+1 from single_t1, \(select @rownum:=0\) r order by id match the route penetration rule, will direct route
      the query select t2.id,t2.single_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id and t1.id=1 match the route penetration rule, will direct route
      """
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs1"
@@ -1244,19 +1261,19 @@ Feature: support rownum sql
       | conn_2 | False   | explain select a.id,a.code,@rownum:=@rownum-1 from single_t1 a, (select @rownum:=0) r order by a.id | success | schema1 |
     Then check resultset "rownum_rs1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1              | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM single_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
+      | dn1              | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM single_t1 a, ( SELECT @rownum := 0 ) r ORDER BY a.id LIMIT 100 |
     Then check resultset "rownum_rs1" has not lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn2              | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM single_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
+      | dn2              | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM single_t1 a, ( SELECT @rownum := 0 ) r ORDER BY a.id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs2"
       | conn   | toClose | sql                                             | expect  | db      |
       | conn_2 | False   | explain select id, code, @rownum:=@rownum-1 from single_t1, (select @rownum:=0) r order by id | success | schema1 |
     Then check resultset "rownum_rs2" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1              | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM single_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
+      | dn1              | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM single_t1, ( SELECT @rownum := 0 ) r ORDER BY id LIMIT 100 |
     Then check resultset "rownum_rs2" has not lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn2              | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM single_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
+      | dn2              | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM single_t1, ( SELECT @rownum := 0 ) r ORDER BY id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs3"
       | conn   | toClose | sql                                                                                                                             | expect  | db      |
       | conn_2 | False   | explain select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1,single_t1 t2 where t1.id=t2.parent_id order by t2.id desc | success | schema1 |
@@ -1354,6 +1371,8 @@ Feature: support rownum sql
       | conn   | toClose | sql                                                                | expect  | db      |
       | conn_2 | True    | drop table if exists sharding_2_t1;drop table if exists single_t1  | success | schema1 |
 
+
+
   Scenario: check rownum sql - shardingTable + singleTable - different shardingNode #10
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -1400,15 +1419,15 @@ Feature: support rownum sql
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     the query select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1,single_t1 t2 where t1.id=t2.parent_id order by t2.id desc match the route penetration regex
-    the query select a.*,@rownum:=@rownum+1 from (select t1.id,t2.single_value from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id order by t2.id) a,(select @rownum:=0) r match the route penetration regex
+    the query select a.\*,@rownum:=@rownum\+1 from \(select t1.id,t2.single_value from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id order by t2.id\) a,\(select @rownum:=0\) r match the route penetration regex
     the query select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1,single_t1 t2 where t1.id=t2.parent_id and t1.id=2 match the route penetration regex
-    the query select id,single_value,@rownum:=1 from single_t1 where parent_id in (select id from sharding_2_t1 where id>1) match the route penetration regex
+    the query select id,single_value,@rownum:=1 from single_t1 where parent_id in \(select id from sharding_2_t1 where id>1\) match the route penetration regex
     the query select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id where t2.parent_id>1 order by t2.id desc match the route penetration regex
     the query select t2.parent_id,t1.code,t1.status,@rownum:=1 from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 match the route penetration regex
-    the query select a.*,@rownum:=@rownum+1 from (select id,single_value from single_t1 where parent_id in (select id from sharding_2_t1 where id=2)) a,(select @rownum:=0) r match the route penetration regex
-    the query select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from single_t1) and status=1 match the route penetration regex
+    the query select a.\*,@rownum:=@rownum\+1 from \(select id,single_value from single_t1 where parent_id in \(select id from sharding_2_t1 where id=2\)\) a,\(select @rownum:=0\) r match the route penetration regex
+    the query select id,parent_id as rownum from sharding_2_t1 where id in \(select parent_id from single_t1\) and status=1 match the route penetration regex
     the query select t2.id,t2.single_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id and t1.id=1 match the route penetration regex
-    the query select t1.shard_name,t2.parent_id,count(0) as abcrownum from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration regex
+    the query select t1.shard_name,t2.parent_id,count\(0\) as abcrownum from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration regex
     """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
@@ -1464,6 +1483,8 @@ Feature: support rownum sql
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                | expect  | db      |
       | conn_2 | True    | drop table if exists sharding_2_t1;drop table if exists single_t1  | success | schema1 |
+
+
 
   Scenario: check rownum sql - shardingTable + singleTable - same shardingNode #11
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -1603,6 +1624,8 @@ Feature: support rownum sql
       | conn   | toClose | sql                                                            | expect  | db      |
       | conn_2 | True    | drop table if exists global_t1;drop table if exists single_t1  | success | schema1 |
 
+
+
   Scenario: check rownum sql - shardingTable + singleTable - different shardingNode #12
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -1650,24 +1673,24 @@ Feature: support rownum sql
     """
     the query select t1.id,t2.single_value,@rownum:=1 from global_t1 t1,single_t1 t2 where t1.id=t2.parent_id order by t2.id desc match the route penetration regex
     the query select t1.id,t2.single_value,@rownum:=1 from global_t1 t1,single_t1 t2 where t1.id=t2.parent_id order by t2.id desc match the route penetration rule, will direct route
-    the query select a.*,@rownum:=@rownum+1 from (select t1.id,t2.single_value from global_t1 t1, single_t1 t2 where t1.id=t2.parent_id order by t2.id) a,(select @rownum:=0) r match the route penetration regex
-    the query select a.*,@rownum:=@rownum+1 from (select t1.id,t2.single_value from global_t1 t1, single_t1 t2 where t1.id=t2.parent_id order by t2.id) a,(select @rownum:=0) r match the route penetration rule, will direct route
+    the query select a.\*,@rownum:=@rownum\+1 from \(select t1.id,t2.single_value from global_t1 t1, single_t1 t2 where t1.id=t2.parent_id order by t2.id\) a,\(select @rownum:=0\) r match the route penetration regex
+    the query select a.\*,@rownum:=@rownum\+1 from \(select t1.id,t2.single_value from global_t1 t1, single_t1 t2 where t1.id=t2.parent_id order by t2.id\) a,\(select @rownum:=0\) r match the route penetration rule, will direct route
     the query select t1.id,t2.single_value,@rownum:=1 from global_t1 t1,single_t1 t2 where t1.id=t2.parent_id and t1.id=2 match the route penetration regex
     the query select t1.id,t2.single_value,@rownum:=1 from global_t1 t1,single_t1 t2 where t1.id=t2.parent_id and t1.id=2 match the route penetration rule, will direct route
-    the query select id,single_value,@rownum:=1 from single_t1 where parent_id in (select id from global_t1 where id>1) match the route penetration regex
-    the query select id,single_value,@rownum:=1 from single_t1 where parent_id in (select id from global_t1 where id>1) match the route penetration rule, will direct route
+    the query select id,single_value,@rownum:=1 from single_t1 where parent_id in \(select id from global_t1 where id>1\) match the route penetration regex
+    the query select id,single_value,@rownum:=1 from single_t1 where parent_id in \(select id from global_t1 where id>1\) match the route penetration rule, will direct route
     the query select t1.id,t2.single_value,@rownum:=1 from global_t1 t1 join single_t1 t2 on t1.id=t2.parent_id where t2.parent_id>1 order by t2.id desc match the route penetration regex
     the query select t1.id,t2.single_value,@rownum:=1 from global_t1 t1 join single_t1 t2 on t1.id=t2.parent_id where t2.parent_id>1 order by t2.id desc match the route penetration rule, will direct route
     the query select t2.parent_id,t1.code,t1.status,@rownum:=1 from global_t1 t1 join single_t1 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 match the route penetration regex
     the query select t2.parent_id,t1.code,t1.status,@rownum:=1 from global_t1 t1 join single_t1 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 match the route penetration rule, will direct route
-    the query select a.*,@rownum:=@rownum+1 from (select id,single_value from single_t1 where parent_id in (select id from global_t1 where id=2)) a,(select @rownum:=0) r match the route penetration regex
-    the query select a.*,@rownum:=@rownum+1 from (select id,single_value from single_t1 where parent_id in (select id from global_t1 where id=2)) a,(select @rownum:=0) r match the route penetration rule, will direct route
-    the query select id,parent_id as rownum from global_t1 where id in (select parent_id from single_t1) and status=1 match the route penetration regex
-    the query select id,parent_id as rownum from global_t1 where id in (select parent_id from single_t1) and status=1 match the route penetration rule, will direct route
+    the query select a.\*,@rownum:=@rownum\+1 from \(select id,single_value from single_t1 where parent_id in \(select id from global_t1 where id=2\)\) a,\(select @rownum:=0\) r match the route penetration regex
+    the query select a.\*,@rownum:=@rownum\+1 from \(select id,single_value from single_t1 where parent_id in \(select id from global_t1 where id=2\)\) a,\(select @rownum:=0\) r match the route penetration rule, will direct route
+    the query select id,parent_id as rownum from global_t1 where id in \(select parent_id from single_t1\) and status=1 match the route penetration regex
+    the query select id,parent_id as rownum from global_t1 where id in \(select parent_id from single_t1\) and status=1 match the route penetration rule, will direct route
     the query select t2.id,t2.single_value,t1.global_name,0 as rownumabc from global_t1 t1 join single_t1 t2 on t1.id=t2.parent_id and t1.id=1 match the route penetration regex
     the query select t2.id,t2.single_value,t1.global_name,0 as rownumabc from global_t1 t1 join single_t1 t2 on t1.id=t2.parent_id and t1.id=1 match the route penetration rule, will direct route
-    the query select t1.global_name,t2.parent_id,count(0) as abcrownum from global_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration regex
-    the query select t1.global_name,t2.parent_id,count(0) as abcrownum from global_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration rule, will direct route
+    the query select t1.global_name,t2.parent_id,count\(0\) as abcrownum from global_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration regex
+    the query select t1.global_name,t2.parent_id,count\(0\) as abcrownum from global_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration rule, will direct route
     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                            | expect  | db      |
