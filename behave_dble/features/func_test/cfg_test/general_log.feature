@@ -563,24 +563,28 @@ Feature: general log test
       show tables_222
       desc backend_connections
       select \* from backend_connections
-      select count(\*) from backend_connections where db_instance_name=\"hostM1\"
-      select db_group_name, max(remote_processlist_id) as max_processlist_id from backend_connections where db_instance_name like \"%M1%\" group by db_group_name order by max_processlist_id desc
+      select count\(\*\) from backend_connections where db_instance_name=\"hostM1\"
+      select db_group_name, max\(remote_processlist_id\) as max_processlist_id from backend_connections where db_instance_name like \"%M1%\" group by db_group_name order by max_processlist_id desc
       select \* from backend_connections where db_instance_name like \"%M1%\" limit 1
       select user,sql,db_group_name,schema,xa_status,in_transaction from backend_connections
       update backend_connections set db_instance_name=\"testHost\" where db_instance_name=\"hostM1\"
       delete from backend_connections where user=\"test\"
-      insert into backend_connections values (1,\"1\",1,1,1)
-      select name,key from dble_algorithm where is_file in (select is_file from dble_algorithm where value = \"enum-integer.txt\")
-      select name,key from dble_algorithm where is_file > all (select is_file from dble_algorithm where value =\"enum-integer.txt\")
-      select name,key from dble_algorithm where is_file < any (select is_file from dble_algorithm where value =\"enum-integer.txt\")
-      select name,key from dble_algorithm where is_file = any (select is_file from dble_algorithm where value =\"enum-integer.txt\")
-      select name,key from dble_algorithm where is_file = (select is_file from dble_algorithm where value =\"enum-integer.txt\")
+      insert into backend_connections values \(1,\"1\",1,1,1\)
+      select name,key from dble_algorithm where is_file in \(select is_file from dble_algorithm where value = \"enum-integer.txt\"\)
+      select name,key from dble_algorithm where is_file > all \(select is_file from dble_algorithm where value =\"enum-integer.txt\"\)
+      select name,key from dble_algorithm where is_file < any \(select is_file from dble_algorithm where value =\"enum-integer.txt\"\)
+      select name,key from dble_algorithm where is_file = any \(select is_file from dble_algorithm where value =\"enum-integer.txt\"\)
+      select name,key from dble_algorithm where is_file = \(select is_file from dble_algorithm where value =\"enum-integer.txt\"\)
       explain select \* from backend_connections limit 10
       Quit
       """
     Given delete file "/opt/dble/general/general.log" on "dble-1"
 
+  @restore_view
   Scenario: check general log records - sharding user #7
+    """
+    {'restore_view':{'dble-1':{'schema1':'view_test'}}}
+    """
     Given delete file "/opt/dble/general/general.log" on "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -651,19 +655,19 @@ Feature: general log test
       \/FAKE_PATH\/mysqld, Version: FAKE_VERSION. started with:
       Tcp port: 3320  Unix socket: FAKE_SOCK
       Time                 Id Command    Argument
-      select version()
+      select version\(\)
       show databases
       use schema1
       show tables
       use schema1_111
       drop table if exists no_sharding_t1
-      create table no_sharding_t1(id int, name varchar(20),age int)
+      create table no_sharding_t1\(id int, name varchar\(20\),age int\)
       desc no_sharding_t1
       explain select \* from no_sharding_t1 limit 10
-      insert into no_sharding_t1 values (1,\"name1\",1),(2,\"name2\",2),(3,\"name3\",3)
+      insert into no_sharding_t1 values \(1,\"name1\",1\),\(2,\"name2\",2\),\(3,\"name3\",3\)
       select \* from no_sharding_t1
       select id, name from no_sharding_t1 where name like \"%name%\" order by age
-      select count(\*) from no_sharding_t1 where age > 1 group by age
+      select count\(\*\) from no_sharding_t1 where age > 1 group by age
       update no_sharding_t1 set age=age-1 where age=3
       delete from no_sharding_t1 where name=\"name3\"
       drop view if exists view_test
@@ -671,25 +675,25 @@ Feature: general log test
       select \* from view_test
       drop view view_test
       drop table if exists sharding_4_t1
-      create table sharding_4_t1(id int, name varchar(20), age int)
+      create table sharding_4_t1\(id int, name varchar\(20\), age int\)
       explain select \* from sharding_4_t1 limit 10
-      insert into sharding_4_t1(id,name,age) select id,name,age from no_sharding_t1
-      insert into sharding_4_t1 values (1,\"name1\",1),(2,\"name2\",2),(3,\"name3\",3),(4,\"name4\",4)
-      select count(\*) from sharding_4_t1 where name like \"%name%\" group by name
+      insert into sharding_4_t1\(id,name,age\) select id,name,age from no_sharding_t1
+      insert into sharding_4_t1 values \(1,\"name1\",1\),\(2,\"name2\",2\),\(3,\"name3\",3\),\(4,\"name4\",4\)
+      select count\(\*\) from sharding_4_t1 where name like \"%name%\" group by name
       select id, name from sharding_4_t1 where age > 1 order by name desc limit 10
       update sharding_4_t1 set age=age-1 where age=3
       delete from sharding_4_t1 where name=\"name7\"
       select \* from no_sharding_t1 a inner join sharding_4_t1 b on a.name=b.name where a.id =1
-      select \* from sharding_4_t1 where name in (select name from no_sharding_t1 where id !=1)
-      select \* from no_sharding_t1 where age <> (select age from sharding_4_t1 where id !=1)
-      update sharding_4_t1 set name=\"3\" where name=(select name from no_sharding_t1 order by id desc limit 1)
-      update sharding_4_t1 set name=\"4\" where name in (select name from no_sharding_t1)
+      select \* from sharding_4_t1 where name in \(select name from no_sharding_t1 where id !=1\)
+      select \* from no_sharding_t1 where age <> \(select age from sharding_4_t1 where id !=1\)
+      update sharding_4_t1 set name=\"3\" where name=\(select name from no_sharding_t1 order by id desc limit 1\)
+      update sharding_4_t1 set name=\"4\" where name in \(select name from no_sharding_t1\)
       update sharding_4_t1 a, no_sharding_t1 b set a.name=b.name where a.id=2 and b.id=2
-      update no_sharding_t1 set age=age-1 where name != (select name from sharding_4_t1 where name =\"name1\")
-      delete from sharding_4_t1 where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp))
+      update no_sharding_t1 set age=age-1 where name != \(select name from sharding_4_t1 where name =\"name1\"\)
+      delete from sharding_4_t1 where name in \(\(select age from \(select name,age from no_sharding_t1 order by id desc\) as tmp\)\)
       delete sharding_4_t1 from sharding_4_t1,no_sharding_t1 where sharding_4_t1.id=1
       /\*!dble:shardingNode=dn1\*/ select \* from sharding_4_t1
-      /\*!dble:shardingNode=dn1\*/ insert into sharding_4_t1 values(66,\"name66\",66)
+      /\*!dble:shardingNode=dn1\*/ insert into sharding_4_t1 values\(66,\"name66\",66\)
       /\*!dble:shardingNode=dn1\*/ update sharding_4_t1 set name=\"dn1\" where id=66
       /\*!dble:shardingNode=dn1\*/ delete from sharding_4_t1 where id=66
       Quit
@@ -697,8 +701,11 @@ Feature: general log test
 
     Given delete file "/opt/dble/general/general.log" on "dble-1"
 
-
+  @restore_view
   Scenario: check general log records - rwSplitUser #8
+     """
+    {'restore_view':{'dble-1':{'schema1':'test_view'}}}
+    """
     Given delete file "/opt/dble/general/general.log" on "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -747,30 +754,30 @@ Feature: general log test
       \/FAKE_PATH\/mysqld, Version: FAKE_VERSION. started with:
       Tcp port: 3320  Unix socket: FAKE_SOCK
       Time                 Id Command    Argument
-      select version()
+      select version\(\)
       show databases
       use db1
       show tables
       drop table if exists test_table1
-      create table test_table1(id int, name varchar(20),age int)
+      create table test_table1\(id int, name varchar\(20\),age int\)
       desc test_table1
       explain select \* from test_table1 limit 10
-      insert into test_table1 values (1,\"name1\",1),(2,\"name2\",2),(3,\"name3\",3),(4,\"name4\",4)
+      insert into test_table1 values \(1,\"name1\",1\),\(2,\"name2\",2\),\(3,\"name3\",3\),\(4,\"name4\",4\)
       drop table if exists test_table2
-      create table test_table2(id int, name varchar(20),age int)
-      insert into test_table2(id,name,age) select id,name,age from db1.test_table1
-      update test_table2 set name=\"test_name\" where id in (select id from db1.test_table1)
+      create table test_table2\(id int, name varchar\(20\),age int\)
+      insert into test_table2\(id,name,age\) select id,name,age from db1.test_table1
+      update test_table2 set name=\"test_name\" where id in \(select id from db1.test_table1\)
       update test_table2 a,db1.test_table1 b set a.age=b.age-1 where a.id=2 and b.id=2
       select n.id,s.name from test_table2 n join db1.test_table1 s on n.id=s.id
-      select \* from test_table2 where age <> (select age from db1.test_table1 where id !=1)
-      select \* from test_table2 where age in (select age from db1.test_table1 where id !=1)
+      select \* from test_table2 where age <> \(select age from db1.test_table1 where id !=1\)
+      select \* from test_table2 where age in \(select age from db1.test_table1 where id !=1\)
       delete test_table2 from test_table2,db1.test_table1 where test_table2.id=1 and test_table1.id =1
-      delete from db1.test_table1 where name in ((select age from (select name,age from test_table2 order by id desc) as tmp))
+      delete from db1.test_table1 where name in \(\(select age from \(select name,age from test_table2 order by id desc\) as tmp\)\)
       drop view if exists test_view
-      create view test_view(id,name,age) AS select \* from test_table1
+      create view test_view\(id,name,age\) AS select \* from test_table1
       select \* from test_view union select \* from test_table1
       drop view test_view
-      select \* from (select s.sno from test_table1 s where s.id=1)
+      select \* from \(select s.sno from test_table1 s where s.id=1\)
       abc
       Quit
       """

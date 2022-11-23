@@ -48,10 +48,10 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     [[]dn2[]]select 1
     [[]dn3[]]select 1
     [[]dn4[]]select 1
-    [[]dn1[]]create table sharding_4_t1(id int, age int)
-    [[]dn2[]]create table sharding_4_t1(id int, age int)
-    [[]dn3[]]create table sharding_4_t1(id int, age int)
-    [[]dn4[]]create table sharding_4_t1(id int, age int)
+    [[]dn1[]]create table sharding_4_t1\(id int, age int\)
+    [[]dn2[]]create table sharding_4_t1\(id int, age int\)
+    [[]dn3[]]create table sharding_4_t1\(id int, age int\)
+    [[]dn4[]]create table sharding_4_t1\(id int, age int\)
     """
 
     Given execute oscmd ">/opt/dble/txlogs/server-tx.log" on "dble-1"
@@ -65,10 +65,10 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     [[]dn2[]]select 1
     [[]dn3[]]select 1
     [[]dn4[]]select 1
-    [[]dn1[]]alter table sharding_4_t1 add column name CHAR(15)
-    [[]dn2[]]alter table sharding_4_t1 add column name CHAR(15)
-    [[]dn3[]]alter table sharding_4_t1 add column name CHAR(15)
-    [[]dn4[]]alter table sharding_4_t1 add column name CHAR(15)
+    [[]dn1[]]alter table sharding_4_t1 add column name CHAR\(15\)
+    [[]dn2[]]alter table sharding_4_t1 add column name CHAR\(15\)
+    [[]dn3[]]alter table sharding_4_t1 add column name CHAR\(15\)
+    [[]dn4[]]alter table sharding_4_t1 add column name CHAR\(15\)
     """
 
     Given execute oscmd ">/opt/dble/txlogs/server-tx.log" on "dble-1"
@@ -99,10 +99,10 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     [[]dn2[]]select 1
     [[]dn3[]]select 1
     [[]dn4[]]select 1
-    [[]dn1[]]create index my_index on sharding_4_t1 (id)
-    [[]dn2[]]create index my_index on sharding_4_t1 (id)
-    [[]dn3[]]create index my_index on sharding_4_t1 (id)
-    [[]dn4[]]create index my_index on sharding_4_t1 (id)
+    [[]dn1[]]create index my_index on sharding_4_t1 \(id\)
+    [[]dn2[]]create index my_index on sharding_4_t1 \(id\)
+    [[]dn3[]]create index my_index on sharding_4_t1 \(id\)
+    [[]dn4[]]create index my_index on sharding_4_t1 \(id\)
     """
 
     Given execute oscmd ">/opt/dble/txlogs/server-tx.log" on "dble-1"
@@ -165,10 +165,10 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     """
     ConnID:3, XID:17
     [[]dn5[]]drop table if exists no_sharding_t1
-    [[]dn5[]]create table no_sharding_t1(id int, age int)
-    [[]dn5[]]alter table no_sharding_t1 add column name CHAR(15)
+    [[]dn5[]]create table no_sharding_t1\(id int, age int\)
+    [[]dn5[]]alter table no_sharding_t1 add column name CHAR\(15\)
     [[]dn5[]]truncate table no_sharding_t1
-    [[]dn5[]]create index my_index on no_sharding_t1 (id)
+    [[]dn5[]]create index my_index on no_sharding_t1 \(id\)
     [[]dn5[]]drop index my_index on no_sharding_t1
     [[]dn5[]] LOCK TABLES no_sharding_t1 READ
     """
@@ -205,27 +205,27 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:4, XID:1
-    \[dn2\]INSERT INTO sharding_4_t1 VALUES (1, 10, 11)
+    \[dn2\]INSERT INTO sharding_4_t1 VALUES \(1, 10, 11\)
     ConnID:4, XID:2
     \[dn2\]update sharding_4_t1 set age=20 where id=1
     ConnID:4, XID:3
     \[dn2\]delete from sharding_4_t1 where id=1
     ConnID:4, XID:4
-    \[dn1\]INSERT INTO sharding_4_t1 VALUES (4, 40, 44)
-    \[dn2\]INSERT INTO sharding_4_t1 VALUES (5, 50, 55)
-    \[dn3\]INSERT INTO sharding_4_t1 VALUES (2, 20, 22)
-    \[dn4\]INSERT INTO sharding_4_t1 VALUES (3, 30, 33)
-    \[dn3\]update sharding_4_t1 set age=20 where id in (2, 3)
-    \[dn4\]update sharding_4_t1 set age=20 where id in (2, 3)
+    \[dn1\]INSERT INTO sharding_4_t1 VALUES \(4, 40, 44\)
+    \[dn2\]INSERT INTO sharding_4_t1 VALUES \(5, 50, 55\)
+    \[dn3\]INSERT INTO sharding_4_t1 VALUES \(2, 20, 22\)
+    \[dn4\]INSERT INTO sharding_4_t1 VALUES \(3, 30, 33\)
+    \[dn3\]update sharding_4_t1 set age=20 where id in \(2, 3\)
+    \[dn4\]update sharding_4_t1 set age=20 where id in \(2, 3\)
     [[]dn1[]]delete from sharding_4_t1
     [[]dn2[]]delete from sharding_4_t1
     [[]dn3[]]delete from sharding_4_t1
     [[]dn4[]]delete from sharding_4_t1
-    \[dn5\]insert into no_sharding_t1 values (11,10,1)
+    \[dn5\]insert into no_sharding_t1 values \(11,10,1\)
     \[dn5\]update no_sharding_t1 set age=20 where id=11
     \[dn5\]delete from no_sharding_t1 where id=11
-    \[dn5\]insert into no_sharding_t1 values (12,20,2),(13,30,3),(14,40,4),(15,50,5)
-    \[dn5\]update no_sharding_t1 set age=20 where id in (11, 12)
+    \[dn5\]insert into no_sharding_t1 values \(12,20,2\),\(13,30,3\),\(14,40,4\),\(15,50,5\)
+    \[dn5\]update no_sharding_t1 set age=20 where id in \(11, 12\)
     \[dn5\]delete from no_sharding_t1
     ConnID:4, XID:14
     """
@@ -298,10 +298,10 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     [[]dn2[]]select 1
     [[]dn3[]]select 1
     [[]dn4[]]select 1
-    [[]dn1[]]create table test(id int, age int)
-    [[]dn2[]]create table test(id int, age int)
-    [[]dn3[]]create table test(id int, age int)
-    [[]dn4[]]create table test(id int, age int)
+    [[]dn1[]]create table test\(id int, age int\)
+    [[]dn2[]]create table test\(id int, age int\)
+    [[]dn3[]]create table test\(id int, age int\)
+    [[]dn4[]]create table test\(id int, age int\)
     """
 
    Given execute oscmd ">/opt/dble/txlogs/server-tx.log" on "dble-1"
@@ -316,10 +316,10 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     [[]dn2[]]select 1
     [[]dn3[]]select 1
     [[]dn4[]]select 1
-    [[]dn1[]]alter table test add column name CHAR(15)
-    [[]dn2[]]alter table test add column name CHAR(15)
-    [[]dn3[]]alter table test add column name CHAR(15)
-    [[]dn4[]]alter table test add column name CHAR(15)
+    [[]dn1[]]alter table test add column name CHAR\(15\)
+    [[]dn2[]]alter table test add column name CHAR\(15\)
+    [[]dn3[]]alter table test add column name CHAR\(15\)
+    [[]dn4[]]alter table test add column name CHAR\(15\)
     """
 
     Given execute oscmd ">/opt/dble/txlogs/server-tx.log" on "dble-1"
@@ -352,10 +352,10 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     [[]dn2[]]select 1
     [[]dn3[]]select 1
     [[]dn4[]]select 1
-    [[]dn1[]]CREATE INDEX my_index_1 ON test (id)
-    [[]dn2[]]CREATE INDEX my_index_1 ON test (id)
-    [[]dn3[]]CREATE INDEX my_index_1 ON test (id)
-    [[]dn4[]]CREATE INDEX my_index_1 ON test (id)
+    [[]dn1[]]CREATE INDEX my_index_1 ON test \(id\)
+    [[]dn2[]]CREATE INDEX my_index_1 ON test \(id\)
+    [[]dn3[]]CREATE INDEX my_index_1 ON test \(id\)
+    [[]dn4[]]CREATE INDEX my_index_1 ON test \(id\)
     """
     Then check following text exist "N" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
@@ -405,7 +405,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     """
     ConnID:2, XID:10
     begin
-    [[]dn1[]]create table sing1(id int, age int)
+    [[]dn1[]]create table sing1\(id int, age int\)
     """
 
     Given execute oscmd ">/opt/dble/txlogs/server-tx.log" on "dble-1"
@@ -416,7 +416,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     """
     ConnID:2, XID:11
     begin
-    [[]dn1[]]alter table sing1 add column name CHAR(15)
+    [[]dn1[]]alter table sing1 add column name CHAR\(15\)
     """
 
     Given execute oscmd ">/opt/dble/txlogs/server-tx.log" on "dble-1"
@@ -443,7 +443,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     """
     ConnID:2, XID:14
     begin
-    [[]dn1[]]CREATE INDEX my_index_2 ON sing1 (id)
+    [[]dn1[]]CREATE INDEX my_index_2 ON sing1 \(id\)
     """
     Then check following text exist "N" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
@@ -528,7 +528,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     ConnID:3, XID:1
     begin
     [[]dn1[]]INSERT INTO test
-    VALUES (1, 10, 11)
+    VALUES \(1, 10, 11\)
     [[]dn2[]]INSERT INTO test
     [[]dn3[]]INSERT INTO test
     [[]dn4[]]INSERT INTO test
@@ -592,8 +592,8 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     ConnID:3, XID:5
     begin
     [[]dn1[]]INSERT INTO sing1
-    VALUES (11, 10, 1),
-    (12, 20, 2)
+    VALUES \(11, 10, 1\),
+    \(12, 20, 2\)
     commit
     """ 
   
