@@ -509,13 +509,15 @@ Feature: test config in user.xml  ---  analysisUser
       | conn_2 | False   | dbGroup @@switch name='ha_group3' master='hostS1'             | success  |
       | conn_2 | False   | dbGroup @@enable name='ha_group3'                             | success  |
       | conn_2 | False   | dbGroup @@events                                              | success  |
+    #### sleep为了上一个心跳的恢复
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                | expect   |
       | ana1  | 111111 | conn_1 | False   | select user()      | success  |
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
     """
-     <dbInstance name=\"hostM1\" url=\"172.100.9.10:9004\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"false\" databaseType=\"clickhouse\"/>
-     <dbInstance name=\"hostS1\" url=\"172.100.9.11:9004\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"true\" databaseType=\"clickhouse\"/>
+     <dbInstance name=\"hostM1\" url=\"172.100.9.10:9004\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"false\" databaseType=\"clickhouse\"\/>
+     <dbInstance name=\"hostS1\" url=\"172.100.9.11:9004\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"10\" primary=\"true\" databaseType=\"clickhouse\"\/>
     """
 
 #########   fresh conn
@@ -588,7 +590,3 @@ Feature: test config in user.xml  ---  analysisUser
 #      | conn_0 | False   | show @@sql.sum.table           | length{(1)}  |
 #      | conn_0 | False   | show @@connection.coun          | length{(1)}  |
 #      | conn_0 | False   | reload @@user_stat            | length{(1)}  | 重置前面命令的状态 Reset show @@sql  @@sql.sum @@sql.slow  @@sql.high  @@sql.large  @@sql.resultset  success
-
-
-
-
