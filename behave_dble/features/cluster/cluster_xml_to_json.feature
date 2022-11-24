@@ -224,7 +224,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
     {\"dbGroup\":\[
-    {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user()\",\"timeout\":10,\"errorRetryCount\":0},
+    {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":10,\"errorRetryCount\":0},
     \"dbInstance\":\[
     {\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":
     \"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"usingDecrypt\":\"true\",\"primary\":true,
@@ -267,8 +267,8 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {\"name\":\"schema2\",\"sqlMaxLimit\":-1,\"logicalCreateADrop\":true,
     \"table\":\[
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"/5 \* \* \* \* ? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"/10 \* \* \* \* ?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"\/5 \* \* \* \* \? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"\/10 \* \* \* \* \?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200,\"specifyCharset\":false}}\]},
     {\"name\":\"schema3\",\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\"}\],
     \"shardingNode\":\[
@@ -318,7 +318,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
     """
     {\"dbGroup\":\[
-    {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user()\",\"timeout\":10,\"errorRetryCount\":0},
+    {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":10,\"errorRetryCount\":0},
     \"dbInstance\":\[
     {\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":\"
     \"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"usingDecrypt\":\"true\",\"primary\":true,
@@ -361,8 +361,8 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {\"name\":\"schema2\",\"sqlMaxLimit\":-1,\"logicalCreateADrop\":true,
     \"table\":\[
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"/5 \* \* \* \* ? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"/10 \* \* \* \* ?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"\/5 \* \* \* \* \? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"\/10 \* \* \* \* \?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200,\"specifyCharset\":false}}\]},
     {\"name\":\"schema3\",\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\"}\],
     \"shardingNode\":\[
@@ -412,7 +412,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
     """
     {\"dbGroup\":\[
-    {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user()\",\"timeout\":10,\"errorRetryCount\":0},
+    {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":10,\"errorRetryCount\":0},
     \"dbInstance\":\[
     {\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":
     \"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"usingDecrypt\":\"true\",\"primary\":true,
@@ -455,8 +455,8 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {\"name\":\"schema2\",\"sqlMaxLimit\":-1,\"logicalCreateADrop\":true,
     \"table\":\[
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"/5 \* \* \* \* ? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"/10 \* \* \* \* ?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"\/5 \* \* \* \* \? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"\/10 \* \* \* \* \?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200,\"specifyCharset\":false}}\]},
     {\"name\":\"schema3\",\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\"}\],
     \"shardingNode\":\[
@@ -519,8 +519,8 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {\"name\":\"schema2\",\"sqlMaxLimit\":-1,\"logicalCreateADrop\":true,
     \"table\":\[
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"/5 \* \* \* \* ? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"/10 \* \* \* \* ?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"\/5 \* \* \* \* \? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
+    {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"\/10 \* \* \* \* \?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200,\"specifyCharset\":false}}\]},
     {\"name\":\"schema3\",\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\"}\],
     \"shardingNode\":\[
@@ -551,7 +551,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2"
     """
     {\"dbGroup\":\[
-    {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user()\",\"timeout\":10,\"errorRetryCount\":0},
+    {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":10,\"errorRetryCount\":0},
     \"dbInstance\":\[
     {\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":
     \"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"usingDecrypt\":\"true\",\"primary\":true,
@@ -1134,7 +1134,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                                   | expect                                              | db               |
-      | conn_1 | true    | insert into dble_db_group value ('ha_group5','select 1',-1,1,60,1,100,'false','ture')                                                 | Column 'active' is not writable                     | dble_information |
+      | conn_1 | true    | insert into dble_db_group value ('ha_group5','select 1',-1,1,60,1,100,-1,null,'false','ture')                                         | Column 'active' is not writable                     | dble_information |
 
     Given execute sql in "dble-2" in "admin" mode
       | conn   | toClose | sql                                                                                                                                | expect                                              | db               |
@@ -1294,7 +1294,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1326,7 +1326,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1348,7 +1348,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1371,7 +1371,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1389,7 +1389,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
@@ -1411,7 +1411,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
@@ -1433,7 +1433,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
@@ -1469,7 +1469,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-3"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user()\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM4\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":89757,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1499,7 +1499,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user()\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM4\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":89757,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1522,7 +1522,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user()\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM4\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":89757,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1545,7 +1545,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user()\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM4\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":89757,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1564,8 +1564,8 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group4\" delayThreshold=\"100\" disableHA=\"false\">
-        <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select user()</heartbeat>
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group4\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
+        <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select user\(\)</heartbeat>
         <dbInstance name=\"hostM4\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"89757\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
             <property name=\"connectionHeartbeatTimeout\">20</property>
@@ -1587,8 +1587,8 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group4\" delayThreshold=\"100\" disableHA=\"false\">
-        <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select user()</heartbeat>
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group4\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
+        <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select user\(\)</heartbeat>
         <dbInstance name=\"hostM4\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"89757\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
             <property name=\"connectionHeartbeatTimeout\">20</property>
@@ -1609,8 +1609,8 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group4\" delayThreshold=\"100\" disableHA=\"false\">
-        <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select user()</heartbeat>
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group4\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
+        <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select user\(\)</heartbeat>
         <dbInstance name=\"hostM4\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"89757\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
             <property name=\"connectionHeartbeatTimeout\">20</property>
@@ -1695,7 +1695,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     """
@@ -1716,7 +1716,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     """
@@ -1731,7 +1731,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     """
@@ -1746,7 +1746,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     """
@@ -1758,7 +1758,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
     """
@@ -1775,7 +1775,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
     """
@@ -1791,7 +1791,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
     """
@@ -1811,7 +1811,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "60" seconds
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
     """
@@ -1828,7 +1828,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
 
 
-  Scenario: test ha with check json on zk config use btrace  #8
+  Scenario: test ha with check json on zk config use btrace  #7
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -1889,7 +1889,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
@@ -1898,7 +1898,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
@@ -1907,7 +1907,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
@@ -1919,7 +1919,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"primary\":true},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":false},
@@ -1932,7 +1932,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"primary\":true},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":false},
@@ -1944,7 +1944,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"primary\":true},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":false},
@@ -1965,7 +1965,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
@@ -1974,7 +1974,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
@@ -1983,7 +1983,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
@@ -1995,7 +1995,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":false},
@@ -2008,7 +2008,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":false},
@@ -2020,7 +2020,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":false},
@@ -2063,7 +2063,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":false},
@@ -2076,7 +2076,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"primary\":true},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"primary\":false},
@@ -2089,7 +2089,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"primary\":true},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"primary\":false},
@@ -2105,7 +2105,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
@@ -2115,7 +2115,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
@@ -2124,7 +2124,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
@@ -2137,7 +2137,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
@@ -2157,7 +2157,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
@@ -2166,7 +2166,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
@@ -2175,7 +2175,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"true\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" disabled=\"true\" primary=\"false\"/>
@@ -2187,7 +2187,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"primary\":false},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"primary\":true},
@@ -2199,7 +2199,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"primary\":false},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"primary\":true},
@@ -2211,7 +2211,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"primary\":false},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"disabled\":\"true\",\"primary\":true},
@@ -2234,7 +2234,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
@@ -2243,7 +2243,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
@@ -2252,7 +2252,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
     """
     <dbGroup rwSplitMode=\"0\" name=\"ha_group2\" delayThreshold=\"100\">
-        <heartbeat>select user()</heartbeat>
+        <heartbeat>select user\(\)</heartbeat>
         <dbInstance name=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
         <dbInstance name=\"hostS1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"/>
         <dbInstance name=\"hostS2\" url=\"172.100.9.6:3308\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"false\"/>
@@ -2264,7 +2264,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":false},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true},
@@ -2276,7 +2276,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":false},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true},
@@ -2287,7 +2287,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user()\"},
+    {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
     {\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":false},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true},

@@ -51,8 +51,8 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn4             | BASE SQL | select * from sharding_4_t1 where id=1 or id=2 or id=3 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_1" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id = 3)) or ((sharding_4_t1.id = 2)) or ((sharding_4_t1.id = 1)))}
-    these conditions will try to pruning:{(((sharding_4_t1.id = 3)) or ((sharding_4_t1.id = 2)) or ((sharding_4_t1.id = 1)))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 3\)\) or \(\(sharding_4_t1.id = 2\)\) or \(\(sharding_4_t1.id = 1\)\)\)}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 3\)\) or \(\(sharding_4_t1.id = 2\)\) or \(\(sharding_4_t1.id = 1\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=3\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 3 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=3\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=3\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]
     """
@@ -70,8 +70,8 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn4             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE aid = 1 OR aid = 2 OR aid = 3 LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_2" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or () or ())}
-    whereUnit \[() or () or ()\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\) or \(\) or \(\)\)}
+    whereUnit \[\(\) or \(\) or \(\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -88,7 +88,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn4             | BASE SQL | select * from tb_child where kid=1 or kid=2 or kid=3 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_3" in host "dble-1"
     """
-    these conditions will try to pruning:{(((tb_child.kid = 3)) or ((tb_child.kid = 2)) or ((tb_child.kid = 1)))}
+    these conditions will try to pruning:{\(\(\(tb_child.kid = 3\)\) or \(\(tb_child.kid = 2\)\) or \(\(tb_child.kid = 1\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:tb_child,column:KID,value :\[value=3\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:tb_child,column:KID,value :\[value=2\]},}{ RouteCalculateUnit 3 :{schema:schema1,table:tb_child,column:KID,value :\[value=1\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:tb_child,column:KID,value :\[value=3\]},, {schema:schema1,table:tb_child,column:KID,value :\[value=2\]},, {schema:schema1,table:tb_child,column:KID,value :\[value=1\]},\]\] merged to \[{schema:schema1,table:tb_child,column:KID,value :\[value=3\]},, {schema:schema1,table:tb_child,column:KID,value :\[value=2\]},, {schema:schema1,table:tb_child,column:KID,value :\[value=1\]},\]
     """
@@ -106,8 +106,8 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn4             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1 OR aid = 2 OR aid = 3 LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_4" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or () or ((sharding_4_t1.id = 1)))}
-    whereUnit \[() or () or ((sharding_4_t1.id = 1))\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\) or \(\) or \(\(sharding_4_t1.id = 1\)\)\)}
+    whereUnit \[\(\) or \(\) or \(\(sharding_4_t1.id = 1\)\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -122,7 +122,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn2             | BASE SQL | select * from sharding_4_t1 where id=1 and 1=1 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_5" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id = 1)))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 1\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]
     """
@@ -136,7 +136,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn2             | BASE SQL | select * from sharding_4_t1 where id=1 and 1=0 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_6" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id = 1)))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 1\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]
     """
@@ -154,7 +154,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn4             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1 OR 1 = 1 LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_7" in host "dble-1"
     """
-    these conditions will try to pruning:{}
+    these conditions will try to pruning:\{\}
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -169,7 +169,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn2             | BASE SQL   | select * from sharding_4_t1 where id=1 or 1=0    |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_8" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id = 1)))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 1\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]
     """
@@ -214,7 +214,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn4             | select * from sharding_4_t1 where id between 1 and 3 and age=1 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_1" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id between (\"1\", \"3\"))))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id between \(\"1\", \"3\"\)\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value between 1 and 3\]}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value between 1 and 3\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value between 1 and 3\]},\]
     all ColumnRoute value between 1 and 3 merge to these node:\[dn2, dn3, dn4\]
@@ -237,7 +237,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn4             | select * from sharding_4_t1 where id between 1 and 3 and age>1 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_2" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id between (\"1\", \"3\"))))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id between \(\"1\", \"3\"\)\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value between 1 and 3\]}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value between 1 and 3\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value between 1 and 3\]},\]
     all ColumnRoute value between 1 and 3 merge to these node:\[dn2, dn3, dn4\]
@@ -262,7 +262,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn4             | select * from sharding_4_t1 where id between 1 and 4 and age<=>1 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_3" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id between (\"1\", \"4\"))))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id between \(\"1\", \"4\"\)\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value between 1 and 4\]}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value between 1 and 4\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value between 1 and 4\]},\]
     all ColumnRoute value between 1 and 4 merge to these node:\[dn2, dn3, dn4, dn1\]
@@ -288,8 +288,8 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3) OR age = 4 LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_4" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or ((sharding_4_t1.id IN (1, 2, 3))))}
-    whereUnit \[() or ((sharding_4_t1.id IN (1, 2, 3)))\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\) or \(\(sharding_4_t1.id IN \(1, 2, 3\)\)\)\)}
+    whereUnit \[\(\) or \(\(sharding_4_t1.id IN \(1, 2, 3\)\)\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -308,7 +308,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn1             | select * from sharding_4_t1 where id is null and age=4  |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_5" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id IS NULL)))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id IS NULL\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=null\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=null\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=null\]},\]
     """
@@ -327,7 +327,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn2             | select * from sharding_4_t1 where id=1 and age=1 and name=2  |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_6" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id = 1)))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 1\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]
     """
@@ -351,7 +351,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1 AND name = 2 LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_7" in host "dble-1"
     """
-    these conditions will try to pruning:{}
+    these conditions will try to pruning:\{\}
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -376,9 +376,9 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR name = 2 LIMIT 100  |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_8" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or ())}
+    these conditions will try to pruning:{\(\(\) or \(\)\)}
     RouteCalculateUnit 1 :}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
 
@@ -401,9 +401,9 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE id = 1 OR age = 1 OR name = 2 LIMIT 100  |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_9" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or () or ((sharding_4_t1.id = 1)))}
+    these conditions will try to pruning:{\(\(\) or \(\) or \(\(sharding_4_t1.id = 1\)\)\)}
     RouteCalculateUnit 1 :}
-    whereUnit \[() or () or ((sharding_4_t1.id = 1))\] will be pruned for contains useless or condition
+    whereUnit \[\(\) or \(\) or \(\(sharding_4_t1.id = 1\)\)\] will be pruned for contains useless or condition
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
 
@@ -424,7 +424,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn3             | select * from sharding_4_t1 where (age=1 and id=1)or (id=2 and name=2)  |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_10" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id = 2)) or ((sharding_4_t1.id = 1)))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 2\)\) or \(\(sharding_4_t1.id = 1\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]
     """
@@ -445,7 +445,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn3             | select * from sharding_4_t1 where age=1 and(id=2 or id=1)    |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_11" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id = 1)) or ((sharding_4_t1.id = 2)))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 1\)\) or \(\(sharding_4_t1.id = 2\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},\]
     """
@@ -466,7 +466,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn3             | select * from sharding_4_t1 where age=1 and(name=2 and(pad=1 and(id=2 or id=1))) |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_12" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id = 1)) or ((sharding_4_t1.id = 2)))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 1\)\) or \(\(sharding_4_t1.id = 2\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},\]
     """
@@ -491,9 +491,9 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR (name = 2 AND (pad = 1 AND (id = 2 OR id = 1))) LIMIT 100  |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_13" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or (((sharding_4_t1.id = 1)) or ((sharding_4_t1.id = 2))))}
+    these conditions will try to pruning:{\(\(\) or \(\(\(sharding_4_t1.id = 1\)\) or \(\(sharding_4_t1.id = 2\)\)\)\)}
     RouteCalculateUnit 1 :}
-    whereUnit \[() or (((sharding_4_t1.id = 1)) or ((sharding_4_t1.id = 2)))\] will be pruned for contains useless or condition
+    whereUnit \[\(\) or \(\(\(sharding_4_t1.id = 1\)\) or \(\(sharding_4_t1.id = 2\)\)\)\] will be pruned for contains useless or condition
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
 
@@ -511,7 +511,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn1             | SELECT * FROM sharding_4_t1 WHERE (id = 1 OR id = 2) AND (id = 3 OR id = 4) LIMIT 100  |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_14" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id = 2)) or ((sharding_4_t1.id = 1))) and (((sharding_4_t1.id = 4)) or ((sharding_4_t1.id = 3)))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 2\)\) or \(\(sharding_4_t1.id = 1\)\)\) and \(\(\(sharding_4_t1.id = 4\)\) or \(\(sharding_4_t1.id = 3\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=4\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=3\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]
@@ -542,7 +542,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn3             | select * from sharding_4_t1 where (id=1 and age >=1) or (id=2 and name=2) or(id=1 and pad=1) |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_15" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id = 1)) or ((sharding_4_t1.id = 2)) or ((sharding_4_t1.id = 1)))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 1\)\) or \(\(sharding_4_t1.id = 2\)\) or \(\(sharding_4_t1.id = 1\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 3 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]
     """
@@ -596,7 +596,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn2             | select * from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.age=1 and b.id=1) or (a.id=5 and b.name=2) |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_1" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.id = 5) and (b.name = 2) and (b.id = 5)) or ((a.age = 1) and (b.id = 1) and (a.id = 1))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(a.id = 5\) and \(b.name = 2\) and \(b.id = 5\)\) or \(\(a.age = 1\) and \(b.id = 1\) and \(a.id = 1\)\)\)\)}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.id =\] will be pruned for empty values
@@ -618,7 +618,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn2             | select * from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where a.age=1 and (a.id=1 or b.id=1) |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_2" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (((b.id = 1) and (a.id = 1)) or ((a.id = 1) and (b.id = 1))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(a.age = 1\) and \(\(\(b.id = 1\) and \(a.id = 1\)\) or \(\(a.id = 1\) and \(b.id = 1\)\)\)\)}
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
@@ -639,7 +639,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result | dn2             | select * from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where a.age=1 and (b.name=2 and (a.pad=1 and (a.id=1 or b.id=1))) |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_3" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (b.name = 2) and (a.pad = 1) and (((b.id = 1) and (a.id = 1)) or ((a.id = 1) and (b.id = 1))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(a.age = 1\) and \(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\) and \(a.id = 1\)\) or \(\(a.id = 1\) and \(b.id = 1\)\)\)\)}
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
@@ -664,12 +664,12 @@ Feature: In order to calculate the route, the where condition needs to be proces
 
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_4" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((b.id = 5) and (a.id = 5)) or ((a.id = 1) and (b.id = 1)))) and ((a.id =) and (b.id =) and (((b.id = 13) and (a.id = 13)) or ((a.id = 9) and (b.id = 9))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(b.id = 5\) and \(a.id = 5\)\) or \(\(a.id = 1\) and \(b.id = 1\)\)\)\) and \(\(a.id =\) and \(b.id =\) and \(\(\(b.id = 13\) and \(a.id = 13\)\) or \(\(a.id = 9\) and \(b.id = 9\)\)\)\)}
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((b.id IN 5)) or ((a.id IN 1)))) and ((a.id =) and (b.id =) and (((b.id IN 13)) or ((a.id IN 9))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(b.id IN 5\)\) or \(\(a.id IN 1\)\)\)\) and \(\(a.id =\) and \(b.id =\) and \(\(\(b.id IN 13\)\) or \(\(a.id IN 9\)\)\)\)}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=5\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=5\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=13\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=13\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=9\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=9\]},}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[5\]\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1\]\]},}
@@ -690,12 +690,12 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result  | dn2               | (select id,age,name from sharding_4_t1 where (age=1 and id=1)or (id=1 and name=2)) union (select id,age,name from sharding_4_t2 where age=1 and id=1) |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_5" in host "dble-1"
     """
-    these conditions will try to pruning:{(((schema1.sharding_4_t1.id = 1) and (schema1.sharding_4_t1.name = 2)) or ((schema1.sharding_4_t1.age = 1) and (schema1.sharding_4_t1.id = 1)))}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
-    these conditions will try to pruning:{(((schema2.sharding_4_t2.age = 1) and (schema2.sharding_4_t2.id = 1)))}
+    these conditions will try to pruning:{\(\(\(schema1.sharding_4_t1.id = 1\) and \(schema1.sharding_4_t1.name = 2\)\) or \(\(schema1.sharding_4_t1.age = 1\) and \(schema1.sharding_4_t1.id = 1\)\)\)}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\(schema2.sharding_4_t2.age = 1\) and \(schema2.sharding_4_t2.id = 1\)\)\)}
     condition \[schema1.sharding_4_t1.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[schema1.sharding_4_t1.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    these conditions will try to pruning:{(() or ()) and (((schema2.sharding_4_t2.id = 1)))}
+    these conditions will try to pruning:{\(\(\) or \(\)\) and \(\(\(schema2.sharding_4_t2.id = 1\)\)\)}
     condition \[schema2.sharding_4_t2.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
@@ -715,7 +715,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result  | dn2             | (select id,age,name from sharding_4_t1 where age=1 and id=1) union (select id,age,name from sharding_4_t2 where age=1 and id=1) |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_6" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id = 1))) and (((schema2.sharding_4_t2.id = 1)))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 1\)\)\) and \(\(\(schema2.sharding_4_t2.id = 1\)\)\)}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]
@@ -734,7 +734,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result  | dn2             | (select id,age,name from sharding_4_t1 where age=1 and (name=2 and (pad=1 and id=1))) union (select id,age,name from sharding_4_t2 where age=1 and id=1) |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_7" in host "dble-1"
     """
-    these conditions will try to pruning:{(((sharding_4_t1.id = 1))) and (((schema2.sharding_4_t2.id = 1)))}
+    these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 1\)\)\) and \(\(\(schema2.sharding_4_t2.id = 1\)\)\)}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]
@@ -755,7 +755,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result  | dn2             | select * from (select a.id,b.age from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.age=1 and b.id=1) or (a.id=5 and b.name=2))m |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_8" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.id = 5) and (b.name = 2) and (b.id = 5)) or ((a.age = 1) and (b.id = 1) and (a.id = 1))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(a.id = 5\) and \(b.name = 2\) and \(b.id = 5\)\) or \(\(a.age = 1\) and \(b.id = 1\) and \(a.id = 1\)\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=5\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=5\]},}{ RouteCalculateUnit 2 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
@@ -777,7 +777,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result  | dn2             | select * from (select a.id,b.age from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where a.age=1 and (a.id=5 or b.id=1))m |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_9" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (((b.id = 1) and (a.id = 1)) or ((a.id = 5) and (b.id = 5))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(a.age = 1\) and \(\(\(b.id = 1\) and \(a.id = 1\)\) or \(\(a.id = 5\) and \(b.id = 5\)\)\)\)}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=5\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=5\]},}
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
@@ -797,7 +797,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | Fetch_result  | dn2             | select * from (select a.id,b.age from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where a.age=1 and (b.name=2 and (a.pad=1 and (a.id=5 or b.id=1))))m |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_10" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (b.name = 2) and (a.pad = 1) and (((b.id = 1) and (a.id = 1)) or ((a.id = 5) and (b.id = 5))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(a.age = 1\) and \(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\) and \(a.id = 1\)\) or \(\(a.id = 5\) and \(b.id = 5\)\)\)\)}
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
@@ -821,8 +821,8 @@ Feature: In order to calculate the route, the where condition needs to be proces
 
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_11" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((b.id = 5) and (a.id = 5)) or ((a.id = 1) and (b.id = 1)))) and ((a.id =) and (b.id =) and (((b.id = 13) and (a.id = 13)) or ((a.id = 9) and (b.id = 9))))}
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((b.id IN 5)) or ((a.id IN 1)))) and ((a.id =) and (b.id =) and (((b.id IN 13)) or ((a.id IN 9))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(b.id = 5\) and \(a.id = 5\)\) or \(\(a.id = 1\) and \(b.id = 1\)\)\)\) and \(\(a.id =\) and \(b.id =\) and \(\(\(b.id = 13\) and \(a.id = 13\)\) or \(\(a.id = 9\) and \(b.id = 9\)\)\)\)}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(b.id IN 5\)\) or \(\(a.id IN 1\)\)\)\) and \(\(a.id =\) and \(b.id =\) and \(\(\(b.id IN 13\)\) or \(\(a.id IN 9\)\)\)\)}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=5\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=5\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=13\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=13\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=9\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=9\]},}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[5\]\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1\]\]},}
@@ -908,13 +908,13 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD | shuffle_field_2 | where_filter_1                                                                                                                                  |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_1" in host "dble-1"
     """
-    these conditions will try to pruning:{(((a.id = 2) and (b.name = 2)) or ((a.age = 1) and (a.id = 1)))}
+    these conditions will try to pruning:{\(\(\(a.id = 2\) and \(b.name = 2\)\) or \(\(a.age = 1\) and \(a.id = 1\)\)\)}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
-    these conditions will try to pruning:{(((a.id = 2)) or ((a.age = 1) and (a.id = 1)))}
+    these conditions will try to pruning:{\(\(\(a.id = 2\)\) or \(\(a.age = 1\) and \(a.id = 1\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
-    these conditions will try to pruning:{}
+    these conditions will try to pruning:\{\}
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -954,14 +954,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD | shuffle_field_2 | join_1                                                                                                 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_2" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.age = 1) and (((b.id = 1)) or ((b.id = 2))))}
+    these conditions will try to pruning:{\(\(a.age = 1\) and \(\(\(b.id = 1\)\) or \(\(b.id = 2\)\)\)\)}
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}
-    these conditions will try to pruning:{(((a.age = 1)))}
+    these conditions will try to pruning:{\(\(\(a.age = 1\)\)\)}
     RouteCalculateUnit 1 :}
-    these conditions will try to pruning:{(((b.id IN (1, 2))))}
+    these conditions will try to pruning:{\(\(\(b.id IN \(1, 2\)\)\)\)}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[1, 2\]\]},}
-    whereUnit \[((a.age = 1))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(a.age = 1\)\)\] will be pruned for contains useless or condition
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
 
@@ -995,16 +995,16 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD | shuffle_field_2 | join_1                                                                                                                       |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_3" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.age = 1) and (b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((b.id = 2))))}
+    these conditions will try to pruning:{\(\(a.age = 1\) and \(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\)\) or \(\(b.id = 2\)\)\)\)}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}
-    these conditions will try to pruning:{(((a.age = 1) and (a.pad = 1)))}
+    these conditions will try to pruning:{\(\(\(a.age = 1\) and \(a.pad = 1\)\)\)}
     RouteCalculateUnit 1 :}
-    these conditions will try to pruning:{(((b.id IN (1, 2)) and (b.name = 2)))}
+    these conditions will try to pruning:{\(\(\(b.id IN \(1, 2\)\) and \(b.name = 2\)\)\)}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[1, 2\]\]},}
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((a.age = 1) and (a.pad = 1))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(a.age = 1\) and \(a.pad = 1\)\)\] will be pruned for contains useless or condition
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     changeAndToOr from \[\[\]\] and \[\[{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[1, 2\]\]},\]\] merged to \[{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[1, 2\]\]},\]
     """
@@ -1044,18 +1044,18 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD | shuffle_field_2 | where_filter_1                                                                                                                 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_4" in host "dble-1"
     """
-    these conditions will try to pruning:{(((a.age = 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((b.id = 2)))))}
+    these conditions will try to pruning:{\(\(\(a.age = 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\)\) or \(\(b.id = 2\)\)\)\)\)}
     RouteCalculateUnit 1 :}
-    these conditions will try to pruning:{(((a.age IN 1)) or ((a.pad = 1)))}
+    these conditions will try to pruning:{\(\(\(a.age IN 1\)\) or \(\(a.pad = 1\)\)\)}
     RouteCalculateUnit 1 :}
     condition \[a.age IN 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((a.age IN 1)) or ((a.pad = 1))\] will be pruned for contains useless or condition
-    these conditions will try to pruning:{}
+    whereUnit \[\(\(a.age IN 1\)\) or \(\(a.pad = 1\)\)\] will be pruned for contains useless or condition
+    these conditions will try to pruning:\{\}
     RouteCalculateUnit 1 :}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((a.age = 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((b.id = 2))))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(a.age = 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\)\) or \(\(b.id = 2\)\)\)\)\] will be pruned for contains useless or condition
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
 
@@ -1087,15 +1087,15 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD | shuffle_field_2 | join_1                                                                                                                               |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_5" in host "dble-1"
     """
-    these conditions will try to pruning:{(((a.id = 2)) or ((a.id = 1))) and (((a.id = 5)) or ((a.id = 3)))}
+    these conditions will try to pruning:{\(\(\(a.id = 2\)\) or \(\(a.id = 1\)\)\) and \(\(\(a.id = 5\)\) or \(\(a.id = 3\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=5\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=3\]},}
     this condition  is always false, so this RouteCalculateUnit will be always false
     this RouteCalculateUnit \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},] and RouteCalculateUnit \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=5\]},\] merged to RouteCalculateUnit\[\]
-    these conditions will try to pruning:{(((a.id IN (1, 2)) and (a.id IN (3, 5))))}
+    these conditions will try to pruning:{\(\(\(a.id IN \(1, 2\)\) and \(a.id IN \(3, 5\)\)\)\)}
     ColumnRoute\[value in \[1, 2\]\] and ColumnRoute\[value in \[3, 5\]\] will merge to ColumnRoute\[\]
     RouteCalculateUnit 1 :}
-    these conditions will try to pruning:{}
+    these conditions will try to pruning:\{\}
     RouteCalculateUnit 1 :}
     ColumnRoute\[value=1\] and ColumnRoute\[value=5\] will merge to ColumnRoute\[\]
     this RouteCalculateUnit  is always false, so this Unit will be ignore for changeAndToOr
@@ -1134,14 +1134,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD | shuffle_field_2 | distinct_1                                                                                                                                                                                                                         |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_6" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or ())}
+    these conditions will try to pruning:{\(\(\) or \(\)\)}
     RouteCalculateUnit 1 :}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
-    these conditions will try to pruning:{(((schema1.sharding_4_t1.id = 2) and (schema1.sharding_4_t1.name = 2)) or ((schema1.sharding_4_t1.age = 1) and (schema1.sharding_4_t1.id = 1)))}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\(schema1.sharding_4_t1.id = 2\) and \(schema1.sharding_4_t1.name = 2\)\) or \(\(schema1.sharding_4_t1.age = 1\) and \(schema1.sharding_4_t1.id = 1\)\)\)}
     condition \[schema1.sharding_4_t1.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[schema1.sharding_4_t1.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
-    these conditions will try to pruning:{}
+    these conditions will try to pruning:\{\}
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -1177,14 +1177,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD | shuffle_field_2 | distinct_1                                                                                                                                                           |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_7" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or ())}
+    these conditions will try to pruning:{\(\(\) or \(\)\)}
     RouteCalculateUnit 1 :}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
-    these conditions will try to pruning:{(((schema1.sharding_4_t1.age = 1) and (schema1.sharding_4_t1.id IN (1, 2))))}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\(schema1.sharding_4_t1.age = 1\) and \(schema1.sharding_4_t1.id IN \(1, 2\)\)\)\)}
     condition \[schema1.sharding_4_t1.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},\]
-    these conditions will try to pruning:{}
+    these conditions will try to pruning:\{\}
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -1220,15 +1220,15 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD | shuffle_field_2 | distinct_1                                                                                                                                                                                                                        |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_8" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or ())}
+    these conditions will try to pruning:{\(\(\) or \(\)\)}
     RouteCalculateUnit 1 :}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
-    these conditions will try to pruning:{(((schema1.sharding_4_t1.age = 1) and (schema1.sharding_4_t1.name = 2) and (schema1.sharding_4_t1.pad = 1) and (schema1.sharding_4_t1.id IN (1, 2))))}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\(schema1.sharding_4_t1.age = 1\) and \(schema1.sharding_4_t1.name = 2\) and \(schema1.sharding_4_t1.pad = 1\) and \(schema1.sharding_4_t1.id IN \(1, 2\)\)\)\)}
     condition \[schema1.sharding_4_t1.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[schema1.sharding_4_t1.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[schema1.sharding_4_t1.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},}
-    these conditions will try to pruning:{}
+    these conditions will try to pruning:\{\}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},\]
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
@@ -1269,16 +1269,16 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD | shuffle_field_2 | distinct_1                                                                                                                                                                                                                              |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_9" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or (() or ()))}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
-    whereUnit \[() or (() or ())\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\) or \(\(\) or \(\)\)\)}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
+    whereUnit \[\(\) or \(\(\) or \(\)\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
-    these conditions will try to pruning:{(((schema1.sharding_4_t1.age IN 1)) or ((schema1.sharding_4_t1.name = 2) and (schema1.sharding_4_t1.pad = 1) and (schema1.sharding_4_t1.id IN (1, 2))))}
+    these conditions will try to pruning:{\(\(\(schema1.sharding_4_t1.age IN 1\)\) or \(\(schema1.sharding_4_t1.name = 2\) and \(schema1.sharding_4_t1.pad = 1\) and \(schema1.sharding_4_t1.id IN \(1, 2\)\)\)\)}
     condition \[schema1.sharding_4_t1.age IN 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((schema1.sharding_4_t1.age IN 1)) or ((schema1.sharding_4_t1.name = 2) and (schema1.sharding_4_t1.pad = 1) and (schema1.sharding_4_t1.id IN (1, 2)))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(schema1.sharding_4_t1.age IN 1\)\) or \(\(schema1.sharding_4_t1.name = 2\) and \(schema1.sharding_4_t1.pad = 1\) and \(schema1.sharding_4_t1.id IN \(1, 2\)\)\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :}
-    these conditions will try to pruning:{}
+    these conditions will try to pruning:\{\}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
 
@@ -1317,15 +1317,15 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD | shuffle_field_2 | distinct_1                                                                                                                             |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_10" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or () or (() or ()))}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
-    whereUnit \[() or () or (() or ())\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\) or \(\) or \(\(\) or \(\)\)\)}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
+    whereUnit \[\(\) or \(\) or \(\(\) or \(\)\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
-    these conditions will try to pruning:{(((schema1.sharding_4_t1.id IN (1, 2, 3, 4))))}
+    these conditions will try to pruning:{\(\(\(schema1.sharding_4_t1.id IN \(1, 2, 3, 4\)\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2, 3, 4\]\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2, 3, 4\]\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2, 3, 4\]\]},\]
-    these conditions will try to pruning:{}
+    these conditions will try to pruning:\{\}
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -1364,16 +1364,16 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD             | shuffle_field_3            | rename_derived_sub_query_1                                                                                                                      |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_11" in host "dble-1"
     """
-    these conditions will try to pruning:{(((a.id = 2) and (b.name = 2)) or ((a.age = 1) and (a.id = 1)))}
+    these conditions will try to pruning:{\(\(\(a.id = 2\) and \(b.name = 2\)\) or \(\(a.age = 1\) and \(a.id = 1\)\)\)}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]
-    these conditions will try to pruning:{(((a.id = 2)) or ((a.age = 1) and (a.id = 1)))}
+    these conditions will try to pruning:{\(\(\(a.id = 2\)\) or \(\(a.age = 1\) and \(a.id = 1\)\)\)}
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]
-    these conditions will try to pruning:{}
+    these conditions will try to pruning:\{\}
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -1410,15 +1410,15 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD            | shuffle_field_3            | rename_derived_sub_query_1                                                                             |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_12" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.age = 1) and (((b.id = 1)) or ((b.id = 2))))}
+    these conditions will try to pruning:{\(\(a.age = 1\) and \(\(\(b.id = 1\)\) or \(\(b.id = 2\)\)\)\)}
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},, {schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},\]\] merged to \[{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},, {schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},\]
-    these conditions will try to pruning:{(((a.age = 1)))}
+    these conditions will try to pruning:{\(\(\(a.age = 1\)\)\)}
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((a.age = 1))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(a.age = 1\)\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :}
-    these conditions will try to pruning:{(((b.id IN (1, 2))))}
+    these conditions will try to pruning:{\(\(\(b.id IN \(1, 2\)\)\)\)}
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[1, 2\]\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[1, 2\]\]},\]\] merged to \[{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[1, 2\]\]},\]
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
@@ -1456,19 +1456,19 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD            | shuffle_field_3            | rename_derived_sub_query_1                                                                                                   |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_13" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.age = 1) and (b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((b.id = 2))))}
+    these conditions will try to pruning:{\(\(a.age = 1\) and \(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\)\) or \(\(b.id = 2\)\)\)\)}
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},, {schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},\]\] merged to \[{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},, {schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},\]
-    these conditions will try to pruning:{(((a.age = 1) and (a.pad = 1)))}
+    these conditions will try to pruning:{\(\(\(a.age = 1\) and \(a.pad = 1\)\)\)}
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((a.age = 1) and (a.pad = 1))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(a.age = 1\) and \(a.pad = 1\)\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
-    these conditions will try to pruning:{(((b.id IN (1, 2)) and (b.name = 2)))}
+    these conditions will try to pruning:{\(\(\(b.id IN \(1, 2\)\) and \(b.name = 2\)\)\)}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[1, 2\]\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[1, 2\]\]},\]\] merged to \[{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[1, 2\]\]},\]
@@ -1511,16 +1511,16 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD            | shuffle_field_3            | rename_derived_sub_query_1                                                                                                     |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_14" in host "dble-1"
     """
-    these conditions will try to pruning:{(((a.age = 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((b.id = 2)))))}
+    these conditions will try to pruning:{\(\(\(a.age = 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\)\) or \(\(b.id = 2\)\)\)\)\)}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((a.age = 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((b.id = 2))))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(a.age = 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\)\) or \(\(b.id = 2\)\)\)\)\] will be pruned for contains useless or condition
     { RouteCalculateUnit 1 :}
-    these conditions will try to pruning:{(((a.age IN 1)) or ((a.pad = 1)))}
+    these conditions will try to pruning:{\(\(\(a.age IN 1\)\) or \(\(a.pad = 1\)\)\)}
     condition \[a.age IN 1\] will be pruned for columnName is not shardingColumn/joinColumn
     { RouteCalculateUnit 1 :}
-    these conditions will try to pruning:{}
+    these conditions will try to pruning:\{\}
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -1559,14 +1559,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD            | shuffle_field_3            | rename_derived_sub_query_1                                                                                     |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_15" in host "dble-1"
     """
-    these conditions will try to pruning:{(((a.id = 2)) or ((a.id = 1)) or (((a.id = 5)) or ((a.id = 3))))}
+    these conditions will try to pruning:{\(\(\(a.id = 2\)\) or \(\(a.id = 1\)\) or \(\(\(a.id = 5\)\) or \(\(a.id = 3\)\)\)\)}
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=5\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=3\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=5\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=3\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=5\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=3\]},\]
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=5\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=3\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=5\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=3\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},, {schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},\]
-    these conditions will try to pruning:{(((a.id IN (1, 2, 3, 5))))}
+    these conditions will try to pruning:{\(\(\(a.id IN \(1, 2, 3, 5\)\)\)\)}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2, 3, 5\]\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2, 3, 5\]\]},\]
-    these conditions will try to pruning:{}
+    these conditions will try to pruning:\{\}
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -1628,13 +1628,13 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD         | shuffle_field_1 | merge_1                                                                                                                                                                                                                                                         |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_1" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.id = 2) and (b.name = 2) and (b.id = 2)) or ((a.age = 1) and (b.id = 1) and (a.id = 1))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(a.id = 2\) and \(b.name = 2\) and \(b.id = 2\)\) or \(\(a.age = 1\) and \(b.id = 1\) and \(a.id = 1\)\)\)\)}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     { RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.id = 2) and (b.name = 2) and (b.id = 2)) or ((a.age = 1) and (b.id = 1) and (a.id = 1))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(a.id = 2\) and \(b.name = 2\) and \(b.id = 2\)\) or \(\(a.age = 1\) and \(b.id = 1\) and \(a.id = 1\)\)\)\)}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.id =\] will be pruned for empty values
@@ -1666,12 +1666,12 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD         | shuffle_field_1 | merge_1                                                                                                                                                                                                                                        |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_2" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (((b.id = 1) and (a.id = 1)) or ((a.id = 2) and (b.id = 2))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(a.age = 1\) and \(\(\(b.id = 1\) and \(a.id = 1\)\) or \(\(a.id = 2\) and \(b.id = 2\)\)\)\)}
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (((b.id IN 1)) or ((a.id IN 2))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(a.age = 1\) and \(\(\(b.id IN 1\)\) or \(\(a.id IN 2\)\)\)\)}
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
@@ -1696,14 +1696,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD         | shuffle_field_1 | merge_1                                                                                                                                                                                                                                                                             |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_3" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (b.name = 2) and (a.pad = 1) and (((b.id = 1) and (a.id = 1)) or ((a.id = 2) and (b.id = 2))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(a.age = 1\) and \(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\) and \(a.id = 1\)\) or \(\(a.id = 2\) and \(b.id = 2\)\)\)\)}
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     { RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (b.name = 2) and (a.pad = 1) and (((b.id IN 1)) or ((a.id IN 2))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(a.age = 1\) and \(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id IN 1\)\) or \(\(a.id IN 2\)\)\)\)}
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
@@ -1734,23 +1734,23 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD         | shuffle_field_1 | merge_1                                                                                                                                                                                                                                                                                   |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_4" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.age = 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((a.id = 2))))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(a.age = 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\)\) or \(\(a.id = 2\)\)\)\)\)\)}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((a.age = 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((a.id = 2))))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(a.age = 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\)\) or \(\(a.id = 2\)\)\)\)\] will be pruned for contains useless or condition
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
-    whereUnit \[(a.id =) and (b.id =) and (((a.age = 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((a.id = 2)))))\] will be pruned for contains useless or condition
+    whereUnit \[\(a.id =\) and \(b.id =\) and \(\(\(a.age = 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\)\) or \(\(a.id = 2\)\)\)\)\)\] will be pruned for contains useless or condition
     { RouteCalculateUnit 1 :}
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.age IN 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id IN 1)) or ((a.id IN 2))))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(a.age IN 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id IN 1\)\) or \(\(a.id IN 2\)\)\)\)\)\)}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age IN 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((a.age IN 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id IN 1)) or ((a.id IN 2))))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(a.age IN 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id IN 1\)\) or \(\(a.id IN 2\)\)\)\)\] will be pruned for contains useless or condition
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
-    whereUnit \[(a.id =) and (b.id =) and (((a.age IN 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id IN 1)) or ((a.id IN 2)))))\] will be pruned for contains useless or condition
+    whereUnit \[\(a.id =\) and \(b.id =\) and \(\(\(a.age IN 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id IN 1\)\) or \(\(a.id IN 2\)\)\)\)\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -1792,17 +1792,17 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD         | shuffle_field_2 | distinct_1                                                                                                                                                                                                                         |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_6" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or ()) and (() or ())}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\) or \(\)\) and \(\(\) or \(\)\)}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
     { RouteCalculateUnit 1 :}
-    these conditions will try to pruning:{(((schema1.sharding_4_t1.id = 2) and (schema1.sharding_4_t1.name = 2)) or ((schema1.sharding_4_t1.age = 1) and (schema1.sharding_4_t1.id = 1)))}
+    these conditions will try to pruning:{\(\(\(schema1.sharding_4_t1.id = 2\) and \(schema1.sharding_4_t1.name = 2\)\) or \(\(schema1.sharding_4_t1.age = 1\) and \(schema1.sharding_4_t1.id = 1\)\)\)}
     condition \[schema1.sharding_4_t1.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[schema1.sharding_4_t1.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
-    these conditions will try to pruning:{(((schema2.sharding_4_t2.age IN 1)) or ((schema2.sharding_4_t2.id IN 1)))}
+    these conditions will try to pruning:{\(\(\(schema2.sharding_4_t2.age IN 1\)\) or \(\(schema2.sharding_4_t2.id IN 1\)\)\)}
     condition \[schema2.sharding_4_t2.age IN 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((schema2.sharding_4_t2.age IN 1)) or ((schema2.sharding_4_t2.id IN 1))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(schema2.sharding_4_t2.age IN 1\)\) or \(\(schema2.sharding_4_t2.id IN 1\)\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :}
     """
 
@@ -1831,14 +1831,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD         | shuffle_field_2 | distinct_1                                                                                                                                                                                                                         |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_7" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or ()) and (((schema2.sharding_4_t2.id = 1)))}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\) or \(\)\) and \(\(\(schema2.sharding_4_t2.id = 1\)\)\)}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
-    these conditions will try to pruning:{(((schema1.sharding_4_t1.id = 2) and (schema1.sharding_4_t1.name = 2)) or ((schema1.sharding_4_t1.age = 1) and (schema1.sharding_4_t1.id = 1)))}
+    these conditions will try to pruning:{\(\(\(schema1.sharding_4_t1.id = 2\) and \(schema1.sharding_4_t1.name = 2\)\) or \(\(schema1.sharding_4_t1.age = 1\) and \(schema1.sharding_4_t1.id = 1\)\)\)}
     condition \[schema1.sharding_4_t1.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[schema1.sharding_4_t1.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
-    these conditions will try to pruning:{(((schema2.sharding_4_t2.age = 1) and (schema2.sharding_4_t2.id = 1)))}
+    these conditions will try to pruning:{\(\(\(schema2.sharding_4_t2.age = 1\) and \(schema2.sharding_4_t2.id = 1\)\)\)}
     condition \[schema2.sharding_4_t2.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
     """
@@ -1874,17 +1874,17 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD         | shuffle_field_2 | distinct_1                                                                                                                                                                                      |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_8" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or ()) and (() or ())}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\) or \(\)\) and \(\(\) or \(\)\)}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :}
-    these conditions will try to pruning:{(((schema1.sharding_4_t1.age = 1) and (schema1.sharding_4_t1.id IN (1, 2))))}
+    these conditions will try to pruning:{\(\(\(schema1.sharding_4_t1.age = 1\) and \(schema1.sharding_4_t1.id IN \(1, 2\)\)\)\)}
     condition \[schema1.sharding_4_t1.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     { RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},}
     changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},\]
-    these conditions will try to pruning:{(((schema2.sharding_4_t2.age IN 1)) or ((schema2.sharding_4_t2.id IN 1)))}
+    these conditions will try to pruning:{\(\(\(schema2.sharding_4_t2.age IN 1\)\) or \(\(schema2.sharding_4_t2.id IN 1\)\)\)}
     condition \[schema2.sharding_4_t2.age IN 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((schema2.sharding_4_t2.age IN 1)) or ((schema2.sharding_4_t2.id IN 1))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(schema2.sharding_4_t2.age IN 1\)\) or \(\(schema2.sharding_4_t2.id IN 1\)\)\] will be pruned for contains useless or condition
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -1915,15 +1915,15 @@ Feature: In order to calculate the route, the where condition needs to be proces
 
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_9" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or ()) and (((schema2.sharding_4_t2.id = 1)))}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\) or \(\)\) and \(\(\(schema2.sharding_4_t2.id = 1\)\)\)}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
-    these conditions will try to pruning:{(((schema1.sharding_4_t1.age = 1) and (schema1.sharding_4_t1.name = 2) and (schema1.sharding_4_t1.pad = 1) and (schema1.sharding_4_t1.id IN (1, 2))))}
+    these conditions will try to pruning:{\(\(\(schema1.sharding_4_t1.age = 1\) and \(schema1.sharding_4_t1.name = 2\) and \(schema1.sharding_4_t1.pad = 1\) and \(schema1.sharding_4_t1.id IN \(1, 2\)\)\)\)}
     condition \[schema1.sharding_4_t1.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[schema1.sharding_4_t1.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[schema1.sharding_4_t1.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     { RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},}
-    these conditions will try to pruning:{(((schema2.sharding_4_t2.age = 1) and (schema2.sharding_4_t2.id = 1)))}
+    these conditions will try to pruning:{\(\(\(schema2.sharding_4_t2.age = 1\) and \(schema2.sharding_4_t2.id = 1\)\)\)}
     condition \[schema2.sharding_4_t2.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     { RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
     """
@@ -1957,15 +1957,15 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD         | shuffle_field_2 | distinct_1                                                                                                                                                                                                                              |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_10" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or (() or ())) and (((schema2.sharding_4_t2.id = 1)))}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
-    whereUnit \[() or (() or ())\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\) or \(\(\) or \(\)\)\) and \(\(\(schema2.sharding_4_t2.id = 1\)\)\)}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
+    whereUnit \[\(\) or \(\(\) or \(\)\)\] will be pruned for contains useless or condition
     { RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
-    these conditions will try to pruning:{(((schema1.sharding_4_t1.age IN 1)) or ((schema1.sharding_4_t1.name = 2) and (schema1.sharding_4_t1.pad = 1) and (schema1.sharding_4_t1.id IN (1, 2))))}
+    these conditions will try to pruning:{\(\(\(schema1.sharding_4_t1.age IN 1\)\) or \(\(schema1.sharding_4_t1.name = 2\) and \(schema1.sharding_4_t1.pad = 1\) and \(schema1.sharding_4_t1.id IN \(1, 2\)\)\)\)}
     condition \[schema1.sharding_4_t1.age IN 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((schema1.sharding_4_t1.age IN 1)) or ((schema1.sharding_4_t1.name = 2) and (schema1.sharding_4_t1.pad = 1) and (schema1.sharding_4_t1.id IN (1, 2)))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(schema1.sharding_4_t1.age IN 1\)\) or \(\(schema1.sharding_4_t1.name = 2\) and \(schema1.sharding_4_t1.pad = 1\) and \(schema1.sharding_4_t1.id IN \(1, 2\)\)\)\] will be pruned for contains useless or condition
     { RouteCalculateUnit 1 :}
-    these conditions will try to pruning:{(((schema2.sharding_4_t2.age = 1) and (schema2.sharding_4_t2.id = 1)))}
+    these conditions will try to pruning:{\(\(\(schema2.sharding_4_t2.age = 1\) and \(schema2.sharding_4_t2.id = 1\)\)\)}
     condition \[schema2.sharding_4_t2.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     { RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
     """
@@ -1989,16 +1989,16 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD         | shuffle_field_2 | distinct_1                                                                                                                                                                                 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_11" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or ()) and (() or ()) and (((schema2.sharding_4_t2.id = 1)))}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\) or \(\)\) and \(\(\) or \(\)\) and \(\(\(schema2.sharding_4_t2.id = 1\)\)\)}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
-    these conditions will try to pruning:{(((schema1.sharding_4_t1.id IN (1, 2)) and (schema1.sharding_4_t1.id IN (3, 4))))}
+    these conditions will try to pruning:{\(\(\(schema1.sharding_4_t1.id IN \(1, 2\)\) and \(schema1.sharding_4_t1.id IN \(3, 4\)\)\)\)}
     ColumnRoute\[value in \[1, 2\]\] and ColumnRoute\[value in \[3, 4\]\] will merge to ColumnRoute\[\]
     this condition  is always false, so this RouteCalculateUnit will be always false
     RouteCalculateUnit 1 :}
     the condition is always false ,route from broadcast to single
-    these conditions will try to pruning:{(((schema2.sharding_4_t2.age = 1) and (schema2.sharding_4_t2.id = 1)))}
+    these conditions will try to pruning:{\(\(\(schema2.sharding_4_t2.age = 1\) and \(schema2.sharding_4_t2.id = 1\)\)\)}
     condition \[schema2.sharding_4_t2.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
     """
@@ -2024,13 +2024,13 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD            | shuffle_field_2            | rename_derived_sub_query_1                                                                                                                                                               |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_12" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.id = 2) and (b.name = 2) and (b.id = 2)) or ((a.age = 1) and (b.id = 1) and (a.id = 1))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(a.id = 2\) and \(b.name = 2\) and \(b.id = 2\)\) or \(\(a.age = 1\) and \(b.id = 1\) and \(a.id = 1\)\)\)\)}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.id = 2) and (b.name = 2) and (b.id = 2)) or ((a.age = 1) and (b.id = 1) and (a.id = 1))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(a.id = 2\) and \(b.name = 2\) and \(b.id = 2\)\) or \(\(a.age = 1\) and \(b.id = 1\) and \(a.id = 1\)\)\)\)}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.id =\] will be pruned for empty values
@@ -2058,12 +2058,12 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD            | shuffle_field_2            | rename_derived_sub_query_1                                                                                                                                              |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_13" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (((b.id = 1) and (a.id = 1)) or ((a.id = 2) and (b.id = 2))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(a.age = 1\) and \(\(\(b.id = 1\) and \(a.id = 1\)\) or \(\(a.id = 2\) and \(b.id = 2\)\)\)\)}
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (((b.id IN 1)) or ((a.id IN 2))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(a.age = 1\) and \(\(\(b.id IN 1\)\) or \(\(a.id IN 2\)\)\)\)}
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
@@ -2090,14 +2090,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD            | shuffle_field_2            | rename_derived_sub_query_1                                                                                                                                                                                   |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_14" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (b.name = 2) and (a.pad = 1) and (((b.id = 1) and (a.id = 1)) or ((a.id = 2) and (b.id = 2))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(a.age = 1\) and \(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\) and \(a.id = 1\)\) or \(\(a.id = 2\) and \(b.id = 2\)\)\)\)}
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (b.name = 2) and (a.pad = 1) and (((b.id IN 1)) or ((a.id IN 2))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(a.age = 1\) and \(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id IN 1\)\) or \(\(a.id IN 2\)\)\)\)}
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
@@ -2130,23 +2130,23 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | SHUFFLE_FIELD            | shuffle_field_2            | rename_derived_sub_query_1                                                                                                                                                                                         |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_15" in host "dble-1"
     """
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.age = 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((a.id = 2))))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(a.age = 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\)\) or \(\(a.id = 2\)\)\)\)\)\)}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((a.age = 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((a.id = 2))))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(a.age = 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\)\) or \(\(a.id = 2\)\)\)\)\] will be pruned for contains useless or condition
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
-    whereUnit \[(a.id =) and (b.id =) and (((a.age = 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((a.id = 2)))))\] will be pruned for contains useless or condition
+    whereUnit \[\(a.id =\) and \(b.id =\) and \(\(\(a.age = 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id = 1\)\) or \(\(a.id = 2\)\)\)\)\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :}
-    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.age IN 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id IN 1)) or ((a.id IN 2))))))}
+    these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(a.age IN 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id IN 1\)\) or \(\(a.id IN 2\)\)\)\)\)\)}
     condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[a.age IN 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((a.age IN 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id IN 1)) or ((a.id IN 2))))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(a.age IN 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id IN 1\)\) or \(\(a.id IN 2\)\)\)\)\] will be pruned for contains useless or condition
     condition \[a.id =\] will be pruned for empty values
     condition \[b.id =\] will be pruned for empty values
-    whereUnit \[(a.id =) and (b.id =) and (((a.age IN 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id IN 1)) or ((a.id IN 2)))))\] will be pruned for contains useless or condition
+    whereUnit \[\(a.id =\) and \(b.id =\) and \(\(\(a.age IN 1\)\) or \(\(b.name = 2\) and \(a.pad = 1\) and \(\(\(b.id IN 1\)\) or \(\(a.id IN 2\)\)\)\)\)\] will be pruned for contains useless or condition
     RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -2382,11 +2382,11 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | /*AllowDiff*/dn1 | BASE SQL | SELECT * FROM global_4_t1 WHERE (id = 1 OR id = 2) AND (id = 3 OR id = 4) LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
-    these conditions will try to pruning:{(((schema2.global_4_t1.id = 2)) or ((schema2.global_4_t1.id = 1))) and (((schema2.global_4_t1.id = 4)) or ((schema2.global_4_t1.id = 3)))}
+    these conditions will try to pruning:{\(\(\(schema2.global_4_t1.id = 2\)\) or \(\(schema2.global_4_t1.id = 1\)\)\) and \(\(\(schema2.global_4_t1.id = 4\)\) or \(\(schema2.global_4_t1.id = 3\)\)\)}
     condition \[schema2.global_4_t1.id = 2\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((schema2.global_4_t1.id = 2)) or ((schema2.global_4_t1.id = 1))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(schema2.global_4_t1.id = 2\)\) or \(\(schema2.global_4_t1.id = 1\)\)\] will be pruned for contains useless or condition
     condition \[schema2.global_4_t1.id = 4\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((schema2.global_4_t1.id = 4)) or ((schema2.global_4_t1.id = 3))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(schema2.global_4_t1.id = 4\)\) or \(\(schema2.global_4_t1.id = 3\)\)\] will be pruned for contains useless or condition
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -2401,10 +2401,10 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn4             | BASE SQL | update global_4_t1 set name='test' where id=1 and o_id=1 |
     Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
-    these conditions will try to pruning:{(((schema2.global_4_t1.id = 1) and (schema2.global_4_t1.o_id = 1)))}
+    these conditions will try to pruning:{\(\(\(schema2.global_4_t1.id = 1\) and \(schema2.global_4_t1.o_id = 1\)\)\)}
     condition \[schema2.global_4_t1.id = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[schema2.global_4_t1.o_id = 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((schema2.global_4_t1.id = 1) and (schema2.global_4_t1.o_id = 1))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(schema2.global_4_t1.id = 1\) and \(schema2.global_4_t1.o_id = 1\)\)\] will be pruned for contains useless or condition
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -2419,10 +2419,10 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn4             | BASE SQL | delete from global_4_t1 where id=1 and o_id=1 |
     Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
-    these conditions will try to pruning:{(((schema2.global_4_t1.id = 1) and (schema2.global_4_t1.o_id = 1)))}
+    these conditions will try to pruning:{\(\(\(schema2.global_4_t1.id = 1\) and \(schema2.global_4_t1.o_id = 1\)\)\)}
     condition \[schema2.global_4_t1.id = 1\] will be pruned for columnName is not shardingColumn/joinColumn
     condition \[schema2.global_4_t1.o_id = 1\] will be pruned for columnName is not shardingColumn/joinColumn
-    whereUnit \[((schema2.global_4_t1.id = 1) and (schema2.global_4_t1.o_id = 1))\] will be pruned for contains useless or condition
+    whereUnit \[\(\(schema2.global_4_t1.id = 1\) and \(schema2.global_4_t1.o_id = 1\)\)\] will be pruned for contains useless or condition
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -2435,9 +2435,9 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn5             | BASE SQL | SELECT * FROM noshard_t1 WHERE (id = 1 OR id = 2) AND (id = 3 OR id = 4) LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or ()) and (() or ())}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\) or \(\)\) and \(\(\) or \(\)\)}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -2449,7 +2449,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn5             | BASE SQL | update noshard_t1 set name='test' where id=1 and t_id=1  |
     Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
-    these conditions will try to pruning:{}
+    these conditions will try to pruning:\{\}
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
@@ -2461,8 +2461,8 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn5             | BASE SQL | delete from noshard_t1 where id=1 or t_id=1 |
     Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
-    these conditions will try to pruning:{(() or ())}
-    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    these conditions will try to pruning:{\(\(\) or \(\)\)}
+    whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
