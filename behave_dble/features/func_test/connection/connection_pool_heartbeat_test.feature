@@ -27,7 +27,7 @@ Feature: connection pool basic test - heartbeat create connections
     """
     Given prepare a thread run btrace script "fillPool.java" in "dble-1"
     Then execute admin cmd "reload @@config_all -r"
-    Then check btrace "fillPool.java" output in "dble-1" with "1" times
+    Then check btrace "fillPool.java" output in "dble-1" with ">0" times
     """
     get into fillPool
     """
