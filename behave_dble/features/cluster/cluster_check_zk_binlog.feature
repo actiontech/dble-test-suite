@@ -240,7 +240,7 @@ Feature: test "binlog" in zk cluster
       """
       timeout while waiting for unfinished distributed transactions
       """
-    Given sleep "10" seconds
+    Given sleep "11" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
