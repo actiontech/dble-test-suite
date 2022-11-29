@@ -631,24 +631,15 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False    | /*!dble:shardingNode=dn1*/ select * from sharding_4_t1                                    | success | schema1 |
       | conn_0 | False    | /*!dble:shardingNode=dn1*/ insert into sharding_4_t1 values(666, 'name666')               | success | schema1 |
       | conn_0 | False    | /*!dble:shardingNode=dn1*/ update sharding_4_t1 set name = 'dn1' where id=666             | success | schema1 |
-      | conn_0 | True     | /*!dble:shardingNode=dn1*/ delete from sharding_4_t1 where id=666                         | success | schema1 |
+      | conn_0 | False    | /*!dble:shardingNode=dn1*/ delete from sharding_4_t1 where id=666                         | success | schema1 |
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
       | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information |
+      | conn_1 | False   | select entry,user,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{((2, 'test', 'dn1', 'hostM1', 4, 4, 1, 1, 1, 1, 1, 1, 1, 1),)}   | dble_information |
       | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(1,)}   | dble_information |
+      | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry   | has{((2, 'test', 'schema1.sharding_4_t1', 1, 1, 1, 1, 1, 1, 1, 1, 1),)}   | dble_information |
       | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_11"
-      | conn   | toClose | sql                                                                 | db               |
-      | conn_1 | True    | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
-    Then check resultset "resultset_11" has lines with following column values
-      | entry-0 | user-1 | backend_host-3 | backend_port-4 | sharding_node-5 | db_instance-6 | tx_count-7 | tx_rows-8 | sql_insert_count-10 | sql_insert_rows-11 | sql_update_count-13 | sql_update_rows-14 | sql_delete_count-16 | sql_delete_rows-17 | sql_select_count-19 | sql_select_rows-20 |
-      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 4          | 4         | 1                   | 1                  | 1                   | 1                  | 1                   | 1                  | 1                   | 1                  |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_21"
-      | conn   | toClose | sql                                                                 | db               |
-      | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
-    Then check resultset "resultset_21" has lines with following column values
-      | entry-0 | user-1 | table-2                  | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_examined_rows-10 | sql_select_rows-11 |
-      | 2       | test   | schema1.sharding_4_t1    | 1                  | 1                 | 1                  | 1                 | 1                  | 1                 | 1                  | 1                           | 1                  |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                                                                     | expect  | db      |
@@ -657,12 +648,8 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
       | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(1,)}   | dble_information |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_31"
-      | conn   | toClose | sql                                                                 | db               |
-      | conn_1 | False   | select entry,user,associate_tables,sql_select_count,sql_select_rows,sql_select_examined_rows from sql_statistic_by_associate_tables_by_entry_by_user  | dble_information |
-    Then check resultset "resultset_31" has lines with following column values
-      | entry-0 | user-1 | associate_tables-2                          | sql_select_count-3 | sql_select_rows-4 | sql_select_examined_rows-5 |
-      | 2       | test   | schema1.sharding_2_t1,schema1.sharding_4_t1 | 2                  | 1                 | 1                          |
+      | conn_1 | False   | select entry,user,associate_tables,sql_select_count,sql_select_rows,sql_select_examined_rows from sql_statistic_by_associate_tables_by_entry_by_user     | has{((2, 'test', 'schema1.sharding_2_t1,schema1.sharding_4_t1', 2, 1, 1),)}   | dble_information |
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_0 | False    | drop table if exists sharding_4_t1                                              | success | schema1 |
