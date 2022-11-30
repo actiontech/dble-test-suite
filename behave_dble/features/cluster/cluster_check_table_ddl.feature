@@ -291,7 +291,15 @@ Feature: test "ddl" in zk cluster
       """
       schema1.sharding_4_t1
       """
-    Given stop dble in "dble-1"
+    # Given stop dble in "dble-1" # coz "./dble stop" will release the all locks in dble
+    Given execute linux command in "dble-1"
+    """
+    ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $3}' | xargs -r kill -9
+    """
+    Given execute linux command in "dble-1"
+    """
+    ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | xargs -r kill -9
+    """
     Given sleep "2" seconds
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose  | sql                                           | expect                                                                                     | db      |
