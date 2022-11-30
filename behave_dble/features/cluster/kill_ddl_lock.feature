@@ -6,7 +6,7 @@
 Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
   @btrace
   Scenario: check 'kill @@ddl_lock where schema=? and table=?' work normal #1
-    Given reset dble registered nodes in zk
+#    Given reset dble registered nodes in zk
     Given delete the following xml segment
       | file              | parent         | child              |
       | sharding.xml     | {'tag':'root'} | {'tag':'shardingNode'} |
