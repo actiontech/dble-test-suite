@@ -263,30 +263,27 @@ Feature:  backend_connections test
     Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
         """
         s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-        /evict/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+        /compareAndSet/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
         """
+    # 连接状态改变时都会调用此方法，-2表示连接状态变为回收的
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
     #sleep 5s to wait connections idle timeout and into scaling period
     Given sleep "5" seconds
-    ####这个btrace的检测是使用行数的，后续如果失败联系开发更改方法的行数
     Then check btrace "BtraceAboutConnection.java" output in "dble-1"
       """
-        get into evict
+        get into compareAndSet
       """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                 | expect        | db                |
       | conn_0 | false   | select * from backend_connections where remote_addr="172.100.9.5" and state="EVICT" and used_for_heartbeat='false'  | length{(1)}   | dble_information  |
+    Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given destroy btrace threads list
+    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
 
-    #btrace sleep 10s, make sure btrace sleep over then check idle connection nums
-    Given sleep "7" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                 | expect        | db                |
-      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'                          | has{((14,),)}  | dble_information  |
+      | conn   | toClose | sql                                                                                                                 | expect         | db                | timeout |
+      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'                          | has{((14,),)}  | dble_information  | 3       |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                 | expect        | db                |
       | conn_0 | true    | drop table if exists sharding_4_t1                                                                                  | success       | schema1           |
-
-    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
-    Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
-    Given destroy btrace threads list
