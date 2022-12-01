@@ -5,30 +5,30 @@
 
 Feature: check in zk online key
 
-
-
   Scenario: dble-1 stop,change bootstrap.cnf the same of dble-2,start dble-1,the result will be wrong  #1
+    Given stop dble cluster and zk service
+    Given replace config files in all dbles with command line config
+    Given config zookeeper cluster in all dble nodes with "local zookeeper host"
     Given reset dble registered nodes in zk
+    Then start dble in order
     Then check following text exist " " in file "/opt/dble/conf/bootstrap.cnf" in host "dble-2"
       """
       \-DinstanceName=2
       """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    /-DinstanceName=1/c -DinstanceName=2
-    /-DinstanceId=1/c -DinstanceId=2
-    /-DserverId=server_1/c -DserverId=server_2
+    /-DinstanceName=/c -DinstanceName=2
+    /-DinstanceId=/c -DinstanceId=2
+    /-DserverId=1/c -DserverId=server_2
     """
-    Given Restart dble in "dble-1" success
-    Then restart dble in "dble-2" failed for
+    Then restart dble in "dble-1" failed for
     """
     Online path with other IP or serverPort exist,make sure different instance has different instanceName
     """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    /-DinstanceName=2/c -DinstanceName=1
-    /-DinstanceId=2/c -DinstanceId=1
-    /-DserverId=server_2/c -DserverId=server_1
+    /-DinstanceName=/c -DinstanceName=1
+    /-DinstanceId=/c -DinstanceId=1
+    /-DserverId=/c -DserverId=server_1
     """
     Given Restart dble in "dble-1" success
-    Given reset dble registered nodes in zk
