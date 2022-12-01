@@ -13,6 +13,7 @@ from steps.lib.PreQueryPrepare import PreQueryPrepare
 from steps.lib.QueryMeta import QueryMeta
 from steps.lib.ObjectFactory import ObjectFactory
 from behave import *
+import time
 
 global sql_threads
 sql_threads = []
@@ -103,7 +104,7 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
             post_delegater.check_result()
             break
         except Exception as e:
-            logger.info(f"result is not out yet,retry {i} times")
+            logger.info("result is not out yet,retry {0} times".format(i))
             if i == timeout-1:
                 raise e
             else:
