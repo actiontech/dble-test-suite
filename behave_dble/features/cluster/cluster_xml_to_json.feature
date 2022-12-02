@@ -848,17 +848,16 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | reload @@config_all         | dble_information |
+    Then check btrace "BtraceAboutxmlJson.java" output in "dble-2"
+    """
+    get into sleep
+    """
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """
       name="schema2"
       name="global99"
       """
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
-      """
-      name="schema2"
-      name="global99"
-      """
-    Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
       name="schema2"
       name="global99"
