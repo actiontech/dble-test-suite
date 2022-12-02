@@ -102,22 +102,18 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
     elif int(info_dic.get("timeout"))==0 :
         timeout = 1
     else:
-        # res, err, time_cost = obj.do_execute_query(query_meta)
-        # post_delegater = PostQueryCheck(res, err, time_cost, query_meta)
-        # post_delegater.check_result()
-        # return res, err
         timeout=int(info_dic.get("timeout"))
     for i in range(timeout):
         try:
             res, err, time_cost = obj.do_execute_query(query_meta)
             post_delegater = PostQueryCheck(res, err, time_cost, query_meta)
             post_delegater.check_result()
-            print("try success")
-        except e as Exception:
-            print(e)
-            logger.debug(e+"result is not out yet,retry")
-            time.sleep(1)
-            continue
+        except AssertionError as e:
+            logger.debug("result is not out yet,retry")
+            if i == timeout-1:
+                raise AssertionError
+            else:
+                time.sleep(1)
         #print(res,err)
         return res, err
 
