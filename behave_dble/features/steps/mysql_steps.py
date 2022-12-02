@@ -108,14 +108,16 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
             res, err, time_cost = obj.do_execute_query(query_meta)
             post_delegater = PostQueryCheck(res, err, time_cost, query_meta)
             post_delegater.check_result()
-        except Exception as e:
+        except AssertionError as e:
             logger.debug("result is not out yet,retry")
-            if i == timeout-1 :
+            if i == timeout-1:
+                print("###################################################################")
+                print("timeout is "+i)
                 raise e
             else:
                 time.sleep(1)
-        #print(res,err)
-        return res, err
+    #print(res,err)
+    return res, err
 
 
 @Given('execute sql "{num}" times in "{host_name}" at concurrent')
