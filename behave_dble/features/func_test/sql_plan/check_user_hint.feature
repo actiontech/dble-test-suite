@@ -4,7 +4,7 @@
 
 Feature: check user hint
 
-  # DBLE0REQ-1484
+  # DBLE0REQ-1484 @skip # skip coz mission DBLE0REQ-2000
   Scenario: check rwSplitUser hint when log level is info #1
 #    Given reset replication and none system databases
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"

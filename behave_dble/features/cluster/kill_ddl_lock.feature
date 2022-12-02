@@ -66,6 +66,11 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
       | conn_2 | false   | show @@ddl                                          | hasStr{drop table if exists test}   |
       | conn_2 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                             |
       | conn_2 | true    | show @@ddl                                          | hasNoStr{drop table if exists test} |
+    Then execute sql in "dble-3" in "admin" mode
+      | conn   | toClose | sql                                                 | expect                              |
+      | conn_2 | false   | show @@ddl                                          | hasStr{drop table if exists test}   |
+      | conn_2 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                             |
+      | conn_2 | true    | show @@ddl                                          | hasNoStr{drop table if exists test} |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect                              |
       | conn_1 | false   | show @@ddl                                          | hasStr{drop table if exists test}   |
