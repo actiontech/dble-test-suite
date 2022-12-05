@@ -37,11 +37,11 @@ Feature: set charset in server.xml,check backend charsets are as set
       | 172.100.9.6 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                              | expect         | db      |charset| timeout|
-      | conn_0 | False   | drop table if exists aly_test                                    | success        | schema1 | utf8  | 0      |
-      | conn_0 | False   | create table aly_test(id int, name char(10)) default charset=utf8| success        | schema1 | utf8  | 0      |
-      | conn_0 | False   | insert into aly_test value(1, '中')                              | success        | schema1 | utf8  | 0      |
-      | conn_0 | False   | select name from aly_test                                        | has{(('中',),)}| schema1 | utf8  | 1      |
-      | conn_0 | False   | set names utf8mb4                                                | success        | schema1 | utf8  | 0      |
+      | conn_0 | False   | drop table if exists aly_test                                    | success        | schema1 | utf8  |       |
+      | conn_0 | False   | create table aly_test(id int, name char(10)) default charset=utf8| success        | schema1 | utf8  |       |
+      | conn_0 | False   | insert into aly_test value(1, '中')                              | success        | schema1 | utf8  |       |
+      | conn_0 | False   | select name from aly_test                                        | has{(('中',),)}| schema1 | utf8  | 1     |
+      | conn_0 | False   | set names utf8mb4                                                | success        | schema1 | utf8  |       |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "conn_rs_A"
       | sql               |
       | show @@connection |
