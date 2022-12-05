@@ -748,74 +748,75 @@ sql_log_by_tx_digest_by_entry_by_user
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
+    #### sql_id为7的那一行，因为join数据的时候，后端返回的影响行数不固定，所以去除examined_rows一列的比对
     Then check resultset "resulte_1" has lines with following column values
-      | sql_id-0 | sql_stmt-1                                                                                                             | sql_digest-2                                                                                                                | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-      | 1        | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                              | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                                   | Insert     | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 2        | insert into test(id, name) select id,name from schema2.global2                                                         | insert into test(id, name) select id,name from schema2.global2                                                              | Insert     | 2       | 2       | test   | 172.100.9.8   | 8066          | 4      | 16               |
-      | 3        | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                  | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                       | Insert     | 3       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 4        | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                          | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                               | Insert     | 4       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 5        | select * from test a inner join sharding_2_t1 b on a.name=b.name where a.id =1                                         | SELECT * FROM test a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                                          | Select     | 5       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 6        | select * from schema2.global2 a inner join sharding_2_t1 b on a.name=b.name where a.id =1                              | SELECT * FROM schema2.global2 a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                               | Select     | 6       | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 7        | select * from sharding_2_t1 a inner join schema2.sing1 b on a.name=b.name where a.id =1                                | SELECT * FROM sharding_2_t1 a  INNER JOIN schema2.sing1 b ON a.name = b.name WHERE a.id = ?                                 | Select     | 7       | 2       | test   | 172.100.9.8   | 8066          | 4      | 10               |
-      | 8        | select * from sharding_2_t1 where name in (select name from schema2.sharding2 where id !=1)                            | SELECT * FROM sharding_2_t1 WHERE name IN (  SELECT name  FROM schema2.sharding2  WHERE id != ? )                           | Select     | 8       | 2       | test   | 172.100.9.8   | 8066          | 6      | 11               |
-      | 9        | update test set name= '3' where name = (select name from schema2.global2 order by id desc limit 1)                     | UPDATE test SET name = ? WHERE name = (   SELECT name   FROM schema2.global2   ORDER BY id DESC   LIMIT ?  )                | Update     | 9       | 2       | test   | 172.100.9.8   | 8066          | 2      | 8                |
-      | 10       | update test set name= '4' where name in (select name from schema2.global2 )                                            | UPDATE test SET name = ? WHERE name IN (   SELECT name   FROM schema2.global2  )                                            | Update     | 10      | 2       | test   | 172.100.9.8   | 8066          | 6      | 24               |
-      | 11       | update sharding_2_t1 a,schema2.sharding2 b set a.name=b.name where a.id=2 and b.id=2                                   | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.name = b.name WHERE a.id = ?  AND b.id = ?                                | Update     | 11      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 12       | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1 | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | Delete     | 12      | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
+      | sql_id-0 | sql_stmt-1                                                                                                             | sql_digest-2                                                                                                                | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
+      | 1        | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                              | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                                   | Insert     | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      |
+      | 2        | insert into test(id, name) select id,name from schema2.global2                                                         | insert into test(id, name) select id,name from schema2.global2                                                              | Insert     | 2       | 2       | test   | 172.100.9.8   | 8066          | 4      |
+      | 3        | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                  | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                       | Insert     | 3       | 2       | test   | 172.100.9.8   | 8066          | 4      |
+      | 4        | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                          | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                               | Insert     | 4       | 2       | test   | 172.100.9.8   | 8066          | 4      |
+      | 5        | select * from test a inner join sharding_2_t1 b on a.name=b.name where a.id =1                                         | SELECT * FROM test a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                                          | Select     | 5       | 2       | test   | 172.100.9.8   | 8066          | 4      |
+      | 6        | select * from schema2.global2 a inner join sharding_2_t1 b on a.name=b.name where a.id =1                              | SELECT * FROM schema2.global2 a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                               | Select     | 6       | 2       | test   | 172.100.9.8   | 8066          | 2      |
+      | 7        | select * from sharding_2_t1 a inner join schema2.sing1 b on a.name=b.name where a.id =1                                | SELECT * FROM sharding_2_t1 a  INNER JOIN schema2.sing1 b ON a.name = b.name WHERE a.id = ?                                 | Select     | 7       | 2       | test   | 172.100.9.8   | 8066          | 4      |
+      | 8        | select * from sharding_2_t1 where name in (select name from schema2.sharding2 where id !=1)                            | SELECT * FROM sharding_2_t1 WHERE name IN (  SELECT name  FROM schema2.sharding2  WHERE id != ? )                           | Select     | 8       | 2       | test   | 172.100.9.8   | 8066          | 6      |
+      | 9        | update test set name= '3' where name = (select name from schema2.global2 order by id desc limit 1)                     | UPDATE test SET name = ? WHERE name = (   SELECT name   FROM schema2.global2   ORDER BY id DESC   LIMIT ?  )                | Update     | 9       | 2       | test   | 172.100.9.8   | 8066          | 2      |
+      | 10       | update test set name= '4' where name in (select name from schema2.global2 )                                            | UPDATE test SET name = ? WHERE name IN (   SELECT name   FROM schema2.global2  )                                            | Update     | 10      | 2       | test   | 172.100.9.8   | 8066          | 6      |
+      | 11       | update sharding_2_t1 a,schema2.sharding2 b set a.name=b.name where a.id=2 and b.id=2                                   | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.name = b.name WHERE a.id = ?  AND b.id = ?                                | Update     | 11      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 12       | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1 | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | Delete     | 12      | 2       | test   | 172.100.9.8   | 8066          | 2      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
-      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           | 4               |
-      | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           | 16              |
-      | 3       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1           | 4               |
-      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4         | 1           | 4               |
-      | 5       | 2       | test   | 172.100.9.8   | 8066          | 5         | 1           | 4               |
-      | 6       | 2       | test   | 172.100.9.8   | 8066          | 6         | 1           | 2               |
-      | 7       | 2       | test   | 172.100.9.8   | 8066          | 7         | 1           | 10              |
-      | 8       | 2       | test   | 172.100.9.8   | 8066          | 8         | 1           | 11              |
-      | 9       | 2       | test   | 172.100.9.8   | 8066          | 9         | 1           | 8               |
-      | 10      | 2       | test   | 172.100.9.8   | 8066          | 10        | 1           | 24              |
-      | 11      | 2       | test   | 172.100.9.8   | 8066          | 11        | 1           | 0               |
-      | 12      | 2       | test   | 172.100.9.8   | 8066          | 12        | 1           | 2               |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
+      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           |
+      | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           |
+      | 3       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1           |
+      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4         | 1           |
+      | 5       | 2       | test   | 172.100.9.8   | 8066          | 5         | 1           |
+      | 6       | 2       | test   | 172.100.9.8   | 8066          | 6         | 1           |
+      | 7       | 2       | test   | 172.100.9.8   | 8066          | 7         | 1           |
+      | 8       | 2       | test   | 172.100.9.8   | 8066          | 8         | 1           |
+      | 9       | 2       | test   | 172.100.9.8   | 8066          | 9         | 1           |
+      | 10      | 2       | test   | 172.100.9.8   | 8066          | 10        | 1           |
+      | 11      | 2       | test   | 172.100.9.8   | 8066          | 11        | 1           |
+      | 12      | 2       | test   | 172.100.9.8   | 8066          | 12        | 1           |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
-      | sql_digest-0                                                                                                                | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-      | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | 2       | test   | 1      | 2      | 2               |
-      | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                               | 2       | test   | 1      | 4      | 4               |
-      | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                       | 2       | test   | 1      | 4      | 4               |
-      | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                                   | 2       | test   | 1      | 4      | 4               |
-      | insert into test(id, name) select id,name from schema2.global2                                                              | 2       | test   | 1      | 4      | 16              |
-      | SELECT * FROM schema2.global2 a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                               | 2       | test   | 1      | 2      | 2               |
-      | SELECT * FROM sharding_2_t1 a  INNER JOIN schema2.sing1 b ON a.name = b.name WHERE a.id = ?                                 | 2       | test   | 1      | 4      | 10              |
-      | SELECT * FROM sharding_2_t1 WHERE name IN (  SELECT name  FROM schema2.sharding2  WHERE id != ? )                           | 2       | test   | 1      | 6      | 11              |
-      | SELECT * FROM test a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                                          | 2       | test   | 1      | 4      | 4               |
-      | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.name = b.name WHERE a.id = ?  AND b.id = ?                                | 2       | test   | 1      | 0      | 0               |
-      | UPDATE test SET name = ? WHERE name = (   SELECT name   FROM schema2.global2   ORDER BY id DESC   LIMIT ?  )                | 2       | test   | 1      | 2      | 8               |
-      | UPDATE test SET name = ? WHERE name IN (   SELECT name   FROM schema2.global2  )                                            | 2       | test   | 1      | 6      | 24              |
+      | sql_digest-0                                                                                                                | entry-1 | user-2 | exec-3 | rows-5 |
+      | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | 2       | test   | 1      | 2      |
+      | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                               | 2       | test   | 1      | 4      |
+      | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                       | 2       | test   | 1      | 4      |
+      | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                                   | 2       | test   | 1      | 4      |
+      | insert into test(id, name) select id,name from schema2.global2                                                              | 2       | test   | 1      | 4      |
+      | SELECT * FROM schema2.global2 a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                               | 2       | test   | 1      | 2      |
+      | SELECT * FROM sharding_2_t1 a  INNER JOIN schema2.sing1 b ON a.name = b.name WHERE a.id = ?                                 | 2       | test   | 1      | 4      |
+      | SELECT * FROM sharding_2_t1 WHERE name IN (  SELECT name  FROM schema2.sharding2  WHERE id != ? )                           | 2       | test   | 1      | 6      |
+      | SELECT * FROM test a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                                          | 2       | test   | 1      | 4      |
+      | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.name = b.name WHERE a.id = ?  AND b.id = ?                                | 2       | test   | 1      | 0      |
+      | UPDATE test SET name = ? WHERE name = (   SELECT name   FROM schema2.global2   ORDER BY id DESC   LIMIT ?  )                | 2       | test   | 1      | 2      |
+      | UPDATE test SET name = ? WHERE name IN (   SELECT name   FROM schema2.global2  )                                            | 2       | test   | 1      | 6      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
       | conn   | toClose | sql                                                   | db               |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
-      | tx_digest-0                                                                                                                 | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 12        | 2                |
-      | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                               | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 4         | 4                |
-      | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                       | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 3         | 4                |
-      | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                                   | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 1         | 4                |
-      | insert into test(id, name) select id,name from schema2.global2                                                              | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 2         | 16               |
-      | SELECT * FROM schema2.global2 a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                               | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 6         | 2                |
-      | SELECT * FROM sharding_2_t1 a  INNER JOIN schema2.sing1 b ON a.name = b.name WHERE a.id = ?                                 | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 7         | 10               |
-      | SELECT * FROM sharding_2_t1 WHERE name IN (  SELECT name  FROM schema2.sharding2  WHERE id != ? )                           | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 8         | 11               |
-      | SELECT * FROM test a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                                          | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 5         | 4                |
-      | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.name = b.name WHERE a.id = ?  AND b.id = ?                                | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 11        | 0                |
-      | UPDATE test SET name = ? WHERE name = (   SELECT name   FROM schema2.global2   ORDER BY id DESC   LIMIT ?  )                | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 9         | 8                |
-      | UPDATE test SET name = ? WHERE name IN (   SELECT name   FROM schema2.global2  )                                            | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 10        | 24               |
+      | tx_digest-0                                                                                                                 | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
+      | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 12        |
+      | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                               | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 4         |
+      | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                       | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 3         |
+      | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                                   | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 1         |
+      | insert into test(id, name) select id,name from schema2.global2                                                              | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 2         |
+      | SELECT * FROM schema2.global2 a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                               | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 6         |
+      | SELECT * FROM sharding_2_t1 a  INNER JOIN schema2.sing1 b ON a.name = b.name WHERE a.id = ?                                 | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 7         |
+      | SELECT * FROM sharding_2_t1 WHERE name IN (  SELECT name  FROM schema2.sharding2  WHERE id != ? )                           | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 8         |
+      | SELECT * FROM test a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                                          | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 5         |
+      | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.name = b.name WHERE a.id = ?  AND b.id = ?                                | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 11        |
+      | UPDATE test SET name = ? WHERE name = (   SELECT name   FROM schema2.global2   ORDER BY id DESC   LIMIT ?  )                | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 9         |
+      | UPDATE test SET name = ? WHERE name IN (   SELECT name   FROM schema2.global2  )                                            | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 10        |
 
     #case mysql 8.0 shrdinguser   sql_id:13-24
     Then execute sql in "dble-1" in "user" mode
@@ -859,18 +860,18 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
-      | sql_id-0 | sql_stmt-1                                                                                                                  | sql_digest-2                                                                                                                | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-      | 25       | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | Insert     | 25      | 3       | test1  | 172.100.9.8   | 8066          | 2      | 2                |
-      | 26       | update no_sharding_t1 set name='test_name' where id in (select id from schema2.no_shar)                                     | UPDATE no_sharding_t1 SET name = ? WHERE id IN (   SELECT id   FROM schema2.no_shar  )                                      | Update     | 26      | 3       | test1  | 172.100.9.8   | 8066          | 4      | 4                |
-      | 27       | update no_sharding_t1 set age=age-1 where name != (select name from schema2.no_shar where name ='name1')                    | UPDATE no_sharding_t1 SET age = age - ? WHERE name != (   SELECT name   FROM schema2.no_shar   WHERE name = ?  )            | Update     | 27      | 3       | test1  | 172.100.9.8   | 8066          | 4      | 4                |
-      | 28       | select n.id,s.name from no_sharding_t1 n join schema2.no_shar s on n.id=s.id                                                | select n.id,s.name from no_sharding_t1 n join schema2.no_shar s on n.id=s.id                                                | Select     | 28      | 3       | test1  | 172.100.9.8   | 8066          | 4      | 4                |
-      | 29       | select * from no_sharding_t1 where age <> (select age from schema2.no_shar where id !=1)                                    | SELECT * FROM no_sharding_t1 WHERE age <> (  SELECT age  FROM schema2.no_shar  WHERE id != ? )                              | Select     | 29      | 3       | test1  | 172.100.9.8   | 8066          | 4      | 4                |
-      | 30       | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | Delete     | 30      | 3       | test1  | 172.100.9.8   | 8066          | 2      | 2                |
-      | 31       | insert into sharding_2_t1 (id) select id from schema2.sharding2                                                             | insert into sharding_2_t1 (id) select id from schema2.sharding2                                                             | Insert     | 31      | 3       | test1  | 172.100.9.8   | 8066          | 2      | 2                |
-      | 32       | update sharding_2_t1 a,schema2.sharding2 b set a.age=b.age-1 where a.id=2 and b.id=2                                        | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                              | Update     | 32      | 3       | test1  | 172.100.9.8   | 8066          | 2      | 2                |
-      | 33       | select n.id,s.name from sharding_2_t1 n join schema2.sharding2 s on n.id=s.id                                               | select n.id,s.name from sharding_2_t1 n join schema2.sharding2 s on n.id=s.id                                               | Select     | 33      | 3       | test1  | 172.100.9.8   | 8066          | 4      | 4                |
-      | 34       | select * from sharding_2_t1 where age <> (select age from schema2.sharding2 where id !=1)                                   | SELECT * FROM sharding_2_t1 WHERE age <> (  SELECT age  FROM schema2.sharding2  WHERE id != ? )                             | Select     | 34      | 3       | test1  | 172.100.9.8   | 8066          | 3      | 4                |
-      | 35       | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1      | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | Delete     | 35      | 3       | test1  | 172.100.9.8   | 8066          | 2      | 2                |
+      | sql_id-0 | sql_stmt-1                                                                                                                  | sql_digest-2                                                                                                                | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
+      | 25       | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | Insert     | 25      | 3       | test1  | 172.100.9.8   | 8066          | 2      |
+      | 26       | update no_sharding_t1 set name='test_name' where id in (select id from schema2.no_shar)                                     | UPDATE no_sharding_t1 SET name = ? WHERE id IN (   SELECT id   FROM schema2.no_shar  )                                      | Update     | 26      | 3       | test1  | 172.100.9.8   | 8066          | 4      |
+      | 27       | update no_sharding_t1 set age=age-1 where name != (select name from schema2.no_shar where name ='name1')                    | UPDATE no_sharding_t1 SET age = age - ? WHERE name != (   SELECT name   FROM schema2.no_shar   WHERE name = ?  )            | Update     | 27      | 3       | test1  | 172.100.9.8   | 8066          | 4      |
+      | 28       | select n.id,s.name from no_sharding_t1 n join schema2.no_shar s on n.id=s.id                                                | select n.id,s.name from no_sharding_t1 n join schema2.no_shar s on n.id=s.id                                                | Select     | 28      | 3       | test1  | 172.100.9.8   | 8066          | 4      |
+      | 29       | select * from no_sharding_t1 where age <> (select age from schema2.no_shar where id !=1)                                    | SELECT * FROM no_sharding_t1 WHERE age <> (  SELECT age  FROM schema2.no_shar  WHERE id != ? )                              | Select     | 29      | 3       | test1  | 172.100.9.8   | 8066          | 4      |
+      | 30       | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | Delete     | 30      | 3       | test1  | 172.100.9.8   | 8066          | 2      |
+      | 31       | insert into sharding_2_t1 (id) select id from schema2.sharding2                                                             | insert into sharding_2_t1 (id) select id from schema2.sharding2                                                             | Insert     | 31      | 3       | test1  | 172.100.9.8   | 8066          | 2      |
+      | 32       | update sharding_2_t1 a,schema2.sharding2 b set a.age=b.age-1 where a.id=2 and b.id=2                                        | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                              | Update     | 32      | 3       | test1  | 172.100.9.8   | 8066          | 2      |
+      | 33       | select n.id,s.name from sharding_2_t1 n join schema2.sharding2 s on n.id=s.id                                               | select n.id,s.name from sharding_2_t1 n join schema2.sharding2 s on n.id=s.id                                               | Select     | 33      | 3       | test1  | 172.100.9.8   | 8066          | 4      |
+      | 34       | select * from sharding_2_t1 where age <> (select age from schema2.sharding2 where id !=1)                                   | SELECT * FROM sharding_2_t1 WHERE age <> (  SELECT age  FROM schema2.sharding2  WHERE id != ? )                             | Select     | 34      | 3       | test1  | 172.100.9.8   | 8066          | 3      |
+      | 35       | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1      | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | Delete     | 35      | 3       | test1  | 172.100.9.8   | 8066          | 2      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
@@ -893,35 +894,35 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
-      | sql_digest-0                                                                                                                | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-      | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | 3       | test1  | 1      | 2      | 2               |
-      | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | 3       | test1  | 1      | 2      | 2               |
-      | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | 3       | test1  | 1      | 2      | 2               |
-      | insert into sharding_2_t1 (id) select id from schema2.sharding2                                                             | 3       | test1  | 1      | 2      | 2               |
-      | SELECT * FROM no_sharding_t1 WHERE age <> (  SELECT age  FROM schema2.no_shar  WHERE id != ? )                              | 3       | test1  | 1      | 4      | 4               |
-      | SELECT * FROM sharding_2_t1 WHERE age <> (  SELECT age  FROM schema2.sharding2  WHERE id != ? )                             | 3       | test1  | 1      | 3      | 4               |
-      | select n.id,s.name from no_sharding_t1 n join schema2.no_shar s on n.id=s.id                                                | 3       | test1  | 1      | 4      | 4               |
-      | select n.id,s.name from sharding_2_t1 n join schema2.sharding2 s on n.id=s.id                                               | 3       | test1  | 1      | 4      | 4               |
-      | UPDATE no_sharding_t1 SET age = age - ? WHERE name != (   SELECT name   FROM schema2.no_shar   WHERE name = ?  )            | 3       | test1  | 1      | 4      | 4               |
-      | UPDATE no_sharding_t1 SET name = ? WHERE id IN (   SELECT id   FROM schema2.no_shar  )                                      | 3       | test1  | 1      | 4      | 4               |
-      | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                              | 3       | test1  | 1      | 2      | 2               |
+      | sql_digest-0                                                                                                                | entry-1 | user-2 | exec-3 | rows-5 |
+      | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | 3       | test1  | 1      | 2      |
+      | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | 3       | test1  | 1      | 2      |
+      | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | 3       | test1  | 1      | 2      |
+      | insert into sharding_2_t1 (id) select id from schema2.sharding2                                                             | 3       | test1  | 1      | 2      |
+      | SELECT * FROM no_sharding_t1 WHERE age <> (  SELECT age  FROM schema2.no_shar  WHERE id != ? )                              | 3       | test1  | 1      | 4      |
+      | SELECT * FROM sharding_2_t1 WHERE age <> (  SELECT age  FROM schema2.sharding2  WHERE id != ? )                             | 3       | test1  | 1      | 3      |
+      | select n.id,s.name from no_sharding_t1 n join schema2.no_shar s on n.id=s.id                                                | 3       | test1  | 1      | 4      |
+      | select n.id,s.name from sharding_2_t1 n join schema2.sharding2 s on n.id=s.id                                               | 3       | test1  | 1      | 4      |
+      | UPDATE no_sharding_t1 SET age = age - ? WHERE name != (   SELECT name   FROM schema2.no_shar   WHERE name = ?  )            | 3       | test1  | 1      | 4      |
+      | UPDATE no_sharding_t1 SET name = ? WHERE id IN (   SELECT id   FROM schema2.no_shar  )                                      | 3       | test1  | 1      | 4      |
+      | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                              | 3       | test1  | 1      | 2      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
       | conn   | toClose | sql                                                   | db               |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
-      | tx_digest-0                                                                                                                 | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 30        | 2                |
-      | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 35        | 2                |
-      | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 25        | 2                |
-      | insert into sharding_2_t1 (id) select id from schema2.sharding2                                                             | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 31        | 2                |
-      | SELECT * FROM no_sharding_t1 WHERE age <> (  SELECT age  FROM schema2.no_shar  WHERE id != ? )                              | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 29        | 4                |
-      | SELECT * FROM sharding_2_t1 WHERE age <> (  SELECT age  FROM schema2.sharding2  WHERE id != ? )                             | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 34        | 4                |
-      | select n.id,s.name from no_sharding_t1 n join schema2.no_shar s on n.id=s.id                                                | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 28        | 4                |
-      | select n.id,s.name from sharding_2_t1 n join schema2.sharding2 s on n.id=s.id                                               | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 33        | 4                |
-      | UPDATE no_sharding_t1 SET age = age - ? WHERE name != (   SELECT name   FROM schema2.no_shar   WHERE name = ?  )            | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 27        | 4                |
-      | UPDATE no_sharding_t1 SET name = ? WHERE id IN (   SELECT id   FROM schema2.no_shar  )                                      | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 26        | 4                |
-      | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                              | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 32        | 2                |
+      | tx_digest-0                                                                                                                 | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
+      | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 30        |
+      | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 35        |
+      | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 25        |
+      | insert into sharding_2_t1 (id) select id from schema2.sharding2                                                             | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 31        |
+      | SELECT * FROM no_sharding_t1 WHERE age <> (  SELECT age  FROM schema2.no_shar  WHERE id != ? )                              | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 29        |
+      | SELECT * FROM sharding_2_t1 WHERE age <> (  SELECT age  FROM schema2.sharding2  WHERE id != ? )                             | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 34        |
+      | select n.id,s.name from no_sharding_t1 n join schema2.no_shar s on n.id=s.id                                                | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 28        |
+      | select n.id,s.name from sharding_2_t1 n join schema2.sharding2 s on n.id=s.id                                               | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 33        |
+      | UPDATE no_sharding_t1 SET age = age - ? WHERE name != (   SELECT name   FROM schema2.no_shar   WHERE name = ?  )            | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 27        |
+      | UPDATE no_sharding_t1 SET name = ? WHERE id IN (   SELECT id   FROM schema2.no_shar  )                                      | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 26        |
+      | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                              | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 32        |
 
       # rwSplitUser sql_id:36-41
     Then execute sql in "dble-1" in "user" mode
@@ -955,55 +956,55 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
-      | sql_id-0 | sql_stmt-1                                                                                                          | sql_digest-2                                                                                                        | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-      | 42       | insert into test_table(id,name,age) select id,name,age from test_table1                                             | insert into test_table(id,name,age) select id,name,age from test_table1                                             | Insert     | 42      | 4       | rwS1   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 43       | update test_table set name='test_name' where id in (select id from test_table1 )                                    | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | Update     | 43      | 4       | rwS1   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 44       | update test_table a,test_table1 b set a.age=b.age-1 where a.id=2 and b.id=2                                         | UPDATE test_table a, test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               | Update     | 44      | 4       | rwS1   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 45       | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | Select     | 45      | 4       | rwS1   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 46       | select * from test_table where age <> (select age from test_table1 where id !=1)                                    | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | Select     | 46      | 4       | rwS1   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 47       | select * from test_table where age <> (select age from test_table1 where id !=1)                                    | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | Select     | 47      | 4       | rwS1   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 48       | delete test_table from test_table,test_table1 where test_table.id=1 and test_table1.id =1                           | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | Delete     | 48      | 4       | rwS1   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 49       | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | Delete     | 49      | 4       | rwS1   | 172.100.9.8   | 8066          | 1      | 1                |
+      | sql_id-0 | sql_stmt-1                                                                                                          | sql_digest-2                                                                                                        | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
+      | 42       | insert into test_table(id,name,age) select id,name,age from test_table1                                             | insert into test_table(id,name,age) select id,name,age from test_table1                                             | Insert     | 42      | 4       | rwS1   | 172.100.9.8   | 8066          | 2      |
+      | 43       | update test_table set name='test_name' where id in (select id from test_table1 )                                    | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | Update     | 43      | 4       | rwS1   | 172.100.9.8   | 8066          | 4      |
+      | 44       | update test_table a,test_table1 b set a.age=b.age-1 where a.id=2 and b.id=2                                         | UPDATE test_table a, test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               | Update     | 44      | 4       | rwS1   | 172.100.9.8   | 8066          | 2      |
+      | 45       | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | Select     | 45      | 4       | rwS1   | 172.100.9.8   | 8066          | 4      |
+      | 46       | select * from test_table where age <> (select age from test_table1 where id !=1)                                    | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | Select     | 46      | 4       | rwS1   | 172.100.9.8   | 8066          | 4      |
+      | 47       | select * from test_table where age <> (select age from test_table1 where id !=1)                                    | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | Select     | 47      | 4       | rwS1   | 172.100.9.8   | 8066          | 4      |
+      | 48       | delete test_table from test_table,test_table1 where test_table.id=1 and test_table1.id =1                           | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | Delete     | 48      | 4       | rwS1   | 172.100.9.8   | 8066          | 2      |
+      | 49       | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | Delete     | 49      | 4       | rwS1   | 172.100.9.8   | 8066          | 1      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
-      | 42      | 4       | rwS1   | 172.100.9.8   | 8066          | 42        | 1           | 2               |
-      | 43      | 4       | rwS1   | 172.100.9.8   | 8066          | 43        | 1           | 4               |
-      | 44      | 4       | rwS1   | 172.100.9.8   | 8066          | 44        | 1           | 2               |
-      | 45      | 4       | rwS1   | 172.100.9.8   | 8066          | 45        | 1           | 4               |
-      | 46      | 4       | rwS1   | 172.100.9.8   | 8066          | 46        | 1           | 4               |
-      | 47      | 4       | rwS1   | 172.100.9.8   | 8066          | 47        | 1           | 4               |
-      | 48      | 4       | rwS1   | 172.100.9.8   | 8066          | 48        | 1           | 2               |
-      | 49      | 4       | rwS1   | 172.100.9.8   | 8066          | 49        | 1           | 1               |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
+      | 42      | 4       | rwS1   | 172.100.9.8   | 8066          | 42        | 1           |
+      | 43      | 4       | rwS1   | 172.100.9.8   | 8066          | 43        | 1           |
+      | 44      | 4       | rwS1   | 172.100.9.8   | 8066          | 44        | 1           |
+      | 45      | 4       | rwS1   | 172.100.9.8   | 8066          | 45        | 1           |
+      | 46      | 4       | rwS1   | 172.100.9.8   | 8066          | 46        | 1           |
+      | 47      | 4       | rwS1   | 172.100.9.8   | 8066          | 47        | 1           |
+      | 48      | 4       | rwS1   | 172.100.9.8   | 8066          | 48        | 1           |
+      | 49      | 4       | rwS1   | 172.100.9.8   | 8066          | 49        | 1           |
 
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
-      | sql_digest-0                                                                                                        | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-      | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | 4       | rwS1   | 1      | 1      | 1               |
-      | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | 4       | rwS1   | 1      | 2      | 2               |
-      | insert into test_table(id,name,age) select id,name,age from test_table1                                             | 4       | rwS1   | 1      | 2      | 2               |
-      | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | 4       | rwS1   | 2      | 8      | 8               |
-      | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | 4       | rwS1   | 1      | 4      | 4               |
-      | UPDATE test_table a, test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               | 4       | rwS1   | 1      | 2      | 2               |
-      | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | 4       | rwS1   | 1      | 4      | 4               |
+      | sql_digest-0                                                                                                        | entry-1 | user-2 | exec-3 | rows-5 |
+      | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | 4       | rwS1   | 1      | 1      |
+      | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | 4       | rwS1   | 1      | 2      |
+      | insert into test_table(id,name,age) select id,name,age from test_table1                                             | 4       | rwS1   | 1      | 2      |
+      | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | 4       | rwS1   | 2      | 8      |
+      | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | 4       | rwS1   | 1      | 4      |
+      | UPDATE test_table a, test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               | 4       | rwS1   | 1      | 2      |
+      | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | 4       | rwS1   | 1      | 4      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
       | conn   | toClose | sql                                                   | db               |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
-      | tx_digest-0                                                                                                         | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 49        | 1                |
-      | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 48        | 2                |
-      | insert into test_table(id,name,age) select id,name,age from test_table1                                             | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 42        | 2                |
-      | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | 2      | rwS1   | 4       | 2          | 172.100.9.8   | 8066          | 46,47     | 8                |
-      | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 45        | 4                |
-      | UPDATE test_table a, test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 44        | 2                |
-      | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 43        | 4                |
+      | tx_digest-0                                                                                                         | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
+      | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 49        |
+      | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 48        |
+      | insert into test_table(id,name,age) select id,name,age from test_table1                                             | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 42        |
+      | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | 2      | rwS1   | 4       | 2          | 172.100.9.8   | 8066          | 46,47     |
+      | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 45        |
+      | UPDATE test_table a, test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 44        |
+      | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 43        |
 
 
     Then execute sql in "dble-1" in "admin" mode
@@ -1022,44 +1023,44 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
-      | sql_id-0 | sql_stmt-1                                                                               | sql_digest-2                                                                                    | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-      | 50       | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                      | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                             | Other      | 50      | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 51       | drop view if exists test_view                                                            | DROP VIEW IF EXISTS test_view                                                                   | Other      | 51      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 52       | create view test_view(id,name) AS select * from test union select * from schema2.global2 | CREATE VIEW test_view (  id,   name ) AS SELECT * FROM test UNION SELECT * FROM schema2.global2 | Other      | 52      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 53       | select * from test union select * from schema2.global2                                   | select * from test union select * from schema2.global2                                          | Select     | 53      | 2       | test   | 172.100.9.8   | 8066          | 8      | 8                |
-      | 54       | drop view test_view                                                                      | DROP VIEW test_view                                                                             | Other      | 54      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | sql_id-0 | sql_stmt-1                                                                               | sql_digest-2                                                                                    | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
+      | 50       | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                      | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                             | Other      | 50      | 2       | test   | 172.100.9.8   | 8066          | 2      |
+      | 51       | drop view if exists test_view                                                            | DROP VIEW IF EXISTS test_view                                                                   | Other      | 51      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 52       | create view test_view(id,name) AS select * from test union select * from schema2.global2 | CREATE VIEW test_view (  id,   name ) AS SELECT * FROM test UNION SELECT * FROM schema2.global2 | Other      | 52      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 53       | select * from test union select * from schema2.global2                                   | select * from test union select * from schema2.global2                                          | Select     | 53      | 2       | test   | 172.100.9.8   | 8066          | 8      |
+      | 54       | drop view test_view                                                                      | DROP VIEW test_view                                                                             | Other      | 54      | 2       | test   | 172.100.9.8   | 8066          | 0      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
-      | 50      | 2       | test   | 172.100.9.8   | 8066          | 50        | 1           | 2               |
-      | 51      | 2       | test   | 172.100.9.8   | 8066          | 51        | 1           | 0               |
-      | 52      | 2       | test   | 172.100.9.8   | 8066          | 52        | 1           | 0               |
-      | 53      | 2       | test   | 172.100.9.8   | 8066          | 53        | 1           | 8               |
-      | 54      | 2       | test   | 172.100.9.8   | 8066          | 54        | 1           | 0               |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
+      | 50      | 2       | test   | 172.100.9.8   | 8066          | 50        | 1           |
+      | 51      | 2       | test   | 172.100.9.8   | 8066          | 51        | 1           |
+      | 52      | 2       | test   | 172.100.9.8   | 8066          | 52        | 1           |
+      | 53      | 2       | test   | 172.100.9.8   | 8066          | 53        | 1           |
+      | 54      | 2       | test   | 172.100.9.8   | 8066          | 54        | 1           |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
-      | sql_digest-0                                                                                    | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-      | CREATE VIEW test_view (  id,   name ) AS SELECT * FROM test UNION SELECT * FROM schema2.global2 | 2       | test   | 1      | 0      | 0               |
-      | DROP VIEW IF EXISTS test_view                                                                   | 2       | test   | 1      | 0      | 0               |
-      | DROP VIEW test_view                                                                             | 2       | test   | 1      | 0      | 0               |
-      | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                             | 2       | test   | 1      | 2      | 2               |
+      | sql_digest-0                                                                                    | entry-1 | user-2 | exec-3 | rows-5 |
+      | CREATE VIEW test_view (  id,   name ) AS SELECT * FROM test UNION SELECT * FROM schema2.global2 | 2       | test   | 1      | 0      |
+      | DROP VIEW IF EXISTS test_view                                                                   | 2       | test   | 1      | 0      |
+      | DROP VIEW test_view                                                                             | 2       | test   | 1      | 0      |
+      | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                             | 2       | test   | 1      | 2      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
       | conn   | toClose | sql                                                   | db               |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
-      | tx_digest-0                                                                                     | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | CREATE VIEW test_view (  id,   name ) AS SELECT * FROM test UNION SELECT * FROM schema2.global2 | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 52        | 0                |
-      | DROP VIEW IF EXISTS test_view                                                                   | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 51        | 0                |
-      | DROP VIEW test_view                                                                             | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 54        | 0                |
-      | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                             | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 50        | 2                |
-      | select * from test union select * from schema2.global2                                          | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 53        | 8                |
+      | tx_digest-0                                                                                     | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
+      | CREATE VIEW test_view (  id,   name ) AS SELECT * FROM test UNION SELECT * FROM schema2.global2 | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 52        |
+      | DROP VIEW IF EXISTS test_view                                                                   | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 51        |
+      | DROP VIEW test_view                                                                             | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 54        |
+      | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                             | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 50        |
+      | select * from test union select * from schema2.global2                                          | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 53        |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                  | expect  | db      |

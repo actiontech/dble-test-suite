@@ -1115,7 +1115,15 @@ Feature: test "binlog" in zk cluster
       """
       \[1, 2, 3\]
       """
-    Given stop dble in "dble-1"
+    # Given stop dble in "dble-1" # coz "./dble stop" will release the all locks in dble
+    Given execute linux command in "dble-1"
+    """
+    ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $3}' | xargs -r kill -9
+    """
+    Given execute linux command in "dble-1"
+    """
+    ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | xargs -r kill -9
+    """
     Then execute sql in "dble-2" in "admin" mode
       | conn     | toClose | sql                      | expect                                               |
       | conn_2   | true    | show @@binlog.status     | There is another command is showing BinlogStatus     |
