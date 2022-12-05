@@ -22,13 +22,13 @@ Feature: check user hint
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | user   | passwd | conn   | toClose | sql                                                         | expect         | db  | timeout |
-      | split1 | 111111 | conn_1 | False   | drop table if exists test_table                             | success        | db1 |5|
-      | split1 | 111111 | conn_1 | False   | create table test_table(id int, age int)                    | success        | db1 |5|
-      | split1 | 111111 | conn_1 | False   | insert into test_table values(1,10),(2,20),(3,30),(4,40)    | success        | db1 |5|
-      | split1 | 111111 | conn_1 | False   | /*!dble:db_type=master*/select * from test_table where id=1 | has{((1,10),)} | db1 |5|
-      | split1 | 111111 | conn_1 | False   | /*!dble:db_type=slave*/select * from test_table where id=1  | has{((1,10),)} | db1 |5|
-      | split1 | 111111 | conn_1 | False   | /*#dble:db_type=master*/select * from test_table where id=1 | has{((1,10),)} | db1 |5|
-      | split1 | 111111 | conn_1 | True    | /*#dble:db_type=slave*/select * from test_table where id=1  | has{((1,10),)} | db1 |5|
+      | split1 | 111111 | conn_1 | False   | drop table if exists test_table                             | success        | db1 ||
+      | split1 | 111111 | conn_1 | False   | create table test_table(id int, age int)                    | success        | db1 ||
+      | split1 | 111111 | conn_1 | False   | insert into test_table values(1,10),(2,20),(3,30),(4,40)    | success        | db1 ||
+      | split1 | 111111 | conn_1 | False   | /*!dble:db_type=master*/select * from test_table where id=1 | has{((1,10),)} | db1 ||
+      | split1 | 111111 | conn_1 | False   | /*!dble:db_type=slave*/select * from test_table where id=1  | has{((1,10),)} | db1 |20,0.1|
+      | split1 | 111111 | conn_1 | False   | /*#dble:db_type=master*/select * from test_table where id=1 | has{((1,10),)} | db1 ||
+      | split1 | 111111 | conn_1 | True    | /*#dble:db_type=slave*/select * from test_table where id=1  | has{((1,10),)} | db1 ||
     Given set log4j2 log level to "info" in "dble-1"
     Given sleep "35" seconds
     Given execute oscmd in "dble-1"
