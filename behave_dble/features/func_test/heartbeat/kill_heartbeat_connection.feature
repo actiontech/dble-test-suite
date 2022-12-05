@@ -165,10 +165,10 @@ Feature: heartbeat basic test
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | error totally whack | schema1 |
 
       #sleep 3s for heartbeat recover
-    #Given sleep "3" seconds
+   #  Given sleep "3" seconds
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                         | expect  | db     |timeout |
-     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |10       |
+     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1  |   |
 
 
   @btrace

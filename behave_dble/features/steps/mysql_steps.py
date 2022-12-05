@@ -97,25 +97,31 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
 
     pre_delegater = PreQueryPrepare(query_meta)
     pre_delegater.prepare()
+
     if not info_dic.get("timeout") :
         timeout = 1
-    elif int(info_dic.get("timeout"))==0 :
-        timeout = 1
+    elif "," in info_dic.get("timeout"):
+        timeout=int(info_dic.get("timeout").split(",")[0])
+        sep_time=float(info_dic.get("timeout").split(",")[1])
     else:
         timeout=int(info_dic.get("timeout"))
+        sep_time=1
+
     for i in range(timeout):
         try:
             res, err, time_cost = obj.do_execute_query(query_meta)
             post_delegater = PostQueryCheck(res, err, time_cost, query_meta)
             post_delegater.check_result()
+            break
         except Exception as e:
-            logger.debug("result is not out yet,retry")
+            logger.info(f"result is not out yet,retry {i} times")
             if i == timeout-1:
                 raise e
             else:
-                time.sleep(1)
-    #print(res,err)
+                time.sleep(sep_time)
     return res, err
+ 
+    
 
 
 @Given('execute sql "{num}" times in "{host_name}" at concurrent')
