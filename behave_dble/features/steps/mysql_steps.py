@@ -6,14 +6,16 @@
 import logging
 from threading import Thread
 
+from steps.lib.utils import get_node
 from steps.lib.Flag import Flag
-from steps.lib.MySQLObject import MySQLObject
+from steps.lib.DbleObject import DbleObject
 from steps.lib.PostQueryCheck import PostQueryCheck
 from steps.lib.PreQueryPrepare import PreQueryPrepare
 from steps.lib.QueryMeta import QueryMeta
 from steps.lib.ObjectFactory import ObjectFactory
 from behave import *
 import time
+
 
 global sql_threads
 sql_threads = []
@@ -77,8 +79,9 @@ def step_impl(context, host_name):
     for row in context.table:
         execute_sql_in_host(host_name, row.as_dict())
 
+
 def execute_sql_in_host(host_name, info_dic, mode="mysql"):
-    if mode in ["admin", "user"]:#query to dble
+    if mode in ["admin", "user"]:  # query to dble
         obj = ObjectFactory.create_dble_object(host_name)
         query_meta = QueryMeta(info_dic, mode, obj._dble_meta)
     else:
@@ -88,12 +91,29 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
     pre_delegater = PreQueryPrepare(query_meta)
     pre_delegater.prepare()
 
-    res, err, time_cost = obj.do_execute_query(query_meta)
+    if not info_dic.get("timeout") :
+        timeout = 1
+    elif "," in info_dic.get("timeout"):
+        timeout=int(info_dic.get("timeout").split(",")[0])
+        sep_time=float(info_dic.get("timeout").split(",")[1])
+    else:
+        timeout=int(info_dic.get("timeout"))
+        sep_time=1
 
-    post_delegater = PostQueryCheck(res, err, time_cost, query_meta)
-    post_delegater.check_result()
-
+    for i in range(timeout):
+        try:
+            res, err, time_cost = obj.do_execute_query(query_meta)
+            post_delegater = PostQueryCheck(res, err, time_cost, query_meta)
+            post_delegater.check_result()
+            break
+        except Exception as e:
+            logger.info("result is not out yet,retry {0} times".format(i))
+            if i == timeout-1:
+                raise e
+            else:
+                time.sleep(sep_time)
     return res, err
+
 
 @Given('execute sql "{num}" times in "{host_name}" at concurrent')
 @Given('execute sql "{num}" times in "{host_name}" at concurrent {concur}')
