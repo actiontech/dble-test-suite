@@ -29,7 +29,7 @@ Feature: check user hint
       | split1 | 111111 | conn_1 | False   | /*!dble:db_type=master*/select * from test_table where id=1 | has{((1,10),)} | db1 ||
       | split1 | 111111 | conn_1 | False   | /*!dble:db_type=slave*/select * from test_table where id=1  | has{((1,10),)} | db1 |20,0.1|
       | split1 | 111111 | conn_1 | False   | /*#dble:db_type=master*/select * from test_table where id=1 | has{((1,10),)} | db1 ||
-      | split1 | 111111 | conn_1 | True    | /*#dble:db_type=slave*/select * from test_table where id=1  | has{((1,10),)} | db1 ||
+      | split1 | 111111 | conn_1 | True    | /*#dble:db_type=slave*/select * from test_table where id=1  | has{((1,10),)} | db1 |20,0.1|
     Given set log4j2 log level to "info" in "dble-1"
     Given sleep "35" seconds
     Given execute oscmd in "dble-1"
@@ -38,12 +38,12 @@ Feature: check user hint
     mysql -usplit1 -p111111 -P8066 -h172.100.9.1 -Ddb1 -e "/*!dble:db_type=master*/select * from test_table where id=1;/*!dble:db_type=slave*/select * from test_table where id=1;"
     """
     Then execute sql in "dble-1" in "user" mode
-      | user   | passwd | conn   | toClose | sql                                                         | expect         | db  |
-      | split1 | 111111 | conn_2 | False   | /*!dble:db_type=master*/select * from test_table where id=1 | has{((1,10),)} | db1 |
-      | split1 | 111111 | conn_2 | False   | /*!dble:db_type=slave*/select * from test_table where id=1  | has{((1,10),)} | db1 |
-      | split1 | 111111 | conn_2 | False   | /*#dble:db_type=master*/select * from test_table where id=1 | has{((1,10),)} | db1 |
-      | split1 | 111111 | conn_2 | False   | /*#dble:db_type=slave*/select * from test_table where id=1  | has{((1,10),)} | db1 |
-      | split1 | 111111 | conn_2 | True    | drop table if exists test_table                             | success        | db1 |
+      | user   | passwd | conn   | toClose | sql                                                         | expect         | db  | timeout |
+      | split1 | 111111 | conn_2 | False   | /*!dble:db_type=master*/select * from test_table where id=1 | has{((1,10),)} | db1 ||
+      | split1 | 111111 | conn_2 | False   | /*!dble:db_type=slave*/select * from test_table where id=1  | has{((1,10),)} | db1 |20,0.1|
+      | split1 | 111111 | conn_2 | False   | /*#dble:db_type=master*/select * from test_table where id=1 | has{((1,10),)} | db1 ||
+      | split1 | 111111 | conn_2 | False   | /*#dble:db_type=slave*/select * from test_table where id=1  | has{((1,10),)} | db1 |20,0.1|
+      | split1 | 111111 | conn_2 | True    | drop table if exists test_table                             | success        | db1 ||
 
   Scenario: check shardingUser hint when log level is info #2
     Given execute sql in "dble-1" in "user" mode
