@@ -62,7 +62,8 @@ Feature: general log test
       | conn_0 | true    | select variable_name, variable_value from dble_variables where variable_name like '%generalLog%' | dble_information |
     Then check resultset "general_log_rs1" has lines with following column values
       | variable_name-0     | variable_value-1              |
-      | enableGeneralLog    | false                         |
+#      | enableGeneralLog    | false                         |
+      | enableGeneralLog    | 0                             |
       | generalLogFile      | /opt/dble/general/general.log |
       | generalLogFileSize  | 16M                           |
       | generalLogQueueSize | 4096                          |
@@ -71,7 +72,8 @@ Feature: general log test
       | show @@sysparam |
     Then check resultset "general_log_rs2" has lines with following column values
       | PARAM_NAME-0        | PARAM_VALUE-1                 |
-      | enableGeneralLog    | false                         |
+#      | enableGeneralLog    | false                         |
+      | enableGeneralLog    | 0                             |
       | generalLogFile      | /opt/dble/general/general.log |
       | generalLogFileSize  | 16M                           |
       | generalLogQueueSize | 4096                          |
@@ -101,7 +103,7 @@ Feature: general log test
       | conn_1 | true    | select variable_name, variable_value from dble_variables where variable_name like '%generalLog%' | dble_information |
     Then check resultset "general_log_rs3" has lines with following column values
       | variable_name-0     | variable_value-1          |
-      | enableGeneralLog    | true                      |
+      | enableGeneralLog    | 1                         |
       | generalLogFile      | /opt/dble/general/general |
       | generalLogFileSize  | 1M                        |
       | generalLogQueueSize | 1024                      |
@@ -110,7 +112,7 @@ Feature: general log test
       | show @@sysparam |
     Then check resultset "general_log_rs4" has lines with following column values
       | PARAM_NAME-0        | PARAM_VALUE-1             |
-      | enableGeneralLog    | true                      |
+      | enableGeneralLog    | 1                         |
       | generalLogFile      | /opt/dble/general/general |
       | generalLogFileSize  | 1M                        |
       | generalLogQueueSize | 1024                      |
@@ -140,14 +142,14 @@ Feature: general log test
       | conn_2 | true    | select variable_name, variable_value from dble_variables where variable_name like '%generalLog%' | dble_information |
     Then check resultset "general_log_rs5" has lines with following column values
       | variable_name-0     | variable_value-1           |
-      | enableGeneralLog    | true                       |
+      | enableGeneralLog    | 1                          |
       | generalLogFile      | /opt/dble/test/general.log |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "general_log_rs6"
       | sql             |
       | show @@sysparam |
     Then check resultset "general_log_rs6" has lines with following column values
       | PARAM_NAME-0        | PARAM_VALUE-1              |
-      | enableGeneralLog    | true                       |
+      | enableGeneralLog    | 1                          |
       | generalLogFile      | /opt/dble/test/general.log |
     Then check following text exist "Y" in file "/opt/dble/test/general.log" in host "dble-1"
       """
@@ -172,14 +174,14 @@ Feature: general log test
       | conn_3 | true    | select variable_name, variable_value from dble_variables where variable_name like '%generalLog%' | dble_information |
     Then check resultset "general_log_rs7" has lines with following column values
       | variable_name-0     | variable_value-1              |
-      | enableGeneralLog    | true                          |
+      | enableGeneralLog    | 1                             |
       | generalLogFile      | /opt/dble/general.log         |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "general_log_rs8"
       | sql             |
       | show @@sysparam |
     Then check resultset "general_log_rs8" has lines with following column values
       | PARAM_NAME-0        | PARAM_VALUE-1                 |
-      | enableGeneralLog    | true                          |
+      | enableGeneralLog    |  1                            |
       | generalLogFile      | /opt/dble/general.log         |
     Then check following text exist "Y" in file "/opt/dble/general.log" in host "dble-1"
     """
@@ -206,14 +208,14 @@ Feature: general log test
       | conn_4 | true    | select variable_name, variable_value from dble_variables where variable_name like '%generalLog%' | dble_information |
     Then check resultset "general_log_rs9" has lines with following column values
       | variable_name-0     | variable_value-1                   |
-      | enableGeneralLog    | true                               |
+      | enableGeneralLog    | 1                                  |
       | generalLogFile      | /opt/dble/test/general/general.log |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "general_log_rs10"
       | sql             |
       | show @@sysparam |
     Then check resultset "general_log_rs10" has lines with following column values
       | PARAM_NAME-0        | PARAM_VALUE-1                      |
-      | enableGeneralLog    | true                               |
+      | enableGeneralLog    | 1                                  |
       | generalLogFile      | /opt/dble/test/general/general.log |
     Then check following text exist "Y" in file "/opt/dble/test/general/general.log" in host "dble-1"
     """
@@ -240,14 +242,14 @@ Feature: general log test
       | conn_5 | true    | select variable_name, variable_value from dble_variables where variable_name like '%generalLog%' | dble_information |
     Then check resultset "general_log_rs11" has lines with following column values
       | variable_name-0     | variable_value-1                   |
-      | enableGeneralLog    | false                              |
+      | enableGeneralLog    | 0                                  |
       | generalLogFile      | /opt/dble/test/general/general_log |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "general_log_rs12"
       | sql             |
       | show @@sysparam |
     Then check resultset "general_log_rs12" has lines with following column values
       | PARAM_NAME-0        | PARAM_VALUE-1                      |
-      | enableGeneralLog    | false                              |
+      | enableGeneralLog    | 0                                  |
       | generalLogFile      | /opt/dble/test/general/general_log |
     Then get result of oscmd named "general_log_rs13" in "dble-1"
     """

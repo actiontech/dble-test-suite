@@ -238,7 +238,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'samplingRate','sqlLogTableSize')       | dble_information |
     Then check resultset "res_1" has lines with following column values
       | variable_name-0 | variable_value-1|
-      | enableStatistic | false           |
+      | enableStatistic | 0               |
       | samplingRate    | 100             |
       | sqlLogTableSize | 100             |
 

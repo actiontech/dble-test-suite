@@ -167,8 +167,8 @@ Feature: heartbeat basic test
       #sleep 3s for heartbeat recover
    #  Given sleep "3" seconds
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                         | expect  | db     |timeout |
-     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1  | 3|
+     | user | passwd | conn   | toClose  | sql                         | expect  | db       | timeout |
+     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1  | 4       |
 
 
   @btrace
