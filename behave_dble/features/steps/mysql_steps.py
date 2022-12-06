@@ -73,14 +73,16 @@ def step_impl(context,host_name, query, occur_times_expr=None):
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.check_query_in_general_log(query, expect_exist=True, expect_occur_times_expr=occur_times_expr)
 
+
 @Given('execute sql in "{host_name}"')
 @Then('execute sql in "{host_name}"')
 def step_impl(context, host_name):
     for row in context.table:
         execute_sql_in_host(host_name, row.as_dict())
 
+
 def execute_sql_in_host(host_name, info_dic, mode="mysql"):
-    if mode in ["admin", "user"]:#query to dble
+    if mode in ["admin", "user"]:  # query to dble
         obj = ObjectFactory.create_dble_object(host_name)
         query_meta = QueryMeta(info_dic, mode, obj._dble_meta)
     else:
@@ -90,12 +92,29 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
     pre_delegater = PreQueryPrepare(query_meta)
     pre_delegater.prepare()
 
-    res, err, time_cost = obj.do_execute_query(query_meta)
+    if not info_dic.get("timeout") :
+        timeout = 1
+    elif "," in info_dic.get("timeout"):
+        timeout=int(info_dic.get("timeout").split(",")[0])
+        sep_time=float(info_dic.get("timeout").split(",")[1])
+    else:
+        timeout=int(info_dic.get("timeout"))
+        sep_time=1
 
-    post_delegater = PostQueryCheck(res, err, time_cost, query_meta)
-    post_delegater.check_result()
-
+    for i in range(timeout):
+        try:
+            res, err, time_cost = obj.do_execute_query(query_meta)
+            post_delegater = PostQueryCheck(res, err, time_cost, query_meta)
+            post_delegater.check_result()
+            break
+        except Exception as e:
+            logger.info(f"result is not out yet,retry {i} times")
+            if i == timeout-1:
+                raise e
+            else:
+                time.sleep(sep_time)
     return res, err
+
 
 
 @Given('execute sql "{num}" times in "{host_name}" at concurrent')
