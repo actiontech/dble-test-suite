@@ -1834,11 +1834,11 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_41 | False   | update test_table1 set age =44 where id=100        | success | db2 |
   ##### 事务没结束，不落盘
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect           | db               |
-      | conn_0 | False   | select * from sql_log                                 | retrycheck{(0)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | retrycheck{(0)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | retrycheck{(0)}  | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | retrycheck{(0)}  | dble_information |
+      | conn   | toClose | sql                                                   | expect       | db               | timeout |
+      | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information | 3       |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information | 3       |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(0)}  | dble_information | 3       |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information | 3       |
 
      Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose | sql                                 | expect  | db  |
@@ -1848,11 +1848,11 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_41 | true    | drop table if exists test_table1    | success | db2 |
 
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect           | db               |
-      | conn_0 | False   | select * from sql_log                                 | retrycheck{(12)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | retrycheck{(4)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | retrycheck{(9)}  | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | retrycheck{(4)}  | dble_information |
+      | conn   | toClose | sql                                                   | expect       | db               | timeout |
+      | conn_0 | False   | select * from sql_log                                 | length{(12)} | dble_information | 3       |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(4)}  | dble_information | 3       |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(9)}  | dble_information | 3       |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(4)}  | dble_information | 3       |
 
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
