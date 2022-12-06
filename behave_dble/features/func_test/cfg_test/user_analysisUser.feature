@@ -358,6 +358,7 @@ Feature: test config in user.xml  ---  analysisUser
       """
       $a -DuseCostTimeStat=1
       $a -DuseThreadUsageStat=1
+      $a -DrwStickyTime=0
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
