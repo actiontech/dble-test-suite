@@ -70,4 +70,20 @@ public final class BtraceAboutConnection {
         }
     }
 
+    @OnMethod(
+            clazz = "com.actiontech.dble.net.connection.PooledConnection",
+            method = "compareAndSet",
+            location = @Location(Kind.RETURN)
+    )
+    // This method is called when the connection status changes. -2 means evict
+    public static void compareAndSet(int expect, int update) throws Exception {
+        if(update == -2) {
+            BTraceUtils.println("get into compareAndSet");
+            BTraceUtils.println("---------------");
+            Thread.sleep(10L);
+            BTraceUtils.println("sleep end ");
+            BTraceUtils.println("---------------");
+        }
+    }
+
 }
