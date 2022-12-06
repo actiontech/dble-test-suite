@@ -43,7 +43,11 @@ Feature: config sharding config files incorrect and restart dble or reload confi
       shardingNode  define error ,attribute can't be empty
     """
 
+  @restore_mysql_config
   Scenario: config sharding property, reload the configs #5
+  """
+  {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}
+  """
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
      /lower_case_table_names/d
