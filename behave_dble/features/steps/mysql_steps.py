@@ -6,9 +6,8 @@
 import logging
 from threading import Thread
 
-from steps.lib.utils import get_node
 from steps.lib.Flag import Flag
-from steps.lib.DbleObject import DbleObject
+from steps.lib.MySQLObject import MySQLObject
 from steps.lib.PostQueryCheck import PostQueryCheck
 from steps.lib.PreQueryPrepare import PreQueryPrepare
 from steps.lib.QueryMeta import QueryMeta
