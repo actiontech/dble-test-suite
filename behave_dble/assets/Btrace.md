@@ -166,8 +166,15 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.btrace.provider.XaDelayProvider#afterAddXaToQueue||xa事务添加commitQueue或者rollbackQueue之后|
 |com.actiontech.dble.btrace.provider.XaDelayProvider#beforeInnerRetry||重试xa的COMMIT/ROLLBACK操作之前|
 
-* 其他
+* 连接池改善后相关断点
+|clazz#method|line|probe-point desc|
+|----|----|----|----|
+|com.actiontech.dble.btrace.provider.ConnectionPoolProvider#newConnectionBorrow1||进入borrow方法，new一根新连接之前|
+|com.actiontech.dble.btrace.provider.ConnectionPoolProvider#borrowConnectionBefore||进入borrow方法，池里拿链接之前|
+|com.actiontech.dble.btrace.provider.ConnectionPoolProvider#newConnectionAfter||进入borrow方法，new一根新链接之后，获取连接之前|
+|com.actiontech.dble.btrace.provider.ConnectionPoolProvider#fillPool||fillPool为扩容方法，在进入扩容方法前hang住|
 
+* 其他
 |clazz#method|line|probe-point desc|
 |----|----|----|----|
 |com.actiontech.dble.meta.ProxyMetaManager#addMetaLock|135|添加元数据(table)锁之后|
@@ -221,6 +228,7 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.services.manager.handler.ClusterManageHandler#waitOtherSessionBlocked||脱离/加入集群时，集群中有即将执行的sql，hang脱离/加入集群命令|
 |com.actiontech.dble.backend.datasource.PhysicalDbGroup#rwSelect||读写分离模式选择dbGroup后select语句执行方法|
 |com.actiontech.dble.rwsplit.RWSplitNonBlockingSession#reSelectRWDbGroup||读写分离模式在选择dbGroup后原dbGroup失效重新选择dbGroup|
+|com.actiontech.dble.backend.pool.ConnectionPool#line=400||后端连接在连接池中的状态保持evict状态|
 
 ### 小版本改动：
 * 版本号
