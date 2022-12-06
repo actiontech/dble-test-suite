@@ -400,10 +400,10 @@ Feature: test "binlog" in zk cluster
       | conn    | toClose | sql                                                   | expect  | db      |
       | conn_33 | true    | insert into sharding4 values (1,1,1),(5,5,5)          | success | schema1 |
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                                               | expect  | db      |
-      | conn_22 | true    | insert into sing1 values (1,1),(2,2)              | success | schema1 |
-      | conn_23 | true    | insert into no_sharding1 values (1,1,1),(2,2,2)   | success | schema1 |
-      | conn_24 | true    | insert into vertical1 values (1,1),(2,2)          | success | schema2 |
+      | conn    | toClose | sql                                               | expect  | db      |timeout|
+      | conn_22 | true    | insert into sing1 values (1,1),(2,2)              | success | schema1 |3|
+      | conn_23 | true    | insert into no_sharding1 values (1,1,1),(2,2,2)   | success | schema1 |3|
+      | conn_24 | true    | insert into vertical1 values (1,1),(2,2)          | success | schema2 |3|
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
       wait all session finished
@@ -697,9 +697,9 @@ Feature: test "binlog" in zk cluster
       | conn      | toClose | sql                      | expect          | db      |
       | conn_31   | true    | desc global1             | length{(4)}     | schema1 |
     Then execute sql in "dble-2" in "user" mode
-      | conn      | toClose | sql                              | expect         | db      |
-      | conn_21   | false   | select * from global1            | length{(6)}    | schema1 |
-      | conn_21   | true    | alter table global1 drop name   | success        | schema1 |
+      | conn      | toClose | sql                              | expect         | db      |timeout|
+      | conn_21   | false   | select * from global1            | length{(6)}    | schema1 |3|
+      | conn_21   | true    | alter table global1 drop name   | success        | schema1 ||
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
@@ -745,8 +745,8 @@ Feature: test "binlog" in zk cluster
     Given prepare a thread execute sql "insert into sharding2 values (1,1,1,1),(2,2,2,2)" with "conn_21"
     #route one node wouldn't "hang" ,would succes
     Then execute sql in "dble-3" in "user" mode
-      | conn    | toClose | sql                                                  | expect  | db      |
-      | conn_33 | true    | insert into sharding4 values (1,1,1,1),(5,5,5,5)     | success | schema1 |
+      | conn    | toClose | sql                                                  | expect  | db      |timeout|
+      | conn_33 | true    | insert into sharding4 values (1,1,1,1),(5,5,5,5)     | success | schema1 |3|
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose | sql                                             | expect  | db      |
       | conn_22 | true    | insert into sing1 values (3,3),(4,4)            | success | schema1 |

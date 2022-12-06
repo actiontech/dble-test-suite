@@ -750,13 +750,13 @@ Feature: test "ha" in zk cluster
       | ha_group2  | hostS2 | 172.100.9.3 | 3306   | W     | 0        | 1000   | false        |
     #case query dml sql will be success
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                            | expect      | db      |
-      | conn_1 | False   | insert into global1 values (1) | success     | schema1 |
-      | conn_1 | False   | insert into global2 values (1) | success     | schema1 |
-      | conn_1 | False   | insert into global3 values (1) | success     | schema1 |
-      | conn_1 | False   | select * from global1          | length{(2)} | schema1 |
-      | conn_1 | False   | select * from global2          | length{(2)} | schema1 |
-      | conn_1 | true    | select * from global3          | length{(5)} | schema1 |
+      | conn   | toClose | sql                            | expect      | db      |timeout|
+      | conn_1 | False   | insert into global1 values (1) | success     | schema1 ||
+      | conn_1 | False   | insert into global2 values (1) | success     | schema1 ||
+      | conn_1 | False   | insert into global3 values (1) | success     | schema1 ||
+      | conn_1 | False   | select * from global1          | length{(2)} | schema1 |3|
+      | conn_1 | False   | select * from global2          | length{(2)} | schema1 |3|
+      | conn_1 | true    | select * from global3          | length{(5)} | schema1 |3|
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose | sql                                                  | expect      | db      |
       | conn_2  | False   | insert into sharding2 values (1,1),(2,2)             | success     | schema1 |
