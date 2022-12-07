@@ -163,9 +163,6 @@ Feature: connection pool basic test
       | conn_1 | False   | select * from sharding_4_t1                            | success                    | schema1 |
       | conn_2 | False   | begin                                                  | success                    | schema1 |
       | conn_2 | False   | select * from sharding_4_t1                            | success                    | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                        | expect        | db                |
-      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'                 | has{((12),)}  | dble_information  |
     #sleep 5s to go into scaling period
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode

@@ -17,20 +17,18 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       $a  -DcomplexExecutor=2
       """
     Then restart dble in "dble-1" success
-    # keepAlivetime is 60s, 'complexExecutor' heartbeat and 9066 cmd would use it
-    Given sleep "61" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_pool_1"
       | conn   | toClose | sql                            | db                |
       | conn_0 | False   | select * from dble_thread_pool | dble_information  |
     Then check resultset "dble_thread_pool_1" has lines with following column values
-      | name-0                  | pool_size-1 | core_pool_size-2 | active_count-3 | waiting_task_count-4 |
-      | Timer                   | 1           | 1                | 0              | 0                    |
-      | BusinessExecutor        | 1           | 1                | 1              | 0                    |
-      | backendBusinessExecutor | 1           | 1                | 0              | 0                    |
-      | complexQueryExecutor    | 2           | 2                | 1              | 0                    |
-      | writeToBackendExecutor  | 1           | 1                | 1              | 0                    |
-      | $_NIO_REACTOR_FRONT-    | 1           | 1                | 1              | 0                    |
-      | $_NIO_REACTOR_BACKEND-  | 1           | 1                | 1              | 0                    |
+      | name-0                  | core_pool_size-2 | active_count-3 | waiting_task_count-4 |
+      | Timer                   | 1                | 0              | 0                    |
+      | BusinessExecutor        | 1                | 1              | 0                    |
+      | backendBusinessExecutor | 1                | 0              | 0                    |
+      | complexQueryExecutor    | 2                | 1              | 0                    |
+      | writeToBackendExecutor  | 1                | 1              | 0                    |
+      | $_NIO_REACTOR_FRONT-    | 1                | 1              | 0                    |
+      | $_NIO_REACTOR_BACKEND-  | 1                | 1              | 0                    |
     Then check "/opt/dble/conf/bootstrap.dynamic.cnf" in "dble-1" was empty
 
     # unsupported insert and delete
