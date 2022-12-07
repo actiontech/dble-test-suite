@@ -88,6 +88,10 @@ def step_impl(context, btraceScript, host):
             assert len(ste) == 0, "expect execute cmd {} success, but outcome with err:{}".format(cmd, ste)
             if int(sto) >= 2:
                 return True
+            else:
+                logtext = "cat {}.log".format(remoteFile)
+                rc, sto, ste = sshClient.exec_command(logtext)
+                logger.debug("logtext:{0}".format(sto))
             return False
         check_btrace_working(sshClient, remoteFile)
 
