@@ -64,7 +64,7 @@ Feature:manager Cmd
       | conn_0 | true    | select * from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')       | dble_information |
     Then check resultset "version_2" has lines with following column values
       | variable_name-0                         | variable_value-1 | comment-2                                                      | read_only-3 |
-      | enableStatistic                         | 0                | Enable statistic sql, the default is false                     | false       |
+      | enableStatistic                         | 0                | Enable statistic sql, the default is 0(false)                  | false       |
       | associateTablesByEntryByUserTableSize   | 1024             | AssociateTablesByEntryByUser table size, the default is 1024   | false       |
       | frontendByBackendByEntryByUserTableSize | 1024             | FrontendByBackendByEntryByUser table size, the default is 1024 | false       |
       | tableByUserByEntryTableSize             | 1024             | TableByUserByEntry table size, the default is 1024             | false       |
@@ -123,7 +123,7 @@ Feature:manager Cmd
       | conn_0 | true    | select * from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')       | dble_information |
     Then check resultset "version_5" has lines with following column values
       | variable_name-0                         | variable_value-1 | comment-2                                                      | read_only-3 |
-      | enableStatistic                         | 1                | Enable statistic sql, the default is false                     | false       |
+      | enableStatistic                         | 1                | Enable statistic sql, the default is 0(false)                  | false       |
       | associateTablesByEntryByUserTableSize   | 1024             | AssociateTablesByEntryByUser table size, the default is 1024   | false       |
       | frontendByBackendByEntryByUserTableSize | 1024             | FrontendByBackendByEntryByUser table size, the default is 1024 | false       |
       | tableByUserByEntryTableSize             | 1024             | TableByUserByEntry table size, the default is 1024             | false       |
