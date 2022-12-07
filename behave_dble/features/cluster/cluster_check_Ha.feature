@@ -758,29 +758,29 @@ Feature: test "ha" in zk cluster
       | conn_1 | False   | select * from global2          | length{(2)} | schema1 |3|
       | conn_1 | true    | select * from global3          | length{(5)} | schema1 |3|
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                                                  | expect      | db      |
-      | conn_2  | False   | insert into sharding2 values (1,1),(2,2)             | success     | schema1 |
-      | conn_2  | False   | select * from sharding2                              | length{(8)} | schema1 |
-      | conn_2  | False   | insert into sharding4 values (1,1),(2,2),(3,3),(4,4) | success     | schema1 |
-      | conn_2  | False   | select * from sharding4                              | length{(12)}| schema1 |
-      | conn_2  | False   | select * from sharding4 where id=1                   | length{(2)} | schema1 |
-      | conn_2  | False   | insert into child1 values (3,3)                      | success     | schema1 |
-      | conn_2  | true    | select * from child1                                 | length{(6)} | schema1 |
-      | conn_21 | False   | insert into sharding21 values (1,1),(2,2)            | success     | schema3 |
-      | conn_21 | true    | select * from sharding21                             | length{(4)} | schema3 |
+      | conn    | toClose | sql                                                  | expect      | db      | timeout |
+      | conn_2  | False   | insert into sharding2 values (1,1),(2,2)             | success     | schema1 |         |
+      | conn_2  | False   | select * from sharding2                              | length{(8)} | schema1 | 3       |
+      | conn_2  | False   | insert into sharding4 values (1,1),(2,2),(3,3),(4,4) | success     | schema1 |         |
+      | conn_2  | False   | select * from sharding4                              | length{(12)}| schema1 | 3       |
+      | conn_2  | False   | select * from sharding4 where id=1                   | length{(2)} | schema1 | 3       |
+      | conn_2  | False   | insert into child1 values (3,3)                      | success     | schema1 |         |
+      | conn_2  | true    | select * from child1                                 | length{(6)} | schema1 | 3       |
+      | conn_21 | False   | insert into sharding21 values (1,1),(2,2)            | success     | schema3 |         |
+      | conn_21 | true    | select * from sharding21                             | length{(4)} | schema3 | 3       |
     Then execute sql in "dble-3" in "user" mode
-      | conn    | toClose | sql                                   | expect      | db      |
-      | conn_3  | False   | insert into sing1 values (1)          | success     | schema1 |
-      | conn_3  | False   | select * from sing1                   | length{(4)} | schema1 |
-      | conn_3  | False   | insert into sing2 values (1)          | success     | schema1 |
-      | conn_3  | False   | select * from sing2                   | length{(2)} | schema1 |
-      | conn_3  | False   | insert into no_sharding1 values (1,1) | success     | schema1 |
-      | conn_3  | true    | select * from no_sharding1            | length{(4)} | schema1 |
-      | conn_31 | False   | insert into no_sharding2 values (1,1) | success     | schema3 |
-      | conn_31 | true    | select * from no_sharding2            | length{(2)} | schema3 |
-      | conn_32 | False   | show tables                           | success     | schema2 |
-      | conn_32 | False   | insert into vertical1 values (1)      | success     | schema2 |
-      | conn_32 | true    | select * from  vertical1              | length{(2)} | schema2 |
+      | conn    | toClose | sql                                   | expect      | db      | timeout |
+      | conn_3  | False   | insert into sing1 values (1)          | success     | schema1 |         |
+      | conn_3  | False   | select * from sing1                   | length{(4)} | schema1 | 3       |
+      | conn_3  | False   | insert into sing2 values (1)          | success     | schema1 |         |
+      | conn_3  | False   | select * from sing2                   | length{(2)} | schema1 | 3       |
+      | conn_3  | False   | insert into no_sharding1 values (1,1) | success     | schema1 |         |
+      | conn_3  | true    | select * from no_sharding1            | length{(4)} | schema1 | 3       |
+      | conn_31 | False   | insert into no_sharding2 values (1,1) | success     | schema3 |         |
+      | conn_31 | true    | select * from no_sharding2            | length{(2)} | schema3 | 3       |
+      | conn_32 | False   | show tables                           | success     | schema2 |         |
+      | conn_32 | False   | insert into vertical1 values (1)      | success     | schema2 |         |
+      | conn_32 | true    | select * from  vertical1              | length{(2)} | schema2 | 3       |
 
 
 
