@@ -199,16 +199,16 @@ Feature: verify hint sql
       | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
       | conn_0 | True    | truncate table mysql.general_log                                             | success     |
     Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | conn   | toClose | sql                                                                          | expect      | timeout |
+      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} | 3       |
+      | conn_0 | True    | truncate table mysql.general_log                                             | success     |         |
     Then execute sql in "dble-1" in "user" mode
       | sql                                             | expect  | db      |
       | /*!dble:db_type=slave*/select * from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | conn   | toClose | sql                                                                          | expect      | timeout |
+      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} | 3       |
+      | conn_0 | True    | truncate table mysql.general_log                                             | success     |         |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                          | expect      |
       | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
@@ -221,16 +221,16 @@ Feature: verify hint sql
       | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(0)} |
       | conn_0 | True    | truncate table mysql.general_log                                                        | success     |
     Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} |
-      | conn_0 | True    | truncate table mysql.general_log                                                        | success     |
+      | conn   | toClose | sql                                                                                     | expect      | timeout |
+      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} | 3       |
+      | conn_0 | True    | truncate table mysql.general_log                                                        | success     |         |
     Then execute sql in "dble-1" in "user" mode
       | sql                                                    | expect  | db      |
       | /*!dble:db_type=slave*/select count(*) from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} |
-      | conn_0 | True    | set global log_output='file'                                                            | success     |
+      | conn   | toClose | sql                                                                                     | expect      | timeout |
+      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} | 3       |
+      | conn_0 | True    | set global log_output='file'                                                            | success     |         |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                                     | expect      |
       | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(0)} |
@@ -292,16 +292,16 @@ Feature: verify hint sql
       | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
       | conn_0 | True    | truncate table mysql.general_log                                             | success     |
     Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | conn   | toClose | sql                                                                          | expect      | timeout |
+      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} | 3       |
+      | conn_0 | True    | truncate table mysql.general_log                                             | success     |         |
     Then execute sql in "dble-1" in "user" mode
       | sql                                             | expect  | db      |
       | /*!dble:db_type=slave*/select * from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | conn   | toClose | sql                                                                          | expect      | timeout |
+      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} | 3       |
+      | conn_0 | True    | truncate table mysql.general_log                                             | success     |         |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                          | expect      |
       | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
@@ -314,16 +314,16 @@ Feature: verify hint sql
       | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(0)} |
       | conn_0 | True    | truncate table mysql.general_log                                                        | success     |
     Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} |
-      | conn_0 | True    | truncate table mysql.general_log                                                        | success     |
+      | conn   | toClose | sql                                                                                     | expect      | timeout |
+      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} | 3       |
+      | conn_0 | True    | truncate table mysql.general_log                                                        | success     |         |
     Then execute sql in "dble-1" in "user" mode
       | sql                                                    | expect  | db      |
       | /*!dble:db_type=slave*/select count(*) from test_table | success | schema1 |
     Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} |
-      | conn_0 | True    | set global log_output='file'                                                            | success     |
+      | conn   | toClose | sql                                                                                     | expect      | timeout |
+      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} | 3       |
+      | conn_0 | True    | set global log_output='file'                                                            | success     |         |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                                     | expect      |
       | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(0)} |
