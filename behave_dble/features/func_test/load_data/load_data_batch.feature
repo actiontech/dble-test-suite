@@ -13,7 +13,7 @@ Feature: case about load data batch
     Then check resultset "A" has lines with following column values
       | variable_name-0     | variable_value-1 | comment-2                                                                                                         | read_only-3 |
       | maxRowSizeToFile    | 100000           | The maximum row size,if over this value,row data will be saved to file when load data.The default value is 100000 | false       |
-      | enableBatchLoadData | 0                | Enable Batch Load Data. The default value is false                                                                | false       |
+      | enableBatchLoadData | 0                | Enable Batch Load Data. The default value is 0(false)                                                             | false       |
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
       """
       enableBatchLoadData=0
@@ -27,7 +27,7 @@ Feature: case about load data batch
     Then check resultset "B" has lines with following column values
       | variable_name-0     | variable_value-1 | comment-2                                                                                                         | read_only-3 |
       | maxRowSizeToFile    | 100000           | The maximum row size,if over this value,row data will be saved to file when load data.The default value is 100000 | false       |
-      | enableBatchLoadData | 1                | Enable Batch Load Data. The default value is false                                                                | false       |
+      | enableBatchLoadData | 1                | Enable Batch Load Data. The default value is 0(false)                                                             | false       |
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
       """
       enableBatchLoadData=1
@@ -44,7 +44,7 @@ Feature: case about load data batch
     Then check resultset "C" has lines with following column values
       | variable_name-0     | variable_value-1 | comment-2                                                                                                         | read_only-3 |
       | maxRowSizeToFile    | 100000           | The maximum row size,if over this value,row data will be saved to file when load data.The default value is 100000 | false       |
-      | enableBatchLoadData | 0                | Enable Batch Load Data. The default value is false                                                                | false       |
+      | enableBatchLoadData | 0                | Enable Batch Load Data. The default value is 0(false)                                                             | false       |
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
       """
       enableBatchLoadData=0
@@ -67,7 +67,7 @@ Feature: case about load data batch
     Then check resultset "A" has lines with following column values
       | variable_name-0     | variable_value-1 | comment-2                                                                                                         | read_only-3 |
       | maxRowSizeToFile    | 100000           | The maximum row size,if over this value,row data will be saved to file when load data.The default value is 100000 | false       |
-      | enableBatchLoadData | 1                | Enable Batch Load Data. The default value is false                                                                | false       |
+      | enableBatchLoadData | 1                | Enable Batch Load Data. The default value is 0(false)                                                             | false       |
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
       """
       enableBatchLoadData=1

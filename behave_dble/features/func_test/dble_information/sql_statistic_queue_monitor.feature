@@ -242,8 +242,9 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | ON            |
       | samplingRate             | 20            |
       | queueMonitor             | monitoring    |
-    # more 10s，equal [observeTime + a intervalTime cycle]，checking queueMonitor
-    Given sleep "10" seconds
+    # more 10s，equal [observeTime + a intervalTime cycle]，checking queueMonitor <3.22.11
+    # more 5s，equal [observeTime + a intervalTime cycle]，checking queueMonitor 3.22.11 due to jira DBLE0REQ-2042
+    Given sleep "6" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_11"
       | conn   | toClose  | sql                             | db               |
       | conn_0 | False    | show @@statistic;               | dble_information |
