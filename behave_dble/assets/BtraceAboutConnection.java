@@ -53,17 +53,32 @@ public final class BtraceAboutConnection {
         }
     }
 
-    @OnMethod(
-            clazz = "com.actiontech.dble.backend.pool.ConnectionPool",
-           //location=@Location(value=Kind.LINE,line=373) for 3.22.01
-           //location=@Location(value=Kind.LINE,line=382) <3.22.11
-            location=@Location(value=Kind.LINE,line=401)
+//     @OnMethod(
+//             clazz = "com.actiontech.dble.backend.pool.ConnectionPool",
+// //             location=@Location(value=Kind.LINE,line=373) for 3.22.01
+//             location=@Location(value=Kind.LINE,line=382)
+//
+//     )
+//     public static void evict(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+//         if(num2.get() == 0) {
+//             num2.incrementAndGet();
+//             BTraceUtils.println("get into evict");
+//             BTraceUtils.println("---------------");
+//             Thread.sleep(10L);
+//             BTraceUtils.println("sleep end ");
+//             BTraceUtils.println("---------------");
+//         }
+//     }
 
+    @OnMethod(
+            clazz = "com.actiontech.dble.net.connection.PooledConnection",
+            method = "compareAndSet",
+            location = @Location(Kind.RETURN)
     )
-    public static void evict(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
-        if(num2.get() == 0) {
-            num2.incrementAndGet();
-            BTraceUtils.println("get into evict");
+    // This method is called when the connection status changes. -2 means evict
+    public static void compareAndSet(int expect, int update) throws Exception {
+        if(update == -2) {
+            BTraceUtils.println("get into compareAndSet");
             BTraceUtils.println("---------------");
             Thread.sleep(10L);
             BTraceUtils.println("sleep end ");
