@@ -147,7 +147,9 @@ Feature:  dble_status test
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
       | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '16',), ('transactions', '13',))}    |
-   Given prepare a thread execute sql "exit" with "conn_1"
+   Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql  | expect |
+      | conn_1 | False   | exit | druid not support sql syntax, the reason is syntax error, error in :'exit, pos 4, line 1, column 5, token IDENTIFIER exit |
   #case query exit, questions and transactions add 1
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
