@@ -30,12 +30,12 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | sql                 |
       | show @@shardingnode |
     Then check resultset "A" has lines with following column values
-      | NAME-0 | DB_GROUP-1    | SCHEMA_EXISTS-2 | ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn1    | ha_group1/da1 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn2    | ha_group2/da1 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn3    | ha_group1/da2 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn4    | ha_group2/da2 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn5    | ha_group1/da3 | true            | 0        | 0      | 1000   | 0         | -1              |
+      | NAME-0 | DB_GROUP-1    | SCHEMA_EXISTS-2 | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+      | dn1    | ha_group1/da1 | true            | 0        | 1000   | 0         | -1              |
+      | dn2    | ha_group2/da1 | true            | 0        | 1000   | 0         | -1              |
+      | dn3    | ha_group1/da2 | true            | 0        | 1000   | 0         | -1              |
+      | dn4    | ha_group2/da2 | true            | 0        | 1000   | 0         | -1              |
+      | dn5    | ha_group1/da3 | true            | 0        | 1000   | 0         | -1              |
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                       | expect          |
       | conn_0 | False    | show databases like 'da1' | has{('da1',),}  |
@@ -59,12 +59,12 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | sql                 |
       | show @@shardingnode |
     Then check resultset "A1" has lines with following column values
-      | NAME-0 | DB_GROUP-1    | SCHEMA_EXISTS-2  | ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn1    | ha_group1/da1 | false            | 0        | 0      | 1000   | 0         | -1              |
-      | dn2    | ha_group2/da1 | false            | 0        | 0      | 1000   | 0         | -1              |
-      | dn3    | ha_group1/da2 | false            | 0        | 0      | 1000   | 0         | -1              |
-      | dn4    | ha_group2/da2 | false            | 0        | 0      | 1000   | 0         | -1              |
-      | dn5    | ha_group1/da3 | false            | 0        | 0      | 1000   | 0         | -1              |
+      | NAME-0 | DB_GROUP-1    | SCHEMA_EXISTS-2  | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+      | dn1    | ha_group1/da1 | false            | 0        | 1000   | 0         | -1              |
+      | dn2    | ha_group2/da1 | false            | 0        | 1000   | 0         | -1              |
+      | dn3    | ha_group1/da2 | false            | 0        | 1000   | 0         | -1              |
+      | dn4    | ha_group2/da2 | false            | 0        | 1000   | 0         | -1              |
+      | dn5    | ha_group1/da3 | false            | 0        | 1000   | 0         | -1              |
 # skip because http://10.186.18.11/jira/browse/DBLE0REQ-672
 #    Given execute single sql in "dble-1" in "admin" mode and save resultset in "A2"
 #      | sql                 |
@@ -117,12 +117,12 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | sql                 |
       | show @@shardingnode |
     Then check resultset "B" has lines with following column values
-      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2 | ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn1    | ha_group1/da11 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn2    | ha_group2/da11 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn3    | ha_group1/da21 | false           | 0        | 0      | 1000   | 0         | -1              |
-      | dn4    | ha_group2/da21 | false           | 0        | 0      | 1000   | 0         | -1              |
-      | dn5    | ha_group1/da31 | false           | 0        | 0      | 1000   | 0         | -1              |
+      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2 | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+      | dn1    | ha_group1/da11 | true            | 0        | 1000   | 0         | -1              |
+      | dn2    | ha_group2/da11 | true            | 0        | 1000   | 0         | -1              |
+      | dn3    | ha_group1/da21 | false           | 0        | 1000   | 0         | -1              |
+      | dn4    | ha_group2/da21 | false           | 0        | 1000   | 0         | -1              |
+      | dn5    | ha_group1/da31 | false           | 0        | 1000   | 0         | -1              |
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                        | expect          |
       | conn_0 | False    | show databases like 'da11' | has{('da11',),} |
@@ -137,12 +137,12 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | sql                 |
       | show @@shardingnode |
     Then check resultset "B1" has lines with following column values
-      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2 | ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn1    | ha_group1/da11 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn2    | ha_group2/da11 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn3    | ha_group1/da21 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn4    | ha_group2/da21 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn5    | ha_group1/da31 | true            | 0        | 0      | 1000   | 0         | -1              |
+      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2 | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+      | dn1    | ha_group1/da11 | true            | 0        | 1000   | 0         | -1              |
+      | dn2    | ha_group2/da11 | true            | 0        | 1000   | 0         | -1              |
+      | dn3    | ha_group1/da21 | true            | 0        | 1000   | 0         | -1              |
+      | dn4    | ha_group2/da21 | true            | 0        | 1000   | 0         | -1              |
+      | dn5    | ha_group1/da31 | true            | 0        | 1000   | 0         | -1              |
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                        | expect           |
       | conn_0 | False    | show databases like 'da11' | has{('da11',),}  |
@@ -166,12 +166,12 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | sql                 |
       | show @@shardingnode |
     Then check resultset "B2" has lines with following column values
-      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2 | ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn1    | ha_group1/da11 | false           | 0        | 0      | 1000   | 0         | -1              |
-      | dn2    | ha_group2/da11 | false           | 0        | 0      | 1000   | 0         | -1              |
-      | dn3    | ha_group1/da21 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn4    | ha_group2/da21 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn5    | ha_group1/da31 | true            | 0        | 0      | 1000   | 0         | -1              |
+      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2 | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+      | dn1    | ha_group1/da11 | false           | 0        | 1000   | 0         | -1              |
+      | dn2    | ha_group2/da11 | false           | 0        | 1000   | 0         | -1              |
+      | dn3    | ha_group1/da21 | true            | 0        | 1000   | 0         | -1              |
+      | dn4    | ha_group2/da21 | true            | 0        | 1000   | 0         | -1              |
+      | dn5    | ha_group1/da31 | true            | 0        | 1000   | 0         | -1              |
 # skip because http://10.186.18.11/jira/browse/DBLE0REQ-672
 #    Given execute single sql in "dble-1" in "admin" mode and save resultset in "B3"
 #      | sql                 |
@@ -224,12 +224,12 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | sql                 |
       | show @@shardingnode |
     Then check resultset "C" has lines with following column values
-      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2 | ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn10   | ha_group1/da00 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn11   | ha_group1/da01 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn20   | ha_group2/da00 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn21   | ha_group2/da01 | true            | 0        | 0      | 1000   | 0         | -1              |
-      | dn5    | ha_group1/da31 | false           | 0        | 0      | 1000   | 0         | -1              |
+      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2 | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+      | dn10   | ha_group1/da00 | true            | 0        | 1000   | 0         | -1              |
+      | dn11   | ha_group1/da01 | true            | 0        | 1000   | 0         | -1              |
+      | dn20   | ha_group2/da00 | true            | 0        | 1000   | 0         | -1              |
+      | dn21   | ha_group2/da01 | true            | 0        | 1000   | 0         | -1              |
+      | dn5    | ha_group1/da31 | false           | 0        | 1000   | 0         | -1              |
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                        | expect          |
       | conn_0 | False    | show databases like 'da00' | has{('da00',),} |
@@ -244,12 +244,12 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | sql                 |
       | show @@shardingnode |
     Then check resultset "C" has lines with following column values
-      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2  | ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn10   | ha_group1/da00 | false            | 0        | 0      | 1000   | 0         | -1              |
-      | dn11   | ha_group1/da01 | false            | 0        | 0      | 1000   | 0         | -1              |
-      | dn20   | ha_group2/da00 | false            | 0        | 0      | 1000   | 0         | -1              |
-      | dn21   | ha_group2/da01 | false            | 0        | 0      | 1000   | 0         | -1              |
-      | dn5    | ha_group1/da31 | false            | 0        | 0      | 1000   | 0         | -1              |
+      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2  | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+      | dn10   | ha_group1/da00 | false            | 0        | 1000   | 0         | -1              |
+      | dn11   | ha_group1/da01 | false            | 0        | 1000   | 0         | -1              |
+      | dn20   | ha_group2/da00 | false            | 0        | 1000   | 0         | -1              |
+      | dn21   | ha_group2/da01 | false            | 0        | 1000   | 0         | -1              |
+      | dn5    | ha_group1/da31 | false            | 0        | 1000   | 0         | -1              |
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                        | expect          |
       | conn_0 | False    | show databases like 'da00' | length{(0)}     |
