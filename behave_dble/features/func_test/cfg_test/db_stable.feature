@@ -3,8 +3,22 @@
 # Created by zhaohongjie at 2018/12/7
 Feature: db config stable test
 
-  Background delete default configs not must，reload @@config_all success
-    Given delete the following xml segment
+#  Background delete default configs not must，reload @@config_all success
+#    Given delete the following xml segment
+#      | file          | parent           | child                                             |
+#      | sharding.xml  | {'tag':'root'}   | {'tag':'schema'}                                  |
+#      | sharding.xml  | {'tag':'root'}   | {'tag':'shardingNode'}                            |
+#      | db.xml        | {'tag':'root'}   | {'tag':'dbGroup'}                                 |
+#      | user.xml      | {'tag':'root'}   | {'tag':'shardingUser', 'kv_map':{'name':'test'}}  |
+#    Then execute admin cmd "reload @@config_all"
+#    Given Restart dble in "dble-1" success
+
+  @NORMAL @restore_mysql_service
+  Scenario: config contains only 1 stopped mysqld, reload @@config_all fail, start the mysqld, reload @@config_all success #1
+     """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
+     Given delete the following xml segment
       | file          | parent           | child                                             |
       | sharding.xml  | {'tag':'root'}   | {'tag':'schema'}                                  |
       | sharding.xml  | {'tag':'root'}   | {'tag':'shardingNode'}                            |
@@ -13,11 +27,6 @@ Feature: db config stable test
     Then execute admin cmd "reload @@config_all"
     Given Restart dble in "dble-1" success
 
-  @NORMAL @restore_mysql_service
-  Scenario: config contains only 1 stopped mysqld, reload @@config_all fail, start the mysqld, reload @@config_all success #1
-     """
-    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
-    """
     Given stop mysql in host "mysql-master1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -38,7 +47,7 @@ Feature: db config stable test
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload config failure
+    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group1.hostM1]}
     """
     Given start mysql in host "mysql-master1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -117,7 +126,7 @@ Feature: db config stable test
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload config failure
+    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hosts1]}
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
