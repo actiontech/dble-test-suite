@@ -120,14 +120,14 @@ Feature:check DDL log in cluster
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='frontWorker'                   | success                                | dble_information |
       | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='frontWorker'     | has{(('frontWorker', 4, 4),)}          | dble_information |
 
-    Given execute sql "2000" times in "dble-1" together use 1000 connection not close
+    Given execute sql "200" times in "dble-1" together use 100 connection not close
       | sql                                                                          | db      |
       | drop table if exists sharding_4_t1;create table sharding_4_t1(id int)        | schema1 |
 
     Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                           | occur_times |
-      | <init_ddl_trace>              | 4000        |
-      | <finish_ddl_trace>            | 4000        |
+      | <init_ddl_trace>              | 400         |
+      | <finish_ddl_trace>            | 400         |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
