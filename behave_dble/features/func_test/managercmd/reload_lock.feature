@@ -47,7 +47,7 @@ Feature: when reload hang,emergency means to deal with it
      Given sleep "10" seconds
      Then check sql thread output in "err"
         """
-        Reload config failure.
+        Reload Failure
         """
      Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
        | conn   | toClose   | sql                      |   db              |

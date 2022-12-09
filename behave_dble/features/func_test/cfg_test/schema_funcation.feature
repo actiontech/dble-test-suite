@@ -12,24 +12,24 @@ Feature: schema support add function
         <schema shardingNode="dn1,dn2" name="schema2" function="hash-four" sqlMaxLimit="100"/>
       """
     Then execute sql in "dble-1" in "admin" mode
-      |conn   | toClose | sql                          | expect                    |
-      |conn_1 | False   | reload @@config_all          | Reload config failure.    |
+      |conn   | toClose | sql                          | expect            |
+      |conn_1 | False   | reload @@config_all          | Reload Failure    |
     #schema cannot add same shardingNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
         <schema shardingNode="dn1,dn1" name="schema3" function="hash-two" sqlMaxLimit="100"/>
       """
     Then execute sql in "dble-1" in "admin" mode
-      |conn   | toClose | sql                          | expect                 |
-      |conn_1 | False   | reload @@config_all          | Reload config failure. |
+      |conn   | toClose | sql                          | expect         |
+      |conn_1 | False   | reload @@config_all          | Reload Failure |
     #schema's name cannot be duplicated
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
         <schema shardingNode="dn1,dn2" name="schema1" function="hash-two" sqlMaxLimit="100"/>
       """
     Then execute sql in "dble-1" in "admin" mode
-      |conn   | toClose | sql                          | expect                 |
-      |conn_1 | False   | reload @@config_all          | Reload config failure. |
+      |conn   | toClose | sql                          | expect         |
+      |conn_1 | False   | reload @@config_all          | Reload Failure |
 
   Scenario: create table with different type of column to test the table's shardingKey be correctly confirmed      #2
     # shardingKey confirmed rules:
@@ -258,8 +258,8 @@ Feature: schema support add function
         </schema>
       """
     Then execute sql in "dble-1" in "admin" mode
-      |conn   | toClose | sql                          | expect                 |
-      |conn_0 | False   | reload @@config_all          | Reload config failure. |
+      |conn   | toClose | sql                          | expect         |
+      |conn_0 | False   | reload @@config_all          | Reload Failure |
     Given delete the following xml segment
       |file            | parent          | child               |
       |sharding.xml    |{'tag':'root'}   | {'tag':'schema'}    |
@@ -276,8 +276,8 @@ Feature: schema support add function
         </schema>
       """
     Then execute sql in "dble-1" in "admin" mode
-      |conn   | toClose | sql                          | expect                 |
-      |conn_0 | False   | reload @@config_all          | Reload config failure. |
+      |conn   | toClose | sql                          | expect         |
+      |conn_0 | False   | reload @@config_all          | Reload Failure |
     Given delete the following xml segment
       |file            | parent          | child               |
       |sharding.xml    |{'tag':'root'}   | {'tag':'schema'}    |
@@ -294,8 +294,8 @@ Feature: schema support add function
         </schema>
       """
     Then execute sql in "dble-1" in "admin" mode
-      |conn   | toClose | sql                          | expect                 |
-      |conn_0 | False   | reload @@config_all          | Reload config failure. |
+      |conn   | toClose | sql                          | expect         |
+      |conn_0 | False   | reload @@config_all          | Reload Failure |
     Given delete the following xml segment
       |file            | parent          | child               |
       |sharding.xml    |{'tag':'root'}   | {'tag':'schema'}    |
@@ -312,8 +312,8 @@ Feature: schema support add function
         </schema>
       """
     Then execute sql in "dble-1" in "admin" mode
-      |conn   | toClose | sql                          | expect                 |
-      |conn_0 | False   | reload @@config_all          | Reload config failure. |
+      |conn   | toClose | sql                          | expect         |
+      |conn_0 | False   | reload @@config_all          | Reload Failure |
 
     # custom table config correctly, check the correctness of the shards
     Given delete the following xml segment
