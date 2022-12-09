@@ -481,6 +481,7 @@ Feature: test "binlog" in zk cluster
     Given execute sqls in "dble-2" at background
       | conn    | toClose | sql                                                 | db      |
       | conn_21 | true    | alter table global1 add tal int default 2020122801  | schema1 |
+    Given sleep "1" seconds
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
@@ -515,6 +516,7 @@ Feature: test "binlog" in zk cluster
     Given execute sqls in "dble-2" at background
       | conn    | toClose | sql                                  | db      |
       | conn_21 | true    | create index index1 ON global2(id)   | schema1 |
+    Given sleep "1" seconds
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
@@ -547,6 +549,7 @@ Feature: test "binlog" in zk cluster
     Given execute sqls in "dble-3" at background
       | conn    | toClose | sql                                                   | db      |
       | conn_31 | true    | alter table sharding2 add tal int default 2020122802  | schema1 |
+    Given sleep "1" seconds
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
@@ -580,6 +583,7 @@ Feature: test "binlog" in zk cluster
     Given execute sqls in "dble-1" at background
       | conn    | toClose | sql                                                   | db      |
       | conn_11 | true    | alter table sharding4 add tal int default 2020122803  | schema1 |
+    Given sleep "1" seconds
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
@@ -608,6 +612,7 @@ Feature: test "binlog" in zk cluster
     Given execute sqls in "dble-3" at background
       | conn    | toClose | sql                                          | db      |
       | conn_31 | true    | alter table child1 add index index2(name)    | schema1 |
+    Given sleep "1" seconds
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
@@ -740,7 +745,8 @@ Feature: test "binlog" in zk cluster
       """
       get into NonBlockingSession,start sleep
       """
-     Then execute "admin" cmd  in "dble-2" at background
+    Given sleep "1" seconds
+    Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_2  | False   | show @@binlog.status | dble_information |
     Given prepare a thread execute sql "insert into global1 values (4,4,4)" with "conn_31"
