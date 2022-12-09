@@ -42,7 +42,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload config failure.The reason is The user's group[ana1.ha_group3] for analysisUser isn't configured in db.xml.
+    Reload Failure, The reason is The user's group[ana1.ha_group3] for analysisUser isn't configured in db.xml.
     """
     Then Restart dble in "dble-1" failed for
      """
@@ -66,7 +66,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload config failure.The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: databaseType [CLICKHOUSE]  use lowercase
+    Reload Failure, The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: databaseType [CLICKHOUSE]  use lowercase
     """
 
     ### databaseType is default
@@ -79,7 +79,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload config failure.The reason is The group[ana1.ha_group3] all dbInstance database type must be CLICKHOUSE
+    Reload Failure, The reason is The group[ana1.ha_group3] all dbInstance database type must be CLICKHOUSE
     """
     ### databaseType is mysql
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -91,7 +91,7 @@ Feature: test config in user.xml  ---  analysisUser
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload config failure.The reason is The group[ana1.ha_group3] all dbInstance database type must be CLICKHOUSE
+    Reload Failure, The reason is The group[ana1.ha_group3] all dbInstance database type must be CLICKHOUSE
     """
     ### databaseType is
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"

@@ -311,7 +311,7 @@ Feature: check keepAlive
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload config failure.The reason is dbGroup ha_group2 keepAlive should be greater than 0!
+    Reload Failure, The reason is dbGroup ha_group2 keepAlive should be greater than 0!
     """
 
   #DBLE0REQ-1371

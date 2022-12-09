@@ -506,7 +506,7 @@ Feature: test "reload @@config" in zk cluster
       maxCon=\"108\"
       """
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
-    #  Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 70; cvc-datatype-valid.1.2.1: '1.2' is not a valid value for 'integer'.
+    #  Reload Failure, The reason is com.actiontech.dble.config.util.ConfigException: org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 70; cvc-datatype-valid.1.2.1: '1.2' is not a valid value for 'integer'.
       """
       '1.2' is not a valid value for 'integer'
       """
@@ -610,9 +610,9 @@ Feature: test "reload @@config" in zk cluster
       """
     Given sleep "10" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
-    # Reload config failure.The reason is SelfCheck### User[name:test]'s schema [schema4444] is not exist!
+    # Reload Failure, The reason is SelfCheck### User[name:test]'s schema [schema4444] is not exist!
       """
-      Reload config failure
+      Reload Failure
       """
     #case check on zookeeper
     Given execute linux command in "dble-2"
@@ -920,7 +920,7 @@ Feature: test "reload @@config" in zk cluster
       Given sleep "10" seconds
       Then check sql thread output in "err"
         """
-        Reload config failure.
+        Reload Failure
         """
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "1B"
         | conn    | toClose   | sql                    |  db                |

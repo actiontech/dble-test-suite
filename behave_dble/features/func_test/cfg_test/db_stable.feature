@@ -47,7 +47,7 @@ Feature: db config stable test
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group1.hostM1]}
+    Reload Failure, The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group1.hostM1]}
     """
     Given start mysql in host "mysql-master1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -126,7 +126,7 @@ Feature: db config stable test
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hosts1]}
+    Reload Failure, The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hosts1]}
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """

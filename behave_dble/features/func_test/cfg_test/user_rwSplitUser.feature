@@ -43,7 +43,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload config failure.The reason is The user's group[rwS1.ha_group3] for rwSplit isn't configured in db.xml.
+    Reload Failure, The reason is The user's group[rwS1.ha_group3] for rwSplit isn't configured in db.xml.
     """
     Then Restart dble in "dble-1" failed for
      """
@@ -68,7 +68,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload config failure.The reason is The group[rwS1.ha_group3] all dbInstance database type must be MYSQL
+    Reload Failure, The reason is The group[rwS1.ha_group3] all dbInstance database type must be MYSQL
     """
 
      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -80,7 +80,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload config failure.The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: databaseType [MYSQL]  use lowercase
+    Reload Failure, The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: databaseType [MYSQL]  use lowercase
     """
 
 
@@ -100,7 +100,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload config failure.The reason is The group[rwS1.ha_group1] has been used by sharding node, can't be used by rwSplit
+    Reload Failure, The reason is The group[rwS1.ha_group1] has been used by sharding node, can't be used by rwSplit
     """
 
 

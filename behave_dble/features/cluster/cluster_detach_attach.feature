@@ -180,7 +180,7 @@ Feature: check single dble detach or attach from cluster
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                                | expect                                                  |
-      | conn_1 | False     | reload @@config_all                | Reload config failure.The reason is cluster is detached |
+      | conn_1 | False     | reload @@config_all                | Reload Failure, The reason is cluster is detached       |
       | conn_1 | False     | show @@binlog.status               | cluster is detached                                     |
       | conn_1 | False     | dbGroup @@disable name='ha_group1' | cluster is detached, you should attach cluster first.   |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_A"
@@ -801,7 +801,7 @@ Feature: check single dble detach or attach from cluster
     Given sleep "5" seconds
     Then check sql thread output in "err"
     """
-    Reload config failure.The reason is cluster is detached
+    Reload Failure, The reason is cluster is detached
     """
 
     # check attach and manager command
