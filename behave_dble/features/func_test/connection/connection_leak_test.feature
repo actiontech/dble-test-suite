@@ -101,18 +101,18 @@ Feature: connection leak test
         | conn_0  | False     | create table table_b(id int,name varchar(40))   | schema1     | success  |
         | conn_0  | False     | create table table_c(name varchar(40),id int)   | schema1     | success  |
         | conn_0  | False     | insert into table_b set id = 1,name = "xx"      | schema1     | success  |
-    Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
-    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
+    Given delete file "/opt/dble/BtraceClusterDelayquery.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceClusterDelayquery.java.log" on "dble-1"
+    Given update file content "./assets/BtraceClusterDelayquery.java" in "behave" with sed cmds
       """
        s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
        /synAndDoExecute/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
       """
-    Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
+    Given prepare a thread run btrace script "BtraceClusterDelayquery.java" in "dble-1"
     Given sleep "5" seconds
     Given prepare a thread execute sql "insert into table_c set id =5,name ="xx"" with "conn_0"
     Given sleep "2" seconds
-    Then check following text exist "Y" in file "/opt/dble/BtraceClusterDelay.java.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/BtraceClusterDelayquery.java.log" in host "dble-1"
       """
       get into query
       """
@@ -122,10 +122,10 @@ Feature: connection leak test
       """
         1105, "java.io.IOException: the dbInstance[172.100.9.5:3306] can't reach. Please check the dbInstance is accessible"
       """
-    Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
+    Given stop btrace script "BtraceClusterDelayquery.java" in "dble-1"
     Given destroy btrace threads list
-    Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
+    Given delete file "/opt/dble/BtraceClusterDelayquery.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceClusterDelayquery.java.log" on "dble-1"
 
     #CASE2: transaction nums more than maxCon nums in the same front connection, new front connection can execute sql successfully
     Given sleep "10" seconds
