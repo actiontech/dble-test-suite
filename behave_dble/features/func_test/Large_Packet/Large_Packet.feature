@@ -60,7 +60,8 @@ Feature:Support MySQL's large package protocol
       s/sbtest2/test/g
       """
     #_mysql_exceptions.OperationalError: (1153, "Got a packet bigger than 'max_allowed_packet' bytes")       # DBLE0REQ-960
-    Given execute linux command in "dble-1" and contains exception "Got a packet bigger than"
+     ## Packet for query is too large (16777219 > 7340032).You can change maxPacketSize value in bootstrap.cnf  #DBLE0REQ-2004
+    Given execute linux command in "dble-1" and contains exception "Packet for query is too large (16777219 > 7340032).You can change maxPacketSize value in bootstrap.cnf"
       """
       python3 /opt/LargePacket.py
       """
