@@ -72,8 +72,9 @@ Feature: #mysql node disconnected,check the change of dble
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                 | expect                                                            |
       | conn_0 | False   | dryrun              | hasStr{Can't connect to [dbInstance[ha_group1.hostM1]]}           |
-      | conn_0 | True    | reload @@config_all | Reload Failure, The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly |
-    Given Restart dble in "dble-1" success
+      | conn_0 | True    | reload @@config_all | success       |
+   ## DBLE0REQ-2003 只是停一个mysql不影响reload
+  #    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect               | db      |
       | conn_0 | False   | insert into test_table values(1,3)    | success              | schema1 |
