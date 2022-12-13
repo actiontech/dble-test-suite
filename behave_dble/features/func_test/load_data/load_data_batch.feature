@@ -128,15 +128,16 @@ Feature: case about load data batch
     """
     echo -e '1,1\n2,2\n3,3\n4,4\n5,5\n6,6\n7,7\n8,8\n9,9\n10,10\n11,11\n12,12\n13,13' > /opt/dble/data.txt
     """
-    Given connect "dble-1" with user "test" in "dble-1" to execute sql
-    """
-    drop table if exists schema1.sharding_2_t1
-    drop table if exists schema1.test
-    drop table if exists schema1.test1
-    create table schema1.sharding_2_t1(id int,c int)
-    create table schema1.test(id int,c int)
-    create table schema1.test1(id int,c int)
-    """
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                | db      |
+      | new_1  | False   | drop table if exists schema1.sharding_2_t1         | schema1 |
+      | new_1  | False   | drop table if exists schema1.test                  | schema1 |
+      | new_1  | False   | drop table if exists schema1.test1                 | schema1 |
+      | new_1  | False   | create table schema1.sharding_2_t1(id int,c int)   | schema1 |
+      | new_1  | False   | create table schema1.test(id int,c int)            | schema1 |
+      | new_1  | True    | create table schema1.test1(id int,c int)           | schema1 |
+
+
     Then execute admin cmd "enable @@load_data_batch"
     Then execute admin cmd "reload @@load_data.num=2"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
@@ -275,6 +276,13 @@ Feature: case about load data batch
     Given delete file "/opt/dble/BtraceAboutLoadDataBatch.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutLoadDataBatch.java.log" on "dble-1"
     Given delete file "/opt/dble/data.txt" on "dble-1"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                | db      |
+      | new_1  | False   | drop table if exists schema1.sharding_2_t1         | schema1 |
+      | new_1  | False   | drop table if exists schema1.test                  | schema1 |
+      | new_1  | true    | drop table if exists schema1.test1                 | schema1 |
+
+
 
   Scenario: test something wrong with file , the logic of load data batch          #4
     #for Multi-node-sharding table
@@ -286,15 +294,15 @@ Feature: case about load data batch
     """
     echo -e '1,1\n2,2\n3,3\n4,4\n5,5\n6,a\n7,7\n8,8\n9,9\n10,10\n11,11\n12,12\n13,13' > /opt/dble/data.txt
     """
-    Given connect "dble-1" with user "test" in "dble-1" to execute sql
-    """
-    drop table if exists schema1.sharding_2_t1
-    drop table if exists schema1.test
-    drop table if exists schema1.test1
-    create table schema1.sharding_2_t1(id int,c int)
-    create table schema1.test(id int,c int)
-    create table schema1.test1(id int,c int)
-    """
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                | db      |
+      | new_1  | False   | drop table if exists schema1.sharding_2_t1         | schema1 |
+      | new_1  | False   | drop table if exists schema1.test                  | schema1 |
+      | new_1  | False   | drop table if exists schema1.test1                 | schema1 |
+      | new_1  | False   | create table schema1.sharding_2_t1(id int,c int)   | schema1 |
+      | new_1  | False   | create table schema1.test(id int,c int)            | schema1 |
+      | new_1  | True    | create table schema1.test1(id int,c int)           | schema1 |
+
     Then execute admin cmd "enable @@load_data_batch"
     Then execute admin cmd "reload @@load_data.num=2"
     Then execute sql in "dble-1" in "user" mode
@@ -440,6 +448,14 @@ Feature: case about load data batch
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
     Then check path "/opt/dble/temp/error" in "dble-1" should not exist
     Given delete file "/opt/dble/data.txt" on "dble-1"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                | db      |
+      | new_1  | False   | drop table if exists schema1.sharding_2_t1         | schema1 |
+      | new_1  | False   | drop table if exists schema1.test                  | schema1 |
+      | new_1  | true    | drop table if exists schema1.test1                 | schema1 |
+
+
+
 
   Scenario: test during execute load data, backend mysql disconnected, the logic of load data batch       #5
     Given execute admin cmd "kill @@load_data" success
@@ -571,15 +587,16 @@ Feature: case about load data batch
     """
     echo -e '1,1\n2,2\n3,3\n4,4\n5,5\n6,6\n7,7\n8,8\n9,9\n10,10\n11,11\n12,12\n13,13' > /opt/dble/data.txt
     """
-    Given connect "dble-1" with user "test" in "dble-1" to execute sql
-    """
-    drop table if exists schema1.sharding_2_t1
-    drop table if exists schema1.test
-    drop table if exists schema1.test1
-    create table schema1.sharding_2_t1(id int,c int)
-    create table schema1.test(id int,c int)
-    create table schema1.test1(id int,c int)
-    """
+
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                | db      |
+      | new_1  | False   | drop table if exists schema1.sharding_2_t1         | schema1 |
+      | new_1  | False   | drop table if exists schema1.test                  | schema1 |
+      | new_1  | False   | drop table if exists schema1.test1                 | schema1 |
+      | new_1  | False   | create table schema1.sharding_2_t1(id int,c int)   | schema1 |
+      | new_1  | False   | create table schema1.test(id int,c int)            | schema1 |
+      | new_1  | True    | create table schema1.test1(id int,c int)           | schema1 |
+
     Then execute admin cmd "enable @@load_data_batch"
     Then execute admin cmd "reload @@load_data.num=2"
 
