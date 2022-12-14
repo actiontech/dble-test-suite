@@ -266,8 +266,14 @@ def check_text(context,flag,filename,hostname,checkFromLine=0):
         logger.debug("grep cmd is: {}".format(cmd))
         rc, stdout, stderr = ssh.exec_command(cmd)
         if flag =="N":
+            logt = "cat {}".format(filename)
+            rc0, sto0, ste0 = ssh.exec_command(logt)
+            logger.debug("logtxt:{0}".format(sto0))
             assert_that(len(stdout) == 0,"expect \"{0}\" not exist in file {1},but exist".format(str,filename))
         else:#default take flag as Y
+            logtxt = "cat {}".format(filename)
+            rc1, sto1, ste1 = ssh.exec_command(logtxt)
+            logger.debug("logtxt:{0}".format(sto1))
             assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1},but not".format(str, filename))
 
 
