@@ -128,7 +128,7 @@ Feature: test slow query log related manager command
      """
      insert into a_test values\(1,1\),\(2,1111\)
      """
-  # case to check xa query log written in assigned file
+  # case to check transaction query log written in assigned file
      Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                           | expect  | db      |
       | conn_0 | False   | begin                                         | success | schema1 |
@@ -143,17 +143,17 @@ Feature: test slow query log related manager command
      """
      update a_test set name = \"3\"
      """
-#case wiat 10 secends in conn0 query commit ,to check slowlogs has update sql
-     Given sleep "10" seconds
      Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql    | expect  | db      |
       | conn_0 | true    | commit | success | schema1 |
+  # case wait 3 seconds to check slowlogs has below update sql
+     Given sleep "3" seconds
      Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
      update a_test set name = \"3\"
      """
     Given destroy sql threads list
-#case drop table
+  # case drop table
      Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                        | expect  | db      |
       | conn_1 | true    | commit                                     | success | schema1 |
