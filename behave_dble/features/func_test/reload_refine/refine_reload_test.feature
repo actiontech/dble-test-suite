@@ -1748,8 +1748,8 @@ Feature: refine reload of DBLE0REQ-1793
       | test | 111111 | conn_0 | False   | FLUSH PRIVILEGES                                      | success                | mysql |
       | test | 111111 | conn_0 | True    | SELECT user,host from user where user='test1'         | has{(('test1', '%'),)} | mysql |
     Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                     | db               | expect                                                                |
-      | conn_0 | True    | select name,db_group,addr,port,user,encrypt_configured from dble_db_instance where db_group='ha_group1' | dble_information | has{(('host4M', 'ha_group1', '172.100.9.6', 3306, 'test', 'false'),)} |
+      | conn   | toClose | sql                                                                                                                         | db               | expect                                                                |
+      | conn_0 | True    | select name,db_group,addr,port,user,encrypt_configured from dble_db_instance where db_group='ha_group1' and `name`='host4M' | dble_information | has{(('host4M', 'ha_group1', '172.100.9.4', 3306, 'test', 'false'),)} |
     Given record current dble log line number in "log_linenu"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                                        | expect  | db               |
@@ -1765,8 +1765,8 @@ Feature: refine reload of DBLE0REQ-1793
     SELF_RELOAD] stop connection pool :dbInstance\[name=host4M
     """
     Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                  | db               | expect                                                        |
-      | conn_0 | True    | select name,db_group,addr,port,user from dble_db_instance where db_group='ha_group1' | dble_information | has{(('host4M', 'ha_group1', '172.100.9.6', 3306, 'test1'),)} |
+      | conn   | toClose | sql                                                                                                      | db               | expect                                                        |
+      | conn_0 | True    | select name,db_group,addr,port,user from dble_db_instance where db_group='ha_group1' and `name`='host4M' | dble_information | has{(('host4M', 'ha_group1', '172.100.9.4', 3306, 'test1'),)} |
     # drop user
     Then execute sql in "mysql"
       | user | passwd | conn   | toClose | sql                             | expect                 | db    |
