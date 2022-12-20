@@ -159,8 +159,8 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                                    | expect       | db                 |
       | conn_0 | False    | stop @@statistic_queue_monitor;        | success      | dble_information   |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | length{(4)}   | dble_information   |
+      | conn   | toClose  | sql                                    | expect        | db                 | timeout |
+      | conn_0 | False    | show @@statistic_queue.usage;          | length{(4)}   | dble_information   | 11,0.1  |
     # we need a intervalTime，checking "show @@statistic_queue.usage;"
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
