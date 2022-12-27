@@ -31,7 +31,7 @@ Feature: refine reload of DBLE0REQ-1793
       | name-0   | heartbeat_stmt-1 | heartbeat_timeout-2| heartbeat_retry-3| heartbeat_keep_alive-4| rw_split_mode-5| delay_threshold-6| delay_period_millis-7|delay_database-8|disable_ha-9| active-10 |
       | ha_group1| select user()    | 0                  | 1                | 60                    | 0              |        100       |  -1                  | null           |   false    |     true  |
       | ha_group2| select user()    | 0                  | 1                | 60                    | 0              |        100       |  -1                  | null           |   false    |     true  |
-      | mysql-tg | show slave status| 0                  | 0                | 60                    | 1              |        -1        |  -1                  | None           |   false    |     false |
+      | mysql-tg | show slave status| 0                  | 0                | 60                    | 1              |        -1        |  -1                  | null           |   false    |     false |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                               | expect              | db               |
       | conn_0 | False   | select * from dble_db_group                       | length{(3)}         | dble_information |
@@ -60,7 +60,7 @@ Feature: refine reload of DBLE0REQ-1793
       | name-0   | heartbeat_stmt-1 | heartbeat_timeout-2| heartbeat_retry-3| heartbeat_keep_alive-4| rw_split_mode-5| delay_threshold-6| delay_period_millis-7|delay_database-8|disable_ha-9| active-10 |
       | ha_group1| select user()    | 0                  | 1                | 60                    | 0              |        100       |  -1                  | null           |   false    |     true  |
       | ha_group2| select user()    | 0                  | 1                | 60                    | 0              |        100       |  -1                  | null           |   false    |     true  |
-      | mysql-tg | select user()    | 10                 | 2                | 30                    | 3              |        12        |  -1                  | None           |   true     |     false |
+      | mysql-tg | select user()    | 10                 | 2                | 30                    | 3              |        12        |  -1                  | null           |   true     |     false |
     # 测试3 变更active=false状态的dbGroup相关参数值
     Given record current dble log line number in "log_linenu"
     Then execute sql in "dble-1" in "admin" mode
@@ -112,7 +112,7 @@ Feature: refine reload of DBLE0REQ-1793
 
     # 测试1：dbGroup被引用，且rwSplitMode为0的情况下，dbGroup内新增从实例，从实例只新增心跳连接，并不会初始化连接池,以ha_group1为测试对象 非空dbGroup内新增dbInstance
     Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                      | expect          | db               |
+      | conn   | toClose | sql                                                                                                     | expect          | db               |
       | conn_0 | False   | select count(*) from backend_connections where db_group_name='ha_group1' and used_for_heartbeat='false' | hasnot{((0,),)} | dble_information |
       | conn_0 | False   | select count(*) from backend_connections where db_group_name='ha_group2' and used_for_heartbeat='false' | hasnot{((0,),)} | dble_information |
     Given record current dble log line number in "log_linenu"
@@ -1073,7 +1073,7 @@ Feature: refine reload of DBLE0REQ-1793
      # issue wait for fixed
     Then check resultset "refine_reload#8_1" has lines with following column values
       | name-0   | heartbeat_stmt-1| heartbeat_timeout-2| heartbeat_retry-3| heartbeat_keep_alive-4| rw_split_mode-5| delay_threshold-6| delay_period_millis-7|delay_database-8|disable_ha-9| active-10 |
-      | ha_group1| select 1        | 0                  | 0                | 60                    | 1              |        -1        |  -1                  | None           |   false    |     false |
+      | ha_group1| select 1        | 0                  | 0                | 60                    | 1              |        -1        |  -1                  | null           |   false    |     false |
   # 测试0  通过添加1M1S 的dbGroup,  ha_group2，reload后生效rwSplitMode=3  没有被引用，只新增心跳，没有新增连接池
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
@@ -1711,7 +1711,7 @@ Feature: refine reload of DBLE0REQ-1793
     SELF_RELOAD] start connection pool :dbInstance\[name=host4M
     SELF_RELOAD] stop connection pool :dbInstance
     """
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "refine_reload#9_3"
+    Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                  | db               | expect                                                       |
       | conn_0 | True    | select name,db_group,addr,port,user from dble_db_instance where db_group='ha_group1' | dble_information | has{(('host4M', 'ha_group1', '172.100.9.6', 3307, 'test'),)} |
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
@@ -1771,6 +1771,277 @@ Feature: refine reload of DBLE0REQ-1793
     Then execute sql in "mysql"
       | user | passwd | conn   | toClose | sql                             | expect                 | db    |
       | test | 111111 | conn_0 | False   | DROP USER IF EXISTS `test1`@`%` | success                | mysql |
+     # 测试4：变更 disabled
+     # test env prepare
+    Given delete the following xml segment
+      | file         | parent         | child                  |
+      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+     <dbGroup rwSplitMode="1" name="ha_group1" delayThreshold="100" disableHA="false">
+        <heartbeat timeout="0" errorRetryCount="1" keepAlive="60">select user()</heartbeat>
+        <dbInstance name="host4M" url="172.100.9.4:3306" password="111111" user="test" maxCon="100" minCon="2" primary="true"/>
+        <dbInstance name="host4S" url="172.100.9.4:3307" password="111111" user="test" maxCon="10" minCon="2"  primary="false"/>
+     </dbGroup>
+     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" disableHA="false">
+        <heartbeat timeout="0" errorRetryCount="1" keepAlive="60">select @@read_only</heartbeat>
+        <dbInstance name="host6M" url="172.100.9.6:3306" password="111111" user="test" maxCon="100" minCon="2" primary="true"/>
+        <dbInstance name="host6S1" url="172.100.9.6:3307" password="111111" user="test" maxCon="10" minCon="2" primary="false"/>
+     </dbGroup>
+    """
+    Given delete the following xml segment
+      | file         | parent         | child                   |
+      | user.xml     | {'tag':'root'} | {'tag':'shardingUser'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+     <rwSplitUser name="S1" password="123" usingDecrypt="false" maxCon="10" dbGroup="ha_group1"/>
+     <rwSplitUser name="S2" password="123" usingDecrypt="false" maxCon="600" dbGroup="ha_group2"/>
+    """
+    Then execute admin cmd "reload @@config_all"
+    # dbGroup级别的disable和enable：
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "refine_reload#9_1"
+      | conn   | toClose | sql                                                                                                   | db               |
+      | conn_0 | True    | select name,db_group,addr,port,user,primary,disabled from dble_db_instance where db_group='ha_group1' | dble_information |
+    Then check resultset "refine_reload#9_1" has lines with following column values
+      | name-0  | db_group-1 | addr-2      | port-3  | user-4  | primary-5 | disabled-6 |
+      | host4M  | ha_group1  | 172.100.9.4 | 3306    | test    |  true     |   false    |
+      | host4S  | ha_group1  | 172.100.9.4 | 3307    | test    |  false    |   false    |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                    | expect         | db               |
+      | conn_0 | False   | dbGroup @@disable name = 'ha_group1'                                                                   | success        | dble_information |
+      | conn_0 | False   | select count(*) from backend_connections where db_group_name='ha_group1'                               | equal{((0,),)} | dble_information |
+    # dbGroup级别 disabled=true：
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "refine_reload#9_2"
+      | conn   | toClose | sql                                                                                                   | db               |
+      | conn_0 | True    | select name,db_group,addr,port,user,primary,disabled from dble_db_instance where db_group='ha_group2' | dble_information |
+    Then check resultset "refine_reload#9_2" has lines with following column values
+      | name-0  | db_group-1 | addr-2      | port-3  | user-4  | primary-5 | disabled-6 |
+      | host6M  | ha_group2  | 172.100.9.6 | 3306    | test    |  true     |   false    |
+      | host6S1 | ha_group2  | 172.100.9.6 | 3307    | test    |  false    |   false    |
+    Given record current dble log line number in "log_linenu"
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                      | expect         | db               |
+      | conn_0 | False   | UPDATE dble_information.dble_db_instance set disabled='true' where db_group='ha_group2'  | success        | dble_information |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    get system variables :show variables,dbInstance
+    SELF_RELOAD] stop heartbeat :dbInstance\[name=host6S1
+    SELF_RELOAD] stop heartbeat :dbInstance\[name=host6M
+    SELF_RELOAD] stop connection pool :dbInstance\[name=host6M
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    SELF_RELOAD] test connection dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] start heartbeat :
+    SELF_RELOAD] start connection pool :dbInstance
+    SELF_RELOAD] stop connection pool :dbInstance\[name=host6S1
+    """
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "refine_reload#9_3"
+      | conn   | toClose | sql                                                                                                   | db               |
+      | conn_0 | True    | select name,db_group,addr,port,user,primary,disabled from dble_db_instance where db_group='ha_group2' | dble_information |
+    Then check resultset "refine_reload#9_3" has lines with following column values
+      | name-0  | db_group-1 | addr-2      | port-3  | user-4  | primary-5 | disabled-6 |
+      | host6M  | ha_group2  | 172.100.9.6 | 3306    | test    |  true     |   true     |
+      | host6S1 | ha_group2  | 172.100.9.6 | 3307    | test    |  false    |   true     |
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+      """
+      <dbInstance name=\"host6M\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"true\" id=\"host6M\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
+      <dbInstance name=\"host6S1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"true\" id=\"host6S1\" readWeight=\"0\" primary=\"false\" databaseType=\"mysql\">
+      """
+    # dbGroup级别 disabled=false：
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                           | expect         | db               |
+      | conn_0 | False   | select count(*) from backend_connections      | equal{((0,),)} | dble_information |
+    Given record current dble log line number in "log_linenu"
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                      | expect         | db               |
+      | conn_0 | False   | UPDATE dble_information.dble_db_instance set disabled='false' where db_group='ha_group1' | success        | dble_information |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    get system variables :show variables,dbInstance
+    SELF_RELOAD] start connection pool :dbInstance\[name=host4M
+    SELF_RELOAD] start connection pool :dbInstance\[name=host4S
+    SELF_RELOAD] stop heartbeat :dbInstance\[name=host4M
+    SELF_RELOAD] stop heartbeat :dbInstance\[name=host4S
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    SELF_RELOAD] test connection dbInstance:dbInstance
+    SELF_RELOAD] stop connection pool :dbInstance
+    """
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "refine_reload#9_4"
+      | conn   | toClose | sql                                                                                                   | db               |
+      | conn_0 | True    | select name,db_group,addr,port,user,primary,disabled from dble_db_instance where db_group='ha_group1' | dble_information |
+    Then check resultset "refine_reload#9_4" has lines with following column values
+      | name-0  | db_group-1 | addr-2      | port-3  | user-4  | primary-5 | disabled-6 |
+      | host4M  | ha_group1  | 172.100.9.4 | 3306    | test    |  true     |   false    |
+      | host4S  | ha_group1  | 172.100.9.4 | 3307    | test    |  false    |   false    |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                    | expect         | db               |
+      | conn_0 | False   | select count(*) from backend_connections                                                               | equal{((6,),)} | dble_information |
+      | conn_0 | False   | select count(*) from backend_connections where db_group_name='ha_group1'                               | equal{((6,),)} | dble_information |
+      | conn_0 | False   | select count(*) from backend_connections where db_instance_name='host4M' and used_for_heartbeat='true' | equal{((1,),)} | dble_information |
+      | conn_0 | False   | select count(*) from backend_connections where db_instance_name='host4S' and used_for_heartbeat='true' | equal{((1,),)} | dble_information |
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+      """
+      <dbInstance name=\"host4M\" url=\"172.100.9.4:3306\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" id=\"host4M\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
+      <dbInstance name=\"host4S\" url=\"172.100.9.4:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" id=\"host4S\" readWeight=\"0\" primary=\"false\" databaseType=\"mysql\">
+      """
+    # dbInstance级别的disable： rwSplitMode=0 master & slave
+        # master
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                       | expect         | db               |
+      | conn_0 | False   | select count(*) from backend_connections where db_group_name='ha_group2'  | equal{((0,),)} | dble_information |
+    Given record current dble log line number in "log_linenu"
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                               | expect         | db               |
+      | conn_0 | False   | UPDATE dble_information.dble_db_instance set disabled='false' where name='host6M' | success        | dble_information |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6M
+    get system variables :show variables,dbInstance
+    SELF_RELOAD] start heartbeat
+    SELF_RELOAD] start connection pool :dbInstance\[name=host6M
+    SELF_RELOAD] stop heartbeat :dbInstance\[name=host6M
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    SELF_RELOAD] test connection dbInstance:dbInstance
+    SELF_RELOAD] stop connection pool :dbInstance
+    SELF_RELOAD] start connection pool :dbInstance\[name=host6S1
+    SELF_RELOAD] stop heartbeat :dbInstance\[name=host6S1
+    """
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "refine_reload#9_5"
+      | conn   | toClose | sql                                                                                                   | db               |
+      | conn_0 | True    | select name,db_group,addr,port,user,primary,disabled from dble_db_instance where db_group='ha_group2' | dble_information |
+    Then check resultset "refine_reload#9_5" has lines with following column values
+      | name-0  | db_group-1 | addr-2      | port-3  | user-4  | primary-5 | disabled-6 |
+      | host6M  | ha_group2  | 172.100.9.6 | 3306    | test    |  true     |   false    |
+      | host6S1 | ha_group2  | 172.100.9.6 | 3307    | test    |  false    |   true     |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                    | expect         | db               |
+      | conn_0 | False   | select count(*) from backend_connections where db_group_name='ha_group2'                               | equal{((3,),)} | dble_information |
+      | conn_0 | False   | select count(*) from backend_connections where db_instance_name='host6M' and used_for_heartbeat='true' | equal{((1,),)} | dble_information |
+      | conn_0 | False   | select count(*) from backend_connections where db_instance_name='host6S1'                              | equal{((0,),)} | dble_information |
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+      """
+      <dbInstance name=\"host6M\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" id=\"host6M\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
+      <dbInstance name=\"host6S1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"true\" id=\"host6S1\" readWeight=\"0\" primary=\"false\" databaseType=\"mysql\">
+      """
+    # slave
+    Given record current dble log line number in "log_linenu"
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                               | expect         | db               |
+      | conn_0 | False   | UPDATE dble_information.dble_db_instance set disabled='false' where name='host6S1'| success        | dble_information |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
+    get system variables :show variables,dbInstance
+    SELF_RELOAD] start heartbeat
+    SELF_RELOAD] stop heartbeat :dbInstance\[name=host6S1
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    SELF_RELOAD] test connection dbInstance:dbInstance
+    SELF_RELOAD] stop connection pool :dbInstance
+    SELF_RELOAD] start connection pool :dbInstance
+    """
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "refine_reload#9_6"
+      | conn   | toClose | sql                                                                                                   | db               |
+      | conn_0 | True    | select name,db_group,addr,port,user,primary,disabled from dble_db_instance where db_group='ha_group2' | dble_information |
+    Then check resultset "refine_reload#9_6" has lines with following column values
+      | name-0  | db_group-1 | addr-2      | port-3  | user-4  | primary-5 | disabled-6 |
+      | host6M  | ha_group2  | 172.100.9.6 | 3306    | test    |  true     |   false    |
+      | host6S1 | ha_group2  | 172.100.9.6 | 3307    | test    |  false    |   false    |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                    | expect         | db               |
+      | conn_0 | False   | select count(*) from backend_connections where db_group_name='ha_group2'                               | equal{((4,),)} | dble_information |
+      | conn_0 | False   | select count(*) from backend_connections where db_instance_name='host6M' and used_for_heartbeat='true' | equal{((1,),)} | dble_information |
+      | conn_0 | False   | select count(*) from backend_connections where db_instance_name='host6S1'                              | equal{((1,),)} | dble_information |
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+      """
+      <dbInstance name=\"host6M\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"100\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" id=\"host6M\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
+      <dbInstance name=\"host6S1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" id=\"host6S1\" readWeight=\"0\" primary=\"false\" databaseType=\"mysql\">
+      """
+     # 测试5：变更 time_between_eviction_runs_millis 和 heartbeat_period_millis
+     # test env prepare
+    Given delete the following xml segment
+      | file         | parent         | child                  |
+      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+     <dbGroup rwSplitMode="1" name="ha_group1" delayThreshold="100" disableHA="false">
+        <heartbeat timeout="0" errorRetryCount="1" keepAlive="60">select user()</heartbeat>
+        <dbInstance name="host4M" url="172.100.9.4:3306" password="111111" user="test" maxCon="100" minCon="2" primary="true"/>
+     </dbGroup>
+    """
+    Given delete the following xml segment
+      | file         | parent         | child                   |
+      | user.xml     | {'tag':'root'} | {'tag':'shardingUser'}  |
+      | user.xml     | {'tag':'root'} | {'tag':'rwSplitUser'}   |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+     <rwSplitUser name="S1" password="123" usingDecrypt="false" maxCon="10" dbGroup="ha_group1"/>
+    """
+    Then execute admin cmd "reload @@config_all"
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                         | db               | expect                                                              |
+      | conn_0 | True    | select name,db_group,addr,port,user,time_between_eviction_runs_millis from dble_db_instance | dble_information | has{(('host4M', 'ha_group1', '172.100.9.4', 3306, 'test', 30000),)} |
+    Given record current dble log line number in "log_linenu"
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                             | expect         | db               |
+      | conn_0 | False   | UPDATE dble_information.dble_db_instance set time_between_eviction_runs_millis=10000 where db_group='ha_group1' | success        | dble_information |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    get system variables :show variables,dbInstance
+    SELF_RELOAD] start heartbeat
+    SELF_RELOAD] stop connection pool :dbInstance
+    SELF_RELOAD] start connection pool :dbInstance\[name=host4M
+    SELF_RELOAD] stop heartbeat :dbInstance\[name=host4M
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    SELF_RELOAD] test connection dbInstance:dbInstance
+    """
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                         | db               | expect                                                              |
+      | conn_0 | True    | select name,db_group,addr,port,user,time_between_eviction_runs_millis from dble_db_instance | dble_information | has{(('host4M', 'ha_group1', '172.100.9.4', 3306, 'test', 10000),)} |
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+      """
+      <property name=\"timeBetweenEvictionRunsMillis\">10000</property>
+      """
+     # heartbeat_period_millis
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                               | db               | expect                                                              |
+      | conn_0 | True    | select name,db_group,addr,port,user,heartbeat_period_millis from dble_db_instance | dble_information | has{(('host4M', 'ha_group1', '172.100.9.4', 3306, 'test', 10000),)} |
+    Given record current dble log line number in "log_linenu"
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                   | expect         | db               |
+      | conn_0 | False   | UPDATE dble_information.dble_db_instance set heartbeat_period_millis=20000 where db_group='ha_group1' | success        | dble_information |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    get system variables :show variables,dbInstance
+    SELF_RELOAD] start heartbeat
+    SELF_RELOAD] stop connection pool :dbInstance
+    SELF_RELOAD] start connection pool :dbInstance\[name=host4M
+    SELF_RELOAD] stop heartbeat :dbInstance\[name=host4M
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    SELF_RELOAD] test connection dbInstance:dbInstance
+    """
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                               | db               | expect                                                              |
+      | conn_0 | True    | select name,db_group,addr,port,user,heartbeat_period_millis from dble_db_instance | dble_information | has{(('host4M', 'ha_group1', '172.100.9.4', 3306, 'test', 20000),)} |
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+      """
+      <property name=\"heartbeatPeriodMillis\">20000</property>
+      """
 
     @NORMAL
   Scenario: when we change the attributes of dbInstance which not support change by sql #10
@@ -1842,7 +2113,7 @@ Feature: refine reload of DBLE0REQ-1793
       | select encrypt_configured from dble_db_instance where name='host4M'   | dble_information |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                            | expect              | db               |
-      | conn_0 | False   | UPDATE dble_db_instance set `encrypt_configured`='true' where `name`='host4M'  | Update failure.The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: host host4M,user test password need to decrypt, but failed ! | dble_information |
+      | conn_0 | True   | UPDATE dble_db_instance set `encrypt_configured`='true' where `name`='host4M'  | Update failure.The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: host host4M,user test password need to decrypt, but failed ! | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "refine_reload#10_test_2"
       | sql                                                                   | db               |
       | select encrypt_configured from dble_db_instance where name='host4M'   | dble_information |
