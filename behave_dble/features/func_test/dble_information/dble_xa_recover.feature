@@ -52,8 +52,8 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn_2 | True    | xa start 'Dble_Server.1.db1.db2'; insert into xa_test values(2, 2); xa end 'Dble_Server.1.db1.db2'; xa prepare 'Dble_Server.1.db1.db2' |
     # case select * from dble_xa_recover
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_xa_recover_2"
-      | conn   | toClose | sql                           | db                |
-      | conn_0 | False   | select * from dble_xa_recover | dble_information  |
+      | conn   | toClose | sql                           | expect         |db                |timeout|
+      | conn_0 | False   | select * from dble_xa_recover | length{(4)}    |dble_information  |3      |
     Then check resultset "dble_xa_recover_2" has lines with following column values
       | dbgroup-0 | instance-1 | ip-2        | port-3 | formatid-4 | gtrid_length-5 | bqual_length-6 | data-7                |
       | ha_group1 | hostM1     | 172.100.9.5 | 3306   |  1         | 16             | 0              | Dble_Server.abcd      |
