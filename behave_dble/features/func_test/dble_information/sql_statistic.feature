@@ -947,10 +947,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | rwS1 | 111111 | conn_31 | true    | delete from db2.test_table1                                   | success | db1 |
 
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                        | expect      | db               |
-      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(2,)}   | dble_information |
-      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+      | conn   | toClose | sql                                                                        | expect      | db               | timeout |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(1,)}   | dble_information | 3       |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(2,)}   | dble_information | 3       |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information | 3       |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_15"
       | conn   | toClose | sql                                                                 | db               |
