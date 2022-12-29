@@ -62,6 +62,7 @@ run_func_unstable_case: up
 	features/func_test/connection/  \
 	features/func_test/ddl/  \
 	features/func_test/xa_transaction/ \
+	features/func_test/local_read/ \
 	features/func_test/Large_Packet/
 
 run_managercmd_case: up
