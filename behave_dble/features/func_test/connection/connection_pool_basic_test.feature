@@ -235,8 +235,8 @@ Feature: connection pool basic test
         <heartbeat>select user()</heartbeat>
         <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="6" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
-             <property name="idleTimeout">3000</property>
-             <property name="timeBetweenEvictionRunsMillis">5000</property>
+             <property name="idleTimeout">2000</property>
+             <property name="timeBetweenEvictionRunsMillis">7000</property>
         </dbInstance>
      </dbGroup>
 
@@ -261,8 +261,8 @@ Feature: connection pool basic test
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_A"
       | conn   | toClose | sql                                                                                                               | expect        | db                |
       | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(2)}   | dble_information  |
-    #sleep 6s to wait connections idle timeout and into scaling period
-    Given sleep "6" seconds
+    #sleep 8s to wait connections idle timeout and into scaling period
+    Given sleep "8" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_B"
       | conn   | toClose | sql                                                                                                               | expect        | db                |
       | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(6)}   | dble_information  |
