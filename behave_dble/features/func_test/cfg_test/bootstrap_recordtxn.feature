@@ -24,6 +24,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                              | expect  | db      |
       | conn_1 | false   | drop table if exists sharding_4_t1                               | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:1
@@ -41,6 +42,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                              | expect  | db      |
       | conn_1 | false   | create table sharding_4_t1(id int, age int)                      | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:2
@@ -58,6 +60,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                              | expect  | db      |
       | conn_1 | false   | alter table sharding_4_t1 add column name CHAR(15)               | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:3
@@ -75,6 +78,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                              | expect  | db      |
       | conn_1 | false   | truncate table sharding_4_t1                                     | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:4
@@ -92,6 +96,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                              | expect  | db      |
       | conn_1 | false   | create index my_index on sharding_4_t1 (id)                      | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:5
@@ -109,6 +114,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                              | expect  | db      |
       | conn_1 | false   | drop index my_index on sharding_4_t1                             | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:6
@@ -129,6 +135,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_1 | false   | unlock tables                                                    | success | schema1 |
       | conn_1 | false   | create view test_view2 as select * from sharding_4_t1            | success | schema1 |
       | conn_1 | false   | drop view test_view2                                             | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:7
@@ -161,6 +168,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_1 | false   | unlock tables                                                    | success | schema1 |
       | conn_1 | false   | create view test_view as select * from no_sharding_t1            | success | schema1 |
       | conn_1 | true    | drop view test_view                                              | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:17
@@ -202,6 +210,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_2 | false   | delete from no_sharding_t1                                                                        | success | schema1 |
       | conn_2 | false   | select * from no_sharding_t1 where id=13                                                          | success | schema1 |
       | conn_2 | false   | select * from no_sharding_t1                                                                      | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:4, XID:1
@@ -268,6 +277,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn   | toClose | sql                                                      | expect  | db      |
       | conn_3 | false   | begin                                                    | success | schema1 |
       | conn_3 | false   | drop table if exists test                                | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:2, XID:1
@@ -290,6 +300,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                           | expect  | db      |
       | conn_3 | false   | begin;create table test(id int, age int)                      | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:2, XID:2
@@ -304,10 +315,11 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     [[]dn4[]]create table test\(id int, age int\)
     """
 
-   Given execute oscmd ">/opt/dble/txlogs/server-tx.log" on "dble-1"
-   Then execute sql in "dble-1" in "user" mode
+    Given execute oscmd ">/opt/dble/txlogs/server-tx.log" on "dble-1"
+    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                           | expect  | db      |
       | conn_3 | false   | begin;alter table test add column name CHAR(15)               | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:2, XID:3
@@ -326,6 +338,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                           | expect  | db      |
       | conn_3 | false   | begin;truncate table test                                     | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:2, XID:4
@@ -344,6 +357,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                           | expect  | db      |
       | conn_3 | false   | begin;create index my_index_1 on test (id);rollback           | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:2, XID:5
@@ -367,6 +381,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                           | expect  | db      |
       | conn_3 | false   | begin;drop index my_index_1 on test;commit                    | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:2, XID:7
@@ -387,6 +402,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     """
 
     Given execute oscmd ">/opt/dble/txlogs/server-tx.log" on "dble-1"
+    Given sleep "1" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                           | expect  | db      |
       | conn_3 | false   | begin;drop table if exists sing1                              | success | schema1 |
@@ -401,6 +417,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                           | expect  | db      |
       | conn_3 | false   | begin;create table sing1(id int, age int)                     | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:2, XID:10
@@ -412,6 +429,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                           | expect  | db      |
       | conn_3 | false   | begin;alter table sing1 add column name CHAR(15)              | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:2, XID:11
@@ -423,6 +441,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                           | expect  | db      |
       | conn_3 | false   | begin;truncate table sing1;commit                             | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:2, XID:12
@@ -439,6 +458,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                           | expect  | db      |
       | conn_3 | false   | begin;create index my_index_2 on sing1 (id);rollback          | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:2, XID:14
@@ -455,6 +475,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                           | expect  | db      |
       | conn_3 | false   | begin;drop index my_index_2 on sing1                          | success | schema1 |
+   Given sleep "1" seconds
    Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:2, XID:16
@@ -469,6 +490,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;unlock tables;commit                                    | success | schema1 |
       | conn_3 | false   | begin;create view test_view1 as select * from test            | success | schema1 |
       | conn_3 | false   | begin;drop view test_view1                                    | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:2, XID:17
@@ -500,6 +522,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
       | conn_3 | false   | begin;unlock tables;commit                                    | success | schema1 |
       | conn_3 | false   | begin;create view test_view2 as select * from sing1           | success | schema1 |
       | conn_3 | true    | begin;drop view test_view2                                    | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:2, XID:21
@@ -523,6 +546,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                        | expect  | db      |
       | conn_4 | false   | begin;insert into test values (1,10,11);commit                                             | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:1
@@ -539,6 +563,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                        | expect  | db      |
       | conn_4 | false   | begin;update test set age=20 where id=1;commit                                             | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:2
@@ -556,6 +581,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                        | expect  | db      |
       | conn_4 | false   | begin;delete from test where id=1;commit                                                   | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:3
@@ -572,6 +598,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                        | expect  | db      |
       | conn_4 | false   | begin;select * from test where id=3;commit                                                 | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:4
@@ -587,6 +614,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                        | expect  | db      |
       | conn_4 | false   | begin;insert into sing1 values (11,10,1),(12,20,2);commit                                  | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:5
@@ -601,6 +629,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                        | expect  | db      |
       | conn_4 | false   | begin;update sing1 set age=20;commit                                                       | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:6
@@ -614,6 +643,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                        | expect  | db      |
       | conn_4 | false   | begin;delete from sing1 where id=11;commit                                                 | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:7
@@ -627,6 +657,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                        | expect  | db      |
       | conn_4 | false   | begin;select * from sing1 where id=12;commit                                               | success | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
     ConnID:3, XID:8
