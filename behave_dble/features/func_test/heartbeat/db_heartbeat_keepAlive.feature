@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2022 ActionTech.
+# Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wangjuan at 2022/8/16
 # heartbeat中新增参数keepAlive，当心跳超过keepAlive时间未响应，将会关闭心跳连接，重新建立连接来进行心跳的任务
