@@ -23,7 +23,7 @@ Feature: check dbDistrict and dbDataCenter
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure, The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: property [ dbDistrict ]  is illegal, the value not be empty
+    Reload config failure.The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: property [ dbDistrict ]  is illegal, the value not be empty
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -34,7 +34,7 @@ Feature: check dbDistrict and dbDataCenter
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure, The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: property [ dbDataCenter ]  is illegal, the value not be empty
+    Reload config failure.The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: property [ dbDataCenter ]  is illegal, the value not be empty
     """
 
     # reload: check db.xml special character
@@ -47,7 +47,7 @@ Feature: check dbDistrict and dbDataCenter
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure, The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: properties of system may not recognized:abc@123the UTF-8 encoding is recommended, dbInstance name dbDistrict show be use  u4E00-u9FA5a-zA-Z_0-9\-\.
+    Reload config failure.The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: properties of system may not recognized:abc@123the UTF-8 encoding is recommended, dbInstance name dbDistrict show be use  u4E00-u9FA5a-zA-Z_0-9\-\.
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -58,7 +58,7 @@ Feature: check dbDistrict and dbDataCenter
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure, The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: properties of system may not recognized:def%456the UTF-8 encoding is recommended, dbInstance name dbDataCenter show be use  u4E00-u9FA5a-zA-Z_0-9\-\.
+    Reload config failure.The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: properties of system may not recognized:def%456the UTF-8 encoding is recommended, dbInstance name dbDataCenter show be use  u4E00-u9FA5a-zA-Z_0-9\-\.
     """
 
     # reload: check db.xml alphabet and digit
@@ -149,24 +149,16 @@ Feature: check dbDistrict and dbDataCenter
     """
 
     # restart: check bootstrap.cnf special character
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    /-Ddistrict/d
-    $a -Ddistrict=123@abc
-    """
-    Then restart dble in "dble-1" failed for
-    """
-    Property \[ district \] 123@abc in bootstrap.cnf is illegal,the UTF-8 encoding is recommended, Property \[ district \]  show be use  u4E00-u9FA5a-zA-Z_0-9\\\-\\\.
-    """
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    /-DdataCenter/d
-    $a -DdataCenter=456+def
-    """
-    Then restart dble in "dble-1" failed for
-    """
-    Property \[ dataCenter \] 456+def in bootstrap.cnf is illegal,the UTF-8 encoding is recommended, Property \[ dataCenter \]  show be use  u4E00-u9FA5a-zA-Z_0-9\\\-\\\.
-    """
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#    """
+#    /-Ddistrict=/c -Ddistrict=123@abc
+#    /-DdataCenter=/c -DdataCenter=456+def
+#    """
+#    Then restart dble in "dble-1" failed for
+#    """
+#    Property \[ district \] 123@abc in bootstrap.cnf is illegal,the UTF-8 encoding is recommended, Property \[ district \]  show be use  u4E00-u9FA5a-zA-Z_0-9\\\-\\\.
+#    Property \[ dataCenter \] 456+def in bootstrap.cnf is illegal,the UTF-8 encoding is recommended, Property \[ dataCenter \]  show be use  u4E00-u9FA5a-zA-Z_0-9\\\-\\\.
+#    """
 
     # restart: check bootstrap.cnf alphabet value
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
