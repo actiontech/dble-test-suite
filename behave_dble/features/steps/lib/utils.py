@@ -116,6 +116,15 @@ def step_impl(context, num):
     time.sleep(int_num)
 
 
+@Given('sleep "{num}" seconds by count')
+def step_impl(context, num):
+    int_num = int(num)
+    count = 0
+    while count < int_num:
+        time.sleep(1)
+        count = count + 1
+
+
 @Given('update config of mysql "{mysql_version}" in "{mysql_type}" type in "{host_name}" with sed cmds')
 def update_file_content(context, mysql_version, host_name, mysql_type, sed_str=None):
     if not sed_str and len(context.text) > 0:
