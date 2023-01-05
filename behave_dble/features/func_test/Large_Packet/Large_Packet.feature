@@ -924,22 +924,22 @@ Feature:Support MySQL's large package protocol
     Given Restart dble in "dble-1" success
 
     #prepare largepacket values
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                                                                                                                                                    | expect  | db      |
-#      | conn_0 | false   | drop table if exists noshar                                                                                                                            | success | schema1 |
-#      | conn_0 | false   | drop table if exists sing1                                                                                                                             | success | schema1 |
-#      | conn_0 | false   | drop table if exists global1                                                                                                                           | success | schema1 |
-#      | conn_0 | false   | drop table if exists global2                                                                                                                           | success | schema1 |
-#      | conn_0 | false   | drop table if exists global3                                                                                                                           | success | schema1 |
-#      | conn_0 | false   | drop table if exists sharding_4_t1                                                                                                                     | success | schema1 |
-#      | conn_0 | false   | drop table if exists sharding_2_t1                                                                                                                     | success | schema1 |
-#      | conn_0 | false   | create table noshar (id int,c longblob)                                                                                                                | success | schema1 |
-#      | conn_0 | false   | create table sing1 (id int,c longblob)                                                                                                                 | success | schema1 |
-#      | conn_0 | false   | create table global1 (id int,c longblob)                                                                                                               | success | schema1 |
-#      | conn_0 | false   | create table global2 (id int,c longblob)                                                                                                               | success | schema1 |
-#      | conn_0 | false   | create table global3 (id int,c longblob)                                                                                                               | success | schema1 |
-#      | conn_0 | false   | create table sharding_4_t1 (id int,c longblob)                                                                                                         | success | schema1 |
-#      | conn_0 | false   | create table sharding_2_t1 (id int,c longblob)                                                                                                         | success | schema1 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                                    | expect  | db      |
+      | conn_0 | false   | drop table if exists noshar                                                                                                                            | success | schema1 |
+      | conn_0 | false   | drop table if exists sing1                                                                                                                             | success | schema1 |
+      | conn_0 | false   | drop table if exists global1                                                                                                                           | success | schema1 |
+      | conn_0 | false   | drop table if exists global2                                                                                                                           | success | schema1 |
+      | conn_0 | false   | drop table if exists global3                                                                                                                           | success | schema1 |
+      | conn_0 | false   | drop table if exists sharding_4_t1                                                                                                                     | success | schema1 |
+      | conn_0 | false   | drop table if exists sharding_2_t1                                                                                                                     | success | schema1 |
+      | conn_0 | false   | create table noshar (id int,c longblob)                                                                                                                | success | schema1 |
+      | conn_0 | false   | create table sing1 (id int,c longblob)                                                                                                                 | success | schema1 |
+      | conn_0 | false   | create table global1 (id int,c longblob)                                                                                                               | success | schema1 |
+      | conn_0 | false   | create table global2 (id int,c longblob)                                                                                                               | success | schema1 |
+      | conn_0 | false   | create table global3 (id int,c longblob)                                                                                                               | success | schema1 |
+      | conn_0 | false   | create table sharding_4_t1 (id int,c longblob)                                                                                                         | success | schema1 |
+      | conn_0 | false   | create table sharding_2_t1 (id int,c longblob)                                                                                                         | success | schema1 |
 #      | conn_0 | false   | insert into noshar values (7,repeat("x",16*1024*1024))                                                                                                 | success | schema1 |
 #      | conn_0 | false   | insert into sing1 values (7,repeat("x",16*1024*1024))                                                                                                  | success | schema1 |
 #      | conn_0 | false   | insert into global1 values (7,repeat("x",16*1024*1024))                                                                                                | success | schema1 |
