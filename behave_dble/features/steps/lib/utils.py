@@ -5,6 +5,7 @@ import logging
 import os
 import shutil
 import time
+from datetime import datetime
 from functools import wraps
 from logging import config
 from pprint import pformat
@@ -119,10 +120,11 @@ def step_impl(context, num):
 @Given('sleep "{num}" seconds by count')
 def step_impl(context, num):
     int_num = int(num)
-    count = 0
-    while count < int_num:
-        time.sleep(1)
-        count = count + 1
+    startt = time.time()
+    # logger.debug("current datetime: {}".format(datetime.now()))
+    while time.time() < startt + int_num:
+        pass
+    # logger.debug("after datetime: {}".format(datetime.now()))
 
 
 @Given('update config of mysql "{mysql_version}" in "{mysql_type}" type in "{host_name}" with sed cmds')
