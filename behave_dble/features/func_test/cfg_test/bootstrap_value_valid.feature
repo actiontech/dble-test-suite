@@ -234,21 +234,36 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
   """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
     """
+    #### 9066
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                            | expect               | db               |
+      | conn_0 | true    | select @@max_allowed_packet                                    | has{((4194304,),)}   | dble_information |
+      | conn_0 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet | has{((1, 8388608),)} | dble_information |
+    #### 8066
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                            | expect                   | db      |
+      | conn_1 | true    | select @@max_allowed_packet                                    | has{((4194304,),)}       | schema1 |
+      | conn_1 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet | has{(('1', '4194304'),)} | schema1 |
+
+
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a\-DmaxPacketSize=6291456
     """
     Then restart dble in "dble-1" success
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
-      | sql             |
-      | show @@sysparam |
-    Then check resultset "sysparam_rs" has lines with following column values
-      | PARAM_NAME-0  | PARAM_VALUE-1 |
-      | maxPacketSize | 6291456       |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                              | expect                | db               |
+      | conn_0 | true    | select @@max_allowed_packet                                                      | has{((6291456,),)}    | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('6291456',),)}  | dble_information |
+      | conn_0 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet                   | has{((1, 8388608),)}  | dble_information |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                              | expect              | db        |
+      | conn_1 | true    | select @@max_allowed_packet      | has{((6291456,),)}  | schema1   |
+      | conn_1 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet | has{(('1', '6291456'),)} | schema1 |
 
     #case2 max_packet_size < max_allowed_packet
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
-    """
+      """
       /max_allowed_packet/d
       /server-id/a max_allowed_packet = 8388608
       """
@@ -256,25 +271,36 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       """
       /max_allowed_packet/d
       /server-id/a max_allowed_packet = 8388608
-    """
+      """
     Given execute sql in "mysql-master1"
       | conn   | toClose | sql                                            | expect                                    |
       | conn_1 | True    | show variables like 'max_allowed_packet%'      | has{(('max_allowed_packet', '8388608'),)} |
     Given execute sql in "mysql-master2"
       | conn   | toClose | sql                                            | expect                                    |
       | conn_2 | True    | show variables like 'max_allowed_packet%'      | has{(('max_allowed_packet', '8388608'),)} |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                              | expect                | db               |
+      | conn_0 | true    | select @@max_allowed_packet                                                      | has{((6291456,),)}    | dble_information |
+      | conn_0 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet                   | has{((1, 8388608),)}  | dble_information |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                              | expect              | db        |
+      | conn_1 | true    | select @@max_allowed_packet      | has{((6291456,),)}  | schema1   |
+      | conn_1 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet | has{(('1', '6291456'),)} | schema1 |
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     s/-DmaxPacketSize=6291456/-DmaxPacketSize=9437184/
     """
     Then restart dble in "dble-1" success
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
-      | sql             |
-      | show @@sysparam |
-    Then check resultset "sysparam_rs" has lines with following column values
-      | PARAM_NAME-0  | PARAM_VALUE-1 |
-      | maxPacketSize | 9437184       |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                              | expect                 | db               |
+      | conn_0 | true    | select @@max_allowed_packet                                                      | has{((9437184,),)}     | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('9437184',),)}   | dble_information |
+      | conn_0 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet                   | has{((1, 9438208),)}   | dble_information |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                              | expect              | db        |
+      | conn_1 | true    | select @@max_allowed_packet      | has{((9437184,),)}  | schema1   |
+      | conn_1 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet | has{(('1', '9437184'),)} | schema1 |
 
     #case 3  max_packet_size > max_allowed_packet
     Given execute sql in "mysql-master1"
@@ -288,12 +314,14 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     s/-DmaxPacketSize=9437184/-DmaxPacketSize=8000000/
     """
     Then restart dble in "dble-1" success
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
-      | sql             |
-      | show @@sysparam |
-    Then check resultset "sysparam_rs" has lines with following column values
-      | PARAM_NAME-0  | PARAM_VALUE-1 |
-      | maxPacketSize | 8000000       |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                              | expect                | db               |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('8000000',),)}  | dble_information |
+      | conn_0 | true    | select @@max_allowed_packet                                                      | has{((8000000,),)}    | dble_information |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                              | expect              | db        |
+      | conn_1 | true    | select @@max_allowed_packet      | has{((8000000,),)}  | schema1   |
+
 
   @restore_view
   Scenario: homePath and viewPersistenceConfBaseDir in bootstrap.cnf, restart dble and check paths #9
