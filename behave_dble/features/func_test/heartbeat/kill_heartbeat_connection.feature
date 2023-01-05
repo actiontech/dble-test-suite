@@ -112,7 +112,7 @@ Feature: heartbeat basic test
     mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3,$NF}' | grep true |awk '{print $1}'
     """
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
-    Then check btrace "BtraceHeartbeat.java" output in "dble-1"
+    Then check btrace "BtraceHeartbeat.java" output in "dble-1" with ">0" times
     """
     before fieldEofResponse
     """
