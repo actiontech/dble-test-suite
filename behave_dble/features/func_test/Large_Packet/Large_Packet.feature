@@ -895,10 +895,13 @@ Feature:Support MySQL's large package protocol
     Given turn off general log in "mysql-master2"
 
 
+   @restore_mysql_config
    Scenario: test "select" sql #5
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
+    """
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
-
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
       <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
