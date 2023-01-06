@@ -276,7 +276,11 @@ Feature:Support MySQL's large package protocol about 'ps protocol'
       | conn_0 | true    | drop table if exists sharding_4_t1         | success | schema1 |
 
 
+   @restore_mysql_config
   Scenario: test 'Multi-sentence' about large packet  ---- Multi-sentence query   #4
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
+    """
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
       s/16\*1024\*1024/17\*1024\*1024/g
