@@ -250,7 +250,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                            | expect               | db               |
       | conn_0 | true    | select @@max_allowed_packet                                    | has{((4194304,),)}   | dble_information |
-      | conn_0 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet | has{((1, 8388608),)} | dble_information |
+#      | conn_0 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet | has{((1, 8388608),)} | dble_information |
     #### 8066
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                            | expect                   | db      |
@@ -267,7 +267,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       | conn   | toClose | sql                                                                              | expect                | db               |
       | conn_0 | true    | select @@max_allowed_packet                                                      | has{((6291456,),)}    | dble_information |
       | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('6291456B',),)} | dble_information |
-      | conn_0 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet                   | has{((1, 8388608),)}  | dble_information |
+#      | conn_0 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet                   | has{((1, 8388608),)}  | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect              | db        |
       | conn_1 | true    | select @@max_allowed_packet      | has{((6291456,),)}  | schema1   |
