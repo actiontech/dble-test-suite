@@ -301,48 +301,48 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     before xa commit
     """
     Given stop mysql in host "mysql-master1"
-    Given sleep "10" seconds
+    Given sleep "10" seconds by time
     Given destroy sql threads list
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given record current dble log "/opt/dble/logs/dble.log" line number in "log_num_1"
-    Given sleep "60" seconds
+    Given sleep "61" seconds by time
     Then check the time interval of following key after line "log_num_1" in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                                        | interval_times |
       | at the 0th time in background              | 20             |
     Given start mysql in host "mysql-master1"
-    Given sleep "10" seconds
+    Given sleep "10" seconds by time
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a\-DxaSessionCheckPeriod=6000
     """
     Then Restart dble in "dble-1" success
-    Given sleep "10" seconds
+    Given sleep "10" seconds by time
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |
       | conn_2 | False   | set autocommit=0                                        | success | schema1 |
       | conn_2 | False   | set xa=on                                               | success | schema1 |
       | conn_2 | False   | insert into sharding_4_t1 values(5,5),(6,6),(7,7),(8,8) | success | schema1 |
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
-    Given sleep "5" seconds
+    Given sleep "5" seconds by time
     Given prepare a thread execute sql "commit" with "conn_2"
     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
     """
     before xa commit
     """
     Given stop mysql in host "mysql-master1"
-    Given sleep "10" seconds
+    Given sleep "10" seconds by time
     Given destroy sql threads list
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given record current dble log "/opt/dble/logs/dble.log" line number in "log_num_2"
-    Given sleep "60" seconds
+    Given sleep "61" seconds by time
     Then check the time interval of following key after line "log_num_2" in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                                        | interval_times |
       | at the 0th time in background              | 6              |
     Given start mysql in host "mysql-master1"
-    Given sleep "15" seconds
+    Given sleep "15" seconds by time
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect      | db      |
       | conn_1 | False   | select * from sharding_4_t1         | length{(8)} | schema1 |
