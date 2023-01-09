@@ -4,7 +4,7 @@ disable_existing_loggers: True
 
 formatters:
   simple:
-    format: "[%(asctime)s][%(levelname)8s][%(filename)15s][%(lineno)4d][%(funcName)s][%(message)s]"
+    format: "[%(asctime)s.%(msecs)03d][%(levelname)8s][%(filename)20s][%(lineno)4d][%(funcName)s][%(message)s]"
     datefmt: "%Y-%m-%d %H:%M:%S"
 
 handlers:
