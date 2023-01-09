@@ -531,7 +531,7 @@ def step_impl(context,host1,role,host2,oscmd="cd /root/sandboxes/sandbox/data"):
             password = node.manager_password
             port = node.manager_port
         else:
-            user = node.client_user
+            user = '{0}'.format(role)
             password = node.client_password
             port = node.client_port
     else:
