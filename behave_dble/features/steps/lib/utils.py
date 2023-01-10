@@ -117,7 +117,7 @@ def step_impl(context, num):
     time.sleep(int_num)
 
 
-@Given('sleep "{num}" seconds by count')
+@Given('sleep "{num}" seconds by time')
 def step_impl(context, num):
     int_num = int(num)
     startt = time.time()
