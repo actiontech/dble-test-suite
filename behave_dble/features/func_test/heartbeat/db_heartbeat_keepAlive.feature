@@ -22,7 +22,7 @@ Feature: check keepAlive
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
-    Given sleep "2" seconds
+    Given sleep "2" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs1"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -34,7 +34,7 @@ Feature: check keepAlive
     """
     iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
     """
-    Given sleep "4" seconds
+    Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs2"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -51,7 +51,7 @@ Feature: check keepAlive
     Given record current dble log line number in "log_num_1"
 
     # case 1.1: sleep more than keepAlive
-    Given sleep "62" seconds
+    Given sleep "62" seconds by time
     #print log and mysqlId change
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1"
     """
@@ -61,7 +61,7 @@ Feature: check keepAlive
     """
     iptables -F
     """
-    Given sleep "4" seconds
+    Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs3"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -83,7 +83,7 @@ Feature: check keepAlive
     """
     iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
     """
-    Given sleep "4" seconds
+    Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs4"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -94,7 +94,7 @@ Feature: check keepAlive
     Given record current dble log line number in "log_num_2"
 
     # case 1.2: sleep less than keepAlive
-    Given sleep "10" seconds
+    Given sleep "10" seconds by time
     #print log and mysqlId change
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_2" in host "dble-1"
     """
@@ -104,7 +104,7 @@ Feature: check keepAlive
     """
     iptables -F
     """
-    Given sleep "4" seconds
+    Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs5"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -133,7 +133,7 @@ Feature: check keepAlive
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
-    Given sleep "2" seconds
+    Given sleep "2" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs6"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -145,7 +145,7 @@ Feature: check keepAlive
     """
     iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
     """
-    Given sleep "4" seconds
+    Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs7"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -162,7 +162,7 @@ Feature: check keepAlive
     Given record current dble log line number in "log_num_3"
 
     # case 2.1: sleep more than keepAlive
-    Given sleep "32" seconds
+    Given sleep "32" seconds by time
     #print log and mysqlId change
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1"
     """
@@ -172,7 +172,7 @@ Feature: check keepAlive
     """
     iptables -F
     """
-    Given sleep "4" seconds
+    Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs8"
       | conn   | toClose | sql               |
       | conn_0 | True    | show @@heartbeat  |
@@ -194,7 +194,7 @@ Feature: check keepAlive
     """
     iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
     """
-    Given sleep "4" seconds
+    Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs9"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -205,7 +205,7 @@ Feature: check keepAlive
     Given record current dble log line number in "log_num_4"
 
     # case 2.2: sleep less than keepAlive
-    Given sleep "10" seconds
+    Given sleep "10" seconds by time
     #print log and mysqlId change
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_4" in host "dble-1"
     """
@@ -215,7 +215,7 @@ Feature: check keepAlive
     """
     iptables -F
     """
-    Given sleep "4" seconds
+    Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs10"
       | conn   | toClose | sql               |
       | conn_0 | True    | show @@heartbeat  |
@@ -244,7 +244,7 @@ Feature: check keepAlive
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
-    Given sleep "2" seconds
+    Given sleep "2" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs11"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -256,7 +256,7 @@ Feature: check keepAlive
     """
     iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
     """
-    Given sleep "4" seconds
+    Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs12"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -271,7 +271,7 @@ Feature: check keepAlive
       | conn   | toClose | sql                                                                                                                                  |
       | conn_0 | false   | select remote_processlist_id from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' |
     Given record current dble log line number in "log_num_5"
-    Given sleep "2" seconds
+    Given sleep "2" seconds by time
     #print log and mysqlId change
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_5" in host "dble-1"
     """
@@ -281,7 +281,7 @@ Feature: check keepAlive
     """
     iptables -F
     """
-    Given sleep "4" seconds
+    Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs13"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -324,7 +324,7 @@ Feature: check keepAlive
       | conn_0 | False   | reload @@config_all                                                 | success |
       | conn_0 | False   | reload @@config_all -fr                                             | success |
       | conn_0 | True    | select * from dble_information.backend_connections where used_for_heartbeat='true' and db_instance_name='hostM1' | length{(1)} |
-    Given sleep "60" seconds
+    Given sleep "60" seconds by time
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     setTimeout
