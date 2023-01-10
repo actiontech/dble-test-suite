@@ -50,9 +50,10 @@ Feature: connection pool basic test, from DBLE0REQ-1867
       | conn_0 | True    | insert into sharding_8_t1 values(10,'10'),(12,'12'),(14,'14'),(16,'16')   | success                    | schema1 |
       | conn_0 | True    | insert into sharding_8_t1 values(18,'18'),(20,'20')                       | success                    | schema1 |
     #确保测试前没有启动、reload并发，导致多一根连接的情况，DBLE0REQ-1925
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                         | expect        | db                |
-      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5'           |  length{(4)}  | dble_information  |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_1"
+      | conn   | toClose | sql                                                                                                                                      | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'    | success       | dble_information  |
+    Then kill the redundant connections if "rs_1" is more then expect value "4" in "mysql-master1"
 
   @CRITICAL @btrace @auto_retry
   Scenario: borrowDirectly方法中窃取到1条非排队线程创建的连接（即空闲连接），且排队线程等于1，窃取线程不会新建1条连接  #1
