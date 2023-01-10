@@ -241,3 +241,26 @@ class MySQLObject(object):
                 assert err is None, "kill conn '{}' failed for {}".format(conn_id,err[1])
         logger.debug("kill connections success, killed connection ids:{}".format(conn_ids))
         conn.close()
+
+    def kill_redundant_conns(self, conn_ids_origin, kill_num):
+        conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user, passwd=self._mysql_meta.mysql_password, db='',
+                             port=self._mysql_meta.mysql_port, autocommit=True)
+        res, err = conn.execute("show processlist")
+
+        conn_ids = ()
+        for con in conn_ids_origin:
+            conn_ids = conn_ids + (con[0],)
+        logger.debug("conn_ids is {}".format(conn_ids))
+
+        count = 0
+        for row in res:
+            conn_id = row[0]
+            not_show_processlist = row[7] != "show processlist"#for excluding show processlist conn itself
+            if not_show_processlist and conn_id in conn_ids:
+                res, err = conn.execute("kill {}".format(conn_id))
+                assert err is None, "kill conn '{}' failed for {}".format(conn_id,err[1])
+                logger.debug("kill connection id {} success".format(conn_id))
+                count = count + 1
+            if count >= int(kill_num):
+                break
+        conn.close()

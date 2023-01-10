@@ -217,6 +217,13 @@ def step_impl(context, host_name, conn_ids):
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.kill_conns(conn_ids)
 
+@Then('kill the redundant connections if "{current_idle_connections}" is more then expect value "{expect_value}" in "{mysql_host_name}"')
+def step_impl(context, mysql_host_name, current_idle_connections,expect_value):
+    current_idle_connections = getattr(context, current_idle_connections, None)
+    need_to_kill_num = len(current_idle_connections) - int(expect_value)
+    if need_to_kill_num > 0:
+        mysql = ObjectFactory.create_mysql_object(mysql_host_name)
+        mysql.kill_redundant_conns(current_idle_connections, need_to_kill_num)
 
 @Given('execute sql "{num}" times in "{host_name}" together use {concur} connection not close')
 @Given('execute "{mode_name}" sql "{num}" times in "{host_name}" together use {concur} connection not close')

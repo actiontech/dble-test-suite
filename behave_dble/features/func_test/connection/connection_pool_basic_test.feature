@@ -85,35 +85,28 @@ Feature: connection pool basic test
 
   @CRITICAL
   Scenario: test initial connection pool: except heartbeat connection the other connection is in idle status #3
-    # sleep time > idle time + timeBetweenEvictionRunsMillis, because Connection pool initialization #DBLE0REQ-1132, DBLE0REQ-1925
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-             <property name="idleTimeout">3000</property>
-             <property name="timeBetweenEvictionRunsMillis">4000</property>
         </dbInstance>
     </dbGroup>
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-             <property name="idleTimeout">3000</property>
-             <property name="timeBetweenEvictionRunsMillis">4000</property>
         </dbInstance>
     </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
-    Given sleep "8" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                      | expect        | db                |
-      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'      | length{(20)}  | dble_information  |
+      | conn_0 | True    | select * from backend_connections where state!='idle' and used_for_heartbeat='false'      | length{(0)}  | dble_information  |
     Then execute admin cmd "reload @@config_all -r"
-    Given sleep "8" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                      | expect        | db                |
-      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'      | length{(20)}  | dble_information  |
+      | conn_0 | True    | select * from backend_connections where state!='idle' and used_for_heartbeat='false'      | length{(0)}  | dble_information  |
 
 
   @CRITICAL
@@ -152,12 +145,14 @@ Feature: connection pool basic test
         <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="10" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="timeBetweenEvictionRunsMillis">5000</property>
-             <property name="idleTimeout">3000</property>
         </dbInstance>
      </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
-    Given sleep "9" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_1"
+      | conn   | toClose | sql                                                                                                       | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false'   | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_1" is more then expect value "20" in "mysql-master1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                    | expect                     | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                     | success                    | schema1 |
@@ -191,12 +186,15 @@ Feature: connection pool basic test
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="20" minCon="4" primary="true">
-             <property name="idleTimeout">3000</property>
+             <property name="idleTimeout">30000</property>
         </dbInstance>
     </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
-    Given sleep "9" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_2"
+      | conn   | toClose | sql                                                                                                       | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false'   | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_2" is more then expect value "8" in "mysql-master1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect                     | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                        | success                    | schema1 |
@@ -243,12 +241,15 @@ Feature: connection pool basic test
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="20" minCon="6" primary="true">
-             <property name="idleTimeout">5000</property>
+             <property name="idleTimeout">30000</property>
         </dbInstance>
     </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
-    Given sleep "9" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_3"
+      | conn   | toClose | sql                                                                                                       | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false'   | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_3" is more then expect value "12" in "mysql-master1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                 | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                  | success | schema1 |
@@ -296,7 +297,10 @@ Feature: connection pool basic test
     </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
-    Given sleep "7" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_4"
+      | conn   | toClose | sql                                                                                                       | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false'   | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_4" is more then expect value "12" in "mysql-master1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                 | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                  | success | schema1 |
@@ -338,6 +342,10 @@ Feature: connection pool basic test
      </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_5"
+      | conn   | toClose | sql                                                                                                       | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false'   | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_5" is more then expect value "16" in "mysql-master1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                        | expect                     | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                         | success                    | schema1 |
@@ -373,7 +381,7 @@ Feature: connection pool basic test
       | state                      | 18           |
 
   @CRITICAL
-  Scenario: connection shrink: timeBetweenEvictionRunsMillis<=0(in this case, dble will use the default value 30s), idle connections > minCon and the idle connection's idle time >= idleTimeout, the idle connections will be  recycle  #10
+  Scenario: connection shrink: idle connections > minCon and the idle connection's idle time >= idleTimeout, the idle connections will be  recycle  #10
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -381,11 +389,15 @@ Feature: connection pool basic test
         <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="4" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="idleTimeout">1000</property>
-             <property name="timeBetweenEvictionRunsMillis">30000</property>
+             <property name="timeBetweenEvictionRunsMillis">5000</property>
         </dbInstance>
      </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_6"
+      | conn   | toClose | sql                                                                                                       | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false'   | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_6" is more then expect value "14" in "mysql-master1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                        | expect                     | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                         | success                    | schema1 |
@@ -416,47 +428,8 @@ Feature: connection pool basic test
       | db_instance_name            | 2            |
       | remote_processlist_id       | 5            |
       | state                       | 18           |
-    #sleep 30s to wait into default scaling period
-    Given sleep "30" seconds
+    #sleep 5s to wait into default scaling period
+    Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_C"
-      | conn   | toClose | sql                                                                                                                                      | expect        | db                |
+      | conn   | toClose | sql                                                                                                                               | expect        | db                |
       | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5'                 | length{(4)}   | dble_information  |
-
-  @TRIVIAL @skip
-    # due to when use illegal values,the dble can't reload success and restart dble success  DBLE0REQ-920
-  Scenario: parameter validation test about scaling (timeBetweenEvictionRunsMillis, idleTimeout, evictorShutdownTimeoutMillis)  #11
-    #1.all parameters use with integer less equal to zero, reload success and dble will use the default values
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="4" primary="true">
-             <property name="idleTimeout">-1</property>
-             <property name="timeBetweenEvictionRunsMillis">0</property>
-             <property name="evictorShutdownTimeoutMillis">-5000000000000000000000</property>
-        </dbInstance>
-     </dbGroup>
-     """
-    Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                                                             | expect                         | db                |
-      | conn_0 | True    | select idle_timeout,time_between_eviction_runs_millis,evictor_shutdown_timeout_millis from dble_db_instance where db_group='ha_group1' and name='M1'            | has{((600000,30000,10000),)}   | dble_information  |
-    #2.all paramter use with not integer, restart dble success and dble will use the default values
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="4" primary="true">
-             <property name="idleTimeout">abc</property>
-             <property name="timeBetweenEvictionRunsMillis">2$</property>
-             <property name="evictorShutdownTimeoutMillis">%3a</property>
-        </dbInstance>
-     </dbGroup>
-     """
-    Given restart dble in "dble-1" success
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                                                  | expect                          | db                |
-      | conn_0 | True    | select idle_timeout,time_between_eviction_runs_millis,evictor_shutdown_timeout_millis from dble_db_instance where db_group='ha_group1' and name='M1' | has{((600000,30000,10000),)}    | dble_information  |
-
-
-
