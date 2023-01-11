@@ -33,6 +33,8 @@ Feature: check keepAlive
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
+    iptables -A OUTPUT -d 172.100.9.1 -p tcp --dport 3306 -j DROP
+    iptables -L
     """
     Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs2"
@@ -60,6 +62,7 @@ Feature: check keepAlive
     Given execute oscmd in "mysql-master2"
     """
     iptables -F
+    iptables -L
     """
     Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs3"
@@ -82,6 +85,8 @@ Feature: check keepAlive
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
+    iptables -A OUTPUT -d 172.100.9.1 -p tcp --dport 3306 -j DROP
+    iptables -L
     """
     Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs4"
@@ -103,6 +108,7 @@ Feature: check keepAlive
     Given execute oscmd in "mysql-master2"
     """
     iptables -F
+    iptables -L
     """
     Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs5"
@@ -144,6 +150,8 @@ Feature: check keepAlive
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
+    iptables -A OUTPUT -d 172.100.9.1 -p tcp --dport 3306 -j DROP
+    iptables -L
     """
     Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs7"
@@ -171,6 +179,7 @@ Feature: check keepAlive
     Given execute oscmd in "mysql-master2"
     """
     iptables -F
+    iptables -L
     """
     Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs8"
@@ -193,6 +202,8 @@ Feature: check keepAlive
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
+    iptables -A OUTPUT -d 172.100.9.1 -p tcp --dport 3306 -j DROP
+    iptables -L
     """
     Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs9"
@@ -214,6 +225,7 @@ Feature: check keepAlive
     Given execute oscmd in "mysql-master2"
     """
     iptables -F
+    iptables -L
     """
     Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs10"
@@ -255,6 +267,8 @@ Feature: check keepAlive
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
+    iptables -A OUTPUT -d 172.100.9.1 -p tcp --dport 3306 -j DROP
+    iptables -L
     """
     Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs12"
@@ -280,6 +294,7 @@ Feature: check keepAlive
     Given execute oscmd in "mysql-master2"
     """
     iptables -F
+    iptables -L
     """
     Given sleep "4" seconds by time
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs13"
