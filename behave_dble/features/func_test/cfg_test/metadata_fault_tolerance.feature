@@ -46,7 +46,7 @@ Feature: fault tolerance detection
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
@@ -164,7 +164,7 @@ Feature: fault tolerance detection
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
@@ -292,7 +292,7 @@ Feature: fault tolerance detection
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
