@@ -6,7 +6,7 @@ from typing import List, Optional, Tuple
 import os
 import paramiko
 import time
-LOGGER = logging.getLogger()
+LOGGER = logging.getLogger('root')
 class NotInitializedConnectionError(Exception):
     pass
 
