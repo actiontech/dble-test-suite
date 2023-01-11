@@ -26,7 +26,7 @@ Feature: connect dble rwSplitUser in mysql(172.100.9.4), and execute cmd "load d
       """
     Given execute oscmd in "mysql"
       """
-      echo -e '20,20\n30,30' > /root/sandboxes/sandbox/master/data/test.txt
+      echo -e '20,20\n30,30' > /usr/local/mysql/data/test.txt
       """
 
     Given connect "dble-1" with user "rw1" in "mysql" to execute sql
@@ -52,7 +52,7 @@ Feature: connect dble rwSplitUser in mysql(172.100.9.4), and execute cmd "load d
     #load data with absolute path #2
     Given connect "dble-1" with user "rw1" in "mysql" to execute sql
     """
-    load data local infile '/root/sandboxes/sandbox/master/data/test.txt' into table db1.test1 fields terminated by ',' lines terminated by '\n'
+    load data local infile '/usr/local/mysql/data/test.txt' into table db1.test1 fields terminated by ',' lines terminated by '\n'
     """
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose | sql                  | expect                     | db    |
@@ -64,7 +64,7 @@ Feature: connect dble rwSplitUser in mysql(172.100.9.4), and execute cmd "load d
     """
     Given execute oscmd in "mysql"
     """
-    rm -rf /root/sandboxes/sandbox/master/data/test.txt
+    rm -rf /usr/local/mysql/data/test.txt
     """
 
 
@@ -84,7 +84,7 @@ Feature: connect dble rwSplitUser in mysql(172.100.9.4), and execute cmd "load d
 
     Given execute oscmd in "mysql"
       """
-      echo -e '1,abc\n2,\n3,qwe' > /root/sandboxes/sandbox/master/data/test.txt
+      echo -e '1,abc\n2,\n3,qwe' > /usr/local/mysql/data/test.txt
       """
     ## rwSplitUser
     Given connect "dble-1" with user "rw1" in "mysql" to execute sql
@@ -99,7 +99,7 @@ Feature: connect dble rwSplitUser in mysql(172.100.9.4), and execute cmd "load d
 
     Given execute oscmd in "mysql"
       """
-      rm -rf /root/sandboxes/sandbox/master/data/test.txt
+      rm -rf /usr/local/mysql/data/test.txt
       """
 
 
@@ -119,7 +119,7 @@ Feature: connect dble rwSplitUser in mysql(172.100.9.4), and execute cmd "load d
     Then execute admin cmd "reload @@config_all"
     Given execute oscmd in "mysql"
       """
-      echo -e '' > /root/sandboxes/sandbox/master/data/test.txt
+      echo -e '' > /usr/local/mysql/data/test.txt
       """
 
     ## rwSplitUser
@@ -131,7 +131,7 @@ Feature: connect dble rwSplitUser in mysql(172.100.9.4), and execute cmd "load d
     #####区别于分库分表用户，DBLE0REQ-1595 读写分离用户直接下发，不做空值处理
     Given execute linux command in "mysql" and contains exception " Incorrect integer value: '' for column 'id' at row 1"
       """
-      cd /root/sandboxes/sandbox/master/data && mysql -h172.100.9.1 -urw1 -p111111 -P8066 -c -e"load data infile './test.txt' into table db1.test1 fields terminated by ',' lines terminated by '\n'"
+      cd /usr/local/mysql/data && mysql -h172.100.9.1 -urw1 -p111111 -P8066 -c -e"load data infile './test.txt' into table db1.test1 fields terminated by ',' lines terminated by '\n'"
       """
     Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                 | expect       | db    |
@@ -139,5 +139,5 @@ Feature: connect dble rwSplitUser in mysql(172.100.9.4), and execute cmd "load d
      | rw1   | 111111 | conn_1 | true    | drop table test1    | success      | db1   |
     Given execute oscmd in "mysql"
       """
-      rm -rf /root/sandboxes/sandbox/master/data/test.txt
+      rm -rf /usr/local/mysql/data/test.txt
       """
