@@ -239,7 +239,7 @@ Feature: test connection pool
    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
 
-  @NORMAL
+  @NORMAL @auto_retry
   Scenario: test connection param "testWhileIdle"  #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """

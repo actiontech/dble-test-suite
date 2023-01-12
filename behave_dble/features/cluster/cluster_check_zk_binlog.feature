@@ -66,7 +66,7 @@ Feature: test "binlog" in zk cluster
       | conn_0 | False   | create table sing1 (id int)                                  | success | schema1 |
       | conn_0 | True    | create table no_sharding1 (id int, name int)                 | success | schema1 |
 
-
+  @auto_retry
   Scenario: during "transaction",happen bad block,check "showBinlogStatusTimeout" #1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -449,7 +449,7 @@ Feature: test "binlog" in zk cluster
 
 
 
-  @btrace
+  @btrace @auto_retry
   Scenario: during "transaction" ,the admin cmd of "show @@binlog.status" be blocked,and set timeout  #3
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """

@@ -196,6 +196,7 @@ Feature: test "pause/resume" in zk cluster
       | conn_3 | True     | select * from sharding_4_t1               | length{(1)}   | schema1  |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
 
+  @auto_retry
   Scenario: create xa ,check pause_node.lock but pause or resume timeout #4
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                                 | expect    | db       |

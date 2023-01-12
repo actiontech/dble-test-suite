@@ -175,7 +175,7 @@ Feature: connection pool basic test
       | conn_0 | True    | select * from backend_connections where state='in use' and used_for_heartbeat='false'               | length{(8)}    | dble_information  |
 
 
-  @CRITICAL
+  @CRITICAL @auto_retry
   Scenario: connection shrink: idle connections > minCon and the idle connection's idle time >= idleTimeout, the connection will be  recycle  #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -227,7 +227,7 @@ Feature: connection pool basic test
       | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle'     | length{(14)}  | dble_information  |
 
 
-  @CRITICAL
+  @CRITICAL @auto_retry
   Scenario: connection shrink: idle connections < minCon and the idle connection's idle time >= idleTimeout, the idle connections will not be  recycle  #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """

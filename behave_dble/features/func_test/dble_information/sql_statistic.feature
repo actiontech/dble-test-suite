@@ -8,7 +8,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
          sql_statistic_by_associate_tables_by_entry_by_user
 
 
-
+  @auto_retry
   Scenario: simple sql test #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """

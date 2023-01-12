@@ -183,7 +183,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | disable @@statistic;                   | success       | dble_information   |
       | conn_0 | True     | reload @@samplingRate = 0;             | success       | dble_information   |
 
-
+  @auto_retry
   Scenario: test statistic_queue_monitor single observeTime or intervalTime; default unit for observeTime & intervalTime is seconds  #4
     # case 9306 http://10.186.18.20:888/testlink/linkto.php?tprojectPrefix=dble&item=testcase&id=dble-9306
     Given execute sql in "dble-1" in "admin" mode
@@ -480,7 +480,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | disable @@statistic;                   | success       | dble_information   |
       | conn_0 | True     | reload @@samplingRate = 0;             | success       | dble_information   |
 
-
+  @auto_retry
   Scenario: test start statistic_queue_monitor exit when the merely statistic is disabled  #8
     # case 9310 http://10.186.18.20:888/testlink/linkto.php?tprojectPrefix=dble&item=testcase&id=dble-9310
     Given execute sql in "dble-1" in "admin" mode

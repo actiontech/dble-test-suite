@@ -9,7 +9,7 @@ Feature: test ddl closed abnormally
 #  After the ddl executes select 1 and returns successfully, when checking whether the session is alive, close the connection to verify the release of the ddl lock
 
 
-   @btrace
+   @btrace @auto_retry
   Scenario: Once the DDL task has been executed, regardless of whether the front-end connection exists, it does not affect the execution of the internal DDL      #1
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"

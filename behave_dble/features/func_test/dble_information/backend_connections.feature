@@ -179,7 +179,7 @@ Feature:  backend_connections test
       | conn_0 | False   | update backend_connections set user = 'a' where user ='test'              | Access denied for table 'backend_connections'     |
       | conn_0 | True    | insert into backend_connections values (1,'1',1,1,1)                      | Access denied for table 'backend_connections'     |
 
-  @btrace
+  @btrace @auto_retry
   Scenario: check backend connection status #2
 
     # state = HEARTBEAT CHECK

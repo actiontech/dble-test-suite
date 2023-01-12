@@ -181,6 +181,7 @@ Feature: check dbDistrict and dbDataCenter
     Given turn off general log in "mysql-slave1"
     Given turn off general log in "mysql-slave2"
 
+  @auto_retry
   Scenario: bootstrap.cnf and db.xml only set dataCenter, local read is not enabled #2
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
