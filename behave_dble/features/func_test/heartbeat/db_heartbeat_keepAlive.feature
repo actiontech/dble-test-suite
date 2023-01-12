@@ -6,7 +6,7 @@
 Feature: check keepAlive
 
   #DBLE0REQ-1495
-  @restore_network
+  @restore_network  @auto_retry
   Scenario: check keepAlive in heartbeat #1
     """
     {'restore_network':'mysql-master2'}

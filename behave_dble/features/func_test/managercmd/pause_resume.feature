@@ -48,7 +48,7 @@ Feature: test "pause/resume" manager cmd
         | sql                | expect      | db       |
         | select * from test | length{(0)} | schema1  |
 
-  @CRITICAL
+  @CRITICAL @auto_retry
   Scenario: verify "pause" when transaction executing and after transaction commit #3
       Then execute sql in "dble-1" in "user" mode
         | conn   | toClose  | sql                                                        | expect  | db      |

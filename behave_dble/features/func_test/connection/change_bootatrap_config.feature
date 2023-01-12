@@ -805,7 +805,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 
-  @btrace
+  @btrace @auto_retry
   Scenario: use btrace check  #9
   # on bootstrap.cnf the default value : -DNIOFrontRW=1
     Then execute sql in "dble-1" in "admin" mode

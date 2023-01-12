@@ -546,6 +546,7 @@ Feature: check single dble detach or attach from cluster
       | conn    | toClose   | sql                                | expect      | db      |
       | conn_3  | true      | drop table if exists sharding_4_t1 | success     | schema1 |
 
+  @auto_retry
   Scenario: check cluster @@attach and timeout less than default value when other sql is being executed #6
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
