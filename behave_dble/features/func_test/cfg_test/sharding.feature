@@ -365,3 +365,67 @@ Feature: sharding basic config test
       """
       The dbGroup\[dbGroup2\] associated with ShardingNode\[dn2\] does not exist
       """
+
+
+  Scenario: config add logicalCreateADrop /DBLE0REQ-1852      #13
+    Given delete the following xml segment
+      | file         | parent         | child            |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      """
+      <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100" logicalCreateADrop="aa" >
+        <globalTable name="test" shardingNode="dn1,dn2"/>
+      </schema>
+      """
+    Then execute admin cmd "reload @@config_all" get the following output
+      """
+      Reload config failure.
+      """
+    Then execute admin cmd "dryrun" get the following output
+      """
+      'aa' is not a valid value for 'boolean'
+      """
+
+    Given delete the following xml segment
+      | file         | parent         | child            |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      """
+      <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100" logicalCreateADrop="true" >
+        <globalTable name="test" shardingNode="dn1,dn2"/>
+      </schema>
+      """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                              | expect                                                     |
+      | create database dble_information | The sql did not match create\|drop database @@shardingNode |
+    Then execute sql in "dble-1" in "user" mode
+      | sql                                 | expect                                                      |
+      | create database test1               | Can't create database 'test1' that doesn't exists in config |
+      | create database if not exists test1 | Can't create database 'test1' that doesn't exists in config |
+      | drop database test1                 | Can't drop database 'test1' that doesn't exists in config   |
+      | drop database if exists test1       | Can't drop database 'test1' that doesn't exists in config   |
+      | show databases                      | length{(1)}                                                 |
+      | create database schema1             | success                                                     |
+      | show databases                      | length{(1)}                                                 |
+      | drop database schema1               | success                                                     |
+      | drop database if exists schema1     | success                                                     |
+      | show databases                      | length{(1)}                                                 |
+    Given delete the following xml segment
+      | file         | parent         | child            |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      """
+      <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100" logicalCreateADrop="false" >
+        <globalTable name="test" shardingNode="dn1,dn2"/>
+      </schema>
+      """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | sql                             | expect                                                    |
+      | show databases                  | length{(1)}                                               |
+      | create database schema1         | THE DDL is not supported :CREATE DATABASE schema1         |
+      | show databases                  | length{(1)}                                               |
+      | drop database schema1           | THE DDL is not supported :DROP DATABASE schema1           |
+      | drop database if exists schema1 | THE DDL is not supported :DROP DATABASE IF EXISTS schema1 |
+      | show databases                  | length{(1)}                                               |
