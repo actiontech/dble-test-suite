@@ -46,7 +46,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | hostS2 | 172.100.9.6 | 3308   | init      | 0       | idle     | 5000      | true   | None          |
 #case one slave is down ,check master RS_CODE is "ok" and slave RS_CODE is "error"
     Given stop mysql in host "mysql-slave1"
-    Given sleep "5" seconds by time
+    Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "12"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -58,7 +58,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | hostS2 | 172.100.9.6 | 3308   | init      | 0       | idle     | 5000      | true   | None                                                                                                                           |
     Given start mysql in host "mysql-slave1"
 #because heartbeat timeout is set to 5 seconds,so wait 5 seconds to check slave RS_CODE is "ok"
-    Given sleep "5" seconds by time
+    Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "13"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -74,7 +74,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       iptables -A INPUT -s 172.100.9.1 -j DROP
       iptables -A OUTPUT -d 172.100.9.1 -j DROP
       """
-    Given sleep "20" seconds by time
+    Given sleep "20" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "16"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -89,7 +89,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     """
     iptables -F
     """
-    Given sleep "20" seconds by time
+    Given sleep "20" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "17"
       | conn   | toClose | sql               |
       | conn_0 | true    | show @@heartbeat  |
@@ -130,7 +130,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 10000      | false  | None                                                                                                                            |
       | hostS1 | 172.100.9.6 | 3307   | error     | 2       | idle     | 10000      | false  | connection Error//heartbeat conn for sql[/*# from=1 reason=heartbeat*/show slave status] is closed, due to abnormal connection  |
     Given start mysql in host "mysql-slave1"
-    Given sleep "10" seconds by time
+    Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "22"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -156,7 +156,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     """
     Then execute admin cmd "reload @@config"
     Given stop mysql in host "mysql-slave1"
-    Given sleep "5" seconds by time
+    Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "31"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -166,7 +166,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | hostS1 | 172.100.9.6 | 3307   | error     | 0       | idle     | 10000     | false  | connection Error//heartbeat conn for sql[/*# from=1 reason=heartbeat*/show slave status] is closed, due to abnormal connection |
       | hostS2 | 172.100.9.6 | 3308   | ok        | 0       | idle     | 10000     | false  | None                                                                                                                           |
     Given start mysql in host "mysql-slave1"
-    Given sleep "10" seconds by time
+    Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "32"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -187,7 +187,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | hostS1 | 172.100.9.6 | 3307   | ok        | 0       | idle     | 10000     | false  |
       | hostS2 | 172.100.9.6 | 3308   | ok        | 0       | idle     | 10000     | false  |
     Given start mysql in host "mysql-master2"
-    Given sleep "10" seconds by time
+    Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "42"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -202,7 +202,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
        iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
        iptables -A OUTPUT -d 172.100.9.1 -p tcp --dport 3306 -j DROP
       """
-    Given sleep "20" seconds by time
+    Given sleep "20" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "43"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -215,7 +215,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     """
     iptables -F
     """
-    Given sleep "20" seconds by time
+    Given sleep "20" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "44"
       | conn   | toClose | sql               |
       | conn_0 | true    | show @@heartbeat  |
