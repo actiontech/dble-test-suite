@@ -204,14 +204,13 @@ Feature:  backend_connections test
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
 
     # sleep time > timeBetweenEvictionRunsMillis = 3
-    Given sleep "4" seconds
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                            | expect             | db              | timeout |
-      | conn_0 | true    | select * from backend_connections where remote_addr="172.100.9.5" and used_for_heartbeat="false" and state="HEARTBEAT CHECK"   | length{(1)}        |dble_information | 3       |
     Then check btrace "BtraceAboutConnection.java" output in "dble-1"
     """
         sending ping signal
     """
+    Given execute sql in "dble-1" in "admin" mode
+  | conn   | toClose | sql                                                                                                                            | expect             | db              | timeout |
+  | conn_0 | true    | select * from backend_connections where remote_addr="172.100.9.5" and used_for_heartbeat="false" and state="HEARTBEAT CHECK"   | length{(1)}        |dble_information | 3       |
     Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
     Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
