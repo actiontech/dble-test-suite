@@ -377,9 +377,10 @@ Feature: sharding basic config test
         <globalTable name="test" shardingNode="dn1,dn2"/>
       </schema>
       """
+    # Reload Failure, The reason is javax.xml.bind.UnmarshalException\n - with linked exception:\n[org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 89; cvc-datatype-valid.1.2.1: 'aa' is not a valid value for 'boolean'.]
     Then execute admin cmd "reload @@config_all" get the following output
       """
-      Reload config failure.
+      Reload Failure
       """
     Then execute admin cmd "dryrun" get the following output
       """
