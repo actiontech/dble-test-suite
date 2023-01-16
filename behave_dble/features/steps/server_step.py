@@ -10,6 +10,7 @@ from behave import *
 from hamcrest import *
 
 from steps.lib.utils import get_node
+import socket
 
 logger = logging.getLogger('root')
 
@@ -63,4 +64,23 @@ def step_impl(context, var1, var2, new_var):
 
     setattr(context, new_var, new_value)
 
+
+@Given('check remote "{remote_port}" in "{host_name}" connected "{flag}"')
+def socket_connect(context, remote_port, host_name, flag='Y'):
+    host_ip = get_node(host_name).ip
+    result = 0
+    try:
+        sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sk.settimeout(2)
+        sk.connect((host_ip, int(remote_port)))
+        logger.debug('connect to ' + host_name + ' ' + remote_port + ' success')
+    except Exception as e:
+        result = 1
+        logger.debug('connect to ' + host_name + ' ' + remote_port + ' timed out')
+    sk.close()
+
+    if flag == "N":
+        assert_that(result > 0, "expect connect to \"{0}\" \"{0}\" timed out, but success".format(host_name, remote_port))
+    else:  # default take flag as Y
+        assert_that(result == 0, "expect connect to \"{0}\" \"{0}\" success, but timed out".format(host_name, remote_port))
 
