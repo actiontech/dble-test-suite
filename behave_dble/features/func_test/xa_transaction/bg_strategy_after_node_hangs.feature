@@ -306,7 +306,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given record current dble log "/opt/dble/logs/dble.log" line number in "log_num_1"
-    Given sleep "61" seconds by time
+    Given sleep "61" seconds
     Then check the time interval of following key after line "log_num_1" in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                                        | interval_times |
       | at the 0th time in background              | 20             |
@@ -337,7 +337,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given record current dble log "/opt/dble/logs/dble.log" line number in "log_num_2"
-    Given sleep "61" seconds by time
+    Given sleep "61" seconds
     Then check the time interval of following key after line "log_num_2" in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                                        | interval_times |
       | at the 0th time in background              | 6              |
