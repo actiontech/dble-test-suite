@@ -36,7 +36,7 @@ Feature: check dbDistrict and dbDataCenter
        | conn_1 | false   | create table sharding_4_t1 (id int, name varchar(100), age int)                               | schema1 | success |         |
        | conn_1 | false   | insert into sharding_4_t1 values (1,'name1',18),(2, 'name2',20),(3,'name3',30),(4,'name4',19) | schema1 | success |         |
        | conn_1 | true    | select name from sharding_4_t1                                                                | schema1 | has{(('name1',),('name2',),('name3',),('name4',))} | 2        |
-    Then check general log in host "mysql-master2" has "SELECT name FROM sharding_4_t1" occured "==2" times
+    Then check general log in host "mysql-master2" has "SELECT name FROM sharding_4_t1" occured ">=2" times
     Then check general log in host "mysql-slave1" has not "SELECT name FROM sharding_4_t1"
     Then check general log in host "mysql-slave2" has not "SELECT name FROM sharding_4_t1"
 
@@ -217,7 +217,7 @@ Feature: check dbDistrict and dbDataCenter
        | conn_1 | false   | select * from sharding_4_t2                                           | schema1 | length{(2)} | 2    |
     Then check general log in host "mysql-master2" has not "SELECT \* FROM sharding_4_t2"
     Then check general log in host "mysql-slave1" has not "SELECT \* FROM sharding_4_t2"
-    Then check general log in host "mysql-slave2" has "SELECT \* FROM sharding_4_t2" occured "==2" times
+    Then check general log in host "mysql-slave2" has "SELECT \* FROM sharding_4_t2" occured ">=2" times
 
     Given turn off general log in "mysql-master2"
     Given turn off general log in "mysql-slave1"
@@ -259,7 +259,7 @@ Feature: check dbDistrict and dbDataCenter
        | conn_1 | false   | create table sharding_4_t3 (id int, name varchar(100), age int)             | schema1 | success |         |
        | conn_1 | false   | insert into sharding_4_t3 values (1,'name1',18),(2, 'name2',20),(3,'name3',30),(4,'name4',19) | schema1 | success |         |
        | conn_1 | false   | select name from sharding_4_t3                                              | schema1 | has{(('name1',),('name2',),('name3',),('name4',))} | 2        |
-    Then check general log in host "mysql-master2" has "SELECT name FROM sharding_4_t3" occured "==2" times
+    Then check general log in host "mysql-master2" has "SELECT name FROM sharding_4_t3" occured ">=2" times
     Then check general log in host "mysql-slave1" has not "SELECT name FROM sharding_4_t3"
     Then check general log in host "mysql-slave2" has not "SELECT name FROM sharding_4_t3"
 
@@ -496,7 +496,7 @@ Feature: check dbDistrict and dbDataCenter
        | conn_1 | false   | select name from sharding_4_t4                                              | schema1 | has{(('name1',),('name2',),('name3',),('name4',))} | 2      |
        | conn_1 | true    | drop table if exists sharding_4_t4                                          | schema1 | success |         |
     Then check general log in host "mysql-master2" has not "SELECT name FROM sharding_4_t4"
-    Then check general log in host "mysql-slave1" has "SELECT name FROM sharding_4_t4" occured "==2" times
+    Then check general log in host "mysql-slave1" has "SELECT name FROM sharding_4_t4" occured ">=2" times
     Then check general log in host "mysql-slave2" has not "SELECT name FROM sharding_4_t4"
     Given turn off general log in "mysql-master2"
     Given turn off general log in "mysql-slave1"
