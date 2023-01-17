@@ -17,6 +17,7 @@ import operator
 
 import time
 import datetime
+import math
 
 from steps.lib.DBUtil import DBUtil
 from steps.lib.utils import get_sftp,get_ssh,get_node
@@ -403,6 +404,27 @@ def step_impl(context, t1, t2):
     t2_result = t2_result.split(' ')[0]
     assert_that(t2_result == t1_result), "expect {0} == {1}, but not !".format(t1, t2)
 
+@Then('check "{t1}" equal to "{t2}" in "{mode}" mode')
+def step_impl(context, t1, t2, mode="default"):
+    t1_result = getattr(context, t1)
+    t2_result = getattr(context, t2)
+    t1_result = float(t1_result[-1])
+    t2_result = float(t2_result[-1])
+
+    logger.debug("{0}, {1}\n".format(t1_result, t2_result))
+    if mode == "ceil":
+        t1_result_int = math.ceil(t1_result)
+        t2_result_int = math.ceil(t2_result)
+    elif mode == "floor":
+        t1_result_int = math.floor(t1_result)
+        t2_result_int = math.floor(t2_result)
+    else:
+       t1_result_int = round(t1_result)
+       t2_result_int = round(t2_result)
+
+    logger.debug("{0}, {1}\n".format(t1_result_int, t2_result_int))
+
+    assert_that(t1_result_int == t2_result_int), "expect {0} == {1} in {2} mode, but not !".format(t1, t2, mode)
 
 @When('connect ssh execute cmd "{cmd}"')
 def step_impl(context, cmd):
