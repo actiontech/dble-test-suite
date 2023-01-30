@@ -484,6 +484,7 @@ Feature: general log test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                | expect                                                                               | db               |
       | conn_0 | false   | show @@general_log | has{(('general_log', 'ON'), ('general_log_file', '/opt/dble/general/general.log'),)} | dble_information |
+    Given destroy sql threads list
     Given stop btrace script "BtraceGeneralLog.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceGeneralLog.java" on "dble-1"

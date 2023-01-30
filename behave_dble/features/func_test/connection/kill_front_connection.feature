@@ -111,6 +111,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     """
     Query was interrupted.
     """
+    Given destroy sql threads list
     Given stop btrace script "BtraceSessionStage.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
@@ -143,6 +144,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     """
     was closed ,reason is [Query was interrupted.]
     """
+    Given destroy sql threads list
     Given stop btrace script "BtraceSessionStage.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceSessionStage.java" on "dble-1"
@@ -173,8 +175,8 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     """
     Query was interrupted.
     """
-    Given stop btrace script "BtraceSessionStage.java" in "dble-1"
     Given destroy sql threads list
+    Given stop btrace script "BtraceSessionStage.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"

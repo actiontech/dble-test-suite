@@ -83,3 +83,4 @@ Feature: when reload hang,emergency means to deal with it
       [RL][0-SELF_RELOAD]
       [RL][1-SELF_RELOAD]
       """
+     Given destroy sql threads list

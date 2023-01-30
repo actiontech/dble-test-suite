@@ -132,6 +132,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
       | conn_1 | True    | delete from sharding_4_t1   | success     | schema1 |
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
+    Given destroy sql threads list
 
   @btrace @restore_network @skip
   Scenario:  mysql node network shock causing xa transaction fail to commit, close background attempts, execute 'kill @@session.xa' and 'xa commit'  #3

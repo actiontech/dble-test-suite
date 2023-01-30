@@ -122,6 +122,7 @@ Feature: connection leak test
       """
         1105, "java.io.IOException: the dbInstance[172.100.9.5:3306] can't reach. Please check the dbInstance is accessible"
       """
+    Given destroy sql threads list
     Given stop btrace script "BtraceClusterDelayquery.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelayquery.java" on "dble-1"
