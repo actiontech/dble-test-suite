@@ -112,7 +112,7 @@ def init_meta(context, flag):
 
 
 @Given('sleep "{num}" seconds')
-def step_impl(context, num):
+def sleep_by_time(context, num):
     int_num = int(num)
     startt = time.time()
     # logger.debug("current datetime: {}".format(datetime.now()))

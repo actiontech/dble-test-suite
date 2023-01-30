@@ -321,22 +321,20 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach1.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(6000L)/;/\}/!ba}
     """
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "cluster @@detach timeout=1" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach1.java" output in "dble-1"
     """
     get into cluster detach or attach handle
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "show @@general_log" with "conn_2"
     Then check btrace "BtraceClusterDetachAttach3.java" output in "dble-1"
     """
@@ -347,7 +345,7 @@ Feature: check single dble detach or attach from cluster
     """
     detach cluster pause timeout
     """
-    Given sleep "10" seconds
+    Given sleep "6" seconds
     Then check sql thread output in "res"
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
@@ -516,14 +514,12 @@ Feature: check single dble detach or attach from cluster
     /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "cluster @@detach timeout=20" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach1.java" output in "dble-1"
     """
     get into cluster detach or attach handle
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "insert into sharding_4_t1 (id) values (1)" with "conn_3"
     Then check btrace "BtraceClusterDetachAttach3.java" output in "dble-1"
     """
@@ -710,17 +706,15 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "cluster @@attach timeout=20" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach1.java" output in "dble-1"
     """
     get into cluster detach or attach handle
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "show @@general_log" with "conn_2"
     Then check btrace "BtraceClusterDetachAttach3.java" output in "dble-1"
     """
@@ -798,9 +792,8 @@ Feature: check single dble detach or attach from cluster
     """
     get into waitOtherSessionBlocked
     """
-    Given prepare a thread execute sql "reload @@config_all" with "conn_2"
-    Given sleep "5" seconds
-    Then check sql thread output in "err"
+    Given prepare a thread execute sql "reload @@config_all" with "conn_2" and save resultset in "reload_result"
+    Then check sql thread output in "reload_result_err" by retry "5" times
     """
     Reload Failure, The reason is cluster is detached
     """
@@ -835,9 +828,8 @@ Feature: check single dble detach or attach from cluster
     """
     get into waitOtherSessionBlocked
     """
-    Given prepare a thread execute sql "create view test_view as select * from sharding_4_t1" with "conn_3"
-    Given sleep "5" seconds
-    Then check sql thread output in "err"
+    Given prepare a thread execute sql "create view test_view as select * from sharding_4_t1" with "conn_3" and save resultset in "view_result"
+    Then check sql thread output in "view_result_err" by retry "5" times
     """
     cluster is detached, you should attach cluster first.
     """
@@ -871,8 +863,7 @@ Feature: check single dble detach or attach from cluster
     get into waitOtherSessionBlocked
     """
     Given prepare a thread execute sql "commit" with "conn_3"
-    Given sleep "5" seconds
-    Then check sql thread output in "err"
+    Then check sql thread output in "err" by retry "5" times
     """
     cluster is detached, you should attach cluster first.
     """
@@ -904,8 +895,7 @@ Feature: check single dble detach or attach from cluster
     get into waitOtherSessionBlocked
     """
     Given prepare a thread execute sql "insert into sharding_4_t1 (id) values (1),(2),(3),(4)" with "conn_3"
-    Given sleep "5" seconds
-    Then check sql thread output in "err"
+    Then check sql thread output in "err" by retry "5" times
     """
     cluster is detached, you should attach cluster first.
     """
@@ -980,7 +970,6 @@ Feature: check single dble detach or attach from cluster
 
     # check manager command
     Given prepare a thread run btrace script "BtraceClusterDetachAttach5.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10" with "conn_2"
     Given sleep "1" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
@@ -1006,7 +995,6 @@ Feature: check single dble detach or attach from cluster
       | conn    | toClose   | sql                                  | expect  | db      |
       | conn_3  | false     | drop table if exists sharding_4_t1   | success | schema1 |
     Given prepare a thread run btrace script "BtraceClusterDetachAttach5.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "create table sharding_4_t1(pid int, id int)" with "conn_3"
     Given sleep "1" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
@@ -1030,7 +1018,6 @@ Feature: check single dble detach or attach from cluster
       | conn    | toClose   | sql                                                      | expect  | db      |
       | conn_3  | false     | insert into sharding_4_t1 (id) values (1),(2),(3),(4)    | success | schema1 |
     Given prepare a thread run btrace script "BtraceClusterDetachAttach5.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "create view test_view as select * from sharding_4_t1" with "conn_3"
     Given sleep "1" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
@@ -1051,7 +1038,6 @@ Feature: check single dble detach or attach from cluster
 
     # check zk offset-step sequence
     Given prepare a thread run btrace script "BtraceClusterDetachAttach5.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "insert into sharding_4_t1 (id) values (5)" with "conn_3"
     Given sleep "1" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
@@ -1075,7 +1061,6 @@ Feature: check single dble detach or attach from cluster
       | conn    | toClose   | sql                                                 | expect  | db      |
       | conn_3  | false     | set xa=1;set autocommit=0;delete from sharding_4_t1 | success | schema1 |
     Given prepare a thread run btrace script "BtraceClusterDetachAttach5.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "commit" with "conn_3"
     Given sleep "1" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
@@ -1151,7 +1136,6 @@ Feature: check single dble detach or attach from cluster
 
     # check cluster manager command
     Given prepare a thread run btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
-    Given sleep "5" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach6.java" output in "dble-1"
     """
@@ -1179,7 +1163,6 @@ Feature: check single dble detach or attach from cluster
 
     # check cluster manager command
     Given prepare a thread run btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach6.java" output in "dble-1"
     """
@@ -1205,7 +1188,6 @@ Feature: check single dble detach or attach from cluster
       | conn    | toClose   | sql                                  | expect  | db      |
       | conn_3  | false     | drop table if exists sharding_4_t1   | success | schema1 |
     Given prepare a thread run btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach6.java" output in "dble-1"
     """
@@ -1239,7 +1221,6 @@ Feature: check single dble detach or attach from cluster
 
     # check ddl - view
     Given prepare a thread run btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach6.java" output in "dble-1"
     """
@@ -1275,7 +1256,6 @@ Feature: check single dble detach or attach from cluster
       | conn    | toClose   | sql                                | expect      | db      |
       | conn_3  | false     | select * from sharding_4_t1        | length{(4)} | schema1 |
     Given prepare a thread run btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach6.java" output in "dble-1"
     """
@@ -1306,7 +1286,6 @@ Feature: check single dble detach or attach from cluster
       | conn    | toClose   | sql                                                 | expect  | db      |
       | conn_3  | false     | set xa=1;set autocommit=0;delete from sharding_4_t1 | success | schema1 |
     Given prepare a thread run btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach6.java" output in "dble-1"
     """
