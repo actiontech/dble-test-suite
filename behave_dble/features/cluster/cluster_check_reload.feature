@@ -1011,7 +1011,7 @@ Feature: test "reload @@config" in zk cluster
         | PHYSICAL_SCHEMA           |   4          |
         | SUER                      |   5          |
         | PASSWORD                  |   6          |
-
+      Given destroy sql threads list
 #CASE2: change sharding.xml and reload hang on the different dble
       Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-2"
       Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-2"
@@ -1106,7 +1106,7 @@ Feature: test "reload @@config" in zk cluster
         | NAME-0 | SEQUENCE-1 | HOST-2        | PORT-3 | PHYSICAL_SCHEMA-4 | USER-5 | PASSWORD-6 |
         | dn1    | 0          | 172.100.9.5   | 3306   | db1               | test   | 111111     |
         | dn2    | 1          | 172.100.9.6   | 3306   | db1               | test   | 111111     |
-
+      Given destroy sql threads list
       Given delete file "/opt/dble/BtraceCluster.java" on "dble-1"
       Given delete file "/opt/dble/BtraceCluster.java.log" on "dble-1"
       Given delete file "/opt/dble/BtraceCluster.java" on "dble-2"

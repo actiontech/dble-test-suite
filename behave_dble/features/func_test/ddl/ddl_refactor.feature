@@ -107,7 +107,7 @@ Feature: test ddl refactor
     Then execute sql in "dble-1" in "user" mode
       | sql                                | expect   | db      |
       | drop table if exists sharding_4_t1 | success  | schema1 |
-
+    Given destroy sql threads list
 
    Scenario:  can‘t support ddl in xa transaction  #4
      #case  https://github.com/actiontech/dble/issues/1760

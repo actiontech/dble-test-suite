@@ -80,6 +80,7 @@ Feature: connection test in rwSplit mode
         """
           \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
         """
+     Given destroy sql threads list
 
      Given prepare a thread execute sql "select * from test" with "conn_1"
      Given record current dble log line number in "log_num_2"
@@ -105,7 +106,7 @@ Feature: connection test in rwSplit mode
        """
           get into rwSelect
        """
-
+     Given destroy sql threads list
      Given stop Btrace script "BtraceRwSelect.java" in "dble-1"
      Given destroy Btrace threads list
      Given delete file "/opt/dble/BtraceRwSelect.java" on "dble-1"
@@ -162,6 +163,7 @@ Feature: connection test in rwSplit mode
         """
           \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
         """
+     Given destroy sql threads list
 
      Given prepare a thread execute sql "select * from test" with "conn_3"
      Given record current dble log line number in "log_num_4"
@@ -188,6 +190,7 @@ Feature: connection test in rwSplit mode
        """
           get into rwSelect
        """
+     Given destroy sql threads list
      Given stop Btrace script "BtraceRwSelect.java" in "dble-1"
      Given destroy Btrace threads list
      Given delete file "/opt/dble/BtraceRwSelect.java" on "dble-1"
@@ -255,6 +258,8 @@ Feature: connection test in rwSplit mode
         """
 
      # add slave dbInstance
+     Given destroy sql threads list
+
      Given prepare a thread execute sql "select * from test" with "conn_1"
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                                         | db      |
@@ -270,6 +275,7 @@ Feature: connection test in rwSplit mode
       """
         get into reSelectRWDbGroup
       """
+    Given destroy sql threads list
     Given stop Btrace script "BtraceSelectRWDbGroup.java" in "dble-1"
     Given destroy Btrace threads list
     Then execute sql in "dble-1" in "user" mode
@@ -345,6 +351,7 @@ Feature: connection test in rwSplit mode
         """
      Given stop Btrace script "BtraceRwSplitSession.java" in "dble-1"
      Given destroy Btrace threads list
+     Given destroy sql threads list
 
      Then execute sql in "dble-1" in "user" mode
        |user| conn   | toClose | sql                                     | expect  |
