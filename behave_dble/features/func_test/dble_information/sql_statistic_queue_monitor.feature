@@ -69,12 +69,12 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                                    | expect       | db                 |
       | conn_0 | False    | start @@statistic_queue_monitor;       | success      | dble_information   |
     # Because you need to wait until the first statistic data is counted in the result before you can assert that it passes
-    Given sleep "1" seconds by time
+    Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect       | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(1)}  | dble_information   |
     # Check the status of queueMonitor, because its status change takes time
-    Given sleep "4" seconds by time
+    Given sleep "4" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_3"
       | conn   | toClose  | sql                             | db               |
       | conn_0 | False    | show @@statistic;               | dble_information |
@@ -84,7 +84,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | samplingRate             | 20             |
       | queueMonitor             | monitoring     |
     # we need at least [observeTime (1min)+ 1* intervalTime] ，Then the result of "show @@statistic_queue.usage;" will tell us that statistic finished
-    Given sleep "65" seconds by time
+    Given sleep "65" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(13)}  | dble_information   |
@@ -139,12 +139,12 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                                                                           | expect       | db                 |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = 1h and intervalTime = 2s;       | success      | dble_information   |
     # Because you need to wait until the first statistical data is counted in the result before you can assert that it passes
-    Given sleep "1" seconds by time
+    Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect       | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(1)}  | dble_information   |
     # Check the status of queueMonitor, because its status change takes time
-    Given sleep "4" seconds by time
+    Given sleep "4" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_6"
       | conn   | toClose  | sql                             | db               |
       | conn_0 | False    | show @@statistic;               | dble_information |
@@ -154,7 +154,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | samplingRate             | 0              |
       | queueMonitor             | monitoring     |
     # one more seconds is needed, in addition to the previous sleep duration, the actual total is 6s,then "stop @@statistic_queue_monitor;"
-    Given sleep "1" seconds by time
+    Given sleep "1" seconds
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect       | db                 |
       | conn_0 | False    | stop @@statistic_queue_monitor;        | success      | dble_information   |
@@ -162,7 +162,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(4)}   | dble_information   |
     # we need a intervalTime，checking "show @@statistic_queue.usage;"
-    Given sleep "2" seconds by time
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(4)}   | dble_information   |
@@ -233,7 +233,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                                                  | expect   | db               |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = 10;    | success  | dble_information |
     # sleep 5s，a default intervalTime cycle
-    Given sleep "5" seconds by time
+    Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_10"
       | conn   | toClose  | sql                             | db               |
       | conn_0 | False    | show @@statistic;               | dble_information |
@@ -243,7 +243,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | samplingRate             | 20            |
       | queueMonitor             | monitoring    |
     # more 10s，equal [observeTime + a intervalTime cycle]，checking queueMonitor
-    Given sleep "10" seconds by time
+    Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_11"
       | conn   | toClose  | sql                             | db               |
       | conn_0 | False    | show @@statistic;               | dble_information |
@@ -305,7 +305,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                             | db               |
       | conn_0 | False    | show @@statistic;               | dble_information |
     # Check the status of queueMonitor, because its status change takes time
-    Given sleep "3" seconds by time
+    Given sleep "3" seconds
     Then check resultset "res_13" has lines with following column values
       | NAME-0                   | VALUE-1       |
       | statistic                | ON            |
@@ -319,7 +319,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                                                                       | expect                                                                                  | db               |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime =4M and intervalTime = 3;     | In the monitoring..., can use 'stop @@statistic_queue_monitor' to interrupt monitoring  | dble_information |
     # sleep 3s，checking statistic_queue_monitor，the second statistic_queue_monitor didn't work
-    Given sleep "3" seconds by time
+    Given sleep "3" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(4)}   | dble_information   |
@@ -349,7 +349,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(4)}   | dble_information   |
-    Given sleep "2" seconds by time
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(5)}   | dble_information   |
@@ -372,7 +372,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(5)}   | dble_information   |
-    Given sleep "2" seconds by time
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(5)}   | dble_information   |
@@ -530,7 +530,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | reload @@samplingRate = 0;             | success  | dble_information |
     # sleep 1s，check the monitoring status.
       # Since the sampling statistics are still runningn, the queue monitoring status is still continuing
-    Given sleep "1" seconds by time
+    Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(2)}   | dble_information   |
@@ -549,7 +549,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                                      | expect   | db                 |
       | conn_0 | False    | disable @@statistic;                     | success  | dble_information   |
     # sleep 1s，an intervalTime cycle,Check the monitoring output, there is no new addition, the queue monitoring stops
-    Given sleep "1" seconds by time
+    Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(2)}   | dble_information   |
@@ -610,7 +610,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                             | db               |
       | conn_0 | False    | show @@statistic;               | dble_information |
     # Check the status of queueMonitor, because its status change takes time
-    Given sleep "2" seconds by time
+    Given sleep "2" seconds
     Then check resultset "res_24" has lines with following column values
       | NAME-0                   | VALUE-1       |
       | statistic                | OFF           |
@@ -625,7 +625,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | disable @@statistic;                   | success  | dble_information |
     # sleep 2s an intervalTime cycle,Check the monitoring status.
       # Since the sampling statistics are still running, the queue monitoring status is still continuing
-    Given sleep "2" seconds by time
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(3)}   | dble_information   |
@@ -644,7 +644,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                                      | expect   | db                 |
       | conn_0 | False    | reload @@samplingRate = 0;               | success  | dble_information   |
     # sleep 2s，an intervalTime cycle,Check the monitoring output, there is no new addition, check the status, the queue monitoring stops
-    Given sleep "2" seconds by time
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(3)}   | dble_information   |
@@ -703,7 +703,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                                                                        | expect   | db               |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime =10MIN and intervalTime = 2;   | success  | dble_information |
     # Check the status of queueMonitor, because its status change takes time
-    Given sleep "2" seconds by time
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_28"
       | conn   | toClose  | sql                             | db               |
       | conn_0 | False    | show @@statistic;               | dble_information |

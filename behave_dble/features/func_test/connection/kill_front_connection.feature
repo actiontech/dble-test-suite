@@ -97,7 +97,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     /setBackendResponseTime/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
-    Given sleep "5" seconds by time
+    Given sleep "5" seconds
     Given prepare a thread execute sql "insert into sharding_4_t1(id) values(1),(2),(3),(4)" with "conn_0"
     Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
     """
@@ -106,7 +106,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  |
       | conn_2 | False   | kill query {0} | success |
-    Given sleep "5" seconds by time
+    Given sleep "5" seconds
     Then check sql thread output in "err"
     """
     Query was interrupted.
@@ -129,7 +129,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     /setBackendResponseTime/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
-    Given sleep "5" seconds by time
+    Given sleep "5" seconds
     Given prepare a thread execute sql "insert into sharding_4_t1(id) values(5),(6),(7),(8)" with "conn_0"
     Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
     """
@@ -138,7 +138,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  |
       | conn_2 | False   | kill query {0} | success |
-    Given sleep "5" seconds by time
+    Given sleep "5" seconds
     Then check sql thread output in "err"
     """
     was closed ,reason is [Query was interrupted.]
@@ -159,7 +159,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     /endRoute/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
-    Given sleep "5" seconds by time
+    Given sleep "5" seconds
     Given prepare a thread execute sql "select * from sharding_4_t1" with "conn_0"
     Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
     """
@@ -168,7 +168,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  |
       | conn_2 | True   | kill query {0} | success |
-    Given sleep "5" seconds by time
+    Given sleep "5" seconds
     Then check sql thread output in "err"
     """
     Query was interrupted.
