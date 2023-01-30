@@ -172,21 +172,26 @@ def step_impl(context, host_name, num, concur="100", mode_name="user"):
 
 
 @Given('prepare a thread execute sql "{sql}" with "{conn_type}"')
-def step_impl(context, sql, conn_type=''):
+@Given('prepare a thread execute sql "{sql}" with "{conn_type}" and save resultset in "{result_set}"')
+def step_impl(context, sql, conn_type='', result_set=''):
     conn = DbleObject.dble_long_live_conns.get(conn_type, None)
     assert conn, "conn '{0}' is not exists in dble_long_live_conns".format(conn_type)
     global sql_threads
-    thd = Thread(target=execute_sql_backgroud, args=(context, conn, sql), name=sql)
+    thd = Thread(target=execute_sql_backgroud, args=(context, conn, sql, result_set), name=sql)
     sql_threads.append(thd)
     thd.setDaemon(True)
     thd.start()
 
 
-def execute_sql_backgroud(context, conn, sql):
+def execute_sql_backgroud(context, conn, sql, result_set):
     sql_cmd = sql.strip()
     res, err = conn.execute(sql_cmd)
-    setattr(context, "sql_thread_result", res)
-    setattr(context, "sql_thread_err", err)
+    if result_set:
+        setattr(context, "{0}_result".format(result_set), res)
+        setattr(context, "{0}_err".format(result_set), err)
+    else:
+        setattr(context, "sql_thread_result", res)
+        setattr(context, "sql_thread_err", err)
     logger.debug("execute sql in thread end, res or err has been record in context variables")
 
 
