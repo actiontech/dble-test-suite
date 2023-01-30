@@ -11,7 +11,7 @@ import time
 from behave import *
 
 from steps.lib.QueryMeta import QueryMeta
-from steps.lib.utils import get_sftp, get_ssh, get_node, wait_for
+from steps.lib.utils import get_sftp, get_ssh, get_node, wait_for, sleep_by_time
 import logging
 logger = logging.getLogger('root')
 
@@ -178,12 +178,37 @@ def destroy_threads(context):
     btrace_threads = []
 
 
+@Then('check sql thread output in "{result}" by retry "{retry_times}" times')
 @Then('check sql thread output in "{result}"')
-def step_impl(context, result):
-    if result.lower() == "res":
-        output = getattr(context, "sql_thread_result")
-        context.logger.debug("sql thread output from res: {0}".format(output))
-    elif result.lower() == "err":
-        output = getattr(context, "sql_thread_err")
-        context.logger.debug("sql thread output from err: {0}".format(output))
+def step_impl(context, result, retry_times=1):
+    if "," in str(retry_times):
+        timeout = int(retry_times.split(",")[0])
+        sep_time = float(retry_times.split(",")[1])
+    else:
+        timeout = int(retry_times)
+        sep_time = 1
+
+    for i in range(timeout):
+        try:
+            if result.lower() == "res":
+                output = getattr(context, "sql_thread_result")
+                context.logger.debug("sql thread output from res: {0}".format(output))
+            elif result.lower() == "err":
+                output = getattr(context, "sql_thread_err")
+                context.logger.debug("sql thread output from err: {0}".format(output))
+            else:
+                output = getattr(context, result.lower())
+                context.logger.debug("sql thread output from result set: {0}".format(output))
+
+            assert str(output).find(context.text.strip()) > -1, "expect output: {0} in {1}, but was: {2}".format(
+                context.text, result, output)
+            break
+        except Exception as e:
+            logger.info(f"sql thread result is not out yet,retry {i} times")
+            if i == timeout - 1:
+                raise e
+            else:
+                sleep_by_time(context, sep_time)
+                # time.sleep(sep_time)
+
     assert str(output).find(context.text.strip()) > -1, "expect output: {0} in {1}, but was: {2}".format(context.text, result, output)
