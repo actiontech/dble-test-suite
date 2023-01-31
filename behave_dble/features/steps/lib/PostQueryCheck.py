@@ -79,8 +79,14 @@ class PostQueryCheck(object):
             isBalance = re.search(r"balance\{(.*?)\}", self._expect, re.I)
             if isBalance:
                 assert_that(self._real_err is None, "sql: {0}, expect query success, but failed for '{1}'".format(self._sql, self._real_err))
-                bal_num = isBalance.group(1)
-                self.balance(self._real_res, int(bal_num))
+                bal_res = isBalance.group(1)
+                if "," in bal_res:
+                    bal_num=bal_res.split(",")[0]
+                    bal_per=bal_res.split(",")[1]
+                else:
+                    bal_num=bal_res
+                    bal_per=0.2    
+                self.balance(self._real_res, int(bal_num),float(bal_per))
                 break
 
             hasString = re.search(r"hasStr\{(.*?)\}", self._expect, re.I)
@@ -182,8 +188,12 @@ class PostQueryCheck(object):
                 if expLen == k: return True
         return False
 
-    def balance(self, RS, expectRS):  # Float a value up and down
+
+    def balance(self, RS, expectRS,percent):  # Float a value up and down
+        if percent<0 or percent>1:
+            logger.debug("wrong value of percent")
+            return False
         re_num = int(re.sub("\D", "", str(RS[0])))  # get the number from result of dble
         a = abs(re_num - expectRS)
-        b = expectRS * 0.2
+        b = expectRS * percent
         assert a <= b, "expect {0} in resultset {1}".format(expectRS, re_num)
