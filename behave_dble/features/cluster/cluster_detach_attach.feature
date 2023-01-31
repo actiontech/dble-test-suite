@@ -362,7 +362,7 @@ Feature: check single dble detach or attach from cluster
       | conn   | toClose   | sql              | expect                                 |
       | conn_1 | True      | cluster @@attach | illegal state: cluster is not detached |
 
-  Scenario: check cluster @@detach and timeout use default value when other sql is being executed #4
+  Scenario: check cluster @@detach and timeout use default value 10s when other sql is being executed #4
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     s/-Dprocessors=1/-Dprocessors=4/
@@ -397,29 +397,27 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach1.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
+    # sleep time > detach timeout default value 10s
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach1.java" output in "dble-1"
     """
     get into cluster detach or attach handle
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "create view test_view as select * from sharding_4_t1" with "conn_3"
     Then check btrace "BtraceClusterDetachAttach3.java" output in "dble-1"
     """
     get into afterDelayServiceMarkDoing
     """
-    Given sleep "12" seconds
-    Then check sql thread output in "err"
+    Then check sql thread output in "err" by retry "12" times
     """
     detach cluster pause timeout
     """
@@ -791,8 +789,8 @@ Feature: check single dble detach or attach from cluster
     """
     get into waitOtherSessionBlocked
     """
-    Given prepare a thread execute sql "reload @@config_all" with "conn_2" and save resultset in "reload_result"
-    Then check sql thread output in "reload_result_err" by retry "5" times
+    Given prepare a thread execute sql "reload @@config_all" with "conn_2" and save resultset in "reload_rs"
+    Then check sql thread output in "reload_rs_err" by retry "5" times
     """
     Reload config failure.The reason is cluster is detached
     """
@@ -827,8 +825,8 @@ Feature: check single dble detach or attach from cluster
     """
     get into waitOtherSessionBlocked
     """
-    Given prepare a thread execute sql "create view test_view as select * from sharding_4_t1" with "conn_3" and save resultset in "view_result"
-    Then check sql thread output in "view_result_err" by retry "5" times
+    Given prepare a thread execute sql "create view test_view as select * from sharding_4_t1" with "conn_3" and save resultset in "view_rs"
+    Then check sql thread output in "view_rs_err" by retry "5" times
     """
     cluster is detached, you should attach cluster first.
     """
@@ -855,14 +853,13 @@ Feature: check single dble detach or attach from cluster
       | conn    | toClose   | sql                                                 | db      | expect  |
       | conn_3  | false     | set xa=on;set autocommit=0;delete from sharding_4_t1 | schema1 | success |
     Given prepare a thread run btrace script "BtraceClusterDetachAttach2.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach2.java" output in "dble-1"
     """
     get into waitOtherSessionBlocked
     """
-    Given prepare a thread execute sql "commit" with "conn_3"
-    Then check sql thread output in "err" by retry "5" times
+    Given prepare a thread execute sql "commit" with "conn_3" and save resultset in "commit_rs"
+    Then check sql thread output in "commit_rs_err" by retry "5" times
     """
     cluster is detached, you should attach cluster first.
     """
@@ -893,8 +890,8 @@ Feature: check single dble detach or attach from cluster
     """
     get into waitOtherSessionBlocked
     """
-    Given prepare a thread execute sql "insert into sharding_4_t1 (id) values (1),(2),(3),(4)" with "conn_3"
-    Then check sql thread output in "err" by retry "5" times
+    Given prepare a thread execute sql "insert into sharding_4_t1 (id) values (1),(2),(3),(4)" with "conn_3" and save resultset in "insert_rs"
+    Then check sql thread output in "insert_rs_err" by retry "5" times
     """
     cluster is detached, you should attach cluster first.
     """
