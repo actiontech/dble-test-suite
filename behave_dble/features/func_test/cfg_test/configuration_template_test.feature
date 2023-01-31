@@ -36,14 +36,14 @@ Feature: use template to generate configuration file, check function is normal
     s/ip2:3306/172.100.9.6:3306/
     s/your_user/test/g
     s/your_psw/111111/g
-    31,42d
+    31,43d
     """
     Given update file content "{install_dir}/dble/conf/user.xml" in "dble-1" with sed cmds
     """
     s/shardingUser name="root"/shardingUser name="test"/
     s/managerUser name="man1"/managerUser name="root"/
     s/\<password="[0-9]\{6\}"/password="111111"/g
-    31d
+    32d
     """
     Then Restart dble in "dble-1" success
 
