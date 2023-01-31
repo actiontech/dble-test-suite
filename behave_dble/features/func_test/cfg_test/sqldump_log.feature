@@ -4,7 +4,6 @@
 # Created by quexiuping at 2022/11/18
 
 Feature: sqldump log test  3.22.11
-  ToDo：多语句
 
 
   Scenario: check invalid sqldump log parameters in bootstrap.cnf #1
@@ -439,7 +438,7 @@ Feature: sqldump log test  3.22.11
 
 
 
-  Scenario: check sqldump log records   - rwSplitser user   #6
+  Scenario: check sqldump log records muliti sql   - rwSplitser user   #6
     Given delete file "/opt/dble/sqldump/sqldump.log" on "dble-1"
     Given delete the following xml segment
       | file          | parent           | child                   |
