@@ -182,17 +182,18 @@ def destroy_threads(context):
     btrace_threads = []
 
 
-@Then('check sql thread output in "{result}" by retry "{retry_times}" times')
+@Then('check sql thread output in "{result}" by retry "{retry_param}" times')
 @Then('check sql thread output in "{result}"')
-def step_impl(context, result, retry_times=1):
-    if "," in str(retry_times):
-        timeout = int(retry_times.split(",")[0])
-        sep_time = float(retry_times.split(",")[1])
+def step_impl(context, result, retry_param=1):
+    if "," in str(retry_param):
+        retry_times = int(retry_param.split(",")[0])
+        sep_time = float(retry_param.split(",")[1])
     else:
-        timeout = int(retry_times)
+        retry_times = int(retry_param)
         sep_time = 1
 
-    for i in range(timeout):
+    execute_times = retry_times + 1
+    for i in range(execute_times):
         try:
             if result.lower() == "res":
                 output = getattr(context, "sql_thread_result")
@@ -208,8 +209,8 @@ def step_impl(context, result, retry_times=1):
                 context.text, result, output)
             break
         except Exception as e:
-            logger.info(f"sql thread result is not out yet,retry {i} times")
-            if i == timeout - 1:
+            logger.info(f"sql thread result is not out yet, execute {i + 1} times")
+            if i == execute_times - 1:
                 raise e
             else:
                 sleep_by_time(context, sep_time)
