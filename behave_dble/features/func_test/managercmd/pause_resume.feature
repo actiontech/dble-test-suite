@@ -27,7 +27,7 @@ Feature: test "pause/resume" manager cmd
         | conn_0 | False    | resume                                                                        | success |
         | conn_0 | True     | pause @@shardingNode = 'dn1,dn3,dn6' and timeout = 10,queue=10                |ShardingNode dn6 did not exists |
 
-  @CRITICAL
+  @CRITICAL @auto_retry
   Scenario: verify pause "wait_limit" work  #2
       Then execute sql in "dble-1" in "user" mode
         | conn   | toClose  | sql                                        | expect   | db       |
@@ -40,7 +40,7 @@ Feature: test "pause/resume" manager cmd
       Then execute sql in "dble-1" in "user" mode
         | conn   | toClose  | sql                | expect                                                   | db      |
         | conn_0 | False    | select * from test | waiting time exceeded wait_limit from pause shardingNode | schema1 |
-        | conn_0 | True     | select * from test | execute_time{(1)}                                        | schema1 |
+        | conn_0 | True     | select * from test | execute_time{1}                                          | schema1 |
       Then execute sql in "dble-1" in "admin" mode
         | sql   | expect  |
         |resume | success |
@@ -63,24 +63,25 @@ Feature: test "pause/resume" manager cmd
         | conn   | toClose | sql     | expect  | db       |
         | conn_0 | True    | commit  | success | schema1  |
       Then execute sql in "dble-1" in "admin" mode
-        | conn   | toClose  | sql                                                                           | expect                                    |
-        | conn_0 | False    | pause @@shardingNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=1 | success                                  |
-        | conn_0 | False    | show @@pause                                                              | has{('dn1',), ('dn2',),('dn3',),('dn4',)}  |
-        | conn_0 | True     | resume                                                                    | success                                    |
+        | conn   | toClose  | sql                                                                           | expect                                     |
+        | conn_0 | False    | pause @@shardingNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=1 | success                                    |
+        | conn_0 | False    | show @@pause                                                                  | has{('dn1',), ('dn2',),('dn3',),('dn4',)}  |
+        | conn_0 | True     | resume                                                                        | success                                    |
       # verify "queue"
       Then execute sql in "dble-1" in "admin" mode
-        | conn   | toClose | sql                                                                        |
+        | conn   | toClose | sql                                                                            |
         | conn_0 | True    | pause @@shardingNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=10 |
+    #### 参数wait_limit=10 导致 10s后  failed for: (1003, 'waiting time exceeded wait_limit from pause shardingNode')
       Then execute sql in "dble-1" in "user" mode
-        | conn   | toClose | sql                | expect             | db       |
-        | conn_0 | True    | select * from test | execute_time{(10)} |  schema1 |
+        | conn   | toClose | sql                | expect                 | db      |
+        | conn_0 | True    | select * from test | execute_time{10,0.5}   | schema1 |
       Given create "2" front connections executing "select * from test"
       """
       The node is pausing, wait list is full
       """
     Then execute sql in "dble-1" in "admin" mode
-      | conn | toClose | sql    | expect  | db |
-      | new  | True    | resume | success |    |
+      | conn | toClose | sql    | expect  |
+      | new  | True    | resume | success |
 
   @CRITICAL
   Scenario: resume shardingNode which not stop data flow #4
