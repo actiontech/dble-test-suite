@@ -201,7 +201,7 @@ def step_impl(context):
     for thd in sql_threads:
         context.logger.debug("join sql thread: {0}".format(thd.name))
         thd.join()
-
+    sql_threads=[]
 
 @Given('kill all backend conns in "{host_name}"')
 @Given('kill all backend conns in "{host_name}" except ones in "{exclude_conn_ids}"')
