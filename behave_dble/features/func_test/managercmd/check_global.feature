@@ -133,7 +133,7 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
     >/opt/dble/logs/dble.log
     """
-    Given sleep "11" seconds
+    Given sleep "13" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     Global Consistency Check fail for table :schema1-g1
@@ -159,7 +159,7 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
     >/opt/dble/logs/dble.log
     """
-    Given sleep "11" seconds
+    Given sleep "13" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     Global Consistency Check fail for table :schema1-g1
@@ -185,7 +185,7 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
     >/opt/dble/logs/dble.log
     """
-    Given sleep "11" seconds
+    Given sleep "13" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     Global Consistency Check fail for table :schema1-g1
@@ -220,7 +220,7 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
     Then execute admin cmd "reload @@config"
     Given stop mysql in host "mysql-master1"
-    Given sleep "11" seconds
+    Given sleep "13" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     error node is : null-null
