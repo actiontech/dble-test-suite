@@ -329,7 +329,7 @@ Feature: check single dble detach or attach from cluster
     /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
-    Given prepare a thread execute sql "cluster @@detach timeout=1" with "conn_1"
+    Given prepare a thread execute sql "cluster @@detach timeout=1" with "conn_1" and save resultset in "detach_rs"
     Then check btrace "BtraceClusterDetachAttach1.java" output in "dble-1"
     """
     get into cluster detach or attach handle
@@ -340,13 +340,11 @@ Feature: check single dble detach or attach from cluster
     """
     get into afterDelayServiceMarkDoing
     """
-    Given sleep "3" seconds
-    Then check sql thread output in "err"
+    Then check sql thread output in "detach_rs_err" by retry "5" times
     """
     detach cluster pause timeout
     """
-    Given sleep "6" seconds
-    Then check sql thread output in "res"
+    Then check sql thread output in "res" by retry "8" times
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
     """
@@ -406,7 +404,7 @@ Feature: check single dble detach or attach from cluster
     /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
-    Given prepare a thread execute sql "cluster @@detach" with "conn_1"
+    Given prepare a thread execute sql "cluster @@detach" with "conn_1" and save resultset in "detach_rs"
     Then check btrace "BtraceClusterDetachAttach1.java" output in "dble-1"
     """
     get into cluster detach or attach handle
@@ -417,7 +415,7 @@ Feature: check single dble detach or attach from cluster
     """
     get into afterDelayServiceMarkDoing
     """
-    Then check sql thread output in "err" by retry "12" times
+    Then check sql thread output in "detach_rs_err" by retry "12" times
     """
     detach cluster pause timeout
     """
@@ -578,26 +576,22 @@ Feature: check single dble detach or attach from cluster
     /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
-    Given sleep "3" seconds
-    Given prepare a thread execute sql "cluster @@attach timeout=1" with "conn_1"
+    Given prepare a thread execute sql "cluster @@attach timeout=1" with "conn_1" and save resultset in "detach_rs"
     Then check btrace "BtraceClusterDetachAttach1.java" output in "dble-1"
     """
     get into cluster detach or attach handle
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "show @@general_log" with "conn_2"
     Then check btrace "BtraceClusterDetachAttach3.java" output in "dble-1"
     """
     get into afterDelayServiceMarkDoing
     """
-    Given sleep "3" seconds
-    Then check sql thread output in "err"
+    Then check sql thread output in "detach_rs_err" by retry "10" times
     """
     attach cluster pause timeout
     """
-    Given sleep "10" seconds
-    Then check sql thread output in "res"
+    Then check sql thread output in "res" by retry "15" times
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
     """
@@ -613,7 +607,7 @@ Feature: check single dble detach or attach from cluster
       | conn   | toClose   | sql              | expect  |
       | conn_1 | true      | cluster @@attach | success |
 
-  Scenario: check cluster @@attach and timeout use default value when other sql is being executed #7
+  Scenario: check cluster @@attach and timeout use default value 10s when other sql is being executed #7
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     s/-Dprocessors=1/-Dprocessors=4/
@@ -643,34 +637,31 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach1.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
+    # sleep time > detach timeout default value 10s
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
-    Given sleep "3" seconds
-    Given prepare a thread execute sql "cluster @@attach" with "conn_1"
+    Given prepare a thread execute sql "cluster @@attach" with "conn_1" and save resultset in "attach_rs"
     Then check btrace "BtraceClusterDetachAttach1.java" output in "dble-1"
     """
     get into cluster detach or attach handle
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "show @@general_log" with "conn_2"
     Then check btrace "BtraceClusterDetachAttach3.java" output in "dble-1"
     """
     get into afterDelayServiceMarkDoing
     """
-    Given sleep "12" seconds
-    Then check sql thread output in "err"
+    Then check sql thread output in "attach_rs_err" by retry "12" times
     """
     attach cluster pause timeout
     """
-    Given sleep "3" seconds
-    Then check sql thread output in "res"
+    Then check sql thread output in "res" by retry "5" times
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
     """
@@ -717,8 +708,7 @@ Feature: check single dble detach or attach from cluster
     """
     get into afterDelayServiceMarkDoing
     """
-    Given sleep "10" seconds
-    Then check sql thread output in "res"
+    Then check sql thread output in "res" by retry "12" times
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
     """
