@@ -57,7 +57,7 @@ Feature: check keepAlive
     Given record current dble log line number in "log_num_1"
 
     # case 1.1: sleep more than keepAlive
-    Given sleep "65" seconds
+    Given sleep "62" seconds
     #print log and mysqlId change
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1"
     """
@@ -190,7 +190,7 @@ Feature: check keepAlive
     Given record current dble log line number in "log_num_3"
 
     # case 2.1: sleep more than keepAlive
-    Given sleep "35" seconds
+    Given sleep "32" seconds
     #print log and mysqlId change
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1"
     """
