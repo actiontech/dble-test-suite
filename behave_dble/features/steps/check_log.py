@@ -5,8 +5,9 @@
 # @Author  : zhaohongjie@actionsky.com
 import re
 from behave import *
-
+import logging
 from steps.lib.utils import get_node
+logger = logging.getLogger('root')
 
 @Then('check "{file}" in "{hostname}" was empty')
 def step_impl(context,hostname, file):
@@ -16,7 +17,7 @@ def step_impl(context,hostname, file):
     cmd = "cat {0}".format(path)
     ssh_client = node.ssh_conn
     rc, sto, ste = ssh_client.exec_command(cmd)
-    print ("rc:{0}; sto:{1}; ste:{2}\n".format(rc, sto, ste))
+    logger.debug ("the : rc:{0}; sto:{1}; ste:{2}".format(rc, sto, ste))
     assert len(sto)==0, "cat file is not empty!"
     assert len(ste)==0, "cat file failed for: {0}".format(ste[0:200])
 
