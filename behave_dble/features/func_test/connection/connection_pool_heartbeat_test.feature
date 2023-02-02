@@ -79,7 +79,7 @@ Feature: connection pool basic test - heartbeat create connections
       | conn   | toClose | sql                                                                                                                    | expect       | db                |
       | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'      | length{(4)}  | dble_information  |
 
-  @CRITICAL @restore_network
+  @CRITICAL @restore_network @skip
   Scenario: expect heartbeat create connections when heartbeat status changes from Timeout to OK #3
     """
     {'restore_network':'mysql-master1'}

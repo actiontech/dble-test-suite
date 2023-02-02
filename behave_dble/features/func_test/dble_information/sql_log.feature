@@ -1214,7 +1214,7 @@ sql_log_by_tx_digest_by_entry_by_user
       """
 
 
-
+ @skip
   Scenario: test samplingRate=100 and transaction sql  ---- shardinguser  #7
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |

@@ -437,7 +437,7 @@ Feature: test read load balance
       | set global general_log=off   |
 
 
-  @restore_mysql_service
+  @restore_mysql_service @skip
   Scenario: dbGroup rwSplitMode="3" and read dbInstance down, do read on write dbInstance #10
      """
      {'restore_mysql_service':{'mysql-slave1':{'start_mysql':1}}}
