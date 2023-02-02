@@ -75,9 +75,10 @@ Feature: test ddl refactor
       | conn_0 | False   | drop table if exists sharding_4_t1  | success  | schema1 |
       | conn_0 | False   | create table sharding_4_t1(id int)  | success  | schema1 |
     Then execute sql in "mysql-master1"
-      | conn   | toClose  | sql                                | expect    | db  |
-      | conn_1 | False    |begin                               | success   | db1 |
-      | conn_1 | False    |insert into sharding_4_t1 values(1) | success   | db1 |
+      | conn   | toClose  | sql                                | expect                         | db  |timeout |
+      | conn_1 | False    |begin                               | success                        | db1 |        |
+      | conn_1 | False    |insert into sharding_4_t1 values(1) | success                        | db1 |        |
+      | conn_1 | False    |select * from sharding_4_t1         | has{((1,),)}                   | db1 | 3      |
     Given prepare a thread execute sql "drop table sharding_4_t1" with "conn_0"
     Given sleep "120" seconds
     Then get result of oscmd named "rs_A" in "dble-1"
