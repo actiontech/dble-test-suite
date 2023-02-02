@@ -672,6 +672,8 @@ def step_impl(context, filename, hostname, line_num_rs=None):
     for row in context.table:
         key = row["key"]
         interval = row["interval_times"]
+        percent = row["percent"]
+
         if line_num_rs:
             line_num = getattr(context, line_num_rs, 0)
             logger.debug("line_num {0}".format(line_num))
@@ -691,11 +693,10 @@ def step_impl(context, filename, hostname, line_num_rs=None):
                 if pre_datetime:
                     datetime2 = datetime.datetime.strptime(pre_datetime, '%Y-%m-%d %H:%M:%S')
                     datetime_interval = (datetime1-datetime2).seconds
-                    logger.debug("datetime interval is {0}".format(int(datetime_interval) == int(interval)))
-                    assert_that(int(datetime_interval) == int(interval),
-                                "last datetime is {0}, current datetime is {1}, "
-                                "expect the time interval of \"{2}\" is {3} in {4}, "
-                                "but the actual value is {5}".format(pre_datetime, line_datetime, key, interval, filename, datetime_interval))
+                    a = int(float(interval) - float(interval) * float(percent))
+                    b = int(float(interval) + float(interval) * float(percent))
+                    logger.debug("datetime interval is {0},interval_times is {1},time interval {2} to {3}".format(int(datetime_interval),int(interval),a,b))
+                    assert (a <= int(datetime_interval) <= b), "last datetime is {0}, current datetime is {1}, expect the time interval of \"{2}\" is {3} in {4}, but the actual value is {5}".format(pre_datetime, line_datetime, key, interval, filename, datetime_interval)
                     pre_datetime = line_datetime
                 else:
                     pre_datetime = line_datetime

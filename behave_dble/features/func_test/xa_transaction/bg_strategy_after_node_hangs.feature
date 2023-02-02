@@ -307,10 +307,10 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given sleep "60" seconds
     ### 日志中 "at the 0th time in background "的关键字是定时任务完成返回的，和定时任务开始是两个异步的线程，靠这个关键词检测xaSessionCheckPeriod字段存在一定的时间误差
     ### 目前因为issue：DBLE0REQ-2056 ，暂时更改成检验时间内发生的次数作为校验，后续有更好的方案再修改 time：2023.1.31
-#    Then check the time interval of following key after line "log_num_1" in file "/opt/dble/logs/dble.log" in "dble-1"
-    Then check the occur times of following key in file "/opt/dble/logs/dble.log" after line "log_num_1" in "dble-1"
-      | key                                        | occur_times |
-      | at the 0th time in background              | 3           |
+    ### 增加偏移量确保时间差  time：2023.2.1
+    Then check the time interval of following key after line "log_num_1" in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                        | interval_times | percent |
+      | at the 0th time in background              | 20             |  0.1   |
     Given start mysql in host "mysql-master1"
     Given sleep "10" seconds
 
@@ -337,10 +337,9 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given destroy btrace threads list
     Given record current dble log "/opt/dble/logs/dble.log" line number in "log_num_2"
     Given sleep "30" seconds
-#    Then check the time interval of following key after line "log_num_2" in file "/opt/dble/logs/dble.log" in "dble-1"
-    Then check the occur times of following key in file "/opt/dble/logs/dble.log" after line "log_num_2" in "dble-1"
-      | key                                        | occur_times     |
-      | at the 0th time in background              | 3             |
+    Then check the time interval of following key after line "log_num_2" in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                        | interval_times | percent |
+      | at the 0th time in background              | 10             |  0.2   |
     Given start mysql in host "mysql-master1"
     Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
