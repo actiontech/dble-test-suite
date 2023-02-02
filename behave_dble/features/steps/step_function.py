@@ -518,6 +518,12 @@ def step_impl(context,result,value):
     rs = getattr(context,result)
     assert int(rs) < int(value),"expect result {0} less than {1},but not".format(rs,value)
 
+@Then('check result "{result}" value as "{num_expr}"')
+def step_impl(context,result,num_expr):
+    rs = getattr(context,result)
+    isTrue_str = "{}{}".format(rs, num_expr)
+    assert eval(isTrue_str),"expect value is as expect,but real is {0}, expect is {1}".format(rs,num_expr)
+
 @Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql')
 @Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql after "{oscmd}"')
 def step_impl(context,host1,role,host2,oscmd="cd /root/sandboxes/sandbox/data"):
