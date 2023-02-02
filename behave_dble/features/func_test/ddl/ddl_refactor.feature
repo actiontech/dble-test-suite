@@ -70,6 +70,7 @@ Feature: test ddl refactor
 
   @current
   Scenario: check warning log when the time of hang>60s   #3
+    #有个定时任务，每60s检测一次 ddl执行时间是否超过 30*60*60 ms, 如果超过108s, dble日志中就打印一次warn提示信息, 类似：this ddl{drop table sharding_4_t1} execute for too long
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect   | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1  | success  | schema1 |
@@ -80,19 +81,20 @@ Feature: test ddl refactor
       | conn_1 | False    |insert into sharding_4_t1 values(1) | success                        | db1 |        |
       | conn_1 | False    |select * from sharding_4_t1         | has{((1,),)}                   | db1 | 3      |
     Given prepare a thread execute sql "drop table sharding_4_t1" with "conn_0"
-    Given sleep "120" seconds
+    #极端情况下需要 108+60秒 才能打印出日志
+    Given sleep "170" seconds
     Then get result of oscmd named "rs_A" in "dble-1"
     """
     cat /opt/dble/logs/dble.log |grep WARN|grep "this ddl{drop table sharding_4_t1} execute for too long" |wc -l
     """
-    Then check result "rs_A" value is "1"
+    Then check result "rs_A" value as ">=1"
     Then get index:"0" column value of "show @@session" named as "id_A"
     Then kill dble front connection "id_A" in "dble-1" with manager command
     Then get result of oscmd named "rs_B" in "dble-1"
     """
     cat /opt/dble/logs/dble.log |grep WARN|grep "this ddl{drop table sharding_4_t1} execute for too long" |wc -l
     """
-    Then check result "rs_B" value is "1"
+    Then check result "rs_B" value as "<=2"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     \[DDL_3\] <exec_ddl_sql.fail>
