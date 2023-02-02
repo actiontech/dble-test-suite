@@ -522,14 +522,13 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn   | toClose | sql                                                                                               | expect                                     | db               |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='complexQueryExecutor'                   | success                                    | dble_information |
       | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name ='complexQueryExecutor'               | has{(('complexQueryExecutor', 4),)}        | dble_information |
-    # keepAlivetime is 60s, 'complexExecutor' heartbeat and 9066 cmd would use it
-    Given sleep "60" seconds
+    # complexExecutor线程池比较特殊：最大容量为数值型的最大值，可以理解为无限大，可设置的core_pool_size为线程池的最小值
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
       """
       jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '"complexQueryExecutor' | wc -l
       """
-    Then check result "A" value is "4"
+    Then check result "A" value as ">=4"
     # use dble.log check
     Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                                        | occur_times |
@@ -548,16 +547,15 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                               | expect                                 | db               |
       | conn_0 | true    | update dble_thread_pool set core_pool_size=2 where name ='complexQueryExecutor'                   | success                                | dble_information |
-    Given sleep "60" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                               | expect                                     | db               |
-      | conn_0 | true    | select name,pool_size,core_pool_size from dble_thread_pool where name ='complexQueryExecutor'     | has{(('complexQueryExecutor', 2, 2),)}     | dble_information |
+      | conn_0 | true    | select name,core_pool_size from dble_thread_pool where name ='complexQueryExecutor'     | has{(('complexQueryExecutor', 2),)}     | dble_information |
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
       """
       jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '"complexQueryExecutor' | wc -l
       """
-    Then check result "A" value is "2"
+    Then check result "A" value as ">=2"
     # use dble.log check
     Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                                              | occur_times |
