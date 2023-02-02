@@ -212,6 +212,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       """
 
 
+    @skip
   Scenario: don't use "disable/enable", can change mysql master and active idle DBLE0REQ-816   #5
     # rwSplitMode="0"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"

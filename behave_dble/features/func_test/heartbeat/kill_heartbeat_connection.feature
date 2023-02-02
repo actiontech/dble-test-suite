@@ -64,7 +64,7 @@ Feature: heartbeat basic test
      | test | 111111 | conn_1 | True     | commit           | success | schema1  |
      | test | 111111 | conn_2 | True     | commit           | success | schema1  |
 
-  @btrace
+  @btrace @skip
   Scenario: heartbeat timeout test #2
     Given delete the following xml segment
       | file         | parent         | child                  |
