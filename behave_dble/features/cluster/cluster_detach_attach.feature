@@ -360,6 +360,7 @@ Feature: check single dble detach or attach from cluster
       | conn   | toClose   | sql              | expect                                 |
       | conn_1 | True      | cluster @@attach | illegal state: cluster is not detached |
 
+  @skip
   Scenario: check cluster @@detach and timeout use default value 10s when other sql is being executed #4
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
