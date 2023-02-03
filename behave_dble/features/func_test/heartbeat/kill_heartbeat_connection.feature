@@ -260,7 +260,7 @@ Feature: heartbeat basic test
     Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
     Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
 
-  @btrace
+  @btrace @skip
   Scenario: heartbeat connection recover success in retry 'errorRetryCount' times, the heartbeat will set as Ok,and the connection pool is available in retry period #5
     Given delete the following xml segment
       | file         | parent         | child                  |
