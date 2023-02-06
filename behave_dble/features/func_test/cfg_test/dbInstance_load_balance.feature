@@ -462,7 +462,9 @@ Feature: test read load balance
       <dbGroup rwSplitMode="3" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
           <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3">
+            <property name="heartbeatPeriodMillis">2000</property>
+          </dbInstance>
       </dbGroup>
     """
     Then execute admin cmd "reload @@config"
@@ -494,6 +496,9 @@ Feature: test read load balance
       | sql                          |
       | set global general_log=off   |
     Given stop mysql in host "mysql-slave1"
+    Given execute sql in "dble-1" in "admin" mode
+    | conn   | toClose  | sql              | expect                                         | db               | timeout |
+    | conn_1 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3307, 'error'} | dble_information | 6,2     |
     Given execute sql "1100" times in "dble-1" at concurrent
       | sql                                | db      |
       | select name from test where id ={} | schema1 |
