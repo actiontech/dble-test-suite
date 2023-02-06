@@ -49,9 +49,9 @@ Feature: connection test in rwSplit mode
        |rwS1| conn_0 | true    | create database testdb                    | success |
 
       Given execute sql in "dble-1" in "user" mode
-       |user| conn   | toClose | sql                                     | expect  | db        |
-       |rwS1| conn_1 | False   | create table test(id int)               | success | testdb    |
-       |rwS1| conn_1 | False   | insert into test values(1)              | success | testdb    |
+       |user| conn   | toClose | sql                                     | expect  | db        | timeout |
+       |rwS1| conn_1 | False   | create table test(id int)               | success | testdb    | 3       |
+       |rwS1| conn_1 | False   | insert into test values(1)              | success | testdb    |         |
 
      Given delete file "/opt/dble/BtraceRwSelect.java" on "dble-1"
      Given delete file "/opt/dble/BtraceRwSelect.java" on "dble-1"
