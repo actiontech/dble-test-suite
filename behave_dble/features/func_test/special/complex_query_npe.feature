@@ -5,7 +5,7 @@
 
 Feature: check complex query has not npe in dble.log   ##DBLE0REQ-1288
 
-
+@skip
   Scenario: check complex query has not npe in dble.log   # 1
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """

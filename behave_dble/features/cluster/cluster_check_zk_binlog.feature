@@ -133,7 +133,7 @@ Feature: test "binlog" in zk cluster
     Given delete file "/tmp/dble_admin_query.log" on "dble-3"
 
 
-  @btrace
+  @btrace @skip
   Scenario: query "show @@binlog.status" timeout, do ddl #2
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """

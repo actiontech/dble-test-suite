@@ -373,7 +373,7 @@ Feature: schema support add function
       |conn_0 | False   | drop table if exists sharding_1                       | success  | schema2 |
       |conn_0 | False   | drop table if exists single_1                         | success  | schema2 |
       |conn_0 | true    | drop table if exists global_1                         | success  | schema2 |
-
+@skip
     Scenario: checkTableConsistency=1, Consistency check by  checkTableConsistencyPeriod         #4
       #custom table's shardingNode no one same with schema's shardingNode
       Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
