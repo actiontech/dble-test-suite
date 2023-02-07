@@ -5,7 +5,7 @@
 # @Author  : zhaohongjie@actionsky.com
 
 #At present, the multi-thread query only works for 2 thread
-import logging
+import logging,time
 from threading import Thread
 
 logger = logging.getLogger("root")
@@ -34,5 +34,7 @@ class MyThread(Thread):
             elif self.current_thd_idx[0] == -1:
                 logger.info("try to exit from sql thread!")
                 return
+            elif self._sql_queue.empty():
+                time.sleep(2) 
             else:
                 logger.info("self.current_thd_idx[0]: {0}".format(self.current_thd_idx[0]))
