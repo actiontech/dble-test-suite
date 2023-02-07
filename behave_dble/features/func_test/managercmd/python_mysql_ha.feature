@@ -65,6 +65,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     Given stop dble in "dble-1"
     Given start mysql in host "mysql-master2"
     Then Start dble in "dble-1"
+    #等待custom_mysql_ha程序启动并打印日志
+    Given sleep "1" seconds
     Then check following text exist "N" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
       Write-dbInstance 172.100.9.6:3306 in ha_group2 is not alive!
@@ -99,10 +101,10 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     Given Restart dble in "dble-1" success
 
     Given stop mysql in host "mysql-master2"
-    Given sleep "5" seconds
+#    Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql                      | expect            |
-      | show @@custom_mysql_ha   | has{(('1',),)}    |
+      | sql                      | expect            |timeout｜
+      | show @@custom_mysql_ha   | has{(('1',),)}    |10,1   ｜
     Then check following text exist "Y" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
       DbInstance 172.100.9.6:3306 in ha_group2 is not alive!
@@ -212,7 +214,6 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       """
 
 
-    @skip
   Scenario: don't use "disable/enable", can change mysql master and active idle DBLE0REQ-816   #5
     # rwSplitMode="0"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -220,36 +221,31 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-           <property name="timeBetweenEvictionRunsMillis">5000</property>
+           <property name="timeBetweenEvictionRunsMillis">3000</property>
+           <property name="idleTimeout">1000</property>
        </dbInstance>
-       <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" />
+       <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" >
+            <property name="timeBetweenEvictionRunsMillis">3000</property>
+            <property name="idleTimeout">1000</property>
+       </dbInstance>
        <dbInstance name="hostS2" password="111111" url="172.100.9.6:3308" user="test" maxCon="1000" minCon="10" />
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
-      | conn   | toClose | sql                                                                                                                      | db               |
-      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
-    Then check resultset "1" has lines with following column values
-      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 10                | 1000             | false      |
-      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 0                 | 1000             | false      |
-      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 0                 | 1000             | false      |
+    Given sleep "4" seconds
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                      | db               |expect                                                                                                                     |timeout|
+      | conn_0 | False   | select name,port,primary,active_conn_count,idle_conn_count,disabled from dble_db_instance where db_group='ha_group2'     | dble_information |has{(('hostM2', 3306,'true',0,10,'false'),('hostS1', 3307,'false',0,0,'false') ,('hostS2', 3308,'false',0,0,'false'))}     |3,1    |
 
 ##### change msater to  hostS1  172.100.9.6:3307
     Given change the primary instance of mysql group named "group2" to "mysql-slave1"
 
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS1'"
-    Given sleep "5" seconds
-      #timeBetweenEvictionRunsMillis is 5s,so hostS1 and hostM2(former master) idle_conn_count is 10
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "3"
-      | conn   | toClose | sql                                                                                                                      | db               |
-      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
-    Then check resultset "3" has lines with following column values
-      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 10                | 1000             | false      |
-      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | true      | 0                   | 10                | 1000             | false      |
-      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 0                 | 1000             | false      |
+    Given sleep "4" seconds
+      #timeBetweenEvictionRunsMillis is 3s,so hostS1 and hostM2(former master) idle_conn_count is 10
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                      | db               |expect                                                                                                                     |timeout|
+      | conn_0 | False   | select name,port,primary,active_conn_count,idle_conn_count,disabled from dble_db_instance where db_group='ha_group2'     | dble_information |has{(('hostM2', 3306,'false',0,10,'false'),('hostS1', 3307,'true',0,10,'false') ,('hostS2', 3308,'false',0,0,'false'))}    |3,1    |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                          | expect      | db      |
@@ -268,37 +264,30 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
-           <property name="timeBetweenEvictionRunsMillis">5000</property>
+           <property name="timeBetweenEvictionRunsMillis">3000</property>
+           <property name="idleTimeout">1000</property>
        </dbInstance>
        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3" />
        <dbInstance name="hostS2" password="111111" url="172.100.9.6:3308" user="test" maxCon="10" minCon="3" >
-           <property name="timeBetweenEvictionRunsMillis">5000</property>
+           <property name="timeBetweenEvictionRunsMillis">3000</property>
+           <property name="idleTimeout">1000</property>
        </dbInstance>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all -r"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
-      | conn   | toClose | sql                                                                                                                      | db               |
-      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
-    Then check resultset "1" has lines with following column values
-      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 3                 | 10               | false      |
-      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 3                 | 10               | false      |
-
+    Given sleep "4" seconds
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                      | db               |expect                                                                                                                     |timeout|
+      | conn_0 | False   | select name,port,primary,active_conn_count,idle_conn_count,disabled from dble_db_instance where db_group='ha_group2'     | dble_information |has{(('hostM2', 3306,'true',0,3,'false'),('hostS1', 3307,'false',0,3,'false') ,('hostS2', 3308,'false',0,3,'false'))}      |3,1    |
 ##### change msater to  hostS2
     Given change the primary instance of mysql group named "group2" to "mysql-slave2"
 
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
-    Given sleep "5" seconds
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
-      | conn   | toClose | sql                                                                                                                      | db               |
-      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
-    Then check resultset "1" has lines with following column values
-      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 3                 | 10               | false      |
-      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | true      | 0                   | 3                 | 10               | false      |
+    Given sleep "4" seconds
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                      | db               |expect                                                                                                                     |timeout|
+      | conn_0 | False   | select name,port,primary,active_conn_count,idle_conn_count,disabled from dble_db_instance where db_group='ha_group2'     | dble_information |has{(('hostM2', 3306,'false',0,3,'false'),('hostS1', 3307,'false',0,3,'false') ,('hostS2', 3308,'true',0,3,'false'))}      |3,1    |
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                          | expect      | db      |
       | conn_1 | False   | drop table if exists test    | success     | schema1 |
@@ -316,37 +305,30 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
-           <property name="timeBetweenEvictionRunsMillis">5000</property>
+           <property name="timeBetweenEvictionRunsMillis">3000</property>
+           <property name="idleTimeout">1000</property>
        </dbInstance>
        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3" />
        <dbInstance name="hostS2" password="111111" url="172.100.9.6:3308" user="test" maxCon="10" minCon="3" >
-           <property name="timeBetweenEvictionRunsMillis">5000</property>
+           <property name="timeBetweenEvictionRunsMillis">3000</property>
+           <property name="idleTimeout">1000</property>
        </dbInstance>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all -r"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
-      | conn   | toClose | sql                                                                                                                      | db               |
-      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
-    Then check resultset "1" has lines with following column values
-      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 3                 | 10               | false      |
-      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 3                 | 10               | false      |
-
+    Given sleep "4" seconds
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                      | db               |expect                                                                                                                     |timeout|
+      | conn_0 | False   | select name,port,primary,active_conn_count,idle_conn_count,disabled from dble_db_instance where db_group='ha_group2'     | dble_information |has{(('hostM2', 3306,'true',0,3,'false'),('hostS1', 3307,'false',0,3,'false') ,('hostS2', 3308,'false',0,3,'false'))}      |3,1    |
 ##### change msater to  hostS2
     Given change the primary instance of mysql group named "group2" to "mysql-slave2"
 
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
-    Given sleep "5" seconds
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
-      | conn   | toClose | sql                                                                                                                      | db               |
-      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
-    Then check resultset "1" has lines with following column values
-      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 3                 | 10               | false      |
-      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | true      | 0                   | 3                 | 10               | false      |
+    Given sleep "4" seconds
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                      | db               |expect                                                                                                                     |timeout|
+      | conn_0 | False   | select name,port,primary,active_conn_count,idle_conn_count,disabled from dble_db_instance where db_group='ha_group2'     | dble_information |has{(('hostM2', 3306,'false',0,3,'false'),('hostS1', 3307,'false',0,3,'false') ,('hostS2', 3308,'true',0,3,'false'))}      |3,1    |
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                          | expect      | db      |
       | conn_1 | False   | drop table if exists test    | success     | schema1 |
@@ -363,36 +345,30 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     <dbGroup rwSplitMode="3" name="ha_group2" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
-           <property name="timeBetweenEvictionRunsMillis">5000</property>
+           <property name="timeBetweenEvictionRunsMillis">3000</property>
+           <property name="idleTimeout">1000</property>
        </dbInstance>
        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="3" />
        <dbInstance name="hostS2" password="111111" url="172.100.9.6:3308" user="test" maxCon="10" minCon="3" >
-           <property name="timeBetweenEvictionRunsMillis">5000</property>
+           <property name="timeBetweenEvictionRunsMillis">3000</property>
+           <property name="idleTimeout">1000</property>
        </dbInstance>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all -r"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
-      | conn   | toClose | sql                                                                                                                      | db               |
-      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
-    Then check resultset "1" has lines with following column values
-      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 3                 | 10               | false      |
-      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | false     | 0                   | 3                 | 10               | false      |
+    Given sleep "4" seconds
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                      | db               |expect                                                                                                                     |timeout|
+      | conn_0 | False   | select name,port,primary,active_conn_count,idle_conn_count,disabled from dble_db_instance where db_group='ha_group2'     | dble_information |has{(('hostM2', 3306,'true',0,3,'false'),('hostS1', 3307,'false',0,3,'false') ,('hostS2', 3308,'false',0,3,'false'))}      |3,1    |
 
     Given change the primary instance of mysql group named "group2" to "mysql-slave2"
 
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
-    Given sleep "5" seconds
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
-      | conn   | toClose | sql                                                                                                                      | db               |
-      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
-    Then check resultset "1" has lines with following column values
-      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 3                 | 10               | false      |
-      | hostS1 | ha_group2  | 172.100.9.6 | 3307   | false     | 0                   | 3                 | 10               | false      |
-      | hostS2 | ha_group2  | 172.100.9.6 | 3308   | true      | 0                   | 3                 | 10               | false      |
+    Given sleep "4" seconds
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                      | db               |expect                                                                                                                     |timeout|
+      | conn_0 | False   | select name,port,primary,active_conn_count,idle_conn_count,disabled from dble_db_instance where db_group='ha_group2'     | dble_information |has{(('hostM2', 3306,'false',0,3,'false'),('hostS1', 3307,'false',0,3,'false') ,('hostS2', 3308,'true',0,3,'false'))}      |3,1    |
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                          | expect      | db      |
       | conn_1 | False   | drop table if exists test    | success     | schema1 |
