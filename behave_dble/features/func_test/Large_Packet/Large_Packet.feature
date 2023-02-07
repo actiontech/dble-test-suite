@@ -894,11 +894,7 @@ Feature:Support MySQL's large package protocol
     Given turn off general log in "mysql-master2"
 
 
-   @restore_mysql_config
    Scenario: test "select" sql #5
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
-    """
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -925,32 +921,6 @@ Feature:Support MySQL's large package protocol
       """
     Given Restart dble in "dble-1" success
 
-    #prepare largepacket values
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                                                                                    | expect  | db      |
-      | conn_0 | false   | drop table if exists noshar                                                                                                                            | success | schema1 |
-      | conn_0 | false   | drop table if exists sing1                                                                                                                             | success | schema1 |
-      | conn_0 | false   | drop table if exists global1                                                                                                                           | success | schema1 |
-      | conn_0 | false   | drop table if exists global2                                                                                                                           | success | schema1 |
-      | conn_0 | false   | drop table if exists global3                                                                                                                           | success | schema1 |
-      | conn_0 | false   | drop table if exists sharding_4_t1                                                                                                                     | success | schema1 |
-      | conn_0 | false   | drop table if exists sharding_2_t1                                                                                                                     | success | schema1 |
-      | conn_0 | false   | create table noshar (id int,c longblob)                                                                                                                | success | schema1 |
-      | conn_0 | false   | create table sing1 (id int,c longblob)                                                                                                                 | success | schema1 |
-      | conn_0 | false   | create table global1 (id int,c longblob)                                                                                                               | success | schema1 |
-      | conn_0 | false   | create table global2 (id int,c longblob)                                                                                                               | success | schema1 |
-      | conn_0 | false   | create table global3 (id int,c longblob)                                                                                                               | success | schema1 |
-      | conn_0 | false   | create table sharding_4_t1 (id int,c longblob)                                                                                                         | success | schema1 |
-      | conn_0 | false   | create table sharding_2_t1 (id int,c longblob)                                                                                                         | success | schema1 |
-      | conn_0 | false   | insert into noshar values (7,repeat("x",16*1024*1024))                                                                                                 | success | schema1 |
-      | conn_0 | false   | insert into sing1 values (7,repeat("x",16*1024*1024))                                                                                                  | success | schema1 |
-      | conn_0 | false   | insert into global1 values (7,repeat("x",16*1024*1024))                                                                                                | success | schema1 |
-      | conn_0 | false   | insert into global2 values (7,repeat("x",14*1024*1024))                                                                                                | success | schema1 |
-      | conn_0 | false   | insert into global3 values (7,repeat("x",20*1024*1024))                                                                                                | success | schema1 |
-      | conn_0 | false   | insert into sharding_4_t1 values (7,repeat("x",40*1024*1024)),(5,repeat("x",32*1024*1024)) ,(6,repeat("x",20*1024*1024)) ,(8,repeat("x",12*1024*1024)) | success | schema1 |
-      | conn_0 | true    | insert into sharding_2_t1 values (7,repeat("x",16*1024*1024)),(2,repeat("x",14*1024*1024))                                                             | success | schema1 |
-
-
     #prepare largepacket
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
@@ -960,8 +930,6 @@ Feature:Support MySQL's large package protocol
     #change insert sql to select
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
       """
-      s/\"drop table if/# \"drop table if/g
-      s/\"create table {0}/# \"create table {0}/g
       s/insert into {0}({1},{2}) values ({3},/select * from {0} where {1}={3} or {2} =/g
       s/.format(self.table, cols_keys, target_col_key, cols_values)/.format(self.table, cols_keys, target_col_key,cols_values)/g
       s/)'\''/'\''/g
@@ -1088,11 +1056,264 @@ Feature:Support MySQL's large package protocol
     Given turn off general log in "mysql-master1"
     Given turn off general log in "mysql-master2"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                        | expect  | db      |
-      | conn_0 | false   | drop table if exists noshar                | success | schema1 |
-      | conn_0 | false   | drop table if exists sing1                 | success | schema1 |
-      | conn_0 | false   | drop table if exists global1               | success | schema1 |
-      | conn_0 | false   | drop table if exists global2               | success | schema1 |
-      | conn_0 | false   | drop table if exists global3               | success | schema1 |
-      | conn_0 | false   | drop table if exists sharding_4_t1         | success | schema1 |
-      | conn_0 | false   | drop table if exists sharding_2_t1         | success | schema1 |
+      | conn   | toClose | sql                                       | expect  | db      |
+      | conn_0 | true   | drop table if exists noshar                | success | schema1 |
+
+
+   Scenario: test "select" sql -- about response has large packet coz:DBLE0REQ-2092   #6
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
+    """
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      s/-Xmx1G/-Xmx8G/g
+      /DmaxPacketSize/d
+      /# processor/a -DmaxPacketSize=167772160
+      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=4G/g
+      """
+    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
+      """
+      s/debug/info/g
+      """
+    Given Restart dble in "dble-1" success
+
+#    prepare large packet values
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                                                                                                                                                | expect  | db      |
+      | conn_0 | false   | drop table if exists noshar                                                                                                                                                                                                                                        | success | schema1 |
+      | conn_0 | false   | drop table if exists test                                                                                                                                                                                                                                          | success | schema1 |
+      | conn_0 | false   | drop table if exists sharding_4_t1                                                                                                                                                                                                                                 | success | schema1 |
+      | conn_0 | false   | create table noshar (id int,c longblob)                                                                                                                                                                                                                            | success | schema1 |
+      | conn_0 | false   | create table test (id int,c longblob)                                                                                                                                                                                                                              | success | schema1 |
+      | conn_0 | false   | create table sharding_4_t1 (id int,c longblob)                                                                                                                                                                                                                     | success | schema1 |
+      | conn_0 | false   | truncate table noshar;truncate table test;truncate table sharding_4_t1;                                                                                                                                                                                            | success | schema1 |
+      | conn_0 | false   | insert into noshar values (13,repeat("x",16*1024*1024-5)),(14,repeat("x",16*1024*1024-3)),(15,repeat("x",16*1024*1024-1)),(16,repeat("x",16*1024*1024)),(17,repeat("x",16*1024*1024+2)),(18,repeat("x",16*1024*1024+4)),(19,repeat("x",16*1024*1024+6))            | success | schema1 |
+      | conn_0 | false   | insert into noshar values (29,repeat("x",16*1024*1024-15)),(30,repeat("x",16*1024*1024-13)),(31,repeat("x",16*1024*1024-11)),(32,repeat("x",16*1024*1024)),(33,repeat("x",16*1024*1024+12)),(34,repeat("x",16*1024*1024+14)),(35,repeat("x",16*1024*1024+16))      | success | schema1 |
+      | conn_0 | false   | insert into noshar values (20,repeat("x",20*1024*1024-5)),(40,repeat("x",40*1024*1024-11)),(333,repeat("x",16*1024*1024-6)) ,(334,repeat("x",repeat("x",16*1024*1024-5+1))),(440,repeat("x",repeat("x",40*1024*1024)))                                             | success | schema1 |
+
+      | conn_0 | false   | insert into test values (13,repeat("x",16*1024*1024-6)),(14,repeat("x",16*1024*1024-4)),(15,repeat("x",16*1024*1024-2)),(16,repeat("x",16*1024*1024)),(17,repeat("x",16*1024*1024+1)),(18,repeat("x",16*1024*1024+3)),(19,repeat("x",16*1024*1024+5))              | success | schema1 |
+      | conn_0 | false   | insert into test values (29,repeat("x",16*1024*1024-16)),(30,repeat("x",16*1024*1024-14)),(31,repeat("x",16*1024*1024-12)),(32,repeat("x",16*1024*1024)),(33,repeat("x",16*1024*1024+11)),(34,repeat("x",16*1024*1024+13)),(35,repeat("x",16*1024*1024+15))        | success | schema1 |
+      | conn_0 | false   | insert into test values (20,repeat("x",20*1024*1024-5)),(40,repeat("x",40*1024*1024-11)),(333,repeat("x",16*1024*1024-6)) ,(334,repeat("x",repeat("x",16*1024*1024-5+1))),(440,repeat("x",repeat("x",40*1024*1024)))                                               | success | schema1 |
+
+      | conn_0 | false   | insert into sharding_4_t1 values (13,repeat("x",16*1024*1024-6)),(14,repeat("x",16*1024*1024-4)),(15,repeat("x",16*1024*1024-2)),(16,repeat("x",16*1024*1024)),(17,repeat("x",16*1024*1024+1)),(18,repeat("x",16*1024*1024+3)),(19,repeat("x",16*1024*1024+5))       | success | schema1 |
+      | conn_0 | false   | insert into sharding_4_t1 values (113,repeat("x",16*1024*1024-5)),(114,repeat("x",16*1024*1024-3)),(115,repeat("x",16*1024*1024-1)),(117,repeat("x",16*1024*1024+2)),(118,repeat("x",16*1024*1024+4)),(119,repeat("x",16*1024*1024+6))                               | success | schema1 |
+      | conn_0 | false   | insert into sharding_4_t1 values (29,repeat("x",16*1024*1024-16)),(30,repeat("x",16*1024*1024-14)),(31,repeat("x",16*1024*1024-12)),(32,repeat("x",16*1024*1024)),(33,repeat("x",16*1024*1024+11)),(34,repeat("x",16*1024*1024+13)),(35,repeat("x",16*1024*1024+15)) | success | schema1 |
+      | conn_0 | false   | insert into sharding_4_t1 values (229,repeat("x",16*1024*1024-15)),(320,repeat("x",16*1024*1024-13)),(321,repeat("x",16*1024*1024-11)),(323,repeat("x",16*1024*1024+12)),(324,repeat("x",16*1024*1024+14)),(325,repeat("x",16*1024*1024+16))                         | success | schema1 |
+      | conn_0 | true    | insert into sharding_4_t1 values (20,repeat("x",20*1024*1024-5)),(40,repeat("x",40*1024*1024-11)),(333,repeat("x",16*1024*1024-6)) ,(334,repeat("x",repeat("x",16*1024*1024-5+1))),(440,repeat("x",repeat("x",40*1024*1024)))                                        | success | schema1 |
+
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                | expect      | db      |
+      | conn_0 | false   | select c from noshar where id = 13                                                 | length{(1)} | schema1 |
+      | conn_0 | false   | select c from noshar where id = 14                                                 | length{(1)} | schema1 |
+      | conn_0 | false   | select c from noshar where id = 15                                                 | length{(1)} | schema1 |
+      | conn_0 | false   | select c from noshar where id = 16                                                 | length{(1)} | schema1 |
+      | conn_0 | false   | select c from noshar where id = 17                                                 | length{(1)} | schema1 |
+      | conn_0 | false   | select c from noshar where id = 18                                                 | length{(1)} | schema1 |
+      | conn_0 | false   | select c from noshar where id = 19;select id,c,length(c) from noshar where id = 29 | success     | schema1 |
+      | conn_0 | false   | select id,c from noshar where id = 30                                              | length{(1)} | schema1 |
+      | conn_0 | false   | select id,c from noshar where id = 31                                              | length{(1)} | schema1 |
+      | conn_0 | false   | select id,c from noshar where id = 32                                              | length{(1)} | schema1 |
+      | conn_0 | false   | select id,c from noshar where id = 33                                              | length{(1)} | schema1 |
+      | conn_0 | false   | select id,c from noshar where id = 34                                              | length{(1)} | schema1 |
+      | conn_0 | false   | select id,c from noshar where id = 35;select id,c from noshar where id = 20        | success     | schema1 |
+      | conn_0 | false   | select id,c from noshar where id = 333                                             | length{(1)} | schema1 |
+      | conn_0 | false   | select id,c from noshar where id = 334                                             | length{(1)} | schema1 |
+      | conn_0 | false   | select id,c from noshar where id = 440                                             | length{(1)} | schema1 |
+      | conn_0 | true    | select id,c from noshar                                                            | length{(19)}| schema1 |
+
+      | conn_0 | false   | select c from test where id = 13                                                 | length{(1)} | schema1 |
+      | conn_0 | false   | select c from test where id = 14                                                 | length{(1)} | schema1 |
+      | conn_0 | false   | select c from test where id = 15                                                 | length{(1)} | schema1 |
+      | conn_0 | false   | select c from test where id = 16                                                 | length{(1)} | schema1 |
+      | conn_0 | false   | select c from test where id = 17                                                 | length{(1)} | schema1 |
+      | conn_0 | false   | select c from test where id = 18                                                 | length{(1)} | schema1 |
+      | conn_0 | false   | select c from test where id = 19;select id,c,length(c) from test where id = 29   | success     | schema1 |
+      | conn_0 | false   | select id,c from test where id = 30                                              | length{(1)} | schema1 |
+      | conn_0 | false   | select id,c from test where id = 31                                              | length{(1)} | schema1 |
+      | conn_0 | false   | select id,c from test where id = 32                                              | length{(1)} | schema1 |
+      | conn_0 | false   | select id,c from test where id = 33                                              | length{(1)} | schema1 |
+      | conn_0 | false   | select id,c from test where id = 34                                              | length{(1)} | schema1 |
+      | conn_0 | false   | select id,c from test where id = 35;select id,c from test where id = 20          | success     | schema1 |
+      | conn_0 | false   | select id,c from test where id = 333                                             | length{(1)} | schema1 |
+      | conn_0 | false   | select id,c from test where id = 334                                             | length{(1)} | schema1 |
+      | conn_0 | true    | select id,c from test where id = 440                                             | length{(1)} | schema1 |
+
+      | conn_0 | false   | select c from sharding_4_t1 where id = 13;select c from sharding_4_t1 where id = 113                        | success      | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 14;select c from sharding_4_t1 where id = 114                        | success      | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 15;select c from sharding_4_t1 where id = 115                        | success      | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 16;select 1;select user();select c from sharding_4_t1 where id = 119 | success      | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 17;select c from sharding_4_t1 where id = 117                        | success      | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 18;select c from sharding_4_t1 where id = 118                        | success      | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 19;select id,c,length(c) from sharding_4_t1 where id = 29            | success      | schema1 |
+      | conn_0 | false   | select id,c from sharding_4_t1 where id = 30;select id,c from sharding_4_t1 where id = 320                  | success      | schema1 |
+      | conn_0 | false   | select id,c from sharding_4_t1 where id = 31;select id,c from sharding_4_t1 where id = 321                  | success      | schema1 |
+      | conn_0 | false   | select id,c from sharding_4_t1 where id = 32;select id,c from sharding_4_t1 where id = 322                  | success      | schema1 |
+      | conn_0 | false   | select id,c from sharding_4_t1 where id = 33;select id,c from sharding_4_t1 where id = 323                  | success      | schema1 |
+      | conn_0 | false   | select id,c from sharding_4_t1 where id = 34;select id,c from sharding_4_t1 where id = 324                  | success      | schema1 |
+      | conn_0 | false   | select id,c from sharding_4_t1 where id = 35;select id,c from sharding_4_t1 where id = 20                   | success      | schema1 |
+      | conn_0 | false   | select id,c from sharding_4_t1 where id = 333                                                               | success      | schema1 |
+      | conn_0 | false   | select id,c from sharding_4_t1 where id = 334                                                               | success      | schema1 |
+      | conn_0 | false   | select id,c from sharding_4_t1 where id > 50                                                                | success      | schema1 |
+      | conn_0 | true    | select id,c from sharding_4_t1 where id < 100                                                               | success      | schema1 |
+
+      | conn_0 | false   | select * from sharding_4_t1 where id in (select a.id from test a right join noshar b on a.id = b.id and a.id > 88)         | length{(3)}  | schema1 |
+      | conn_0 | false   | select 2                                                                                                                   | success      | schema1 |
+      | conn_0 | false   | select * from sharding_4_t1 a join test b using(id,c)  where a.id=16 or b.id=32;select 1                                   | success      | schema1 |
+      | conn_0 | false   | /*!dble:shardingNode=dn1*/select * from sharding_4_t1 a join test b using(id,c) where a.id=16 or b.id=32                   | success      | schema1 |
+      | conn_0 | false   | /*!dble:shardingNode=dn1*/select c,id from sharding_4_t1;select id from sharding_4_t1                                      | success      | schema1 |
+
+      | conn_0 | true    | drop table if exists noshar;drop table if exists test;drop table if exists sharding_4_t1                            | success | schema1 |
+
+
+   @restore_mysql_config
+   Scenario: test hint  and  mulit sql    #7
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      s/-Xmx1G/-Xmx8G/g
+      /DmaxPacketSize/d
+      /# processor/a -DmaxPacketSize=167772160
+      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=4G/g
+      """
+    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
+      """
+      s/debug/info/g
+      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" >
+        </dbInstance>
+        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" readWeight="2">
+        </dbInstance>
+    </dbGroup>
+    """
+    Given Restart dble in "dble-1" success
+
+    ##### /*!dble:shardingNode=dn1*/insert into sharding_4_t1(id,c) values (7,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/16\*1024\*1024/16\*1024\*1024-2/g
+      s/sbtest2/sharding_4_t1/g
+      """
+    Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
+      """
+      s/insert into {0}({1},{2}) values ({3},/\/*!dble:shardingNode=dn1*\/insert into {0}({1},{2}) values ({3},/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/16\*1024\*1024-2/16\*1024\*1024-1/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    ##### /*!dble:sql=select c from test*/update test set c="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/16\*1024\*1024-1/16\*1024\*1024/g
+      s/sharding_4_t1/test/g
+      """
+    Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
+      """
+      s/dble:shardingNode=dn1/dble:sql=select c from test/g
+      s/insert into {0}({1},{2}) values ({3},/update {0} set {1}=/g
+      s/.format(self.table, cols_keys, target_col_key, cols_values)/.format(self.table,target_col_key)/g
+      s/)'\''/ where {0}={1}'\''.format(cols_keys,cols_values)/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/16\*1024\*1024/16\*1024\*1024+1/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    ##### /*!dble:db_type=master*/update test set c="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/16\*1024\*1024+1/16\*1024\*1024+2/g
+      """
+    Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
+      """
+      s/dble:sql=select c from test/dble:db_type=master/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/16\*1024\*1024+2/32\*1024\*1024-4/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    ##### /*!dble:db_type=master*/select 1;update test set c="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/32\*1024\*1024-4/32\*1024\*1024-2/g
+      """
+    Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
+      """
+      s/update {0} set {1}=/select 1;update {0} set {1}=/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/32\*1024\*1024-2/32\*1024\*1024/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    #####  /*!dble:db_type=master*/delete from test where c="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
+      """
+      s/select 1;update {0} set {1}=/delete from {0} where {1}=/g
+      s/where {0}={1}'\''.format(cols_keys,cols_values)/or {0}={1}'\''.format(cols_keys,cols_values)/g
+      """
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/32\*1024\*1024/32\*1024\*1024+2/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/32\*1024\*1024+2/32\*1024\*1024+4/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                              | expect      | db      |
+      | conn_0 | true    | drop table if exists test;drop table if exists sharding_4_t1                     | success | schema1 |
+
+    Given delete file "/opt/LargePacket.py" on "dble-1"
+    Given delete file "/opt/SQLContext.py" on "dble-1"
+    Given delete file "/opt/SQLContext.pyc" on "dble-1"
