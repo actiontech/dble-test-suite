@@ -19,7 +19,7 @@ import time
 import datetime
 
 from steps.lib.DBUtil import DBUtil
-from steps.lib.utils import get_sftp,get_ssh,get_node
+from steps.lib.utils import get_sftp,get_ssh,get_node,sleep_by_time
 from steps.lib.generate_util import generate
 
 from behave import *
@@ -255,8 +255,9 @@ def check_text_from_line(context,flag,filename,hostname,checkFromLine):
     checkFromLineNum=getattr(context,checkFromLine,0)
     check_text(context,flag,filename,hostname,checkFromLineNum)
 
+@Then('check following text exist "{flag}" in file "{filename}" in host "{hostname}" retry "{retry_param}" times')
 @Then('check following text exist "{flag}" in file "{filename}" in host "{hostname}"')
-def check_text(context,flag,filename,hostname,checkFromLine=0):
+def check_text(context,flag,filename,hostname,checkFromLine=0, retry_param=1):
     strs = context.text.strip()
     strs_list = strs.splitlines()
 
@@ -264,11 +265,33 @@ def check_text(context,flag,filename,hostname,checkFromLine=0):
     for str in strs_list:
         cmd = "tail -n +{2} {1} | grep -E -n \"{0}\"".format(str,filename,checkFromLine)
         logger.debug("grep cmd is: {}".format(cmd))
-        rc, stdout, stderr = ssh.exec_command(cmd)
-        if flag =="N":
-            assert_that(len(stdout) == 0,"expect \"{0}\" not exist in file {1},but exist".format(str,filename))
-        else:#default take flag as Y
-            assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1},but not".format(str, filename))
+        if flag == "N":
+            rc, stdout, stderr = ssh.exec_command(cmd)
+            assert_that(len(stdout) == 0, "expect \"{0}\" not exist in file {1},but exist".format(str, filename))
+        else:
+            # default take flag as Y
+            retry_exec_command(context, ssh, cmd, str, filename, retry_param)
+
+
+def retry_exec_command(context, ssh_client, exe_cmd, check_str, filename, retry_param):
+    if "," in str(retry_param):
+        retry_times = int(retry_param.split(",")[0])
+        sep_time = float(retry_param.split(",")[1])
+    else:
+        retry_times = int(retry_param)
+        sep_time = 1
+
+    execute_times = retry_times + 1
+    for i in range(execute_times):
+        try:
+            rc, stdout, stderr = ssh_client.exec_command(exe_cmd)
+            assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1},but not".format(check_str, filename))
+        except Exception as e:
+            logger.info(f"check text in file not out yet, execute {i + 1} times")
+            if i == execute_times - 1:
+                raise e
+            else:
+                sleep_by_time(context, sep_time)
 
 
 @Then('check following text exists in file "{filename}" after line "{checkFromLine}" in host "{hostname}" with "{num}" times')

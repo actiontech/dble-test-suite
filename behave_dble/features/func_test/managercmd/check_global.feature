@@ -85,8 +85,7 @@ Feature: test " check @@global schema = '' [and table = '']"
     >/opt/dble/logs/dble.log
     """
      #sleep 11 or more seconds because check the log
-    Given sleep "11" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "6,2" times
     """
     Global check start .........g1
     Global check start .........g3
@@ -105,8 +104,7 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
     >/opt/dble/logs/dble.log
     """
-    Given sleep "11" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "6,2" times
     """
     Global Consistency Check success for table :schema1-g1
     Global Consistency Check success for table :schema2-g3
@@ -133,8 +131,7 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
     >/opt/dble/logs/dble.log
     """
-    Given sleep "13" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "6,2" times
     """
     Global Consistency Check fail for table :schema1-g1
     Global Consistency Check fail for table :schema2-g3
@@ -159,8 +156,7 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
     >/opt/dble/logs/dble.log
     """
-    Given sleep "13" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "6,2" times
     """
     Global Consistency Check fail for table :schema1-g1
     Global Consistency Check fail for table :schema2-g3
@@ -185,8 +181,7 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
     >/opt/dble/logs/dble.log
     """
-    Given sleep "13" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "6,2" times
     """
     Global Consistency Check fail for table :schema1-g1
     Global Consistency Check fail for table :schema2-g3
@@ -220,8 +215,7 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
     Then execute admin cmd "reload @@config"
     Given stop mysql in host "mysql-master1"
-    Given sleep "13" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "6,2" times
     """
     error node is : null-null
     Global Consistency Check fail for table :schema1-g1
