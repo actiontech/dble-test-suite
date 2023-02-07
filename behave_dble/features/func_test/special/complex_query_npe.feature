@@ -5,7 +5,7 @@
 
 Feature: check complex query has not npe in dble.log   ##DBLE0REQ-1288
 
-@skip
+
   Scenario: check complex query has not npe in dble.log   # 1
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
@@ -35,8 +35,7 @@ Feature: check complex query has not npe in dble.log   ##DBLE0REQ-1288
       | conn   | toClose | sql                                                                                        | db      |
       | conn_0 | false   | select * from sharding_2_t1 a inner join schema2.sing1 b on a.name=b.name where a.id =1    | schema1 |
 
-    Given sleep "6" seconds
-    Then check following text exist "Y" in file "/opt/dble/BtraceAboutrowEof.java.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/BtraceAboutrowEof.java.log" in host "dble-1" retry "8" times
       """
       get into way
       get into reRegister1
