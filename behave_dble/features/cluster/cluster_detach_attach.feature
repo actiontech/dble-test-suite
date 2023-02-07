@@ -607,7 +607,7 @@ Feature: check single dble detach or attach from cluster
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql              | expect  |
       | conn_1 | true      | cluster @@attach | success |
-@skip
+
   Scenario: check cluster @@attach and timeout use default value 10s when other sql is being executed #7
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -644,7 +644,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given prepare a thread execute sql "cluster @@attach" with "conn_1" and save resultset in "attach_rs"
@@ -724,7 +724,7 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java.log" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
-@skip
+
   Scenario: check cluster @@detach, cluster @@attach when other sql will be executed #9
     Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
@@ -793,11 +793,10 @@ Feature: check single dble detach or attach from cluster
     get into waitOtherSessionBlocked
     """
     Given prepare a thread execute sql "pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10" with "conn_2"
-    Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose   | sql           | expect  |
-      | conn_2 | False     | show @@pause  | has{(('dn1',), ('dn2',))} |
-      | conn_2 | True      | resume        | success |
+      | conn   | toClose   | sql           | expect                    | timeout |
+      | conn_2 | False     | show @@pause  | has{(('dn1',), ('dn2',))} | 8       |
+      | conn_2 | True      | resume        | success                   |         |
     Given stop btrace script "BtraceClusterDetachAttach2.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
