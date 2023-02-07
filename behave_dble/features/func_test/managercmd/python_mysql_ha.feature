@@ -101,10 +101,10 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     Given Restart dble in "dble-1" success
 
     Given stop mysql in host "mysql-master2"
-    Given sleep "5" seconds
+#    Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql                      | expect            |
-      | show @@custom_mysql_ha   | has{(('1',),)}    |
+      | sql                      | expect            |timeout｜
+      | show @@custom_mysql_ha   | has{(('1',),)}    |10,1   ｜
     Then check following text exist "Y" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
       DbInstance 172.100.9.6:3306 in ha_group2 is not alive!
