@@ -522,6 +522,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_3 | False   | insert into test_table values (1,2)           | success | db1 |
       | rwS1 | 111111 | conn_3 | False   | select 2                                      | success | db1 |
 #DBLE0REQ-1112
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                 | expect       | db               |
       | conn_0 | False   | select * from sql_log                                               | length{(12)} | dble_information |
@@ -619,6 +620,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | select * from view_test                          | success | schema1 |
       | conn_1 | False   | drop view view_test                              | success | schema1 |
       | conn_1 | False   | truncate  test1                                  | success | schema1 |
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
@@ -1101,7 +1103,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False    | /*!dble:shardingNode=dn2*/ insert into sharding_4_t1 values(666, 'name666')               | success | schema1 |
       | conn_1 | False    | /*!dble:shardingNode=dn3*/ update sharding_4_t1 set name = 'dn1' where id=666             | success | schema1 |
       | conn_1 | True     | /*!dble:shardingNode=dn4*/ delete from sharding_4_t1 where id=666                         | success | schema1 |
-
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
@@ -1149,6 +1151,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False    | insert into sharding_4_t1 values(666, 'name666')               | success | schema1 |
       | conn_1 | False    | update sharding_4_t1 set name = 'dn1' where id=666             | success | schema1 |
       | conn_1 | True     | delete from sharding_4_t1 where id=666                         | success | schema1 |
+    Given sleep "2" seconds
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
@@ -1214,7 +1217,7 @@ sql_log_by_tx_digest_by_entry_by_user
       """
 
 
- @skip
+
   Scenario: test samplingRate=100 and transaction sql  ---- shardinguser  #7
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
@@ -1246,6 +1249,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False    | delete from sharding_4_t1 where id=5                                            | success | schema1 |
       | conn_1 | False    | update sharding_4_t1 set name='dn1' where id=100                                | success | schema1 |
       | conn_1 | False    | commit                                                                          | success | schema1 |
+    Given sleep "2" seconds
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
@@ -1304,6 +1308,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_2 | False    | update sharding_4_t1 set name='dn4' where id=3                                  | success | schema1 |
       | conn_2 | False    | update sharding_4_t1 set name='dn1' where id=100                                | success | schema1 |
       | conn_2 | False    | rollback                                                                        | success | schema1 |
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
@@ -1484,6 +1489,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_11 | False    | begin                                                                           | success | schema1 |
       | conn_11 | False    | select * from sharding_4_t1                                                     | success | schema1 |
       | conn_11 | False    | insert into sharding_4_t1 values(5,'name5')                                     | success | schema1 |
+    Given sleep "2" seconds
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect      | db               |
@@ -1497,6 +1503,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_12 | False    | start transaction                                                               | success | schema1 |
       | conn_12 | False    | select * from sharding_2_t1                                                     | success | schema1 |
       | conn_12 | False    | insert into sharding_2_t1 values(5,'name5')                                     | success | schema1 |
+    Given sleep "2" seconds
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect      | db               |
@@ -1833,6 +1840,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_41 | False   | delete from test_table1 where id=5                 | success | db2 |
       | rwS1 | 111111 | conn_41 | False   | update test_table1 set age =44 where id=100        | success | db2 |
   ##### 事务没结束，不落盘
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
       | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information | 3       |
@@ -2160,6 +2168,7 @@ sql_log_by_tx_digest_by_entry_by_user
       #case "explain"/"explain2"  select +0 tx_count+0
       | conn_1 | False   | explain select * from test           | success                               | schema1 |
       | conn_1 | False   | explain2 select * from test          | success                               | schema1 |
+    Given sleep "2" seconds
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
@@ -2216,6 +2225,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_2 | False   | insert into test1001 values (1)       | Table 'schema2.test1001' doesn't exist | schema2 |
       | conn_2 | False   | delete from test1002                  | Table 'schema2.test1002' doesn't exist | schema2 |
       | conn_2 | true    | update test1003 set id =2 where id =1 | Table 'schema2.test1003' doesn't exist | schema2 |
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
@@ -2299,6 +2309,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | insert into sharding_4_t1(id,name) select s2.id,s2.name from schema2.sharding_2 s2 join test s2g on s2.id=s2g.id               | This `INSERT ... SELECT Syntax` is not supported  | schema1 |
       | conn_1 | true    | replace into test(name) select name from sharding_4_t1                                                                         | This `REPLACE ... SELECT Syntax` is not supported | schema1 |
     #has one implict cmd "exit"
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect      | db               |
       | conn_0 | False   | select * from sql_log                               | length{(1)} | dble_information |
@@ -2342,6 +2353,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | split1 | 111111 | conn_3 | False    | select concat_ws('',id,age) as 'll' from test_table group by ls  | Unknown column 'ls' in 'group statement'                         | db1 |
       #ERROR 1248 (42000): Every derived table must have its own alias tx_count +1  tx_rows +0 select_count +1 select_rows +0
       | split1 | 111111 | conn_3 | true     | select * from (select s.sno from test_table s where s.id=1)      | Every derived table must have its own alias                      | db1 |
+    Given sleep "2" seconds
 
      Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_11"
       | conn   | toClose | sql                     | db               |
@@ -2543,6 +2555,7 @@ sql_log_by_tx_digest_by_entry_by_user
     Given execute sql "1000" times in "dble-1" at concurrent 1000
       | user   | passwd | sql                                    | db    |
       | split1 | 111111 | select 2;select 3;select user()        | db1   |
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               |
       | conn_0 | False   | select * from sql_log                               | length{(4000)}  | dble_information |
@@ -2554,6 +2567,7 @@ sql_log_by_tx_digest_by_entry_by_user
     Given execute sql "1000" times in "dble-1" together use 1000 connection not close
       | user   | passwd | sql                                    | db    |
       | split1 | 111111 | select 2;select 3;select user()        | db1   |
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               |
       | conn_0 | False   | select * from sql_log                               | length{(3000)}  | dble_information |
@@ -2575,6 +2589,7 @@ sql_log_by_tx_digest_by_entry_by_user
     Given execute sql "100" times in "dble-1" together use 100 connection not close
       | user   | passwd | sql                            | db    |
       | split1 | 111111 | begin;select 3;select 1        | db1   |
+    Given sleep "2" seconds
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect         | db               |
@@ -2587,6 +2602,7 @@ sql_log_by_tx_digest_by_entry_by_user
     Given execute sql "100" times in "dble-1" at concurrent 100
       | user   | passwd | sql                                 | db    |
       | split1 | 111111 | begin;select 3;select user()        | db1   |
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               |
       | conn_0 | False   | select * from sql_log                               | length{(400)}   | dble_information |
@@ -2607,6 +2623,7 @@ sql_log_by_tx_digest_by_entry_by_user
     Given execute sql "1000" times in "dble-1" together use 1000 connection not close
       | user   | passwd | sql                          | db    |
       | split1 | 111111 | begin;select 3;commit        | db1   |
+    Given sleep "2" seconds
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               |
@@ -2619,8 +2636,9 @@ sql_log_by_tx_digest_by_entry_by_user
      Given execute sql "1000" times in "dble-1" at concurrent 1000
       | user   | passwd | sql                            | db    |
       | split1 | 111111 | begin;select 3;commit          | db1   |
+     Given sleep "2" seconds
 
-      Then execute sql in "dble-1" in "admin" mode
+     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               |
       | conn_1 | False   | select * from sql_log                               | length{(4000)}  | dble_information |
       | conn_1 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
@@ -2733,6 +2751,7 @@ sql_log_by_tx_digest_by_entry_by_user
     Given execute sql "1000" times in "dble-1" at concurrent 1000
       | sql                                | db      |
       | select name from test where id ={} | schema1 |
+    Given sleep "2" seconds
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               |
