@@ -250,10 +250,11 @@ def step_impl(context,hostname,num=None,rs_name=None):
     if num is not None:
         assert int(stdout) >= int(num), "expect {0} less than result {1} ,but not ".format(num, int(stdout))
 
+@Then('check following text exist "{flag}" in file "{filename}" after line "{checkFromLine}" in host "{hostname}" retry "{retry_param}" times')
 @Then('check following text exist "{flag}" in file "{filename}" after line "{checkFromLine}" in host "{hostname}"')
-def check_text_from_line(context,flag,filename,hostname,checkFromLine):
+def check_text_from_line(context,flag,filename,hostname,checkFromLine,retry_param=1):
     checkFromLineNum=getattr(context,checkFromLine,0)
-    check_text(context,flag,filename,hostname,checkFromLineNum)
+    check_text(context,flag,filename,hostname,checkFromLineNum,retry_param)
 
 @Then('check following text exist "{flag}" in file "{filename}" in host "{hostname}" retry "{retry_param}" times')
 @Then('check following text exist "{flag}" in file "{filename}" in host "{hostname}"')
