@@ -268,7 +268,7 @@ Feature: test config in user.xml
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
       $a\-DcheckTableConsistency=1
-      $a\-DcheckTableConsistencyPeriod=1000
+      $a\-DcheckTableConsistencyPeriod=2000
     """
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
@@ -282,7 +282,7 @@ Feature: test config in user.xml
     Then execute sql in "mysql-master1"
       | sql                              | expect  |db   |
       | alter table test_table drop name | success | db1 |
-    Given sleep "2" seconds
+    Given sleep "5" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     structure are not consistent in different shardingNode
