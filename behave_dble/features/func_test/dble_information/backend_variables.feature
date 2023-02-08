@@ -60,15 +60,15 @@ Feature:  backend_variables test
      #sleep time > idle time,because Connection pool initialization #DBLE0REQ-1132
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                      | expect          |
-      | conn_0 | False   | select * from backend_variables where variable_name='autocommit' and variable_value='true'                               | length{(4)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='autocommit' and variable_value='false'                              | length{(0)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='repeatable-read'         | length{(4)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='read-uncommitted'        | length{(0)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='character_set_client' and variable_value='utf8mb4'                  | length{(4)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='collation_connection' and variable_value='utf8mb4_general_ci'       | length{(4)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='character_set_results' and variable_value='utf8mb4'                 | length{(4)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='character_set_connection' and variable_value='utf8mb4_general_ci'   | length{(4)}     |
+      | conn   | toClose | sql                                                                                                                      | expect          | timeout |
+      | conn_0 | False   | select * from backend_variables where variable_name='autocommit' and variable_value='true'                               | length{(4)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='autocommit' and variable_value='false'                              | length{(0)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='repeatable-read'         | length{(4)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='read-uncommitted'        | length{(0)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='character_set_client' and variable_value='utf8mb4'                  | length{(4)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='collation_connection' and variable_value='utf8mb4_general_ci'       | length{(4)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='character_set_results' and variable_value='utf8mb4'                 | length{(4)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='character_set_connection' and variable_value='utf8mb4_general_ci'   | length{(4)}     | 3       |
 
    #case set sharding table to change autocommit and change transaction_isolation
     Then execute sql in "dble-1" in "user" mode
@@ -174,18 +174,18 @@ Feature:  backend_variables test
      #sleep time > idle time,because Connection pool initialization #DBLE0REQ-1132
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                      | expect          |
-      | conn_0 | False   | use dble_information                                                                                                     | success         |
-      | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='repeatable-read'         | length{(0)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='read-committed'          | length{(4)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='character_set_client' and variable_value='utf8mb4'                  | length{(0)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='collation_connection' and variable_value='utf8mb4_general_ci'       | length{(0)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='character_set_results' and variable_value='utf8mb4'                 | length{(0)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='character_set_connection' and variable_value='utf8mb4_general_ci'   | length{(0)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='character_set_client' and variable_value='latin1'                   | length{(4)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='collation_connection' and variable_value='latin1_swedish_ci'        | length{(4)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='character_set_results' and variable_value='latin1'                  | length{(4)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='character_set_connection' and variable_value='latin1_swedish_ci'    | length{(4)}     |
+      | conn   | toClose | sql                                                                                                                      | expect          | timeout |
+      | conn_0 | False   | use dble_information                                                                                                     | success         |         |
+      | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='repeatable-read'         | length{(0)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='read-committed'          | length{(4)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='character_set_client' and variable_value='utf8mb4'                  | length{(0)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='collation_connection' and variable_value='utf8mb4_general_ci'       | length{(0)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='character_set_results' and variable_value='utf8mb4'                 | length{(0)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='character_set_connection' and variable_value='utf8mb4_general_ci'   | length{(0)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='character_set_client' and variable_value='latin1'                   | length{(4)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='collation_connection' and variable_value='latin1_swedish_ci'        | length{(4)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='character_set_results' and variable_value='latin1'                  | length{(4)}     | 3       |
+      | conn_0 | False   | select * from backend_variables where variable_name='character_set_connection' and variable_value='latin1_swedish_ci'    | length{(4)}     | 3       |
 #case check variable_type='user'
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | expect  | db      |
@@ -204,7 +204,3 @@ Feature:  backend_variables test
       | conn_0 | False   | delete from backend_variables where variable_name='autocommit'                         | Access denied for table 'backend_variables'     |
       | conn_0 | False   | update backend_variables set variable_name='' where variable_name='autocommit'         | Access denied for table 'backend_variables'     |
       | conn_0 | True    | insert into backend_variables values (1,'1','1','1')                                   | Access denied for table 'backend_variables'     |
-
-
-
-
