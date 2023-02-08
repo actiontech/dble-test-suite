@@ -45,6 +45,8 @@ Feature: connection pool basic test - heartbeat create connections
       | conn   | toClose | sql                                                                                                                   | expect        | db                |
       | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'     | balance{10}    | dble_information  |
 
+
+
   @CRITICAL @restore_mysql_service
   Scenario: expect heartbeat create connections when heartbeat status changes from Error to OK #2
     """
@@ -65,19 +67,21 @@ Feature: connection pool basic test - heartbeat create connections
     Given record current dble log line number in "log_linenu"
     Given stop mysql in host "mysql-master1"
     Given sleep "10" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5,1" times
     """
     heartbeat to \[172.100.9.5:3306\] setError
     """
     Given start mysql in host "mysql-master1"
     Given sleep "10" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5,1" times
     """
     complexQueryWorker\] \(com.actiontech.dble.backend.pool.ConnectionPool.*\- need add
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                    | expect       | db                |
       | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'      | length{(4)}  | dble_information  |
+
+
 
   @CRITICAL @restore_network
   Scenario: expect heartbeat create connections when heartbeat status changes from Timeout to OK #3
@@ -107,7 +111,7 @@ Feature: connection pool basic test - heartbeat create connections
       iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
       """
     Given sleep "10" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5,1" times
     """
     heartbeat to \[172.100.9.5:3306\] setTimeout
     """
