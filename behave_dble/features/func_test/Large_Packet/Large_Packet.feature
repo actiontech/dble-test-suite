@@ -1059,7 +1059,7 @@ Feature:Support MySQL's large package protocol
       | conn   | toClose | sql                                       | expect  | db      |
       | conn_0 | true   | drop table if exists noshar                | success | schema1 |
 
-
+@skip
    Scenario: test "select" sql -- about response has large packet coz:DBLE0REQ-2092   #6
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}

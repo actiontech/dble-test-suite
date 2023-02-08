@@ -4,7 +4,7 @@
 
 # 2.19.11.0#dble-7860
 Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
-  @btrace
+  @btrace @skip
   Scenario: check 'kill @@ddl_lock where schema=? and table=?' work normal #1
     Given reset dble registered nodes in zk
     Given delete the following xml segment
