@@ -464,9 +464,9 @@ Feature: schema support add function
         """
       Then execute admin cmd "reload @@config_all"
       Then execute sql in "dble-1" in "user" mode
-        |conn   | toClose | sql                                             | expect                                   | db      |
+        |conn   | toClose | sql                                             | expect                                      | db      |
         |conn_3 | true    | show tables                                     | has{(('sharding_table_1',),)}               | schema2 |
-      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1"
+      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1" retry "2,2" times
         """
           Table \[sharding_table_1\] structure are not consistent in different shardingNode
         """
@@ -478,8 +478,7 @@ Feature: schema support add function
         | conn  | toClose | sql                                             | expect              | db    |
         | conn_4| true    | create table sharding_table_1(aid int,id int)   | success             | db1   |
       #for arriving checkTableConsistencyPeriod time
-      Given sleep "3" seconds
-      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_2" in host "dble-1"
+      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_2" in host "dble-1" retry "2,2" times
         """
           Table \[sharding_table_1\] structure of all shardingNodes has been restored to be consistent
         """
@@ -504,8 +503,7 @@ Feature: schema support add function
         | conn  | toClose | sql                                                          | expect        | db    |
         | conn_7| False   | alter table sharding_table_2 add column bid int              | success       | db2   |
        #for arriving checkTableConsistencyPeriod time
-      Given sleep "3" seconds
-      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1"
+      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1" retry "2,2" times
         """
           Table \[sharding_table_2\] structure are not consistent in different shardingNode
         """
@@ -513,8 +511,7 @@ Feature: schema support add function
         | conn  | toClose | sql                                                          | expect        | db    |
         | conn_7| true    | alter table sharding_table_2 drop column bid                 | success       | db2   |
        #for arriving checkTableConsistencyPeriod time
-      Given sleep "3" seconds
-      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1"
+      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1" retry "2,2" times
         """
          Table \[sharding_table_2\] structure of all shardingNodes has been restored to be consistent
         """
@@ -536,8 +533,7 @@ Feature: schema support add function
         | conn   | toClose | sql                                             | expect              | db    |
         | conn_11| true    | drop table if exists sharding_table_3           | success             | db2   |
       #for arriving checkTableConsistencyPeriod time
-      Given sleep "3" seconds
-      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_4" in host "dble-1"
+      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_4" in host "dble-1" retry "2,2" times
         """
           found the table\[schema2.sharding_table_3\] in all defaultNode\[dn4, dn5\] has been lost, will remove his metadata
         """
