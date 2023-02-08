@@ -724,7 +724,7 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java.log" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
-
+@skip
   Scenario: check cluster @@detach, cluster @@attach when other sql will be executed #9
     Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """

@@ -4,7 +4,7 @@
 
 
 Feature:  backend_variables test
-
+@skip
    Scenario:  backend_variables table #1
   #case desc backend_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_1"

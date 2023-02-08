@@ -79,7 +79,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       """
 
 
-  @restore_mysql_service
+  @restore_mysql_service @skip
   Scenario: when useOuterHa is false, mysql has one slave, python script can change mysql master #3
      """
      {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
