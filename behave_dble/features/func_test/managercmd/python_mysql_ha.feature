@@ -58,7 +58,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       """
     Then check following text exist "Y" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
-      Write-dbInstance 172.100.9.6:3306 in ha_group2 is not alive!
+      172.100.9.6:3306 in ha_group2 is not alive!
       Do not switch ha_group2 Write-dbInstance to 172.100.9.6:3306; due to canbemaster status is 0.
       Switch failed!
       """
@@ -69,7 +69,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     Given sleep "1" seconds
     Then check following text exist "N" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
-      Write-dbInstance 172.100.9.6:3306 in ha_group2 is not alive!
+      172.100.9.6:3306 in ha_group2 is not alive!
       Do not switch ha_group2 Write-dbInstance to 172.100.9.6:3306; due to canbemaster status is 0.
       Switch failed!
       """
@@ -105,9 +105,10 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     Then execute sql in "dble-1" in "admin" mode
       | sql                      | expect            |timeout｜
       | show @@custom_mysql_ha   | has{(('1',),)}    |10,1   ｜
+    ##python脚本判断 Write-dbInstance 和 DbInstance的时间误差问题
     Then check following text exist "Y" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
-      DbInstance 172.100.9.6:3306 in ha_group2 is not alive!
+      172.100.9.6:3306 in ha_group2 is not alive!
       Get dbGroups from db.xml file.
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
