@@ -36,7 +36,15 @@ used_in_local: create_venv up
 
 run_cluster_case: up
 	pipenv run behave features/setup.feature \
-	features/cluster/ 
+	features/cluster/cluster_check_table_view.feature \
+	features/cluster/cluster_check_table_ddl.feature \
+	features/cluster/cluster_check_zk_binlog.feature \
+	features/cluster/cluster_detach_attach.feature:293 \
+	features/cluster/cluster_detach_attach.feature:363 \
+	features/cluster/cluster_detach_attach.feature:611 \
+	features/cluster/cluster_detach_attach.feature:728 \
+	features/cluster/kill_ddl_lock.feature:8 \
+	features/cluster/cluster_xml_to_json.feature:9
 	
 run_func_stable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
@@ -54,7 +62,21 @@ run_func_stable_case: up
 
 run_cfg_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/cfg_test/
+	features/func_test/cfg_test/dbInstance_load_balance.feature:441 \
+    features/func_test/cfg_test/schema_funcation.feature:377 \
+	features/func_test/cfg_test/user.feature:267 \
+    features/func_test/connection/connection_pool_heartbeat_test.feature:83 \
+    features/func_test/connection/connection_pool_basic_test.feature:113 \
+	features/func_test/dble_information/sql_log.feature:1218 \
+	features/func_test/dble_information/sql_statistic_queue_monitor.feature \
+	features/func_test/dble_information/backend_variables.feature:8 \
+    features/func_test/managercmd/python_mysql_ha.feature \
+    features/func_test/managercmd/pause_resume.feature:31 \
+    features/func_test/ddl/ddl_refactor.feature:72 \
+    features/func_test/special/complex_query_npe.feature:9 \
+    features/func_test/heartbeat/db_heartbeat_keepAlive.feature:10 \
+    features/func_test/heartbeat/kill_heartbeat_connection.feature:68 \
+    features/func_test/heartbeat/kill_heartbeat_connection.feature:264
 
 run_func_unstable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \

@@ -27,7 +27,7 @@ Feature: test "pause/resume" manager cmd
         | conn_0 | False    | resume                                                                        | success |
         | conn_0 | True     | pause @@shardingNode = 'dn1,dn3,dn6' and timeout = 10,queue=10                |ShardingNode dn6 did not exists |
 
-  @CRITICAL @skip
+  @CRITICAL
   Scenario: verify pause "wait_limit" work  #2
       Then execute sql in "dble-1" in "user" mode
         | conn   | toClose  | sql                                        | expect   | db       |

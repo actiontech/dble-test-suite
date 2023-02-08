@@ -64,7 +64,7 @@ Feature: heartbeat basic test
      | test | 111111 | conn_1 | True     | commit           | success | schema1  |
      | test | 111111 | conn_2 | True     | commit           | success | schema1  |
 
-  @btrace @skip
+  @btrace
   Scenario: heartbeat timeout test #2
     Given delete the following xml segment
       | file         | parent         | child                  |
@@ -260,7 +260,7 @@ Feature: heartbeat basic test
     Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
     Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
 
-  @btrace @skip
+  @btrace
   Scenario: heartbeat connection recover success in retry 'errorRetryCount' times, the heartbeat will set as Ok,and the connection pool is available in retry period #5
     Given delete the following xml segment
       | file         | parent         | child                  |

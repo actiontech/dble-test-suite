@@ -5,7 +5,7 @@
 
 Feature: test dble's config xml and table dble_config in dble_information to check json on cluster
 
-@skip
+
   Scenario: test modify dble's config xml and reload dble check json on zk config #1
 
     Given stop dble cluster and zk service

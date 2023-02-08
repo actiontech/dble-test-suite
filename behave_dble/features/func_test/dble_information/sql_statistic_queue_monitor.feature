@@ -1,7 +1,7 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by mayingle at 2021/09/01
-@skip
+
 Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]]
          stop @@statistic_queue_monitor;
          drop @@statistic_queue.usage;
