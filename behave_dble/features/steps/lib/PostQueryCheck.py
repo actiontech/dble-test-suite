@@ -100,10 +100,14 @@ class PostQueryCheck(object):
 
             executeTime = re.search(r"execute_time\{(.*?)\}", self._expect, re.I)
             if executeTime:
-                expectRS = executeTime.group(1)
-                duration = self._time_cost.seconds
-                logger.debug("sql: {0}, expect duration is :{1},real duration is{2} ".format(self._sql, eval(expectRS), duration))
-                assert_that(duration, equal_to(eval(expectRS)), "sql: {0}, executeTime not equal to expected".format(self._sql))
+                exec_res = executeTime.group(1)
+                if "," in exec_res:
+                    exec_num = exec_res.split(",")[0]
+                    exec_per = exec_res.split(",")[1]
+                else:
+                    exec_num = exec_res
+                    exec_per = 1
+                self.executeTime(self._real_res, int(exec_num),float(exec_per))
                 break
 
             hasEqual = re.search(r"equal\{(.*?)\}", self._expect, re.I)
@@ -187,3 +191,13 @@ class PostQueryCheck(object):
         a = abs(re_num - expectRS)
         b = expectRS * 0.2
         assert a <= b, "expect {0} in resultset {1}".format(expectRS, re_num)
+
+
+    def executeTime(self, RS, expectRS,percent):  # Float a value up and down
+        if percent<0 or percent>1:
+            logger.debug("wrong value of percent")
+            return False
+        duration = self._time_cost.seconds
+        a = abs(duration - expectRS)
+        b = expectRS * percent
+        assert a <= b, "expect {0} in resultset {1}".format(expectRS, duration)
