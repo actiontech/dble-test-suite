@@ -76,7 +76,8 @@ run_cfg_case: up
     features/func_test/special/complex_query_npe.feature:9 \
     features/func_test/heartbeat/db_heartbeat_keepAlive.feature:10 \
     features/func_test/heartbeat/kill_heartbeat_connection.feature:68 \
-    features/func_test/heartbeat/kill_heartbeat_connection.feature:264
+    features/func_test/heartbeat/kill_heartbeat_connection.feature:264 \
+    features/func_test/load_data/load_data_batch.feature:121
 
 run_func_unstable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
