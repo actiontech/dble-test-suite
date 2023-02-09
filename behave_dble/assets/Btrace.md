@@ -179,7 +179,8 @@ btrace -u 28060 ${脚本的路径}
 |----|----|----|----|
 |com.actiontech.dble.meta.ProxyMetaManager#addMetaLock|135|添加元数据(table)锁之后|
 |com.actiontech.dble.meta.ProxyMetaManager#removeMetaLock||删除metadata锁之前|
-|com.actiontech.dble.backend.heartbeat.MySQLHeartbeat#heartbeat||心跳|
+|com.actiontech.dble.backend.heartbeat.MySQLHeartbeat#heartbeat||定时任务开始执行心跳任务，心跳测试语句下发之前|
+|com.actiontech.dble.backend.heartbeat.HeartbeatSQLJob#fieldEofResponse||心跳语句收到mysql报文|
 |com.actiontech.dble.config.helper.GetAndSyncDbInstanceKeyVariables#call||异步获取mysql实例的Variables|
 |com.actiontech.dble.sqlengine.SQLJob#fieldEofResponse||mysql返回最后字段的响应|
 |com.actiontech.dble.backend.mysql.nio.handler.query.impl.BaseSelectHandler#rowResponse||执行select sql下，mysql每行返回的响应|
