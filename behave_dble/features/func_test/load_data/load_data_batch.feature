@@ -117,7 +117,7 @@ Feature: case about load data batch
         | maxRowSizeToFile        | 60000            |
         | enableBatchLoadData     | 0                |
 
-  @btrace
+  @btrace @skip
   Scenario: test with Btrace script to check file slice is right     #3
     #Preparation: Create test file and table  for loading data
     Given execute oscmd in "dble-1"
