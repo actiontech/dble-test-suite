@@ -404,6 +404,7 @@ Feature: check single dble detach or attach from cluster
     /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
+    Given sleep "3" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1" and save resultset in "detach_rs"
     Then check btrace "BtraceClusterDetachAttach1.java" output in "dble-1"
     """
@@ -646,6 +647,7 @@ Feature: check single dble detach or attach from cluster
     /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
+    Given sleep "3" seconds
     Given prepare a thread execute sql "cluster @@attach" with "conn_1" and save resultset in "attach_rs"
     Then check btrace "BtraceClusterDetachAttach1.java" output in "dble-1"
     """
@@ -771,7 +773,7 @@ Feature: check single dble detach or attach from cluster
     /waitOtherSessionBlocked/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
 
-    # check detach and manager command
+    # check detach and manager command 执行集群命令时，有即将执行的管理端命令，集群命令先执行
     Given prepare a thread run btrace script "BtraceClusterDetachAttach2.java" in "dble-1"
     Given sleep "3" seconds
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
@@ -792,6 +794,7 @@ Feature: check single dble detach or attach from cluster
     get into waitOtherSessionBlocked
     """
     Given prepare a thread execute sql "pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10" with "conn_2"
+    Given sleep "8" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql           | expect                    | timeout |
       | conn_2 | False     | show @@pause  | has{(('dn1',), ('dn2',))} | 8       |
