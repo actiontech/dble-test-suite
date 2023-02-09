@@ -201,7 +201,7 @@ Feature: test "binlog" in zk cluster
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1" retry "5" times
       """
       status
       """
