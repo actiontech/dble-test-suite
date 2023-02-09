@@ -89,7 +89,7 @@ Feature: heartbeat basic test
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
         <heartbeat timeout="4">select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-           <property name="heartbeatPeriodMillis">5000</property>
+           <property name="heartbeatPeriodMillis">7000</property>
         </dbInstance>
      </dbGroup>
     """
@@ -120,8 +120,8 @@ Feature: heartbeat basic test
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
     Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
-    #sleep 10s to let heartbeat timeout(2 heartbeat times)
-    Given sleep "10" seconds
+    #sleep 14s to let heartbeat timeout(2 heartbeat times)
+    Given sleep "14" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     heartbeat to \[172.100.9.5:3306\] setTimeout
@@ -130,11 +130,23 @@ Feature: heartbeat basic test
 
   Scenario: set errorRetryCount=0, kill the heartbeat connection, then check the heartbeat status #3
     #1 the killed heartbeat connection, heartbeat will set error at once, and then it will recover at next heartbeat period
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given delete the following xml segment
+      | file         | parent         | child                  |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+      | sharding.xml | {'tag':'root'} | {'tag':'function'}     |
+      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
+     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
         <shardingTable name="sharding_2_t1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
     </schema>
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
+    <function class="Hash" name="hash-two">
+        <property name="partitionCount">2</property>
+        <property name="partitionLength">1</property>
+    </function>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -168,21 +180,33 @@ Feature: heartbeat basic test
    #  Given sleep "3" seconds
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                         | expect  | db       | timeout |
-     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1  | 4       |
+     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1  | 5       |
 
 
-  @btrace  @auto_retry
+  @btrace
   Scenario: heartbeat connection is recover failed in retry 'errorRetryCount' times, the heartbeat will set as error,and the connection pool is available in retry period #4
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given delete the following xml segment
+      | file         | parent         | child                  |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+      | sharding.xml | {'tag':'root'} | {'tag':'function'}     |
+      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
+     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
         <shardingTable name="sharding_2_t1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
     </schema>
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
+    <function class="Hash" name="hash-two">
+        <property name="partitionCount">2</property>
+        <property name="partitionLength">1</property>
+    </function>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
-        <heartbeat errorRetryCount="3" timeout="300">select user()</heartbeat>
+        <heartbeat errorRetryCount="3" timeout="1">select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
            <property name="heartbeatPeriodMillis">180000</property>
         </dbInstance>
@@ -199,29 +223,30 @@ Feature: heartbeat basic test
     Given update file content "./assets/BtraceHeartbeat.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /heartbeat/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(2000L)/;/\}/!ba}
+    /heartbeat/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceHeartbeat.java" in "dble-1"
 
-    Given record current dble log line number in "log_linenu"
-    Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
-    """
-    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
-    """
-    Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
+#    Given record current dble log line number in "log_linenu"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "master1_heartbeat_id"
+      | conn   | toClose | sql                                                                                                                                      | expect        | db                |timeout|
+      | conn_0 | True    | select remote_processlist_id from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'                      | length{(1)}   | dble_information  |3,1    |
+    Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
     #the first time retry failed, and connection pool is available
     Then check btrace "BtraceHeartbeat.java" output in "dble-1" with "1" times
     """
     before heartbeat
     """
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                         | expect  | db     |
+     | user | passwd | conn   | toClose  | sql                         | expect  | db      |
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
-    Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
-    """
-    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
-    """
-    Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
+
+    #需要超过桩的时间才能建立心跳连接，日志中出现“[heartbeat]do heartbeat,conn is BackendConnection。。。”后才能查到心跳连接
+    Given sleep "5" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "master1_heartbeat_id"
+      | conn   | toClose | sql                                                                                                                                      | expect        | db                |timeout|
+      | conn_0 | True    | select remote_processlist_id from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'                      | length{(1)}   | dble_information  |3,1    |
+    Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
     #the second time retry failed, and connection pool is available
     Then check btrace "BtraceHeartbeat.java" output in "dble-1" with "2" times
     """
@@ -230,33 +255,36 @@ Feature: heartbeat basic test
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                         | expect  | db     |
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
-    Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
-    """
-    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
-    """
-    Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
+
+    Given sleep "5" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "master1_heartbeat_id"
+      | conn   | toClose | sql                                                                                                                                      | expect        | db                |timeout|
+      | conn_0 | True    | select remote_processlist_id from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'                      | length{(1)}   | dble_information  |3,1    |
+    Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
     #the 3trd time retry failed, the heartbeat set error and connection pool is not available
     Then check btrace "BtraceHeartbeat.java" output in "dble-1" with "3" times
     """
     before heartbeat
     """
-    Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
-    """
-    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
-    """
-    Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
-    Given sleep "1" seconds
-    #DBLE0REQ-960
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Given record current dble log line number in "log_linenu"
+    Given sleep "5" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "master1_heartbeat_id"
+      | conn   | toClose | sql                                                                                                                                      | expect        | db                |timeout|
+      | conn_0 | True    | select remote_processlist_id from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'                      | length{(1)}   | dble_information  |3,1    |
+    Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
+    Given stop btrace script "BtraceHeartbeat.java" in "dble-1"
+    Given destroy btrace threads list
+    #在心跳setError并且error的持续时间超过timeout时间，才会标记实例不可达（此时连接池不可用）
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "3,1" times
     """
     select user\(\)\] is closed, due to stream closed by peer, we will try again immediately
     retry to do heartbeat for the 3 times
+    heartbeat to \[172.100.9.5:3306\] setError
+    error heartbeat continued for more than
     """
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                           | expect   | db      |
-     | test | 111111 | conn_1 | False    | select * from sharding_2_t1   | success  | schema1 |
-    Given stop btrace script "BtraceHeartbeat.java" in "dble-1"
-    Given destroy btrace threads list
+     | user | passwd | conn   | toClose  | sql                          | expect               | db      |
+     | test | 111111 | conn_1 | True    | select * from sharding_2_t1   | error totally whack  | schema1 |
     Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
     Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
 
@@ -297,11 +325,12 @@ Feature: heartbeat basic test
     /heartbeat/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceHeartbeat.java" in "dble-1"
-    Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
-    """
-    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
-    """
-    Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "master1_heartbeat_id"
+      | conn   | toClose | sql                                                                                                                                      | expect        | db                |timeout|
+      | conn_0 | True    | select remote_processlist_id from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'                      | length{(1)}   | dble_information  |3,1    |
+    Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
+
     #the first time retry failed,and connection pool is available
     Then check btrace "BtraceHeartbeat.java" output in "dble-1" with "1" times
     """
@@ -310,12 +339,12 @@ Feature: heartbeat basic test
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                         | expect  | db      |
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
-    Given sleep "3" seconds
-    Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
-    """
-    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
-    """
-    Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
+    #需要超过桩的时间才能建立心跳连接，日志中出现“[heartbeat]do heartbeat,conn is BackendConnection。。。”后才能查到心跳连接
+    Given sleep "5" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "master1_heartbeat_id"
+      | conn   | toClose | sql                                                                                                                                      | expect        | db                |timeout|
+      | conn_0 | True    | select remote_processlist_id from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'                      | length{(1)}   | dble_information  |4,1    |
+    Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
     #the second time retry failed,and connection pool is available
     Then check btrace "BtraceHeartbeat.java" output in "dble-1" with "2" times
     """
@@ -327,12 +356,12 @@ Feature: heartbeat basic test
     Given record current dble log line number in "log_linenu"
     #sleep 5s coz issue: DBLE0REQ-701
     Given sleep "5" seconds
-    Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
-    """
-    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
-    """
-    Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "master1_heartbeat_id"
+      | conn   | toClose | sql                                                                                                                                      | expect        | db                |timeout|
+      | conn_0 | True    | select remote_processlist_id from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'                      | length{(1)}   | dble_information  |4,1    |
+    Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
     #the 3trd time retry success, the heartbeat setOk and connection pool is available
+
     Then check btrace "BtraceHeartbeat.java" output in "dble-1" with "3" times
     """
     before heartbeat
