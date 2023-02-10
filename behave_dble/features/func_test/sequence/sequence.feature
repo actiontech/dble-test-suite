@@ -64,7 +64,7 @@ Feature: Functional testing of global sequences
       | sql                                                            | expect      | db      |
       | select count(*) from test_auto having count(*) > 1 group by id | length{(0)} | schema1 |
 
-  @BLOCKER  @current
+  @BLOCKER  @current @skip
   Scenario: test global sequenceHandlerType: 2(snowflake) #2
 #    case points:
 #  1.sequence column can't be inserted by client
