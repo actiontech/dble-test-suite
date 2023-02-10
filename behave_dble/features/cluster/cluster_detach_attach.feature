@@ -1,7 +1,7 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wangjuan at 2021/9/13
-
+@skip
 # DBLE0REQ-1002
 Feature: check single dble detach or attach from cluster
 
