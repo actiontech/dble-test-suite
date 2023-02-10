@@ -39,10 +39,7 @@ run_cluster_case: up
 	features/cluster/cluster_check_table_view.feature \
 	features/cluster/cluster_check_table_ddl.feature \
 	features/cluster/cluster_check_zk_binlog.feature \
-	features/cluster/cluster_detach_attach.feature:293 \
-	features/cluster/cluster_detach_attach.feature:363 \
-	features/cluster/cluster_detach_attach.feature:611 \
-	features/cluster/cluster_detach_attach.feature:728 \
+	features/cluster/cluster_detach_attach.feature \
 	features/cluster/kill_ddl_lock.feature:8 \
 	features/cluster/cluster_xml_to_json.feature:9
 	
@@ -77,7 +74,9 @@ run_cfg_case: up
     features/func_test/heartbeat/db_heartbeat_keepAlive.feature:10 \
     features/func_test/heartbeat/kill_heartbeat_connection.feature:68 \
     features/func_test/heartbeat/kill_heartbeat_connection.feature:264 \
-    features/func_test/load_data/load_data_batch.feature:121
+    features/func_test/load_data/load_data_batch.feature:121 \
+    features/func_test/sequence/sequence.feature:68 \
+    features/func_test/xa_transaction/xa_retry_count.feature:96
 
 run_func_unstable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
