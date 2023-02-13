@@ -74,21 +74,21 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | False   | dryrun              | hasStr{Can't connect to [dbInstance[ha_group1.hostM1]]}           |
       | conn_0 | True    | reload @@config_all | success       |
    ## DBLE0REQ-2003 只是停一个mysql不影响reload
-  #    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect               | db      |
       | conn_0 | False   | insert into test_table values(1,3)    | success              | schema1 |
       | conn_0 | True    | insert into test_table values(2,4)    | error totally whack  | schema1 |
     Given start mysql in host "mysql-master1"
+    #### 休眠10s是因为mysql的心跳周期heartbeatPeriodMillis默认10s，增加timeout是为了那个java起任务的时间差
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                | db      |
-      | conn_0 | False   | insert into test_table values(1,3) | schema1 |
-      | conn_0 | True    | insert into test_table values(2,4) | schema1 |
+      | conn   | toClose | sql                                | db      | timeout |
+      | conn_0 | False   | insert into test_table values(1,3) | schema1 |         |
+      | conn_0 | True    | insert into test_table values(2,4) | schema1 | 9       |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                   | expect                                                                                        |
+      | conn   | toClose | sql                   | expect                                                                                                         |
       | conn_0 | False   | dryrun                | hasNoStr{shardingNode[dn3] has no available primary dbinstance,The table in this shardingNode has not checked} |
-      | conn_0 | True    | reload @@config_all   | success                                                                                       |
+      | conn_0 | True    | reload @@config_all   | success                                                                                                        |
 
   @restore_mysql_service
   Scenario: # some of the backend nodes was disconnected in the course of a transaction    #3
@@ -99,6 +99,15 @@ Feature: #mysql node disconnected,check the change of dble
     """
         <shardingTable name="test_table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      """
+      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+            <property name="heartbeatPeriodMillis">5000</property>
+        </dbInstance>
+      </dbGroup>
+      """
     Then execute admin cmd "Reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                  | db      |
@@ -108,14 +117,16 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | False   | begin                                                | schema1 |
       | conn_0 | False   | update test_table set pad=1                          | schema1 |
     Given stop mysql in host "mysql-master1"
+    ### (1003, 'Transaction error, need to rollback.Reason:[Connection {dbInstance[172.100.9.5:3306],Schema[db1],threadID[1685]} was closed ,reason is [stream closed by peer]]')
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql     | expect      | db      |
       | conn_0 | True    | commit  | Connection  | schema1 |
     Given start mysql in host "mysql-master1"
-    Given sleep "30" seconds
+    Given sleep "5" seconds
     Then execute sql in "dble-1" in "user" mode
-      | sql                      | db      |
-      | select * from test_table | schema1 |
+      | sql                                | db      | expect                                      | timeout |
+      | select * from test_table           | schema1 | has{((1, 1), (3, 3), (2, 2), (4, 4))}       |  5      |
+      | drop table if exists test_table    | schema1 | success                                     |         |
 
 
   # ---the case is no need anymore for new feature on 5.6.29-dble-3.20.05.99-3ddaae7379f6c4e128d47de58ae085dcdb5aa55c-20200612021000 dble Server
