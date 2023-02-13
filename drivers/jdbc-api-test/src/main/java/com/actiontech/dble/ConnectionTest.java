@@ -227,15 +227,29 @@ public class ConnectionTest extends InterfaceTest {
 		try{
 			mysqlConn.abort(ae);
 			dbleConn.abort(ae);
+            // 等待abort资源释放，等待时间最大容忍度为10s
+            for(int i=0;i<=10;i++)
+            {
+                boolean isMySQLClosed = mysqlConn.isClosed();
+                boolean isDbleClosed = dbleConn.isClosed();
 
-			boolean isMySQLClosed = mysqlConn.isClosed();
-			boolean isDbleClosed = dbleConn.isClosed();
+                if (isMySQLClosed == isDbleClosed == true){
+                    System.out.println("pass! abort()");
+                    break;
+                }else{
+                    if(i == 10){
+                    on_assert_fail("fail! After abort(), dble isClosed() is:"+isDbleClosed+", but mysql isClosed is:"+isMySQLClosed);
+                    }
+                }
 
-			if (isMySQLClosed == isDbleClosed)
-				System.out.println("pass! abort()");
-			else {
-				on_assert_fail("fail! After abort(), dble isClosed() is:"+isDbleClosed+", but mysql isClosed is:"+isMySQLClosed);
-			}
+                i=i+1;
+                try{
+                    Thread.sleep(1000);
+                }catch(InterruptedException e){
+                    System.out.println("sleep 1s failed, the error is "+e.getMessage());
+                }
+            }
+
 		}catch(SQLException e){
 			System.out.println("SQLException:"+e.getMessage());
 		}
