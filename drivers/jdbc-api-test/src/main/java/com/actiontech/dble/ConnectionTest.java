@@ -242,7 +242,6 @@ public class ConnectionTest extends InterfaceTest {
                     }
                 }
 
-                i=i+1;
                 try{
                     Thread.sleep(1000);
                 }catch(InterruptedException e){
