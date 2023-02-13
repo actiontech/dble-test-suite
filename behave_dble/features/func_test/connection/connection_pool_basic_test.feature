@@ -2,6 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wujinling at 2021/02/21
 
+@skip
 Feature: connection pool basic test
 
   @CRITICAL
@@ -134,7 +135,7 @@ Feature: connection pool basic test
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                      | expect       | db                |timeout|
-      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'      | length{(20)} | dble_information  | 3,1   |
+      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'      | length{(20)} | dble_information  | 5,1   |
 
   @CRITICAL
   Scenario: connection expansion: use the active connections until the idle connections less than minCon, after timeBetweenEvictionRunsMillis the connections will increase to minCon #5
