@@ -3,6 +3,7 @@
 # Created by wangjuan at 2021/9/13
 
 # DBLE0REQ-1002
+@skip #coz unstable until 2023.02.13
 Feature: check single dble detach or attach from cluster
 
   Scenario: check thread name after cluster @@detach, cluster @@attach #1

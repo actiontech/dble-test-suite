@@ -76,7 +76,13 @@ run_cfg_case: up
     features/func_test/heartbeat/kill_heartbeat_connection.feature:264 \
     features/func_test/load_data/load_data_batch.feature:121 \
     features/func_test/sequence/sequence.feature:68 \
-    features/func_test/xa_transaction/xa_retry_count.feature:96
+    features/func_test/xa_transaction/xa_retry_count.feature:96 \
+    features/func_test/cfg_test/sharding_db_attribute.feature:240 \
+    features/func_test/heartbeat/reconnect_heartbeat_readonly_check.feature:349 \
+    features/func_test/connection/rwSplit_connection_test.feature:281 \
+    features/func_test/xa_transaction/net_down_before_rollback.feature:15 \
+    features/func_test/managercmd/reload_lock.feature:9 \
+    features/func_test/safety/mysql_node_disconnected.feature:58
 
 run_func_unstable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \

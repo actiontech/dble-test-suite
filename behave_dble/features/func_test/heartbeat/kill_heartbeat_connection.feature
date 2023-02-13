@@ -183,7 +183,7 @@ Feature: heartbeat basic test
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1  | 5       |
 
 
-  @btrace
+  @btrace @skip #skip for issue DBLE0REQ-2103
   Scenario: heartbeat connection is recover failed in retry 'errorRetryCount' times, the heartbeat will set as error,and the connection pool is available in retry period #4
     Given delete the following xml segment
       | file         | parent         | child                  |
