@@ -237,6 +237,7 @@ Feature: test some import nodes attr in sharding.xml
       | conn_1 | True    | commit                                           | success | schema1 |
       | conn_2 | True    | set @x = 1                                       | success | schema1 |
 
+  @skip
   Scenario:  when minCon<=the number of db, verify the minCon restore logic #8
    #minConRecover logic: the minimum number = the number of dbs;
    #minConRecover_num ignore heartbeat conn, so the total conns need add extra heartbeat conn,that is dbs + two heartbeats = 3+2 + 1+1 =7

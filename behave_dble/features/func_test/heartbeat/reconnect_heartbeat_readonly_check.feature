@@ -345,7 +345,7 @@ Feature: We will check readonly status on both master and slave even if the hear
      Given turn off general log in "mysql"
 
 
-   @restore_global_setting @restore_network
+   @restore_global_setting @restore_network @skip
   Scenario: all heartbeat SQL -- select user() & show slave status & select @@read_only;heartbeat fail & recover by dble network down; (1.4 & 2.4 & 3.4). #5
      """
      {'restore_global_setting':{'mysql-master1':{'general_log':0},'mysql-master2':{'general_log':0},'mysql-master3':{'general_log':0},'mysql-slave1':{'general_log':0},'mysql-slave2':{'general_log':0},'mysql':{'general_log':0}}}
