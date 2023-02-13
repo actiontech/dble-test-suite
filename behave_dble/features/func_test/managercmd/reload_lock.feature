@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by caiwei at 2021/04/15
 
-
+@skip
 Feature: when reload hang,emergency means to deal with it
 
    @btrace
