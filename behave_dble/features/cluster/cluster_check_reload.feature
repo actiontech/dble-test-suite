@@ -1048,10 +1048,10 @@ Feature: test "reload @@config" in zk cluster
       Then execute sql in "dble-2" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect   |
         | conn_2B | False     | release @@reload_metadata  | dble_information | success  |
-
+#####(5999, 'Reload Failure, The reason is partial instance reload failed, failed because of:[2:interrupt by command.should reload config again;]')
       Then check sql thread output in "err" by retry "20" times
         """
-        Reload config failed partially.
+        The reason is partial instance reload failed
         """
 
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "1b"
