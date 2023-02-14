@@ -349,7 +349,14 @@ Feature: We will check readonly status on both master and slave even if the hear
   Scenario: all heartbeat SQL -- select user() & show slave status & select @@read_only;heartbeat fail & recover by dble network down; (1.4 & 2.4 & 3.4). #5
      """
      {'restore_global_setting':{'mysql-master1':{'general_log':0},'mysql-master2':{'general_log':0},'mysql-master3':{'general_log':0},'mysql-slave1':{'general_log':0},'mysql-slave2':{'general_log':0},'mysql':{'general_log':0}}}
+     {'restore_network':'mysql-master1'}
+     {'restore_network':'mysql-master2'}
+     {'restore_network':'mysql-master3'}
+     {'restore_network':'mysql-slave2'}
+     {'restore_network':'mysql-slave1'}
+     {'restore_network':'mysql'}
      """
+
      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
      """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -428,9 +435,6 @@ Feature: We will check readonly status on both master and slave even if the hear
 
      Given record current dble log line number in "log_linenu"
 
-     # sleep 3 sec for
-     Given sleep "3" seconds
-
      # start turn on iptables on every mysql node
      Given execute oscmd in "mysql-master1"
      """
@@ -457,7 +461,7 @@ Feature: We will check readonly status on both master and slave even if the hear
      iptables -F
      """
 
-     Given sleep "3" seconds
+     Given sleep "6" seconds
 
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
      """
