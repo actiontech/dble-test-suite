@@ -76,6 +76,7 @@ run_cfg_case: up
     features/func_test/heartbeat/db_heartbeat_keepAlive.feature:10 \
     features/func_test/heartbeat/kill_heartbeat_connection.feature \
     features/func_test/load_data/load_data_batch.feature:121 \
+    features/func_test/load_data/load_data_batch.feature:460 \
     features/func_test/sequence/sequence.feature:68 \
     features/func_test/xa_transaction/xa_retry_count.feature:96 \
     features/func_test/cfg_test/sharding_db_attribute.feature:240 \
@@ -84,6 +85,7 @@ run_cfg_case: up
     features/func_test/xa_transaction/net_down_before_rollback.feature:15 \
     features/func_test/managercmd/reload_lock.feature:9 \
     features/func_test/safety/mysql_node_disconnected.feature:58 \
+    features/func_test/managercmd/reload_config_all.feature:62 \
     features/func_test/cfg_test/user.feature:298
 
 run_func_unstable_case: up
