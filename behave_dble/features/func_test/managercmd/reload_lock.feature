@@ -5,14 +5,14 @@
 
 Feature: when reload hang,emergency means to deal with it
 
-   @btrace @auto_retry
+   @btrace
    Scenario:reload hang with single dble
      Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
      Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
      Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /countdown/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
+      /countdown/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
       """
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
      """
@@ -44,8 +44,9 @@ Feature: when reload hang,emergency means to deal with it
        | conn   | toClose   | sql                        | db               | expect   |
        | conn_1 | False     | release @@reload_metadata  | dble_information | success  |
      ### 退出一次桩的循环时间
-     Given sleep "8" seconds
-     Then check sql thread output in "err"
+     Given sleep "5" seconds
+     ## failed for: (5999, 'Reload Failure, The reason is reload interruputed by others,metadata should be reload')
+     Then check sql thread output in "err" by retry "10" times
         """
         Reload Failure
         """

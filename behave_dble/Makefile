@@ -41,7 +41,8 @@ run_cluster_case: up
 	features/cluster/cluster_check_zk_binlog.feature \
 	features/cluster/cluster_detach_attach.feature \
 	features/cluster/kill_ddl_lock.feature:8 \
-	features/cluster/cluster_xml_to_json.feature:9
+	features/cluster/cluster_xml_to_json.feature:9 \
+	features/cluster/cluster_check_reload.feature:855
 	
 run_func_stable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
