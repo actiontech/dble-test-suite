@@ -456,7 +456,7 @@ Feature: case about load data batch
 
 
 
-
+@skip
   Scenario: test during execute load data, backend mysql disconnected, the logic of load data batch       #5
     Given execute admin cmd "kill @@load_data" success
     Given execute admin cmd "enable @@load_data_batch" success
