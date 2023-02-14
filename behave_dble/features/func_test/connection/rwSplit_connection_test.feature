@@ -314,7 +314,7 @@ Feature: connection test in rwSplit mode
        |user| conn   | toClose | sql                                     | expect  | db        |
        |rwS1| conn_1 | False   | create table test(id int)               | success | testdb    |
        |rwS1| conn_1 | False   | insert into test values(1)              | success | testdb    |
-       |rwS1| conn_1 | False   | select * from test                      | success | testdb    |
+       |rwS1| conn_1 | False   | select * from test                      | length{(1)} | testdb    |
 
      Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                             | expect  |
@@ -323,7 +323,6 @@ Feature: connection test in rwSplit mode
      Given delete file "/opt/dble/BtraceRwSplitSession.java" on "dble-1"
      Given delete file "/opt/dble/BtraceRwSplitSession.java.log" on "dble-1"
      Given prepare a thread run Btrace script "BtraceRwSplitSession.java" in "dble-1"
-     Given sleep "5" seconds
      Given prepare a thread execute sql "select * from test" with "conn_1"
 
      #every time need 2 seconds,make sure execute time more than 11*2
@@ -331,9 +330,9 @@ Feature: connection test in rwSplit mode
         | conn   | toClose | sql                                                         | db      |
         | conn_2 | False   | delete from dble_db_instance where name='hostM2'            | dble_information   |
         | conn_2 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.6',3307,'test','111111','false','false',1,99)| dble_information|
-      Given sleep "1" seconds
+#      Given sleep "1" seconds
      #if check failed, should first try add BtraceRwSplitSession.java sleep time
-     Then check sql thread output in "err"
+     Then check sql thread output in "err" by retry "5" times
         """
           is always invalid, pls check reason
         """
