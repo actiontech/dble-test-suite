@@ -3,7 +3,6 @@
 # Created by wangjuan at 2021/9/13
 
 # DBLE0REQ-1002
-@skip #coz unstable until 2023.02.13
 Feature: check single dble detach or attach from cluster
 
   Scenario: check thread name after cluster @@detach, cluster @@attach #1
@@ -322,7 +321,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach1.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(6000L)/;/\}/!ba}
+    /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
@@ -330,6 +329,7 @@ Feature: check single dble detach or attach from cluster
     /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
+    Given sleep "2" seconds
     Given prepare a thread execute sql "cluster @@detach timeout=1" with "conn_1" and save resultset in "detach_rs"
     Then check btrace "BtraceClusterDetachAttach1.java" output in "dble-1"
     """
@@ -341,11 +341,11 @@ Feature: check single dble detach or attach from cluster
     """
     get into afterDelayServiceMarkDoing
     """
-    Then check sql thread output in "detach_rs_err" by retry "5" times
+    Then check sql thread output in "detach_rs_err" by retry "10" times
     """
     detach cluster pause timeout
     """
-    Then check sql thread output in "res" by retry "8" times
+    Then check sql thread output in "res" by retry "5" times
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
     """
@@ -417,14 +417,13 @@ Feature: check single dble detach or attach from cluster
     """
     get into afterDelayServiceMarkDoing
     """
-    Then check sql thread output in "detach_rs_err" by retry "12" times
+    Then check sql thread output in "detach_rs_err" by retry "15" times
     """
     detach cluster pause timeout
     """
-    Given sleep "3" seconds
     Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose | sql                                | expect                | db      |
-      | conn_3  | false   | show tables                        | has{(('test_view',),)} | schema1 |
+      | conn    | toClose | sql                                | expect                 | db      | timeout |
+      | conn_4  | true    | show tables                        | has{(('test_view',),)} | schema1 | 5       |
     Given stop btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
     Given stop btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach3.java.log" on "dble-1"
@@ -504,12 +503,12 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach1.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given prepare a thread execute sql "cluster @@detach timeout=20" with "conn_1"
@@ -523,10 +522,9 @@ Feature: check single dble detach or attach from cluster
     """
     get into afterDelayServiceMarkDoing
     """
-    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose   | sql                                | expect      | db      |
-      | conn_3  | false     | select * from sharding_4_t1        | length{(1)} | schema1 |
+      | conn    | toClose   | sql                                | expect      | db      | timeout |
+      | conn_4  | true      | select * from sharding_4_t1        | length{(1)} | schema1 | 15      |
     Given stop btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
     Given stop btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach3.java.log" on "dble-1"
@@ -575,7 +573,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given prepare a thread execute sql "cluster @@attach timeout=1" with "conn_1" and save resultset in "detach_rs"
@@ -593,7 +591,7 @@ Feature: check single dble detach or attach from cluster
     """
     attach cluster pause timeout
     """
-    Then check sql thread output in "res" by retry "15" times
+    Then check sql thread output in "res" by retry "5" times
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
     """
@@ -645,7 +643,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given sleep "3" seconds
@@ -660,7 +658,7 @@ Feature: check single dble detach or attach from cluster
     """
     get into afterDelayServiceMarkDoing
     """
-    Then check sql thread output in "attach_rs_err" by retry "12" times
+    Then check sql thread output in "attach_rs_err" by retry "15" times
     """
     attach cluster pause timeout
     """
@@ -697,7 +695,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given prepare a thread execute sql "cluster @@attach timeout=20" with "conn_1"
@@ -711,7 +709,7 @@ Feature: check single dble detach or attach from cluster
     """
     get into afterDelayServiceMarkDoing
     """
-    Then check sql thread output in "res" by retry "12" times
+    Then check sql thread output in "res" by retry "15" times
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
     """
@@ -795,11 +793,10 @@ Feature: check single dble detach or attach from cluster
     get into waitOtherSessionBlocked
     """
     Given prepare a thread execute sql "pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10" with "conn_2"
-    Given sleep "8" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql           | expect                    | timeout |
-      | conn_2 | False     | show @@pause  | has{(('dn1',), ('dn2',))} | 8       |
-      | conn_2 | True      | resume        | success                   |         |
+      | conn_4 | False     | show @@pause  | has{(('dn1',), ('dn2',))} | 8       |
+      | conn_4 | True      | resume        | success                   |         |
     Given stop btrace script "BtraceClusterDetachAttach2.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
@@ -831,11 +828,10 @@ Feature: check single dble detach or attach from cluster
     get into waitOtherSessionBlocked
     """
     Given prepare a thread execute sql "create view test_view as select * from sharding_4_t1" with "conn_3"
-    Given sleep "5" seconds
     Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose   | sql                                                   | db      | expect      |
-      | conn_3  | false     | insert into sharding_4_t1 (id) values (1),(2),(3),(4) | schema1 | success     |
-      | conn_3  | false     | select * from test_view                               | schema1 | length{(4)} |
+      | conn    | toClose   | sql                                                   | db      | expect      | timeout |
+      | conn_4  | false     | insert into sharding_4_t1 (id) values (1),(2),(3),(4) | schema1 | success     |         |
+      | conn_4  | true      | select * from test_view                               | schema1 | length{(4)} | 5       |
     Given stop btrace script "BtraceClusterDetachAttach2.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
@@ -867,7 +863,7 @@ Feature: check single dble detach or attach from cluster
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose   | sql                         | db      | expect      |
-      | conn_3  | false     | set xa=off                  | schema1 | success     |
+      | conn_3  | true      | set xa=off                  | schema1 | success     |
       | conn_3  | false     | select * from sharding_4_t1 | schema1 | length{(0)} |
 
     Given stop btrace script "BtraceClusterDetachAttach2.java" in "dble-1"
@@ -889,19 +885,18 @@ Feature: check single dble detach or attach from cluster
     cluster is detached, you should attach cluster first.
     """
 
-    # check attach and xa
+    # check attach and zk offset-step sequence
     Given prepare a thread execute sql "cluster @@attach" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach2.java" output in "dble-1" with "==2" times
     """
     get into waitOtherSessionBlocked
     """
     Given prepare a thread execute sql "insert into sharding_4_t1 (id) values (1),(2),(3),(4)" with "conn_3"
-    Given sleep "5" seconds
     Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose   | sql                                | db      | expect      |
-      | conn_3  | false     | select * from sharding_4_t1        | schema1 | length{(4)} |
-      | conn_3  | false     | drop view if exists test_view      | schema1 | success     |
-      | conn_3  | true      | drop table if exists sharding_4_t1 | schema1 | success     |
+      | conn    | toClose   | sql                                | db      | expect      | timeout |
+      | conn_4  | true      | select * from sharding_4_t1        | schema1 | length{(4)} | 8       |
+      | conn_3  | false     | drop view if exists test_view      | schema1 | success     |         |
+      | conn_3  | true      | drop table if exists sharding_4_t1 | schema1 | success     |         |
 
     Given stop btrace script "BtraceClusterDetachAttach2.java" in "dble-1"
     Given destroy btrace threads list
@@ -1131,7 +1126,7 @@ Feature: check single dble detach or attach from cluster
     get into zkDetachCluster
     """
     Given prepare a thread execute sql "pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10" with "conn_2"
-    Given sleep "5" seconds
+    Given sleep "7" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     ignore event because of detached
@@ -1158,7 +1153,7 @@ Feature: check single dble detach or attach from cluster
     get into zkDetachCluster
     """
     Given prepare a thread execute sql "reload @@config_all" with "conn_2"
-    Given sleep "5" seconds
+    Given sleep "7" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     ignore event because of detached
@@ -1183,14 +1178,14 @@ Feature: check single dble detach or attach from cluster
     get into zkDetachCluster
     """
     Given prepare a thread execute sql "create table sharding_4_t1(pid int, id int)" with "conn_3"
-    Given sleep "5" seconds
+    Given sleep "7" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_line_num" in host "dble-1"
     """
     ignore event because of detached
     """
     Given record current dble log line number in "log_line_num"
     Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose   | sql            | expect                     | db      |
+      | conn    | toClose   | sql            | expect                        | db      |
       | conn_4  | false     | show tables    | hasnot{(('sharding_4_t1',),)} | schema1 |
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose   | sql            | expect                     | db      |
@@ -1200,9 +1195,9 @@ Feature: check single dble detach or attach from cluster
       | conn_1  | false     | cluster @@attach                  | success |
       | conn_1  | false     | reload @@metadata                 | success |
     Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose   | sql                                                      | expect                    | db      |
+      | conn    | toClose   | sql                                                      | expect                     | db      |
       | conn_4  | false     | show tables                                              | has{(('sharding_4_t1',),)} | schema1 |
-      | conn_4  | false     | insert into sharding_4_t1 (id) values (1),(2),(3),(4)    | success                   | schema1 |
+      | conn_4  | false     | insert into sharding_4_t1 (id) values (1),(2),(3),(4)    | success                    | schema1 |
     Given stop btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
@@ -1216,7 +1211,7 @@ Feature: check single dble detach or attach from cluster
     get into zkDetachCluster
     """
     Given prepare a thread execute sql "create view test_view as select * from sharding_4_t1" with "conn_3"
-    Given sleep "5" seconds
+    Given sleep "7" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_line_num" in host "dble-1"
     """
     ignore event because of detached
@@ -1251,7 +1246,7 @@ Feature: check single dble detach or attach from cluster
     get into zkDetachCluster
     """
     Given prepare a thread execute sql "insert into sharding_4_t1 (id) values (5)" with "conn_3"
-    Given sleep "5" seconds
+    Given sleep "7" seconds
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_line_num" in host "dble-1"
     """
     ignore event because of detached
@@ -1281,7 +1276,7 @@ Feature: check single dble detach or attach from cluster
     get into zkDetachCluster
     """
     Given prepare a thread execute sql "commit" with "conn_3"
-    Given sleep "5" seconds
+    Given sleep "7" seconds
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_line_num" in host "dble-1"
     """
     ignore event because of detached

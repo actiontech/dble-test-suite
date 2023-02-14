@@ -287,6 +287,7 @@ def retry_exec_command(context, ssh_client, exe_cmd, check_str, filename, retry_
         try:
             rc, stdout, stderr = ssh_client.exec_command(exe_cmd)
             assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1},but not".format(check_str, filename))
+            break
         except Exception as e:
             logger.info(f"check text in file not out yet, execute {i + 1} times")
             if i == execute_times - 1:
