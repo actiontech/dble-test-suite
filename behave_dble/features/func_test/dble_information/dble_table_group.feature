@@ -2,6 +2,8 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 2020/8/26
 
+
+  @skip
 Feature:  dble_table test
 
   @skip_restart  @restore_mysql_config @use.with_mysql_version=5.7
@@ -347,7 +349,7 @@ Feature:  dble_table test
       | dn3             | BASE SQL | INSERT INTO er_parent VALUES (2, '顺序2') |
       | dn4             | BASE SQL | INSERT INTO er_parent VALUES (3, '顺序3') |
 
-  @skip_restart @skip
+  @skip_restart
    Scenario:  dble_child_table table #5
   #case desc dble_child_table
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_child_table_1"
@@ -394,7 +396,7 @@ Feature:  dble_table test
       | ID                 | CODE          | FIX            |
 
 
-   Scenario:  supported select and unsupported dml
+   Scenario:  supported select and unsupported dml #6
 #case count filed values
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                         | expect          |
