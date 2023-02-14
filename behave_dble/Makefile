@@ -64,6 +64,7 @@ run_cfg_case: up
 	features/func_test/cfg_test/user.feature:267 \
     features/func_test/connection/connection_pool_heartbeat_test.feature:83 \
     features/func_test/connection/connection_pool_basic_test.feature \
+    features/func_test/dble_information/dble_table_group.feature \
 	features/func_test/dble_information/sql_log.feature:1218 \
 	features/func_test/dble_information/sql_statistic_queue_monitor.feature \
 	features/func_test/dble_information/backend_variables.feature:8 \
@@ -82,7 +83,6 @@ run_cfg_case: up
     features/func_test/xa_transaction/net_down_before_rollback.feature:15 \
     features/func_test/managercmd/reload_lock.feature:9 \
     features/func_test/safety/mysql_node_disconnected.feature:58 \
-    features/func_test/dble_information/dble_table_group.feature:397 \
     features/func_test/cfg_test/user.feature:298
 
 run_func_unstable_case: up
