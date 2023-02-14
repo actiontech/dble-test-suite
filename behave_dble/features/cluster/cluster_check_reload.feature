@@ -917,10 +917,8 @@ Feature: test "reload @@config" in zk cluster
         | conn    | toClose   | sql                        | db               | expect   |
         | conn_12 | False     | release @@reload_metadata  | dble_information | success  |
 
-     ### 退出一次桩的循环时间
-      Given sleep "8" seconds
      ## failed for: (5999, 'Reload Failure, The reason is reload interruputed by others,metadata should be reload')
-      Then check sql thread output in "err" by retry "15" times
+      Then check sql thread output in "err" by retry "20" times
         """
         Reload Failure
         """
@@ -1050,8 +1048,8 @@ Feature: test "reload @@config" in zk cluster
       Then execute sql in "dble-2" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect   |
         | conn_2B | False     | release @@reload_metadata  | dble_information | success  |
-      Given sleep "8" seconds
-      Then check sql thread output in "err" by retry "10" times
+
+      Then check sql thread output in "err" by retry "20" times
         """
         Reload config failed partially.
         """
