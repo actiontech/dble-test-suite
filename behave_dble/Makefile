@@ -80,7 +80,7 @@ run_cfg_case: up
     features/func_test/xa_transaction/xa_retry_count.feature:96 \
     features/func_test/cfg_test/sharding_db_attribute.feature:240 \
     features/func_test/heartbeat/reconnect_heartbeat_readonly_check.feature:349 \
-    features/func_test/connection/rwSplit_connection_test.feature:281 \
+    features/func_test/connection/rwSplit_connection_test.feature \
     features/func_test/xa_transaction/net_down_before_rollback.feature:15 \
     features/func_test/managercmd/reload_lock.feature:9 \
     features/func_test/safety/mysql_node_disconnected.feature:58 \

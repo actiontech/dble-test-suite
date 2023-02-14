@@ -57,8 +57,6 @@ Feature: connection test in rwSplit mode
      Given delete file "/opt/dble/BtraceRwSelect.java" on "dble-1"
      Given prepare a thread run Btrace script "BtraceRwSelect.java" in "dble-1"
 
-       #make sure btrace start
-     Given sleep "5" seconds
      Given record current dble log line number in "log_num_1"
      Given prepare a thread execute sql "select * from test" with "conn_1"
 
@@ -67,16 +65,12 @@ Feature: connection test in rwSplit mode
         | conn   | toClose | sql                                               | expect           | db      |
         | conn_2 | False   | delete from dble_db_instance where name='hostM2'  | success          | dble_information   |
 
-       #btrace sleep 5s
-     Given sleep "8" seconds
-     Then check sql thread output in "res"
+     Then check sql thread output in "res" by retry "10" times
         """
           (1,)
         """
 
-       #make sure the check log happens 5 seconds after the dbGroup is dropped, because the connection recycle timer task happens every 5 seconds
-     Given sleep "5" seconds
-     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1"
+     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1" retry "10" times
         """
           \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
         """
@@ -88,16 +82,13 @@ Feature: connection test in rwSplit mode
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                          |expect               | db      |
         | conn_2 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.6',3307,'test','111111','false','false',1,99) | success            | dble_information   |
-     #btrace sleep 5s
-     Given sleep "8" seconds
-     Then check sql thread output in "res"
+
+     Then check sql thread output in "res" by retry "10" times
         """
           (1,)
         """
 
-       #make sure the check log happens 5 seconds after the dbGroup is dropped, because the connection recycle timer task happens every 5 seconds
-     Given sleep "5" seconds
-     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_2" in host "dble-1"
+     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_2" in host "dble-1" retry "10" times
         """
           \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
         """
@@ -139,8 +130,6 @@ Feature: connection test in rwSplit mode
      Given delete file "/opt/dble/BtraceRwSelect.java" on "dble-1"
      Given delete file "/opt/dble/BtraceRwSelect.java.log" on "dble-1"
      Given prepare a thread run Btrace script "BtraceRwSelect.java" in "dble-1"
-     #make sure btrace start
-     Given sleep "5" seconds
 
      Given prepare a thread execute sql "select * from test" with "conn_3"
 
@@ -149,16 +138,12 @@ Feature: connection test in rwSplit mode
         | conn   | toClose | sql                                               | expect           | db      |
         | conn_4 | False   | delete from dble_db_instance where name='hostM2'  | success          | dble_information   |
 
-      #btrace sleep 5s
-     Given sleep "8" seconds
-     Then check sql thread output in "res"
+     Then check sql thread output in "res" by retry "10" times
         """
           (1,)
         """
 
-      #make sure the check log happens 5 seconds after the dbGroup is dropped, because the connection recycle timer task happens every 5 seconds
-     Given sleep "5" seconds
-     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1"
+     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1" retry "10" times
         """
           \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
         """
@@ -170,16 +155,13 @@ Feature: connection test in rwSplit mode
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                           |expect              | db      |
         | conn_4 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.6',3307,'test','111111','false','false',1,99)  | success           | dble_information   |
-     #btrace sleep 5s
-     Given sleep "8" seconds
-     Then check sql thread output in "res"
+
+     Then check sql thread output in "res" by retry "10" times
         """
           (1,)
         """
 
-     #make sure the check log happens 5 seconds after the dbGroup is dropped, because the connection recycle timer task happens every 5 seconds
-     Given sleep "5" seconds
-     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_4" in host "dble-1"
+     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_4" in host "dble-1" retry "10" times
         """
           \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
         """
@@ -240,16 +222,14 @@ Feature: connection test in rwSplit mode
      Given delete file "/opt/dble/BtraceSelectRWDbGroup.java" on "dble-1"
      Given delete file "/opt/dble/BtraceSelectRWDbGroup.java.log" on "dble-1"
      Given prepare a thread run Btrace script "BtraceSelectRWDbGroup.java" in "dble-1"
-     Given sleep "5" seconds
 
      #delete slave dbInstance
      Given prepare a thread execute sql "select * from test" with "conn_1"
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                                   | expect             | db      |
         | conn_2 | False   | delete from dble_db_instance where name='hostM2'      | success            | dble_information   |
-     #because btrace sleep 5s
-     Given sleep "10" seconds
-     Then check sql thread output in "res"
+
+     Then check sql thread output in "res" by retry "10" times
         """
           (1,)
         """
@@ -259,9 +239,8 @@ Feature: connection test in rwSplit mode
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                                         | db      |
         | conn_2 | true    | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.6',3307,'test','111111','false','false',1,99)            | dble_information   |
-      #because btrace sleep 5s
-     Given sleep "10" seconds
-     Then check sql thread output in "res"
+
+     Then check sql thread output in "res" by retry "10" times
         """
           (1,)
         """
@@ -355,5 +334,3 @@ Feature: connection test in rwSplit mode
 
       Given delete file "/opt/dble/BtraceRwSplitSession.java" on "dble-1"
       Given delete file "/opt/dble/BtraceRwSplitSession.java.log" on "dble-1"
-
-
