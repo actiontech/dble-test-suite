@@ -38,9 +38,7 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
         <shardingTable name="table_a" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
         <shardingTable name="table_b" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
     """
-    Then execute admin cmd "reload @@config_all"
-#    default heartbeat period is 10 seconds,wait enough time for heartbeat recover
-    Given sleep "11" seconds
+    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                           | expect    | db      |
       | conn_0 | False    | drop table if exists table_a                  | success   | schema1 |
