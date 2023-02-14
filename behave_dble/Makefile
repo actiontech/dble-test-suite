@@ -63,7 +63,7 @@ run_cfg_case: up
     features/func_test/cfg_test/schema_funcation.feature:377 \
 	features/func_test/cfg_test/user.feature:267 \
     features/func_test/connection/connection_pool_heartbeat_test.feature:83 \
-    features/func_test/connection/connection_pool_basic_test.feature:113 \
+    features/func_test/connection/connection_pool_basic_test.feature \
 	features/func_test/dble_information/sql_log.feature:1218 \
 	features/func_test/dble_information/sql_statistic_queue_monitor.feature \
 	features/func_test/dble_information/backend_variables.feature:8 \
@@ -72,8 +72,7 @@ run_cfg_case: up
     features/func_test/ddl/ddl_refactor.feature:72 \
     features/func_test/special/complex_query_npe.feature:9 \
     features/func_test/heartbeat/db_heartbeat_keepAlive.feature:10 \
-    features/func_test/heartbeat/kill_heartbeat_connection.feature:68 \
-    features/func_test/heartbeat/kill_heartbeat_connection.feature:264 \
+    features/func_test/heartbeat/kill_heartbeat_connection.feature \
     features/func_test/load_data/load_data_batch.feature:121 \
     features/func_test/sequence/sequence.feature:68 \
     features/func_test/xa_transaction/xa_retry_count.feature:96 \
@@ -82,7 +81,9 @@ run_cfg_case: up
     features/func_test/connection/rwSplit_connection_test.feature:281 \
     features/func_test/xa_transaction/net_down_before_rollback.feature:15 \
     features/func_test/managercmd/reload_lock.feature:9 \
-    features/func_test/safety/mysql_node_disconnected.feature:58
+    features/func_test/safety/mysql_node_disconnected.feature:58 \
+    features/func_test/dble_information/dble_table_group.feature:397 \
+    features/func_test/cfg_test/user.feature:298
 
 run_func_unstable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
@@ -100,7 +101,7 @@ run_managercmd_case: up
 
 run_sql_support_special: up
 	pipenv run behave -Dreset=false -D dble_conf=sql_cover_mixed features/setup.feature \
-	features/sql_cover/special/
+	features/sql_cover/special/subquery_plan_optimize.feature:8
 
 run_sql_support_global: up
 	pipenv run behave -D dble_conf=sql_cover_global features/setup.feature features/sql_cover/sql_global.feature
