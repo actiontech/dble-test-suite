@@ -5,16 +5,15 @@
 
 Feature: when reload hang,emergency means to deal with it
 
-   @btrace
+   @btrace @auto_retry
    Scenario:reload hang with single dble
      Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
      Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
      Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /countdown/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
+      /countdown/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
       """
-
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
      """
       /-Dprocessors=1/c -Dprocessors=4
@@ -29,7 +28,7 @@ Feature: when reload hang,emergency means to deal with it
         <shardingTable name="sharding" shardingNode="dn3,dn4" shardingColumn="id" function="hash-two"/>
         """
      Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
-     Given sleep "5" seconds
+#     Given sleep "5" seconds
      Given prepare a thread execute sql "reload @@config_all" with "conn_0"
      Then check btrace "BtraceClusterDelay.java" output in "dble-1"
      """
@@ -44,7 +43,8 @@ Feature: when reload hang,emergency means to deal with it
      Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose   | sql                        | db               | expect   |
        | conn_1 | False     | release @@reload_metadata  | dble_information | success  |
-     Given sleep "10" seconds
+     ### 退出一次桩的循环时间
+     Given sleep "8" seconds
      Then check sql thread output in "err"
         """
         Reload Failure
