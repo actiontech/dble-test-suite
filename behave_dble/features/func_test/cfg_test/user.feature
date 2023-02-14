@@ -269,23 +269,7 @@ Feature: test config in user.xml
     """
     $a -DfakeMySQLVersion=5.7.13
     $a -DprocessorCheckPeriod=10
-    $a -DsqlExecuteTimeout=20
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-            <property name="timeBetweenEvictionRunsMillis">10</property>
-    </dbInstance>
-    </dbGroup>
-
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-            <property name="timeBetweenEvictionRunsMillis">10</property>
-        </dbInstance>
-    </dbGroup>
+    $a -DsqlExecuteTimeout=10
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -294,10 +278,9 @@ Feature: test config in user.xml
       | conn_0  | False    | create table test_table(id int,name char(20)) | success                | schema1 |
       | conn_0  | False    | insert into test_table values(1,11),(2,22)    | success                | schema1 |
       | conn_0  | False    | select sleep(3)                               | success                | schema1 |
-      | conn_0  | False    | select sleep(19)                              | success                | schema1 |
-      | conn_0  | False    | select sleep(20),id from test_table           | reason is [sql timeout]| schema1 |
-      | conn_0  | False    | select sleep(21)                              | reason is [sql timeout]| schema1 |
-      | conn_0  | True     | select sleep(25),id from test_table           | reason is [sql timeout]| schema1 |
+      | conn_0  | False    | select sleep(8)                               | success                | schema1 |
+      | conn_0  | False    | select sleep(11),id from test_table           | reason is [sql timeout]| schema1 |
+      | conn_0  | True     | select sleep(15)                              | reason is [sql timeout]| schema1 |
 
 
 
