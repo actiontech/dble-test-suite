@@ -251,6 +251,9 @@ Feature: test view in zk cluster
     #sleep 2s, to check dble-1 has stop
     Given sleep "2" seconds
     Then Start dble in "dble-1"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                       | expect    | db      |
+      | conn_1 | true    | show create view view_3   | success   | schema1 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     waiting for view finished
