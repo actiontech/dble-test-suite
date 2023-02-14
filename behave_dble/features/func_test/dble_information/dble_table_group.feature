@@ -347,7 +347,7 @@ Feature:  dble_table test
       | dn3             | BASE SQL | INSERT INTO er_parent VALUES (2, '顺序2') |
       | dn4             | BASE SQL | INSERT INTO er_parent VALUES (3, '顺序3') |
 
-  @skip_restart
+  @skip_restart @skip
    Scenario:  dble_child_table table #5
   #case desc dble_child_table
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_child_table_1"

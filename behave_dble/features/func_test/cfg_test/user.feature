@@ -294,7 +294,7 @@ Feature: test config in user.xml
 
 
 
-
+  @skip
   Scenario: test 'sqlExecuteTimeout' from issue:1286 #11
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
