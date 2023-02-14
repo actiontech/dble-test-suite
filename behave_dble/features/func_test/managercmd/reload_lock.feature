@@ -14,7 +14,6 @@ Feature: when reload hang,emergency means to deal with it
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
       /countdown/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
       """
-
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
      """
       /-Dprocessors=1/c -Dprocessors=4
@@ -29,7 +28,6 @@ Feature: when reload hang,emergency means to deal with it
         <shardingTable name="sharding" shardingNode="dn3,dn4" shardingColumn="id" function="hash-two"/>
         """
      Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
-     Given sleep "5" seconds
      Given prepare a thread execute sql "reload @@config_all" with "conn_0"
      Then check btrace "BtraceClusterDelay.java" output in "dble-1"
      """
@@ -44,8 +42,9 @@ Feature: when reload hang,emergency means to deal with it
      Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose   | sql                        | db               | expect   |
        | conn_1 | False     | release @@reload_metadata  | dble_information | success  |
-     Given sleep "10" seconds
-     Then check sql thread output in "err"
+
+     ## failed for: (5999, 'Reload Failure, The reason is reload interruputed by others,metadata should be reload')
+     Then check sql thread output in "err" by retry "15" times
         """
         Reload Failure
         """

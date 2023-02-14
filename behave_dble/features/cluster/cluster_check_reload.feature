@@ -850,9 +850,9 @@ Feature: test "reload @@config" in zk cluster
     rm -rf /tmp/dble_*
     """
 
-    @btrace @skip
-    Scenario: when reload hang,emergency ways to deal with it       #5
 
+    @btrace
+    Scenario: when reload hang,emergency ways to deal with it       #5
 #CASE1: change sharding.xml and reload hang on the same dble
       Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
       Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
@@ -892,10 +892,9 @@ Feature: test "reload @@config" in zk cluster
       Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
         """
         s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-        /countdown/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
+        /countdown/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
         """
       Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
-      Given sleep "5" seconds
       Given prepare a thread execute sql "reload @@config_all" with "conn_10"
       Then check btrace "BtraceClusterDelay.java" output in "dble-1"
         """
@@ -917,11 +916,13 @@ Feature: test "reload @@config" in zk cluster
       Then execute sql in "dble-1" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect   |
         | conn_12 | False     | release @@reload_metadata  | dble_information | success  |
-      Given sleep "10" seconds
-      Then check sql thread output in "err"
+
+     ## failed for: (5999, 'Reload Failure, The reason is reload interruputed by others,metadata should be reload')
+      Then check sql thread output in "err" by retry "20" times
         """
         Reload Failure
         """
+
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "1B"
         | conn    | toClose   | sql                    |  db                |
         | conn_12 | False     | show @@reload_status   |  dble_information  |
@@ -1020,7 +1021,6 @@ Feature: test "reload @@config" in zk cluster
         <shardingTable name="sharding_2" shardingNode="dn1,dn2" shardingColumn="id" function="hash-two"/>
         """
       Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-2"
-      Given sleep "5" seconds
       Given prepare a thread execute sql "reload @@config_all" with "conn_10"
       Then check btrace "BtraceClusterDelay.java" output in "dble-2"
         """
@@ -1048,8 +1048,8 @@ Feature: test "reload @@config" in zk cluster
       Then execute sql in "dble-2" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect   |
         | conn_2B | False     | release @@reload_metadata  | dble_information | success  |
-      Given sleep "10" seconds
-      Then check sql thread output in "err"
+
+      Then check sql thread output in "err" by retry "20" times
         """
         Reload config failed partially.
         """
