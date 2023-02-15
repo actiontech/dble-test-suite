@@ -183,7 +183,7 @@ Feature: heartbeat basic test
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1  | 5       |
 
 
-  @btrace @skip #skip for issue DBLE0REQ-2103
+  @btrace
   Scenario: heartbeat connection is recover failed in retry 'errorRetryCount' times, the heartbeat will set as error,and the connection pool is available in retry period #4
     Given delete the following xml segment
       | file         | parent         | child                  |
@@ -274,17 +274,20 @@ Feature: heartbeat basic test
     Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
     Given stop btrace script "BtraceHeartbeat.java" in "dble-1"
     Given destroy btrace threads list
-    #在心跳setError并且error的持续时间超过timeout时间，才会标记实例不可达（此时连接池不可用）
+    #在心跳setError之后, 并且有sql对该db下发查询，发现心跳error持续时间超过timeout配置的值，就会打印 "error heartbeat continued for more than"（此时连接池不可用）
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "3,1" times
     """
     select user\(\)\] is closed, due to stream closed by peer, we will try again immediately
     retry to do heartbeat for the 3 times
     heartbeat to \[172.100.9.5:3306\] setError
-    error heartbeat continued for more than
     """
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                          | expect               | db      |
      | test | 111111 | conn_1 | True    | select * from sharding_2_t1   | error totally whack  | schema1 |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "3,1" times
+    """
+    error heartbeat continued for more than
+    """
     Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
     Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
 
@@ -294,7 +297,7 @@ Feature: heartbeat basic test
       | file         | parent         | child                  |
       | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
       | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-      | db.xml | {'tag':'root'} | {'tag':'dbGroup'} |
+      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
