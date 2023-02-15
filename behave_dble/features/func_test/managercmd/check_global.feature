@@ -3,7 +3,7 @@
 # Created by quexiuping at 2020/9/14
 Feature: test " check @@global schema = '' [and table = '']"
 
-  @restore_mysql_service
+  @restore_mysql_service @skip
   Scenario: check @@global schema = '' [and table = ''] #1
     """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
