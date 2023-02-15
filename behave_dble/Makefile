@@ -86,7 +86,8 @@ run_cfg_case: up
     features/func_test/safety/mysql_node_disconnected.feature:58 \
     features/func_test/managercmd/reload_config_all.feature:62 \
     features/func_test/cfg_test/user.feature:298 \
-    features/func_test/managercmd/check_global.feature:7
+    features/func_test/managercmd/check_global.feature:7 \
+    features/func_test/managercmd/reload_config_all_r.feature:8
 
 run_func_unstable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
