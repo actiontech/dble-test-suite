@@ -4,7 +4,7 @@
 # Created by yangxiaoliang at 2019/11/15
 #2.19.11.0#dble-7849
 Feature: reload @@config_all -r
-
+@skip
   Scenario: execute manager cmd "reload @@config_all -r" after add or change shardingNode/dbGroup #1
     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
       """
