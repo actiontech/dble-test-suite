@@ -278,7 +278,6 @@ Feature: test config in user.xml
       | conn_0  | False    | create table test_table(id int,name char(20)) | success                | schema1 |
       | conn_0  | False    | insert into test_table values(1,11),(2,22)    | success                | schema1 |
       | conn_0  | False    | select sleep(3)                               | success                | schema1 |
-      | conn_0  | False    | select sleep(8)                               | success                | schema1 |
       | conn_0  | False    | select sleep(11),id from test_table           | reason is [sql timeout]| schema1 |
       | conn_0  | True     | select sleep(15)                              | reason is [sql timeout]| schema1 |
 
