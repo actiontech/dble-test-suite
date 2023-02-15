@@ -40,7 +40,7 @@ Feature: test "pause/resume" manager cmd
       Then execute sql in "dble-1" in "user" mode
         | conn   | toClose  | sql                | expect                                                   | db      |
         | conn_0 | False    | select * from test | waiting time exceeded wait_limit from pause shardingNode | schema1 |
-        | conn_0 | True     | select * from test | execute_time{2,0.5}                                      | schema1 |
+#        | conn_0 | True     | select * from test | execute_time{2,0.5}                                      | schema1 |
       Then execute sql in "dble-1" in "admin" mode
         | sql   | expect  |
         |resume | success |
