@@ -75,8 +75,7 @@ run_cfg_case: up
     features/func_test/special/complex_query_npe.feature:9 \
     features/func_test/heartbeat/db_heartbeat_keepAlive.feature:10 \
     features/func_test/heartbeat/kill_heartbeat_connection.feature \
-    features/func_test/load_data/load_data_batch.feature:121 \
-    features/func_test/load_data/load_data_batch.feature:460 \
+    features/func_test/load_data/load_data_batch.feature \
     features/func_test/sequence/sequence.feature:68 \
     features/func_test/xa_transaction/xa_retry_count.feature:96 \
     features/func_test/cfg_test/sharding_db_attribute.feature:240 \

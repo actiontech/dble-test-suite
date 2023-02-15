@@ -50,6 +50,8 @@ Feature: case about load data batch
       enableBatchLoadData=0
       """
 
+
+
   Scenario: Manger CMD reload @@load_data.num        #2
     #CASE  reload @@load_data.num --> Illegal value
     Then execute admin cmd "enable @@load_data_batch"
@@ -116,6 +118,8 @@ Feature: case about load data batch
         | variable_name-0         | variable_value-1 |
         | maxRowSizeToFile        | 60000            |
         | enableBatchLoadData     | 0                |
+
+
 
   @btrace
   Scenario: test with Btrace script to check file slice is right     #3
@@ -184,11 +188,10 @@ Feature: case about load data batch
     11,11
     13,13
     """
-    Given sleep "3" seconds
     #check data.txt successfully load data into table "sharding_2_t1"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                    | expect          | db      |
-      | conn_1 | true    | select * from schema1.sharding_2_t1    | length{(13)}    | schema1 |
+      | conn   | toClose | sql                                    | expect          | db      | timeout |
+      | conn_1 | true    | select * from schema1.sharding_2_t1    | length{(13)}    | schema1 | 10      |
     #check dir /opt/dble/temp/file is deleted
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
 
@@ -231,11 +234,10 @@ Feature: case about load data batch
     12,12
     13,13
     """
-    Given sleep "3" seconds
     #check data.txt successfully load data into table "test"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                    | expect          | db      |
-      | conn_1 | true    | select * from schema1.test             | length{(13)}    | schema1 |
+      | conn   | toClose | sql                                    | expect          | db      | timeout |
+      | conn_1 | true    | select * from schema1.test             | length{(13)}    | schema1 | 10      |
     #check dir /opt/dble/temp/file is deleted
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
 
@@ -260,11 +262,10 @@ Feature: case about load data batch
     12,12
     13,13
     """
-    Given sleep "3" seconds
     #check data.txt successfully load data into table "test1"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                          | expect          | db      |
-      | conn_2 | true    | select * from schema1.test1                  | length{(13)}    | schema1 |
+      | conn   | toClose | sql                                          | expect          | db      | timeout |
+      | conn_2 | true    | select * from schema1.test1                  | length{(13)}    | schema1 | 10      |
     #check dir /opt/dble/temp/file is deleted
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
     Then check btrace "BtraceAboutLoadDataBatch.java" output in "dble-1" with "3" times
@@ -456,7 +457,6 @@ Feature: case about load data batch
 
 
 
-
   Scenario: test during execute load data, backend mysql disconnected, the logic of load data batch       #5
     Given execute admin cmd "kill @@load_data" success
     Given execute admin cmd "enable @@load_data_batch" success
@@ -477,7 +477,7 @@ Feature: case about load data batch
     Then check path "/opt/dble/temp/file" in "dble-1" should exist
     Then check path "/opt/dble/temp/error" in "dble-1" should not exist
     Then execute sql in "mysql-master2" in "mysql" mode
-      | conn   | toClose | sql                       | expect           | db  |
+      | conn   | toClose | sql                       | expect             | db  |
       | conn_0 | false   | select count(*) from test | has{((1000000,),)} | db1 |
       | conn_0 | true    | select count(*) from test | has{((1000000,),)} | db2 |
     Given execute single sql in "mysql-master1" in "mysql" mode and save resultset in "A"
