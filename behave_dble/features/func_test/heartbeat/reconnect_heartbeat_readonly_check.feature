@@ -362,30 +362,30 @@ Feature: We will check readonly status on both master and slave even if the hear
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
          <heartbeat>show slave status</heartbeat>
          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-             <property name="heartbeatPeriodMillis">1000</property>
+             <property name="heartbeatPeriodMillis">2000</property>
          </dbInstance>
          <dbInstance name="hosts1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false">
-             <property name="heartbeatPeriodMillis">1000</property>
+             <property name="heartbeatPeriodMillis">2000</property>
          </dbInstance>
      </dbGroup>
 
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
          <heartbeat>select user()</heartbeat>
          <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-             <property name="heartbeatPeriodMillis">1000</property>
+             <property name="heartbeatPeriodMillis">2000</property>
          </dbInstance>
          <dbInstance name="hosts2" password="111111" url="172.100.9.6:3308" user="test" maxCon="1000" minCon="10" primary="false">
-             <property name="heartbeatPeriodMillis">100</property>
+             <property name="heartbeatPeriodMillis">200</property>
          </dbInstance>
      </dbGroup>
 
      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
          <heartbeat>select @@read_only</heartbeat>
          <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
-             <property name="heartbeatPeriodMillis">1000</property>
+             <property name="heartbeatPeriodMillis">2000</property>
          </dbInstance>
          <dbInstance name="hosts3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="false">
-             <property name="heartbeatPeriodMillis">1000</property>
+             <property name="heartbeatPeriodMillis">2000</property>
          </dbInstance>
      </dbGroup>
 
@@ -399,6 +399,8 @@ Feature: We will check readonly status on both master and slave even if the hear
         <shardingNode dbGroup="ha_group3" database="db3" name="dn5" />
      """
      Then execute admin cmd "reload @@config_all"
+     ### 等待reload后 heartbeatPeriodMillis=2  心跳的建立和恢复
+     Given sleep "4" seconds
 
      # start turn on iptables on every mysql node
      Given execute oscmd in "mysql-master1"
@@ -460,8 +462,8 @@ Feature: We will check readonly status on both master and slave even if the hear
      """
      iptables -F
      """
-
-     Given sleep "6" seconds
+    ### 防火墙恢复后，等待心跳的恢复下发
+     Given sleep "5" seconds
 
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
      """
