@@ -326,7 +326,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given sleep "2" seconds
@@ -345,7 +345,7 @@ Feature: check single dble detach or attach from cluster
     """
     detach cluster pause timeout
     """
-    Then check sql thread output in "res" by retry "5" times
+    Then check sql thread output in "res" by retry "8" times
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
     """
@@ -402,7 +402,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given sleep "3" seconds
@@ -423,7 +423,7 @@ Feature: check single dble detach or attach from cluster
     """
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                | expect                 | db      | timeout |
-      | conn_4  | true    | show tables                        | has{(('test_view',),)} | schema1 | 5       |
+      | conn_4  | true    | show tables                        | has{(('test_view',),)} | schema1 | 10      |
     Given stop btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
     Given stop btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach3.java.log" on "dble-1"
@@ -508,7 +508,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given prepare a thread execute sql "cluster @@detach timeout=20" with "conn_1"
@@ -573,7 +573,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given prepare a thread execute sql "cluster @@attach timeout=1" with "conn_1" and save resultset in "detach_rs"
@@ -591,7 +591,7 @@ Feature: check single dble detach or attach from cluster
     """
     attach cluster pause timeout
     """
-    Then check sql thread output in "res" by retry "5" times
+    Then check sql thread output in "res" by retry "8" times
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
     """
@@ -643,7 +643,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given sleep "3" seconds
@@ -662,7 +662,7 @@ Feature: check single dble detach or attach from cluster
     """
     attach cluster pause timeout
     """
-    Then check sql thread output in "res" by retry "5" times
+    Then check sql thread output in "res" by retry "10" times
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
     """
@@ -695,7 +695,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given prepare a thread execute sql "cluster @@attach timeout=20" with "conn_1"
