@@ -437,6 +437,8 @@ Feature: We will check readonly status on both master and slave even if the hear
 
      Given record current dble log line number in "log_linenu"
 
+     Given sleep "4" seconds
+
      # start turn on iptables on every mysql node
      Given execute oscmd in "mysql-master1"
      """
