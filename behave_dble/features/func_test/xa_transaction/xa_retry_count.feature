@@ -119,6 +119,9 @@ Feature: change xaRetryCount value and check result
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    """
+    Given update file content "./assets/BtraceXaDelay_backgroundRetry2.java" in "behave" with sed cmds
+    """
     /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay_backgroundRetry2.java" in "dble-1"
