@@ -82,7 +82,7 @@ run_cfg_case: up
     features/func_test/managercmd/reload_lock.feature:9 \
     features/func_test/ddl/ddl_refactor.feature:72 \
     features/func_test/special/complex_query_npe.feature:9 \
-    features/func_test/special/thread_leak_test.feature:63  \
+    features/func_test/special/thread_leak_test.feature  \
     features/func_test/heartbeat/db_heartbeat_keepAlive.feature:10 \
     features/func_test/heartbeat/kill_heartbeat_connection.feature \
     features/func_test/heartbeat/reconnect_heartbeat_readonly_check.feature:349 \
