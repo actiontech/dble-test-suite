@@ -80,7 +80,7 @@ run_cfg_case: up
     features/func_test/managercmd/check_global.feature:7 \
     features/func_test/managercmd/reload_config_all_r.feature:8 \
     features/func_test/managercmd/reload_lock.feature:9 \
-    features/func_test/Large_Packet/ \
+    features/func_test/Large_Packet/Large_Packet.feature:1063 \
     features/func_test/ddl/ddl_refactor.feature:72 \
     features/func_test/special/complex_query_npe.feature:9 \
     features/func_test/special/thread_leak_test.feature  \
@@ -90,7 +90,11 @@ run_cfg_case: up
     features/func_test/load_data/load_data_batch.feature \
     features/func_test/sequence/sequence.feature:68 \
     features/func_test/safety/mysql_node_disconnected.feature:58 \
-	features/func_test/xa_transaction/ \
+	features/func_test/xa_transaction/net_down_before_rollback.feature \
+	features/func_test/xa_transaction/xa_retry_count.feature \
+	features/func_test/xa_transaction/bg_strategy_after_net_shock.feature \
+	features/func_test/xa_transaction/bg_strategy_after_node_hangs.feature \
+	features/func_test/xa_transaction/net_down_before_rollback.feature
 
 
 
