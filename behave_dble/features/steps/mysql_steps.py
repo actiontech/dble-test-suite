@@ -15,6 +15,7 @@ from steps.lib.QueryMeta import QueryMeta
 from steps.lib.ObjectFactory import ObjectFactory
 from behave import *
 import time
+from datetime import datetime
 
 global sql_threads
 sql_threads = []
@@ -116,12 +117,24 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
         except Exception as e:
             logger.info(f"result is not out yet,retry {i} times")
             if i == timeout-1:
+                print_jstack(get_node(host_name))
                 raise e
             else:
                 time.sleep(sep_time)
     return res, err
- 
-    
+
+
+def print_jstack(node):
+    ssh_client = node.ssh_conn
+    get_dble_pid_cmd = "jps | grep WrapperSimpleApp | awk '{print $1}'"
+    rc, sto, ste = ssh_client.exec_command(get_dble_pid_cmd)
+    assert len(sto) > 0, "dble pid not found!!!"
+
+    current_datetime = datetime.strftime(datetime.now(), '%H%M%S_%f')
+    jstack_url = "/opt/dble/logs/jstack_{0}.log".format(current_datetime)
+    print_jstack_cmd = "jstack -l {0} > {1}".format(sto, jstack_url)
+    ssh_client.exec_command(print_jstack_cmd)
+    logger.debug("print jstack finished, {0}".format(jstack_url))
 
 
 @Given('execute sql "{num}" times in "{host_name}" at concurrent')

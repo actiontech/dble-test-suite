@@ -27,7 +27,7 @@ class MysqlConnUtil:
             cursor = self._conn.cursor()
             result = None
             errMsg = None
-            logger.debug("try to execute sql:{0} in {1}".format(sql[0:500], dest_info))
+            logger.debug("try to execute sql:{0}, in {1}".format(sql[0:500], dest_info))
             cursor.execute(sql)
             result = []
             while True:
@@ -43,10 +43,10 @@ class MysqlConnUtil:
             pass
 
         if errMsg is not None:
-            showErr = "execute sql in {} failed for: {}".format(dest_info, errMsg)
-            logger.debug(showErr);
+            showErr = "execute sql {}, in {} failed for: {}".format(sql[0:500], dest_info, errMsg)
+            logger.debug(showErr)
         else:
-            logger.debug("execute sql in {} success, resultset: ".format(dest_info))
+            logger.debug("execute sql {}, in {} success, resultset: ".format(sql[0:500], dest_info))
             for row in result:
                 logger.debug(row[0:300])
 
