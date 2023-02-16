@@ -63,31 +63,35 @@ run_cfg_case: up
 	features/func_test/cfg_test/dbInstance_load_balance.feature:441 \
     features/func_test/cfg_test/schema_funcation.feature:377 \
 	features/func_test/cfg_test/user.feature:267 \
+    features/func_test/cfg_test/user.feature:298 \
+    features/func_test/cfg_test/sharding_db_attribute.feature:240 \
+    features/func_test/cfg_test/user_analysisUser.feature:327 \
     features/func_test/connection/connection_pool_heartbeat_test.feature:83 \
     features/func_test/connection/connection_pool_basic_test.feature \
+    features/func_test/connection/rwSplit_connection_test.feature \
     features/func_test/dble_information/dble_table_group.feature \
 	features/func_test/dble_information/sql_log.feature:1218 \
 	features/func_test/dble_information/sql_statistic_queue_monitor.feature \
 	features/func_test/dble_information/backend_variables.feature:8 \
+	features/func_test/dble_information/dble_xa_recover.feature:10 \
     features/func_test/managercmd/python_mysql_ha.feature \
     features/func_test/managercmd/pause_resume.feature:31 \
+    features/func_test/managercmd/reload_config_all.feature:62 \
+    features/func_test/managercmd/check_global.feature:7 \
+    features/func_test/managercmd/reload_config_all_r.feature:8 \
+    features/func_test/managercmd/reload_lock.feature:9 \
     features/func_test/ddl/ddl_refactor.feature:72 \
     features/func_test/special/complex_query_npe.feature:9 \
     features/func_test/heartbeat/db_heartbeat_keepAlive.feature:10 \
     features/func_test/heartbeat/kill_heartbeat_connection.feature \
+    features/func_test/heartbeat/reconnect_heartbeat_readonly_check.feature:349 \
     features/func_test/load_data/load_data_batch.feature \
     features/func_test/sequence/sequence.feature:68 \
-    features/func_test/xa_transaction/xa_retry_count.feature:96 \
-    features/func_test/cfg_test/sharding_db_attribute.feature:240 \
-    features/func_test/heartbeat/reconnect_heartbeat_readonly_check.feature:349 \
-    features/func_test/connection/rwSplit_connection_test.feature \
-    features/func_test/xa_transaction/net_down_before_rollback.feature:15 \
-    features/func_test/managercmd/reload_lock.feature:9 \
     features/func_test/safety/mysql_node_disconnected.feature:58 \
-    features/func_test/managercmd/reload_config_all.feature:62 \
-    features/func_test/cfg_test/user.feature:298 \
-    features/func_test/managercmd/check_global.feature:7 \
-    features/func_test/managercmd/reload_config_all_r.feature:8
+	features/func_test/xa_transaction/ \
+	features/func_test/Large_Packet/ \
+
+
 
 run_func_unstable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \

@@ -62,23 +62,23 @@ Feature: check dble_xa_recover and exception xa transactions
       | ha_group2 | hostM2     | 172.100.9.6 | 3306   |  1         | 21             | 0              | Dble_Server.1.db1.db2 |
     # case supported select  table limit/order by/where like
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                    | expect                                    |
-      | conn_0 | False   | use dble_information                                                                   | success                                   |
-      | conn_0 | False   | select * from dble_xa_recover limit 5                                                  | length{(4)}                               |
-      | conn_0 | False   | select * from dble_xa_recover order by data desc limit 3                               | length{(3)}                               |
-      | conn_0 | False   | select * from dble_xa_recover where data in (select common from dble_xa_recover )      | Correlated Sub Queries is not supported   |
-      | conn_0 | False   | select * from dble_xa_recover where data > any (select data from dble_xa_recover )     | length{(3)}                               |
-      | conn_0 | False   | select * from dble_xa_recover where data like '%xa%'                                   | length{(1)}                               |
-      | conn_0 | False   | select data from dble_xa_recover                                                       | length{(4)}                               |
+      | conn   | toClose | sql                                                                                    | expect                                    | timeout |
+      | conn_0 | False   | use dble_information                                                                   | success                                   |         |
+      | conn_0 | False   | select * from dble_xa_recover limit 5                                                  | length{(4)}                               | 5       |
+      | conn_0 | False   | select * from dble_xa_recover order by data desc limit 3                               | length{(3)}                               | 5       |
+      | conn_0 | False   | select * from dble_xa_recover where data in (select common from dble_xa_recover )      | Correlated Sub Queries is not supported   |         |
+      | conn_0 | False   | select * from dble_xa_recover where data > any (select data from dble_xa_recover )     | length{(3)}                               | 5       |
+      | conn_0 | False   | select * from dble_xa_recover where data like '%xa%'                                   | length{(1)}                               | 5       |
+      | conn_0 | False   | select data from dble_xa_recover                                                       | length{(4)}                               | 5       |
     # case supported select max/min from table
-      | conn_0 | False   | select max(data) from dble_xa_recover                                                  | has{(('host_xa_test',),)}                     |
-      | conn_0 | False   | select min(data) from dble_xa_recover                                                  | has{(('Dble_Server.1.db1',),)}                 |
+      | conn_0 | False   | select max(data) from dble_xa_recover                                                  | has{(('host_xa_test',),)}                     | 5       |
+      | conn_0 | False   | select min(data) from dble_xa_recover                                                  | has{(('Dble_Server.1.db1',),)}                | 5       |
     # case supported select field from table
-      | conn_0 | False   | select data from dble_xa_recover where instance = 'hostM1'                             | has{(('Dble_Server.abcd',), ('Dble_Server.1.db1',))} |
+      | conn_0 | False   | select data from dble_xa_recover where instance = 'hostM1'                             | has{(('Dble_Server.abcd',), ('Dble_Server.1.db1',))} | 5       |
     # case unsupported update/delete/insert
-      | conn_0 | False   | delete from dble_xa_recover where instance='hostM1'                                    | Access denied for table 'dble_xa_recover' |
-      | conn_0 | False   | update dble_xa_recover set data='number of requests' where instance='hostM1'           | Access denied for table 'dble_xa_recover' |
-      | conn_0 | True    | insert into dble_xa_recover values ('a','b','c')                                       | Access denied for table 'dble_xa_recover' |
+      | conn_0 | False   | delete from dble_xa_recover where instance='hostM1'                                    | Access denied for table 'dble_xa_recover' |         |
+      | conn_0 | False   | update dble_xa_recover set data='number of requests' where instance='hostM1'           | Access denied for table 'dble_xa_recover' |         |
+      | conn_0 | True    | insert into dble_xa_recover values ('a','b','c')                                       | Access denied for table 'dble_xa_recover' |         |
 
     # sleep reason: http://10.186.18.11/jira/browse/DBLE0REQ-1683
     Given sleep "2" seconds
@@ -92,7 +92,7 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn_2 | False   | xa rollback 'host_xa_test'          |
       | conn_2 | True    | xa rollback 'Dble_Server.1.db1.db2' |
 
-  @restore_xa_recover @auto_retry
+  @restore_xa_recover
   Scenario: check xa transactions in mysql #2
     """
     {'restore_xa_recover':['mysql-master1', 'mysql-master2']}
