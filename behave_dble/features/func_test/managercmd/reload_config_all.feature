@@ -72,6 +72,10 @@ Feature: reload @@config_all base test, not including all cases in testlink
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
+    #confirm the heartbeat connection is found
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                                               | expect        | db                |timeout|
+      | select * from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.6'   | length{(1)}   | dble_information  | 3     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_C"
       | sql            |
       | show @@backend |
@@ -98,6 +102,9 @@ Feature: reload @@config_all base test, not including all cases in testlink
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                                               | expect        | db                |timeout|
+      | select * from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'   | length{(1)}   | dble_information  | 3     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_D"
       | sql            |
       | show @@backend |
@@ -106,6 +113,9 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | 3306        | 172.100.9.6 |
     #2 reload @@config_all -f, kill in use backend conn, do diff
     Then execute admin cmd "reload @@config_all -f"
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                                               | expect        | db                |timeout|
+      | select * from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'   | length{(1)}   | dble_information  | 3     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_E"
       | sql            |
       | show @@backend |
@@ -125,6 +135,9 @@ Feature: reload @@config_all base test, not including all cases in testlink
       |USER_VARIABLES       | 19           |
     #3 reload @@config_all -r, donot do diff, rebuild backend conn, skip in use backend conn
     Then execute admin cmd "reload @@config_all -r"
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                                               | expect        | db                |timeout|
+      | select * from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'   | length{(1)}   | dble_information  | 3     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_F"
       | sql            |
       | show @@backend |
@@ -157,11 +170,18 @@ Feature: reload @@config_all base test, not including all cases in testlink
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all -f -r"
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                                               | expect        | db                |timeout|
+      | select * from backend_connections where used_for_heartbeat='true'                                 | length{(2)}   | dble_information  | 3     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_G"
       | sql            |
       | show @@backend |
     Given stop mysql in host "mysql-master2"
     Then execute admin cmd "reload @@config_all -s"
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                                               | expect        | db                |timeout|
+      | select * from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'   | length{(1)}   | dble_information  | 3     |
+      | select * from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.6'   | length{(0)}   | dble_information  | 3     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_H"
       | sql            |
       | show @@backend |
@@ -188,7 +208,9 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | conn_1 | False    | begin                                 | success    | schema1 |
       | conn_1 | False    | insert into test_shard values(1),(2),(3),(4)  | success    | schema1 |
     Then execute admin cmd "reload @@config_all -r -f -s"
-    Given sleep "1" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                                               | expect        | db                |timeout|
+      | select * from backend_connections where used_for_heartbeat='true'                                 | length{(2)}   | dble_information  | 3     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_I"
       | sql            |
       | show @@backend |

@@ -113,10 +113,11 @@ def init_meta(context, flag):
 
 @Given('sleep "{num}" seconds')
 def sleep_by_time(context, num):
-    int_num = int(num)
+    # int_num = int(num)
+    float_num = float(num)
     startt = time.time()
     # logger.debug("current datetime: {}".format(datetime.now()))
-    while time.time() < startt + int_num:
+    while time.time() < startt + float_num:
         pass
     # logger.debug("after datetime: {}".format(datetime.now()))
 
