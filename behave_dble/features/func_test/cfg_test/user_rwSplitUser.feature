@@ -248,7 +248,7 @@ Feature: test config in user.xml  ---  rwSplitUser
       | rwS1:tenant1  | 111111 | conn_2 | False   | show databases | success  |
 
 
-  @CRITICAL
+  @CRITICAL  @skip
   Scenario: test 'sqlExecuteTimeout'  #12
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """

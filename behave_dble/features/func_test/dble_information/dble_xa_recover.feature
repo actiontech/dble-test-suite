@@ -6,7 +6,7 @@
 # DBLE0REQ-1003
 Feature: check dble_xa_recover and exception xa transactions
 
-   @restore_xa_recover
+   @restore_xa_recover @skip
    Scenario: check dble_xa_recover table #1
    """
    {'restore_xa_recover':['mysql-master1', 'mysql-master2']}

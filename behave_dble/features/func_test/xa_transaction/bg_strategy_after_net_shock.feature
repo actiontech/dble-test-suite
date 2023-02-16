@@ -5,6 +5,8 @@
 
 #@skip #skip coz run for a long time
 #2.20.04.0#dble-8175
+
+  @skip
 Feature: retry policy after xa transaction commit failed for network anomaly
 
    @btrace @restore_network

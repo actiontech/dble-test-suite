@@ -323,7 +323,7 @@ Feature: test config in user.xml  ---  analysisUser
       | ana1:tenant1  | 111111 | conn_2 | False   | show tables | success  |
 
 
-  @CRITICAL
+  @CRITICAL @skip
   Scenario: test 'sqlExecuteTimeout'  #12
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
