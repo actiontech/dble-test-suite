@@ -248,7 +248,7 @@ Feature: test config in user.xml  ---  rwSplitUser
       | rwS1:tenant1  | 111111 | conn_2 | False   | show databases | success  |
 
 
-  @CRITICAL @auto_retry
+  @CRITICAL
   Scenario: test 'sqlExecuteTimeout'  #12
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -271,8 +271,8 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user  | passwd    | conn   | toClose    | sql              | expect                                 |
-      | rwS1  | 111111    | conn_1 | false      | select sleep(3)  | reason is [sql timeout]                |
+      | user  | passwd    | conn   | toClose    | sql              | expect                                 | timeout |
+      | rwS1  | 111111    | conn_1 | false      | select sleep(3)  | reason is [sql timeout]                | 5,3     |
 
 
   @TRIVIAL

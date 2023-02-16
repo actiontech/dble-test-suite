@@ -346,11 +346,11 @@ Feature: test config in user.xml  ---  analysisUser
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user  | passwd    | conn   | toClose    | sql              | expect                                 |
-      | ana1  | 111111    | conn_0 | false      | select sleep(3)  | reason is [sql timeout]                |
+      | user  | passwd    | conn   | toClose    | sql              | expect                                 | timeout |
+      | ana1  | 111111    | conn_0 | false      | select sleep(3)  | reason is [sql timeout]                | 5,3     |
 
 
-  @TRIVIAL @auto_retry
+  @TRIVIAL
   Scenario: analysisUser user supporte management cmd success    #13
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
