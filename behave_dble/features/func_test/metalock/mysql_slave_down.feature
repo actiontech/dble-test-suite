@@ -41,13 +41,13 @@ Feature: test mysql one node down
       | conn   | toClose | sql             | expect                               | db      |
       | conn_1 | False   | commit          | Transaction error, need to rollback  | schema1 |
     Given start mysql in host "mysql-master2"
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                   | expect                                   | db      |
-      | conn_1 | False   | select * from sharding_4_t1           | Transaction error, need to rollback      | schema1 |
-      | conn_1 | False   | rollback                              | success                                  | schema1 |
-      | conn_1 | False   | select * from sharding_4_t1           | has{((1,1,1),(2,2,2),(3,3,3),(4,4,4))}   | schema1 |
-      | conn_1 | False   | delete from sharding_4_t1             | success                                  | schema1 |
+      | conn   | toClose | sql                                   | expect                                   | db      | timeout |
+      | conn_1 | False   | select * from sharding_4_t1           | Transaction error, need to rollback      | schema1 | 15      |
+      | conn_1 | False   | rollback                              | success                                  | schema1 | 15      |
+      | conn_1 | False   | select * from sharding_4_t1           | has{((1,1,1),(2,2,2),(3,3,3),(4,4,4))}   | schema1 | 15      |
+      | conn_1 | False   | delete from sharding_4_t1             | success                                  | schema1 | 15      |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                               | expect   | db      |
@@ -60,13 +60,13 @@ Feature: test mysql one node down
       | conn   | toClose | sql             | expect                               | db      |
       | conn_1 | False   | commit          | Transaction error, need to rollback  | schema1 |
     Given start mysql in host "mysql-master1"
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                           | expect                                   | db      |
-      | conn_1 | False   | select * from sing1           | Transaction error, need to rollback      | schema1 |
-      | conn_1 | False   | rollback                      | success                                  | schema1 |
-      | conn_1 | False   | select * from sing1           | has{((1,1,1),(2,2,2),(3,3,3),(4,4,4))}   | schema1 |
-      | conn_1 | False   | delete from sing1             | success                                  | schema1 |
+      | conn   | toClose | sql                           | expect                                   | db      | timeout |
+      | conn_1 | False   | select * from sing1           | Transaction error, need to rollback      | schema1 | 15      |
+      | conn_1 | False   | rollback                      | success                                  | schema1 | 15      |
+      | conn_1 | False   | select * from sing1           | has{((1,1,1),(2,2,2),(3,3,3),(4,4,4))}   | schema1 | 15      |
+      | conn_1 | False   | delete from sing1             | success                                  | schema1 | 15      |
 
 
     Given delete file "/opt/dble/BtraceAddMetaLock.java" on "dble-1"
@@ -85,9 +85,9 @@ Feature: test mysql one node down
     get into addMetaLock,start sleep
     """
     Given stop mysql in host "mysql-master1"
-    Given sleep "15" seconds
+#    Given sleep "15" seconds
      # ERROR 3009 (HY000) at line 1: java.io.IOException: the dbInstance[172.100.9.5:3306] can't reach. Please check the dbInstance is accessible
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1" retry "20,2" times
       """
       the dbInstance\[172.100.9.5:3306\] can
       t reach. Please check the dbInstance is accessible
@@ -96,15 +96,15 @@ Feature: test mysql one node down
     Given destroy btrace threads list
 
     Given start mysql in host "mysql-master1"
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Then execute sql in "mysql-master1"
       | conn    | toClose | sql                         | expect                                                                                                                           | db  |
       | conn_11 | true    | desc sharding_4_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
       | conn_21 | true    | desc sharding_4_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db2 |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                    | expect       | db      |
-      | conn_1 | False   | alter table sharding_4_t1 drop age     | success      | schema1 |
-      | conn_1 | False   | desc sharding_4_t1                     | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''))}     | schema1 |
+      | conn   | toClose | sql                                    | expect       | db      | timeout |
+      | conn_1 | False   | alter table sharding_4_t1 drop age     | success      | schema1 | 20      |
+      | conn_1 | true    | desc sharding_4_t1                     | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''))}     | schema1 | 20      |
 
 
     #case singtable
@@ -117,9 +117,9 @@ Feature: test mysql one node down
     get into addMetaLock,start sleep
     """
     Given stop mysql in host "mysql-master1"
-    Given sleep "15" seconds
+#    Given sleep "15" seconds
      # ERROR 3009 (HY000) at line 1: java.io.IOException: the dbInstance[172.100.9.5:3306] can't reach. Please check the dbInstance is accessible
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1" retry "20,2" times
       """
       the dbInstance\[172.100.9.5:3306\] can
       t reach. Please check the dbInstance is accessible
@@ -127,14 +127,14 @@ Feature: test mysql one node down
     Given stop btrace script "BtraceAddMetaLock.java" in "dble-1"
     Given destroy btrace threads list
     Given start mysql in host "mysql-master1"
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Then execute sql in "mysql-master1"
       | conn    | toClose | sql                 | expect                                                                                                                           | db  |
       | conn_11 | true    | desc sing1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                            | expect       | db      |
-      | conn_1 | False   | alter table sing1 drop age     | success      | schema1 |
-      | conn_1 | False   | desc sing1                     | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''))}     | schema1 |
+      | conn   | toClose | sql                            | expect       | db      | timeout |
+      | conn_1 | False   | alter table sing1 drop age     | success      | schema1 | 20      |
+      | conn_1 | False   | desc sing1                     | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''))}     | schema1 | 20      |
 
 
     Given delete file "/opt/dble/BtraceAddMetaLock.java" on "dble-1"
@@ -159,21 +159,21 @@ Feature: test mysql one node down
     Given stop mysql in host "mysql-master2"
     Given stop btrace script "BtraceAddMetaLock.java" in "dble-1"
     Given destroy btrace threads list
-    Given sleep "6" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+#    Given sleep "6" seconds
+    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1" retry "10" times
       """
       was closed ,reason is
       """
     Given start mysql in host "mysql-master2"
-    Given sleep "30" seconds
+#    Given sleep "30" seconds
     Then execute sql in "mysql-master1"
       | conn    | toClose | sql                         | expect                                                                                                                           | db  |
       | conn_11 | true    | desc sharding_4_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
       | conn_12 | true    | desc sharding_4_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db2 |
     Then execute sql in "mysql-master2"
-      | conn    | toClose | sql                         | expect                                                                                  | db  |
-      | conn_21 | true    | desc sharding_4_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''))} | db1 |
-      | conn_22 | true    | desc sharding_4_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''))} | db2 |
+      | conn    | toClose | sql                         | expect                                                                                  | db  | timeout |
+      | conn_21 | true    | desc sharding_4_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''))} | db1 | 30      |
+      | conn_22 | true    | desc sharding_4_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''))} | db2 | 30      |
     Given delete file "/opt/dble/BtraceAddMetaLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAddMetaLock.java.log" on "dble-1"
 
@@ -195,21 +195,21 @@ Feature: test mysql one node down
     Given stop mysql in host "mysql-master1"
     Given stop btrace script "BtraceAddMetaLock.java" in "dble-1"
     Given destroy btrace threads list
-    Given sleep "6" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+#    Given sleep "6" seconds
+    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1" retry "10" times
       """
       the dbInstance\[172.100.9.5:3306\] can't reach. Please check the dbInstance is accessible
       """
     Given start mysql in host "mysql-master1"
-    Given sleep "30" seconds
+#    Given sleep "30" seconds
     Then execute sql in "mysql-master1"
-      | conn    | toClose | sql                 | expect                                                                                  | db  |
-      | conn_11 | False   | desc sing1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''))} | db1 |
+      | conn    | toClose | sql                 | expect                                                                                  | db  | timeout |
+      | conn_11 | False   | desc sing1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''))} | db1 | 30      |
 
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                    | expect       | db      |
-      | conn_1 | False   | drop table if exists sharding_4_t1     | success      | schema1 |
-      | conn_1 | true    | drop table if exists sing1             | success      | schema1 |
+      | conn   | toClose | sql                                    | expect       | db      | timeout |
+      | conn_1 | False   | drop table if exists sharding_4_t1     | success      | schema1 | 20      |
+      | conn_1 | true    | drop table if exists sing1             | success      | schema1 | 20      |
     Given delete file "/opt/dble/BtraceAddMetaLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAddMetaLock.java.log" on "dble-1"
 
