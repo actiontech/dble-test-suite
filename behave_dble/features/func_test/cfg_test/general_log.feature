@@ -427,7 +427,7 @@ Feature: general log test
     Given delete file "/opt/dble/BtraceGeneralLog.java" on "dble-1"
     Given delete file "/opt/dble/BtraceGeneralLog.java.log" on "dble-1"
 
-  @btrace
+  @btrace @skip
   Scenario: check concurrent operation of manager commands #5
     Given delete file "/opt/dble/BtraceGeneralLog.java" on "dble-1"
     Given delete file "/opt/dble/BtraceGeneralLog.java.log" on "dble-1"

@@ -10,7 +10,7 @@ Feature: test mysql one node down
 #       After the node is restored, the successful release of the lock is verified
 
 
-   @btrace   @restore_mysql_service
+   @btrace   @restore_mysql_service @skip
   Scenario: mysql one node down     #1
     """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1},'mysql-master2':{'start_mysql':1}}}

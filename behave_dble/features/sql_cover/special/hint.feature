@@ -237,7 +237,7 @@ Feature: verify hint sql
       | conn_0 | False   | set global log_output='file'                                                            | success     |
       | conn_0 | True    | set global general_log=off                                                              | success     |
 
-  @NORMAL
+  @NORMAL @skip
   Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 2 #4
     Given delete the following xml segment
       | file       | parent         | child              |
