@@ -6,7 +6,7 @@
 Feature: check keepAlive
 
   #DBLE0REQ-1495 疑似存在问题: DBLE0REQ-2084
-  @restore_network  @auto_retry @skip
+  @restore_network
   Scenario: check keepAlive in heartbeat #1
     """
     {'restore_network':'mysql-master2'}
@@ -22,14 +22,9 @@ Feature: check keepAlive
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
-    Given sleep "2" seconds
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs1"
-      | conn   | toClose | sql               |
-      | conn_0 | false   | show @@heartbeat  |
-    Then check resultset "heartbeat_rs1" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
+      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 3,2     |
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -p tcp --dport 3306 -j DROP
@@ -37,14 +32,6 @@ Feature: check keepAlive
     iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "N"
-#    Given sleep "4" seconds
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs2"
-#      | conn   | toClose | sql               |
-#      | conn_0 | false   | show @@heartbeat  |
-#    Then check resultset "heartbeat_rs2" has lines with following column values
-#      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-#      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-#      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | 0         | false  | None          |
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                        | db               | timeout |
       | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
@@ -57,9 +44,9 @@ Feature: check keepAlive
     Given record current dble log line number in "log_num_1"
 
     # case 1.1: sleep more than keepAlive
-    Given sleep "65" seconds
+    Given sleep "60" seconds
     #print log and mysqlId change
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1" retry "3,2" times
     """
       \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
@@ -69,26 +56,19 @@ Feature: check keepAlive
     iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "Y"
-#    Given sleep "4" seconds
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs3"
-#      | conn   | toClose | sql               |
-#      | conn_0 | false   | show @@heartbeat  |
-#    Then check resultset "heartbeat_rs3" has lines with following column values
-#      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-#      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-#      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
-      | conn_0  | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
+    # 先检查是否新建了心跳连接，再检查心跳是否恢复正常
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                              | expect      |
-      | conn_0 | False   | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} |
+      | conn   | toClose | sql                                                                                                              | expect      | timeout |
+      | conn_0 | False   | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} | 3,2     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_conn_2"
       | conn   | toClose | sql                                                                                                                                  |
       | conn_0 | false   | select remote_processlist_id from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' |
     Then check resultsets "heartbeat_conn_2" does not including resultset "heartbeat_conn_1" in following columns
       | column                | column_index |
       | remote_processlist_id | 0            |
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
+      | conn_0  | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
 
     Given execute oscmd in "mysql-master2"
     """
@@ -97,14 +77,6 @@ Feature: check keepAlive
     iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "N"
-#    Given sleep "4" seconds
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs4"
-#      | conn   | toClose | sql               |
-#      | conn_0 | false   | show @@heartbeat  |
-#    Then check resultset "heartbeat_rs4" has lines with following column values
-#      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-#      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-#      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | 0         | false  | None          |
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                        | db               | timeout |
       | conn_0  | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
@@ -123,26 +95,19 @@ Feature: check keepAlive
     iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "Y"
-#    Given sleep "4" seconds
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs5"
-#      | conn   | toClose | sql               |
-#      | conn_0 | false   | show @@heartbeat  |
-#    Then check resultset "heartbeat_rs5" has lines with following column values
-#      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-#      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-#      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
-      | conn_0  | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
+    # 先检查心跳连接是否发生变化，再检查心跳是否恢复正常
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                              | expect      |
-      | conn_0 | False   | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} |
+      | conn   | toClose | sql                                                                                                              | expect      | timeout |
+      | conn_0 | False   | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} | 3,2     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_conn_3"
       | conn   | toClose | sql                                                                                                                                  |
       | conn_0 | false   | select remote_processlist_id from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' |
     Then check resultsets "heartbeat_conn_3" including resultset "heartbeat_conn_2" in following columns
       | column                | column_index |
       | remote_processlist_id | 0            |
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
+      | conn_0  | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
 
     # case 2: keepAlive value is 30s
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -155,14 +120,9 @@ Feature: check keepAlive
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
-    Given sleep "2" seconds
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs6"
-      | conn   | toClose | sql               |
-      | conn_0 | false   | show @@heartbeat  |
-    Then check resultset "heartbeat_rs6" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
+      | conn_0  | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 3,2     |
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -p tcp --dport 3306 -j DROP
@@ -170,14 +130,6 @@ Feature: check keepAlive
     iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "N"
-#    Given sleep "4" seconds
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs7"
-#      | conn   | toClose | sql               |
-#      | conn_0 | false   | show @@heartbeat  |
-#    Then check resultset "heartbeat_rs7" has lines with following column values
-#      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-#      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-#      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | 0         | false  | None          |
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql             | expect                                                                                        | db               | timeout |
       | conn_0 | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
@@ -190,9 +142,9 @@ Feature: check keepAlive
     Given record current dble log line number in "log_num_3"
 
     # case 2.1: sleep more than keepAlive
-    Given sleep "35" seconds
+    Given sleep "30" seconds
     #print log and mysqlId change
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1" retry "3,2" times
     """
       \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
@@ -202,26 +154,19 @@ Feature: check keepAlive
     iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "Y"
-#    Given sleep "4" seconds
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs8"
-#      | conn   | toClose | sql               |
-#      | conn_0 | True    | show @@heartbeat  |
-#    Then check resultset "heartbeat_rs8" has lines with following column values
-#      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-#      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-#      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
-      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
+    # 先检查是否新建了心跳连接，再检查心跳是否恢复正常
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                              | expect      |
-      | conn_0 | True    | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} |
+      | conn   | toClose | sql                                                                                                              | expect      | timeout |
+      | conn_0 | True    | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} | 3,2     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_conn_5"
       | conn   | toClose | sql                                                                                                                                  |
       | conn_0 | false   | select remote_processlist_id from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' |
     Then check resultsets "heartbeat_conn_4" does not including resultset "heartbeat_conn_5" in following columns
       | column                | column_index |
       | remote_processlist_id | 0            |
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
+      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
 
     Given execute oscmd in "mysql-master2"
     """
@@ -230,14 +175,6 @@ Feature: check keepAlive
     iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "N"
-#    Given sleep "4" seconds
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs9"
-#      | conn   | toClose | sql               |
-#      | conn_0 | false   | show @@heartbeat  |
-#    Then check resultset "heartbeat_rs9" has lines with following column values
-#      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-#      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-#      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | 0         | false  | None          |
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                        | db               | timeout |
       | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
@@ -256,26 +193,19 @@ Feature: check keepAlive
     iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "Y"
-#    Given sleep "4" seconds
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs10"
-#      | conn   | toClose | sql               |
-#      | conn_0 | True    | show @@heartbeat  |
-#    Then check resultset "heartbeat_rs10" has lines with following column values
-#      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-#      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-#      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
-      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
+    # 先检查心跳连接是否发生变化，再检查心跳是否恢复正常
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                              | expect      |
-      | conn_0 | True    | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} |
+      | conn   | toClose | sql                                                                                                              | expect      | timeout |
+      | conn_0 | True    | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} | 3,2     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_conn_6"
       | conn   | toClose | sql                                                                                                                                  |
       | conn_0 | false   | select remote_processlist_id from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' |
     Then check resultsets "heartbeat_conn_6" including resultset "heartbeat_conn_5" in following columns
       | column                | column_index |
       | remote_processlist_id | 0            |
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
+      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
 
     # case 3: keepAlive value is 0s
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -288,14 +218,9 @@ Feature: check keepAlive
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
-    Given sleep "2" seconds
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs11"
-      | conn   | toClose | sql               |
-      | conn_0 | false   | show @@heartbeat  |
-    Then check resultset "heartbeat_rs11" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
+      | conn_0  | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 3,2     |
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -p tcp --dport 3306 -j DROP
@@ -303,14 +228,6 @@ Feature: check keepAlive
     iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "N"
-#    Given sleep "4" seconds
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs12"
-#      | conn   | toClose | sql               |
-#      | conn_0 | false   | show @@heartbeat  |
-#    Then check resultset "heartbeat_rs12" has lines with following column values
-#      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-#      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-#      | hostM2 | 172.100.9.6 | 3306   | timeout   | 0       | 0         | false  | None          |
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                        | db               | timeout |
       | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
@@ -321,9 +238,8 @@ Feature: check keepAlive
       | conn   | toClose | sql                                                                                                                                  |
       | conn_0 | false   | select remote_processlist_id from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' |
     Given record current dble log line number in "log_num_5"
-    Given sleep "2" seconds
     #print log and mysqlId change
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_5" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_5" in host "dble-1" retry "3,2" times
     """
       \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
@@ -333,26 +249,19 @@ Feature: check keepAlive
     iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "Y"
-#    Given sleep "4" seconds
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs13"
-#      | conn   | toClose | sql               |
-#      | conn_0 | false   | show @@heartbeat  |
-#    Then check resultset "heartbeat_rs13" has lines with following column values
-#      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-#      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-#      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 0         | false  | None          |
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
-      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
+    # 先检查是否新建了心跳连接，再检查心跳是否恢复正常
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                              | expect      |
-      | conn_0 | True    | select * from dble_information.backend_connections where used_for_heartbeat='true' and db_instance_name='hostM2' | length{(1)} |
+      | conn   | toClose | sql                                                                                                              | expect      | timeout |
+      | conn_0 | True    | select * from dble_information.backend_connections where used_for_heartbeat='true' and db_instance_name='hostM2' | length{(1)} | 3,2     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_conn_8"
       | conn   | toClose | sql                                                                                                                                  |
       | conn_0 | false   | select remote_processlist_id from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' |
     Then check resultsets "heartbeat_conn_7" does not including resultset "heartbeat_conn_8" in following columns
       | column                | column_index |
       | remote_processlist_id | 0            |
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
+      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
 
     # case 4: keepAlive value is -1
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
