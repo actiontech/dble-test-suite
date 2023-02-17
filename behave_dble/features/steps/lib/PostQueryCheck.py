@@ -29,12 +29,6 @@ class PostQueryCheck(object):
         while True:
             if self._expect == "success":
                 logger.debug("sql: {0}, expect no err, but outcomes: {1}".format(self._sql, self._real_err))
-                ssh = get_ssh("dble-1")
-                getDblePidCmd = "jps | grep WrapperSimpleApp | awk '{print $1}'"
-                cmd = "jmap -dump:file=/opt/dble/logs/oom.dump {0}".format(getDblePidCmd)
-                rc, sto, ste = ssh.exec_command(cmd)
-                logger.debug("the dump {}".format(rc))
-                time.sleep(5)
                 assert self._real_err is None, "sql: {0}, expect no err, but outcomes '{1}'".format(self._sql, self._real_err)
                 break
             dest_host = re.search(r'dest_node:(.*)', self._expect, re.I)
