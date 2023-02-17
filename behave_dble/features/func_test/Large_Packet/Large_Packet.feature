@@ -1060,7 +1060,7 @@ Feature:Support MySQL's large package protocol
       | conn_0 | true   | drop table if exists noshar                | success | schema1 |
 
 
-   Scenario: test "select" sql -- about response has large packet coz:DBLE0REQ-2092   #6
+   Scenario: test "select" sql -- about response has large packet coz:DBLE0REQ-2096   #6
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
     """
@@ -1071,6 +1071,9 @@ Feature:Support MySQL's large package protocol
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
       s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=4G/g
+      $a -DsqlExecuteTimeout=1800000
+      $a -DidleTimeout=1800000
+      $a -DbufferPoolChunkSize=8192
       """
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
       """
@@ -1080,91 +1083,48 @@ Feature:Support MySQL's large package protocol
 
 #    prepare large packet values
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                                                                                                                                                                                                | expect  | db      |
-      | conn_0 | false   | drop table if exists noshar                                                                                                                                                                                                                                        | success | schema1 |
-      | conn_0 | false   | drop table if exists test                                                                                                                                                                                                                                          | success | schema1 |
-      | conn_0 | false   | drop table if exists sharding_4_t1                                                                                                                                                                                                                                 | success | schema1 |
-      | conn_0 | false   | create table noshar (id int,c longblob)                                                                                                                                                                                                                            | success | schema1 |
-      | conn_0 | false   | create table test (id int,c longblob)                                                                                                                                                                                                                              | success | schema1 |
-      | conn_0 | false   | create table sharding_4_t1 (id int,c longblob)                                                                                                                                                                                                                     | success | schema1 |
-      | conn_0 | false   | truncate table noshar;truncate table test;truncate table sharding_4_t1;                                                                                                                                                                                            | success | schema1 |
-      | conn_0 | false   | insert into noshar values (13,repeat("x",16*1024*1024-5)),(14,repeat("x",16*1024*1024-3)),(15,repeat("x",16*1024*1024-1)),(16,repeat("x",16*1024*1024)),(17,repeat("x",16*1024*1024+2)),(18,repeat("x",16*1024*1024+4)),(19,repeat("x",16*1024*1024+6))            | success | schema1 |
-      | conn_0 | false   | insert into noshar values (29,repeat("x",16*1024*1024-15)),(30,repeat("x",16*1024*1024-13)),(31,repeat("x",16*1024*1024-11)),(32,repeat("x",16*1024*1024)),(33,repeat("x",16*1024*1024+12)),(34,repeat("x",16*1024*1024+14)),(35,repeat("x",16*1024*1024+16))      | success | schema1 |
-      | conn_0 | false   | insert into noshar values (20,repeat("x",20*1024*1024-5)),(40,repeat("x",40*1024*1024-11)),(333,repeat("x",16*1024*1024-6)) ,(334,repeat("x",repeat("x",16*1024*1024-5+1))),(440,repeat("x",repeat("x",40*1024*1024)))                                             | success | schema1 |
+      | conn   | toClose | sql                                                                                                                    | expect  | db      |
+      | conn_0 | false   | drop table if exists test;create table test (id int,c longblob);truncate table test                                    | success | schema1 |
+      | conn_0 | false   | drop table if exists sharding_4_t1;create table sharding_4_t1 (id int,c longblob);truncate table sharding_4_t1         | success | schema1 |
+      | conn_0 | false   | insert into test values (0,repeat("x",16*1024*1024)),(1,repeat("x",16*1024*1024-1)),(2,repeat("x",16*1024*1024-2)),(3,repeat("x",16*1024*1024-3)),(4,repeat("x",16*1024*1024-4)),(5,repeat("x",16*1024*1024-5))               | success | schema1 |
 
-      | conn_0 | false   | insert into test values (13,repeat("x",16*1024*1024-6)),(14,repeat("x",16*1024*1024-4)),(15,repeat("x",16*1024*1024-2)),(16,repeat("x",16*1024*1024)),(17,repeat("x",16*1024*1024+1)),(18,repeat("x",16*1024*1024+3)),(19,repeat("x",16*1024*1024+5))              | success | schema1 |
-      | conn_0 | false   | insert into test values (29,repeat("x",16*1024*1024-16)),(30,repeat("x",16*1024*1024-14)),(31,repeat("x",16*1024*1024-12)),(32,repeat("x",16*1024*1024)),(33,repeat("x",16*1024*1024+11)),(34,repeat("x",16*1024*1024+13)),(35,repeat("x",16*1024*1024+15))        | success | schema1 |
-      | conn_0 | false   | insert into test values (20,repeat("x",20*1024*1024-5)),(40,repeat("x",40*1024*1024-11)),(333,repeat("x",16*1024*1024-6)) ,(334,repeat("x",repeat("x",16*1024*1024-5+1))),(440,repeat("x",repeat("x",40*1024*1024)))                                               | success | schema1 |
-
-      | conn_0 | false   | insert into sharding_4_t1 values (13,repeat("x",16*1024*1024-6)),(14,repeat("x",16*1024*1024-4)),(15,repeat("x",16*1024*1024-2)),(16,repeat("x",16*1024*1024)),(17,repeat("x",16*1024*1024+1)),(18,repeat("x",16*1024*1024+3)),(19,repeat("x",16*1024*1024+5))       | success | schema1 |
-      | conn_0 | false   | insert into sharding_4_t1 values (113,repeat("x",16*1024*1024-5)),(114,repeat("x",16*1024*1024-3)),(115,repeat("x",16*1024*1024-1)),(117,repeat("x",16*1024*1024+2)),(118,repeat("x",16*1024*1024+4)),(119,repeat("x",16*1024*1024+6))                               | success | schema1 |
-      | conn_0 | false   | insert into sharding_4_t1 values (29,repeat("x",16*1024*1024-16)),(30,repeat("x",16*1024*1024-14)),(31,repeat("x",16*1024*1024-12)),(32,repeat("x",16*1024*1024)),(33,repeat("x",16*1024*1024+11)),(34,repeat("x",16*1024*1024+13)),(35,repeat("x",16*1024*1024+15)) | success | schema1 |
-      | conn_0 | false   | insert into sharding_4_t1 values (229,repeat("x",16*1024*1024-15)),(320,repeat("x",16*1024*1024-13)),(321,repeat("x",16*1024*1024-11)),(323,repeat("x",16*1024*1024+12)),(324,repeat("x",16*1024*1024+14)),(325,repeat("x",16*1024*1024+16))                         | success | schema1 |
-      | conn_0 | true    | insert into sharding_4_t1 values (20,repeat("x",20*1024*1024-5)),(40,repeat("x",40*1024*1024-11)),(333,repeat("x",16*1024*1024-6)) ,(334,repeat("x",repeat("x",16*1024*1024-5+1))),(440,repeat("x",repeat("x",40*1024*1024)))                                        | success | schema1 |
+       ## response  16*1024*1024-5的前后是边界
+      | conn_0 | false   | insert into sharding_4_t1 values (0,repeat("x",16*1024*1024)),(1,repeat("x",16*1024*1024-1)),(2,repeat("x",16*1024*1024-2)),(3,repeat("x",16*1024*1024-3)),(4,repeat("x",16*1024*1024-4)),(5,repeat("x",16*1024*1024-5))               | success | schema1 |
+      | conn_0 | false   | insert into sharding_4_t1 values (6,repeat("x",16*1024*1024-6)),(7,repeat("x",16*1024*1024-7)),(8,repeat("x",16*1024*1024-8)),(9,repeat("x",16*1024*1024-9)),(10,repeat("x",16*1024*1024-10))                                          | success | schema1 |
+       ## response  32*1024*1024-11的前后是边界
+      | conn_0 | false   | insert into sharding_4_t1 values (11,repeat("y",32*1024*1024)),(12,repeat("y",32*1024*1024-3)),(13,repeat("y",32*1024*1024-5)),(14,repeat("y",32*1024*1024-7)),(15,repeat("y",32*1024*1024-9)),(16,repeat("y",32*1024*1024-11))        | success | schema1 |
+      | conn_0 | false   | insert into sharding_4_t1 values (17,repeat("y",32*1024*1024-13)),(18,repeat("y",32*1024*1024-15)),(19,repeat("y",32*1024*1024-17)),(20,repeat("y",32*1024*1024-19)),(21,repeat("y",32*1024*1024-21))                                  | success | schema1 |
+      ## response 其余的大包值
+      | conn_0 | true    | insert into sharding_4_t1 values (22,repeat("z",14*1024*1024)),(23,repeat("z",24*1024*1024-7)),(24,repeat("z",40*1024*1024)),(25,repeat("z",repeat("x",16*1024*1024-5)))                                                               | success | schema1 |
 
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                | expect      | db      |
-      | conn_0 | false   | select c from noshar where id = 13                                                 | length{(1)} | schema1 |
-      | conn_0 | false   | select c from noshar where id = 14                                                 | length{(1)} | schema1 |
-      | conn_0 | false   | select c from noshar where id = 15                                                 | length{(1)} | schema1 |
-      | conn_0 | false   | select c from noshar where id = 16                                                 | length{(1)} | schema1 |
-      | conn_0 | false   | select c from noshar where id = 17                                                 | length{(1)} | schema1 |
-      | conn_0 | false   | select c from noshar where id = 18                                                 | length{(1)} | schema1 |
-      | conn_0 | false   | select c from noshar where id = 19;select id,c,length(c) from noshar where id = 29 | success     | schema1 |
-      | conn_0 | false   | select id,c from noshar where id = 30                                              | length{(1)} | schema1 |
-      | conn_0 | false   | select id,c from noshar where id = 31                                              | length{(1)} | schema1 |
-      | conn_0 | false   | select id,c from noshar where id = 32                                              | length{(1)} | schema1 |
-      | conn_0 | false   | select id,c from noshar where id = 33                                              | length{(1)} | schema1 |
-      | conn_0 | false   | select id,c from noshar where id = 34                                              | length{(1)} | schema1 |
-      | conn_0 | false   | select id,c from noshar where id = 35;select id,c from noshar where id = 20        | success     | schema1 |
-      | conn_0 | false   | select id,c from noshar where id = 333                                             | length{(1)} | schema1 |
-      | conn_0 | false   | select id,c from noshar where id = 334                                             | length{(1)} | schema1 |
-      | conn_0 | false   | select id,c from noshar where id = 440                                             | length{(1)} | schema1 |
-      | conn_0 | true    | select id,c from noshar                                                            | length{(19)}| schema1 |
+      | conn   | toClose | sql                                                                                                                                                                     | expect       | db      |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 0                                                                                                                                | length{(1)}  | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 1                                                                                                                                | length{(1)}  | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 2                                                                                                                                | length{(1)}  | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 3                                                                                                                                | length{(1)}  | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 4                                                                                                                                | length{(1)}  | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 5                                                                                                                                | length{(1)}  | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 6                                                                                                                                | length{(1)}  | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 7                                                                                                                                | length{(1)}  | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 8                                                                                                                                | length{(1)}  | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 9                                                                                                                                | length{(1)}  | schema1 |
+      | conn_0 | true    | select c from sharding_4_t1 where id = 10                                                                                                                               | length{(1)}  | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 11;select c from sharding_4_t1 where id = 12;select c from sharding_4_t1 where id = 13;select c from sharding_4_t1 where id = 14 | success      | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 15;select c from sharding_4_t1 where id = 16;select c from sharding_4_t1 where id = 17;select c from sharding_4_t1 where id = 18 | success      | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 19;select c from sharding_4_t1 where id = 20;select c from sharding_4_t1 where id = 21;select c from sharding_4_t1 where id = 22 | success      | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 23                                                                                                                               | length{(1)}  | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 24                                                                                                                               | length{(1)}  | schema1 |
+      | conn_0 | false   | select c from sharding_4_t1 where id = 25                                                                                                                               | length{(1)}  | schema1 |
+      | conn_0 | true    | select id,c from sharding_4_t1                                                                                                                                          | length{(26)} | schema1 |
 
-      | conn_0 | false   | select c from test where id = 13                                                 | length{(1)} | schema1 |
-      | conn_0 | false   | select c from test where id = 14                                                 | length{(1)} | schema1 |
-      | conn_0 | false   | select c from test where id = 15                                                 | length{(1)} | schema1 |
-      | conn_0 | false   | select c from test where id = 16                                                 | length{(1)} | schema1 |
-      | conn_0 | false   | select c from test where id = 17                                                 | length{(1)} | schema1 |
-      | conn_0 | false   | select c from test where id = 18                                                 | length{(1)} | schema1 |
-      | conn_0 | false   | select c from test where id = 19;select id,c,length(c) from test where id = 29   | success     | schema1 |
-      | conn_0 | false   | select id,c from test where id = 30                                              | length{(1)} | schema1 |
-      | conn_0 | false   | select id,c from test where id = 31                                              | length{(1)} | schema1 |
-      | conn_0 | false   | select id,c from test where id = 32                                              | length{(1)} | schema1 |
-      | conn_0 | false   | select id,c from test where id = 33                                              | length{(1)} | schema1 |
-      | conn_0 | false   | select id,c from test where id = 34                                              | length{(1)} | schema1 |
-      | conn_0 | false   | select id,c from test where id = 35;select id,c from test where id = 20          | success     | schema1 |
-      | conn_0 | false   | select id,c from test where id = 333                                             | length{(1)} | schema1 |
-      | conn_0 | false   | select id,c from test where id = 334                                             | length{(1)} | schema1 |
-      | conn_0 | true    | select id,c from test where id = 440                                             | length{(1)} | schema1 |
+      | conn_0 | false   | select * from sharding_4_t1 where id in (select a.id from test a right join sharding_4_t1 b on a.id = b.id and a.id > 22)                                               | success     | schema1 |
+      | conn_0 | false   | select 2                                                                                                                                                                | success      | schema1 |
+      | conn_0 | false   | select * from sharding_4_t1 a join test b using(id,c) where a.id=16 or b.id=32;select 1                                                                                 | success      | schema1 |
+      | conn_0 | false   | /*!dble:shardingNode=dn1*/select * from sharding_4_t1 a join test b using(id,c) where a.id=16 or b.id=32                                                                | success      | schema1 |
+      | conn_0 | false   | /*!dble:shardingNode=dn1*/select c,id from sharding_4_t1;select id from sharding_4_t1;select * from test                                                                | success      | schema1 |
 
-      | conn_0 | false   | select c from sharding_4_t1 where id = 13;select c from sharding_4_t1 where id = 113                        | success      | schema1 |
-      | conn_0 | false   | select c from sharding_4_t1 where id = 14;select c from sharding_4_t1 where id = 114                        | success      | schema1 |
-      | conn_0 | false   | select c from sharding_4_t1 where id = 15;select c from sharding_4_t1 where id = 115                        | success      | schema1 |
-      | conn_0 | false   | select c from sharding_4_t1 where id = 16;select 1;select user();select c from sharding_4_t1 where id = 119 | success      | schema1 |
-      | conn_0 | false   | select c from sharding_4_t1 where id = 17;select c from sharding_4_t1 where id = 117                        | success      | schema1 |
-      | conn_0 | false   | select c from sharding_4_t1 where id = 18;select c from sharding_4_t1 where id = 118                        | success      | schema1 |
-      | conn_0 | false   | select c from sharding_4_t1 where id = 19;select id,c,length(c) from sharding_4_t1 where id = 29            | success      | schema1 |
-      | conn_0 | false   | select id,c from sharding_4_t1 where id = 30;select id,c from sharding_4_t1 where id = 320                  | success      | schema1 |
-      | conn_0 | false   | select id,c from sharding_4_t1 where id = 31;select id,c from sharding_4_t1 where id = 321                  | success      | schema1 |
-      | conn_0 | false   | select id,c from sharding_4_t1 where id = 32;select id,c from sharding_4_t1 where id = 322                  | success      | schema1 |
-      | conn_0 | false   | select id,c from sharding_4_t1 where id = 33;select id,c from sharding_4_t1 where id = 323                  | success      | schema1 |
-      | conn_0 | false   | select id,c from sharding_4_t1 where id = 34;select id,c from sharding_4_t1 where id = 324                  | success      | schema1 |
-      | conn_0 | false   | select id,c from sharding_4_t1 where id = 35;select id,c from sharding_4_t1 where id = 20                   | success      | schema1 |
-      | conn_0 | false   | select id,c from sharding_4_t1 where id = 333                                                               | success      | schema1 |
-      | conn_0 | false   | select id,c from sharding_4_t1 where id = 334                                                               | success      | schema1 |
-      | conn_0 | false   | select id,c from sharding_4_t1 where id > 50                                                                | success      | schema1 |
-      | conn_0 | true    | select id,c from sharding_4_t1 where id < 100                                                               | success      | schema1 |
-
-      | conn_0 | false   | select * from sharding_4_t1 where id in (select a.id from test a right join noshar b on a.id = b.id and a.id > 88)         | length{(3)}  | schema1 |
-      | conn_0 | false   | select 2                                                                                                                   | success      | schema1 |
-      | conn_0 | false   | select * from sharding_4_t1 a join test b using(id,c)  where a.id=16 or b.id=32;select 1                                   | success      | schema1 |
-      | conn_0 | false   | /*!dble:shardingNode=dn1*/select * from sharding_4_t1 a join test b using(id,c) where a.id=16 or b.id=32                   | success      | schema1 |
-      | conn_0 | false   | /*!dble:shardingNode=dn1*/select c,id from sharding_4_t1;select id from sharding_4_t1                                      | success      | schema1 |
-
-      | conn_0 | true    | drop table if exists noshar;drop table if exists test;drop table if exists sharding_4_t1                            | success | schema1 |
-
+      | conn_0 | true    | drop table if exists test;drop table if exists sharding_4_t1                                                                                | success      | schema1 |
 
    @restore_mysql_config
    Scenario: test hint  and  mulit sql    #7
