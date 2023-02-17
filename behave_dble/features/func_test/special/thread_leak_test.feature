@@ -83,20 +83,20 @@ Feature: check thread leak
     /groupByBucket/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(3000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceGroupByThread.java" in "dble-1"
-    Given sleep "5" seconds
     Given prepare a thread execute sql "select sum(t1.id) from sharding_2_t1 t1 left join sharding_2_t1 t2 on t1.id = t2.id group by t1.start_time" with "conn_0"
     Then check btrace "BtraceGroupByThread.java" output in "dble-1"
     """
     get into groupByBucket.start
     """
     Then get index:"0" column value of "select session_conn_id from dble_information.session_connections where sql_stage<>'Manager connection' limit 1" named as "front_id_1"
+    Given record current dble log line number in "log_num"
     Then execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  | db      |
       | conn_1 | False   | kill query {0} | success | schema1 |
-    Given sleep "5" seconds
-    Then check sql thread output in "err"
+    #由于close并发问题，返回给客户端的报错信息可能不同: "Query was interrupted" or "was closed ,reason is [stream closed by peer]"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num" in host "dble-1" retry "6,1" times
     """
-    Query was interrupted
+      Query was interrupted
     """
     Given destroy sql threads list
     Given stop btrace script "BtraceGroupByThread.java" in "dble-1"
