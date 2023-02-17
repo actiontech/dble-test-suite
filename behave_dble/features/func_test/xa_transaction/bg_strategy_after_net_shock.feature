@@ -27,7 +27,6 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
-    Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_0"
     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
     """
@@ -48,6 +47,10 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
+    #等待一些时间(心跳周期10s)， 确保心跳恢复正常后再进行后面的检测
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                                                               | expect        | db                |timeout  |
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 4,5     |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect      | db      |
       | conn_1 | False   | select * from sharding_4_t1 | length{(4)} | schema1 |
