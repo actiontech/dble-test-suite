@@ -66,6 +66,7 @@ run_cfg_case: up
     features/func_test/cfg_test/user.feature:298 \
     features/func_test/cfg_test/sharding_db_attribute.feature:240 \
     features/func_test/cfg_test/user_analysisUser.feature:327 \
+    features/func_test/cfg_test/general_log.feature:431 \
     features/func_test/connection/connection_pool_heartbeat_test.feature:83 \
     features/func_test/connection/connection_pool_basic_test.feature \
     features/func_test/connection/rwSplit_connection_test.feature \
@@ -74,6 +75,7 @@ run_cfg_case: up
 	features/func_test/dble_information/sql_statistic_queue_monitor.feature \
 	features/func_test/dble_information/backend_variables.feature:8 \
 	features/func_test/dble_information/dble_xa_recover.feature:10 \
+	features/func_test/dble_information/dble_thread_pool.feature \
     features/func_test/managercmd/python_mysql_ha.feature \
     features/func_test/managercmd/pause_resume.feature:31 \
     features/func_test/managercmd/reload_config_all.feature:62 \
@@ -84,6 +86,7 @@ run_cfg_case: up
     features/func_test/ddl/ddl_refactor.feature:72 \
     features/func_test/special/complex_query_npe.feature:9 \
     features/func_test/special/thread_leak_test.feature  \
+    features/sql_cover/special/hint.feature:241 \
     features/func_test/heartbeat/db_heartbeat_keepAlive.feature:10 \
     features/func_test/heartbeat/kill_heartbeat_connection.feature \
     features/func_test/heartbeat/reconnect_heartbeat_readonly_check.feature:349 \
@@ -94,7 +97,8 @@ run_cfg_case: up
 	features/func_test/xa_transaction/xa_retry_count.feature \
 	features/func_test/xa_transaction/bg_strategy_after_net_shock.feature \
 	features/func_test/xa_transaction/bg_strategy_after_node_hangs.feature \
-	features/func_test/xa_transaction/net_down_before_rollback.feature
+	features/func_test/xa_transaction/net_down_before_rollback.feature \
+	features/func_test/metalock/mysql_slave_down.feature:14 \
 
 
 
