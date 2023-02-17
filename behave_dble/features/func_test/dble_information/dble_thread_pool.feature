@@ -35,27 +35,27 @@ Feature:  dble_thread_pool test
       | conn   | toClose | sql                            | db                |
       | conn_0 | False   | select * from dble_thread_pool | dble_information  |
     Then check resultset "dble_thread_pool_2" has lines with following column values
-      | name-0               | pool_size-1 | core_pool_size-2 | active_count-3 | waiting_task_count-4 |
-      | Timer                | 1           | 1                | 0              | 0                    |
-      | frontWorker          | 1           | 1                | 1              | 0                    |
-      | backendWorker        | 8           | 8                | 0              | 0                    |
-      | complexQueryWorker   | 8           | 8                | 1              | 0                    |
-      | writeToBackendWorker | 8           | 8                | 8              | 0                    |
-      | NIOFrontRW           | 1           | 1                | 1              | 0                    |
-      | NIOBackendRW         | 8           | 8                | 8              | 0                    |
+      | name-0               | core_pool_size-2 | active_count-3 | waiting_task_count-4 |
+      | Timer                | 1                | 0              | 0                    |
+      | frontWorker          | 1                | 1              | 0                    |
+      | backendWorker        | 8                | 0              | 0                    |
+      | complexQueryWorker   | 8                | 1              | 0                    |
+      | writeToBackendWorker | 8                | 8              | 0                    |
+      | NIOFrontRW           | 1                | 1              | 0                    |
+      | NIOBackendRW         | 8                | 8              | 0                    |
    #case supported select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                         | expect                                                                               |
       | conn_0 | False   | use dble_information                                        | success                                                                              |
-      | conn_0 | False   | select * from dble_thread_pool limit 1                      | has{(('Timer', 1, 1, 0, 0),)}                                                        |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool limit 1                      | has{(('Timer', 1),)}                                                |
       | conn_0 | False   | select * from dble_thread_pool order by name desc limit 2   | length{(2)}                                                                          |
-      | conn_0 | False   | select * from dble_thread_pool where name like '%Worker%' | has{(('frontWorker', 1, 1, 1, 0), ('backendWorker', 8, 8, 0, 0))}     |
-      | conn_0 | False   | select pool_size from dble_thread_pool                      | has{((1,), (1,), (8,), (8,), (8,), (1,), (8,))}                                      |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name like '%Worker%' | has{(('frontWorker', 1), ('backendWorker', 8))}     |
+      | conn_0 | False   | select core_pool_size from dble_thread_pool                      | has{((1,), (1,), (8,), (8,), (8,), (1,), (8,))}                                      |
   #case supported select max/min from table
-      | conn_0 | False   | select max(pool_size) from dble_thread_pool                 | has{((8,),)}   |
-      | conn_0 | False   | select min(pool_size) from dble_thread_pool                 | has{((1,),)}   |
+      | conn_0 | False   | select max(core_pool_size) from dble_thread_pool                 | has{((8,),)}   |
+      | conn_0 | False   | select min(core_pool_size) from dble_thread_pool                 | has{((1,),)}   |
   #case supported where [sub-query]
-      | conn_0 | False   | select pool_size from dble_thread_pool where name in (select name from dble_thread_pool where active_count>0)  | has{((1,), (8,), (8,), (1,), (8,))}                      |
+      | conn_0 | False   | select core_pool_size from dble_thread_pool where name in (select name from dble_thread_pool where active_count>0)  | has{((1,), (8,), (8,), (1,), (8,))}                      |
   #case supported select field from
       | conn_0 | True    | select name from dble_thread_pool where active_count > 0    | has{(('frontWorker',), ('complexQueryWorker',), ('writeToBackendWorker',), ('NIOFrontRW',), ('NIOBackendRW',))} |
 
@@ -79,7 +79,7 @@ Feature:  dble_thread_pool test
       | conn   | toClose | sql                            | db                |
       | conn_0 | True    | select * from dble_thread_pool | dble_information  |
     Then check resultset "dble_thread_pool_3" has lines with following column values
-      | name-0               | pool_size-1 |
+      | name-0               | core_pool_size-2 |
       | Timer                | 1           |
       | frontWorker          | 4           |
       | backendWorker        | 12          |
@@ -88,7 +88,7 @@ Feature:  dble_thread_pool test
       | NIOFrontRW           | 1           |
       | NIOBackendRW         | 16          |
     Then check resultset "dble_thread_pool_3" has not lines with following column values
-      | name-0               | pool_size-1 |
+      | name-0               | core_pool_size-2 |
       | frontWorker          | 1           |
       | backendWorker        | 8           |
       | complexQueryWorker   | 8           |
