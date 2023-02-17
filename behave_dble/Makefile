@@ -98,7 +98,7 @@ run_cfg_case: up
 	features/func_test/xa_transaction/bg_strategy_after_net_shock.feature \
 	features/func_test/xa_transaction/bg_strategy_after_node_hangs.feature \
 	features/func_test/xa_transaction/net_down_before_rollback.feature \
-	features/func_test/metalock/mysql_slave_down.feature:14 \
+	features/func_test/metalock/mysql_slave_down.feature \
 
 
 
