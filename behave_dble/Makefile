@@ -15,7 +15,7 @@ clean: down remove_venv
 	docker system prune -fa
 
 down:
-    docker ps -a -q | xargs -r docker rm -f
+	docker ps -a -q | xargs -r docker rm -f
 	docker network prune -f
 	docker volume prune -f
 
@@ -46,7 +46,7 @@ run_cluster_case: up
 	features/cluster/writeHost_support_weight.feature:8 \
 	features/cluster/show_ddl.feature:121 \
 	features/cluster/cluster_xml_to_json.feature:1633
-	
+
 run_func_stable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
 	features/func_test/global_var_init/ \
@@ -136,7 +136,7 @@ run_sql_support_no_sharding:up
 	pipenv run behave -D dble_conf=sql_cover_nosharding features/setup.feature features/sql_cover/sql_nosharding.feature
 
 run_sql_support_sharding: up
-	pipenv run behave -D dble_conf=sql_cover_sharding features/setup.feature features/sql_cover/sql_sharding.feature	
+	pipenv run behave -D dble_conf=sql_cover_sharding features/setup.feature features/sql_cover/sql_sharding.feature
 
 run_sql_support_mix: up
 	pipenv run behave -D dble_conf=sql_cover_mixed  features/setup.feature features/sql_cover/sql_mixed.feature
