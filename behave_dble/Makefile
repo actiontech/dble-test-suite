@@ -15,7 +15,8 @@ clean: down remove_venv
 	docker system prune -fa
 
 down:
-	docker ps -a -q | xargs -r docker rm -f
+	docker stop $(docker ps -q)
+	docker rm $(docker ps -a -q)
 	docker network prune -f
 	docker volume prune -f
 
