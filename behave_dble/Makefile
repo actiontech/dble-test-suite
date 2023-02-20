@@ -15,8 +15,7 @@ clean: down remove_venv
 	docker system prune -fa
 
 down:
-	docker stop $(docker ps -q)
-	docker rm $(docker ps -a -q)
+    docker ps -a -q | xargs -r docker rm -f
 	docker network prune -f
 	docker volume prune -f
 
@@ -43,7 +42,10 @@ run_cluster_case: up
 	features/cluster/cluster_detach_attach.feature \
 	features/cluster/kill_ddl_lock.feature:8 \
 	features/cluster/cluster_xml_to_json.feature:9 \
-	features/cluster/cluster_check_reload.feature:855
+	features/cluster/cluster_check_reload.feature:855 \
+	features/cluster/writeHost_support_weight.feature:8 \
+	features/cluster/show_ddl.feature:121 \
+	features/cluster/cluster_xml_to_json.feature:1633
 	
 run_func_stable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
@@ -100,6 +102,11 @@ run_cfg_case: up
 	features/func_test/xa_transaction/bg_strategy_after_node_hangs.feature \
 	features/func_test/xa_transaction/net_down_before_rollback.feature \
 	features/func_test/metalock/mysql_slave_down.feature \
+	features/func_test/managercmd/split.feature:225 \
+	features/func_test/dble_information/sql_log.feature:2126 \
+	features/func_test/cfg_test/sharding_db_attribute.feature:310 \
+	features/func_test/dble_information/sql_statistic.feature:1267 \
+	features/func_test/ddl/ddl_refactor.feature:11
 
 
 
