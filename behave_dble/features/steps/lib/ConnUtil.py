@@ -48,7 +48,8 @@ class MysqlConnUtil:
         else:
             logger.debug("execute sql {}, in {} success, resultset: ".format(sql[0:500], dest_info))
             for row in result:
-                logger.debug(row[0:300])
+                row_str = str(row)
+                logger.debug(row_str[0:10240])
 
         if result!=None and len(result)==1:
             res = result[0]
