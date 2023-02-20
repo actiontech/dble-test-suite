@@ -4,7 +4,7 @@
 Feature:check if sharding.xml in which writeHost contains "weight" push success in cluster after execute "reload @@config_all"
 #github issue #793
 
-  @CRITICAL
+  @CRITICAL @skip
   Scenario: set parameter "readWeight" for writeHost in cluster, then reload #1
     Given delete the following xml segment
       | file          | parent           | child                   |

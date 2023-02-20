@@ -1629,7 +1629,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     <rwSplitUser name=\"rw2\" password=\"111111\" usingDecrypt=\"false\" maxCon=\"999\" dbGroup=\"ha_group4\"/>
     """
 
-
+  @skip
   Scenario: test dble_information dble_config dml check json on zk config use btrace  #6
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """

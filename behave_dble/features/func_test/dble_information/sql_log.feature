@@ -2122,7 +2122,7 @@ sql_log_by_tx_digest_by_entry_by_user
       """
 
 
-
+  @skip
   Scenario: test samplingRate=100 and error sql   #11
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """

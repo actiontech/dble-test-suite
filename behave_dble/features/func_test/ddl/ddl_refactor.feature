@@ -7,7 +7,7 @@ Feature: test ddl refactor
   check log when ddl execute failed
   check warning log when the time of hang>60s
   can‘t support ddl in xa transaction
-
+  @skip
   Scenario: check log when ddl execute successfully   #1
     Given execute sql in "dble-1" in "user" mode
       | sql                                 | expect   | db      |

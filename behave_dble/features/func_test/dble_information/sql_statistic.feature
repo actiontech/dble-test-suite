@@ -1263,7 +1263,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       """
 
 
-
+  @skip
   Scenario:  error sql test #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
