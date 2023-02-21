@@ -71,7 +71,7 @@ Feature: #mysql node disconnected,check the change of dble
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                 | expect                                                            |
       | conn_0 | False   | dryrun              | hasStr{Can't connect to [dbInstance[ha_group1.hostM1]]}           |
-      | conn_0 | True    | reload @@config_all | Reload config failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly |
+      | conn_0 | True    | reload @@config_all | success                                                           |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect               | db      |
