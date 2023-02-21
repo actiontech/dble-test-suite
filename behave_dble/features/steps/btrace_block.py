@@ -82,7 +82,7 @@ def step_impl(context, btraceScript, host):
         # make sure the btrace is working
         @wait_for(context, text="start btrace failed! btrace is not working", duration=10, interval=0.5)
         def check_btrace_working(sshClient, remoteFile):
-            cmd = "grep received {}.log |wc -l".format(remoteFile)
+            cmd = "grep OkayCommand {}.log |wc -l".format(remoteFile)
             rc, sto, ste = sshClient.exec_command(cmd)
             logger.debug("grep cmd is: {}, and its sto is {}".format(cmd, sto))
             assert len(ste) == 0, "expect execute cmd {} success, but outcome with err:{}".format(cmd, ste)
