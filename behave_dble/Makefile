@@ -106,7 +106,12 @@ run_cfg_case: up
 	features/func_test/dble_information/sql_log.feature:2126 \
 	features/func_test/cfg_test/sharding_db_attribute.feature:310 \
 	features/func_test/dble_information/sql_statistic.feature:1267 \
-	features/func_test/ddl/ddl_refactor.feature:11
+	features/func_test/ddl/ddl_refactor.feature:11 \
+	features/func_test/managercmd/slow_query.feature:507 \
+	features/func_test/managercmd/split.feature:365 \
+	features/func_test/managercmd/show_sqlX.feature:6 \
+	features/func_test/cfg_test/mulitiple_reload.feature:174 \
+	features/func_test/managercmd/show_connection.feature:75
 
 
 
