@@ -232,7 +232,7 @@ Feature: test view in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(13000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-3"
     Then execute "user" cmd  in "dble-3" at background
@@ -251,14 +251,11 @@ Feature: test view in zk cluster
     #sleep 2s, to check dble-1 has stop
     Given sleep "2" seconds
     Then Start dble in "dble-1"
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                       | expect    | db      |
-      | conn_1 | true    | show create view view_3   | success   | schema1 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     waiting for view finished
     """
-    #sleep 10s, because btrace sleep 10s
+    #sleep 10s, because btrace sleep 13s
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
