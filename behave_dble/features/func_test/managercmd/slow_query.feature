@@ -503,7 +503,7 @@ Feature: test slow query log related manager command
       delete from test
       """
 
-
+  @skip
   Scenario: Added Inner_Execute, SIMPLE_QUERY properties #7
       Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
        """

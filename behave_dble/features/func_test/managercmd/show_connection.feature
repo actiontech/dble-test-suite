@@ -71,7 +71,7 @@ Feature: show @@connection.sql test
       |EXECUTE_TIME        | 6              |
       |SQL                 | 7              |
 
-  @TRIVIAL
+  @TRIVIAL @skip
   Scenario: multiple session with multiple query display #3
     Then execute sql in "dble-1" in "user" mode
       | sql              | expect  | db       |

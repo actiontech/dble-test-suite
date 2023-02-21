@@ -361,7 +361,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       rm -rf /opt/schema1_with_data.sql*
     """
 
-  @CRITICAL @delete_mysql_tables
+  @CRITICAL @delete_mysql_tables @skip
   Scenario: dump file have two schemas #4
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2']}}

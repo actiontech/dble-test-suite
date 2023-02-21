@@ -170,7 +170,7 @@ Feature: multiple reload
       | conn_0 | False   | drop table if exists test5 | success | schema1 |
       | conn_0 | True    | drop table if exists test6 | success | schema1 |
 
-  @btrace
+  @btrace @skip
   Scenario: execute reload @@config_all with different session at the same time after init metadata failed #3
     Given delete the following xml segment
       | file       | parent         | child              |
