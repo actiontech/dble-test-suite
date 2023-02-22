@@ -102,11 +102,9 @@ Feature: reload @@config_all -r
       | conn   | toClose | sql                                    | expect      | db      |
       | conn_0 | false   | commit                                 | success     | schema1 |
       | conn_0 | True    | select * from sharding_4_t1 where id=1 | length{(0)} | schema1 |
-# dble recycle transaction conn at 5 seconds, so wait 6s here
-    Given sleep "6" seconds
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "F"
-      | sql            |
-      | show @@backend |
-    Then check resultset "F" has not lines with following column values
-      | HOST-3      | USED_FOR_HEARTBEAT-22 |
-      | 172.100.9.4 | false                 |
+    # dble recycle transaction conn at 5 seconds
+    # private static final long DEFAULT_OLD_CONNECTION_CLEAR_PERIOD = 5 * 1000L;
+    #处于未使用状态的连接才会放入连接回收队列中，事务提交后，后端连接可能未立即释放还处于使用状态，所以最长可能需要2个周期连接才会被关闭
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                              | expect      | db               | timeout |
+      | conn_1 | true    | select * from backend_connections where remote_addr='172.100.9.4' and used_for_heartbeat='false' | length{(0)} | dble_information | 3,5     |
