@@ -309,17 +309,20 @@ Feature: connection test in rwSplit mode
         | conn   | toClose | sql                                                         | db      |
         | conn_2 | False   | delete from dble_db_instance where name='hostM2'            | dble_information   |
         | conn_2 | False   | insert into dble_db_instance (name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM2','ha_group2','172.100.9.6',3307,'test','111111','false','false',1,99)| dble_information|
-#      Given sleep "1" seconds
-     #if check failed, should first try add BtraceRwSplitSession.java sleep time
-     Then check sql thread output in "err" by retry "5" times
+     #检测第一次桩至少结束了（select * from test），再去检测后面的步骤
+     Then check Btrace "BtraceRwSplitSession.java" output in "dble-1" with ">0" times
         """
-          is always invalid, pls check reason
+         sleep end
         """
-
      #recursion 10 times still not obtain invalid dbGroup connection, and eleventh return error, enter BtraceRwSplitSession total 11 times
      Then check Btrace "BtraceRwSplitSession.java" output in "dble-1" with "11" times
         """
           get into bindRwSplitSession
+        """
+     #if check failed, should first try add BtraceRwSplitSession.java sleep time
+     Then check sql thread output in "err" by retry "5" times
+        """
+          is always invalid, pls check reason
         """
      Given stop Btrace script "BtraceRwSplitSession.java" in "dble-1"
      Given destroy Btrace threads list
