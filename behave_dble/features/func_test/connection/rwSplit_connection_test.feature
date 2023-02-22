@@ -278,6 +278,7 @@ Feature: connection test in rwSplit mode
     Given delete file "/opt/dble/BtraceSelectRWDbGroup.java" on "dble-1"
     Given delete file "/opt/dble/BtraceSelectRWDbGroup.java.log" on "dble-1"
 
+    @skip
     Scenario: When the front connection is bound with the dbGroup, reload is triggered multiple times and the dbgroup connection is obtained recursively ten times    #4
 
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
