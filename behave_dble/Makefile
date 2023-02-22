@@ -111,7 +111,8 @@ run_cfg_case: up
 	features/func_test/managercmd/split.feature:365 \
 	features/func_test/managercmd/show_sqlX.feature:6 \
 	features/func_test/cfg_test/mulitiple_reload.feature:174 \
-	features/func_test/managercmd/show_connection.feature:75
+	features/func_test/managercmd/show_connection.feature:75 \
+	features/func_test/connection/rwSplit_connection_test.feature:281
 
 
 
