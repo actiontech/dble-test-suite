@@ -20,8 +20,24 @@ from datetime import datetime
 global sql_threads
 sql_threads = []
 
+global tcpdump_threads
+tcpdump_threads = []
+
 logger = logging.getLogger('root')
 
+
+def check_tcpdump_pid_exist(sshClient):
+    cmd = "ps aux|grep tcpdump| grep -v grep | awk '{print $2}' | wc -l"
+    rc, sto, ste = sshClient.exec_command(cmd)
+    assert len(ste) == 0, "exec cmd fail for:{0}".format(ste)
+    tcpdump_pid_exist = str(sto) == '1'
+
+    return tcpdump_pid_exist
+
+def stop_tcpdump(sshClient):
+    cmd = "kill -SIGINT `ps aux | grep tcpdump |grep -v bash|grep -v grep| awk '{{print $2}}'`"
+    rc, sto, ste = sshClient.exec_command(cmd)
+    assert len(ste) == 0, "kill tcpdump err:{0}".format(ste)
 
 @Given('restart mysql in "{host_name}" with sed cmds to update mysql config')
 @Given('restart mysql in "{host_name}"')
@@ -81,6 +97,39 @@ def step_impl(context, host_name, query, occur_times_expr=None):
     mysql.check_query_in_general_log(query, expect_exist=True, expect_occur_times_expr=occur_times_expr)
 
 
+@Given('prepare a thread to run tcpdump in "{host}"')
+def step_impl(context, host):
+    node = get_node(host)
+    sshClient = node.ssh_conn
+    run_tcpdump_cmd = context.text.strip()
+    if check_tcpdump_pid_exist(sshClient):
+        stop_tcpdump(sshClient)
+
+    current_datetime = datetime.strftime(datetime.now(), '%H%M%S_%f')
+    tcpdump_thread_name = "tcpdump_{0}".format(current_datetime)
+    context.logger.debug("tcpdump_thread_name: {0}".format(tcpdump_thread_name))
+    global tcpdump_threads
+    thd = Thread(target=run_tcpdump, args=(sshClient, run_tcpdump_cmd), name=tcpdump_thread_name)
+    tcpdump_threads.append(thd)
+
+    thd.setDaemon(True)
+    thd.start()
+
+
+def run_tcpdump(sshClient, run_tcpdump_cmd):
+    rc, sto, ste = sshClient.exec_command(run_tcpdump_cmd, timeout=300)
+    logger.debug("tcpdump cmd is: {0}".format(run_tcpdump_cmd))
+    assert len(ste) == 0, "tcpdump err:{0}".format(ste)
+
+
+@Given('destroy tcpdump threads list')
+def destroy_threads(context):
+    global tcpdump_threads
+    for thd in tcpdump_threads:
+        context.logger.debug("join tcpdump thread: {0}".format(thd.name))
+        thd.join()
+    tcpdump_threads = []
+
 @Given('execute sql in "{host_name}"')
 @Then('execute sql in "{host_name}"')
 def step_impl(context, host_name):
@@ -118,6 +167,17 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
             logger.info(f"result is not out yet,retry {i} times")
             if i == timeout-1:
                 print_jstack(get_node(host_name))
+                node = get_node(host_name)
+                sshClient = node.ssh_conn
+                if check_tcpdump_pid_exist(sshClient):
+                    stop_tcpdump(sshClient)
+                    # context.execute_steps(u'destroy tcpdump threads list')
+                    global tcpdump_threads
+                    if len(tcpdump_threads) > 0:
+                        for thd in tcpdump_threads:
+                            logger.debug("join tcpdump thread: {0}".format(thd.name))
+                            thd.join()
+                        tcpdump_threads = []
                 raise e
             else:
                 time.sleep(sep_time)

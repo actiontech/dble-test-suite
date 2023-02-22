@@ -32,6 +32,12 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     """
     before xa prepare
     """
+    #安装tcpdump并启动抓包
+    Given prepare a thread to run tcpdump in "dble-1"
+     """
+     nohup tcpdump -w /opt/dble/logs/tcpdump.cap 2>&1 &
+     """
+
     Given execute oscmd in "mysql-master1"
     """
     iptables -A INPUT -s 172.100.9.1 -j REJECT
