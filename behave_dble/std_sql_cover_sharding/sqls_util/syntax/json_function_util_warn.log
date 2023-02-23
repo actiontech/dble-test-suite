@@ -1,9 +1,0 @@
-===file:sqls_util/syntax/json_function_util.sql, id:153, sql:[SELECT f1 ->> "NULL" FROM test1;]===
-mysql err:(3143, 'Invalid JSON path expression. The error is around character position 1.')
-dble err:(3143, 'Invalid JSON path expression. The error is around character position 1.')
-===file:sqls_util/syntax/json_function_util.sql, id:154, sql:[SELECT f1->>"NULL" FROM test1;]===
-mysql err:(3143, 'Invalid JSON path expression. The error is around character position 1.')
-dble err:(3143, 'Invalid JSON path expression. The error is around character position 1.')
-===file:sqls_util/syntax/json_function_util.sql, id:155, sql:[SELECT f1->>"!@#" FROM test1;]===
-mysql err:(3143, 'Invalid JSON path expression. The error is around character position 1.')
-dble err:(3143, 'Invalid JSON path expression. The error is around character position 1.')

@@ -1,6 +1,0 @@
-===file:sqls_util/syntax/create_table_definition.sql, id:554, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ENCRYPTION = 'Y']===
-mysql err:(3185, "Can't find master key from keyring, please check in the server log if a keyring plugin is loaded and initialized successfully.")
-dble err:(3185, "Can't find master key from keyring, please check in the server log if a keyring plugin is loaded and initialized successfully.")
-===file:sqls_util/syntax/create_table_definition.sql, id:586, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=FIXED]===
-mysql err:(1031, "Table storage engine for 'test1' doesn't have this option")
-dble err:(1031, "Table storage engine for 'test1' doesn't have this option")
