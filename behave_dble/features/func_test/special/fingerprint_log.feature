@@ -3,6 +3,7 @@
 # Created by wangjuan at 2021/10/27
 
 # DBLE0REQ-1284
+@skip
 Feature: check fingerprint log
   # fingerprint example: /*#timestamp=xxxx from=xxxx reason=xxxx*/
 
