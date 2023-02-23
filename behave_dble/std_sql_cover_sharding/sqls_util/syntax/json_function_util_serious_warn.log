@@ -1,3 +1,0 @@
-===file:sqls_util/syntax/json_function_util.sql, id:157, sql:[SELECT f1->>NULL FROM test1;]===
-mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NULL FROM test1' at line 1")
-dble err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NULL FROM test1 LIMIT 100' at line 1")

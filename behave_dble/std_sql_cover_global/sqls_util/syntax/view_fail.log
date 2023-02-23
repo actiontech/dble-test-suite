@@ -1,7 +1,0 @@
-===file:sqls_util/syntax/view.sql, id:129, sql:[drop table if exists test1]===
-dble:[None]
-mysql:[()]
-dble err:(1064, "Table 'test1' already exists as a view")
-===file:sqls_util/syntax/view.sql, id:135, sql:[SHOW COLUMNS FROM view_test]===
-dble:[[('view_test', 'create view view_test as  select name,pad from test1', 'latin1', 'latin1_swedish_ci')]]
-mysql:[[('name', 'char(120)', 'NO', '', '', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
