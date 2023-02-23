@@ -45,7 +45,8 @@ run_cluster_case: up
 	features/cluster/cluster_check_reload.feature:855 \
 	features/cluster/writeHost_support_weight.feature:8 \
 	features/cluster/show_ddl.feature:121 \
-	features/cluster/cluster_xml_to_json.feature:1633
+	features/cluster/cluster_xml_to_json.feature:1633 \
+	features/cluster/cluster_xml_to_json.feature:806
 
 run_func_stable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
@@ -112,7 +113,8 @@ run_cfg_case: up
 	features/func_test/managercmd/show_sqlX.feature:6 \
 	features/func_test/cfg_test/mulitiple_reload.feature:174 \
 	features/func_test/managercmd/show_connection.feature:75 \
-	features/func_test/connection/rwSplit_connection_test.feature:281
+	features/func_test/connection/rwSplit_connection_test.feature:281 \
+	features/func_test/dble_information/dble_xa_session.feature:8
 
 
 
