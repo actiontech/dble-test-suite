@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Class-Path: mysql-connector-java-5.1.35-bin.jar jackson-annotations-2.
- 6.0.jar jackson-core-2.6.3.jar jackson-databind-2.6.3.jar snakeyaml-1
- .17.jar
-Main-Class: com.actiontech.testJDBC
-

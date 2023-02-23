@@ -1,7 +1,0 @@
-===file:sqls_util/transaction/trx_ddl_dml.sql, id:820, sql:[/*!dble:shardingNode=dn1*/select * from test1 order by id]===
-mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dble:shardingNode=dn1*/select * from test1 order by id' at line 1")
-dble err:(1064, "can't find hint shardingnode:dn1")
-===file:sqls_util/transaction/trx_ddl_dml.sql, id:828, sql:[/*!dble:shardingNode=dn1*/select * from test1 order by id]===
-mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dble:shardingNode=dn1*/select * from test1 order by id' at line 1")
-dble err:(1064, "can't find hint shardingnode:dn1")
-

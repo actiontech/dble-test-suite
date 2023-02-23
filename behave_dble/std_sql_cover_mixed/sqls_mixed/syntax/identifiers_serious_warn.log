@@ -1,3 +1,0 @@
-===file:sqls_mixed/syntax/identifiers.sql, id:3, sql:[/*!dble:shardingNode=dn1*/lock tables sharding_4_t1 read]===
-mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dble:shardingNode=dn1*/lock tables sharding_4_t1 read' at line 1")
-dble err:(1146, "Table 'db1.sharding_4_t1' doesn't exist")
