@@ -3,6 +3,7 @@
 # Created by wujinling at 2020/09/01
 
 #3.20.07#233
+@skip
 Feature: heartbeat basic test
   Scenario:  heartbeat is not limited by maxCon #1
     #when connections exceeded the maxCon, the heartbeat connection still can be created

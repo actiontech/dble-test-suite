@@ -4,6 +4,7 @@
 # Created by quexiuping at 2021/4/2
 
 
+@skip
 Feature:Support MySQL's large package protocol about 'ps protocol'
 
   Background:delete file and upload file

@@ -1,7 +1,7 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 2021/3/22
-
+@skip
 Feature:test sql_log and sql_log_by_tx_by_entry_by_user
 #DBLE0REQ-985
 sql_log

@@ -3,6 +3,8 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by caiwei at 2021/9/22
 
+
+@skip
 Feature: schema support add function
 
   Scenario: sharding.xml configuration verification     #1

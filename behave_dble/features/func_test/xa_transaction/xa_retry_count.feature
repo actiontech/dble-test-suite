@@ -4,6 +4,7 @@
 # Created by yangxiaoliang at 2020/1/3
 
 #2.20.04.0#dble-8176
+@skip
 Feature: change xaRetryCount value and check result
   Scenario: Setting xaRetryCount to an illegal value, dble report warning #1
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds

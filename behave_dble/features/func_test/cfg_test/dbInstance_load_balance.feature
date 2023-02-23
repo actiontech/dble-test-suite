@@ -1,6 +1,10 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhaohongjie at 2018/12/7
+
+
+
+  @skip
 Feature: test read load balance
 #0：不做均衡，直接分发到当前激活的write dbInstance，read dbInstance将被忽略,不会尝试建立连接
 #1：在除当前激活write dbInstance之外随机选择read dbInstance

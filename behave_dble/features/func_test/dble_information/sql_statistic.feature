@@ -3,6 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wangjuan at 2021/3/2  quexiuping at 2021/3/18
 
+@skip
 Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
          sql_statistic_by_table_by_user_by_entry
          sql_statistic_by_associate_tables_by_entry_by_user

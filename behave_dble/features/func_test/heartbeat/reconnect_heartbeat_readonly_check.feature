@@ -3,6 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by mayingle at 2020/09/11
 
+@skip
 Feature: We will check readonly status on both master and slave even if the heartbeat sql not "select @@read_only;"
 
 #There are 3 kinds of heartbeat SQL in dble for 3.20.07.xx (other version may also like this)

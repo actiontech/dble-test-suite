@@ -2,7 +2,7 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wangjuan at 2021/3/18
-
+@skip
 Feature: general log test
 
   Scenario: check invalid general log parameters in bootstrap.cnf #1

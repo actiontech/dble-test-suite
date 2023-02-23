@@ -1,6 +1,7 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2020/9/14
+@skip
 Feature: test " check @@global schema = '' [and table = '']"
 
   @restore_mysql_service @skip

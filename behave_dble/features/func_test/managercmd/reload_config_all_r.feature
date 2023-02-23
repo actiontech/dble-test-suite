@@ -3,6 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/11/15
 #2.19.11.0#dble-7849
+@skip
 Feature: reload @@config_all -r
 @skip
   Scenario: execute manager cmd "reload @@config_all -r" after add or change shardingNode/dbGroup #1

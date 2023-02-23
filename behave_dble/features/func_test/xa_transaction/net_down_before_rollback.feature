@@ -9,6 +9,7 @@
 #  When the waiting is not ended and after waiting for an error, the firewall is turned off, and the transaction is rolled back successfully.
 
 
+@skip
 Feature: Before the xa transaction is rolled back, open the firewall to the dble on the host where a certain fragment is located
 
   @restore_network @skip

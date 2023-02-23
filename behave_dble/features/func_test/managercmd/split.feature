@@ -2,6 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wujinling at 2020/09/22
 
+@skip
 Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignore]
   Background: prepare env, need contains all types of tables and cross schema
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"

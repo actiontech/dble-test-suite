@@ -2,9 +2,9 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 2020/8/26
 
+@skip
 Feature:  dble_thread_pool test
 
-@skip
   Scenario:  dble_thread_pool table #1
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """

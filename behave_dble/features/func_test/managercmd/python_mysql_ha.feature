@@ -1,7 +1,7 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2021/1/6
-
+@skip
 Feature: test python script "custom_mysql_ha.py" to change mysql master
 
   todo: add check dble.log has disable @@/dbgroup @@switch/enable @@

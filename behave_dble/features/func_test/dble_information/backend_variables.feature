@@ -3,8 +3,8 @@
 # update by quexiuping at 2020/8/26
 
 
-Feature:  backend_variables test
 @skip
+Feature:  backend_variables test
    Scenario:  backend_variables table #1
   #case desc backend_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_1"

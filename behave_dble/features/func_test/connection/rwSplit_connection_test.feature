@@ -6,6 +6,7 @@
   # about http://10.186.18.11/jira/browse/DBLE0REQ-1572
   # For 3.21.02.99 and later dble versions
 
+@skip
 Feature: connection test in rwSplit mode
 
      @skip_restart

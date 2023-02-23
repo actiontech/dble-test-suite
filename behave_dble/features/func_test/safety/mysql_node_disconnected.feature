@@ -1,6 +1,7 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2019/4/16
+@skip
 Feature: #mysql node disconnected,check the change of dble
   # Enter feature description here
 

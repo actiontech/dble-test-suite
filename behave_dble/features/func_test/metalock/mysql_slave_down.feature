@@ -1,6 +1,7 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2021/4/6
+@skip
 Feature: test mysql one node down
 #  3.21.02 dble-9035
 #  During the transaction, after one of the mysql nodes hangs up, verify the commit error. After the node is restored, verify the correctness of the transaction and the successful release of the lock

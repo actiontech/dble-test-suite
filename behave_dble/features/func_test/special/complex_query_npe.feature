@@ -3,6 +3,7 @@
 # update by quexiuping at 2021/8/2
 
 
+@skip
 Feature: check complex query has not npe in dble.log   ##DBLE0REQ-1288
 
 

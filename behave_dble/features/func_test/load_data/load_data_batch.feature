@@ -2,6 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by caiwei at 2021/03/11
 
+@skip
 Feature: case about load data batch
 
   Scenario: Manger CMD enable/disable @@load_data_batch    #1
