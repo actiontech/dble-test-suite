@@ -1,0 +1,29 @@
+version: 1
+disable_existing_loggers: True
+
+formatters:
+  simple:
+    format: "[%(asctime)s.%(msecs)03d][%(levelname)8s][%(filename)20s][%(lineno)4d][%(funcName)s][%(message)s]"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+handlers:
+  debug_file_handler:
+    class: logging.FileHandler
+    level: DEBUG
+    formatter: simple
+    filename: logs/log/behave_debug.log
+    mode: a
+
+loggers:
+  # filter paramiko low level log
+  paramiko:
+    level: WARNING
+    handlers:
+      - debug_file_handler
+    propagate: False
+  root:
+    level: DEBUG
+    handlers:
+      - debug_file_handler
+      # - info_file_handler
+      # - error_file_handler
