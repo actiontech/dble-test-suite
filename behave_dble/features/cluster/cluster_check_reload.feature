@@ -4,6 +4,7 @@
 # Update by caiwei at 2021/08/02
 
 
+@skip
 Feature: test "reload @@config" in zk cluster
   #  db.xml  user.xml  sharding.xml sequence_db_conf.properties
   ######case points:

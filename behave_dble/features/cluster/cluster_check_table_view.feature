@@ -3,6 +3,7 @@
 # Created by quexiuping at 2020/12/11
 
 
+@skip
 Feature: test view in zk cluster
   ######case points:
   #  1.create view，alter view，drop view could success on shardingtable

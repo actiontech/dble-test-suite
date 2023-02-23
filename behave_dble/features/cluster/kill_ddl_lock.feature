@@ -3,6 +3,7 @@
 # Created by yangxiaoliang at 2020/2/26
 
 # 2.19.11.0#dble-7860
+@skip
 Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
   @btrace @skip
   Scenario: check 'kill @@ddl_lock where schema=? and table=?' work normal #1

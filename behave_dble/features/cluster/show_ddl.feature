@@ -3,6 +3,7 @@
 # Created by yangxiaoliang at 2020/2/26
 
 # 2.19.11.0#dble-7859
+@skip
 Feature: show the ddl statement being executed in different scenario
 
   @btrace

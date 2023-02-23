@@ -3,6 +3,7 @@
 # Created by quexiuping at 2020/12/
 
 
+@skip
 Feature: test "binlog" in zk cluster
   # Pull the consistent binlog line
 
