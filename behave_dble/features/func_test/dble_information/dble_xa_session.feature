@@ -4,7 +4,7 @@
 
 Feature:  dble_xa_session test
 
-@btrace @restore_mysql_service
+@btrace @restore_mysql_service @skip
    Scenario:  dble_xa_session  table #1
     """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}

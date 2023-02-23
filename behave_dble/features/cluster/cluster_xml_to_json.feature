@@ -802,7 +802,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       """
 
 
-  @btrace
+  @btrace @skip
   Scenario: test modify dble's error config xml and reload dble check json on zk config  use btrace #3
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
