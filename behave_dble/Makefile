@@ -94,6 +94,7 @@ run_cfg_case: up
     features/func_test/ddl/ddl_refactor.feature \
     features/func_test/special/complex_query_npe.feature \
     features/func_test/special/thread_leak_test.feature  \
+    features/func_test/special/fingerprint_log.feature \
     features/sql_cover/special/hint.feature \
     features/func_test/load_data/load_data_batch.feature \
     features/func_test/sequence/sequence.feature \
