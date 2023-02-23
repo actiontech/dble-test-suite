@@ -76,6 +76,7 @@ run_cfg_case: up
 	features/func_test/dble_information/sql_log.feature \
 	features/func_test/dble_information/sql_statistic_queue_monitor.feature \
 	features/func_test/dble_information/backend_variables.feature \
+	func_test/dble_information/backend_connections.feature \
 	features/func_test/dble_information/dble_xa_recover.feature \
 	features/func_test/dble_information/dble_thread_pool.feature \
 	features/func_test/dble_information/dble_xa_session.feature \
