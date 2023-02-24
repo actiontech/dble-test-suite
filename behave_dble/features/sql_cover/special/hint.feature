@@ -1,6 +1,11 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
+
+
+
 Feature: verify hint sql
+
+
 
   @NORMAL
   Scenario: test hint format: /*!dble:shardingNode=xxx*/ #1
@@ -70,6 +75,9 @@ Feature: verify hint sql
       | sql             | expect       | db  |
       | desc test_table | length{(3)}} | db1 |
       | desc test_table | length{(2)}} | db2 |
+
+
+
 
   @NORMAL
   Scenario: test hint format: /*!dble:sql=xxx*/ #2
@@ -356,6 +364,7 @@ Feature: verify hint sql
       | conn_0 | False   | /*!dble:shardingNode=dn1*/call select_name                          | hasStr{'test_sp2'} | schema1 |
       | conn_0 | True    | /*!dble:sql=select id from test_shard where id =2*/call select_name | hasStr{'test_sp2'} | schema1 |
 
+
   @regression
   Scenario: routed node when index with hint    from issue: 892    author:maofei #7
     Then execute sql in "dble-1" in "user" mode
@@ -370,6 +379,7 @@ Feature: verify hint sql
     """
     dn5{show index from test_global/*test*/}
     """
+
   @restore_view
   Scenario: sql from GUI CLient test,from issue: 1032 author:maofei #8
      """
@@ -405,6 +415,7 @@ Feature: verify hint sql
       | conn_0 | False   | drop table if exists sharding_4_t1                  | success     | schema1 |
       | conn_0 | False   | create table sharding_4_t1(id int,name varchar(30)) | success     | schema1 |
       | conn_0 | True    | show table status like 'sharding_4_t1'              | length{(1)} | schema1 |
+
 
   Scenario: support multi-statement in procedure   author:wujinling #9
     #from issue:1228

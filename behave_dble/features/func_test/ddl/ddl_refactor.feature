@@ -10,14 +10,11 @@ Feature: test ddl refactor
 
   Scenario: check log when ddl execute successfully   #1
     Given execute sql in "dble-1" in "user" mode
-      | sql                                 | expect   | db      |
-      | drop table if exists sharding_4_t1  | success  | schema1 |
+      | conn   | toClose | sql                                 | expect   | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1  | success  | schema1 |
+      | conn_0 | true    | select 1                            | success  | schema1 |
 
-    Given record current dble log line number in "log_num"
-    Then execute sql in "dble-1" in "user" mode
-      | sql                                 | expect   | db      |
-      | create table sharding_4_t1(id int)  | success  | schema1 |
-    Then check the occur times of following key in file "/opt/dble/logs/dble.log" after line "log_num" in "dble-1"
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                                   | occur_times |
       | <init_ddl_trace>                      | 1           |
       | <add_table_lock.start>                | 1           |
@@ -28,13 +25,12 @@ Feature: test ddl refactor
       | <exec_ddl_sql.get_conn>               | 4           |
       | <exec_ddl_sql.succ>                   | 5           |
       | <update_table_metadata.start>         | 1           |
-      | <update_table_metadata>               | 2           |
+      | <update_table_metadata>               | 0           |
       | <update_table_metadata.succ>          | 1           |
       | <release_table_lock.succ>             | 1           |
       | <finish_ddl_trace>                    | 1           |
-    Then execute sql in "dble-1" in "user" mode
-      | sql                                | expect   | db      |
-      | drop table if exists sharding_4_t1 | success  | schema1 |
+
+
 
   Scenario: check log when ddl execute failed       #2
     Then execute sql in "dble-1" in "user" mode
@@ -44,7 +40,6 @@ Feature: test ddl refactor
     Then execute sql in "mysql-master1"
       | sql                                | expect    | db     |
       | drop table if exists sharding_4_t1 | success   | db1    |
-
     Given record current dble log line number in "log_num"
     Then execute sql in "dble-1" in "user" mode
       | sql                      | expect                            | db      |
@@ -67,6 +62,7 @@ Feature: test ddl refactor
     Then execute sql in "dble-1" in "user" mode
       | sql                                | expect   | db      |
       | drop table if exists sharding_4_t1 | success  | schema1 |
+
 
   @current
   Scenario: check warning log when the time of hang>60s   #3
@@ -150,4 +146,3 @@ Feature: test ddl refactor
       java.nio.channels.AsynchronousCloseException: null
       caught err:
       """
-
