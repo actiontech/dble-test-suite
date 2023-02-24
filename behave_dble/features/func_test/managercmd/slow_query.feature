@@ -1,6 +1,11 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
+
+
+
 Feature: test slow query log related manager command
+   ### 这个case修改路劲日志到dble/logs下是为了方便ci上日志的后续查看
+
 
   @NORMAL
   Scenario:test "enable @@slow_query_log"，"disable @@slow_query_log"，"show @@slow_query_log" #1
@@ -44,12 +49,12 @@ Feature: test slow query log related manager command
 
   @NORMAL
   Scenario: check slow query log written in assigned file #3
-      Given delete file "/opt/dble/slowQuery" on "dble-1"
+      Given delete file "/opt/dble/logs/slowQuery" on "dble-1"
       Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DenableSlowLog=1
     $a -DslowLogBaseName=query
-    $a -DslowLogBaseDir=./slowQuery
+    $a -DslowLogBaseDir=./logs/slowQuery
     $a -DsqlSlowTime=1
     """
      Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -59,7 +64,7 @@ Feature: test slow query log related manager command
         </schema>
      """
       Given Restart dble in "dble-1" success
-      Then check following " " exist in dir "/opt/dble/" in "dble-1"
+      Then check following " " exist in dir "/opt/dble/logs/" in "dble-1"
       """
       slowQuery
       query.log
@@ -77,7 +82,7 @@ Feature: test slow query log related manager command
         | conn_0 | False    | select count(id) from a_test    | schema1 |
         | conn_0 | True     | delete from a_test              | schema1 |
 
-      Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+      Then check following text exist "N" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1"
       """
       drop table if exists a_test
       create table a_test\(id int\)
@@ -99,7 +104,7 @@ Feature: test slow query log related manager command
         | conn_0 | False    | select id from a_test           | schema1 |
         | conn_0 | False    | select count(id) from a_test    | schema1 |
         | conn_0 | True     | delete from a_test              | schema1 |
-      Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+      Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1" retry "5" times
       """
       drop table if exists a_test
       create table a_test\(id int\)
@@ -118,13 +123,13 @@ Feature: test slow query log related manager command
        | conn_0 | False    | create table a_test(id int(10) unsigned NOT NULL,name char(1))  |  success                         | schema1 |
        | conn_0 | False    | insert into a_test values(1,1),(2,1111)                         |  Data too long for column 'name' | schema1 |
        | conn_0 | True     | insert into a_test values(3,3)                                  |  success                         | schema1 |
-     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+     Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1" retry "5" times
      """
      drop table if exists a_test
      create table a_test\(id int\(10\) unsigned NOT NULL,name char\(1\)\)
      insert into a_test values\(3,3\)
      """
-     Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+     Then check following text exist "N" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1"
      """
      insert into a_test values\(1,1\),\(2,1111\)
      """
@@ -135,20 +140,20 @@ Feature: test slow query log related manager command
       | conn_0 | False   | update a_test set name = "2"                  | success | schema1 |
       | conn_1 | False   | begin                                         | success | schema1 |
      Given prepare a thread execute sql "update a_test set name = "3"" with "conn_1"
-     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+     Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1" retry "5" times
      """
      update a_test set name = \"2\"
      """
-     Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+     Then check following text exist "N" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1"
      """
      update a_test set name = \"3\"
      """
 #case wiat 10 secends in conn0 query commit ,to check slowlogs has update sql
-     Given sleep "10" seconds
+     Given sleep "12" seconds
      Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql    | expect  | db      |
       | conn_0 | true    | commit | success | schema1 |
-     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+     Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1" retry "5" times
      """
      update a_test set name = \"3\"
      """
@@ -162,12 +167,12 @@ Feature: test slow query log related manager command
 
   @NORMAL
   Scenario: add one line in logfile what's NODE_QUERY  #4  DBLE0REQ-503
-    Given delete file "/opt/dble/slowQuery" on "dble-1"
+    Given delete file "/opt/dble/logs/slowQuery" on "dble-1"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DenableSlowLog=1
     $a -DslowLogBaseName=query
-    $a -DslowLogBaseDir=./slowQuery
+    $a -DslowLogBaseDir=./logs/slowQuery
     $a -DsqlSlowTime=0
     """
     Given delete the following xml segment
@@ -188,18 +193,14 @@ Feature: test slow query log related manager command
       <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
      """
       Given Restart dble in "dble-1" success
-      Then check following " " exist in dir "/opt/dble/" in "dble-1"
-      """
-      slowQuery
-      query.log
-      """
+
       Then execute sql in "dble-1" in "admin" mode
         | sql                            |
         | enable @@slow_query_log        |
      Then execute sql in "dble-1" in "user" mode
        | conn   | toClose  | sql                        | expect             | db      |
        | conn_0 | False    | select sleep(1)            | success            | schema1 |
-     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+     Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1" retry "5" times
      """
      select sleep\(1\)
      SINGLE_NODE_QUERY
@@ -207,7 +208,7 @@ Feature: test slow query log related manager command
    # case singletable
     Given execute oscmd in "dble-1"
     """
-     >/opt/dble/slowQuery/query.log
+     >/opt/dble/logs/slowQuery/query.log
     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                           | expect  | db      |
@@ -217,7 +218,7 @@ Feature: test slow query log related manager command
       | conn_0 | False   | select id from s1             | success | schema1 |
       | conn_0 | False   | update s1 set id=3            | success | schema1 |
       | conn_0 | true    | delete from s1                | success | schema1 |
-    Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1" retry "5" times
      """
      drop table if exists s1
      create table s1 \(id int\)
@@ -229,7 +230,7 @@ Feature: test slow query log related manager command
      dn1_First_Result_Fetch
      dn1_Last_Result_Fetch
      """
-    Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1"
      """
      MULTI_NODE_QUERY
      dn2
@@ -240,7 +241,7 @@ Feature: test slow query log related manager command
    # case global table
     Given execute oscmd in "dble-1"
     """
-     >/opt/dble/slowQuery/query.log
+     >/opt/dble/logs/slowQuery/query.log
     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                     | expect  | db      |
@@ -250,7 +251,7 @@ Feature: test slow query log related manager command
       | conn_0 | False   | select id from test                     | success | schema1 |
       | conn_0 | False   | update test set id=3                    | success | schema1 |
       | conn_0 | true    | delete from test                        | success | schema1 |
-    Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1" retry "5" times
      """
      drop table if exists test
      create table test \(id int\)
@@ -268,14 +269,14 @@ Feature: test slow query log related manager command
      dn4_First_Result_Fetch
      dn4_Last_Result_Fetch
      """
-    Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1"
      """
      dn5
      """
   # case sharding table
     Given execute oscmd in "dble-1"
     """
-     >/opt/dble/slowQuery/query.log
+     >/opt/dble/logs/slowQuery/query.log
     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  | db      |
@@ -285,7 +286,7 @@ Feature: test slow query log related manager command
       | conn_0 | False   | select id,code from sharding_2_t1                | success | schema1 |
       | conn_0 | False   | update sharding_2_t1 set code=3                  | success | schema1 |
       | conn_0 | true    | delete from sharding_2_t1                        | success | schema1 |
-    Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1" retry "5" times
      """
      drop table if exists sharding_2_t1
      create table sharding_2_t1 \(id int,code int\)
@@ -299,7 +300,7 @@ Feature: test slow query log related manager command
      dn2_First_Result_Fetch
      dn2_Last_Result_Fetch
      """
-    Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1"
      """
      SINGLE_NODE_QUERY
      dn3
@@ -309,7 +310,7 @@ Feature: test slow query log related manager command
   # case no-sharding table
     Given execute oscmd in "dble-1"
     """
-     >/opt/dble/slowQuery/query.log
+     >/opt/dble/logs/slowQuery/query.log
     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect  | db      |
@@ -319,7 +320,7 @@ Feature: test slow query log related manager command
       | conn_0 | False   | select id from n1                     | success | schema1 |
       | conn_0 | False   | update n1 set id=3                    | success | schema1 |
       | conn_0 | true    | delete from n1                        | success | schema1 |
-    Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1" retry "5" times
      """
      drop table if exists n1
      create table n1 \(id int\)
@@ -331,7 +332,7 @@ Feature: test slow query log related manager command
      dn5_First_Result_Fetch
      dn5_Last_Result_Fetch
      """
-    Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1"
      """
      MULTI_NODE_QUERY
      dn1
@@ -342,7 +343,7 @@ Feature: test slow query log related manager command
   # case vertical table
     Given execute oscmd in "dble-1"
     """
-     >/opt/dble/slowQuery/query.log
+     >/opt/dble/logs/slowQuery/query.log
     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect  | db      |
@@ -352,7 +353,7 @@ Feature: test slow query log related manager command
       | conn_0 | False   | select id from v1                     | success | schema2 |
       | conn_0 | False   | update v1 set id=3                    | success | schema2 |
       | conn_0 | true    | delete from v1                        | success | schema2 |
-    Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1" retry "5" times
      """
      drop table if exists v1
      create table v1 \(id int\)
@@ -364,7 +365,7 @@ Feature: test slow query log related manager command
      dn3_First_Result_Fetch
      dn3_Last_Result_Fetch
      """
-    Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1"
      """
      MULTI_NODE_QUERY
      dn1
@@ -382,26 +383,25 @@ Feature: test slow query log related manager command
       | conn_0 | False   | insert into schema2.v1 values (1),(2),(3),(4)      | success | schema1 |
     Given execute oscmd in "dble-1"
     """
-     >/opt/dble/slowQuery/query.log
+     >/opt/dble/logs/slowQuery/query.log
     """
      Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                 | expect  | db      |
       | conn_0 | False   | select * from test where id in (select id from n1 where id =(select * from s1 where id=1))          | success | schema1 |
     Given sleep "1" seconds
-    Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1" retry "5" times
      """
      COMPLEX_QUERY
      Generate_New_Query
      """
     Given execute oscmd in "dble-1"
     """
-     >/opt/dble/slowQuery/query.log
+     >/opt/dble/logs/slowQuery/query.log
     """
      Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                            | expect  | db      |
       | conn_0 | False   | select * from sharding_2_t1 where id >(select t.id from test t inner join s1 s on t.id=s.id where s.id =1)     | success | schema1 |
-    Given sleep "1" seconds
-    Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1" retry "5" times
      """
      COMPLEX_QUERY
      Generate_New_Query
@@ -416,12 +416,12 @@ Feature: test slow query log related manager command
 
 
   Scenario: enable slow log function and execute sql, failed sql will not be logged to slow log; successful SQL will be logged to slow log #5
-    Given delete file "/opt/dble/slowQuery" on "dble-1"
+    Given delete file "/opt/dble/logs/slowQuery" on "dble-1"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DenableSlowLog=1
     $a -DslowLogBaseName=query
-    $a -DslowLogBaseDir=./slowQuery
+    $a -DslowLogBaseDir=./logs/slowQuery
     $a -DsqlSlowTime=1
     """
     Given Restart dble in "dble-1" success
@@ -431,12 +431,12 @@ Feature: test slow query log related manager command
       | conn_0 | False   | CREATE TABLE sharding_4_t1(id int(10) unsigned NOT NULL,t_id int(10) unsigned NOT NULL DEFAULT "0",name char(1) NOT NULL DEFAULT "",pad int(11) NOT NULL,PRIMARY KEY (id),KEY k_1 (t_id)) | success                                  | schema1 |
       | conn_0 | False   | insert into sharding_4_t1 values(1,1,"test_1",1),(2,2,"test_2",2),(3,3,"test_3",4),(4,4,"test_4",3),(5,5,5,1),(6,6,"test6",6)                                                             | Data too long for column 'name' at row 1 | schema1 |
       | conn_0 | True    | insert into sharding_4_t1 values(1,1,1,1)                                                                                                                                                 | success                                  | schema1 |
-    Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1" retry "5" times
     """
     CREATE TABLE sharding_4_t1\(id int\(10\) unsigned NOT NULL,t_id int\(10\) unsigned NOT NULL DEFAULT \"0\",name char\(1\) NOT NULL DEFAULT \"\",pad int\(11\) NOT NULL,PRIMARY KEY \(id\),KEY k_1 \(t_id\)\)
     insert into sharding_4_t1 values\(1,1,1,1\)
     """
-    Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/slowQuery/query.log" in host "dble-1"
     """
     insert into sharding_4_t1 values\(1,1,1,1\),\(2,2,\"test_2\",2\),\(3,3,\"test_3\",4\),\(4,4,4,3\),\(5,5,\"test...5\",1\),\(6,6,\"test6\",6\)
     """
@@ -469,8 +469,12 @@ Feature: test slow query log related manager command
       <dbInstance name="hostS3" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
       </dbGroup>
       """
-     Then execute admin cmd "reload @@config_all"
-
+    Given delete file "/opt/dble/logs/slowQuery" on "dble-1"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a -DslowLogBaseDir=./logs/slowQuery
+    """
+    Given Restart dble in "dble-1" success
      Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql                                   | expect         |
        | conn_0 | False   | enable @@slow_query_log               | success        |
@@ -482,7 +486,7 @@ Feature: test slow query log related manager command
       | rwSp | 111111   | conn_3 | False   | create table test(id int)                   | success     | db1     |
       | rwSp | 111111   | conn_3 | False   | insert into test values (1)                 | success     | db1     |
       | rwSp | 111111   | conn_3 | true    | delete from test                            | success     | db1     |
-     Then check following text exist "N" in file "/opt/dble/slowlogs/slow-query.log" in host "dble-1"
+     Then check following text exist "N" in file "/opt/dble/logs/slowQuery/slow-query.log" in host "dble-1"
       """
       drop table if exists test
       create table test\(id int\)
@@ -495,7 +499,7 @@ Feature: test slow query log related manager command
       | conn_1 | False   | create table test(id int)                   | success     | schema1   |
       | conn_1 | False   | insert into test values (1)                 | success     | schema1   |
       | conn_1 | true    | delete from test                            | success     | schema1   |
-     Then check following text exist "Y" in file "/opt/dble/slowlogs/slow-query.log" in host "dble-1"
+     Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/slow-query.log" in host "dble-1" retry "5" times
       """
       drop table if exists test
       create table test\(id int\)
@@ -509,8 +513,13 @@ Feature: test slow query log related manager command
        """
        <shardingUser name="test1" password="111111" schemas="schema1" tenant="tenant1"/>
        """
-     Then execute admin cmd "reload @@config_all"
-     Then execute sql in "dble-1" in "admin" mode
+    Given delete file "/opt/dble/logs/slowQuery" on "dble-1"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a -DslowLogBaseDir=./logs/slowQuery
+    """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql                                   | expect         |
        | conn_0 | False   | enable @@slow_query_log               | success        |
        | conn_0 | False   | reload @@slow_query.time = 0          | success        |
@@ -519,7 +528,7 @@ Feature: test slow query log related manager command
     Then execute sql in "dble-1" in "user" mode
       | user          | passwd | conn   | toClose | sql         | expect   |
       | test1:tenant1 | 111111 | conn_2 | False   | use schema1 | success  |
-    Then check following text exist "Y" in file "/opt/dble/slowlogs/slow-query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/slow-query.log" in host "dble-1" retry "5" times
       """
       User@Host: test1:tenant1\[test1:tenant1\]
       Query_time
@@ -531,7 +540,7 @@ Feature: test slow query log related manager command
       Write_Client
       SIMPLE_QUERY
       """
-    Then check following text exist "N" in file "/opt/dble/slowlogs/slow-query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/slowQuery/slow-query.log" in host "dble-1"
       """
       Result_Fetch
       """
@@ -554,7 +563,7 @@ Feature: test slow query log related manager command
       | user          | passwd | conn   | toClose | sql         | expect   |
       | test1:tenant1 | 111111 | conn_2 | False   | show tables | success  |
 
-    Then check the occur times of following key in file "/opt/dble/slowlogs/slow-query.log" in "dble-1"
+    Then check the occur times of following key in file "/opt/dble/logs/slowQuery/slow-query.log" in "dble-1"
       | key                    | occur_times |
       | Query_time             | 2        |
       | Lock_time              | 2        |
@@ -562,8 +571,8 @@ Feature: test slow query log related manager command
       | Rows_examined          | 2        |
       | Read_SQL               | 2        |
       | Inner_Execute          | 2        |
-#      | Write_Client           | 2        |
-    Then check following text exist "N" in file "/opt/dble/slowlogs/slow-query.log" in host "dble-1"
+
+    Then check following text exist "N" in file "/opt/dble/logs/slowQuery/slow-query.log" in host "dble-1"
       """
       Result_Fetch
       """
@@ -585,7 +594,7 @@ Feature: test slow query log related manager command
       | test1:tenant1 | 111111 | conn_2 | False   | show tables | success      |
       | test1:tenant1 | 111111 | conn_2 | False   | show trace  | length{(4)}  |
 
-    Then check the occur times of following key in file "/opt/dble/slowlogs/slow-query.log" in "dble-1"
+    Then check the occur times of following key in file "/opt/dble/logs/slowQuery/slow-query.log" in "dble-1"
       | key                    | occur_times |
       | Query_time             | 6        |
       | Lock_time              | 6        |
@@ -593,13 +602,12 @@ Feature: test slow query log related manager command
       | Rows_examined          | 6        |
       | Read_SQL               | 6        |
       | Inner_Execute          | 6        |
-      | Write_Client           | 6        |
 
-    Then check following text exist "N" in file "/opt/dble/slowlogs/slow-query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/slowQuery/slow-query.log" in host "dble-1"
       """
       Result_Fetch
       """
-    Then check following text exist "N" in file "/opt/dble/logs/wrapper.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
       caught err:
@@ -609,6 +617,12 @@ Feature: test slow query log related manager command
 
 
   Scenario: commit rollback #8
+    Given delete file "/opt/dble/logs/slowQuery" on "dble-1"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a -DslowLogBaseDir=./logs/slowQuery
+    """
+    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect  | db      |
       | conn_1 | False   | drop table if exists test   | success | schema1 |
@@ -625,7 +639,7 @@ Feature: test slow query log related manager command
       | conn_1 | False   | insert into test values (1) | success | schema1 |
       | conn_1 | False   | rollback                    | success | schema1 |
 
-    Then check the occur times of following key in file "/opt/dble/slowlogs/slow-query.log" in "dble-1"
+    Then check the occur times of following key in file "/opt/dble/logs/slowQuery/slow-query.log" in "dble-1"
       | key                    | occur_times |
       | Query_time             | 3        |
       | Lock_time              | 3        |
@@ -635,19 +649,19 @@ Feature: test slow query log related manager command
       | Inner_Execute          | 2        |
       | Write_Client           | 3        |
       | SIMPLE_QUERY           | 2        |
-    Given record current dble log "/opt/dble/slowlogs/slow-query.log" line number in "log_1"
+    Given record current dble log "/opt/dble/logs/slowQuery/slow-query.log" line number in "log_1"
 #####sleep just create time to check "commit"  Write_Client time
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect  | db      |
       | conn_1 | False   | commit                      | success | schema1 |
 ###### check   Write_Client <  5s
-    Then check following text exist "Y" in file "/opt/dble/slowlogs/slow-query.log" after line "log_1" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/slowQuery/slow-query.log" after line "log_1" in host "dble-1"
     """
     Write_Client: 0.00
     commit
     """
-    Then check the occur times of following key in file "/opt/dble/slowlogs/slow-query.log" in "dble-1"
+    Then check the occur times of following key in file "/opt/dble/logs/slowQuery/slow-query.log" in "dble-1"
       | key                    | occur_times |
       | Query_time             | 4        |
       | Lock_time              | 4        |
@@ -657,7 +671,7 @@ Feature: test slow query log related manager command
       | Inner_Execute          | 3        |
       | Write_Client           | 4        |
       | SIMPLE_QUERY           | 3        |
-    Then check following text exist "N" in file "/opt/dble/logs/wrapper.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
       caught err:

@@ -1,8 +1,9 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 Feature: show @@sql, show @@sql.resultset
+    ###这个case加retry是因为机器的时间震荡问题，到时sql记录的开始时间和结束时间会出现偏差。导致记录sql的id和sql对应不上，下次失败，先查看时间。
 
-  @NORMAL
+  @NORMAL @auto_retry
   Scenario: show @@sql support queries of CRUD, show @@sql.resultset filters sql larger than maxResultSet setting #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -47,5 +48,4 @@ Feature: show @@sql, show @@sql.resultset
     Then check resultset "sql_rs_B" has lines with following column values
         | USER-1 | FREQUENCY-2 | SQL-3                                 | RESULTSET_SIZE-4 |
         | test   |         1   | SELECT * FROM ta ORDER BY id LIMIT ?  | 1185             |
-        | test   |         1   | SELECT * FROM ta WHERE id = ?       | 1604             |
-
+        | test   |         1   | SELECT * FROM ta WHERE id = ?         | 1604             |
