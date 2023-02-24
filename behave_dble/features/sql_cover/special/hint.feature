@@ -6,7 +6,6 @@
 Feature: verify hint sql
 
 
-
   @NORMAL
   Scenario: test hint format: /*!dble:shardingNode=xxx*/ #1
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
@@ -75,7 +74,6 @@ Feature: verify hint sql
       | sql             | expect       | db  |
       | desc test_table | length{(3)}} | db1 |
       | desc test_table | length{(2)}} | db2 |
-
 
 
 
@@ -151,24 +149,25 @@ Feature: verify hint sql
       | desc test_table | length{(3)}} | db1 |
       | desc test_table | length{(2)}} | db2 |
 
+
+
   @TRIVIAL @current
   Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 1 #3
     Given delete the following xml segment
-      | file       | parent         | child              |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}   |
+      | file         | parent         | child                  |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
       | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-      | db.xml | {'tag':'root'} | {'tag':'dbGroup'} |
+      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
       <schema name="schema1" >
          <shardingTable name="test_table" shardingNode="dn2,dn4" function="hash-two" shardingColumn="id"/>
       </schema>
-      <schema name="schema2" shardingNode="dn2">
-      </schema>
+
        <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
        <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
     """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
@@ -178,86 +177,59 @@ Feature: verify hint sql
         </dbInstance>
     </dbGroup>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-    <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
-    """
+    Then execute admin cmd "reload @@config_all"
 
-    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                  | expect  | db      |
       | conn_0 | False   | drop table if exists test_table                                                                      | success | schema1 |
       | conn_0 | False   | create table test_table (id int ,name varchar(20))                                                   | success | schema1 |
       | conn_0 | True    | insert into test_table values(1,'test_table1'),(2,'test_table2'),(3,'test_table3'),(4,'test_table4') | success | schema1 |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                              | expect  |
-      | conn_0 | False   | set global general_log=on        | success |
-      | conn_0 | False   | set global log_output='table'    | success |
-      | conn_0 | True    | truncate table mysql.general_log | success |
-    Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                              | expect  |
-      | conn_0 | False   | set global general_log=on        | success |
-      | conn_0 | False   | set global log_output='table'    | success |
-      | conn_0 | True    | truncate table mysql.general_log | success |
+
+    Given turn on general log in "mysql-slave1"
+    Given turn on general log in "mysql-master2"
     Then execute sql in "dble-1" in "user" mode
-      | sql                                              | expect  | db      |
-      | /*!dble:db_type=master*/select * from test_table | success | schema1 |
-    Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                                                          | expect      | timeout |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} | 3       |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |         |
+      | sql                                               | expect  | db      |
+      | /*!dble:db_type=master*/select id from test_table | success | schema1 |
+
+    Then check general log in host "mysql-slave1" has not "select id from test_table"
+    Then check general log in host "mysql-master2" has "select id from test_table" occured "==2" times
+
     Then execute sql in "dble-1" in "user" mode
-      | sql                                             | expect  | db      |
-      | /*!dble:db_type=slave*/select * from test_table | success | schema1 |
-    Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                                                                          | expect      | timeout |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} | 3       |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |         |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | sql                                              | expect  | db      | timeout |
+      | /*!dble:db_type=slave*/select id from test_table | success | schema1 | 10      |
+
+    Then check general log in host "mysql-slave1" has "select id from test_table" occured "==2" times
+    Then check general log in host "mysql-master2" has "select id from test_table" occured "==2" times
+
     Then execute sql in "dble-1" in "user" mode
       | sql                                                     | expect  | db      |
-      | /*!dble:db_type=master*/select count(*) from test_table | success | schema1 |
-    Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(0)} |
-      | conn_0 | True    | truncate table mysql.general_log                                                        | success     |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                                                                     | expect      | timeout |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} | 3       |
-      | conn_0 | True    | truncate table mysql.general_log                                                        | success     |         |
+      | /*!dble:db_type=master*/select * from test_table        | success | schema1 |
+
+    Then check general log in host "mysql-slave1" has not "select \* from test_table"
+    Then check general log in host "mysql-master2" has "select \* from test_table" occured "==2" times
+
     Then execute sql in "dble-1" in "user" mode
       | sql                                                    | expect  | db      |
-      | /*!dble:db_type=slave*/select count(*) from test_table | success | schema1 |
-    Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                                                                                     | expect      | timeout |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} | 3       |
-      | conn_0 | True    | set global log_output='file'                                                            | success     |         |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(0)} |
-      | conn_0 | False   | set global log_output='file'                                                            | success     |
-      | conn_0 | True    | set global general_log=off                                                              | success     |
+      | /*!dble:db_type=slave*/select * from test_table        | success | schema1 |
+
+    Then check general log in host "mysql-slave1" has "select \* from test_table" occured "==2" times
+    Then check general log in host "mysql-master2" has "select \* from test_table" occured "==2" times
+    Given turn off general log in "mysql-slave1"
+    Given turn off general log in "mysql-master2"
+
+
 
   @NORMAL
   Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 2 #4
     Given delete the following xml segment
-      | file       | parent         | child              |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}   |
+      | file         | parent         | child                  |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
       | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-      | db.xml | {'tag':'root'} | {'tag':'dbGroup'} |
+      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
       <schema name="schema1" >
          <shardingTable name="test_table" shardingNode="dn2,dn4" function="hash-two" shardingColumn="id"/>
-      </schema>
-      <schema name="schema2" shardingNode="dn2">
       </schema>
        <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
        <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
@@ -272,73 +244,45 @@ Feature: verify hint sql
         </dbInstance>
     </dbGroup>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-    <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
-    """
-    Given Restart dble in "dble-1" success
+    Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                  | expect  | db      |
       | conn_0 | False   | drop table if exists test_table                                                                      | success | schema1 |
       | conn_0 | False   | create table test_table (id int ,name varchar(20))                                                   | success | schema1 |
       | conn_0 | True    | insert into test_table values(1,'test_table1'),(2,'test_table2'),(3,'test_table3'),(4,'test_table4') | success | schema1 |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                              | expect  |
-      | conn_0 | False   | set global general_log=on        | success |
-      | conn_0 | False   | set global log_output='table'    | success |
-      | conn_0 | True    | truncate table mysql.general_log | success |
-    Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                              | expect  |
-      | conn_0 | False   | set global general_log=on        | success |
-      | conn_0 | False   | set global log_output='table'    | success |
-      | conn_0 | True    | truncate table mysql.general_log | success |
+    Given turn on general log in "mysql-slave1"
+    Given turn on general log in "mysql-master2"
     Then execute sql in "dble-1" in "user" mode
-      | sql                                              | expect  | db      |
-      | /*!dble:db_type=master*/select * from test_table | success | schema1 |
-    Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                                                          | expect      | timeout |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} | 3       |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |         |
+      | sql                                               | expect  | db      | timeout |
+      | /*!dble:db_type=master*/select id from test_table | success | schema1 | 10      |
+    Then check general log in host "mysql-slave1" has not "select id from test_table"
+    Then check general log in host "mysql-master2" has "select id from test_table" occured "==2" times
+
     Then execute sql in "dble-1" in "user" mode
-      | sql                                             | expect  | db      |
-      | /*!dble:db_type=slave*/select * from test_table | success | schema1 |
-    Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                                                                          | expect      | timeout |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(2)} | 3       |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |         |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                                                          | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  = 'select * from test_table' | length{(0)} |
-      | conn_0 | True    | truncate table mysql.general_log                                             | success     |
+      | sql                                              | expect  | db      | timeout |
+      | /*!dble:db_type=slave*/select id from test_table | success | schema1 | 10      |
+    Then check general log in host "mysql-slave1" has "select id from test_table" occured "==2" times
+    Then check general log in host "mysql-master2" has "select id from test_table" occured "==2" times
+
     Then execute sql in "dble-1" in "user" mode
       | sql                                                     | expect  | db      |
-      | /*!dble:db_type=master*/select count(*) from test_table | success | schema1 |
-    Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(0)} |
-      | conn_0 | True    | truncate table mysql.general_log                                                        | success     |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                                                                     | expect      | timeout |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} | 3       |
-      | conn_0 | True    | truncate table mysql.general_log                                                        | success     |         |
+      | /*!dble:db_type=master*/select * from test_table        | success | schema1 |
+
+    Then check general log in host "mysql-slave1" has not "select \* from test_table"
+    Then check general log in host "mysql-master2" has "select \* from test_table" occured "==2" times
+
     Then execute sql in "dble-1" in "user" mode
       | sql                                                    | expect  | db      |
-      | /*!dble:db_type=slave*/select count(*) from test_table | success | schema1 |
-    Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                                                                                     | expect      | timeout |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(2)} | 3       |
-      | conn_0 | True    | set global log_output='file'                                                            | success     |         |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                                                                     | expect      |
-      | conn_0 | False   | select * from mysql.general_log where argument  like 'select count(*)%from%test_table%' | length{(0)} |
-      | conn_0 | False   | set global log_output='file'                                                            | success     |
-      | conn_0 | True    | set global general_log=off                                                              | success     |
+      | /*!dble:db_type=slave*/select * from test_table        | success | schema1 |
 
-  @TRIVIAL@skip
+    Then check general log in host "mysql-slave1" has "select \* from test_table" occured "==2" times
+    Then check general log in host "mysql-master2" has "select \* from test_table" occured "==2" times
+    Given turn off general log in "mysql-slave1"
+    Given turn off general log in "mysql-master2"
+
+
+
+  @TRIVIAL
   Scenario: hint for specail sql syntax: call procedure #6
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
       """
@@ -365,6 +309,7 @@ Feature: verify hint sql
       | conn_0 | True    | /*!dble:sql=select id from test_shard where id =2*/call select_name | hasStr{'test_sp2'} | schema1 |
 
 
+
   @regression
   Scenario: routed node when index with hint    from issue: 892    author:maofei #7
     Then execute sql in "dble-1" in "user" mode
@@ -379,6 +324,8 @@ Feature: verify hint sql
     """
     dn5{show index from test_global/*test*/}
     """
+
+
 
   @restore_view
   Scenario: sql from GUI CLient test,from issue: 1032 author:maofei #8
@@ -417,6 +364,7 @@ Feature: verify hint sql
       | conn_0 | True    | show table status like 'sharding_4_t1'              | length{(1)} | schema1 |
 
 
+
   Scenario: support multi-statement in procedure   author:wujinling #9
     #from issue:1228
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
@@ -434,6 +382,8 @@ Feature: verify hint sql
       | conn_0 | False   | /*!dble:sql=select * from test_shard where id =1*/CREATE PROCEDURE delete_matches(IN p_playerno INTEGER) BEGIN select * from test_shard; delete from test_shard; END | success | schema1 |
       | conn_0 | False   | /*!dble:sql=select * from test_shard where id =1*/call delete_matches(1)                                                                                             | success | schema1 |
       | conn_0 | True    | /*!dble:sql=select * from test_shard where id =1*/drop procedure if exists delete_matches                                                                            | success | schema1 |
+
+
 
   Scenario: support create function   author:maofei #10
     #### set log_bin_trust_function_creators due to This function has none of DETERMINISTIC, NO SQL, or READS SQL DATA in its declaration and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
@@ -484,6 +434,8 @@ Feature: verify hint sql
       | conn   | toClose  | sql                                                  | expect           |
       | conn_2 | false    | set global log_bin_trust_function_creators = 0       | success          |
       | conn_2 | true     | show variables like 'log_bin_trust_function_creators'| has{(('log_bin_trust_function_creators', 'OFF'),)}  |
+
+
 
   @run
   Scenario: support dble import/export by using GUI  author:wujinling,2019.09.19 #11
