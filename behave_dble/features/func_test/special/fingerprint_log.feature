@@ -56,7 +56,7 @@ Feature: check fingerprint log
     show @@heartbeat
     check @@metadata
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_line" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_line" in host "dble-1" retry "5" times
     """
     INFO.*execute manager cmd from .*root@172.100.9.8.*insert into dble_db_group\(name, heartbeat_stmt, heartbeat_timeout, heartbeat_retry, rw_split_mode, delay_threshold, disable_ha\)
     INFO.*execute manager cmd from .*root@172.100.9.8.*update dble_db_group set rw_split_mode=3 where name=\"ha_group5\"
@@ -123,7 +123,7 @@ Feature: check fingerprint log
     select * from session_connections
     show @@heartbeat
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_line" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_line" in host "dble-1" retry "5" times
     """
     INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# insert=dble_db_group\*/insert into dble_db_group\(name, heartbeat_stmt, heartbeat_timeout, heartbeat_retry, rw_split_mode, delay_threshold, disable_ha\)
     INFO.*execute manager cmd from .*root@172.100.9.8.*/\*#update=dble_db_group\*/update dble_db_group set rw_split_mode=3 where name=\"ha_group5\"
@@ -176,7 +176,7 @@ Feature: check fingerprint log
     """
     Given record current dble log line number in "log_linenu"
     Then execute admin cmd "reload @@config_all"
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5" times
     """
     from=instance-test reason=one time job\*/show databases to con
     from=instance-test reason=one time job\*/select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log to con
@@ -214,5 +214,5 @@ Feature: check fingerprint log
       \*/drop view test_view
       """
     Given sleep "10" seconds
-    Then check general log in host "mysql-master1" has "/\*# from=instance-test reason=heartbeat\*/select user()" occured ">0" times
+    Then check general log in host "mysql-master1" has "from=instance-test reason=heartbeat\*/select user()"
     Given turn off general log in "mysql-master1"

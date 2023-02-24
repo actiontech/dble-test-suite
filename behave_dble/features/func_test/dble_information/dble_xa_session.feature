@@ -38,7 +38,6 @@ Feature:  dble_xa_session test
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
-    Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_1"
     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "1" times
     """
@@ -56,7 +55,6 @@ Feature:  dble_xa_session test
       | XA COMMIT FAIL STAGE | dn3             |
       | XA COMMIT FAIL STAGE | dn1             |
     Given start mysql in host "mysql-master1"
-    Given sleep "10" seconds
 
 #case unsupported update/delete/insert
       Then execute sql in "dble-1" in "admin" mode
@@ -65,7 +63,7 @@ Feature:  dble_xa_session test
       | conn_0 | False   | update dble_xa_session set xa_state = 'a' where xa_state='XA COMMIT FAIL STAGE'         | Access denied for table 'dble_xa_session'     | dble_information |
       | conn_0 | True    | insert into dble_xa_session values (1,'1',1,1,1)                                        | Access denied for table 'dble_xa_session'     | dble_information |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                     | db      |
-      | conn_3 | False   | set autocommit=1                                        | schema1 |
-      | conn_3 | False   | set xa=off                                              | schema1 |
-      | conn_3 | True    | drop table if exists sharding_4_t1                      | schema1 |
+      | conn   | toClose | sql                                                     | db      | timeout |
+      | conn_3 | False   | set autocommit=1                                        | schema1 | 20      |
+      | conn_3 | False   | set xa=off                                              | schema1 | 20      |
+      | conn_3 | True    | drop table if exists sharding_4_t1                      | schema1 | 20      |

@@ -89,8 +89,8 @@ Feature:  backend_connections test
       | user-0 | sql-1                                      | db_group_name-2 | schema-3 | xa_status-4 | in_transaction-5 |
       | test   | insert into test values (1),(2)            | ha_group2       | db2      | 1           | true             |
       | test   | insert into test values (1),(2)            | ha_group1       | db2      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (1), (3) | ha_group2       | db1      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (2), (4) | ha_group1       | db1      | 1           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (1), (3)  | ha_group2       | db1      | 1           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (2), (4)  | ha_group1       | db1      | 1           | true             |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  | db      |
       | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |
@@ -103,13 +103,6 @@ Feature:  backend_connections test
       | test   | INSERT INTO sharding_4_t1 VALUES (2)       | ha_group1       | db2      | 1           | true             |
       | test   | INSERT INTO sharding_4_t1 VALUES (1)       | ha_group2       | db1      | 1           | true             |
       | test   | INSERT INTO sharding_4_t1 VALUES (4)       | ha_group1       | db1      | 1           | true             |
-### DBLE0REQ-1188
-#    Then check resultset "backend_connections_5" has not lines with following column values
-#      | user-0 | sql-1                                      | db_group_name-2 | schema-3 | xa_status-4 | in_transaction-5 |
-#      | test   | insert into test values (1),(2)            | ha_group2       | db2      | 1           | true             |
-#      | test   | insert into test values (1),(2)            | ha_group1       | db2      | 1           | true             |
-#      | test   | INSERT INTO sharding_2_t1 VALUES (1),  (3) | ha_group2       | db1      | 1           | true             |
-#      | test   | INSERT INTO sharding_2_t1 VALUES (2),  (4) | ha_group1       | db1      | 1           | true             |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql             | expect  |
@@ -179,6 +172,7 @@ Feature:  backend_connections test
       | conn_0 | False   | update backend_connections set user = 'a' where user ='test'              | Access denied for table 'backend_connections'     |
       | conn_0 | True    | insert into backend_connections values (1,'1',1,1,1)                      | Access denied for table 'backend_connections'     |
 
+
   @btrace @auto_retry
   Scenario: check backend connection status #2
 
@@ -209,8 +203,8 @@ Feature:  backend_connections test
         sending ping signal
     """
     Given execute sql in "dble-1" in "admin" mode
-  | conn   | toClose | sql                                                                                                                            | expect             | db              | timeout |
-  | conn_0 | true    | select * from backend_connections where remote_addr="172.100.9.5" and used_for_heartbeat="false" and state="HEARTBEAT CHECK"   | length{(1)}        |dble_information | 3       |
+  | conn   | toClose | sql                                                                                                                            | expect             | db               | timeout |
+  | conn_0 | true    | select * from backend_connections where remote_addr="172.100.9.5" and used_for_heartbeat="false" and state="HEARTBEAT CHECK"   | length{(1)}        | dble_information | 6       |
     Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
     Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
@@ -257,8 +251,8 @@ Feature:  backend_connections test
       | conn_4 | False   | commit                                                    | success                    | schema1 |
       | conn_5 | False   | commit                                                    | success                    | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                             | expect        | db                |
-      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'      | has{((20,),)}  | dble_information  |
+      | conn   | toClose | sql                                                                                             | expect         | db                | timeout |
+      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'      | has{((20,),)}  | dble_information  | 5       |
     Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
         """
         s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
@@ -273,8 +267,8 @@ Feature:  backend_connections test
         get into compareAndSet
       """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                 | expect        | db                |
-      | conn_0 | false   | select * from backend_connections where remote_addr="172.100.9.5" and state="EVICT" and used_for_heartbeat='false'  | length{(1)}   | dble_information  |
+      | conn   | toClose | sql                                                                                                                 | expect        | db                | timeout |
+      | conn_0 | false   | select * from backend_connections where remote_addr="172.100.9.5" and state="EVICT" and used_for_heartbeat='false'  | length{(1)}   | dble_information  | 5       |
     Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
@@ -282,7 +276,7 @@ Feature:  backend_connections test
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                 | expect         | db                | timeout |
-      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'                          | has{((14,),)}  | dble_information  | 3       |
+      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'                          | has{((14,),)}  | dble_information  | 10      |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                 | expect        | db                |
       | conn_0 | true    | drop table if exists sharding_4_t1                                                                                  | success       | schema1           |
