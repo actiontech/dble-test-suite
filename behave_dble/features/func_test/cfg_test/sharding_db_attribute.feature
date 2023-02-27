@@ -269,10 +269,10 @@ Feature: test some import nodes attr in sharding.xml
     """
     Given kill all backend conns in "mysql-master2" except ones in "heartbeat_Ids_master2"
     #wait 1s for minCon recover
-    Given sleep "1" seconds
+#    Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql            | expect        |
-      | show @@backend | length{(7)}   |
+      | sql            | expect        | timeout |
+      | show @@backend | length{(7)}   | 3       |
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -301,10 +301,10 @@ Feature: test some import nodes attr in sharding.xml
     mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" |grep '172.100.9.6'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill all backend conns in "mysql-master2" except ones in "heartbeat_Ids_master2"
-    Given sleep "1" seconds
+#    Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql            | expect      |
-      | show @@backend | length{(7)} |
+      | sql            | expect      | timeout |
+      | show @@backend | length{(7)} | 3       |
 
   Scenario:  when minCon>the number of db, verify the minCon restore logic #9
    #  minConRecover logic: min(the value of minCon - the current idle conns in pool, the value of maxCon - total conns in pool) - the creating conns
@@ -335,12 +335,9 @@ Feature: test some import nodes attr in sharding.xml
     """
     Given kill all backend conns in "mysql-master1" except ones in "heartbeat_Ids_master1"
     #wait 1s for minCon recover
-    Given sleep "1" seconds
+#    Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql             | expect      |
-      | show @@backend where host='172.100.9.5'  | length{(11)} |
+      | sql                                      | expect       | timeout |
+      | show @@backend where host='172.100.9.5'  | length{(11)} | 3       |
       #the not used dbInstance will only have one heartbeat connection
-      | show @@backend  | length{(12)} |
-
-
-
+      | show @@backend  | length{(12)} | 3      |

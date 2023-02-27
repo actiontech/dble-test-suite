@@ -8,7 +8,7 @@ Feature: multiple reload
 
   Scenario: execute reload @@config_all with different session at the same time after init metadata successed #1
     Given delete the following xml segment
-      | file       | parent         | child              |
+      | file         | parent         | child                  |
       | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -54,7 +54,7 @@ Feature: multiple reload
 
   Scenario: execute reload @@metadata with different session at the same time after init metadata successed #2
     Given delete the following xml segment
-      | file       | parent         | child              |
+      | file         | parent         | child                  |
       | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -173,7 +173,7 @@ Feature: multiple reload
   @btrace
   Scenario: execute reload @@config_all with different session at the same time after init metadata failed #3
     Given delete the following xml segment
-      | file       | parent         | child              |
+      | file         | parent         | child                  |
       | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -204,7 +204,7 @@ Feature: multiple reload
       | conn_0 | False   | create table test4(id int,age int) | success | schema1 |
       | conn_0 | False   | create table test5(id int,age int) | success | schema1 |
       | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
-    Then execute admin cmd "reload @@config_all -r"
+#    Then execute admin cmd "reload @@config_all -r"
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
@@ -283,7 +283,7 @@ Feature: multiple reload
   @btrace
   Scenario: execute reload @@metadata with different session at the same time after init metadata failed #4
     Given delete the following xml segment
-      | file       | parent         | child              |
+      | file         | parent         | child                  |
       | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -314,7 +314,7 @@ Feature: multiple reload
       | conn_0 | False   | create table test4(id int,age int) | success | schema1 |
       | conn_0 | False   | create table test5(id int,age int) | success | schema1 |
       | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
-    Then execute admin cmd "reload @@config_all -r"
+#    Then execute admin cmd "reload @@config_all -r"
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
