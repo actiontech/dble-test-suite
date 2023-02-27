@@ -45,6 +45,7 @@ Feature: general log test
     Property [[] generalLogQueueSize []] '-1' in bootstrap.cnf is illegal, size must not be less than 1 and must be a power of 2, you may need use the default value 4096 replaced
     """
 
+
   Scenario: check general log parameters in bootstrap.cnf #2
     # check default value
     Then check following text exist "N" in file "/opt/dble/conf/bootstrap.cnf" in host "dble-1"
@@ -62,7 +63,6 @@ Feature: general log test
       | conn_0 | true    | select variable_name, variable_value from dble_variables where variable_name like '%generalLog%' | dble_information |
     Then check resultset "general_log_rs1" has lines with following column values
       | variable_name-0     | variable_value-1              |
-#      | enableGeneralLog    | false                         |
       | enableGeneralLog    | 0                             |
       | generalLogFile      | /opt/dble/general/general.log |
       | generalLogFileSize  | 16M                           |
@@ -72,7 +72,6 @@ Feature: general log test
       | show @@sysparam |
     Then check resultset "general_log_rs2" has lines with following column values
       | PARAM_NAME-0        | PARAM_VALUE-1                 |
-#      | enableGeneralLog    | false                         |
       | enableGeneralLog    | 0                             |
       | generalLogFile      | /opt/dble/general/general.log |
       | generalLogFileSize  | 16M                           |
@@ -257,6 +256,7 @@ Feature: general log test
     """
     Then check result "general_log_rs13" value is "0"
 
+
   Scenario: check manager command: enable @@general_log, disable @@general_log, reload @@general_log_file #3
     #check enable @@general_log
     Then execute sql in "dble-1" in "admin" mode
@@ -387,6 +387,7 @@ Feature: general log test
     """
     Given delete file "/opt/dble/test/general/test.log" on "dble-1"
 
+
   @btrace
   Scenario: check generalLogQueueSize value #4
     Given delete file "/opt/dble/BtraceGeneralLog.java" on "dble-1"
@@ -427,6 +428,7 @@ Feature: general log test
     Given delete file "/opt/dble/BtraceGeneralLog.java" on "dble-1"
     Given delete file "/opt/dble/BtraceGeneralLog.java.log" on "dble-1"
 
+
   @btrace
   Scenario: check concurrent operation of manager commands #5
     Given delete file "/opt/dble/BtraceGeneralLog.java" on "dble-1"
@@ -439,10 +441,9 @@ Feature: general log test
     Given update file content "./assets/BtraceGeneralLog.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /showGeneralLog/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
+    /showGeneralLog/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceGeneralLog.java" in "dble-1"
-    Given sleep "2" seconds
     Given prepare a thread execute sql "show @@general_log" with "conn_0"
     Then check btrace "BtraceGeneralLog.java" output in "dble-1"
     """
@@ -469,7 +470,7 @@ Feature: general log test
     Given update file content "./assets/BtraceGeneralLog.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /updateGeneralLogFile/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+    /updateGeneralLogFile/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceGeneralLog.java" in "dble-1"
     Given prepare a thread execute sql "reload @@general_log_file='general/general.log'" with "conn_0"
@@ -478,8 +479,8 @@ Feature: general log test
     start get into updateGeneralLogFile
     """
     Then execute sql in "dble-1" in "admin" mode
-    | conn   | toClose | sql                  | db               |
-    | conn_2 | true    | enable @@general_log | dble_information |
+    | conn   | toClose | sql                  | db               | timeout |
+    | conn_2 | true    | enable @@general_log | dble_information | 3,5     |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                | expect                                                                               | db               |
@@ -489,6 +490,7 @@ Feature: general log test
     Given delete file "/opt/dble/BtraceGeneralLog.java" on "dble-1"
     Given delete file "/opt/dble/BtraceGeneralLog.java.log" on "dble-1"
     Given delete file "/opt/dble/general/general.log" on "dble-1"
+
 
   Scenario: check general log records - manager user #6
     Given delete file "/opt/dble/general/general.log" on "dble-1"
@@ -581,6 +583,7 @@ Feature: general log test
       Quit
       """
     Given delete file "/opt/dble/general/general.log" on "dble-1"
+
 
   @restore_view
   Scenario: check general log records - sharding user #7
@@ -702,6 +705,7 @@ Feature: general log test
       """
 
     Given delete file "/opt/dble/general/general.log" on "dble-1"
+
 
   @restore_view
   Scenario: check general log records - rwSplitUser #8
