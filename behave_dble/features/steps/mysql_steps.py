@@ -38,6 +38,8 @@ def stop_tcpdump(sshClient):
     cmd = "kill -SIGINT `ps aux | grep tcpdump |grep -v bash|grep -v grep| awk '{{print $2}}'`"
     rc, sto, ste = sshClient.exec_command(cmd)
     assert len(ste) == 0, "kill tcpdump err:{0}".format(ste)
+    # 等待日志打印完成并且进程结束
+    time.sleep(3)
 
 @Given('restart mysql in "{host_name}" with sed cmds to update mysql config')
 @Given('restart mysql in "{host_name}"')
@@ -173,6 +175,10 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
                 sshClient = node.ssh_conn
                 if check_tcpdump_pid_exist(sshClient):
                     stop_tcpdump(sshClient)
+                    #将数据移到/opt/dble/logs路径下
+                    mv_cmd = "mv /tmp/tcpdump.cap /opt/dble/logs"
+                    rc, sto, ste = sshClient.exec_command(mv_cmd)
+                    assert len(ste) == 0, "mv tcpdump file err:{0}".format(ste)
                     # context.execute_steps(u'destroy tcpdump threads list')
                     global tcpdump_threads
                     if len(tcpdump_threads) > 0:

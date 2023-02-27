@@ -35,7 +35,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     #安装tcpdump并启动抓包
     Given prepare a thread to run tcpdump in "dble-1"
      """
-     nohup tcpdump -w /opt/dble/logs/tcpdump.cap -Z root 2>&1 &
+     nohup tcpdump -w /tmp/tcpdump.cap 2>&1 &
      """
 
     Given execute oscmd in "mysql-master1"
