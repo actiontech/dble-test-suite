@@ -88,7 +88,20 @@ run_cfg_case: up
 	features/func_test/xa_transaction/xa_retry_count.feature \
 	features/func_test/metalock/mysql_slave_down.feature \
 
-
+run_cfg_case_unstable: up
+	pipenv run behave -D dble_conf=template features/setup.feature \
+	features/func_test/dble_information/dble_xa_recover.feature \
+	features/func_test/dble_information/sql_statistic_queue_monitor.feature \
+    features/func_test/connection/connection_pool_heartbeat_test.feature \
+    features/func_test/connection/rwSplit_connection_test.feature \
+	features/func_test/cfg_test/dbInstance_load_balance.feature \
+    features/func_test/cfg_test/sharding_db_attribute.feature \
+    features/func_test/cfg_test/general_log.feature \
+    features/func_test/heartbeat/db_heartbeat_keepAlive.feature \
+    features/func_test/heartbeat/reconnect_heartbeat_readonly_check.feature \
+    features/func_test/load_data/load_data_batch.feature \
+	features/func_test/xa_transaction/bg_strategy_after_net_shock.feature \
+	features/func_test/xa_transaction/bg_strategy_after_node_hangs.feature \
 
 run_sql_support_special: up
 	pipenv run behave -Dreset=false -D dble_conf=sql_cover_mixed features/setup.feature \
