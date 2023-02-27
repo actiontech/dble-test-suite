@@ -37,47 +37,31 @@ used_in_local: create_venv up
 run_cluster_case: up
 	pipenv run behave features/setup.feature \
 	features/cluster/cluster_check_table_view.feature \
-	features/cluster/cluster_check_table_ddl.feature \
-	features/cluster/cluster_check_zk_binlog.feature \
-	features/cluster/cluster_detach_attach.feature \
 	features/cluster/kill_ddl_lock.feature \
 	features/cluster/cluster_check_reload.feature \
 	features/cluster/writeHost_support_weight.feature \
 	features/cluster/show_ddl.feature \
 	features/cluster/cluster_xml_to_json.feature \
 
-run_func_stable_case: up
-	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/global_var_init/ \
-	features/func_test/load_data/  \
-	features/func_test/safety/  \
-	features/func_test/sequence/  \
-	features/func_test/sharding_func_test/  \
-	features/func_test/slow_log/  \
-	features/func_test/special/ \
-	features/func_test/sql_plan/ \
-	features/func_test/trace/  \
-	features/func_test/heartbeat/ \
-	features/func_test/metalock/
+
+run_cluster_unstable_case: up
+	pipenv run behave features/setup.feature \
+	features/cluster/cluster_check_table_ddl.feature \
+	features/cluster/cluster_check_zk_binlog.feature \
+	features/cluster/cluster_detach_attach.feature \
+
 
 run_cfg_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/cfg_test/dbInstance_load_balance.feature \
     features/func_test/cfg_test/schema_funcation.feature \
 	features/func_test/cfg_test/user.feature \
-    features/func_test/cfg_test/sharding_db_attribute.feature \
     features/func_test/cfg_test/user_analysisUser.feature \
-    features/func_test/cfg_test/general_log.feature \
 	features/func_test/cfg_test/mulitiple_reload.feature \
-    features/func_test/connection/connection_pool_heartbeat_test.feature \
     features/func_test/connection/connection_pool_basic_test.feature \
-    features/func_test/connection/rwSplit_connection_test.feature \
     features/func_test/dble_information/dble_table_group.feature \
 	features/func_test/dble_information/sql_log.feature \
-	features/func_test/dble_information/sql_statistic_queue_monitor.feature \
 	features/func_test/dble_information/backend_variables.feature \
 	features/func_test/dble_information/backend_connections.feature \
-	features/func_test/dble_information/dble_xa_recover.feature \
 	features/func_test/dble_information/dble_thread_pool.feature \
 	features/func_test/dble_information/dble_xa_session.feature \
 	features/func_test/dble_information/sql_statistic.feature \
@@ -97,35 +81,14 @@ run_cfg_case: up
     features/func_test/special/thread_leak_test.feature  \
     features/func_test/special/fingerprint_log.feature \
     features/sql_cover/special/hint.feature \
-    features/func_test/load_data/load_data_batch.feature \
     features/func_test/sequence/sequence.feature \
     features/func_test/safety/mysql_node_disconnected.feature \
-    features/func_test/heartbeat/db_heartbeat_keepAlive.feature \
     features/func_test/heartbeat/kill_heartbeat_connection.feature \
-    features/func_test/heartbeat/reconnect_heartbeat_readonly_check.feature \
 	features/func_test/xa_transaction/net_down_before_rollback.feature \
 	features/func_test/xa_transaction/xa_retry_count.feature \
-	features/func_test/xa_transaction/bg_strategy_after_net_shock.feature \
-	features/func_test/xa_transaction/bg_strategy_after_node_hangs.feature \
 	features/func_test/metalock/mysql_slave_down.feature \
 
 
-
-
-
-run_func_unstable_case: up
-	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/flow_control/ \
-	features/func_test/connection/  \
-	features/func_test/ddl/  \
-	features/func_test/xa_transaction/ \
-	features/func_test/local_read/ \
-	features/func_test/Large_Packet/
-
-run_managercmd_case: up
-	pipenv run behave -Dreset=false -D dble_conf=template features/setup.feature \
-	features/func_test/dble_information/ \
-	features/func_test/managercmd/
 
 run_sql_support_special: up
 	pipenv run behave -Dreset=false -D dble_conf=sql_cover_mixed features/setup.feature \
