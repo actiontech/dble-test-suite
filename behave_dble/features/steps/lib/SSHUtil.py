@@ -40,6 +40,19 @@ class SSHClient:
 
     def exec_command(self, command: str, timeout: int = 60, **kwargs) -> Tuple[int, str, str]:
         if self._ssh is not None:
+            ssh_active = self._ssh.get_transport().is_active()
+            retry = 5
+            while not ssh_active and retry > 0:
+                LOGGER.debug(f"ssh session active: {ssh_active}, try to reconnect.")
+                self.connect()
+                ssh_active = self._ssh.get_transport().is_active()
+                if not ssh_active:
+                    LOGGER.debug(f"ssh reconnect failed: {5-retry+1} times")
+                    retry -= 1
+                    time.sleep(1)
+                else:
+                    break
+
             LOGGER.info(f'<{self._host}>: Execute command: <{command}>')
             _, stdout, stderr = self._ssh.exec_command(
                 command, timeout=timeout, **kwargs)
