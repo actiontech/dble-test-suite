@@ -207,6 +207,11 @@ Feature: connection test in rwSplit mode
             </dbGroup>
           """
       Given Restart dble in "dble-1" success
+    #安装tcpdump并启动抓包 for issue:DBLE0REQ-2116
+    Given prepare a thread to run tcpdump in "dble-1"
+     """
+     nohup tcpdump -w /tmp/tcpdump2116.cap 2>&1 &
+     """
 
       Given execute sql in "dble-1" in "user" mode
        |user| conn   | toClose | sql                                       | expect  |
