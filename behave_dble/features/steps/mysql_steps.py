@@ -148,7 +148,7 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
     pre_delegater = PreQueryPrepare(query_meta)
     pre_delegater.prepare()
 
-    if not info_dic.get("timeout") :
+    if not info_dic.get("timeout"):
         timeout = 1
     elif "," in info_dic.get("timeout"):
         timeout=int(info_dic.get("timeout").split(",")[0])
@@ -166,8 +166,10 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
         except Exception as e:
             logger.info(f"result is not out yet,retry {i} times")
             if i == timeout-1:
-                print_jstack(get_node(host_name))
                 node = get_node(host_name)
+                if mode in ["admin", "user"]:  #print dble jstack
+                    print_jstack(node)
+                    logger.debug(f"print dble jstack end")
                 sshClient = node.ssh_conn
                 if check_tcpdump_pid_exist(sshClient):
                     stop_tcpdump(sshClient)
@@ -188,7 +190,7 @@ def print_jstack(node):
     ssh_client = node.ssh_conn
     get_dble_pid_cmd = "jps | grep WrapperSimpleApp | awk '{print $1}'"
     rc, sto, ste = ssh_client.exec_command(get_dble_pid_cmd)
-    assert len(sto) > 0, "dble pid not found!!!"
+    assert len(sto) > 0, "print jstack: dble pid not found!!!"
 
     current_datetime = datetime.strftime(datetime.now(), '%H%M%S_%f')
     jstack_url = "/opt/dble/logs/jstack_{0}.log".format(current_datetime)
