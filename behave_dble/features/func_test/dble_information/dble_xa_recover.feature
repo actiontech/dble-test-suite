@@ -136,12 +136,12 @@ Feature: check dble_xa_recover and exception xa transactions
       """
     Given record current dble log "/opt/dble/xalogs/xalog-1.log" line number in "xa_log_1"
     Then Restart dble in "dble-1" success
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                              | expect  | db      |
-      | conn_2 | false   | set autocommit=0;set xa=1;begin                                  | success | schema1 |
-      | conn_2 | false   | insert into sharding_4_t1 values (3,'name3'),(4,'name4')         | success | schema1 |
-      | conn_2 | false   | commit                                                           | success | schema1 |
+      | conn   | toClose | sql                                                              | expect  | db      | timeout |
+      | conn_2 | false   | set autocommit=0;set xa=1;begin                                  | success | schema1 | 6,2     |
+      | conn_2 | false   | insert into sharding_4_t1 values (3,'name3'),(4,'name4')         | success | schema1 | 6,2     |
+      | conn_2 | false   | commit                                                           | success | schema1 | 6,2     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_connections_3"
       | conn   | toClose | sql                                                                                   | db               |
       | conn_0 | False   | select remote_port,user,schema,sql,sql_stage,xa_id,entry_id from session_connections  | dble_information |
