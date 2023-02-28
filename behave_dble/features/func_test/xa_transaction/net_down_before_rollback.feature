@@ -31,6 +31,11 @@ Feature: Before the xa transaction is rolled back, open the firewall to the dble
     </dbGroup>
     """
     Given Restart dble in "dble-1" success
+    #安装tcpdump并启动抓包 for issue:DBLE0REQ-2104
+    Given prepare a thread to run tcpdump in "dble-1"
+     """
+     nohup tcpdump -w /tmp/tcpdump.cap 2>&1 &
+     """
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                  | expect      | db      |
