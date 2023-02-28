@@ -7,6 +7,9 @@ DRIVER_DIR = $(shell dirname ${PWD})
 DOCKER_COMPOSE_FILE = docker-compose-${DBLE_DBLE_TOPO}.yml
 
 up: down
+	docker stop $(docker ps -a | awk '{ print $1}' | tail -n +2)
+    docker rm $(docker ps -a | awk '{ print $1}' | tail -n +2)
+    docker rmi $(docker images | awk '{print $3}' |tail -n +2)
 	docker-compose -f ${PWD}/compose/${DOCKER_COMPOSE_FILE} up -d
 	sleep 3
 	date
@@ -15,10 +18,7 @@ clean: down remove_venv
 	docker system prune -fa
 
 down:
-    docker stop $(docker ps -a | awk '{ print $1}' | tail -n +2)
-    docker rm $(docker ps -a | awk '{ print $1}' | tail -n +2)
-    docker rmi $(docker images | awk '{print $3}' |tail -n +2)
-    docker ps -a -q | xargs -r docker rm -f
+	docker ps -a -q | xargs -r docker rm -f
 	docker network prune -f
 	docker volume prune -f
 
