@@ -17,7 +17,6 @@ Feature: test "binlog" in zk cluster
      /server-id/a binlog_format=row
      /server-id/a relay-log=mysql-relay-bin
      """
-    Given sleep "11" seconds
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
         <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
@@ -48,25 +47,26 @@ Feature: test "binlog" in zk cluster
     Then execute admin cmd "reload @@config_all"
 
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                          | expect  | db      |
-      | conn_1 | False   | drop table if exists vertical1                               | success | schema2 |
-      | conn_1 | True    | create table vertical1 (id int)                              | success | schema2 |
-      | conn_0 | False   | drop table if exists global1                                 | success | schema1 |
-      | conn_0 | False   | drop table if exists global2                                 | success | schema1 |
-      | conn_0 | False   | drop table if exists sharding4                               | success | schema1 |
-      | conn_0 | False   | drop table if exists sharding2                               | success | schema1 |
-      | conn_0 | False   | drop table if exists child1                                  | success | schema1 |
-      | conn_0 | False   | drop table if exists sing1                                   | success | schema1 |
-      | conn_0 | False   | drop table if exists no_sharding1                            | success | schema1 |
-      | conn_0 | False   | create table global1 (id int)                                | success | schema1 |
-      | conn_0 | False   | create table global2 (id int)                                | success | schema1 |
-      | conn_0 | False   | create table sharding4 (id int, name int)                    | success | schema1 |
-      | conn_0 | False   | create table sharding2 (id int, fid int)                     | success | schema1 |
-      | conn_0 | False   | create table child1 (fid int,name int)                       | success | schema1 |
-      | conn_0 | False   | create table sing1 (id int)                                  | success | schema1 |
-      | conn_0 | True    | create table no_sharding1 (id int, name int)                 | success | schema1 |
+      | conn   | toClose | sql                                                          | expect  | db      | timeout |
+      | conn_1 | False   | drop table if exists vertical1                               | success | schema2 | 6,2     |
+      | conn_1 | True    | create table vertical1 (id int)                              | success | schema2 | 6,2     |
+      | conn_0 | False   | drop table if exists global1                                 | success | schema1 | 6,2     |
+      | conn_0 | False   | drop table if exists global2                                 | success | schema1 | 6,2     |
+      | conn_0 | False   | drop table if exists sharding4                               | success | schema1 | 6,2     |
+      | conn_0 | False   | drop table if exists sharding2                               | success | schema1 | 6,2     |
+      | conn_0 | False   | drop table if exists child1                                  | success | schema1 | 6,2     |
+      | conn_0 | False   | drop table if exists sing1                                   | success | schema1 | 6,2     |
+      | conn_0 | False   | drop table if exists no_sharding1                            | success | schema1 | 6,2     |
+      | conn_0 | False   | create table global1 (id int)                                | success | schema1 | 6,2     |
+      | conn_0 | False   | create table global2 (id int)                                | success | schema1 | 6,2     |
+      | conn_0 | False   | create table sharding4 (id int, name int)                    | success | schema1 | 6,2     |
+      | conn_0 | False   | create table sharding2 (id int, fid int)                     | success | schema1 | 6,2     |
+      | conn_0 | False   | create table child1 (fid int,name int)                       | success | schema1 | 6,2     |
+      | conn_0 | False   | create table sing1 (id int)                                  | success | schema1 | 6,2     |
+      | conn_0 | True    | create table no_sharding1 (id int, name int)                 | success | schema1 | 6,2     |
 
-  @auto_retry
+
+
   Scenario: during "transaction",happen bad block,check "showBinlogStatusTimeout" #1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -117,19 +117,19 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-3" at background
       | conn    | toClose | sql                  | db               |
       | conn_3  | true    | show @@binlog.status | dble_information |
-    Given sleep "6" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
+#    Given sleep "6" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "10" times
       """
       wait all session finished
       """
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql       | expect  | db      |
       | conn_11 | true    | commit    | success | schema1 |
-    Given sleep "1" seconds
+#    Given sleep "1" seconds
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                                | expect         | db      |
-      | conn_21 | False   | desc global1                       | hasStr{2021}   | schema1 |
-      | conn_21 | true    | alter table global1 drop name      | success        | schema1 |
+      | conn    | toClose | sql                                | expect         | db      | timeout |
+      | conn_21 | False   | desc global1                       | hasStr{2021}   | schema1 | 5       |
+      | conn_21 | true    | alter table global1 drop name      | success        | schema1 | 5       |
     Given delete file "/tmp/dble_admin_query.log" on "dble-3"
 
 
@@ -175,14 +175,14 @@ Feature: test "binlog" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /delayDdLToDeliver/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+      /delayDdLToDeliver/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
       """
     #global table ddl
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-2"
     Given execute sqls in "dble-2" at background
       | conn    | toClose | sql                                                 | db      |
       | conn_21 | true    | alter table global1 add age int default 2020122001  | schema1 |
-    Given sleep "1" seconds
+#    Given sleep "1" seconds
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
@@ -201,12 +201,12 @@ Feature: test "binlog" in zk cluster
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1" retry "5" times
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
       """
       status
       """
-    Given sleep "8" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       Error can't wait all session finished
       """
@@ -214,9 +214,9 @@ Feature: test "binlog" in zk cluster
     Given destroy btrace threads list
 
     Then execute sql in "dble-3" in "user" mode
-      | conn    | toClose | sql                                  | expect              | db      |
-      | conn_31 | false   | insert into global1(id) values (1)   | success             | schema1 |
-      | conn_31 | True    | select * from global1                | hasStr{2020122001}  | schema1 |
+      | conn    | toClose | sql                                  | expect              | db      | timeout |
+      | conn_31 | false   | insert into global1(id) values (1)   | success             | schema1 | 10,3    |
+      | conn_31 | True    | select * from global1                | hasStr{2020122001}  | schema1 | 10,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given delete file "/tmp/dble_user_query.log" on "dble-2"
 
@@ -226,7 +226,7 @@ Feature: test "binlog" in zk cluster
     Given execute sqls in "dble-2" at background
       | conn    | toClose | sql                                  | db      |
       | conn_21 | true    | create index suoyin ON global2(id)   | schema1 |
-    Given sleep "1" seconds
+#    Given sleep "1" seconds
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
@@ -243,12 +243,12 @@ Feature: test "binlog" in zk cluster
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
       """
       status
       """
-    Given sleep "8" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+ 
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       Error can't wait all session finished
       """
@@ -256,8 +256,8 @@ Feature: test "binlog" in zk cluster
     Given destroy btrace threads list
 
     Then execute sql in "dble-3" in "user" mode
-      | conn    | toClose | sql                                  | expect                         | db      |
-      | conn_31 | True    | create index suoyin ON global2(id)   | Duplicate key name 'suoyin'    | schema1 |
+      | conn    | toClose | sql                                  | expect                         | db      | timeout |
+      | conn_31 | True    | create index suoyin ON global2(id)   | Duplicate key name 'suoyin'    | schema1 | 10,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given delete file "/tmp/dble_user_query.log" on "dble-2"
 
@@ -267,7 +267,7 @@ Feature: test "binlog" in zk cluster
     Given execute sqls in "dble-3" at background
       | conn    | toClose | sql                                                   | db      |
       | conn_31 | true    | alter table sharding2 add age int default 2020122002  | schema1 |
-    Given sleep "1" seconds
+#    Given sleep "1" seconds
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
@@ -280,12 +280,12 @@ Feature: test "binlog" in zk cluster
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
       """
       status
       """
-    Given sleep "8" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+ 
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       Error can't wait all session finished
       """
@@ -293,9 +293,9 @@ Feature: test "binlog" in zk cluster
     Given destroy btrace threads list
 
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                                          | expect              | db      |
-      | conn_21 | false   | insert into sharding2(id,fid) values (1,1)   | success             | schema1 |
-      | conn_21 | True    | select * from sharding2                      | hasStr{2020122002}  | schema1 |
+      | conn    | toClose | sql                                          | expect              | db      | timeout |
+      | conn_21 | false   | insert into sharding2(id,fid) values (1,1)   | success             | schema1 | 10,3    |
+      | conn_21 | True    | select * from sharding2                      | hasStr{2020122002}  | schema1 | 10,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given delete file "/tmp/dble_user_query.log" on "dble-3"
 
@@ -313,17 +313,17 @@ Feature: test "binlog" in zk cluster
       """
       timeout while waiting for unfinished distributed transactions
       """
-    Given sleep "8" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+ 
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       timeout while waiting for unfinished distributed transactions
       """
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                                          | expect              | db      |
-      | conn_21 | false   | insert into sharding4(id,name) values (1,1)  | success             | schema1 |
-      | conn_21 | True    | select * from sharding4                      | hasStr{2020122003}  | schema1 |
+      | conn    | toClose | sql                                          | expect              | db      | timeout |
+      | conn_21 | false   | insert into sharding4(id,name) values (1,1)  | success             | schema1 | 10,3    |
+      | conn_21 | True    | select * from sharding4                      | hasStr{2020122003}  | schema1 | 10,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given delete file "/tmp/dble_user_query.log" on "dble-1"
 
@@ -346,20 +346,20 @@ Feature: test "binlog" in zk cluster
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
       """
       status
       """
-    Given sleep "8" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+ 
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       Error can't wait all session finished
       """
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                                          | expect                         | db      |
-      | conn_21 | True    | alter table child1 add index ceshi(name)     | Duplicate key name 'ceshi'     | schema1 |
+      | conn    | toClose | sql                                          | expect                         | db      | timeout |
+      | conn_21 | True    | alter table child1 add index ceshi(name)     | Duplicate key name 'ceshi'     | schema1 | 10,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given delete file "/tmp/dble_user_query.log" on "dble-3"
 
@@ -373,19 +373,19 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_21 | true    | show @@binlog.status | dble_information |
-    Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+#    Given sleep "2" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "10,3" times
       """
       172.100.9.6:3306
       172.100.9.5:3306
       """
-    Given sleep "8" seconds
+ 
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                               | expect              | db      |
-      | conn_21 | false   | insert into sing1(id) values (1)  | success             | schema1 |
-      | conn_21 | True    | select * from sing1               | hasStr{2020122004}  | schema1 |
+      | conn    | toClose | sql                               | expect              | db      | timeout |
+      | conn_21 | false   | insert into sing1(id) values (1)  | success             | schema1 | 10,3    |
+      | conn_21 | True    | select * from sing1               | hasStr{2020122004}  | schema1 | 10,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-2"
     Given delete file "/tmp/dble_user_query.log" on "dble-1"
 
@@ -399,19 +399,19 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_21 | true    | show @@binlog.status | dble_information |
-    Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+#    Given sleep "2" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "10,3" times
       """
       172.100.9.6:3306
       172.100.9.5:3306
       """
-    Given sleep "8" seconds
+ 
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                                             | expect              | db      |
-      | conn_21 | false   | insert into no_sharding1(id,name) values (1,1)  | success             | schema1 |
-      | conn_21 | True    | select * from no_sharding1                      | hasStr{2020122005}  | schema1 |
+      | conn    | toClose | sql                                             | expect              | db      | timeout |
+      | conn_21 | false   | insert into no_sharding1(id,name) values (1,1)  | success             | schema1 | 10,3    |
+      | conn_21 | True    | select * from no_sharding1                      | hasStr{2020122005}  | schema1 | 10,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-2"
     Given delete file "/tmp/dble_user_query.log" on "dble-1"
 
@@ -425,19 +425,19 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_21 | true    | show @@binlog.status | dble_information |
-    Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+#    Given sleep "2" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "10,3" times
       """
       172.100.9.6:3306
       172.100.9.5:3306
       """
-    Given sleep "8" seconds
+ 
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                                          | expect              | db      |
-      | conn_21 | false   | insert into vertical1(id) values (1)         | success             | schema2 |
-      | conn_21 | True    | select * from vertical1                      | hasStr{2020122006}  | schema2 |
+      | conn    | toClose | sql                                          | expect              | db      | timeout |
+      | conn_21 | false   | insert into vertical1(id) values (1)         | success             | schema2 | 10,3    |
+      | conn_21 | True    | select * from vertical1                      | hasStr{2020122006}  | schema2 | 10,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-2"
     Given delete file "/tmp/dble_user_query.log" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
@@ -449,7 +449,7 @@ Feature: test "binlog" in zk cluster
 
 
 
-  @btrace @auto_retry
+  @btrace
   Scenario: during "transaction" ,the admin cmd of "show @@binlog.status" be blocked,and set timeout  #3
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -509,7 +509,7 @@ Feature: test "binlog" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
-      /checkBackupStatus/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+      /checkBackupStatus/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     #route differ node would "hang"
@@ -547,16 +547,16 @@ Feature: test "binlog" in zk cluster
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
       """
       status
       """
     #wait 15s,because btrace sleep 15s,create timeout showBinlogStatusTimeout=5000
-    Given sleep "15" seconds
+#    Given sleep "15" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "10,3" times
       """
       Error can't wait all session finished
       """
@@ -570,18 +570,18 @@ Feature: test "binlog" in zk cluster
       status
       """
     Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose | sql                                | expect      | db      |
-      | conn_11 | False   | select * from global1              | length{(2)} | schema1 |
-      | conn_11 | true    | select * from global2              | length{(1)} | schema1 |
+      | conn    | toClose | sql                                | expect      | db      | timeout |
+      | conn_11 | False   | select * from global1              | length{(2)} | schema1 | 11,3    |
+      | conn_11 | true    | select * from global2              | length{(1)} | schema1 | 11,3    |
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                                | expect      | db      |
-      | conn_21 | False   | select * from sharding2            | length{(2)} | schema1 |
-      | conn_21 | true    | select * from sharding4            | length{(2)} | schema1 |
+      | conn    | toClose | sql                                | expect      | db      | timeout |
+      | conn_21 | False   | select * from sharding2            | length{(2)} | schema1 | 11,3    |
+      | conn_21 | true    | select * from sharding4            | length{(2)} | schema1 | 11,3    |
     Then execute sql in "dble-3" in "user" mode
-      | conn    | toClose | sql                                | expect      | db      |
-      | conn_31 | False   | select * from sing1                | length{(2)} | schema1 |
-      | conn_32 | true    | select * from no_sharding1         | length{(2)} | schema1 |
-      | conn_32 | true    | select * from vertical1            | length{(2)} | schema2 |
+      | conn    | toClose | sql                                | expect      | db      | timeout |
+      | conn_31 | False   | select * from sing1                | length{(2)} | schema1 | 11,3    |
+      | conn_32 | true    | select * from no_sharding1         | length{(2)} | schema1 | 11,3    |
+      | conn_32 | true    | select * from vertical1            | length{(2)} | schema2 | 11,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-2"
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
@@ -614,15 +614,15 @@ Feature: test "binlog" in zk cluster
       """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
       """
-      $a showBinlogStatusTimeout=20000
+      $a showBinlogStatusTimeout=60000
       """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-2" with sed cmds
       """
-      $a showBinlogStatusTimeout=20000
+      $a showBinlogStatusTimeout=60000
       """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-3" with sed cmds
       """
-      $a showBinlogStatusTimeout=20000
+      $a showBinlogStatusTimeout=60000
       """
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
@@ -632,7 +632,7 @@ Feature: test "binlog" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /delayDdLToDeliver/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+      /delayDdLToDeliver/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
       """
     #global table ddl
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-2"
@@ -657,22 +657,22 @@ Feature: test "binlog" in zk cluster
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
       """
       status
       """
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       172.100.9.6:3306
       172.100.9.5:3306
       """
     Then execute sql in "dble-3" in "user" mode
-      | conn    | toClose | sql                                  | expect              | db      |
-      | conn_31 | false   | insert into global1(id) values (2)   | success             | schema1 |
-      | conn_31 | True    | select * from global1                | hasStr{2020122801}  | schema1 |
+      | conn    | toClose | sql                                  | expect              | db      | timeout |
+      | conn_31 | false   | insert into global1(id) values (2)   | success             | schema1 | 11,3    |
+      | conn_31 | True    | select * from global1                | hasStr{2020122801}  | schema1 | 11,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given delete file "/tmp/dble_user_query.log" on "dble-2"
 
@@ -698,21 +698,21 @@ Feature: test "binlog" in zk cluster
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
       """
       status
       """
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       172.100.9.6:3306
       172.100.9.5:3306
       """
     Then execute sql in "dble-3" in "user" mode
-      | conn    | toClose | sql                                  | expect                         | db      |
-      | conn_31 | True    | create index index1 ON global2(id)   | Duplicate key name 'index1'    | schema1 |
+      | conn    | toClose | sql                                  | expect                         | db      | timeout |
+      | conn_31 | True    | create index index1 ON global2(id)   | Duplicate key name 'index1'    | schema1 | 11,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given delete file "/tmp/dble_user_query.log" on "dble-2"
 
@@ -734,22 +734,22 @@ Feature: test "binlog" in zk cluster
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
       """
       status
       """
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       172.100.9.6:3306
       172.100.9.5:3306
       """
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                                          | expect              | db      |
-      | conn_21 | false   | insert into sharding2(id,fid) values (2,2)   | success             | schema1 |
-      | conn_21 | True    | select * from sharding2                      | hasStr{2020122802}  | schema1 |
+      | conn    | toClose | sql                                          | expect              | db      | timeout |
+      | conn_21 | false   | insert into sharding2(id,fid) values (2,2)   | success             | schema1 | 11,3    |
+      | conn_21 | True    | select * from sharding2                      | hasStr{2020122802}  | schema1 | 11,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given delete file "/tmp/dble_user_query.log" on "dble-3"
 
@@ -767,18 +767,18 @@ Feature: test "binlog" in zk cluster
       172.100.9.6:3306
       172.100.9.5:3306
       """
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       172.100.9.6:3306
       172.100.9.5:3306
       """
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                                          | expect              | db      |
-      | conn_21 | false   | insert into sharding4(id,name) values (2,2)  | success             | schema1 |
-      | conn_21 | True    | select * from sharding4                      | hasStr{2020122803}  | schema1 |
+      | conn    | toClose | sql                                          | expect              | db      | timeout |
+      | conn_21 | false   | insert into sharding4(id,name) values (2,2)  | success             | schema1 | 11,3    |
+      | conn_21 | True    | select * from sharding4                      | hasStr{2020122803}  | schema1 | 11,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given delete file "/tmp/dble_user_query.log" on "dble-1"
 
@@ -804,17 +804,17 @@ Feature: test "binlog" in zk cluster
       """
       status
       """
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       172.100.9.6:3306
       172.100.9.5:3306
       """
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                                          | expect                         | db      |
-      | conn_21 | True    | alter table child1 add index index2(name)    | Duplicate key name 'index2'    | schema1 |
+      | conn    | toClose | sql                                          | expect                         | db      | timeout |
+      | conn_21 | True    | alter table child1 add index index2(name)    | Duplicate key name 'index2'    | schema1 | 11,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given delete file "/tmp/dble_user_query.log" on "dble-3"
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
@@ -851,15 +851,15 @@ Feature: test "binlog" in zk cluster
       """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
       """
-      $a showBinlogStatusTimeout=20000
+      $a showBinlogStatusTimeout=60000
       """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-2" with sed cmds
       """
-      $a showBinlogStatusTimeout=20000
+      $a showBinlogStatusTimeout=60000
       """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-3" with sed cmds
       """
-      $a showBinlogStatusTimeout=20000
+      $a showBinlogStatusTimeout=60000
       """
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
@@ -875,7 +875,7 @@ Feature: test "binlog" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /ShowBinlogStatus/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+      /ShowBinlogStatus/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     #the query will be "hang"
@@ -904,7 +904,7 @@ Feature: test "binlog" in zk cluster
       172.100.9.6:3306
       """
     #wait 15s,because btrace sleep 15s
-    Given sleep "15" seconds
+    Given sleep "30" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
@@ -917,18 +917,18 @@ Feature: test "binlog" in zk cluster
       """
       status
       """
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       172.100.9.5:3306
       172.100.9.6:3306
       """
     Then execute sql in "dble-3" in "user" mode
-      | conn      | toClose | sql                      | expect          | db      |
-      | conn_31   | true    | desc global1             | length{(2)}     | schema1 |
+      | conn      | toClose | sql                      | expect          | db      | timeout |
+      | conn_31   | true    | desc global1             | length{(2)}     | schema1 | 10,3    |
     Then execute sql in "dble-2" in "user" mode
-      | conn      | toClose | sql                              | expect         | db      |
-      | conn_21   | false   | select * from global1            | length{(1)}    | schema1 |
-      | conn_21   | true    | alter table global1 drop name    | success        | schema1 |
+      | conn      | toClose | sql                              | expect         | db      | timeout |
+      | conn_21   | false   | select * from global1            | length{(1)}    | schema1 | 10,3    |
+      | conn_21   | true    | alter table global1 drop name    | success        | schema1 | 10,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
@@ -960,15 +960,15 @@ Feature: test "binlog" in zk cluster
       """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
       """
-      $a showBinlogStatusTimeout=30000
+      $a showBinlogStatusTimeout=60000
       """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-2" with sed cmds
       """
-      $a showBinlogStatusTimeout=30000
+      $a showBinlogStatusTimeout=60000
       """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-3" with sed cmds
       """
-      $a showBinlogStatusTimeout=30000
+      $a showBinlogStatusTimeout=60000
       """
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
@@ -995,7 +995,7 @@ Feature: test "binlog" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
-      /checkBackupStatus/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(18000L)/;/\}/!ba}
+      /checkBackupStatus/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     #route differ node would "hang"
@@ -1027,12 +1027,12 @@ Feature: test "binlog" in zk cluster
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
       """
       status
       """
     #wait 18s,because btrace sleep 18s,create not timeout ,showBinlogStatusTimeout=30000
-    Given sleep "18" seconds
+    Given sleep "30" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
@@ -1050,18 +1050,18 @@ Feature: test "binlog" in zk cluster
       status
       """
     Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose | sql                                | expect      | db      |
-      | conn_11 | False   | select * from global1              | length{(2)} | schema1 |
-      | conn_11 | true    | select * from global2              | length{(1)} | schema1 |
+      | conn    | toClose | sql                                | expect      | db      | timeout |
+      | conn_11 | False   | select * from global1              | length{(2)} | schema1 | 10,3    |
+      | conn_11 | true    | select * from global2              | length{(1)} | schema1 | 10,3    |
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose | sql                                | expect      | db      |
-      | conn_21 | False   | select * from sharding2            | length{(2)} | schema1 |
-      | conn_21 | true    | select * from sharding4            | length{(2)} | schema1 |
+      | conn    | toClose | sql                                | expect      | db      | timeout |
+      | conn_21 | False   | select * from sharding2            | length{(2)} | schema1 | 10,3    |
+      | conn_21 | true    | select * from sharding4            | length{(2)} | schema1 | 10,3    |
     Then execute sql in "dble-3" in "user" mode
-      | conn    | toClose | sql                                | expect      | db      |
-      | conn_31 | False   | select * from sing1                | length{(2)} | schema1 |
-      | conn_32 | true    | select * from no_sharding1         | length{(1)} | schema1 |
-      | conn_32 | true    | select * from vertical1            | length{(1)} | schema2 |
+      | conn    | toClose | sql                                | expect      | db      | timeout |
+      | conn_31 | False   | select * from sing1                | length{(2)} | schema1 | 10,3    |
+      | conn_32 | true    | select * from no_sharding1         | length{(1)} | schema1 | 10,3    |
+      | conn_32 | true    | select * from vertical1            | length{(1)} | schema2 | 10,3    |
     Given delete file "/tmp/dble_admin_query.log" on "dble-2"
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
@@ -1075,15 +1075,15 @@ Feature: test "binlog" in zk cluster
 
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
       """
-      $a showBinlogStatusTimeout=20000
+      $a showBinlogStatusTimeout=60000
       """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-2" with sed cmds
       """
-      $a showBinlogStatusTimeout=20000
+      $a showBinlogStatusTimeout=60000
       """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-3" with sed cmds
       """
-      $a showBinlogStatusTimeout=20000
+      $a showBinlogStatusTimeout=60000
       """
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
@@ -1100,7 +1100,7 @@ Feature: test "binlog" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /ShowBinlogStatus/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+      /ShowBinlogStatus/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute "admin" cmd  in "dble-1" at background
@@ -1111,7 +1111,7 @@ Feature: test "binlog" in zk cluster
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause/status  >/tmp/dble_zk_status.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_status.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_status.log" in host "dble-1" retry "10,3" times
       """
       \[1, 2, 3\]
       """
@@ -1127,15 +1127,15 @@ Feature: test "binlog" in zk cluster
     Then execute sql in "dble-2" in "admin" mode
       | conn     | toClose | sql                      | expect                                               |
       | conn_2   | true    | show @@binlog.status     | There is another command is showing BinlogStatus     |
-    Given sleep "15" seconds
+#    Given sleep "15" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
     Given start dble in "dble-1"
     Then execute sql in "dble-2" in "admin" mode
-      | conn     | toClose | sql                      | expect     |
-      | conn_2   | true    | show @@binlog.status     | success    |
+      | conn     | toClose | sql                      | expect     | timeout |
+      | conn_2   | true    | show @@binlog.status     | success    | 11,3    |
 
     # drop table
     Given execute oscmd in "dble-1"
