@@ -179,8 +179,11 @@ Feature: connection test in rwSplit mode
        |user| conn   | toClose | sql                                     | expect  |
        |rwS1| conn_1 | true    | drop database testdb                    | success |
 
+  @stop_tcpdump
   Scenario: When the front connection is bound with the dbGroup and trigger reload less ten times, result can return correctly      #3
-
+    """
+    {'stop_tcpdump':'dble-1'}
+    """
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
         """
         s/-Dprocessors=1/-Dprocessors=10/
@@ -210,7 +213,7 @@ Feature: connection test in rwSplit mode
     #安装tcpdump并启动抓包 for issue:DBLE0REQ-2116
     Given prepare a thread to run tcpdump in "dble-1"
      """
-     nohup tcpdump -w /tmp/tcpdump.cap 2>&1 &
+     touch /opt/dble/logs/tcpdump.log && tcpdump -w /opt/dble/logs/tcpdump.log
      """
 
       Given execute sql in "dble-1" in "user" mode
@@ -227,7 +230,7 @@ Feature: connection test in rwSplit mode
      Given delete file "/opt/dble/BtraceSelectRWDbGroup.java" on "dble-1"
      Given delete file "/opt/dble/BtraceSelectRWDbGroup.java.log" on "dble-1"
      Given prepare a thread run Btrace script "BtraceSelectRWDbGroup.java" in "dble-1"
-
+     Given stop and destroy tcpdump threads list in "dble-1"
      #delete slave dbInstance
      Given prepare a thread execute sql "select * from test" with "conn_1"
      Then execute sql in "dble-1" in "admin" mode
@@ -261,7 +264,6 @@ Feature: connection test in rwSplit mode
        |rwS1| conn_1 | true    | drop database testdb                    | success |
     Given delete file "/opt/dble/BtraceSelectRWDbGroup.java" on "dble-1"
     Given delete file "/opt/dble/BtraceSelectRWDbGroup.java.log" on "dble-1"
-
     Scenario: When the front connection is bound with the dbGroup, reload is triggered multiple times and the dbgroup connection is obtained recursively ten times    #4
 
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds

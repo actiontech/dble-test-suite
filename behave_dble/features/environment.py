@@ -180,6 +180,21 @@ def after_scenario(context, scenario):
         restore_obj = RestoreEnvObject(scenario)
         restore_obj.restore()
 
+        if "stop_tcpdump" in scenario.tags:
+            params_dic = restore_obj.get_tag_params("{'stop_tcpdump'")
+            logger.debug("params_dic is: {0}".format(params_dic))
+            if params_dic:
+                paras = params_dic["stop_tcpdump"].split(",")
+            else:
+                paras = ""
+
+            logger.debug("try to stop tcpdump thread: {0}".format(paras))
+            for host_name in paras:
+                logger.debug("the value of host_name is: {0}".format(host_name))
+                context.execute_steps(u'Given stop and destroy tcpdump threads list in "{0}"'.format(host_name))
+
+
+
     # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
     stop_scenario_for_failed = context.config.stop and scenario.status == "failed"
     if not stop_scenario_for_failed and not "skip_restart" in scenario.tags and not context.userDebug:
