@@ -86,7 +86,6 @@ run_cfg_case2: up
 	features/func_test/sequence/sequence.feature \
 	features/func_test/safety/mysql_node_disconnected.feature \
 	features/func_test/heartbeat/kill_heartbeat_connection.feature \
-	features/func_test/xa_transaction/net_down_before_rollback.feature \
 	features/func_test/xa_transaction/xa_retry_count.feature \
 	features/func_test/metalock/mysql_slave_down.feature \
 
@@ -101,6 +100,7 @@ run_cfg_case_unstable: up
 	features/func_test/cfg_test/sharding_db_attribute.feature \
 	features/func_test/cfg_test/general_log.feature \
 	features/func_test/managercmd/split.feature \
+	features/func_test/xa_transaction/net_down_before_rollback.feature \
 
 
 run_cfg_case_unstable2: up
