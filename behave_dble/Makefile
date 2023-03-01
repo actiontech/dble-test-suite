@@ -50,7 +50,7 @@ run_cluster_unstable_case: up
 	features/cluster/cluster_detach_attach.feature \
 
 
-run_cfg_case: up
+run_cfg_case1: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
 	features/func_test/cfg_test/schema_funcation.feature \
 	features/func_test/cfg_test/user.feature \
@@ -74,10 +74,13 @@ run_cfg_case: up
 	features/func_test/managercmd/slow_query.feature \
 	features/func_test/managercmd/split.feature \
 	features/func_test/managercmd/show_sqlX.feature \
+
+
+run_cfg_case2: up
+	pipenv run behave -D dble_conf=template features/setup.feature \
 	features/func_test/Large_Packet/Large_Packet.feature \
 	features/func_test/ddl/ddl_refactor.feature \
 	features/func_test/special/complex_query_npe.feature \
-	features/func_test/special/thread_leak_test.feature  \
 	features/func_test/special/fingerprint_log.feature \
 	features/sql_cover/special/hint.feature \
 	features/func_test/sequence/sequence.feature \
@@ -86,6 +89,7 @@ run_cfg_case: up
 	features/func_test/xa_transaction/net_down_before_rollback.feature \
 	features/func_test/xa_transaction/xa_retry_count.feature \
 	features/func_test/metalock/mysql_slave_down.feature \
+
 
 run_cfg_case_unstable: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
@@ -101,6 +105,7 @@ run_cfg_case_unstable: up
 	features/func_test/load_data/load_data_batch.feature \
 	features/func_test/xa_transaction/bg_strategy_after_net_shock.feature \
 	features/func_test/xa_transaction/bg_strategy_after_node_hangs.feature \
+	features/func_test/special/thread_leak_test.feature  \
 
 run_sql_support_special: up
 	pipenv run behave -Dreset=false -D dble_conf=sql_cover_mixed features/setup.feature \
