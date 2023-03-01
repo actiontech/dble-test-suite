@@ -75,10 +75,6 @@ def step_impl(context, host):
     def check_tcpdump_started(sshClient):
         if check_tcpdump_pid_exist(sshClient):
             return True
-        else:
-            catcmd = "cat tcpdump.log"
-            rc, sto, ste = sshClient.exec_command(catcmd)
-            assert len(ste) == 0, "exec cmd {1} return err:{0}".format(ste, catcmd)
         return False
     check_tcpdump_started(sshClient)
 
