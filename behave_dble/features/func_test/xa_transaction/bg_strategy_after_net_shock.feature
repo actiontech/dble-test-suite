@@ -7,10 +7,11 @@
 #2.20.04.0#dble-8175
 Feature: retry policy after xa transaction commit failed for network anomaly
 
-   @btrace @restore_network
+   @btrace @restore_network @stop_tcpdump
   Scenario: mysql node network shock causing xa transaction fail to commit, recovery network before the front end attempts to commit 5 times #1
     """
     {'restore_network':'mysql-master1'}
+    {'stop_tcpdump':'dble-1'}
     """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
@@ -35,7 +36,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     #安装tcpdump并启动抓包
     Given prepare a thread to run tcpdump in "dble-1"
      """
-     nohup tcpdump -w /tmp/tcpdump.cap 2>&1 &
+     touch /opt/dble/logs/tcpdump.log && tcpdump -w /opt/dble/logs/tcpdump.log
      """
 
     Given execute oscmd in "mysql-master1"
@@ -57,6 +58,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                                                                               | expect        | db                |timeout  |
       | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 4,5     |
+    Given stop and destroy tcpdump threads list in "dble-1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect      | db      |
       | conn_1 | False   | select * from sharding_4_t1 | length{(4)} | schema1 |

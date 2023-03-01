@@ -6,7 +6,7 @@
 import logging
 from threading import Thread
 
-from steps.lib.utils import get_node
+from steps.lib.utils import get_node, wait_for
 from steps.lib.Flag import Flag
 from steps.lib.DbleObject import DbleObject
 from steps.lib.PostQueryCheck import PostQueryCheck
@@ -30,16 +30,78 @@ def check_tcpdump_pid_exist(sshClient):
     cmd = "ps aux|grep tcpdump| grep -v grep | awk '{print $2}' | wc -l"
     rc, sto, ste = sshClient.exec_command(cmd)
     assert len(ste) == 0, "exec cmd fail for:{0}".format(ste)
-    tcpdump_pid_exist = str(sto) == '1'
-
+    tcpdump_pid_exist = str(sto) == '2'
+    logger.debug("check tcpdump pid cmd exists")
     return tcpdump_pid_exist
 
-def stop_tcpdump(sshClient):
+    # root     17587     1  0 15:49 ?        00:00:00 bash -c touch /opt/dble/logs/tcpdump.log && tcpdump -w /opt/dble/logs/tcpdump.log
+    # tcpdump  17594 17587  0 15:49 ?        00:00:00 tcpdump -w /opt/dble/logs/tcpdump.log
+
+
+def stop_tcpdump(context, sshClient):
     cmd = "kill -SIGINT `ps aux | grep tcpdump |grep -v bash|grep -v grep| awk '{{print $2}}'`"
     rc, sto, ste = sshClient.exec_command(cmd)
     assert len(ste) == 0, "kill tcpdump err:{0}".format(ste)
-    # 等待日志打印完成并且进程结束
-    time.sleep(3)
+
+    # make sure the tcpdump stop success
+    @wait_for(context, text="stop tcpdump failed!", duration=5, interval=0.5)
+    def check_tcpdump_stopped(sshClient):
+        if not check_tcpdump_pid_exist(sshClient):
+            return True
+        return False
+    check_tcpdump_stopped(sshClient)
+    logger.debug("tcpdump stop success")
+
+@Given('prepare a thread to run tcpdump in "{host}"')
+def step_impl(context, host):
+    node = get_node(host)
+    sshClient = node.ssh_conn
+    run_tcpdump_cmd = context.text.strip()
+    if check_tcpdump_pid_exist(sshClient):
+        stop_tcpdump(context, sshClient)
+
+    current_datetime = datetime.strftime(datetime.now(), '%H%M%S_%f')
+    tcpdump_thread_name = "tcpdump_{0}".format(current_datetime)
+    context.logger.debug("tcpdump_thread_name: {0}".format(tcpdump_thread_name))
+    global tcpdump_threads
+    thd = Thread(target=run_tcpdump, args=(sshClient, run_tcpdump_cmd), name=tcpdump_thread_name)
+    tcpdump_threads.append(thd)
+
+    thd.setDaemon(True)
+    thd.start()
+
+    # make sure the tcpdump start success
+    @wait_for(context, text="start tcpdump failed!", duration=5, interval=0.5)
+    def check_tcpdump_started(sshClient):
+        if check_tcpdump_pid_exist(sshClient):
+            return True
+        else:
+            catcmd = "cat tcpdump.log"
+            rc, sto, ste = sshClient.exec_command(catcmd)
+            assert len(ste) == 0, "exec cmd {1} return err:{0}".format(ste, catcmd)
+        return False
+    check_tcpdump_started(sshClient)
+
+
+def run_tcpdump(sshClient, run_tcpdump_cmd):
+    rc, sto, ste = sshClient.exec_command(run_tcpdump_cmd, timeout=300)
+    logger.debug("tcpdump cmd is: {0}".format(run_tcpdump_cmd))
+    assert len(ste) == 0, "tcpdump err:{0}".format(ste)
+
+
+@Given('stop and destroy tcpdump threads list in "{host}"')
+def destroy_threads(context, host):
+    node = get_node(host)
+    sshClient = node.ssh_conn
+    if check_tcpdump_pid_exist(sshClient):
+        stop_tcpdump(context, sshClient)
+        global tcpdump_threads
+        if len(tcpdump_threads) > 0:
+            for thd in tcpdump_threads:
+                logger.debug("join tcpdump thread: {0}".format(thd.name))
+                thd.join()
+            tcpdump_threads = []
+
 
 @Given('restart mysql in "{host_name}" with sed cmds to update mysql config')
 @Given('restart mysql in "{host_name}"')
@@ -99,39 +161,6 @@ def step_impl(context, host_name, query, occur_times_expr=None):
     mysql.check_query_in_general_log(query, expect_exist=True, expect_occur_times_expr=occur_times_expr)
 
 
-@Given('prepare a thread to run tcpdump in "{host}"')
-def step_impl(context, host):
-    node = get_node(host)
-    sshClient = node.ssh_conn
-    run_tcpdump_cmd = context.text.strip()
-    if check_tcpdump_pid_exist(sshClient):
-        stop_tcpdump(sshClient)
-
-    current_datetime = datetime.strftime(datetime.now(), '%H%M%S_%f')
-    tcpdump_thread_name = "tcpdump_{0}".format(current_datetime)
-    context.logger.debug("tcpdump_thread_name: {0}".format(tcpdump_thread_name))
-    global tcpdump_threads
-    thd = Thread(target=run_tcpdump, args=(sshClient, run_tcpdump_cmd), name=tcpdump_thread_name)
-    tcpdump_threads.append(thd)
-
-    thd.setDaemon(True)
-    thd.start()
-
-
-def run_tcpdump(sshClient, run_tcpdump_cmd):
-    rc, sto, ste = sshClient.exec_command(run_tcpdump_cmd, timeout=300)
-    logger.debug("tcpdump cmd is: {0}".format(run_tcpdump_cmd))
-    assert len(ste) == 0, "tcpdump err:{0}".format(ste)
-
-
-@Given('destroy tcpdump threads list')
-def destroy_threads(context):
-    global tcpdump_threads
-    for thd in tcpdump_threads:
-        context.logger.debug("join tcpdump thread: {0}".format(thd.name))
-        thd.join()
-    tcpdump_threads = []
-
 @Given('execute sql in "{host_name}"')
 @Then('execute sql in "{host_name}"')
 def step_impl(context, host_name):
@@ -172,24 +201,11 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
                 if mode in ["admin", "user"]:  #print dble jstack
                     print_jstack(node)
                     logger.debug(f"print dble jstack end")
-                sshClient = node.ssh_conn
-                if check_tcpdump_pid_exist(sshClient):
-                    stop_tcpdump(sshClient)
-                    #将数据移到/opt/dble/logs路径下
-                    mv_cmd = "mv /tmp/tcpdump.cap /opt/dble/logs"
-                    rc, sto, ste = sshClient.exec_command(mv_cmd)
-                    assert len(ste) == 0, "mv tcpdump file err:{0}".format(ste)
-                    # context.execute_steps(u'destroy tcpdump threads list')
-                    global tcpdump_threads
-                    if len(tcpdump_threads) > 0:
-                        for thd in tcpdump_threads:
-                            logger.debug("join tcpdump thread: {0}".format(thd.name))
-                            thd.join()
-                        tcpdump_threads = []
                 raise e
             else:
                 time.sleep(sep_time)
     return res, err
+
 
 
 def print_jstack(node):

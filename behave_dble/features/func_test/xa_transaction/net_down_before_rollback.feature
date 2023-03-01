@@ -11,10 +11,11 @@
 
 Feature: Before the xa transaction is rolled back, open the firewall to the dble on the host where a certain fragment is located
 
-  @restore_network
+  @restore_network @stop_tcpdump
   Scenario: Before the xa transaction is rolled back, open the firewall to the dble on the host where a certain fragment is located    #1
     """
     {'restore_network':'mysql-master1'}
+    {'stop_tcpdump':'dble-1'}
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -34,7 +35,7 @@ Feature: Before the xa transaction is rolled back, open the firewall to the dble
     #安装tcpdump并启动抓包 for issue:DBLE0REQ-2104
     Given prepare a thread to run tcpdump in "dble-1"
      """
-     nohup tcpdump -w /tmp/tcpdump.cap 2>&1 &
+     touch /opt/dble/logs/tcpdump.log && tcpdump -w /opt/dble/logs/tcpdump.log
      """
 
     Then execute sql in "dble-1" in "user" mode
@@ -88,3 +89,4 @@ Feature: Before the xa transaction is rolled back, open the firewall to the dble
       | conn   | toClose | sql                                           | expect                     | db      |
       | conn_1 | False   | select * from sharding_4_t1                   | length{(0)}                | schema1 |
       | conn_1 | true    | drop table if exists sharding_4_t1            | success                    | schema1 |
+    Given stop and destroy tcpdump threads list in "dble-1"
