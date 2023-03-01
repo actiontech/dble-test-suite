@@ -7,7 +7,7 @@ Feature: test with useNewJoinOptimizer=true
 #more information find in confluence: http://10.186.18.11/confluence/pages/viewpage.action?pageId=32064447
                           #jira: http://10.186.18.11/jira/browse/DBLE0REQ-1469
 
-  @delete_mysql_tables @skip #skip about DBLE0REQ-1658
+  @delete_mysql_tables
   Scenario: shardingTable  + shardingTable  +  shardingTable                              #1
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3']}}
@@ -1300,7 +1300,7 @@ Feature: test with useNewJoinOptimizer=true
         | conn_53| true    | SELECT * FROM Employee a INNER JOIN Dept b on a.DeptName = b.DeptName INNER JOIN Info c on  a.DeptName=c.DeptName and b.DeptName=c.DeptName INNER JOIN Level d on c.age=d.levelid order by a.Name  | schema1|
 
 
-   @delete_mysql_tables @skip #skip about DBLE0REQ-1658
+   @delete_mysql_tables
   Scenario: shardingTable  + GlobalTable  +  GlobalTable                     #2
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3']}}
@@ -1378,7 +1378,7 @@ Feature: test with useNewJoinOptimizer=true
          | conn_2 | false   | explain SELECT * FROM Employee a INNER JOIN Dept b LEFT JOIN Info c on b.deptname=c.deptname order by a.name  | schema1|
     Then check resultset "B" has lines with following column values
         | SHARDING_NODE-0     | TYPE-1            | SQL/REF-2                                                                                         |
-        | dn3_0             | BASE SQL        | select `b`.`deptname`,`b`.`deptid`,`b`.`manager`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Dept` `b` left join  `Info` `c` on `b`.`deptname` = `c`.`deptname` |
+        | dn3_0             | BASE SQL        | select `b`.`deptname`,`b`.`deptid`,`b`.`manager`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  `Dept` `b` left join  `Info` `c` on `b`.`deptname` = `c`.`deptname` where 1=1 |
         | merge_1           | MERGE           | dn3_0                                                                                                                                                                        |
         | dn1_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  `Employee` `a` ORDER BY `a`.`name` ASC                                                                        |
         | dn2_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  `Employee` `a` ORDER BY `a`.`name` ASC                                                                        |
@@ -1765,7 +1765,7 @@ Feature: test with useNewJoinOptimizer=true
 
 
   # root node is GlobalTable
-  @delete_mysql_tables @skip #skip about DBLE0REQ-1658
+  @delete_mysql_tables
    Scenario: GlobalTable  + [otherTypeTable]            #3
      """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3', 'db4'], 'mysql-master2': ['db1', 'db2', 'db3', 'db4']}}
@@ -2069,7 +2069,7 @@ Feature: test with useNewJoinOptimizer=true
 
 
     #take all shardingTable as example
-   @delete_mysql_tables @skip #skip about DBLE0REQ-1658
+   @delete_mysql_tables
    Scenario: right join and more complex join sql            #4
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3', 'db4'], 'mysql-master2': ['db1', 'db2', 'db3', 'db4'], 'mysql':['schema1']}}

@@ -106,6 +106,11 @@ run_cfg_case_unstable: up
 	features/func_test/xa_transaction/bg_strategy_after_net_shock.feature \
 	features/func_test/xa_transaction/bg_strategy_after_node_hangs.feature \
 	features/func_test/special/thread_leak_test.feature  \
+	features/func_test/sql_plan/hint_planA_3.feature  \
+	features/func_test/sql_plan/hint_planA_4.feature  \
+	features/func_test/sql_plan/hint_planA_5.feature  \
+	features/func_test/sql_plan/hint_planA_6.feature  \
+	features/func_test/sql_plan/useNewJoinOptimizer1.feature
 
 run_sql_support_special: up
 	pipenv run behave -Dreset=false -D dble_conf=sql_cover_mixed features/setup.feature \
