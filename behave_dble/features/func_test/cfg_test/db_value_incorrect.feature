@@ -154,7 +154,7 @@ Feature: config db config files incorrect and restart dble or reload configs
       Attribute 'switchType' is not allowed to appear in element 'dbGroup'
       """
 
-  @TRIVIAL @skip
+  @TRIVIAL
   Scenario: dbInstance's  add databasetype  #11
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -174,7 +174,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -183,7 +183,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.13:9004" user="test" maxCon="1000" minCon="10" primary="true" databasetype="clickhouse"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databasetype="clickhouse"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all" get the following output
@@ -310,14 +310,14 @@ Feature: config db config files incorrect and restart dble or reload configs
       The reason is The group[rwS1.ha_group3] all dbInstance database type must be MYSQL
       """
 
-  @TRIVIAL @skip
+  @TRIVIAL
   Scenario: analysisUser with dbInstance database type must be CLICKHOUSE #14
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100" >
         <heartbeat>select 1</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.13:9004" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.14:9004" user="test" maxCon="100" minCon="10" primary="false" />
+        <dbInstance name="hostM1" password="111111" url="172.100.9.10:9004" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostS1" password="111111" url="172.100.9.11:9004" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -333,8 +333,8 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100" >
         <heartbeat>select 1</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.13:9004" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS1" password="111111" url="172.100.9.14:9004" user="test" maxCon="100" minCon="10" primary="false" databaseType="clickhouse"/>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.10:9004" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.11:9004" user="test" maxCon="100" minCon="10" primary="false" databaseType="clickhouse"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -346,8 +346,8 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100" >
         <heartbeat>select 1</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.13:9004" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS1" password="111111" url="172.100.9.14:9004" user="test" maxCon="100" minCon="10" primary="false" databaseType="mysql"/>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.10:9004" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.11:9004" user="test" maxCon="100" minCon="10" primary="false" databaseType="mysql"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -359,10 +359,8 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100" >
         <heartbeat>select 1</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.13:9004" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.14:9004" user="test" maxCon="100" minCon="10" primary="false" databaseType="clickhouse"/>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.10:9004" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
+        <dbInstance name="hostS1" password="111111" url="172.100.9.11:9004" user="test" maxCon="100" minCon="10" primary="false" databaseType="clickhouse"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
-
-

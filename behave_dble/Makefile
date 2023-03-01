@@ -56,6 +56,7 @@ run_cfg_case1: up
 	features/func_test/cfg_test/user.feature \
 	features/func_test/cfg_test/user_analysisUser.feature \
 	features/func_test/cfg_test/mulitiple_reload.feature \
+	features/func_test/cfg_test/db_value_incorrect.feature \
 	features/func_test/connection/connection_pool_basic_test.feature \
 	features/func_test/dble_information/dble_table_group.feature \
 	features/func_test/dble_information/sql_log.feature \
@@ -72,7 +73,6 @@ run_cfg_case1: up
 	features/func_test/managercmd/reload_lock.feature \
 	features/func_test/managercmd/show_connection.feature \
 	features/func_test/managercmd/slow_query.feature \
-	features/func_test/managercmd/split.feature \
 	features/func_test/managercmd/show_sqlX.feature \
 
 
@@ -100,8 +100,13 @@ run_cfg_case_unstable: up
 	features/func_test/cfg_test/dbInstance_load_balance.feature \
 	features/func_test/cfg_test/sharding_db_attribute.feature \
 	features/func_test/cfg_test/general_log.feature \
-	features/func_test/heartbeat/db_heartbeat_keepAlive.feature \
+	features/func_test/managercmd/split.feature \
+
+
+run_cfg_case_unstable2: up
+	pipenv run behave -D dble_conf=template features/setup.feature \
 	features/func_test/heartbeat/reconnect_heartbeat_readonly_check.feature \
+	features/func_test/heartbeat/db_heartbeat_keepAlive.feature \
 	features/func_test/load_data/load_data_batch.feature \
 	features/func_test/xa_transaction/bg_strategy_after_net_shock.feature \
 	features/func_test/xa_transaction/bg_strategy_after_node_hangs.feature \
@@ -110,7 +115,9 @@ run_cfg_case_unstable: up
 	features/func_test/sql_plan/hint_planA_4.feature  \
 	features/func_test/sql_plan/hint_planA_5.feature  \
 	features/func_test/sql_plan/hint_planA_6.feature  \
-	features/func_test/sql_plan/useNewJoinOptimizer1.feature
+	features/func_test/sql_plan/useNewJoinOptimizer1.feature \
+
+
 
 run_sql_support_special: up
 	pipenv run behave -Dreset=false -D dble_conf=sql_cover_mixed features/setup.feature \

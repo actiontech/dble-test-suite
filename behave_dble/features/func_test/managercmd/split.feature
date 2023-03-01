@@ -82,13 +82,13 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       mv /opt/schema1_with_only_data.sql-dn4-*.dump /opt/schema1_with_only_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn4.dump
      """
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                     | expect      |db           |
-      | conn_0 | False    | select * from test                      | length{(5)} | schema1     |
-      | conn_0 | False    | select * from sharding_1_t1             | length{(5)} | schema1     |
-      | conn_0 | False    | select * from sharding_2_t1             | length{(0)} | schema1     |
-      | conn_0 | False    | select * from sharding_4_t1             | length{(0)} | schema1     |
-      | conn_0 | False    | select * from nosharding                | length{(5)} | schema1     |
-      | conn_0 | True     | select * from global_sequence           | length{(0)} | schema1     |
+      | conn   | toClose  | sql                                     | expect      | db          | timeout |
+      | conn_0 | False    | select * from test                      | length{(5)} | schema1     | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1             | length{(5)} | schema1     | 5,2     |
+      | conn_0 | False    | select * from sharding_2_t1             | length{(0)} | schema1     | 5,2     |
+      | conn_0 | False    | select * from sharding_4_t1             | length{(0)} | schema1     | 5,2     |
+      | conn_0 | False    | select * from nosharding                | length{(5)} | schema1     | 5,2     |
+      | conn_0 | True     | select * from global_sequence           | length{(0)} | schema1     | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/schema1_with_only_data.sql-dn*.dump
@@ -132,20 +132,20 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       mv /opt/schema1_with_only_data.sql-dn4-*.dump /opt/schema1_with_only_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn4.dump
      """
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                                       | expect                                      |db          |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                              | length{(5)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                              | length{(5)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                              | length{(5)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                              | length{(5)}                                 | schema1    |
-      | conn_0 | False    | select * from sharding_1_t1                                               | length{(5)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1                     | has{(2,'2',2),(4,'4',4)}                    | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1                     | has{(1,'1',1),(3,'3',3),(5,'5',5)}          | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                     | has{((4,'4',4),)}                           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1                     | has{(1,'1',1),(5,'5',5)}                    | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                     | has{((2,'2',2),)}                           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                     | has{((3,'3',3),)}                           | schema1    |
-      | conn_0 | False    | select * from nosharding                                                  | length{(5)}                                 | schema1    |
-      | conn_0 | True     | select * from global_sequence                                             | length{(5)}                                 | schema1    |
+      | conn   | toClose  | sql                                                                       | expect                                      | db         | timeout |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                              | length{(5)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                              | length{(5)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                              | length{(5)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                              | length{(5)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                                               | length{(5)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1                     | has{(2,'2',2),(4,'4',4)}                    | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1                     | has{(1,'1',1),(3,'3',3),(5,'5',5)}          | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                     | has{((4,'4',4),)}                           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1                     | has{(1,'1',1),(5,'5',5)}                    | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                     | has{((2,'2',2),)}                           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                     | has{((3,'3',3),)}                           | schema1    | 5,2     |
+      | conn_0 | False    | select * from nosharding                                                  | length{(5)}                                 | schema1    | 5,2     |
+      | conn_0 | True     | select * from global_sequence                                             | length{(5)}                                 | schema1    | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/schema1_with_only_data.sql*
@@ -203,19 +203,19 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                                      | expect                                      |db          |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                             | length{(5)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                             | length{(5)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                             | length{(5)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                             | length{(5)}                                 | schema1    |
-      | conn_0 | False    | select * from sharding_1_t1                                              | length{(5)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1                    | has{(2,'2',2),(4,'4',4)}                    | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1                    | has{(1,'1',1),(3,'3',3),(5,'5',5)}          | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                    | has{((4,'4',4),)}                           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1                    | has{(1,'1',1),(5,'5',5)}                    | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                    | has{((2,'2',2),)}                           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                    | has{((3,'3',3),)}                           | schema1    |
-      | conn_0 | True     | select * from global_sequence                                            | length{(5)}                                 | schema1    |
+      | conn   | toClose  | sql                                                                      | expect                                      | db         | timeout |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                             | length{(5)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                             | length{(5)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                             | length{(5)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                             | length{(5)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                                              | length{(5)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1                    | has{(2,'2',2),(4,'4',4)}                    | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1                    | has{(1,'1',1),(3,'3',3),(5,'5',5)}          | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                    | has{((4,'4',4),)}                           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1                    | has{(1,'1',1),(5,'5',5)}                    | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                    | has{((2,'2',2),)}                           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                    | has{((3,'3',3),)}                           | schema1    | 5,2     |
+      | conn_0 | True     | select * from global_sequence                                            | length{(5)}                                 | schema1    | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/noschema_only_table_data.sql*
@@ -262,20 +262,20 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                                      | expect                                    |db          |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                             | length{(5)}                               | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                             | length{(5)}                               | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                             | length{(5)}                               | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                             | length{(5)}                               | schema1    |
-      | conn_0 | False    | select * from sharding_1_t1                                              | length{(5)}                               | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1                    | has{(2,'2',2),(4,'4',4)}                  | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1                    | has{(1,'1',1),(3,'3',3),(5,'5',5)}        | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                    | has{((4,'4',4),)}                         | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1                    | has{(1,'1',1),(5,'5',5)}                  | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                    | has{((2,'2',2),)}                         | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                    | has{((3,'3',3),)}                         | schema1    |
-      | conn_0 | False    | select * from nosharding                                                 | length{(5)}                               | schema1    |
-      | conn_0 | True     | select * from global_sequence                                            | length{(5)}                               | schema1    |
+      | conn   | toClose  | sql                                                                      | expect                                    | db         | timeout |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                             | length{(5)}                               | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                             | length{(5)}                               | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                             | length{(5)}                               | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                             | length{(5)}                               | schema1    | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                                              | length{(5)}                               | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1                    | has{(2,'2',2),(4,'4',4)}                  | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1                    | has{(1,'1',1),(3,'3',3),(5,'5',5)}        | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1                    | has{((4,'4',4),)}                         | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1                    | has{(1,'1',1),(5,'5',5)}                  | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                    | has{((2,'2',2),)}                         | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                    | has{((3,'3',3),)}                         | schema1    | 5,2     |
+      | conn_0 | False    | select * from nosharding                                                 | length{(5)}                               | schema1    | 5,2     |
+      | conn_0 | True     | select * from global_sequence                                            | length{(5)}                               | schema1    | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/schema1_with_data.sql-dn*
@@ -302,20 +302,20 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                          | expect                                  |db          |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                 | length{(5)}                             | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                 | length{(5)}                             | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                 | length{(5)}                             | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                 | length{(5)}                             | schema1    |
-      | conn_0 | False    | select * from sharding_1_t1                                  | length{(5)}                             | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1        | has{(2,'2',2),(4,'4',4)}                | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1        | has{(1,'1',1),(3,'3',3),(5,'5',5)}      | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1        | has{((4,'4',4),)}                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1        | has{(1,'1',1),(5,'5',5)}                | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1        | has{((2,'2',2),)}                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1        | has{((3,'3',3),)}                       | schema1    |
-      | conn_0 | False    | select * from nosharding                                     | length{(5)}                             | schema1    |
-      | conn_0 | True     | select * from global_sequence                                | length{(5)}                             | schema1    |
+      | conn   | toClose  | sql                                                          | expect                                  | db         | timeout |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                 | length{(5)}                             | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                 | length{(5)}                             | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                 | length{(5)}                             | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                 | length{(5)}                             | schema1    | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                                  | length{(5)}                             | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1        | has{(2,'2',2),(4,'4',4)}                | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1        | has{(1,'1',1),(3,'3',3),(5,'5',5)}      | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1        | has{((4,'4',4),)}                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1        | has{(1,'1',1),(5,'5',5)}                | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1        | has{((2,'2',2),)}                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1        | has{((3,'3',3),)}                       | schema1    | 5,2     |
+      | conn_0 | False    | select * from nosharding                                     | length{(5)}                             | schema1    | 5,2     |
+      | conn_0 | True     | select * from global_sequence                                | length{(5)}                             | schema1    | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/schema1_with_data.sql-dn*.dump
@@ -342,20 +342,20 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                             | expect                                |db          |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                    | length{(5)}                           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                    | length{(5)}                           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                    | length{(5)}                           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                    | length{(5)}                           | schema1    |
-      | conn_0 | False    | select * from sharding_1_t1                                     | length{(5)}                           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1           | has{(2,'2',2),(4,'4',4)}              | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1           | has{(1,'1',1),(3,'3',3),(5,'5',5)}    | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1           | has{((4,'4',4),)}                     | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1           | has{(1,'1',1),(5,'5',5)}              | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1           | has{((2,'2',2),)}                     | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1           | has{((3,'3',3),)}                     | schema1    |
-      | conn_0 | False    | select * from nosharding                                        | length{(5)}                           | schema1    |
-      | conn_0 | True     | select * from global_sequence                                   | length{(5)}                           | schema1    |
+      | conn   | toClose  | sql                                                             | expect                                | db         | timeout |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                    | length{(5)}                           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                    | length{(5)}                           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                    | length{(5)}                           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                    | length{(5)}                           | schema1    | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                                     | length{(5)}                           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1           | has{(2,'2',2),(4,'4',4)}              | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1           | has{(1,'1',1),(3,'3',3),(5,'5',5)}    | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1           | has{((4,'4',4),)}                     | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1           | has{(1,'1',1),(5,'5',5)}              | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1           | has{((2,'2',2),)}                     | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1           | has{((3,'3',3),)}                     | schema1    | 5,2     |
+      | conn_0 | False    | select * from nosharding                                        | length{(5)}                           | schema1    | 5,2     |
+      | conn_0 | True     | select * from global_sequence                                   | length{(5)}                           | schema1    | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/schema1_with_data.sql*
@@ -402,27 +402,27 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                               | expect                                           |db          |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                      | length{(5)}                                      | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                      | length{(5)}                                      | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                      | length{(5)}                                      | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                      | length{(5)}                                      | schema1    |
-      | conn_0 | False    | select * from sharding_1_t1                                       | length{(5)}                                      | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1             | has{(2,'2',2),(4,'4',4)}                         | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1             | has{(1,'1',1),(3,'3',3),(5,'5',5)}               | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1             | has{((4,'4',4),)}                                | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1             | has{(1,'1',1),(5,'5',5)}                         | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1             | has{((2,'2',2),)}                                | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1             | has{((3,'3',3),)}                                | schema1    |
-      | conn_0 | False    | select * from nosharding                                          | length{(5)}                                      | schema1    |
-      | conn_0 | True     | select * from global_sequence                                     | length{(5)}                                      | schema1    |
-      | conn_0 | False    | select * from test1                                               | length{(5)}                                      | schema2    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_2_t1             | has{(2,'2',2),(4,'4',4)}                         | schema2    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_2_t1             | has{(1,'1',1),(3,'3',3),(5,'5',5)}               | schema2    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t3             | has{((4,'4',4),)}                                | schema2    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t3             | has{(1,'1',1),(5,'5',5),(9,'9',9),(13,'13',13)}  | schema2    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t3             | has{(2,'2',2),(6,'6',6)}                         | schema2    |
-      | conn_0 | True     | /*#dble:shardingNode=dn4*/select * from sharding_4_t3             | has{((3,'3',3),)}                                | schema2    |
+      | conn   | toClose  | sql                                                               | expect                                           | db         | timeout |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                      | length{(5)}                                      | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                      | length{(5)}                                      | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                      | length{(5)}                                      | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                      | length{(5)}                                      | schema1    | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                                       | length{(5)}                                      | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1             | has{(2,'2',2),(4,'4',4)}                         | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1             | has{(1,'1',1),(3,'3',3),(5,'5',5)}               | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1             | has{((4,'4',4),)}                                | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1             | has{(1,'1',1),(5,'5',5)}                         | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1             | has{((2,'2',2),)}                                | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1             | has{((3,'3',3),)}                                | schema1    | 5,2     |
+      | conn_0 | False    | select * from nosharding                                          | length{(5)}                                      | schema1    | 5,2     |
+      | conn_0 | True     | select * from global_sequence                                     | length{(5)}                                      | schema1    | 5,2     |
+      | conn_0 | False    | select * from test1                                               | length{(5)}                                      | schema2    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_2_t1             | has{(2,'2',2),(4,'4',4)}                         | schema2    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_2_t1             | has{(1,'1',1),(3,'3',3),(5,'5',5)}               | schema2    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t3             | has{((4,'4',4),)}                                | schema2    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t3             | has{(1,'1',1),(5,'5',5),(9,'9',9),(13,'13',13)}  | schema2    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t3             | has{(2,'2',2),(6,'6',6)}                         | schema2    | 5,2     |
+      | conn_0 | True     | /*#dble:shardingNode=dn4*/select * from sharding_4_t3             | has{((3,'3',3),)}                                | schema2    | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/all_schemas_with_data.sql-dn*.dump
@@ -449,27 +449,27 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                             | expect                                            |db          |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                    | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                    | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                    | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                    | length{(5)}                                       | schema1    |
-      | conn_0 | False    | select * from sharding_1_t1                                     | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1           | has{(2,'2',2),(4,'4',4)}                          | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1           | has{(1,'1',1),(3,'3',3),(5,'5',5)}                | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1           | has{((4,'4',4),)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1           | has{(1,'1',1),(5,'5',5)}                          | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1           | has{((2,'2',2),)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1           | has{((3,'3',3),)}                                 | schema1    |
-      | conn_0 | False    | select * from nosharding                                        | length{(5)}                                       | schema1    |
-      | conn_0 | True     | select * from global_sequence                                   | length{(5)}                                       | schema1    |
-      | conn_0 | False    | select * from test1                                             | length{(5)}                                       | schema2    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_2_t1           | has{(2,'2',2),(4,'4',4)}                          | schema2    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_2_t1           | has{(1,'1',1),(3,'3',3),(5,'5',5)}                | schema2    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t3           | has{((4,'4',4),)}                                 | schema2    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t3           | has{(1,'1',1),(5,'5',5),(9,'9',9),(13,'13',13)}   | schema2    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t3           | has{(2,'2',2),(6,'6',6)}                          | schema2    |
-      | conn_0 | True     | /*#dble:shardingNode=dn4*/select * from sharding_4_t3           | has{((3,'3',3),)}                                 | schema2    |
+      | conn   | toClose  | sql                                                             | expect                                            | db         | timeout |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                    | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                    | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                    | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                    | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                                     | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1           | has{(2,'2',2),(4,'4',4)}                          | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1           | has{(1,'1',1),(3,'3',3),(5,'5',5)}                | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1           | has{((4,'4',4),)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1           | has{(1,'1',1),(5,'5',5)}                          | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1           | has{((2,'2',2),)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1           | has{((3,'3',3),)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | select * from nosharding                                        | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | True     | select * from global_sequence                                   | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | select * from test1                                             | length{(5)}                                       | schema2    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_2_t1           | has{(2,'2',2),(4,'4',4)}                          | schema2    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_2_t1           | has{(1,'1',1),(3,'3',3),(5,'5',5)}                | schema2    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t3           | has{((4,'4',4),)}                                 | schema2    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t3           | has{(1,'1',1),(5,'5',5),(9,'9',9),(13,'13',13)}   | schema2    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t3           | has{(2,'2',2),(6,'6',6)}                          | schema2    | 5,2     |
+      | conn_0 | True     | /*#dble:shardingNode=dn4*/select * from sharding_4_t3           | has{((3,'3',3),)}                                 | schema2    | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/all_schemas_with_data.sql*
@@ -548,18 +548,18 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       mv /opt/schema1_with_only_data.sql-dn4-*.dump /opt/schema1_with_only_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn4.dump
      """
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                         | expect                                                               |db          |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                | has{(1,'10',10),(2,'20',20),(3,'30',30),(4,'40',40),(5,'50',50)}     | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                | has{(1,'10',10),(2,'20',20),(3,'30',30),(4,'40',40),(5,'50',50)}     | schema1    |
-      | conn_0 | False    | select * from sharding_1_t1                                 | length{(5)}                                                          | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1       | has{(2,'20',20),(4,'40',40)}                                         | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1       | has{(1,'10',10),(3,'30',30),(5,'50',50)}                             | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1       | has{((4,'40',40),)}                                                  | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1       | has{(1,'10',10),(5,'50',50)}                                         | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1       | has{((2,'20',20),)}                                                  | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1       | has{((3,'30',30),)}                                                  | schema1    |
-      | conn_0 | False    | select * from nosharding                                    | has{(1,'10',10),(2,'20',20),(3,'30',30),(4,'40',40),(5,'50',50)}     | schema1    |
-      | conn_0 | True     | select * from global_sequence                               | length{(5)}                                                          | schema1    |
+      | conn   | toClose  | sql                                                         | expect                                                               | db         | timeout |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                | has{(1,'10',10),(2,'20',20),(3,'30',30),(4,'40',40),(5,'50',50)}     | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                | has{(1,'10',10),(2,'20',20),(3,'30',30),(4,'40',40),(5,'50',50)}     | schema1    | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                                 | length{(5)}                                                          | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1       | has{(2,'20',20),(4,'40',40)}                                         | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1       | has{(1,'10',10),(3,'30',30),(5,'50',50)}                             | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1       | has{((4,'40',40),)}                                                  | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1       | has{(1,'10',10),(5,'50',50)}                                         | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1       | has{((2,'20',20),)}                                                  | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1       | has{((3,'30',30),)}                                                  | schema1    | 5,2     |
+      | conn_0 | False    | select * from nosharding                                    | has{(1,'10',10),(2,'20',20),(3,'30',30),(4,'40',40),(5,'50',50)}     | schema1    | 5,2     |
+      | conn_0 | True     | select * from global_sequence                               | length{(5)}                                                          | schema1    | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/schema1_with_only_data.sql*
@@ -655,20 +655,20 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                   | expect                                                         | db      |
-      | conn_0 | False   | /*#dble:shardingNode=dn1*/select * from test          | has{(1,'1!',1),(2,'@2',2),(3,'#3*',3),(4,'$4&',4),(5,'%5^',5)} | schema1 |
-      | conn_0 | False   | /*#dble:shardingNode=dn2*/select * from test          | has{(1,'1!',1),(2,'@2',2),(3,'#3*',3),(4,'$4&',4),(5,'%5^',5)} | schema1 |
-      | conn_0 | False   | /*#dble:shardingNode=dn3*/select * from test          | has{(1,'1!',1),(2,'@2',2),(3,'#3*',3),(4,'$4&',4),(5,'%5^',5)} | schema1 |
-      | conn_0 | False   | /*#dble:shardingNode=dn4*/select * from test          | has{(1,'1!',1),(2,'@2',2),(3,'#3*',3),(4,'$4&',4),(5,'%5^',5)} | schema1 |
-      | conn_0 | False   | select * from sharding_1_t1                           | has{(1,'1;',1),(2,'2;',2),(3,'3;',3),(4,'4;',4),(5,'5;',5)}    | schema1 |
-      | conn_0 | False   | /*#dble:shardingNode=dn1*/select * from sharding_2_t1 | has{(2,',2',2),(4,';4',4)}                                     | schema1 |
-      | conn_0 | False   | /*#dble:shardingNode=dn2*/select * from sharding_2_t1 | has{(1,'a,1',1),(3,'a3',3),(5,'5,6',5)}                        | schema1 |
-      | conn_0 | False   | /*#dble:shardingNode=dn1*/select * from sharding_4_t1 | has{((4,'$4&',4),)}                                            | schema1 |
-      | conn_0 | False   | /*#dble:shardingNode=dn2*/select * from sharding_4_t1 | has{(1,'1!',1),(5,'%5^',5)}                                    | schema1 |
-      | conn_0 | False   | /*#dble:shardingNode=dn3*/select * from sharding_4_t1 | has{((2,'@2',2),)}                                             | schema1 |
-      | conn_0 | False   | /*#dble:shardingNode=dn4*/select * from sharding_4_t1 | has{((3,'#3*',3),)}                                            | schema1 |
-      | conn_0 | False   | select * from nosharding                              | has{(1,';1',1),(2,';2',2),(3,';3',3),(4,';4',4),(5,';5',5)}    | schema1 |
-      | conn_0 | True    | select * from global_sequence                         | length{(5)}                                                    | schema1 |
+      | conn   | toClose | sql                                                   | expect                                                         | db      | timeout |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/select * from test          | has{(1,'1!',1),(2,'@2',2),(3,'#3*',3),(4,'$4&',4),(5,'%5^',5)} | schema1 | 5,2     |
+      | conn_0 | False   | /*#dble:shardingNode=dn2*/select * from test          | has{(1,'1!',1),(2,'@2',2),(3,'#3*',3),(4,'$4&',4),(5,'%5^',5)} | schema1 | 5,2     |
+      | conn_0 | False   | /*#dble:shardingNode=dn3*/select * from test          | has{(1,'1!',1),(2,'@2',2),(3,'#3*',3),(4,'$4&',4),(5,'%5^',5)} | schema1 | 5,2     |
+      | conn_0 | False   | /*#dble:shardingNode=dn4*/select * from test          | has{(1,'1!',1),(2,'@2',2),(3,'#3*',3),(4,'$4&',4),(5,'%5^',5)} | schema1 | 5,2     |
+      | conn_0 | False   | select * from sharding_1_t1                           | has{(1,'1;',1),(2,'2;',2),(3,'3;',3),(4,'4;',4),(5,'5;',5)}    | schema1 | 5,2     |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/select * from sharding_2_t1 | has{(2,',2',2),(4,';4',4)}                                     | schema1 | 5,2     |
+      | conn_0 | False   | /*#dble:shardingNode=dn2*/select * from sharding_2_t1 | has{(1,'a,1',1),(3,'a3',3),(5,'5,6',5)}                        | schema1 | 5,2     |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/select * from sharding_4_t1 | has{((4,'$4&',4),)}                                            | schema1 | 5,2     |
+      | conn_0 | False   | /*#dble:shardingNode=dn2*/select * from sharding_4_t1 | has{(1,'1!',1),(5,'%5^',5)}                                    | schema1 | 5,2     |
+      | conn_0 | False   | /*#dble:shardingNode=dn3*/select * from sharding_4_t1 | has{((2,'@2',2),)}                                             | schema1 | 5,2     |
+      | conn_0 | False   | /*#dble:shardingNode=dn4*/select * from sharding_4_t1 | has{((3,'#3*',3),)}                                            | schema1 | 5,2     |
+      | conn_0 | False   | select * from nosharding                              | has{(1,';1',1),(2,';2',2),(3,';3',3),(4,';4',4),(5,';5',5)}    | schema1 | 5,2     |
+      | conn_0 | True    | select * from global_sequence                         | length{(5)}                                                    | schema1 | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/schema1_with_data_special.sql*
@@ -716,21 +716,21 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                           | expect                                            |db          |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | select * from sharding_1_t1                                   | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1         | has{(2,'2',2),(4,'4',4)}                          | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1         | has{(1,'1',1),(3,'3',3),(5,'5',5)}                | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1         | has{((4,'4',4),)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1         | has{(1,'1',1),(5,'5',5)}                          | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1         | has{((2,'2',2),)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1         | has{((3,'3',3),)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from foreign_table         | has{(2,'Jerry',12,2),(4,'Nibbles',3,4)}           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from foreign_table         | has{(1,'Tom',30,1),(3,'Spike',5,3)}               | schema1    |
-      | conn_0 | True     | select * from nosharding                                      | length{(5)}                                       | schema1    |
+      | conn   | toClose  | sql                                                           | expect                                            | db         | timeout |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                                   | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1         | has{(2,'2',2),(4,'4',4)}                          | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1         | has{(1,'1',1),(3,'3',3),(5,'5',5)}                | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1         | has{((4,'4',4),)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1         | has{(1,'1',1),(5,'5',5)}                          | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1         | has{((2,'2',2),)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1         | has{((3,'3',3),)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from foreign_table         | has{(2,'Jerry',12,2),(4,'Nibbles',3,4)}           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from foreign_table         | has{(1,'Tom',30,1),(3,'Spike',5,3)}               | schema1    | 5,2     |
+      | conn_0 | True     | select * from nosharding                                      | length{(5)}                                       | schema1    | 5,2     |
 
     Given execute oscmd in "dble-1"
      """
@@ -758,21 +758,21 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                           | expect                                            |db          |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | select * from sharding_1_t1                                   | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1         | has{(2,'2',2),(4,'4',4)}                          | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1         | has{(1,'1',1),(3,'3',3),(5,'5',5)}                | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1         | has{((4,'4',4),)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1         | has{(1,'1',1),(5,'5',5)}                          | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1         | has{((2,'2',2),)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1         | has{((3,'3',3),)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from foreign_table         | has{(2,'Jerry',12,2),(4,'Nibbles',3,4)}           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from foreign_table         | has{(1,'Tom',30,1),(3,'Spike',5,3)}               | schema1    |
-      | conn_0 | True     | select * from nosharding                                      | length{(5)}                                       | schema1    |
+      | conn   | toClose  | sql                                                           | expect                                            | db         | timeout |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                                   | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1         | has{(2,'2',2),(4,'4',4)}                          | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1         | has{(1,'1',1),(3,'3',3),(5,'5',5)}                | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1         | has{((4,'4',4),)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1         | has{(1,'1',1),(5,'5',5)}                          | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1         | has{((2,'2',2),)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1         | has{((3,'3',3),)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from foreign_table         | has{(2,'Jerry',12,2),(4,'Nibbles',3,4)}           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from foreign_table         | has{(1,'Tom',30,1),(3,'Spike',5,3)}               | schema1    | 5,2     |
+      | conn_0 | True     | select * from nosharding                                      | length{(5)}                                       | schema1    | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/schema1_with_childTable.sql*
@@ -820,19 +820,19 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                           | expect                                            |db          |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | select * from sharding_1_t1                                   | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1         | has{(2,'2',2),(4,'4',4)}                          | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1         | has{(1,'1',1),(3,'3',3),(5,'5',5)}                | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1         | has{((4,'4',4),)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1         | has{(1,'1',1),(5,'5',5)}                          | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1         | has{((2,'2',2),)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1         | has{((3,'3',3),)}                                 | schema1    |
-      | conn_0 | True     | select * from nosharding                                      | length{(5)}                                       | schema1    |
+      | conn   | toClose  | sql                                                           | expect                                            |db          | timeout |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                                   | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1         | has{(2,'2',2),(4,'4',4)}                          | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1         | has{(1,'1',1),(3,'3',3),(5,'5',5)}                | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1         | has{((4,'4',4),)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1         | has{(1,'1',1),(5,'5',5)}                          | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1         | has{((2,'2',2),)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1         | has{((3,'3',3),)}                                 | schema1    | 5,2     |
+      | conn_0 | True     | select * from nosharding                                      | length{(5)}                                       | schema1    | 5,2     |
 
     Given execute oscmd in "dble-1"
      """
@@ -860,19 +860,19 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                           | expect                                            |db          |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                  | length{(5)}                                       | schema1    |
-      | conn_0 | False    | select * from sharding_1_t1                                   | length{(5)}                                       | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1         | has{(2,'2',2),(4,'4',4)}                          | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1         | has{(1,'1',1),(3,'3',3),(5,'5',5)}                | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1         | has{((4,'4',4),)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1         | has{(1,'1',1),(5,'5',5)}                          | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1         | has{((2,'2',2),)}                                 | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1         | has{((3,'3',3),)}                                 | schema1    |
-      | conn_0 | True     | select * from nosharding                                      | length{(5)}                                       | schema1    |
+      | conn   | toClose  | sql                                                           | expect                                            | db         | timeout |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test                  | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                                   | length{(5)}                                       | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1         | has{(2,'2',2),(4,'4',4)}                          | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1         | has{(1,'1',1),(3,'3',3),(5,'5',5)}                | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1         | has{((4,'4',4),)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1         | has{(1,'1',1),(5,'5',5)}                          | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1         | has{((2,'2',2),)}                                 | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1         | has{((3,'3',3),)}                                 | schema1    | 5,2     |
+      | conn_0 | True     | select * from nosharding                                      | length{(5)}                                       | schema1    | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/schema1_with_view.sql*
@@ -976,20 +976,20 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                   | expect               |db        |
-      | conn_0 | False    | show tables                                           | length{(6)}          | schema1  |
-      | conn_0 | False    | select * from global_sequence                         | length{(0)}          | schema1  |
-      | conn_0 | False    | select * from sharding_1_t1                           | length{(0)}          | schema1  |
-      | conn_0 | False    | select * from sharding_2_t1                           | length{(0)}          | schema1  |
-      | conn_0 | False    | select * from sharding_4_t1                           | length{(0)}          | schema1  |
-      | conn_0 | False    | select * from test                                    | length{(0)}          | schema1  |
-      | conn_0 | False    | select * from nosharding                              | length{(0)}          | schema1  |
-      | conn_0 | False    | drop table if exists global_sequence                  | success              | schema1  |
-      | conn_0 | False    | drop table if exists sharding_1_t1                    | success              | schema1  |
-      | conn_0 | False    | drop table if exists sharding_2_t1                    | success              | schema1  |
-      | conn_0 | False    | drop table if exists sharding_4_t1                    | success              | schema1  |
-      | conn_0 | False    | drop table if exists test                             | success              | schema1  |
-      | conn_0 | True     | drop table if exists nosharding                       | success              | schema1  |
+      | conn   | toClose  | sql                                                   | expect               |db        | timeout |
+      | conn_0 | False    | show tables                                           | length{(6)}          | schema1  | 5,2     |
+      | conn_0 | False    | select * from global_sequence                         | length{(0)}          | schema1  | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                           | length{(0)}          | schema1  | 5,2     |
+      | conn_0 | False    | select * from sharding_2_t1                           | length{(0)}          | schema1  | 5,2     |
+      | conn_0 | False    | select * from sharding_4_t1                           | length{(0)}          | schema1  | 5,2     |
+      | conn_0 | False    | select * from test                                    | length{(0)}          | schema1  | 5,2     |
+      | conn_0 | False    | select * from nosharding                              | length{(0)}          | schema1  | 5,2     |
+      | conn_0 | False    | drop table if exists global_sequence                  | success              | schema1  | 5,2     |
+      | conn_0 | False    | drop table if exists sharding_1_t1                    | success              | schema1  | 5,2     |
+      | conn_0 | False    | drop table if exists sharding_2_t1                    | success              | schema1  | 5,2     |
+      | conn_0 | False    | drop table if exists sharding_4_t1                    | success              | schema1  | 5,2     |
+      | conn_0 | False    | drop table if exists test                             | success              | schema1  | 5,2     |
+      | conn_0 | True     | drop table if exists nosharding                       | success              | schema1  | 5,2     |
 
     Given execute oscmd in "dble-1"
      """
@@ -1016,10 +1016,10 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                           | expect                                        |db          |
-      | conn_0 | True     | show tables                   | length{(0)}                                   | schema1    |
-      | conn_0 | False    | show tables                   | length{(1)}                                   | schema2    |
-      | conn_0 | True     | show tables                   | has{('sharding_2_t1',),}                      | schema2    |
+      | conn   | toClose  | sql                           | expect                                        |db          | timeout |
+      | conn_0 | True     | show tables                   | length{(0)}                                   | schema1    | 5,2     |
+      | conn_0 | False    | show tables                   | length{(1)}                                   | schema2    | 5,2     |
+      | conn_0 | True     | show tables                   | has{('sharding_2_t1',),}                      | schema2    | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/schema1_with_only_table_structure.sql*
@@ -1080,20 +1080,20 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                        | expect                                |db          |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test               | length{(5)}                           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test               | length{(5)}                           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test               | length{(5)}                           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test               | length{(5)}                           | schema1    |
-      | conn_0 | False    | select * from sharding_1_t1                                | length{(5)}                           | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1      | has{(2,'2',2),(4,'4',4)}              | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1      | has{(1,'1',1),(3,'3',3),(5,'5',5)}    | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1      | has{((4,'4',4),)}                     | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1      | has{(1,'1',1),(5,'5',5)}              | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1      | has{((2,'2',2),)}                     | schema1    |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1      | has{((3,'3',3),)}                     | schema1    |
-      | conn_0 | False    | select * from nosharding                                   | length{(5)}                           | schema1    |
-      | conn_0 | True     | select * from global_sequence                              | length{(5)}                           | schema1    |
+      | conn   | toClose  | sql                                                        | expect                                | db         | timeout |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test               | length{(5)}                           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test               | length{(5)}                           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test               | length{(5)}                           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test               | length{(5)}                           | schema1    | 5,2     |
+      | conn_0 | False    | select * from sharding_1_t1                                | length{(5)}                           | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1      | has{(2,'2',2),(4,'4',4)}              | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1      | has{(1,'1',1),(3,'3',3),(5,'5',5)}    | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1      | has{((4,'4',4),)}                     | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1      | has{(1,'1',1),(5,'5',5)}              | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1      | has{((2,'2',2),)}                     | schema1    | 5,2     |
+      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1      | has{((3,'3',3),)}                     | schema1    | 5,2     |
+      | conn_0 | False    | select * from nosharding                                   | length{(5)}                           | schema1    | 5,2     |
+      | conn_0 | True     | select * from global_sequence                              | length{(5)}                           | schema1    | 5,2     |
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/schema1_with_data.sql*
