@@ -111,6 +111,7 @@ run_cfg_case_unstable: up
 	features/func_test/cfg_test/general_log.feature \
 	features/func_test/managercmd/split.feature \
 	features/func_test/xa_transaction/net_down_before_rollback.feature \
+	features/func_test/dble_information/supported_DML_tables.feature \
 
 
 run_cfg_case_unstable2: up
