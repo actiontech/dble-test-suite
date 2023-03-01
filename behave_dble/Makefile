@@ -5,6 +5,9 @@ endif
 PWD = $(shell pwd)
 DRIVER_DIR = $(shell dirname ${PWD})
 DOCKER_COMPOSE_FILE = docker-compose-${DBLE_DBLE_TOPO}.yml
+DOCKER_RUNNING = $(shell docker ps -q | wc -l)
+DOCKER_EXISTS = $(shell docker ps -aq | wc -l)
+
 
 up: down
 	docker-compose -f ${PWD}/compose/${DOCKER_COMPOSE_FILE} up -d
@@ -15,7 +18,14 @@ clean: down remove_venv
 	docker system prune -fa
 
 down:
-	docker ps -a -q | xargs -r docker rm -f
+    ifneq ($(DOCKER_RUNNING),0)
+		docker stop $$(docker ps -q)
+    endif
+
+    ifneq ($(DOCKER_EXISTS),0)
+		docker rm $$(docker ps -a -q)
+    endif
+
 	docker network prune -f
 	docker volume prune -f
 
