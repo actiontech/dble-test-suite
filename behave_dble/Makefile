@@ -95,7 +95,6 @@ run_cfg_case2: up
 	features/sql_cover/special/hint.feature \
 	features/func_test/sequence/sequence.feature \
 	features/func_test/safety/mysql_node_disconnected.feature \
-	features/func_test/heartbeat/kill_heartbeat_connection.feature \
 	features/func_test/xa_transaction/xa_retry_count.feature \
 	features/func_test/metalock/mysql_slave_down.feature \
 
@@ -112,6 +111,7 @@ run_cfg_case_unstable: up
 	features/func_test/managercmd/split.feature \
 	features/func_test/xa_transaction/net_down_before_rollback.feature \
 	features/func_test/dble_information/supported_DML_tables.feature \
+	features/func_test/heartbeat/kill_heartbeat_connection.feature \
 
 
 run_cfg_case_unstable2: up
