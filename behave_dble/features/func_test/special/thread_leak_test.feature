@@ -32,12 +32,13 @@ Feature: check thread leak
     /ownThread/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(3000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceMultiNodeMergeAndOrderHandler.java" in "dble-1"
-    Given sleep "5" seconds
+#    Given sleep "5" seconds
     Given prepare a thread execute sql "select t1.id from sharding_2_t1 t1 left join single_t1 t2 on t1.id = t2.id" with "conn_0"
     Then check btrace "BtraceMultiNodeMergeAndOrderHandler.java" output in "dble-1"
     """
     get into ownThread
     """
+    ###这个destroy sql threads list 需要耗费将近1分钟是根据桩的时间乘以结果集
     Given destroy sql threads list
     Given stop btrace script "BtraceMultiNodeMergeAndOrderHandler.java" in "dble-1"
     Given destroy btrace threads list
@@ -58,6 +59,8 @@ Feature: check thread leak
       | conn   | toClose | sql                                  | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_2_t1   | success | schema1 |
       | conn_0 | True    | drop table if exists single_t1       | success | schema1 |
+
+
 
   @btrace
   Scenario: check group by thread #2
@@ -84,7 +87,7 @@ Feature: check thread leak
     """
     Given prepare a thread run btrace script "BtraceGroupByThread.java" in "dble-1"
     Given prepare a thread execute sql "select sum(t1.id) from sharding_2_t1 t1 left join sharding_2_t1 t2 on t1.id = t2.id group by t1.start_time" with "conn_0"
-    Then check btrace "BtraceGroupByThread.java" output in "dble-1"
+    Then check btrace "BtraceGroupByThread.java" output in "dble-1" with "10" times
     """
     get into groupByBucket.start
     """
