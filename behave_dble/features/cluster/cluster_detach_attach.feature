@@ -409,12 +409,14 @@ Feature: check single dble detach or attach from cluster
     """
     get into cluster detach or attach handle
     """
+    Given execute oscmd "cat /opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
     Given prepare a thread run btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
     Given prepare a thread execute sql "create view test_view as select * from sharding_4_t1" with "conn_3"
     Then check btrace "BtraceClusterDetachAttach3.java" output in "dble-1"
     """
     get into afterDelayServiceMarkDoing
     """
+    Given execute oscmd "cat /opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
     Then check sql thread output in "detach_rs_err" by retry "10,2" times
     """
     detach cluster pause timeout
@@ -514,12 +516,14 @@ Feature: check single dble detach or attach from cluster
     """
     get into cluster detach or attach handle
     """
+    Given execute oscmd "cat /opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
     Given prepare a thread run btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
     Given prepare a thread execute sql "insert into sharding_4_t1 (id) values (1)" with "conn_3"
     Then check btrace "BtraceClusterDetachAttach3.java" output in "dble-1"
     """
     get into afterDelayServiceMarkDoing
     """
+    Given execute oscmd "cat /opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose   | sql                                | expect      | db      | timeout |
       | conn_4  | true      | select * from sharding_4_t1        | length{(1)} | schema1 | 15      |
@@ -579,12 +583,14 @@ Feature: check single dble detach or attach from cluster
     """
     get into cluster detach or attach handle
     """
+    Given execute oscmd "cat /opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
     Given prepare a thread run btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
     Given prepare a thread execute sql "show @@general_log" with "conn_2"
     Then check btrace "BtraceClusterDetachAttach3.java" output in "dble-1"
     """
     get into afterDelayServiceMarkDoing
     """
+    Given execute oscmd "cat /opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
     Then check sql thread output in "detach_rs_err" by retry "10" times
     """
     attach cluster pause timeout
@@ -649,12 +655,14 @@ Feature: check single dble detach or attach from cluster
     """
     get into cluster detach or attach handle
     """
+    Given execute oscmd "cat /opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
     Given prepare a thread run btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
     Given prepare a thread execute sql "show @@general_log" with "conn_2"
     Then check btrace "BtraceClusterDetachAttach3.java" output in "dble-1"
     """
     get into afterDelayServiceMarkDoing
     """
+    Given execute oscmd "cat /opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
     Then check sql thread output in "attach_rs_err" by retry "15" times
     """
     attach cluster pause timeout
@@ -700,12 +708,14 @@ Feature: check single dble detach or attach from cluster
     """
     get into cluster detach or attach handle
     """
+    Given execute oscmd "cat /opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
     Given prepare a thread run btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
     Given prepare a thread execute sql "show @@general_log" with "conn_2"
     Then check btrace "BtraceClusterDetachAttach3.java" output in "dble-1"
     """
     get into afterDelayServiceMarkDoing
     """
+    Given execute oscmd "cat /opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
     Then check sql thread output in "res" by retry "15" times
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
