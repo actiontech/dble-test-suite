@@ -258,6 +258,8 @@ Feature: test some import nodes attr in sharding.xml
     </dbGroup>
     """
     Given Restart dble in "dble-1" success
+    #开启线程每隔一秒打印一次jstack
+    Given prepare a thread to run jstack in "dble-1"
     Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master1"
     """
     mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" |grep '172.100.9.5'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
@@ -305,6 +307,7 @@ Feature: test some import nodes attr in sharding.xml
     Then execute sql in "dble-1" in "admin" mode
       | sql            | expect      | timeout |
       | show @@backend | length{(7)} | 3       |
+    Given destroy jstack threads list
 
   Scenario:  when minCon>the number of db, verify the minCon restore logic #9
    #  minConRecover logic: min(the value of minCon - the current idle conns in pool, the value of maxCon - total conns in pool) - the creating conns
@@ -329,6 +332,8 @@ Feature: test some import nodes attr in sharding.xml
     </dbGroup>
     """
     Given Restart dble in "dble-1" success
+    # 开启线程每隔一秒打印一次jstack
+    Given prepare a thread to run jstack in "dble-1"
     Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master1"
     """
     mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
@@ -340,4 +345,5 @@ Feature: test some import nodes attr in sharding.xml
       | sql                                      | expect       | timeout |
       | show @@backend where host='172.100.9.5'  | length{(11)} | 3       |
       #the not used dbInstance will only have one heartbeat connection
-      | show @@backend  | length{(12)} | 3      |
+      | show @@backend                           | length{(12)} | 3       |
+    Given destroy jstack threads list
