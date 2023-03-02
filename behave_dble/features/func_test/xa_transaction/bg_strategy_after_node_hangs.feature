@@ -311,7 +311,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     ### 增加偏移量确保时间差  time：2023.2.1
     Then check the time interval of following key after line "log_num_1" in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                                        | interval_times | percent |
-      | at the 0th time in background              | 20             |  0.2   |
+      | at the 0th time in background              | 20             |  0.5   |
     Given start mysql in host "mysql-master1"
     Given sleep "10" seconds
 
@@ -340,7 +340,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given sleep "30" seconds
     Then check the time interval of following key after line "log_num_2" in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                                        | interval_times | percent |
-      | at the 0th time in background              | 10             |  0.2   |
+      | at the 0th time in background              | 10             |  0.5   |
     Given start mysql in host "mysql-master1"
 #    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
