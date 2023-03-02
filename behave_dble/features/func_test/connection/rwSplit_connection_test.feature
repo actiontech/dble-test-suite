@@ -213,7 +213,7 @@ Feature: connection test in rwSplit mode
     #安装tcpdump并启动抓包 for issue:DBLE0REQ-2116
     Given prepare a thread to run tcpdump in "dble-1"
      """
-     touch /opt/dble/logs/tcpdump.log && tcpdump -w /opt/dble/logs/tcpdump.log
+     tcpdump -w /tmp/tcpdump.log
      """
 
       Given execute sql in "dble-1" in "user" mode

@@ -35,7 +35,7 @@ Feature: Before the xa transaction is rolled back, open the firewall to the dble
     #安装tcpdump并启动抓包 for issue:DBLE0REQ-2104
     Given prepare a thread to run tcpdump in "dble-1"
      """
-     touch /opt/dble/logs/tcpdump.log && tcpdump -w /opt/dble/logs/tcpdump.log
+     tcpdump -w /tmp/tcpdump.log
      """
 
     Then execute sql in "dble-1" in "user" mode
