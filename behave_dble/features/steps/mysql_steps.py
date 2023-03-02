@@ -6,7 +6,7 @@
 import logging
 from threading import Thread
 
-from steps.lib.utils import get_node, wait_for
+from steps.lib.utils import get_node, wait_for, sleep_by_time
 from steps.lib.Flag import Flag
 from steps.lib.DbleObject import DbleObject
 from steps.lib.PostQueryCheck import PostQueryCheck
@@ -22,6 +22,9 @@ sql_threads = []
 
 global tcpdump_threads
 tcpdump_threads = []
+
+global jstack_threads
+jstack_threads = []
 
 logger = logging.getLogger('root')
 
@@ -206,7 +209,6 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
     return res, err
 
 
-
 def print_jstack(node):
     ssh_client = node.ssh_conn
     get_dble_pid_cmd = "jps | grep WrapperSimpleApp | awk '{print $1}'"
@@ -218,6 +220,41 @@ def print_jstack(node):
     print_jstack_cmd = "jstack -l {0} > {1}".format(sto, jstack_url)
     ssh_client.exec_command(print_jstack_cmd)
     logger.debug("print jstack finished, {0}".format(jstack_url))
+
+
+def print_jstack_thread(context, host, sleep_time):
+    node = get_node(host)
+    context.stop_jstack = False
+    while True:
+        if context.stop_jstack:
+            context.logger.debug("try to stop jstack thread")
+            break
+        print_jstack(node)
+        sleep_by_time(context, sleep_time)
+
+
+@Given('prepare a thread to run jstack in "{host}" every "{sleep_time}" seconds')
+@Given('prepare a thread to run jstack in "{host}"')
+def step_impl(context, host, sleep_time=1):
+    current_datetime = datetime.strftime(datetime.now(), '%H%M%S_%f')
+    thread_name = "jstack_thd_{0}".format(current_datetime)
+    context.logger.debug("jstack_thread_name: {0}".format(thread_name))
+    global jstack_threads
+    thd = Thread(target=print_jstack_thread, args=(context, host, sleep_time), name=thread_name)
+    jstack_threads.append(thd)
+    thd.setDaemon(True)
+    thd.start()
+
+
+@Given('destroy jstack threads list')
+def destroy_jstack_threads(context):
+    context.stop_jstack = True
+    global jstack_threads
+    if len(jstack_threads) > 0:
+        for thd in jstack_threads:
+            thd.join(3)
+            logger.debug("stopped jstack thread: {0}".format(thd.name))
+        jstack_threads = []
 
 
 @Given('execute sql "{num}" times in "{host_name}" at concurrent')
