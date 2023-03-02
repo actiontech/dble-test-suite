@@ -30,12 +30,11 @@ def check_tcpdump_pid_exist(sshClient):
     cmd = "ps aux|grep tcpdump| grep -v grep | awk '{print $2}' | wc -l"
     rc, sto, ste = sshClient.exec_command(cmd)
     assert len(ste) == 0, "exec cmd fail for:{0}".format(ste)
-    tcpdump_pid_exist = str(sto) == '2'
+    tcpdump_pid_exist = str(sto) == '1'
     logger.debug("check tcpdump pid cmd exists")
     return tcpdump_pid_exist
 
-    # root     17587     1  0 15:49 ?        00:00:00 bash -c touch /opt/dble/logs/tcpdump.log && tcpdump -w /opt/dble/logs/tcpdump.log
-    # tcpdump  17594 17587  0 15:49 ?        00:00:00 tcpdump -w /opt/dble/logs/tcpdump.log
+    # tcpdump   9925  9508  1 10:54 ?        00:00:00 tcpdump -w /tmp/tcpdump.log
 
 
 def stop_tcpdump(context, sshClient):
@@ -97,6 +96,10 @@ def destroy_threads(context, host):
                 logger.debug("join tcpdump thread: {0}".format(thd.name))
                 thd.join()
             tcpdump_threads = []
+        # 由于ci环境权限限制，现在改成写入到/tmp目录下
+        mv_cmd = "mv /tmp/*.log /opt/dble/logs"
+        rc, sto, ste = sshClient.exec_command(mv_cmd)
+        assert len(ste) == 0, "mv tcpdump file err:{0}".format(ste)
 
 
 @Given('restart mysql in "{host_name}" with sed cmds to update mysql config')
