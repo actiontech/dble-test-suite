@@ -45,7 +45,8 @@ used_in_local: create_venv up
 	pipenv run behave features/setup.feature
 
 run_cluster_case: up
-	pipenv run behave features/setup.feature \features/cluster/cluster_check_table_view.feature \
+	pipenv run behave features/setup.feature \
+	features/cluster/cluster_check_table_view.feature \
 	features/cluster/kill_ddl_lock.feature \
 	features/cluster/cluster_check_reload.feature \
 	features/cluster/writeHost_support_weight.feature \
@@ -112,6 +113,11 @@ run_cfg_case_unstable: up
 	features/func_test/xa_transaction/net_down_before_rollback.feature \
 	features/func_test/dble_information/supported_DML_tables.feature \
 	features/func_test/heartbeat/kill_heartbeat_connection.feature \
+	features/func_test/sql_plan/hint_planA_3.feature  \
+	features/func_test/sql_plan/hint_planA_4.feature  \
+	features/func_test/sql_plan/hint_planA_5.feature  \
+	features/func_test/sql_plan/hint_planA_6.feature  \
+	features/func_test/sql_plan/useNewJoinOptimizer1.feature \
 
 
 run_cfg_case_unstable2: up
@@ -122,12 +128,7 @@ run_cfg_case_unstable2: up
 	features/func_test/xa_transaction/bg_strategy_after_net_shock.feature \
 	features/func_test/xa_transaction/bg_strategy_after_node_hangs.feature \
 	features/func_test/special/thread_leak_test.feature  \
-	features/func_test/sql_plan/hint_planA_3.feature  \
-	features/func_test/sql_plan/hint_planA_4.feature  \
-	features/func_test/sql_plan/hint_planA_5.feature  \
-	features/func_test/sql_plan/hint_planA_6.feature  \
-	features/func_test/sql_plan/useNewJoinOptimizer1.feature \
-
+	features/func_test/cfg_test/inSubQueryTransformToJoin.feature \
 
 
 run_sql_support_special: up
