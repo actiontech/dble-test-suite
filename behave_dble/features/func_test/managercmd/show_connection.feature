@@ -4,8 +4,9 @@
 
 Feature: show @@connection.sql test
  ###注意这个case的session不能重复，不然会导致后面一条sql覆盖前面一条sql。该版本的 show @@ xxx.sql应该有一定的问题。有issue修复/DBLE0REQ-2107
+ #### 加上auto_retry是因为机器时间回溯 导致case失败
 
-  @TRIVIAL
+  @TRIVIAL @auto_retry
   Scenario: query execute time <1ms #1
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                    | db       |
