@@ -44,7 +44,7 @@ reset_mysql:
 used_in_local: create_venv up
 	pipenv run behave features/setup.feature
 
-run_cluster_case: up
+run_cluster_case1: up
 	pipenv run behave features/setup.feature \
 	features/cluster/cluster_check_table_view.feature \
 	features/cluster/kill_ddl_lock.feature \
@@ -131,9 +131,16 @@ run_cfg_case_unstable2: up
 	features/func_test/cfg_test/inSubQueryTransformToJoin.feature \
 
 
+run_cluster_case: up
+	pipenv run behave features/setup.feature
+
+run_cfg_case: up
+	pipenv run behave -D dble_conf=template features/setup.feature
+
+
+
 run_sql_support_special: up
-	pipenv run behave -Dreset=false -D dble_conf=sql_cover_mixed features/setup.feature \
-	features/sql_cover/special/subquery_plan_optimize.feature:8
+	pipenv run behave -Dreset=false -D dble_conf=sql_cover_mixed features/setup.feature
 
 run_sql_support_global: up
 	pipenv run behave -D dble_conf=sql_cover_global features/setup.feature features/sql_cover/sql_global.feature
