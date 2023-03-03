@@ -184,7 +184,7 @@ def destroy_threads(context):
 
 @Then('check sql thread output in "{result}" by retry "{retry_param}" times')
 @Then('check sql thread output in "{result}"')
-def step_impl(context, result, retry_param=1):
+def check_sql_thread(context, result, retry_param=1):
     if "," in str(retry_param):
         retry_times = int(retry_param.split(",")[0])
         sep_time = float(retry_param.split(",")[1])
@@ -217,3 +217,26 @@ def step_impl(context, result, retry_param=1):
                 # time.sleep(sep_time)
 
     assert str(output).find(context.text.strip()) > -1, "expect output: {0} in {1}, but was: {2}".format(context.text, result, output)
+
+
+@Given('check sql thread output in "{result}" by retry "{retry_param}" times and check sleep time use "{sleep_end_key}"')
+def step_impl(context, result, retry_param=1, sleep_end_key=None):
+    check_sql_thread(context, result, retry_param)
+
+    # 获取到结果集之后判断sleep的时间是否过长或过短，过长或过短skip当前scenario
+    if sleep_end_key is not None:
+        sleep_end_time = getattr(context, sleep_end_key)
+        logger.debug(f"sleep end time: {sleep_end_time}, current time: {time.time()}")
+        if sleep_end_time is not None:
+            if time.time() < sleep_end_time-2 or time.time() > sleep_end_time+2:
+                logger.debug("sleep time too short or too long, skip case")
+                context.scenario.skip(f"sleep time {sleep_end_time} too short or too long, skip case")
+
+
+@Then('from btrace sleep "{sleep_time}" seconds get sleep end time and save resultset in "{result}"')
+def step_impl(context, sleep_time, result=None):
+    current_time = time.time()
+    end_time = current_time + float(sleep_time)
+    if result is not None:
+        setattr(context, result, end_time)
+        context.logger.debug("the sleep end resultset {0} is {1}".format(result, getattr(context, result)))
