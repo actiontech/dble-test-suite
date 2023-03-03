@@ -68,7 +68,6 @@ run_cfg_case1: up
 	features/func_test/cfg_test/user_analysisUser.feature \
 	features/func_test/cfg_test/mulitiple_reload.feature \
 	features/func_test/cfg_test/db_value_incorrect.feature \
-	features/func_test/connection/connection_pool_basic_test.feature \
 	features/func_test/dble_information/dble_table_group.feature \
 	features/func_test/dble_information/sql_log.feature \
 	features/func_test/dble_information/backend_variables.feature \
@@ -82,7 +81,6 @@ run_cfg_case1: up
 	features/func_test/managercmd/check_global.feature \
 	features/func_test/managercmd/reload_config_all_r.feature \
 	features/func_test/managercmd/reload_lock.feature \
-	features/func_test/managercmd/show_connection.feature \
 	features/func_test/managercmd/slow_query.feature \
 	features/func_test/managercmd/show_sqlX.feature \
 
@@ -106,10 +104,12 @@ run_cfg_case_unstable: up
 	features/func_test/dble_information/sql_statistic_queue_monitor.feature \
 	features/func_test/connection/connection_pool_heartbeat_test.feature \
 	features/func_test/connection/rwSplit_connection_test.feature \
+	features/func_test/connection/connection_pool_basic_test.feature \
 	features/func_test/cfg_test/dbInstance_load_balance.feature \
 	features/func_test/cfg_test/sharding_db_attribute.feature \
 	features/func_test/cfg_test/general_log.feature \
 	features/func_test/managercmd/split.feature \
+	features/func_test/managercmd/show_connection.feature \
 	features/func_test/xa_transaction/net_down_before_rollback.feature \
 	features/func_test/dble_information/supported_DML_tables.feature \
 	features/func_test/heartbeat/kill_heartbeat_connection.feature \
