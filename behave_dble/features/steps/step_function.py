@@ -651,7 +651,7 @@ def step_impl(context, path, hostname, exist_or_not):
     logger.debug("rc:{0}, stdout:{1}, stderr:{2}\n".format(rc, stdout,stderr))
     assert (exist_or_not == "not exist" and stderr != "") or (exist_or_not == "exist" and stderr == "")
     # 若文件存在，加日志检测文件内容是否有问题
-    if (exist_or_not == "exist" and stderr == ""):
+    if (exist_or_not == "exist" and stderr == "" and os.path.isfile(path)):
         cmd1 = "cat {}".format(path)
         rc, stdout, stderr = ssh.exec_command(cmd1)
         assert len(stderr) == 0, "exec cmd err:{0}".format(stderr)
