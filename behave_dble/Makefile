@@ -132,15 +132,44 @@ run_cfg_case_unstable2: up
 
 
 run_cluster_case: up
-	pipenv run behave features/setup.feature
+	pipenv run behave features/setup.feature \
+	features/cluster/
+
+run_func_stable_case: up
+	pipenv run behave -D dble_conf=template features/setup.feature \
+	features/func_test/global_var_init/ \
+	features/func_test/load_data/  \
+	features/func_test/safety/  \
+	features/func_test/sequence/  \
+	features/func_test/sharding_func_test/  \
+	features/func_test/slow_log/  \
+	features/func_test/special/ \
+	features/func_test/sql_plan/ \
+	features/func_test/trace/  \
+	features/func_test/heartbeat/ \
+	features/func_test/metalock/
 
 run_cfg_case: up
-	pipenv run behave -D dble_conf=template features/setup.feature
+	pipenv run behave -D dble_conf=template features/setup.feature \
+	features/func_test/cfg_test/
 
+run_func_unstable_case: up
+	pipenv run behave -D dble_conf=template features/setup.feature \
+	features/func_test/flow_control/ \
+	features/func_test/connection/  \
+	features/func_test/ddl/  \
+	features/func_test/xa_transaction/ \
+	features/func_test/local_read/ \
+	features/func_test/Large_Packet/
 
+run_managercmd_case: up
+	pipenv run behave -Dreset=false -D dble_conf=template features/setup.feature \
+	features/func_test/dble_information/ \
+	features/func_test/managercmd/
 
 run_sql_support_special: up
-	pipenv run behave -Dreset=false -D dble_conf=sql_cover_mixed features/setup.feature
+	pipenv run behave -Dreset=false -D dble_conf=sql_cover_mixed features/setup.feature \
+	features/sql_cover/special/
 
 run_sql_support_global: up
 	pipenv run behave -D dble_conf=sql_cover_global features/setup.feature features/sql_cover/sql_global.feature
