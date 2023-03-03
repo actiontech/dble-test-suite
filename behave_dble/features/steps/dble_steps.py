@@ -133,7 +133,7 @@ def step_impl(context, host, mode_name="admin", host_ip="127.0.0.1", flag="Y"):
     node = get_node(host)
 
     context.logger.debug("btrace is running, start query!!!")
-    # time.sleep(5)
+    time.sleep(3)
     for row in context.table:
         if mode_name=="admin":
             query_meta = QueryMeta(row.as_dict(), "admin", node)
