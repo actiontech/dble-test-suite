@@ -401,7 +401,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(18000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given prepare a thread execute sql "cluster @@detach" with "conn_1" and save resultset in "detach_rs"
@@ -647,7 +647,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+    /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(18000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
     Given prepare a thread execute sql "cluster @@attach" with "conn_1" and save resultset in "attach_rs"
@@ -663,13 +663,14 @@ Feature: check single dble detach or attach from cluster
     get into afterDelayServiceMarkDoing
     """
     Given execute oscmd "cat /opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
-    Then check sql thread output in "attach_rs_err" by retry "15" times
-    """
-    attach cluster pause timeout
-    """
-    Then check sql thread output in "res" by retry "10" times
+    Then from btrace sleep "18" seconds get sleep end time and save resultset in "show_end_time"
+    Given check sql thread output in "res" by retry "20" times and check sleep time use "show_end_time"
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
+    """
+    Then check sql thread output in "attach_rs_err"
+    """
+    attach cluster pause timeout. some frontend connection is doing operation.
     """
     Given stop btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
     Given stop btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
@@ -716,7 +717,8 @@ Feature: check single dble detach or attach from cluster
     get into afterDelayServiceMarkDoing
     """
     Given execute oscmd "cat /opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
-    Then check sql thread output in "res" by retry "15" times
+    Then from btrace sleep "15" seconds get sleep end time and save resultset in "show_end_time"
+    Given check sql thread output in "res" by retry "20" times and check sleep time use "show_end_time"
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
     """
