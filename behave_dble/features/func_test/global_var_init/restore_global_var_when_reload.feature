@@ -59,7 +59,8 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
   @restore_mysql_config @restore_mysql_service
   Scenario:select global vars to a certain writeHost fail at dble start, when heatbeat recover, try select global vars again and set global vars if nessessary #3
     """
-    {'restore_mysql_config':{'mysql-master1':{'autocommit':1,'transaction_isolation':'REPEATABLE-READ','general_log':0}},'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    {'restore_mysql_config':{'mysql-master1':{'autocommit':1,'transaction_isolation':'REPEATABLE-READ','general_log':0}}}
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
     Given stop mysql in host "mysql-master1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"

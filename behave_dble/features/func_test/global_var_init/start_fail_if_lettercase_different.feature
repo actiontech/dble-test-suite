@@ -121,7 +121,8 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
   @restore_mysql_config @restore_mysql_service
   Scenario: backend mysql heartbeat fail, restore the mysql but its lower_case_table_names are different with the running backend mysqls, then heartbeat to this backend mysql fail #4
     """
-    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}},'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}}}
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
