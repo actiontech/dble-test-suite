@@ -246,7 +246,8 @@ Feature: check dble_xa_recover and exception xa transactions
   @restore_mysql_service @restore_xa_recover
   Scenario: check xa transaction when the mysql stopped #3
   """
-  {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}, 'restore_xa_recover':['mysql-master1', 'mysql-master2']}
+  {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
+  {'restore_xa_recover':['mysql-master1', 'mysql-master2']}
   """
     Given delete file "/opt/dble/xalogs/*.log" on "dble-1"
     Then Restart dble in "dble-1" success
