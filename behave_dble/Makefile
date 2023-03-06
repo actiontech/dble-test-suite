@@ -69,7 +69,6 @@ run_cfg_case1: up
 	features/func_test/cfg_test/mulitiple_reload.feature \
 	features/func_test/cfg_test/db_value_incorrect.feature \
 	features/func_test/dble_information/dble_table_group.feature \
-	features/func_test/dble_information/sql_log.feature \
 	features/func_test/dble_information/backend_variables.feature \
 	features/func_test/dble_information/backend_connections.feature \
 	features/func_test/dble_information/dble_thread_pool.feature \
@@ -118,6 +117,7 @@ run_cfg_case_unstable: up
 	features/func_test/sql_plan/hint_planA_5.feature  \
 	features/func_test/sql_plan/hint_planA_6.feature  \
 	features/func_test/sql_plan/useNewJoinOptimizer1.feature \
+	features/func_test/dble_information/sql_log.feature \
 
 
 run_cfg_case_unstable2: up
