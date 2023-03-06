@@ -134,7 +134,7 @@ Feature: connection pool basic test
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                      | expect       | db                |timeout|
-      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'      | length{(20)} | dble_information  | 3,1   |
+      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'      | length{(20)} | dble_information  | 5,1   |
 
   @CRITICAL
   Scenario: connection expansion: use the active connections until the idle connections less than minCon, after timeBetweenEvictionRunsMillis the connections will increase to minCon #5
@@ -166,7 +166,7 @@ Feature: connection pool basic test
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                 | expect         | db                |timeout|
-      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'                 | length{(16)}   | dble_information  | 3,1   |
+      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'                 | length{(16)}   | dble_information  | 5,1   |
       | conn_0 | True    | select * from backend_connections where state='in use' and used_for_heartbeat='false'               | length{(8)}    | dble_information  |       |
 
 
@@ -222,7 +222,7 @@ Feature: connection pool basic test
     Given sleep "8" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                     | expect        | db                |timeout|
-      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle'     | length{(14)}  | dble_information  |2,1    |
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle'     | length{(14)}  | dble_information  |3,1    |
 
 
   @CRITICAL
@@ -266,7 +266,7 @@ Feature: connection pool basic test
     Given sleep "8" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_B"
       | conn   | toClose | sql                                                                                                               | expect        | db                |timeout|
-      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(6)}   | dble_information  |2,1    |
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(6)}   | dble_information  |3,1    |
     #idle_connection_B contains idle_connection_A
     Then check resultsets "idle_connection_B" including resultset "idle_connection_A" in following columns
       | column                | column_index |
@@ -319,7 +319,7 @@ Feature: connection pool basic test
     Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_B"
       | conn   | toClose | sql                                                                                                               | expect      | db                |timeout|
-      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(6)} | dble_information  | 3,1   |
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(6)} | dble_information  | 5,1   |
     #idle_connection_B is the same with idle_connection_A
     Then check resultsets "idle_connection_B" including resultset "idle_connection_A" in following columns
       | column                | column_index |
@@ -369,8 +369,8 @@ Feature: connection pool basic test
     #sleep 3s to wait connections idle timeout and into scaling period
     Given sleep "3" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_B"
-      | conn   | toClose | sql                                                                                                                                      | expect         | db                |
-      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5'                        | length{(8)}    | dble_information  |
+      | conn   | toClose | sql                                                                                                                                      | expect         | db                |timeout|
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5'                        | length{(8)}    | dble_information  |3,1    |
     #idle_connection_B contains idle_connection_A
     Then check resultsets "idle_connection_B" including resultset "idle_connection_A" in following columns
       | column                     | column_index |
@@ -429,7 +429,8 @@ Feature: connection pool basic test
       | remote_processlist_id       | 5            |
       | state                       | 18           |
     #sleep 5s to wait into default scaling period
+    # 由于扩缩容任务是“延迟”类型的定时任务，所以实际进入下个扩缩容需要的时间要大于配置的周期
     Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_C"
-      | conn   | toClose | sql                                                                                                                               | expect        | db                |
-      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5'                 | length{(4)}   | dble_information  |
+      | conn   | toClose | sql                                                                                                                               | expect        | db                |timeout|
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5'                 | length{(4)}   | dble_information  |5,1    |
