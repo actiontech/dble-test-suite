@@ -281,9 +281,10 @@ Feature: heartbeat basic test
     retry to do heartbeat for the 3 times
     heartbeat to \[172.100.9.5:3306\] setError
     """
+    #sleep 1s (timeout配置的时间为1s) 使其进入心跳timeout逻辑
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                          | expect               | db      |
-     | test | 111111 | conn_1 | True    | select * from sharding_2_t1   | error totally whack  | schema1 |
+     | user | passwd | conn   | toClose  | sql                          | expect               | db      |timeout|
+     | test | 111111 | conn_1 | True    | select * from sharding_2_t1   | error totally whack  | schema1 |3,1    |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "3,1" times
     """
     error heartbeat continued for more than
