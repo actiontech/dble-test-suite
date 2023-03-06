@@ -90,7 +90,7 @@ run_cfg_case2: up
 	features/func_test/ddl/ddl_refactor.feature \
 	features/func_test/special/complex_query_npe.feature \
 	features/func_test/special/fingerprint_log.feature \
-	features/sql_cover/special/hint.feature \
+	features/func_test/special/hint.feature \
 	features/func_test/sequence/sequence.feature \
 	features/func_test/safety/mysql_node_disconnected.feature \
 	features/func_test/xa_transaction/xa_retry_count.feature \
