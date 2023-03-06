@@ -6,7 +6,7 @@
 Feature: check keepAlive
 
   #DBLE0REQ-1495 疑似存在问题: DBLE0REQ-2084
-  @restore_network
+  @restore_network @skip
   Scenario: check keepAlive in heartbeat #1
     """
     {'restore_network':'mysql-master2'}

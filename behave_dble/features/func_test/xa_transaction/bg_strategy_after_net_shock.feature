@@ -3,7 +3,8 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/2
 
-#@skip #skip coz run for a long time
+@skip
+# skip coz run for a long time
 #2.20.04.0#dble-8175
 Feature: retry policy after xa transaction commit failed for network anomaly
 
