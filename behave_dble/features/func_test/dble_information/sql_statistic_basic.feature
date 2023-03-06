@@ -4,6 +4,7 @@
 
 Feature:manager Cmd
 
+
   Scenario: enable/disable @@statistic and show @@statistic  #1
    #CASE PREPARE rwSplitUser AND shardingUser
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -168,7 +169,6 @@ Feature:manager Cmd
       | associateTablesByEntryByUserTableSize   | 1024    |
       | frontendByBackendByEntryByUserTableSize | 1024    |
       | tableByUserByEntryTableSize             | 1024    |
-
 
 
   Scenario: reload @@statistic_table_size = ? [where table='?' | where table in (dble_information.tableA,...)]  Illegal value  #2
@@ -1309,119 +1309,64 @@ Feature:manager Cmd
     """
     reload tablesize
     """
-    Given sleep "3" seconds
+    Given sleep "2" seconds
     Then execute admin cmd  in "dble-1" at background
       | conn   | toClose | sql                                 | db               |
       | conn_1 | True    | reload @@statistic_table_size = 111 | dble_information |
-    Given sleep "7" seconds
-    Then execute admin cmd  in "dble-1" at background
-      | conn   | toClose | sql                                | db               |
-      | conn_0 | True    | show @@statistic                   | dble_information |
-    Given sleep "8" seconds
+#    Given sleep "10" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                        | expect       | db               | timeout |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', '0'), ('associateTablesByEntryByUserTableSize', '111'), ('frontendByBackendByEntryByUserTableSize', '111'), ('tableByUserByEntryTableSize', '111'))}  | dble_information | 11 |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
-    Then check resultset "version_1" has lines with following column values
-      | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 0                |
-      | associateTablesByEntryByUserTableSize   | 111              |
-      | frontendByBackendByEntryByUserTableSize | 111              |
-      | tableByUserByEntryTableSize             | 111              |
 
     #case reload @@statistic_table_size = 200 where table =
     Then execute admin cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                                                   | db               |
       | conn_0 | True    | reload @@statistic_table_size = 200 where table ='sql_statistic_by_associate_tables_by_entry_by_user' | dble_information |
-    Given sleep "3" seconds
+    Given sleep "2" seconds
     Then execute admin cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                                                   | db               |
       | conn_0 | True    | reload @@statistic_table_size = 222 where table ='sql_statistic_by_associate_tables_by_entry_by_user' | dble_information |
-    Given sleep "7" seconds
-    Then execute admin cmd  in "dble-1" at background
-      | conn   | toClose | sql                                | db               |
-      | conn_0 | True    | show @@statistic                   | dble_information |
-    Given sleep "8" seconds
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
-    Then check resultset "version_1" has lines with following column values
-      | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 0                |
-      | associateTablesByEntryByUserTableSize   | 222              |
-      | frontendByBackendByEntryByUserTableSize | 111              |
-      | tableByUserByEntryTableSize             | 111              |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                        | expect       | db               | timeout |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', '0'), ('associateTablesByEntryByUserTableSize', '222'), ('frontendByBackendByEntryByUserTableSize', '111'), ('tableByUserByEntryTableSize', '111'))}  | dble_information | 11 |
 
     #case reload @@statistic_table_size = 200 where table in
     Then execute admin cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                                                                                                             | db               |
       | conn_0 | True    | reload @@statistic_table_size = 300 where table in (sql_statistic_by_associate_tables_by_entry_by_user,sql_statistic_by_frontend_by_backend_by_entry_by_user)   | dble_information |
-    Given sleep "3" seconds
+    Given sleep "2" seconds
     Then execute admin cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                                                                                                             | db               |
       | conn_0 | True    | reload @@statistic_table_size = 333 where table in (sql_statistic_by_frontend_by_backend_by_entry_by_user,sql_statistic_by_table_by_user_by_entry)              | dble_information |
-    Given sleep "7" seconds
-    Then execute admin cmd  in "dble-1" at background
-      | conn   | toClose | sql                                | db               |
-      | conn_0 | True    | show @@statistic                   | dble_information |
-    Given sleep "8" seconds
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
-    Then check resultset "version_1" has lines with following column values
-      | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 0                |
-      | associateTablesByEntryByUserTableSize   | 300              |
-      | frontendByBackendByEntryByUserTableSize | 333              |
-      | tableByUserByEntryTableSize             | 333              |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                        | expect       | db               | timeout |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', '0'), ('associateTablesByEntryByUserTableSize', '300'), ('frontendByBackendByEntryByUserTableSize', '333'), ('tableByUserByEntryTableSize', '333'))}  | dble_information | 11 |
 
     #case reload and enable
     Then execute admin cmd  in "dble-1" at background
       | conn   | toClose | sql                                              | db               |
       | conn_0 | True    | reload @@statistic_table_size = 555              | dble_information |
-    Given sleep "3" seconds
+    Given sleep "2" seconds
     Then execute admin cmd  in "dble-1" at background
       | conn   | toClose | sql                                | db               |
       | conn_0 | True    | enable @@statistic                 | dble_information |
-    Then execute admin cmd  in "dble-1" at background
-      | conn   | toClose | sql                                | db               |
-      | conn_0 | True    | show @@statistic                   | dble_information |
-    Given sleep "8" seconds
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
-    Then check resultset "version_1" has lines with following column values
-      | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 1                |
-      | associateTablesByEntryByUserTableSize   | 555              |
-      | frontendByBackendByEntryByUserTableSize | 555              |
-      | tableByUserByEntryTableSize             | 555              |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                        | expect       | db               | timeout |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', '1'), ('associateTablesByEntryByUserTableSize', '555'), ('frontendByBackendByEntryByUserTableSize', '555'), ('tableByUserByEntryTableSize', '555'))}  | dble_information | 11 |
 
     #case reload and disable
     Then execute admin cmd  in "dble-1" at background
       | conn   | toClose | sql                                              | db               |
       | conn_0 | True    | reload @@statistic_table_size = 666              | dble_information |
-    Given sleep "3" seconds
+    Given sleep "2" seconds
     Then execute admin cmd  in "dble-1" at background
       | conn   | toClose | sql                                | db               |
       | conn_0 | True    | disable @@statistic                | dble_information |
-    Then execute admin cmd  in "dble-1" at background
-      | conn   | toClose | sql                                | db               |
-      | conn_0 | True    | show @@statistic                   | dble_information |
-    Given sleep "8" seconds
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
-    Then check resultset "version_1" has lines with following column values
-      | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 0                |
-      | associateTablesByEntryByUserTableSize   | 666              |
-      | frontendByBackendByEntryByUserTableSize | 666              |
-      | tableByUserByEntryTableSize             | 666              |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                        | expect       | db               | timeout |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', '0'), ('associateTablesByEntryByUserTableSize', '666'), ('frontendByBackendByEntryByUserTableSize', '666'), ('tableByUserByEntryTableSize', '666'))}  | dble_information | 11 |
 
 
     Given stop btrace script "BtraceAboutsqlStatistic.java" in "dble-1"
