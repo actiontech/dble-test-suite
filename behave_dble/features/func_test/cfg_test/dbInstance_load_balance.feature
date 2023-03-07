@@ -298,8 +298,11 @@ Feature: test read load balance
       | sql                            |
       | set global log_output='file'   |
 
-  @CRITICAL @current
+  @CRITICAL @current @restore_mysql_service
   Scenario: dbGroup rwSplitMode="2", 1m readWeight=1, 1s readWeight=1, 1s readWeight=0, and readWeight=0 indicates that traffic is not accepted   #8
+    """
+    {'restore_mysql_service':{'mysql-slave1':{'start_mysql':1}}}
+    """
     Given delete the following xml segment
       |file        | parent          | child               |
       |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -320,7 +323,9 @@ Feature: test read load balance
       <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
           <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="150" minCon="10" primary="true" readWeight="1"/>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="150" minCon="10" readWeight="1"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="150" minCon="10" readWeight="1">
+            <property name="heartbeatPeriodMillis">2000</property>
+          </dbInstance>
           <dbInstance name="hostM3" password="111111" url="172.100.9.6:3308" user="test" maxCon="150" minCon="10" readWeight="0"/>
       </dbGroup>
     """
@@ -330,6 +335,9 @@ Feature: test read load balance
     /replicate-ignore-table/d
     /server-id/a replicate-ignore-table = mysql.general_log
     """
+    Given execute sql in "dble-1" in "admin" mode
+    | conn   | toClose  | sql              | expect                                      | db               | timeout |
+    | conn_1 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3307, 'ok'} | dble_information | 6,2     |
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                             |
       | conn_0 | False   | set global general_log=on       |
