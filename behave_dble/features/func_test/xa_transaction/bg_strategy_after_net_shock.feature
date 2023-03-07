@@ -3,16 +3,29 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/2
 
-@skip
 # skip coz run for a long time
 #2.20.04.0#dble-8175
 Feature: retry policy after xa transaction commit failed for network anomaly
 
-   @btrace @restore_network @stop_tcpdump
+   @btrace @restore_network
   Scenario: mysql node network shock causing xa transaction fail to commit, recovery network before the front end attempts to commit 5 times #1
     """
     {'restore_network':'mysql-master1'}
     {'stop_tcpdump':'dble-1'}
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat keepAlive="5">select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
+
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat keepAlive="5">select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
     """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
@@ -34,12 +47,6 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     """
     before xa prepare
     """
-    #安装tcpdump并启动抓包
-    Given prepare a thread to run tcpdump in "dble-1"
-     """
-     tcpdump -w /tmp/tcpdump.log
-     """
-
     Given execute oscmd in "mysql-master1"
     """
     iptables -A INPUT -s 172.100.9.1 -j REJECT
@@ -58,8 +65,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     #等待一些时间(心跳周期10s)， 确保心跳恢复正常后再进行后面的检测
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                                                                               | expect        | db                |timeout  |
-      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 4,5     |
-    Given stop and destroy tcpdump threads list in "dble-1"
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 10,2    |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect      | db      |
       | conn_1 | False   | select * from sharding_4_t1 | length{(4)} | schema1 |
