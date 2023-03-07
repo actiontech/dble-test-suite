@@ -356,11 +356,15 @@ Feature: We will check readonly status on both master and slave even if the hear
      {'restore_network':'mysql-slave1'}
      {'restore_network':'mysql'}
      """
-
+     ### 防火墙的tcp重试时间会越来越大，加上keepAlive时间， 当keepAlive小于防火墙的时间，后端心跳恢复才会使用新的连接，才会下发类似语句， 后端mysql general log才会收到下发的语句
+     ###con query sql:/*#timestamp=1678166093774 from=1 reason=one time job*/
+        # select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log
+           # to con:BackendConnection[id = 75 host = 172.100.9.6 port = 3308 localPort = 35474 mysqlId = 22
+              # db config = dbInstance[name=hosts2,disabled=false,maxCon=1000,minCon=10]]
      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
      """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-         <heartbeat>show slave status</heartbeat>
+         <heartbeat keepAlive="5">show slave status</heartbeat>
          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
              <property name="heartbeatPeriodMillis">2000</property>
          </dbInstance>
@@ -370,7 +374,7 @@ Feature: We will check readonly status on both master and slave even if the hear
      </dbGroup>
 
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-         <heartbeat>select user()</heartbeat>
+         <heartbeat keepAlive="5">select user()</heartbeat>
          <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
              <property name="heartbeatPeriodMillis">2000</property>
          </dbInstance>
@@ -380,7 +384,7 @@ Feature: We will check readonly status on both master and slave even if the hear
      </dbGroup>
 
      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-         <heartbeat>select @@read_only</heartbeat>
+         <heartbeat keepAlive="5">select @@read_only</heartbeat>
          <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
              <property name="heartbeatPeriodMillis">2000</property>
          </dbInstance>
@@ -437,7 +441,7 @@ Feature: We will check readonly status on both master and slave even if the hear
 
      Given record current dble log line number in "log_linenu"
 
-     Given sleep "4" seconds
+     Given sleep "8" seconds
 
      # start turn on iptables on every mysql node
      Given execute oscmd in "mysql-master1"
