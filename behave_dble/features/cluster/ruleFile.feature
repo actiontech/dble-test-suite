@@ -67,9 +67,9 @@ DBLE0REQ-38
     #change check function
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_sharidng.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_sharidng.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_sharidng.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_sharidng.log" in host "dble-1"
       """
       \"data\":{\"schema\":\[
       {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
@@ -156,9 +156,9 @@ DBLE0REQ-38
     #change check function
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_sharidng.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_sharidng.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_sharidng.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_sharidng.log" in host "dble-1"
       """
       {\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
       \"table\":\[
@@ -247,9 +247,9 @@ DBLE0REQ-38
 #    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "partition.txt" on dble-1
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_sharidng.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_sharidng.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_sharidng.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_sharidng.log" in host "dble-1"
       """
       data\":{\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
       \"table\":\[
@@ -299,9 +299,9 @@ DBLE0REQ-38
 #    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "partition.txt" on dble-1
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_sharidng.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_sharidng.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_sharidng.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_sharidng.log" in host "dble-1"
       """
       data\":{\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
       \"table\":\[
@@ -393,9 +393,9 @@ DBLE0REQ-38
 #    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "patternrange.txt" on dble-1
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_sharidng.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_sharidng.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_sharidng.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_sharidng.log" in host "dble-1"
       """
       \"data\":{\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
       \"table\":\[
@@ -446,9 +446,9 @@ DBLE0REQ-38
 #    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "patternrange.txt" on dble-1
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_sharidng.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_sharidng.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_sharidng.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_sharidng.log" in host "dble-1"
       """
       data\":{\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
       \"table\":\[
@@ -477,5 +477,5 @@ DBLE0REQ-38
 
     Given execute linux command in "dble-1"
     """
-    rm -rf /tmp/dble_*
+    rm -rf /opt/dble/logs/dble_*
     """

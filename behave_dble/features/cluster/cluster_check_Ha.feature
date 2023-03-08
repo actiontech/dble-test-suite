@@ -227,21 +227,21 @@ Feature: test "ha" in zk cluster
       | DISABLED   | 10           |
     #case if sql query route ha_group2(dn2 or dn4) will be wrong
     #case global table
-    Given delete file "/tmp/dble_user_query.log" on "dble-1"
+    Given delete file "/opt/dble/logs/dble_user_query.log" on "dble-1"
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global1 values (1)     | schema1 |
     Given sleep "1" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
       """
       the dbInstance\[172.100.9.6:3306\] is disable. Please check the dbInstance disable status
       """
-    Given delete file "/tmp/dble_user_query.log" on "dble-1"
+    Given delete file "/opt/dble/logs/dble_user_query.log" on "dble-1"
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global2 values (2)     | schema1 |
     Given sleep "1" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
       """
       the dbInstance\[172.100.9.6:3306\] is disable. Please check the dbInstance disable status
       """
@@ -555,21 +555,21 @@ Feature: test "ha" in zk cluster
       | W/R        | 4            |
       | DISABLED   | 10           |
     #case if route hostS1 dbInstance  ,result will be wrong
-    Given delete file "/tmp/dble_user_query.log" on "dble-1"
+    Given delete file "/opt/dble/logs/dble_user_query.log" on "dble-1"
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global1 values (1)     | schema1 |
     Given sleep "1" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
       """
       the dbInstance\[172.100.9.6:3307\] is disable. Please check the dbInstance disable status
       """
-    Given delete file "/tmp/dble_user_query.log" on "dble-1"
+    Given delete file "/opt/dble/logs/dble_user_query.log" on "dble-1"
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global2 values (2)     | schema1 |
     Given sleep "1" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
       """
       the dbInstance\[172.100.9.6:3307\] is disable. Please check the dbInstance disable status
       """

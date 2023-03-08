@@ -87,7 +87,7 @@ Feature: test mysql one node down
     Given stop mysql in host "mysql-master1"
 #    Given sleep "15" seconds
      # ERROR 3009 (HY000) at line 1: java.io.IOException: the dbInstance[172.100.9.5:3306] can't reach. Please check the dbInstance is accessible
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1" retry "20,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1" retry "20,2" times
       """
       the dbInstance\[172.100.9.5:3306\] can
       t reach. Please check the dbInstance is accessible
@@ -119,7 +119,7 @@ Feature: test mysql one node down
     Given stop mysql in host "mysql-master1"
 #    Given sleep "15" seconds
      # ERROR 3009 (HY000) at line 1: java.io.IOException: the dbInstance[172.100.9.5:3306] can't reach. Please check the dbInstance is accessible
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1" retry "20,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1" retry "20,2" times
       """
       the dbInstance\[172.100.9.5:3306\] can
       t reach. Please check the dbInstance is accessible
@@ -160,7 +160,7 @@ Feature: test mysql one node down
     Given stop btrace script "BtraceAddMetaLock.java" in "dble-1"
     Given destroy btrace threads list
 #    Given sleep "6" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1" retry "10" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1" retry "10" times
       """
       was closed ,reason is
       """
@@ -196,7 +196,7 @@ Feature: test mysql one node down
     Given stop btrace script "BtraceAddMetaLock.java" in "dble-1"
     Given destroy btrace threads list
 #    Given sleep "6" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1" retry "10" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1" retry "10" times
       """
       the dbInstance\[172.100.9.5:3306\] can't reach. Please check the dbInstance is accessible
       """

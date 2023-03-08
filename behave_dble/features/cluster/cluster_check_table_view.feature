@@ -28,9 +28,9 @@ Feature: test view in zk cluster
     #case check lock on zookeeper values is 1
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1:view_test
       """
@@ -47,13 +47,13 @@ Feature: test view in zk cluster
     #case check lock on zookeeper values is 0
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1:view_test
       """
-    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
       """
       ERROR
       """
@@ -161,9 +161,9 @@ Feature: test view in zk cluster
     #case check lock on zookeeper values is 1
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1:view_view
       """
@@ -181,13 +181,13 @@ Feature: test view in zk cluster
     #case check lock on zookeeper values is 0
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1:view_view
       """
-    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-2"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_user_query.log" in host "dble-2"
       """
       ERROR
       """
@@ -241,9 +241,9 @@ Feature: test view in zk cluster
     #case check lock on zookeeper values is 1
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1:view_3
       """
@@ -262,13 +262,13 @@ Feature: test view in zk cluster
     #case check lock on zookeeper values is 0
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1:view_3
       """
-    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-3"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_user_query.log" in host "dble-3"
       """
       ERROR
       """
@@ -303,5 +303,5 @@ Feature: test view in zk cluster
       | conn_1 | true    | drop table if exists sharding_4_t1    | success     | schema1 |
     Given execute linux command in "dble-1"
     """
-    rm -rf /tmp/dble_*
+    rm -rf /opt/dble/logs/dble_*
     """

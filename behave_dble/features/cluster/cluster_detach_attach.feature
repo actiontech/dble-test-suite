@@ -7,7 +7,7 @@ Feature: check single dble detach or attach from cluster
 
   Scenario: check thread name after cluster @@detach, cluster @@attach #1
     Given delete file "/tmp/jstack.log" on "dble-1"
-    Given delete file "/tmp/dble_zk_online.log" on "dble-1"
+    Given delete file "/opt/dble/logs/dble_zk_online.log" on "dble-1"
     Given execute oscmd in "dble-1"
     """
     jstack -l `ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}'` > /tmp/jstack.log
@@ -74,14 +74,14 @@ Feature: check single dble detach or attach from cluster
     Then check result "rs_A" value is "0"
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/online  >/tmp/dble_zk_online.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/online  >/opt/dble/logs/dble_zk_online.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_online.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_online.log" in host "dble-1"
       """
       [2,3]
       """
     Given delete file "/tmp/jstack.log" on "dble-1"
-    Given delete file "/tmp/dble_zk_online.log" on "dble-1"
+    Given delete file "/opt/dble/logs/dble_zk_online.log" on "dble-1"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql              | expect                                 |
       | conn_1 | False     | cluster @@attach | success                                |
@@ -118,14 +118,14 @@ Feature: check single dble detach or attach from cluster
     Then check result "rs_A" value is "1"
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/online  >/tmp/dble_zk_online.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/online  >/opt/dble/logs/dble_zk_online.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_online.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_online.log" in host "dble-1"
       """
       [1,2,3]
       """
     Given delete file "/tmp/jstack.log" on "dble-1"
-    Given delete file "/tmp/dble_zk_online.log" on "dble-1"
+    Given delete file "/opt/dble/logs/dble_zk_online.log" on "dble-1"
 
   Scenario: check cluster @@detach, cluster @@attach command #2
     Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds

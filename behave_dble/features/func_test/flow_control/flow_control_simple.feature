@@ -54,7 +54,7 @@ Feature: test flow_control about simple query
       | conn_0 | true    | select conn_send_task_queue,sql from session_connections                                | success | dble_information |
       | conn_0 | true    | flow_control @@list                                                                     | success | dble_information |
 
-    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
       """
       closed
       Lost connection
@@ -95,7 +95,7 @@ Feature: test flow_control about simple query
       | conn_0 | true    | select conn_send_task_queue,sql from session_connections                                | success | dble_information |
       | conn_0 | true    | flow_control @@list                                                                     | success | dble_information |
 
-    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
       """
       closed
       Lost connection

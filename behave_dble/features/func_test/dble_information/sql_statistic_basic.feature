@@ -1292,7 +1292,7 @@ Feature:manager Cmd
       | conn_0 | True    | insert into sql_statistic_by_table_by_user_by_entry (entry) values (22)          | Access denied for table 'sql_statistic_by_table_by_user_by_entry'       | dble_information |
 
 
-
+   @btrace
    Scenario: add btrace check manage cmd
     Given delete file "/opt/dble/BtraceAboutsqlStatistic.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutsqlStatistic.java.log" on "dble-1"

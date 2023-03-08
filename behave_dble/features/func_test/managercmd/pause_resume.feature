@@ -133,7 +133,7 @@ Feature: test "pause/resume" manager cmd
     Then execute sql in "dble-1" in "admin" mode
       | sql    | expect  |
       | resume | success |
-    Then check log "/tmp/dble_admin_query.log" output in "dble-1"
+    Then check log "/opt/dble/logs/dble_admin_query.log" output in "dble-1"
     """
     Pause resume when recycle connection, pause revert
     """
@@ -142,7 +142,7 @@ Feature: test "pause/resume" manager cmd
       | conn_0 | false   | select *  from sharding_4_t1               | length{(4)} |
       | conn_0 | false   | commit                                     | success     |
       | conn_0 | true    | drop table if exists sharding_4_t1         | success     |
-    Given delete file "/tmp/dble_admin_query.log" on "dble-1"
+    Given delete file "/opt/dble/logs/dble_admin_query.log" on "dble-1"
 
   @CRITICAL
   Scenario: execute manager cmd "pause @@shardingNode" different  #7

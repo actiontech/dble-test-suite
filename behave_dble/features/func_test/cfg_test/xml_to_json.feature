@@ -11,8 +11,8 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+#    Given sleep "2" seconds
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "5,2" times
     """
     \"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
@@ -219,7 +219,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     \"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":10,\"errorRetryCount\":0},
@@ -323,7 +323,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     \"sequence_db_conf.properties\":{\"\`schema1\`.\`test_auto\`\":\"dn1\"}}
     """
@@ -527,7 +527,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     \"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":10,\"errorRetryCount\":0},
@@ -631,7 +631,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     \"sequence_db_conf.properties\":{\"\`schema1\`.\`test_auto\`\":\"dn5\"}}
     """
@@ -648,7 +648,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     {\"name\":\"schema3\",\"sqlMaxLimit\":-1,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",\"table\":\[{\"type\":\"SingleTable\",\"properties\":{\"name\":\"sing1\",\"shardingNode\":\"dn1\",\"sqlMaxLimit\":100,\"specifyCharset\":false}}
     """
@@ -670,7 +670,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     ha_group5
     """
@@ -689,7 +689,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     ha_group4
     M111
@@ -715,7 +715,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60},
@@ -766,7 +766,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":1000}
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":1,\"errorRetryCount\":1,\"keepAlive\":60},
@@ -819,7 +819,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":1000}
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":1,\"errorRetryCount\":1,\"keepAlive\":60},
@@ -916,7 +916,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     {\"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},\"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
@@ -959,7 +959,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     \"user\":\[
     {\"type\":\"ManagerUser\",\"properties\":{\"name\":\"root\",\"password\":\"111111\"}},
@@ -992,7 +992,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     {\"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},\"dbInstance\":\[{\"name\":\"hostM1\",\"url\":\"172.100.9.5:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]},
