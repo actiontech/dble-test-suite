@@ -66,7 +66,7 @@ Feature: connection pool basic test
     """
     getting connection
     """
-    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     2	2
     """
@@ -77,7 +77,7 @@ Feature: connection pool basic test
     Given sleep "5" seconds
     Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
     Given destroy btrace threads list
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     2	2
     """

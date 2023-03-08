@@ -220,7 +220,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     {\"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":10,\"errorRetryCount\":0},
@@ -313,7 +313,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     {\"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":10,\"errorRetryCount\":0},
@@ -406,7 +406,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     {\"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":10,\"errorRetryCount\":0},
@@ -498,9 +498,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-1"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_zk_sharding.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_zk_sharding.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1" retry "6,2" times
     """
     {\"schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
@@ -543,9 +543,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-2"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "6,2" times
     """
     {\"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":10,\"errorRetryCount\":0},
@@ -581,9 +581,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-3"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-3" retry "6,2" times
     """
     \"user\":\[
     {\"type\":\"ManagerUser\",\"properties\":{\"readOnly\":false,\"name\":\"root\",\"password\":
@@ -607,9 +607,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Given execute linux command in "dble-3"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sequences/common  >/tmp/dble_zk_sequences.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sequences/common  >/opt/dble/logs/dble_zk_sequences.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_sequences.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sequences.log" in host "dble-3" retry "6,2" times
     """
     {\"sequence_conf.properties\":{\"\`schema2\`.\`GLOBAL\`.MINID\":\"10001\",\"\`schema2\`.\`GLOBAL\`.MAXID\":\"20000\",\"\`schema2\`.\`GLOBAL\`.CURID\":\"10000\"}}}
     """
@@ -733,10 +733,10 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       """
 
 
-    Given delete file "/tmp/dble_zk_sharding.log" on "dble-1"
-    Given delete file "/tmp/dble_zk_db.log" on "dble-2"
-    Given delete file "/tmp/dble_zk_user.log" on "dble-3"
-    Given delete file "/tmp/dble_zk_sequences.log" on "dble-3"
+    Given delete file "/opt/dble/logs/dble_zk_sharding.log" on "dble-1"
+    Given delete file "/opt/dble/logs/dble_zk_db.log" on "dble-2"
+    Given delete file "/opt/dble/logs/dble_zk_user.log" on "dble-3"
+    Given delete file "/opt/dble/logs/dble_zk_sequences.log" on "dble-3"
 
 
 
@@ -756,9 +756,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Given execute linux command in "dble-1"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
     """
-    Then check following text exist "N" in file "/tmp/dble_zk_db.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
     """
     \"rwSplitMode\":99
     \"name\":\"ha_group3\"
@@ -858,30 +858,30 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-1"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_zk_sharding.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_zk_sharding.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1" retry "6,2" times
     """
     {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
     """
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
     """
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_2 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
     """
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_3 | True    | select * from dble_config   | dble_information |
-     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
     """
@@ -955,9 +955,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-3"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_zk_sharding.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_zk_sharding.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-3" retry "6,2" times
     """
     schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
@@ -972,7 +972,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
@@ -987,7 +987,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
@@ -1002,7 +1002,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
@@ -1044,9 +1044,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-1"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
     """
-    Then check following text exist "N" in file "/tmp/dble_zk_db.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
     """
     \"name\":\"ha_group4\"
     M111
@@ -1054,9 +1054,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-1"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
     """
-    Then check following text exist "N" in file "/tmp/dble_zk_user.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-1"
     """
     \"type\":\"rwSplitUser\"
     """
@@ -1064,7 +1064,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     \"name\":\"ha_group4\"
     M111
@@ -1073,7 +1073,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_2 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     \"name\":\"ha_group4\"
     M111
@@ -1083,7 +1083,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_3 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     \"name\":\"ha_group4\"
     M111
@@ -1134,18 +1134,18 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-1"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
     """
-    Then check following text exist "N" in file "/tmp/dble_zk_db.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
     """
     \"name\":\"ha_group5\"
     M89757
     """
     Given execute linux command in "dble-1"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
     """
-    Then check following text exist "N" in file "/tmp/dble_zk_user.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-1"
     """
     rw21
     ha_group5
@@ -1153,7 +1153,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     \"name\":\"ha_group5\"
     M89757
@@ -1162,7 +1162,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_2 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     \"name\":\"ha_group5\"
     M89757
@@ -1171,7 +1171,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_3 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     \"name\":\"ha_group5\"
     M89757
@@ -1219,30 +1219,30 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-1"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
     """
-    Then check following text exist "N" in file "/tmp/dble_zk_db.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
     """
     ha_group6
     """
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     ha_group6
     """
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_2 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     ha_group6
     """
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_3 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     ha_group6
     """
@@ -1272,9 +1272,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-1"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
@@ -1294,9 +1294,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-1"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-1" retry "6,2" times
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
     """
@@ -1304,7 +1304,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
@@ -1325,7 +1325,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_2 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
@@ -1347,7 +1347,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_3 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
@@ -1444,9 +1444,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-3"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-3" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
@@ -1465,9 +1465,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Given execute linux command in "dble-2"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-2" retry "6,2" times
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group4\",\"name\":\"rw2\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":999}
     """
@@ -1475,7 +1475,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
@@ -1497,7 +1497,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
@@ -1519,7 +1519,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
@@ -1668,9 +1668,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-2"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
@@ -1679,9 +1679,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-3"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
     """
-    Then check following text exist "N" in file "/tmp/dble_zk_user.log" in host "dble-3"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-3"
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw2\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
@@ -1690,13 +1690,13 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     """
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw2\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
@@ -1704,13 +1704,13 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_2 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     """
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2"
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw2\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
@@ -1718,13 +1718,13 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_3 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     """
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-3"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3"
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw2\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
@@ -1853,9 +1853,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-2"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/tmp/dble_zk_db.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/opt/dble/logs/dble_zk_db.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "6,2" times
     """
     {\"dbGroup\":\"ha_group2\",\"dbInstance\":\[{\"name\":\"hostM2\",\"disable\":true,\"primary\":true},{\"name\":\"hostS1\",\"disable\":false,\"primary\":false},{\"name\":\"hostS2\",\"disable\":false,\"primary\":false}\]}
     """
@@ -1890,7 +1890,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -1902,7 +1902,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_2 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -1913,7 +1913,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_3 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -1926,9 +1926,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-2"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/tmp/dble_zk_db.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/opt/dble/logs/dble_zk_db.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "6,2" times
     """
     {\"dbGroup\":\"ha_group2\",\"dbInstance\":\[{\"name\":\"hostM2\",\"disable\":false,\"primary\":true},{\"name\":\"hostS1\",\"disable\":false,\"primary\":false},{\"name\":\"hostS2\",\"disable\":false,\"primary\":false}\]}
     """
@@ -1963,7 +1963,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -1975,7 +1975,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_2 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -1986,7 +1986,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_3 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -2015,20 +2015,20 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-2"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/tmp/dble_zk_db.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/opt/dble/logs/dble_zk_db.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "6,2" times
     """
     {\"dbGroup\":\"ha_group2\",\"dbInstance\":\[{\"name\":\"hostM2\",\"disable\":true,\"primary\":true},{\"name\":\"hostS1\",\"disable\":true,\"primary\":false},{\"name\":\"hostS2\",\"disable\":true,\"primary\":false}\]}
     """
-    Then check following text exist "N" in file "/tmp/dble_zk_db.log" in host "dble-2"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2"
     """
     {\"dbGroup\":\"ha_group2\",\"dbInstance\":\[{\"name\":\"hostM2\",\"disable\":true,\"primary\":false},{\"name\":\"hostS1\",\"disable\":true,\"primary\":true},{\"name\":\"hostS2\",\"disable\":true,\"primary\":false}\]}
     """
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -2040,7 +2040,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -2052,7 +2052,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -2113,9 +2113,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-2"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/tmp/dble_zk_db.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/opt/dble/logs/dble_zk_db.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2" retry "30,3" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "30,3" times
     """
     {\"dbGroup\":\"ha_group2\",\"dbInstance\":\[{\"name\":\"hostM2\",\"disable\":true,\"primary\":false},{\"name\":\"hostS1\",\"disable\":true,\"primary\":true},{\"name\":\"hostS2\",\"disable\":true,\"primary\":false}\]}
     """
@@ -2149,7 +2149,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
      Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -2160,7 +2160,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -2171,7 +2171,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
      Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -2187,9 +2187,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-2"
     """
-    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/tmp/dble_zk_db.log 2>&1 &
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/opt/dble/logs/dble_zk_db.log 2>&1 &
     """
-    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "6,2" times
     """
     {\"dbGroup\":\"ha_group2\",\"dbInstance\":\[{\"name\":\"hostM2\",\"disable\":false,\"primary\":false},{\"name\":\"hostS1\",\"disable\":false,\"primary\":true},{\"name\":\"hostS2\",\"disable\":false,\"primary\":false}\]}
     """
@@ -2223,7 +2223,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
      Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -2234,7 +2234,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -2244,7 +2244,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
      Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
     \"dbInstance\":\[
@@ -2277,39 +2277,39 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     \"user\":\[
     {\"type\":\"ManagerUser\",\"properties\":{\"name\":\"root\",\"password\":\"111111\"}},
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group2\",\"name\":\"test\",\"password\":\"111111\"}
     """
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     \"type\":\"ShardingUser\"
     """
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_2 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     \"user\":\[
     {\"type\":\"ManagerUser\",\"properties\":{\"name\":\"root\",\"password\":\"111111\"}},
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group2\",\"name\":\"test\",\"password\":\"111111\"}
     """
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2"
     """
     \"type\":\"ShardingUser\"
     """
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_3 | True    | select * from dble_config   | dble_information |
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3" retry "6,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     \"user\":\[
     {\"type\":\"ManagerUser\",\"properties\":{\"name\":\"root\",\"password\":\"111111\"}},
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group2\",\"name\":\"test\",\"password\":\"111111\"}
     """
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-3"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3"
     """
     \"type\":\"ShardingUser\"
     """
@@ -2341,13 +2341,13 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute linux command in "dble-1"
     """
-    rm -rf /tmp/dble_*
+    rm -rf /opt/dble/logs/dble_*
     """
     Given execute linux command in "dble-2"
     """
-    rm -rf /tmp/dble_*
+    rm -rf /opt/dble/logs/dble_*
     """
     Given execute linux command in "dble-3"
     """
-    rm -rf /tmp/dble_*
+    rm -rf /opt/dble/logs/dble_*
     """

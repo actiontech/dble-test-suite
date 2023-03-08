@@ -79,9 +79,9 @@ Feature: test "ddl" in zk cluster
     #case check lock on zookeeper values is 0
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -165,9 +165,9 @@ Feature: test "ddl" in zk cluster
     #case check lock on zookeeper values is 0
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -195,9 +195,9 @@ Feature: test "ddl" in zk cluster
     #case check lock on zookeeper values is 1
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -218,9 +218,9 @@ Feature: test "ddl" in zk cluster
     #case check lock on zookeeper values is 0
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -285,9 +285,9 @@ Feature: test "ddl" in zk cluster
     #case check lock on zookeeper values is 1
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -316,9 +316,9 @@ Feature: test "ddl" in zk cluster
     Given sleep "30" seconds
     Given execute linux command in "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-2"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-2"
       """
       schema1.sharding_4_t1
       """
@@ -375,9 +375,9 @@ Feature: test "ddl" in zk cluster
     #case check lock on zookeeper values is 1
     Given execute linux command in "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-2"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-2"
       """
       schema1.sharding_4_t1
       """
@@ -397,9 +397,9 @@ Feature: test "ddl" in zk cluster
     #case check lock on zookeeper values is 0
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -507,9 +507,9 @@ Feature: test "ddl" in zk cluster
     #case check lock on zookeeper values is 0
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -556,9 +556,9 @@ Feature: test "ddl" in zk cluster
     #case check lock on zookeeper values is 1
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -580,9 +580,9 @@ Feature: test "ddl" in zk cluster
     #case check lock on zookeeper values is 0
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -662,13 +662,13 @@ Feature: test "ddl" in zk cluster
       | conn_3 | true     | drop table if exists test1                             | success  | schema1 |
     Given execute linux command in "dble-1"
     """
-    rm -rf /tmp/dble_*
+    rm -rf /opt/dble/logs/dble_*
     """
     Given execute linux command in "dble-2"
     """
-    rm -rf /tmp/dble_*
+    rm -rf /opt/dble/logs/dble_*
     """
     Given execute linux command in "dble-3"
     """
-    rm -rf /tmp/dble_*
+    rm -rf /opt/dble/logs/dble_*
     """

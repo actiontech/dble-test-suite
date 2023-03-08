@@ -27,9 +27,9 @@ Feature: on zookeeper to check "xa"
     Given prepare a thread execute sql "commit" with "conn_1"
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1  >/tmp/dble_zk_xa.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1  >/opt/dble/logs/dble_zk_xa.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_xa.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_xa.log" in host "dble-1"
       """
       xalog
       """
@@ -49,5 +49,5 @@ Feature: on zookeeper to check "xa"
       | conn_1 | True     | drop table if exists sharding_4_t1    | success      | schema1  |
     Given execute linux command in "dble-1"
     """
-    rm -rf /tmp/dble_*
+    rm -rf /opt/dble/logs/dble_*
     """

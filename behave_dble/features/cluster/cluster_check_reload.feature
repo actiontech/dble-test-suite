@@ -146,41 +146,41 @@ Feature: test "reload @@config" in zk cluster
     #case check on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_zk_sharding.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_zk_sharding.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1"
       """
       \"name\":\"sharding2\"
       """
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
       """
       \"name\":\"hostM3\"
       """
     Given execute linux command in "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-2"
       """
       \"schemas\":\"schema1,schema2\",\"name\":\"test\"
       """
     Given execute linux command in "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sequences/common  >/tmp/dble_zk_sequences.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sequences/common  >/opt/dble/logs/dble_zk_sequences.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_sequences.log" in host "dble-2"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sequences.log" in host "dble-2"
       """
       {\"sequence_db_conf.properties\":{\"\`schema1\`.\`test_auto\`\":\"dn1\"}}}
       """
     Given execute linux command in "dble-3"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-3"
       """
       confChange.lock
       """
@@ -318,34 +318,34 @@ Feature: test "reload @@config" in zk cluster
     #case check on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_zk_sharding.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_zk_sharding.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1"
       """
       \"name\":\"sharding3\"
       """
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
       """
       \"name\":\"hostM\"
       \"maxCon\":108
       """
     Given execute linux command in "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-2"
       """
       \"schemas\":\"schema1,schema2,schema3\",\"name\":\"test\"
       """
     Given execute linux command in "dble-3"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-3"
       """
       confChange.lock
       """
@@ -404,28 +404,28 @@ Feature: test "reload @@config" in zk cluster
       <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1\" specifyCharset=\"false\" function=\"hash-three\" shardingColumn=\"id\"/>
       """
     Given sleep "1" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
       Illegal table conf : table \[ sharding4 \] rule function \[ hash-three \] partition size : 3 > table shardingNode size : 2, please make sure table shardingnode size = function partition size
       """
     #case check on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_zk_sharding.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_zk_sharding.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1"
       """
       \"name\":\"sharding4\"
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1"
       """
       \"name\":\"sharding3\"
       """
     Given execute linux command in "dble-3"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-3"
       """
       confChange.lock
       """
@@ -455,21 +455,21 @@ Feature: test "reload @@config" in zk cluster
     #case check on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_zk_sharding.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_zk_sharding.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1"
       """
       \"name\":\"sharding3\"
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1"
       """
       \"name\":\"sharding4\"
       """
     Given execute linux command in "dble-3"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-3"
       """
       confChange.lock
       """
@@ -505,7 +505,7 @@ Feature: test "reload @@config" in zk cluster
       <dbGroup rwSplitMode=\"0\" name=\"ha_group1\" delayThreshold=\"100\">
       maxCon=\"108\"
       """
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     #  Reload Failure, The reason is com.actiontech.dble.config.util.ConfigException: org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 70; cvc-datatype-valid.1.2.1: '1.2' is not a valid value for 'integer'.
       """
       '1.2' is not a valid value for 'integer'
@@ -513,23 +513,23 @@ Feature: test "reload @@config" in zk cluster
     #case check on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
       """
       \"maxCon\":108
       \"rwSplitMode\":0,\"name\":\"ha_group1\"
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_db.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
       """
       \"maxCon\":10086
       "rwSplitMode\":1.2
       """
     Given execute linux command in "dble-3"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-3"
       """
       confChange.lock
       """
@@ -564,23 +564,23 @@ Feature: test "reload @@config" in zk cluster
     #case check on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_db.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
       """
       \"maxCon\":108
       \"rwSplitMode\":0,\"name\":\"ha_group1\"
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
       """
       \"maxCon\":10086
       \"rwSplitMode\":1
       """
     Given execute linux command in "dble-3"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-3"
       """
       confChange.lock
       """
@@ -609,7 +609,7 @@ Feature: test "reload @@config" in zk cluster
       <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
       """
     Given sleep "10" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     # Reload Failure, The reason is SelfCheck### User[name:test]'s schema [schema4444] is not exist!
       """
       Reload Failure
@@ -617,21 +617,21 @@ Feature: test "reload @@config" in zk cluster
     #case check on zookeeper
     Given execute linux command in "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-2"
       """
       \"schemas\":\"schema1,schema2,schema3\",\"name\":\"test\"
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_user.log" in host "dble-2"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-2"
       """
       \"schemas\":\"schema1,schema4444\",\"nam\e":\"test\"
       """
     Given execute linux command in "dble-3"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-3"
       """
       confChange.lock
       """
@@ -684,21 +684,21 @@ Feature: test "reload @@config" in zk cluster
     #case check on zookeeper
     Given execute linux command in "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-2"
       """
       \"schemas\":\"schema1,schema2,schema3\",\"name\":\"test\"
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_user.log" in host "dble-2"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-2"
       """
       \"schemas\":\"schema1,schema4444\",\"name\":\"test\"
       """
     Given execute linux command in "dble-3"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-3"
       """
       confChange.lock
       """
@@ -733,11 +733,11 @@ Feature: test "reload @@config" in zk cluster
       | conn   | toClose | sql               | db               |
       | conn_3 | True    | reload @@config   | dble_information |
     Given sleep "3" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2"
       """
       Other instance is reloading, please try again later.
       """
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3"
       """
       Other instance is reloading, please try again later.
       """
@@ -749,21 +749,21 @@ Feature: test "reload @@config" in zk cluster
      #case check on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_zk_sharding.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_zk_sharding.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1"
       """
       \"name\":\"sharding5\"
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1"
       """
       \"name\":\"sharding4\"
       """
     Given execute linux command in "dble-3"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-3"
       """
       confChange.lock
       """
@@ -771,7 +771,7 @@ Feature: test "reload @@config" in zk cluster
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     #case dble-1 reload success
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
       ERROR
       """
@@ -822,9 +822,9 @@ Feature: test "reload @@config" in zk cluster
      #case check on zookeeper
     Given execute linux command in "dble-3"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-3"
       """
       confChange.lock
       """
@@ -839,15 +839,15 @@ Feature: test "reload @@config" in zk cluster
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
     Given execute linux command in "dble-1"
     """
-    rm -rf /tmp/dble_*
+    rm -rf /opt/dble/logs/dble_*
     """
     Given execute linux command in "dble-2"
     """
-    rm -rf /tmp/dble_*
+    rm -rf /opt/dble/logs/dble_*
     """
     Given execute linux command in "dble-3"
     """
-    rm -rf /tmp/dble_*
+    rm -rf /opt/dble/logs/dble_*
     """
 
 

@@ -73,7 +73,7 @@ Feature: test fresh backend connection pool
     Given destroy btrace threads list
     #sleep 10s for waiting btrace end and fresh command return success
     Given sleep "10" seconds
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     ERROR
     """
@@ -120,7 +120,7 @@ Feature: test fresh backend connection pool
     Given destroy btrace threads list
     #sleep 10s for waiting btrace end and the first fresh command return success
     Given sleep "10" seconds
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     ERROR
     """
@@ -173,7 +173,7 @@ Feature: test fresh backend connection pool
       | conn_2 | True    | select * from nosharding               | schema1 |
     #sleep 5s and check sql still hang
     Given sleep "5" seconds
-    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     102
     """
@@ -181,7 +181,7 @@ Feature: test fresh backend connection pool
     Given destroy btrace threads list
     #sleep 15s for waiting btrace end and the first fresh command return ok
     Given sleep "15" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     102
     """
@@ -231,7 +231,7 @@ Feature: test fresh backend connection pool
     Given destroy btrace threads list
     #sleep 10s for waiting btrace end and the fresh command return ok
     Given sleep "10" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     id
     101
@@ -239,7 +239,7 @@ Feature: test fresh backend connection pool
     103
     104
     """
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     ERROR
     """

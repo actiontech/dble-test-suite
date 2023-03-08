@@ -163,7 +163,7 @@
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
 #    Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "5,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "5,2" times
       """
       {\"dbGroup\":\[
       {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
@@ -171,7 +171,7 @@
       {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
       \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"primary\":true}\]
       """
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
       \"name\":\"ha_group3\"
       \"name\":\"ha_group4\"
@@ -277,7 +277,7 @@
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
 
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1" retry "5,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "5,2" times
       """
       rwSplitMode\":0.*ha_group1.*name\":\"hostM1\",\"url\":\"172.100.9.5:3306
       rwSplitMode\":0.*ha_group2.*name\":\"hostM2\",\"url\":\"172.100.9.6:3306
@@ -611,7 +611,7 @@
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     """
     \"user\":\[
     {\"type\":\"ManagerUser\",\"properties\":{\"name\":\"root\",\"password\":\"111111\"}},

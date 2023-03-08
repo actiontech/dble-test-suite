@@ -95,7 +95,7 @@ Feature: connection pool basic test, from DBLE0REQ-1867
     Given sleep "10" seconds
     Given destroy btrace threads list
     Given destroy sql threads list
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     2	2
     """
@@ -139,13 +139,13 @@ Feature: connection pool basic test, from DBLE0REQ-1867
       | conn_4 | True    | select * from sharding_8_t1 where id=16            | schema1 |
     Given sleep "10" seconds
     Given destroy sql threads list
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     10	10
     12	12
     14	14
     """
-    Then check following text exist "Y" in file "/tmp/dble_user_query_1.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query_1.log" in host "dble-1"
     """
     16	16
     """
@@ -192,13 +192,13 @@ Feature: connection pool basic test, from DBLE0REQ-1867
       | conn_5 | True    | select * from sharding_8_t1 where id in (16,18)       | schema1 |
     Given sleep "25" seconds
     Given destroy sql threads list
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     10	10
     12	12
     14	14
     """
-    Then check following text exist "Y" in file "/tmp/dble_user_query_1.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query_1.log" in host "dble-1"
     """
     16	16
     18	18
@@ -240,11 +240,11 @@ Feature: connection pool basic test, from DBLE0REQ-1867
       | conn_3 | True    | select * from sharding_8_t1 where id=12            | schema1 |
     #等待桩结束
     Given sleep "15" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     10	10
     """
-    Then check following text exist "Y" in file "/tmp/dble_user_query_1.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query_1.log" in host "dble-1"
     """
     12	12
     """
@@ -294,13 +294,13 @@ Feature: connection pool basic test, from DBLE0REQ-1867
       | conn   | toClose | sql                                                 | db      |
       | conn_3 | True    | select * from sharding_8_t1 where id=16            | schema1 |
     Given sleep "15" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     10	10
     12	12
     14	14
     """
-    Then check following text exist "Y" in file "/tmp/dble_user_query_1.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query_1.log" in host "dble-1"
     """
     16	16
     """
@@ -350,13 +350,13 @@ Feature: connection pool basic test, from DBLE0REQ-1867
       | conn   | toClose | sql                                                        | db      |
       | conn_3 | True    | select * from sharding_8_t1 where id in(16,18)             | schema1 |
     Given sleep "18" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     10	10
     12	12
     14	14
     """
-    Then check following text exist "Y" in file "/tmp/dble_user_query_1.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query_1.log" in host "dble-1"
     """
     16	16
     18	18
@@ -416,11 +416,11 @@ Feature: connection pool basic test, from DBLE0REQ-1867
     Given sleep "20" seconds
     Given destroy btrace threads list
     Given destroy sql threads list
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     10	10
     """
-    Then check following text exist "Y" in file "/tmp/dble_user_query_1.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query_1.log" in host "dble-1"
     """
     12	12
     """
@@ -476,13 +476,13 @@ Feature: connection pool basic test, from DBLE0REQ-1867
     Given sleep "20" seconds
     Given destroy btrace threads list
     Given destroy sql threads list
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     10	10
     12	12
     14	14
     """
-    Then check following text exist "Y" in file "/tmp/dble_user_query_1.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query_1.log" in host "dble-1"
     """
     16	16
     """
@@ -541,13 +541,13 @@ Feature: connection pool basic test, from DBLE0REQ-1867
     Given sleep "30" seconds
     Given destroy btrace threads list
     Given destroy sql threads list
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     10	10
     12	12
     14	14
     """
-    Then check following text exist "Y" in file "/tmp/dble_user_query_1.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query_1.log" in host "dble-1"
     """
     16	16
     18	18
@@ -619,11 +619,11 @@ Feature: connection pool basic test, from DBLE0REQ-1867
     Given stop btrace script "borrowConnectionBefore.java" in "dble-1"
     Given stop btrace script "newConnectionAfter.java" in "dble-1"
     Given destroy btrace threads list
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     10	10
     """
-    Then check following text exist "N" in file "/tmp/dble_user_query_1.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_user_query_1.log" in host "dble-1"
     """
     ERROR
     """
@@ -696,13 +696,13 @@ Feature: connection pool basic test, from DBLE0REQ-1867
     Given stop btrace script "borrowConnectionBefore.java" in "dble-1"
     Given stop btrace script "newConnectionAfter.java" in "dble-1"
     Given destroy btrace threads list
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     10	10
     12	12
     14	14
     """
-    Then check following text exist "N" in file "/tmp/dble_user_query_1.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_user_query_1.log" in host "dble-1"
     """
     ERROR
     """
@@ -768,13 +768,13 @@ Feature: connection pool basic test, from DBLE0REQ-1867
     Given stop btrace script "borrowConnectionBefore.java" in "dble-1"
     Given stop btrace script "newConnectionAfter.java" in "dble-1"
     Given destroy btrace threads list
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     10	10
     12	12
     14	14
     """
-    Then check following text exist "Y" in file "/tmp/dble_user_query_1.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query_1.log" in host "dble-1"
     """
     16	16
     18	18
@@ -843,7 +843,7 @@ Feature: connection pool basic test, from DBLE0REQ-1867
       | conn_6 | True   | commit                                                  | success                    | schema1 |
     Given destroy btrace threads list
     Given destroy sql threads list
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     10	10
     12	12
@@ -913,12 +913,12 @@ Feature: connection pool basic test, from DBLE0REQ-1867
     Given sleep "30" seconds
     Given destroy btrace threads list
     Given destroy sql threads list
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     10	10
     12	12
     """
-    Then check following text exist "Y" in file "/tmp/dble_user_query_1.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query_1.log" in host "dble-1"
     """
     14	14
     16	16

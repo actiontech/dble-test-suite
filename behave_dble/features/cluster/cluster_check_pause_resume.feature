@@ -61,9 +61,9 @@ Feature: test "pause/resume" in zk cluster
     #case check lock on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -89,9 +89,9 @@ Feature: test "pause/resume" in zk cluster
     #case check lock on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -107,9 +107,9 @@ Feature: test "pause/resume" in zk cluster
     #case check lock on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -131,7 +131,7 @@ Feature: test "pause/resume" in zk cluster
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                       | expect        | db       |
       | conn_3 | True     | select * from sharding_4_t1               | length{(1)}   | schema1  |
-    Given delete file "/tmp/dble_admin_query.log" on "dble-1"
+    Given delete file "/opt/dble/logs/dble_admin_query.log" on "dble-1"
 
 
   @skip_restart
@@ -149,9 +149,9 @@ Feature: test "pause/resume" in zk cluster
     #case check lock on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -164,7 +164,7 @@ Feature: test "pause/resume" in zk cluster
       | conn   | toClose  | sql        | expect    | db       |
       | conn_2 | True     | commit     | success   | schema1  |
   #dble1 stop hang and return success
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
       There are some node in cluster can
       recycle backend
@@ -178,9 +178,9 @@ Feature: test "pause/resume" in zk cluster
     #case check lock on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -194,7 +194,7 @@ Feature: test "pause/resume" in zk cluster
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                       | expect        | db       |
       | conn_3 | True     | select * from sharding_4_t1               | length{(1)}   | schema1  |
-    Given delete file "/tmp/dble_admin_query.log" on "dble-1"
+    Given delete file "/opt/dble/logs/dble_admin_query.log" on "dble-1"
 
   @auto_retry
   Scenario: create xa ,check pause_node.lock but pause or resume timeout #4
@@ -210,14 +210,14 @@ Feature: test "pause/resume" in zk cluster
     #case check lock on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
     Given sleep "10" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
      """
      ERROR
      we will try to resume cluster in the backend
@@ -226,9 +226,9 @@ Feature: test "pause/resume" in zk cluster
     #case check lock on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -244,7 +244,7 @@ Feature: test "pause/resume" in zk cluster
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                       | expect        | db       |
       | conn_3 | True     | select * from sharding_4_t1               | length{(1)}   | schema1  |
-    Given delete file "/tmp/dble_admin_query.log" on "dble-1"
+    Given delete file "/opt/dble/logs/dble_admin_query.log" on "dble-1"
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -280,15 +280,15 @@ Feature: test "pause/resume" in zk cluster
     #case check lock on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
     #sleep 10s,because idleTimeout=10000
     Given sleep "11" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
       ERROR
       Lost connection to MySQL server during query
@@ -307,16 +307,16 @@ Feature: test "pause/resume" in zk cluster
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java" on "dble-1"
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java.log" on "dble-1"
-    Given delete file "/tmp/dble_admin_query.log" on "dble-1"
+    Given delete file "/opt/dble/logs/dble_admin_query.log" on "dble-1"
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose | sql     | expect                     |
       | conn_11 | true    | resume  | No shardingNode paused     |
     #case check lock on zookeeper
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -332,5 +332,5 @@ Feature: test "pause/resume" in zk cluster
       | conn_3 | True     | drop table if exists sharding_4_t1        | success       | schema1  |
     Given execute linux command in "dble-1"
     """
-    rm -rf /tmp/dble_*
+    rm -rf /opt/dble/logs/dble_*
     """

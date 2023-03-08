@@ -28,17 +28,17 @@ Feature: on zookeeper to check start config
       """
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_conf_sharding.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_conf_sharding.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_conf_sharding.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_conf_sharding.log" in host "dble-1"
       """
       Node does not exist
       """
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls / >/tmp/dble_zk.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls / >/opt/dble/logs/dble_zk.log 2>&1 &
       """
-    Then check following text exist "N" in file "/tmp/dble_zk.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk.log" in host "dble-1"
       """
       \[dble, zookeeper\]
       """
@@ -69,9 +69,9 @@ Feature: on zookeeper to check start config
 
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_conf_db.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_conf_db.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_conf_db.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_conf_db.log" in host "dble-1"
       """
       {\"dbGroup\":\[
       {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
@@ -81,9 +81,9 @@ Feature: on zookeeper to check start config
       """
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_conf_sharding.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_conf_sharding.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_conf_sharding.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_conf_sharding.log" in host "dble-1"
       """
       {\"schema\":\[
       {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
@@ -105,15 +105,15 @@ Feature: on zookeeper to check start config
       """
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_conf_user.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_conf_user.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_conf_user.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_conf_user.log" in host "dble-1"
       """
       {\"user\":\[{\"type\":\"ManagerUser\",\"properties\":{\"name\":\"root\",\"password\":\"111111\"}},{\"type\":\"ShardingUser\",\"properties\":{\"schemas\":\"schema1,schema2\",\"name\":\"test\",\"password\":\"111111\"}
       """
     Given execute linux command in "dble-1"
       """
-      rm -rf /tmp/dble_*
+      rm -rf /opt/dble/logs/dble_*
       """
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -134,15 +134,15 @@ Feature: on zookeeper to check start config
       """
     Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_conf_sharding.log 2>&1 &
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_conf_sharding.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/tmp/dble_conf_sharding.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_conf_sharding.log" in host "dble-1"
       """
       \"shardingNode\":\[
       {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
       {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
       """
-    Then check following text exist "N" in file "/tmp/dble_conf_sharding.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_conf_sharding.log" in host "dble-1"
       """
       {\"name\":\"dn2\",\"dbGroup\":\"ha_group22\",\"database\":\"db1\"}
       """
@@ -156,5 +156,5 @@ Feature: on zookeeper to check start config
 
     Given execute linux command in "dble-1"
       """
-      rm -rf /tmp/dble_*
+      rm -rf /opt/dble/logs/dble_*
       """

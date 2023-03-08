@@ -861,7 +861,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
        """
     # set idleTimeout
     Given sleep "20" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
       Lost connection to MySQL server during query
       """

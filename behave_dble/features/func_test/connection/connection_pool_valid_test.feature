@@ -84,7 +84,7 @@ Feature: test connection pool
     """
     #sleep 2s wait to exceed connectionHeartbeatTimeout
     Given sleep "2" seconds
-    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     ERROR
     """
@@ -101,7 +101,7 @@ Feature: test connection pool
     Given execute sql "3" times in "dble-1" at concurrent
       | sql                             | db      |
       | select * from sharding_4_t1 | schema1 |
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     2	2
     """
@@ -161,7 +161,7 @@ Feature: test connection pool
     """
     iptables -A INPUT -p tcp --dport {0} -j DROP
     """
-    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     ERROR
     """
@@ -223,7 +223,7 @@ Feature: test connection pool
     """
     #sleep 5s to wait btrace hang over
     Given sleep "5" seconds
-    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     ERROR
     """
@@ -308,7 +308,7 @@ Feature: test connection pool
     #sleep 15s to wait btrace hang over
     Given sleep "15" seconds
     #    DBLE0REQ-1028
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
     """
     Connection is not available, request timed out after
     """
