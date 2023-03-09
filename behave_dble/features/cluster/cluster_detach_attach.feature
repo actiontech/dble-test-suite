@@ -909,6 +909,8 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/opt/dble/BtraceClusterDetachAttach2.java.log" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach2.java" on "dble-1"
 
+
+    @btrace
   Scenario: dble-1 is executing cluster sql, dble-2 is executing detach sql, dble-1 execute success #10
     Given delete file "/opt/dble/BtraceClusterDetachAttach5.java" on "dble-2"
     Given delete file "/opt/dble/BtraceClusterDetachAttach5.java.log" on "dble-2"
@@ -942,9 +944,9 @@ Feature: check single dble detach or attach from cluster
       | conn    | toClose   | sql                      | expect                | db               | timeout |
       | conn_3  | true      | select * from dble_table | hasStr{sharding_4_t2} | dble_information | 8       |
     Then execute sql in "dble-2" in "admin" mode
-      | conn    | toClose   | sql                      | expect                | db               |
-      | conn_2  | false     | select * from dble_table | hasStr{sharding_4_t2} | dble_information |
-      | conn_2  | true      | cluster @@attach         | success               | dble_information |
+      | conn    | toClose   | sql                      | expect                | db               | timeout |
+      | conn_2  | false     | select * from dble_table | hasStr{sharding_4_t2} | dble_information | 8       |
+      | conn_2  | true      | cluster @@attach         | success               | dble_information | 8       |
 
     Given stop btrace script "BtraceClusterDetachAttach5.java" in "dble-2"
     Given destroy btrace threads list

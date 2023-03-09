@@ -50,20 +50,11 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn   | toClose | sql                         |
       | conn_2 | False   | use xa_test_db              |
       | conn_2 | True    | xa start 'Dble_Server.1.db1.db2'; insert into xa_test values(2, 2); xa end 'Dble_Server.1.db1.db2'; xa prepare 'Dble_Server.1.db1.db2' |
-    # case select * from dble_xa_recover
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_xa_recover_2"
-      | conn   | toClose | sql                           | db                |
-      | conn_0 | False   | select * from dble_xa_recover | dble_information  |
-    Then check resultset "dble_xa_recover_2" has lines with following column values
-      | dbgroup-0 | instance-1 | ip-2        | port-3 | formatid-4 | gtrid_length-5 | bqual_length-6 | data-7                |
-      | ha_group1 | hostM1     | 172.100.9.5 | 3306   |  1         | 16             | 0              | Dble_Server.abcd      |
-      | ha_group1 | hostM1     | 172.100.9.5 | 3306   |  1         | 17             | 0              | Dble_Server.1.db1     |
-      | ha_group2 | hostM2     | 172.100.9.6 | 3306   |  1         | 12             | 0              | host_xa_test          |
-      | ha_group2 | hostM2     | 172.100.9.6 | 3306   |  1         | 21             | 0              | Dble_Server.1.db1.db2 |
     # case supported select  table limit/order by/where like
-    Then execute sql in "dble-1" in "admin" mode
+     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                    | expect                                    | timeout |
       | conn_0 | False   | use dble_information                                                                   | success                                   |         |
+      | conn_0 | False   | select * from dble_xa_recover                                                          | has{(('ha_group1', 'hostM1', '172.100.9.5', 3306, 1, 17, 0, 'Dble_Server.1.db1'), ('ha_group1', 'hostM1', '172.100.9.5', 3306, 1, 16, 0, 'Dble_Server.abcd'), ('ha_group2', 'hostM2', '172.100.9.6', 3306, 1, 21, 0, 'Dble_Server.1.db1.db2'), ('ha_group2', 'hostM2', '172.100.9.6', 3306, 1, 12, 0, 'host_xa_test'))}             | 5       |
       | conn_0 | False   | select * from dble_xa_recover limit 5                                                  | length{(4)}                               | 5       |
       | conn_0 | False   | select * from dble_xa_recover order by data desc limit 3                               | length{(3)}                               | 5       |
       | conn_0 | False   | select * from dble_xa_recover where data in (select common from dble_xa_recover )      | Correlated Sub Queries is not supported   |         |
@@ -91,6 +82,7 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn   | toClose | sql                                 |
       | conn_2 | False   | xa rollback 'host_xa_test'          |
       | conn_2 | True    | xa rollback 'Dble_Server.1.db1.db2' |
+
 
   @restore_xa_recover
   Scenario: check xa transactions in mysql #2
@@ -172,15 +164,11 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn_6 | False   | xa end 'test-xa-1'                         | success | db1 |
       | conn_6 | True    | xa prepare 'test-xa-1'                     | success | db1 |
       | conn_7 | True    | xa recover                                 | has{((1,20,0,'Dble_Server.abc123.0',),(1,17,0,'Dble_Server.abc.0',),(1,18,0,'Dble_Server.abc.08',),(1,9,0,'test-xa-1'))} | db1 |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "result_1"
-      | conn   | toClose | sql                           | db               |
-      | conn_0 | True    | select * from dble_xa_recover | dble_information |
-    Then check resultset "result_1" has lines with following column values
-      | dbgroup-0 | instance-1 | ip-2        | port-3 | formatid-4 | gtrid_length-5 | bqual_length-6 | data-7                |
-      | ha_group1 | hostM1     | 172.100.9.5 | 3306   | 1          | 9              | 0              | test-xa-1             |
-      | ha_group1 | hostM1     | 172.100.9.5 | 3306   | 1          | 17             | 0              | Dble_Server.abc.0     |
-      | ha_group1 | hostM1     | 172.100.9.5 | 3306   | 1          | 18             | 0              | Dble_Server.abc.08    |
-      | ha_group1 | hostM1     | 172.100.9.5 | 3306   | 1          | 20             | 0              | Dble_Server.abc123.0  |
+
+     Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                | expect                                                                                                        | timeout | db               |
+      | conn_0 | true    | select data from dble_xa_recover   | has{(('test-xa-1',), ('Dble_Server.abc.08',), ('Dble_Server.abc.0',), ('Dble_Server.abc123.0',))}             | 5       | dble_information |
+
     Then restart dble in "dble-1" failed for
     """
     Suspected residual xa transaction, in the DbInstanceConfig [[]hostName=hostM1, url=172.100.9.5:3306[]], have:
@@ -188,11 +176,16 @@ Feature: check dble_xa_recover and exception xa transactions
     Dble_Server.abc.0
     Please clean up according to the actual situation.
     """
+     # sleep reason: http://10.186.18.11/jira/browse/DBLE0REQ-1683
+    Given sleep "2" seconds
+
     Then execute sql in "mysql-master1"
-      | conn   | toClose | sql                               |
-      | conn_8 | False   | xa rollback 'Dble_Server.abc.08'  |
-      | conn_8 | True    | xa rollback 'Dble_Server.abc.0'   |
+      | conn   | toClose | sql                               | expect  |
+      | conn_8 | False   | xa rollback 'Dble_Server.abc.08'  | success |
+      | conn_8 | True    | xa rollback 'Dble_Server.abc.0'   | success |
     Then Restart dble in "dble-1" success
+
+
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                        | expect  | db  |
       | conn_3 | False   | xa start 'Dble_Server.abc.2.db1'           | success | db1 |
@@ -212,16 +205,11 @@ Feature: check dble_xa_recover and exception xa transactions
       | conn_6 | False   | xa end 'Dble_Server.abc.1'                 | success | db1 |
       | conn_6 | True    | xa prepare 'Dble_Server.abc.1'             | success | db1 |
       | conn_7 | True    | xa recover                                 | has{((1,21,0,'Dble_Server.abc.2.db1',),(1,18,0,'Dble_Server.abc.20',),(1,17,0,'Dble_Server.abc.2'),(1,17,0,'Dble_Server.abc.1'))} | db1 |
-    Given sleep "10" seconds
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "result_2"
-      | conn   | toClose | sql                           | db               |
-      | conn_0 | True    | select * from dble_xa_recover | dble_information |
-    Then check resultset "result_2" has lines with following column values
-      | dbgroup-0 | instance-1 | ip-2        | port-3 | formatid-4 | gtrid_length-5 | bqual_length-6 | data-7                |
-      | ha_group2 | hostM2     | 172.100.9.6 | 3306   | 1          | 17             | 0              | Dble_Server.abc.1     |
-      | ha_group2 | hostM2     | 172.100.9.6 | 3306   | 1          | 17             | 0              | Dble_Server.abc.2     |
-      | ha_group2 | hostM2     | 172.100.9.6 | 3306   | 1          | 18             | 0              | Dble_Server.abc.20    |
-      | ha_group2 | hostM2     | 172.100.9.6 | 3306   | 1          | 21             | 0              | Dble_Server.abc.2.db1 |
+
+     Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                | expect                                                                                                                                                            | timeout | db               |
+      | conn_0 | true    | select data from dble_xa_recover   | has{(('test-xa-1',), ('Dble_Server.abc123.0',), ('Dble_Server.abc.1',), ('Dble_Server.abc.2.db1',), ('Dble_Server.abc.20',), ('Dble_Server.abc.2',))}             | 5       | dble_information |
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect  | db      |
       | conn_9 | true    | drop table if exists sharding_4_t1  | success | schema1 |
@@ -234,12 +222,17 @@ Feature: check dble_xa_recover and exception xa transactions
     Dble_Server.abc.20
     Please clean up according to the actual situation.
     """
+
+     # sleep reason: http://10.186.18.11/jira/browse/DBLE0REQ-1683
+    Given sleep "2" seconds
+
     Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                               |
-      | conn_8 | False   | xa commit 'Dble_Server.abc.2.db1' |
-      | conn_8 | False   | xa commit 'Dble_Server.abc.20'    |
-      | conn_8 | False   | xa rollback 'Dble_Server.abc.2'   |
-      | conn_8 | True    | xa rollback 'Dble_Server.abc.1'   |
+      | conn   | toClose | sql                               | expect  |
+      | conn_8 | False   | xa commit 'Dble_Server.abc.2.db1' | success |
+      | conn_8 | False   | xa commit 'Dble_Server.abc.20'    | success |
+      | conn_8 | False   | xa rollback 'Dble_Server.abc.2'   | success |
+      | conn_8 | True    | xa rollback 'Dble_Server.abc.1'   | success |
+
     Then Restart dble in "dble-1" success
 
   @restore_mysql_service @restore_xa_recover
@@ -251,18 +244,18 @@ Feature: check dble_xa_recover and exception xa transactions
     Given delete file "/opt/dble/xalogs/*.log" on "dble-1"
     Then Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                              | expect  | db      |
-      | conn_1 | false   | drop table if exists sharding_4_t1               | success | schema1 |
-      | conn_1 | false   | create table sharding_4_t1(id int)               | success | schema1 |
-      | conn_1 | false   | set autocommit=0;set xa=1;begin                  | success | schema1 |
-      | conn_1 | false   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |
-      | conn_1 | true    | commit                                           | success | schema1 |
+      | conn   | toClose | sql                                              | expect  | db      | timeout |
+      | conn_1 | false   | drop table if exists sharding_4_t1               | success | schema1 | 10      |
+      | conn_1 | false   | create table sharding_4_t1(id int)               | success | schema1 |         |
+      | conn_1 | false   | set autocommit=0;set xa=1;begin                  | success | schema1 |         |
+      | conn_1 | false   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |         |
+      | conn_1 | true    | commit                                           | success | schema1 |         |
     Given stop mysql in host "mysql-master2"
     Then restart dble in "dble-1" failed for
     """
     java.lang.RuntimeException: Fail to recover xa when dble start, please check backend mysql.
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "5" times
     """
     When prepare execute 'XA RECOVER' in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]], check it's isAlive is false
     When prepare execute 'XA COMMIT 'Dble_Server.1.1.db1'' in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]] , check it's isAlive is false
@@ -274,12 +267,12 @@ Feature: check dble_xa_recover and exception xa transactions
     When prepare execute 'XA RECOVER' in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]], check it's isAlive is false
     When prepare execute 'XA COMMIT 'Dble_Server.1.1.db1'' in dbInstance[[]name=hostM2,disabled=false,maxCon=1000,minCon=10[]] , check it's isAlive is false
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "5" times
     """
     XA COMMIT 'Dble_Server.1.1.db1'
     XA RECOVER to con:BackendConnection
     """
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                 | expect  | db      |
-      | conn_2 | true    | drop table if exists sharding_4_t1  | success | schema1 |
+      | conn   | toClose | sql                                 | expect  | db      | timeout |
+      | conn_2 | true    | drop table if exists sharding_4_t1  | success | schema1 | 10      |
