@@ -75,16 +75,6 @@ run_cfg_case_unstable: up
 	features/func_test/tmp_case
 
 
-
-run_cfg_case_unstable2: up
-	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/heartbeat/reconnect_heartbeat_readonly_check.feature \
-	features/func_test/heartbeat/db_heartbeat_keepAlive.feature \
-	features/func_test/load_data/load_data_batch.feature \
-	features/func_test/xa_transaction/bg_strategy_after_net_shock.feature \
-	features/func_test/xa_transaction/bg_strategy_after_node_hangs.feature \
-
-
 ##master pipline
 run_cluster_case: up
 	pipenv run behave features/setup.feature \
