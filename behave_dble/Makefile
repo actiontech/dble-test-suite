@@ -99,25 +99,8 @@ run_cfg_case2: up
 
 run_cfg_case_unstable: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/dble_information/dble_xa_recover.feature \
-	features/func_test/dble_information/sql_statistic_queue_monitor.feature \
-	features/func_test/connection/connection_pool_heartbeat_test.feature \
-	features/func_test/connection/rwSplit_connection_test.feature \
-	features/func_test/connection/connection_pool_basic_test.feature \
-	features/func_test/cfg_test/dbInstance_load_balance.feature \
-	features/func_test/cfg_test/sharding_db_attribute.feature \
-	features/func_test/cfg_test/general_log.feature \
-	features/func_test/managercmd/split.feature \
-	features/func_test/managercmd/show_connection.feature \
-	features/func_test/xa_transaction/net_down_before_rollback.feature \
-	features/func_test/dble_information/supported_DML_tables.feature \
-	features/func_test/heartbeat/kill_heartbeat_connection.feature \
-	features/func_test/sql_plan/hint_planA_3.feature  \
-	features/func_test/sql_plan/hint_planA_4.feature  \
-	features/func_test/sql_plan/hint_planA_5.feature  \
-	features/func_test/sql_plan/hint_planA_6.feature  \
-	features/func_test/sql_plan/useNewJoinOptimizer1.feature \
-	features/func_test/dble_information/sql_log.feature \
+	features/func_test/tmp_case
+
 
 
 run_cfg_case_unstable2: up
@@ -127,13 +110,30 @@ run_cfg_case_unstable2: up
 	features/func_test/load_data/load_data_batch.feature \
 	features/func_test/xa_transaction/bg_strategy_after_net_shock.feature \
 	features/func_test/xa_transaction/bg_strategy_after_node_hangs.feature \
-	features/func_test/special/thread_leak_test.feature  \
-	features/func_test/cfg_test/inSubQueryTransformToJoin.feature \
 
 
 run_cluster_case: up
 	pipenv run behave features/setup.feature \
-	features/cluster/
+	features/cluster/zk_sequence.feature \
+	features/cluster/zk_onlinekey_check.feature \
+	features/cluster/zk_global_sequence.feature \
+	features/cluster/xml_version_check.feature \
+	features/cluster/xml_exception_case.feature \
+	features/cluster/writeHost_support_weight.feature \
+	features/cluster/show_ddl.feature \
+	features/cluster/ruleFile.feature \
+	features/cluster/kill_ddl_lock.feature \
+	features/cluster/cluster_xml_to_json.feature \
+	features/cluster/cluster_txIsolation.feature \
+	features/cluster/cluster_file_syn.feature \
+	features/cluster/cluster_check_xa.feature \
+	features/cluster/cluster_check_table_view.feature \
+	features/cluster/cluster_check_start.feature \
+	features/cluster/cluster_check_reload.feature \
+	features/cluster/cluster_check_pause_resume.feature \
+	features/cluster/cluster_check_Ha.feature \
+	features/cluster/cluster_check_ddl_log.feature \
+	features/cluster/check_full_meta_in_cluster.feature \
 
 run_func_stable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
