@@ -5,8 +5,8 @@
 
 Feature: check keepAlive
 
-  #DBLE0REQ-1495 疑似存在问题: DBLE0REQ-2084
-  @restore_network @skip
+  #DBLE0REQ-1495
+  @restore_network
   Scenario: check keepAlive in heartbeat #1
     """
     {'restore_network':'mysql-master2'}
@@ -25,11 +25,14 @@ Feature: check keepAlive
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
       | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 3,2     |
+    # 在 mysql-master2上创建一个连接，确保后面执行iptables -F之后，此连接能正常恢复
+    Given execute sql in "mysql-master2" in "mysql" mode
+      | conn   | toClose  | sql      | expect  | db  |
+      | conn_1 | false    | select 1 | success | db1 |
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -p tcp --dport 3306 -j DROP
     iptables -A OUTPUT -p tcp --dport 3306 -j DROP
-    iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "N"
     Given execute sql in "dble-1" in "admin" mode
@@ -46,16 +49,18 @@ Feature: check keepAlive
     # case 1.1: sleep more than keepAlive
     Given sleep "60" seconds
     #print log and mysqlId change
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1" retry "3,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1" retry "5,2" times
     """
       \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
     Given execute oscmd in "mysql-master2"
     """
     iptables -F
-    iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "Y"
+    Given execute sql in "mysql-master2" in "mysql" mode
+      | conn   | toClose  | sql      | expect  | timeout |
+      | conn_1 | false    | select 1 | success | 6       |
     # 先检查是否新建了心跳连接，再检查心跳是否恢复正常
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                              | expect      | timeout |
@@ -70,32 +75,28 @@ Feature: check keepAlive
       | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
       | conn_0  | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
 
+    # case 1.2: add iptables less than keepAlive
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -p tcp --dport 3306 -j DROP
     iptables -A OUTPUT -p tcp --dport 3306 -j DROP
-    iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "N"
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                        | db               | timeout |
       | conn_0  | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
-    Given record current dble log line number in "log_num_2"
-
-    # case 1.2: sleep less than keepAlive
-    Given sleep "10" seconds
-    #print log and mysqlId change
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_2" in host "dble-1"
-    """
-      \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
-    """
     Given execute oscmd in "mysql-master2"
     """
     iptables -F
-    iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "Y"
-    # 先检查心跳连接是否发生变化，再检查心跳是否恢复正常
+    Given execute sql in "mysql-master2" in "mysql" mode
+      | conn   | toClose  | sql      | expect  | timeout |
+      | conn_1 | false    | select 1 | success | 6       |
+    # 先检查检查心跳恢复正常，再检查心跳连接未发生变化
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
+      | conn_0  | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 30,2    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                              | expect      | timeout |
       | conn_0 | False   | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} | 3,2     |
@@ -105,9 +106,6 @@ Feature: check keepAlive
     Then check resultsets "heartbeat_conn_3" including resultset "heartbeat_conn_2" in following columns
       | column                | column_index |
       | remote_processlist_id | 0            |
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
-      | conn_0  | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
 
     # case 2: keepAlive value is 30s
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -127,7 +125,6 @@ Feature: check keepAlive
     """
     iptables -A INPUT -p tcp --dport 3306 -j DROP
     iptables -A OUTPUT -p tcp --dport 3306 -j DROP
-    iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "N"
     Given execute sql in "dble-1" in "admin" mode
@@ -144,17 +141,19 @@ Feature: check keepAlive
     # case 2.1: sleep more than keepAlive
     Given sleep "30" seconds
     #print log and mysqlId change
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1" retry "3,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1" retry "5,2" times
     """
       \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
     Given execute oscmd in "mysql-master2"
     """
     iptables -F
-    iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "Y"
-    # 先检查是否新建了心跳连接，再检查心跳是否恢复正常
+    Given execute sql in "mysql-master2" in "mysql" mode
+      | conn   | toClose  | sql      | expect  | timeout |
+      | conn_1 | false    | select 1 | success | 6       |
+    # 先检查新建了心跳连接，再检查心跳恢复正常
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                              | expect      | timeout |
       | conn_0 | True    | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} | 3,2     |
@@ -168,32 +167,28 @@ Feature: check keepAlive
       | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
       | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
 
+    # case 2.2: add iptables less than keepAlive
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -p tcp --dport 3306 -j DROP
     iptables -A OUTPUT -p tcp --dport 3306 -j DROP
-    iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "N"
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                        | db               | timeout |
       | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
-    Given record current dble log line number in "log_num_4"
-
-    # case 2.2: sleep less than keepAlive
-    Given sleep "10" seconds
-    #print log and mysqlId change
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_4" in host "dble-1"
-    """
-      \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
-    """
     Given execute oscmd in "mysql-master2"
     """
     iptables -F
-    iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "Y"
-    # 先检查心跳连接是否发生变化，再检查心跳是否恢复正常
+    Given execute sql in "mysql-master2" in "mysql" mode
+      | conn   | toClose  | sql      | expect  | timeout |
+      | conn_1 | false    | select 1 | success | 6       |
+    # 先检查心跳恢复正常，再检查心跳连接未发生变化
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
+      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 15,2    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                              | expect      | timeout |
       | conn_0 | True    | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} | 3,2     |
@@ -203,9 +198,6 @@ Feature: check keepAlive
     Then check resultsets "heartbeat_conn_6" including resultset "heartbeat_conn_5" in following columns
       | column                | column_index |
       | remote_processlist_id | 0            |
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
-      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
 
     # case 3: keepAlive value is 0s
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -225,7 +217,6 @@ Feature: check keepAlive
     """
     iptables -A INPUT -p tcp --dport 3306 -j DROP
     iptables -A OUTPUT -p tcp --dport 3306 -j DROP
-    iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "N"
     Given execute sql in "dble-1" in "admin" mode
@@ -239,17 +230,19 @@ Feature: check keepAlive
       | conn_0 | false   | select remote_processlist_id from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' |
     Given record current dble log line number in "log_num_5"
     #print log and mysqlId change
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_5" in host "dble-1" retry "3,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_5" in host "dble-1" retry "5,2" times
     """
       \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
     Given execute oscmd in "mysql-master2"
     """
     iptables -F
-    iptables -L
     """
     Given check remote "3306" in "mysql-master2" connected "Y"
-    # 先检查是否新建了心跳连接，再检查心跳是否恢复正常
+    Given execute sql in "mysql-master2" in "mysql" mode
+      | conn   | toClose  | sql      | expect  | timeout |
+      | conn_1 | false    | select 1 | success | 6       |
+    # 先检查新建了心跳连接，再检查心跳恢复正常
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                              | expect      | timeout |
       | conn_0 | True    | select * from dble_information.backend_connections where used_for_heartbeat='true' and db_instance_name='hostM2' | length{(1)} | 3,2     |
