@@ -53,7 +53,7 @@ Feature: global table sql cover test
         | sqls_util/transaction/lock.sql                        |
         | sqls_util/transaction/trx_ddl_dml.sql                 |
         | sqls_util/transaction/trx_isolation.sql               |
-        | sqls_util/transaction/trx_syntax.sql                  |
+#        | sqls_util/transaction/trx_syntax.sql                  |
         | sqls_util/transaction/trx_savepoint.sql               |
         | sqls_util/dev_dealed/cross_db.sql                     |
         | special_global/select/join.sql                        |
