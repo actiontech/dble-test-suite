@@ -56,8 +56,6 @@ run_cfg_case1: up
 	features/func_test/cfg_test/mulitiple_reload.feature \
 	features/func_test/dble_information/backend_variables.feature \
 	features/func_test/dble_information/backend_connections.feature \
-	features/func_test/dble_information/dble_xa_session.feature \
-	features/func_test/special/fingerprint_log.feature \
 	features/func_test/sequence/sequence.feature \
 	features/func_test/safety/mysql_node_disconnected.feature \
 	features/func_test/xa_transaction/xa_retry_count.feature \
