@@ -4,8 +4,6 @@
 # Created by wangjuan at 2021/7/20
 
 # DBLE0REQ-1003
-@skip
-  ##coz
 Feature: check dble_xa_recover and exception xa transactions
 
    @restore_xa_recover
