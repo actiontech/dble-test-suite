@@ -51,6 +51,7 @@ def step_impl(context, rs_A_name, rs_B_name):
 @Then('check resultset "{rs_name}" has not lines with following column values')
 def step_impl(context, rs_name):
     # headings in form "columnName-columnIndex"
+    txt = getattr(context, rs_name)
     col_idx_list = []
     for str1 in context.table.headings:
         assert str1.rfind('-')!=-1, "context.table heading format error. expect:columnName-columnIndex"
@@ -67,13 +68,14 @@ def step_impl(context, rs_name):
                 real_col = rs_row[col_idx]
                 isFound = str(real_col) == str(expect_col)
                 if not isFound: break
-            assert not isFound, "expect line not in resultset {0}".format(rs_name)
+            assert not isFound, "expect line '{}' not in resultset '{}',but '{}' is \n{}".format(expect_row, rs_name, rs_name, txt)
         context.logger.debug("expect row:{0}, not found".format(expect_row))
+
 
 #once found expect, break loop
 @Then('check resultset "{rs_name}" has lines with following column values')
 def step_impl(context, rs_name):
-
+    txt = getattr(context, rs_name)
     col_idx_list = []
     check_line =False
 
@@ -140,7 +142,7 @@ def step_impl(context, rs_name):
                         # context.logger.debug("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
                 if not isFound: break
             if isFound: break
-        assert isFound, "expect line '{}' not found in resultset {}".format(expect_row, rs_name)
+        assert isFound, "expect line '{}' not found in resultset '{}',but '{}' is \n{}".format(expect_row, rs_name, rs_name, txt)
         context.logger.info("expect row:{0}, is found".format(expect_row))
 
 @Then('check "{rs_name}" only has "{num}" connection of "{host}"')
