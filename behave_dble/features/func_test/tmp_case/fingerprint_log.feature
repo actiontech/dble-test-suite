@@ -157,7 +157,7 @@ Feature: check fingerprint log
   @restore_global_setting
   Scenario: check fingerprint on client side #2
     """
-    {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
+    {'restore_global_setting':{'mysql-master2':{'general_log':0}}}
     """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
   """
@@ -165,12 +165,14 @@ Feature: check fingerprint log
     $a -DinstanceName=instance-test
     """
     Then restart dble in "dble-1" success
-    Given turn on general log in "mysql-master1"
+    Given turn on general log in "mysql-master2"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
     <heartbeat>select user()</heartbeat>
-    <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
+    <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+      <property name="heartbeatPeriodMillis">2000</property>
+    </dbInstance>
     <dbInstance name="hostS2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" />
     </dbGroup>
     """
@@ -182,12 +184,12 @@ Feature: check fingerprint log
     from=instance-test reason=one time job\*/select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log to con
     from=instance-test reason=one time job\*/show variables to con
     """
-    Given record current dble log line number in "log_linenu"
+    Given record current dble log line number in "log_linenu1"
     Then execute admin cmd "reload @@metadata"
-    Then check the time interval of following key after line "log_linenu" in file "/opt/dble/logs/dble.log" in "dble-1"
+    Then check the time interval of following key after line "log_linenu1" in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                                                                                         | interval_times | percent |
       | from=instance-test reason=sql job\*/show full tables where Table_type ='BASE TABLE'  to con | 15             | 1       |
-    Given record current dble log line number in "log_linenu"
+    Given record current dble log line number in "log_linenu2"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                             | expect  | db      |
       | conn_1 | False   | drop table if exists sharding_4_t1                                              | success | schema1 |
@@ -200,7 +202,7 @@ Feature: check fingerprint log
       | conn_1 | False   | create view test_view as select * from sharding_4_t1                            | success | schema1 |
       | conn_1 | False   | select * from test_view                                                         | success | schema1 |
       | conn_1 | False   | drop view test_view                                                             | success | schema1 |
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu2" in host "dble-1"
       """
       \*/drop table if exists sharding_4_t1
       \*/create table sharding_4_t1(id int,name varchar(10))
@@ -213,6 +215,9 @@ Feature: check fingerprint log
       \*/select * from test_view
       \*/drop view test_view
       """
-    Given sleep "10" seconds
-    Then check general log in host "mysql-master1" has "from=instance-test reason=heartbeat\*/select user()"
-    Given turn off general log in "mysql-master1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu1" in host "dble-1" retry "2,2" times
+    """
+    heartbeat to [[]172.100.9.6:3306[]] setOK
+    """
+    Then check general log in host "mysql-master2" has "from=instance-test reason=heartbeat\*/select user()" occured ">0" times
+    Given turn off general log in "mysql-master2"
