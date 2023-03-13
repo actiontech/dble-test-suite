@@ -9,11 +9,7 @@ Feature:  dble_table test
    """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}
    """
-  #case desc dble_table
-    # Given execute linux command in "behave"
-    #   """
-    #   bash ./compose/docker-build-behave/resetReplication.sh
-    #   """
+
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_1"
       | conn   | toClose | sql             | db               |
       | conn_0 | False   | desc dble_table | dble_information |
@@ -215,8 +211,8 @@ Feature:  dble_table test
       | true    | COUNT         | /10 * * * * ?  |
       | true    | CHECKSUM      | 0 /5 * * * ? * |
 
-    Given sleep "10" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#    Given sleep "10" seconds
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "10,2" times
     """
     Global check start .........global3
     Global check start .........global4
