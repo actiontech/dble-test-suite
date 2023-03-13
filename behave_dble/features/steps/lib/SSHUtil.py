@@ -40,27 +40,25 @@ class SSHClient:
 
     def exec_command(self, command: str, timeout: int = 60, **kwargs) -> Tuple[int, str, str]:
         if self._ssh is not None:
-            ssh_active = self._ssh.get_transport().is_active()
-            retry = 5
-            while not ssh_active and retry > 0:
-                LOGGER.debug(f"ssh session active: {ssh_active}, try to reconnect.")
-                self.connect()
-                ssh_active = self._ssh.get_transport().is_active()
-                if not ssh_active:
-                    LOGGER.debug(f"ssh reconnect failed: {5-retry+1} times")
-                    retry -= 1
-                    time.sleep(1)
-                else:
-                    break
-
             LOGGER.info(f'<{self._host}>: Execute command: <{command}>')
-            _, stdout, stderr = self._ssh.exec_command(
-                command, timeout=timeout, **kwargs)
-            rc = stdout.channel.recv_exit_status()
-            sto = stdout.read().decode().strip('\n')
-            ste = stderr.read().decode().strip('\n')
-            LOGGER.debug(f'<{self._host}>: Execute command: <{command}> Return code: <{rc}>, Stdout: <{sto}>, Stderr: <{ste}>')
-            return rc, sto, ste
+            exec_times = 0
+            while exec_times < 2:
+                try:
+                    _, stdout, stderr = self._ssh.exec_command(
+                        command, timeout=timeout, **kwargs)
+                    rc = stdout.channel.recv_exit_status()
+                    sto = stdout.read().decode().strip('\n')
+                    ste = stderr.read().decode().strip('\n')
+                    LOGGER.debug(f'<{self._host}>: Execute command: <{command}> Return code: <{rc}>, Stdout: <{sto}>, Stderr: <{ste}>')
+                    return rc, sto, ste
+                except paramiko.SSHException as e:
+                    if str(e) == "Unable to open channel." or str(e) == "SSH session not active":
+                        LOGGER.debug(f"execute command: {command} raise SSHException: {str(e)}, try ro reconnect ssh.")
+                        self.connect()
+                        exec_times += 1
+                    else:
+                        break
+
         raise NotInitializedConnectionError('Not Initialized ssh Connection')
 
     def _open_sftp(self) -> paramiko.sftp_client.SFTPClient:
