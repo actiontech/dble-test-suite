@@ -32,8 +32,8 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | start @@statistic_queue_monitor;          | success      | dble_information   |
     # Because you need to wait until the first statistic data is counted in the result before you can assert that it passes
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql                                    | expect       | db                 |timeout|
-      | conn_0 | False    | show @@statistic_queue.usage;          | length{(1)}  | dble_information   |5,1      |
+      | conn   | toClose  | sql                                    | expect       | db                 | timeout  |
+      | conn_0 | False    | show @@statistic_queue.usage;          | length{(1)}  | dble_information   | 5,1      |
     # Check the status of queueMonitor, because its status change takes time
     Given sleep "5" seconds
     Given execute sql in "dble-1" in "admin" mode
@@ -42,28 +42,28 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     # we need at least [observeTime (1min)+ 1* intervalTime] ，Then the result of "show @@statistic_queue.usage;" will tell us that statistic finished
     Given sleep "65" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql                                    | expect        | db                 |timeout|
-      | conn_0 | False    | show @@statistic_queue.usage;          | length{(13)}  | dble_information   |5,1   |
-      | conn_0 | True     | show @@statistic;                      | has{(('statistic', 'OFF'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '20'), ('queueMonitor', '-'),)}  | dble_information   |5,1 |
+      | conn   | toClose  | sql                                    | expect                    | db                 |
+      | conn_0 | False    | show @@statistic_queue.usage;          | length_balance{13,0.1}    | dble_information   |
+      | conn_0 | True     | show @@statistic;                      | has{(('statistic', 'OFF'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '20'), ('queueMonitor', '-'),)}  | dble_information   |
 
-  @auto_retry  #show 和 stop 可能有时间差
+    #show 和 stop 可能有时间差
   Scenario: test statistic_queue_monitor with sql statistic on（none default observeTime,intervalTime） #3
     # case 9305 http://10.186.18.20:888/testlink/linkto.php?tprojectPrefix=dble&item=testcase&id=dble-9305
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                           | expect   | db                 |
       | conn_0 | False    | enable @@statistic;                                                           | success  | dble_information   |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = 1h and intervalTime = 2s;       | success  | dble_information   |
-    Given sleep "20" seconds
+    Given sleep "10" seconds
     Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql                                    | expect       | db                 |timeout |
-      | conn_0 | False    | show @@statistic_queue.usage;          | length{(11)}  | dble_information   | 4,0.6  |
-      | conn_0 | False    | stop @@statistic_queue_monitor;        | success      | dble_information   |        |
+      | conn   | toClose  | sql                                    | expect                    | db                 |
+      | conn_0 | False    | show @@statistic_queue.usage;          | length_balance{5,0.2}    | dble_information   |
+      | conn_0 | False    | stop @@statistic_queue_monitor;        | success                   | dble_information   |
     # we need a intervalTime，checking "show @@statistic_queue.usage;"
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql                                    | expect        | db                 |timeout |
-      | conn_0 | False    | show @@statistic_queue.usage;          | length{(11)}  | dble_information   |4,0.6   |
-      | conn_0 | True     | show @@statistic;                      | has{(('statistic', 'ON'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '0'), ('queueMonitor', '-'),)}  | dble_information   ||
+      | conn   | toClose  | sql                                    | expect                  | db                 |
+      | conn_0 | False    | show @@statistic_queue.usage;          | length_balance{5,0.2}  | dble_information   |
+      | conn_0 | True     | show @@statistic;                      | has{(('statistic', 'ON'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '0'), ('queueMonitor', '-'),)}  | dble_information   |
 
   Scenario: test statistic_queue_monitor single observeTime or intervalTime; default unit for observeTime & intervalTime is seconds  #4
     # case 9306 http://10.186.18.20:888/testlink/linkto.php?tprojectPrefix=dble&item=testcase&id=dble-9306
@@ -85,7 +85,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | show @@statistic;                   | has{(('statistic', 'ON'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '20'), ('queueMonitor', '-'),)}  | dble_information   |5,1|
       | conn_0 | True     | show @@statistic_queue.usage;       | length{(3)}   | dble_information   |                                                                                                                                                                                                                                               |
 
-  @auto_retry #show 和 stop 可能有时间差
+   #show 和 stop 可能有时间差
   Scenario: test start statistic_queue_monitor with the last statistic_queue_monitor is running  #5
     # case 9307 http://10.186.18.20:888/testlink/linkto.php?tprojectPrefix=dble&item=testcase&id=dble-9307
     # enable @@statistic; & reload @@samplingRate = 20;
@@ -104,9 +104,9 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | start @@statistic_queue_monitor observeTime =4M and intervalTime = 2      | In the monitoring..., can use 'stop @@statistic_queue_monitor' to interrupt monitoring  | dble_information |
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql                                    | expect        | db                 |timeout|
-      | conn_0 | False    | show @@statistic_queue.usage;          | length{(2)}   | dble_information   |10,1   |
-      | conn_0 | True     | show @@statistic;                      | has{(('statistic', 'ON'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '20'), ('queueMonitor', 'monitoring'),)}  | dble_information   ||
+      | conn   | toClose  | sql                                    | expect                   | db                 |
+      | conn_0 | False    | show @@statistic_queue.usage;          | length_balance{2,0.5}    | dble_information   |
+      | conn_0 | True     | show @@statistic;                      | has{(('statistic', 'ON'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '20'), ('queueMonitor', 'monitoring'),)}  | dble_information   |
 
 
   Scenario: test statistic_queue_monitor with illegal observeTime or intervalTime #6 & #7
