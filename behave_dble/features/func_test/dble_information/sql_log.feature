@@ -1935,7 +1935,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_1 | False    | drop table if exists sharding_4_t1                                              | success | schema1 |
       | conn_1 | False    | create table sharding_4_t1(id int, name varchar(20))                            | success | schema1 |
-      | conn_1 | true     | insert into sharding_4_t1 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | success | schema1 |
+      | conn_1 | False    | insert into sharding_4_t1 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | success | schema1 |
 
     Then execute admin cmd "reload @@samplingRate=100"
     Then execute sql in "dble-1" in "admin" mode
