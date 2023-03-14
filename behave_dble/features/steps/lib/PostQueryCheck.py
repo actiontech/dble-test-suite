@@ -160,7 +160,7 @@ class PostQueryCheck(object):
             for subResExpect in resExpect:
                 assert isinstance(res, list), "expect mult-resultset, but real not"
                 real = self.findFromMultiRes(res, subResExpect)
-                assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
+                assert real == bHas, "expect {0} in resultset {1},\nbut realresult is {2}".format(eval(expectRS), bHas, res)
         else:  # for single query resultset
             assert type(resExpect[0]) is tuple, "expect result format not expected, please check"
             resExpect_list = list(map(list, resExpect))
@@ -169,7 +169,7 @@ class PostQueryCheck(object):
                 real = realRS_list.__contains__(i)
                 if real:
                     realRS_list.remove(i)          # prevent duplication in expected results
-                assert real == bHas, "sql: {0}, expect {1} in resultSet {2}, but not".format(self._sql, resExpect, bHas)
+                assert real == bHas, "sql: '{0}', expect '{1}' is {2} in resultSet , \nbut realresult is {3}".format(self._sql, eval(expectRS), bHas, res)
 
     def matchResultSet(self, res, expect, num):
         subRes_list = []

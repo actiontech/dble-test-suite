@@ -153,9 +153,9 @@ def start_dble_in_node(context, node, expect_success=True):
         ssh_client.exec_command(cmd)
 
         check_dble_started(context, node)
-
-        assert_that(context.dble_start_success == expect_success,
-                    "Expect restart dble {0} success {1}".format(node.host_name, expect_success))
+        cmd2 = "cat /opt/dble/logs/wrapper.log"
+        rc2, sto2, ste2 = node.ssh_conn.exec_command(cmd2)
+        assert_that(context.dble_start_success == expect_success, "Expect restart dble {0} success {1},but wrapper log is\n{2}".format(node.host_name, expect_success, sto2))
 
         if not expect_success:
             expect_err_info = context.text.strip()
