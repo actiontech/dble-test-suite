@@ -80,7 +80,7 @@ def step_impl(context, btraceScript, host):
             assert isBtraceRunningSuccess, "btrace {} is not running in {} seconds,isBtraceRunningSuccess is {}".format(btraceScript, check_btrace_pid_count * 2,isBtraceRunningSuccess)
 
         # make sure the btrace is working
-        @wait_for(context, text="start btrace failed! btrace is not working", duration=10, interval=0.5)
+        @wait_for(context, text="start btrace failed! btrace is not working", duration=15, interval=0.5)
         def check_btrace_working(sshClient, remoteFile):
             cmd = "grep OkayCommand {}.log |wc -l".format(remoteFile)
             rc, sto, ste = sshClient.exec_command(cmd)
