@@ -954,6 +954,7 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/opt/dble/BtraceClusterDetachAttach5.java.log" on "dble-2"
     Given delete file "/opt/dble/BtraceClusterDetachAttach5.java" on "dble-2"
 
+  @btrace
   Scenario: one dble is executing detach command, another dble will execute cluster sql #11
     Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
@@ -989,14 +990,15 @@ Feature: check single dble detach or attach from cluster
 
     Given delete file "/opt/dble/BtraceClusterDetachAttach6.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach6.java.log" on "dble-1"
+    Given delete file "/opt/dble/BtraceClusterDetachAttach6.java" on "dble-2"
+    Given delete file "/opt/dble/BtraceClusterDetachAttach6.java.log" on "dble-2"
 
      Then execute sql in "dble-1" in "admin" mode
-      | conn    | toClose   | sql              | expect      |
-      | conn_1  | false     | show @@pause     | length{(0)} |
-
+      | conn    | toClose   | sql              | expect      | db               |
+      | conn_1  | false     | show @@pause     | length{(0)} | dble_information |
     Then execute sql in "dble-2" in "admin" mode
-      | conn    | toClose   | sql              | expect      |
-      | conn_2  | false     | show @@pause     | length{(0)} |
+      | conn    | toClose   | sql              | expect      | db               |
+      | conn_2  | false     | show @@pause     | length{(0)} | dble_information |
 
     Given update file content "./assets/BtraceClusterDetachAttach6.java" in "behave" with sed cmds
     """
@@ -1004,7 +1006,7 @@ Feature: check single dble detach or attach from cluster
     /zkDetachCluster/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
 
-    # check cluster manager command
+    # check cluster manager command: dble-1 execute cluster @@detach, dble-2 execute pause
     Given prepare a thread run btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach6.java" output in "dble-1"
@@ -1012,48 +1014,68 @@ Feature: check single dble detach or attach from cluster
     get into zkDetachCluster
     """
     Given prepare a thread execute sql "pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10" with "conn_2"
-    Given sleep "7" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     ignore event because of detached
     """
-    Given record current dble log line number in "log_line_num"
-    Then execute sql in "dble-1" in "admin" mode
-      | conn    | toClose   | sql                               | expect                       |
-      | conn_1  | false     | show @@pause                      | hasnot{(('dn1',),('dn2',))}  |
-      | conn_1  | false     | cluster @@attach                  | success                      |
+    # dble-2 two shardingNodes, dble-1 no shardingNode
     Then execute sql in "dble-2" in "admin" mode
-      | conn    | toClose   | sql          | expect                    |
-      | conn_2  | false     | show @@pause | has{(('dn1',), ('dn2',))} |
-      | conn_2  | false     | resume       | success                   |
+      | conn    | toClose   | sql          | expect                    | db               | timeout |
+      | conn_22 | true      | show @@pause | has{(('dn1',), ('dn2',))} | dble_information | 7       |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn    | toClose   | sql              | expect                       | db               |
+      | conn_11 | true      | show @@pause     | hasnot{(('dn1',),('dn2',))}  | dble_information |
+      | conn_1  | true      | cluster @@attach | success                      | dble_information |
+    Then execute sql in "dble-2" in "admin" mode
+      | conn    | toClose   | sql          | expect                    | db               | timeout |
+      | conn_2  | true      | resume       | success                   | dble_information | 7       |
     Given stop btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
     Given delete file "/opt/dble/BtraceClusterDetachAttach6.java.log" on "dble-1"
+    Given delete file "/opt/dble/BtraceClusterDetachAttach6.java" on "dble-1"
 
-    # check cluster manager command
-    Given prepare a thread run btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
-    Given prepare a thread execute sql "cluster @@detach" with "conn_1"
-    Then check btrace "BtraceClusterDetachAttach6.java" output in "dble-1"
+    # check cluster manager command: dble-2 execute cluster @@detach, dble-1 execute reload @@config_all
+    Then execute sql in "dble-1" in "admin" mode
+      | conn    | toClose   | sql                         | expect                    | db               |
+      | conn_1  | false     | select name from dble_table | hasNoStr{'sharding_4_t2'} | dble_information |
+    Then execute sql in "dble-2" in "admin" mode
+      | conn    | toClose   | sql                         | expect                    | db               |
+      | conn_2  | false     | select name from dble_table | hasNoStr{'sharding_4_t2'} | dble_information |
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    """
+        <shardingTable name="sharding_4_t2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" incrementColumn="id" shardingColumn="id"/>
+    """
+    Given prepare a thread run btrace script "BtraceClusterDetachAttach6.java" in "dble-2"
+    Given prepare a thread execute sql "cluster @@detach" with "conn_2"
+    Then check btrace "BtraceClusterDetachAttach6.java" output in "dble-2"
     """
     get into zkDetachCluster
     """
-    Given prepare a thread execute sql "reload @@config_all" with "conn_2"
-    Given sleep "7" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Given prepare a thread execute sql "reload @@config_all" with "conn_1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-2"
     """
     ignore event because of detached
     """
-    Given record current dble log line number in "log_line_num"
+    # dble-1 has new table, dble-2 not
     Then execute sql in "dble-1" in "admin" mode
-      | conn    | toClose   | sql                               | expect  |
-      | conn_1  | false     | cluster @@attach                  | success |
-    Given stop btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
+      | conn    | toClose   | sql                         | expect                    | db               | timeout |
+      | conn_1  | true      | select name from dble_table | hasStr{'sharding_4_t2'}   | dble_information | 7       |
+    Then execute sql in "dble-2" in "admin" mode
+      | conn    | toClose   | sql                         | expect                    | db               |
+      | conn_2  | false     | select name from dble_table | hasNoStr{'sharding_4_t2'} | dble_information |
+      | conn_2  | true      | cluster @@attach            | success                   | dble_information |
+    Given stop btrace script "BtraceClusterDetachAttach6.java" in "dble-2"
     Given destroy btrace threads list
     Given destroy sql threads list
-    Given delete file "/opt/dble/BtraceClusterDetachAttach6.java.log" on "dble-1"
+    Given delete file "/opt/dble/BtraceClusterDetachAttach6.java.log" on "dble-2"
+    Given delete file "/opt/dble/BtraceClusterDetachAttach6.java" on "dble-2"
 
-    # check ddl
+    # check ddl: dble-1 execute cluster @@detach, dble-2 execute ddl
+    Given record current dble log line number in "log_line_num"
+    Then execute sql in "dble-1" in "admin" mode
+      | conn    | toClose   | sql                         | expect                    | db               |
+      | conn_1  | false     | select name from dble_table | hasStr{'sharding_4_t1'}   | dble_information |
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose   | sql                                  | expect  | db      |
       | conn_3  | false     | drop table if exists sharding_4_t1   | success | schema1 |
@@ -1064,18 +1086,17 @@ Feature: check single dble detach or attach from cluster
     get into zkDetachCluster
     """
     Given prepare a thread execute sql "create table sharding_4_t1(pid int, id int)" with "conn_3"
-    Given sleep "7" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_line_num" in host "dble-1"
     """
     ignore event because of detached
     """
-    Given record current dble log line number in "log_line_num"
+    # dble-2 has new table, dble-1 not
+    Then execute sql in "dble-2" in "user" mode
+      | conn    | toClose   | sql            | expect                     | db      | timeout |
+      | conn_33 | true      | show tables    | has{(('sharding_4_t1',),)} | schema1 | 7       |
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose   | sql            | expect                        | db      |
       | conn_4  | false     | show tables    | hasnot{(('sharding_4_t1',),)} | schema1 |
-    Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose   | sql            | expect                     | db      |
-      | conn_3  | false     | show tables    | has{(('sharding_4_t1',),)}    | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose   | sql                               | expect  |
       | conn_1  | false     | cluster @@attach                  | success |
@@ -1083,13 +1104,14 @@ Feature: check single dble detach or attach from cluster
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose   | sql                                                      | expect                     | db      |
       | conn_4  | false     | show tables                                              | has{(('sharding_4_t1',),)} | schema1 |
-      | conn_4  | false     | insert into sharding_4_t1 (id) values (1),(2),(3),(4)    | success                    | schema1 |
+      | conn_4  | true      | insert into sharding_4_t1 (id) values (1),(2),(3),(4)    | success                    | schema1 |
     Given stop btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
     Given delete file "/opt/dble/BtraceClusterDetachAttach6.java.log" on "dble-1"
 
-    # check ddl - view
+    # check ddl - view: dble-1 execute cluster @@detach, dble-2 execute view ddl
+    Given record current dble log line number in "log_line_num"
     Given prepare a thread run btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
     Given prepare a thread execute sql "cluster @@detach" with "conn_1"
     Then check btrace "BtraceClusterDetachAttach6.java" output in "dble-1"
@@ -1097,31 +1119,31 @@ Feature: check single dble detach or attach from cluster
     get into zkDetachCluster
     """
     Given prepare a thread execute sql "create view test_view as select * from sharding_4_t1" with "conn_3"
-    Given sleep "7" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_line_num" in host "dble-1"
     """
     ignore event because of detached
     """
-    Given record current dble log line number in "log_line_num"
-    Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose   | sql                        | expect                  | db      |
-      | conn_4  | false     | show tables                | hasnot{(('test_view',),)}  | schema1 |
+    # dble-2 has view, dble-1 not
     Then execute sql in "dble-2" in "user" mode
-      | conn    | toClose   | sql                        | expect      | db      |
-      | conn_3  | false     | select * from test_view    | length{(4)} | schema1 |
+      | conn    | toClose   | sql                        | expect      | db      | timeout |
+      | conn_33 | true      | select * from test_view    | length{(4)} | schema1 | 7       |
+    Then execute sql in "dble-1" in "user" mode
+      | conn    | toClose   | sql                        | expect                    | db      |
+      | conn_4  | false     | show tables                | hasnot{(('test_view',),)} | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose   | sql                               | expect  |
       | conn_1  | false     | cluster @@attach                  | success |
       | conn_1  | false     | reload @@metadata                 | success |
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose   | sql                        | expect       | db      |
-      | conn_4  | false     | select * from test_view    | length{(4)}  | schema1 |
+      | conn_4  | true      | select * from test_view    | length{(4)}  | schema1 |
     Given stop btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
     Given delete file "/opt/dble/BtraceClusterDetachAttach6.java.log" on "dble-1"
 
-    # check zk offset-step sequence
+    # check zk offset-step sequence: dble-1 execute cluster @@detach, dble-2 execute insert
+    Given record current dble log line number in "log_line_num"
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose   | sql                                | expect      | db      |
       | conn_3  | false     | select * from sharding_4_t1        | length{(4)} | schema1 |
@@ -1132,17 +1154,16 @@ Feature: check single dble detach or attach from cluster
     get into zkDetachCluster
     """
     Given prepare a thread execute sql "insert into sharding_4_t1 (id) values (5)" with "conn_3"
-    Given sleep "7" seconds
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_line_num" in host "dble-1"
     """
     ignore event because of detached
     """
+    Then execute sql in "dble-1" in "user" mode
+      | conn    | toClose   | sql                                | expect      | db      | timeout |
+      | conn_4  | true      | select * from sharding_4_t1        | length{(5)} | schema1 | 7       |
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose   | sql                                | expect      | db      |
-      | conn_3  | false     | select * from sharding_4_t1        | length{(5)} | schema1 |
-    Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose   | sql                                | expect      | db      |
-      | conn_4  | false     | select * from sharding_4_t1        | length{(5)} | schema1 |
+      | conn_3  | true      | select * from sharding_4_t1        | length{(5)} | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose   | sql                               | expect  |
       | conn_1  | false     | cluster @@attach                  | success |
@@ -1151,7 +1172,8 @@ Feature: check single dble detach or attach from cluster
     Given destroy sql threads list
     Given delete file "/opt/dble/BtraceClusterDetachAttach6.java.log" on "dble-1"
 
-    # check xa
+    # check xa: dble-1 execute cluster @@detach, dble-2 execute xa
+    Given record current dble log line number in "log_line_num"
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose   | sql                                                 | expect  | db      |
       | conn_3  | false     | set xa=1;set autocommit=0;delete from sharding_4_t1 | success | schema1 |
@@ -1162,15 +1184,13 @@ Feature: check single dble detach or attach from cluster
     get into zkDetachCluster
     """
     Given prepare a thread execute sql "commit" with "conn_3"
-    Given sleep "7" seconds
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_line_num" in host "dble-1"
     """
     ignore event because of detached
     """
-    Given record current dble log line number in "log_line_num"
     Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose   | sql                         | expect      | db      |
-      | conn_4  | true      | select * from sharding_4_t1 | length{(0)} | schema1 |
+      | conn    | toClose   | sql                         | expect      | db      | timeout |
+      | conn_4  | true      | select * from sharding_4_t1 | length{(0)} | schema1 | 7       |
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose   | sql                         | expect      | db      |
       | conn_3  | false     | set xa=off                  | success     | schema1 |
