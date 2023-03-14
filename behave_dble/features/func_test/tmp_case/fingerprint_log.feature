@@ -159,8 +159,9 @@ Feature: check fingerprint log
     """
     {'restore_global_setting':{'mysql-master2':{'general_log':0}}}
     """
+    Given delete all backend mysql tables
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-  """
+    """
     /-DinstanceName/d
     $a -DinstanceName=instance-test
     """
@@ -200,6 +201,7 @@ Feature: check fingerprint log
       | conn_1 | False   | delete from sharding_4_t1                                                       | success | schema1 |
       | conn_1 | False   | drop index id_index on sharding_4_t1                                            | success | schema1 |
       | conn_1 | False   | create view test_view as select * from sharding_4_t1                            | success | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1                                                     | success | schema1 |
       | conn_1 | False   | select * from test_view                                                         | success | schema1 |
       | conn_1 | False   | drop view test_view                                                             | success | schema1 |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu2" in host "dble-1"
@@ -212,6 +214,7 @@ Feature: check fingerprint log
       \*/delete from sharding_4_t1
       \*/drop index id_index on sharding_4_t1
       \*/create view test_view as select * from sharding_4_t1
+      \*/select * from sharding_4_t1
       \*/select * from test_view
       \*/drop view test_view
       """
