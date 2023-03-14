@@ -34,9 +34,8 @@ class SQLContext:
         cols_def = self.get_columns_def()
 
         prepare_sqls = [
-            "drop table if exists {0}".format(self.table),
-            "create table {0}({1})".format(self.table, cols_def),
-            # "insert into {0} values (7,7)".format(self.table)
+            # "drop table if exists {0}".format(self.table),
+            # "create table if not exists {0}({1})".format(self.table, cols_def)
         ]
 
         return prepare_sqls
@@ -44,10 +43,10 @@ class SQLContext:
     def get_after_sqls(self):
     #check CRUD success after large column or packet query
         after_sqls = [
-            "create table if not exists zhj_test_tb(id int);",
-            "insert into zhj_test_tb values(1);",
-            "select * from zhj_test_tb;",
-            "drop table zhj_test_tb"
+            # "create table if not exists zhj_test_tb(id int);",
+            # "insert into zhj_test_tb values(1);",
+            "select * from tb1;"
+            # "drop table zhj_test_tb"
         ]
         return after_sqls
 
@@ -100,6 +99,9 @@ class SQLContext:
         pre = 'insert into {0}({1},{2}) values ({3},"'.format(self.table, cols_keys, target_col_key, cols_values)
         post = '")'
 
+        #pre = 'PREPARE stmt1 FROM \'select c from {0} where id = ? and {1} = "'.format(self.table, target_col_key)
+        #post = ' "\';SET @1 = 7;EXECUTE stmt1 USING @1;DEALLOCATE PREPARE stmt1 '
+
         return pre, post
 
     def get_size_char(self, size_in_byte):
@@ -113,7 +115,6 @@ class SQLContext:
 
     def get_large_query(self, size_in_byte, isColumnSize=True):
         """
-
         :param size_in_byte:
         :param isColumnSize: True means size_in_byte is column size, False means query size
         :return:

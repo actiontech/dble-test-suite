@@ -169,7 +169,7 @@ class PostQueryCheck(object):
                 real = realRS_list.__contains__(i)
                 if real:
                     realRS_list.remove(i)          # prevent duplication in expected results
-                assert real == bHas, "sql: {0}, expect {1} in resultSet {2}, but not".format(self._sql, resExpect, bHas)
+                assert real == bHas, "sql: {0}, expect {1} in resultSet {2}, but realresult is {3}".format(self._sql, resExpect, bHas, res)
 
     def matchResultSet(self, res, expect, num):
         subRes_list = []

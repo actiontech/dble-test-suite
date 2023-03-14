@@ -120,9 +120,10 @@ def step_impl(context):
       """   
     ''')
 
+
 @Given('create filder content "{fildername}" in "{hostname}"')
 def step_impl(context, fildername,hostname):
-    cmd = "mkdir {0}".format(fildername)
+    cmd = "rm -rf {} && mkdir {}".format(fildername,fildername)
     context.logger.info("sed cmd is :{0}".format(cmd))
     if hostname.startswith('dble'):
         ssh = get_ssh(hostname)

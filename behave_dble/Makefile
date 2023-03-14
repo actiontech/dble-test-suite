@@ -70,7 +70,8 @@ run_cluster_unstable_case: up
 
 run_cfg_case_unstable: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/tmp_case
+	features/func_test/tmp_case/ \
+	features/func_test/Large_Packet/
 
 
 ##master pipline
@@ -122,7 +123,6 @@ run_func_unstable_case: up
 	features/func_test/ddl/  \
 	features/func_test/xa_transaction/ \
 	features/func_test/local_read/ \
-	features/func_test/Large_Packet/
 
 run_managercmd_case: up
 	pipenv run behave -Dreset=false -D dble_conf=template features/setup.feature \
