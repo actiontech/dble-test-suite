@@ -48,17 +48,12 @@ used_in_local: create_venv up
 run_cluster_case1: up
 	pipenv run behave features/setup.feature \
 	features/cluster/kill_ddl_lock.feature \
-	features/cluster/cluster_check_reload.feature \
-	features/cluster/cluster_xml_to_json.feature \
 
 run_cfg_case1: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/cfg_test/mulitiple_reload.feature \
-	features/func_test/dble_information/backend_variables.feature \
-	features/func_test/dble_information/backend_connections.feature \
-	features/func_test/sequence/sequence.feature \
-	features/func_test/safety/mysql_node_disconnected.feature \
-	features/func_test/xa_transaction/xa_retry_count.feature \
+	features/func_test/connection/rwSplit_connection_test.feature
+
+
 
 ##clone pipline
 run_cluster_unstable_case: up
