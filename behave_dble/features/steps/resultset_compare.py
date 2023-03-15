@@ -13,7 +13,7 @@ from fnmatch import fnmatchcase
 def step_impl(context, rs_A_name, rs_B_name):
     rs_A = getattr(context, rs_A_name)
     rs_B = getattr(context, rs_B_name)
-    assert len(rs_A)==len(rs_B), "len {0}:{2}, and len {1}:{3}, expect length equal.".format(rs_A_name, rs_B_name,len(rs_A), len(rs_B))
+    assert len(rs_A)==len(rs_B), "len {}:{}, and len {}:{}, expect length equal.\n{} is {} ,\n{} is {}".format(rs_A_name, len(rs_A), rs_B_name, len(rs_B), rs_A_name, rs_A, rs_B_name, rs_B)
     for rowA, rowB in zip(rs_A, rs_B):
         for row in context.table:
             idx = int(row['column_index'])
@@ -32,7 +32,7 @@ def step_impl(context, rs_parent_name, rs_child_name):
                 isFound = str(row_parent[idx]) == str(row_child[idx])
                 if not isFound: break
             if isFound: break
-        assert isFound, "expect {0} row {1} found in {2}".format(rs_child_name, row_child, rs_parent_name)
+        assert isFound, "expect '{}' row {} found in '{}',but \n'{}' is {},\n'{}' is {}".format(rs_child_name, row_child, rs_parent_name, rs_parent_name, rs_parent, rs_child_name, rs_child)
 
 @Then('check resultsets "{rs_A_name}" does not including resultset "{rs_B_name}" in following columns')
 def step_impl(context, rs_A_name, rs_B_name):
@@ -45,7 +45,7 @@ def step_impl(context, rs_A_name, rs_B_name):
                 idx = int(row_idx['column_index'])
                 isFound = row_A[idx] == row_B[idx]
                 if not isFound: break
-            assert not isFound, "expect {0} row {1} not found in {2}".format(rs_B_name, row_B, rs_A_name)
+            assert not isFound, "expect '{}' row {} not found in '{}',but \n'{}' is {},\n'{}' is {}".format(rs_B_name, row_B, rs_A_name, rs_A_name, rs_A, rs_B_name, row_B)
 
 #loop all rows confirm not exist, once exist, throw assertion error
 @Then('check resultset "{rs_name}" has not lines with following column values')
