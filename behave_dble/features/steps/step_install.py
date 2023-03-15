@@ -155,7 +155,9 @@ def start_dble_in_node(context, node, expect_success=True):
         check_dble_started(context, node)
         cmd2 = "cat /opt/dble/logs/wrapper.log"
         rc2, sto2, ste2 = node.ssh_conn.exec_command(cmd2)
-        assert_that(context.dble_start_success == expect_success, "Expect restart dble {0} success {1},but wrapper log is\n{2}".format(node.host_name, expect_success, sto2))
+        cmd3 = "free -h && cat /proc/loadavg"
+        rc3, sto3, ste3 = node.ssh_conn.exec_command(cmd3)
+        assert_that(context.dble_start_success == expect_success, "Expect restart dble {0} success {1},but wrapper log is\n{2} ,\n\nthe:'{3}' :\n{4}".format(node.host_name, expect_success, sto2, cmd3, sto3))
 
         if not expect_success:
             expect_err_info = context.text.strip()
