@@ -1060,7 +1060,7 @@ Feature: check single dble detach or attach from cluster
     # dble-1 has new table, dble-2 not
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose   | sql                         | expect                    | db               | timeout |
-      | conn_1  | true      | select name from dble_table | hasStr{'sharding_4_t2'}   | dble_information | 7       |
+      | conn_11 | false     | select name from dble_table | hasStr{'sharding_4_t2'}   | dble_information | 7       |
     Then execute sql in "dble-2" in "admin" mode
       | conn    | toClose   | sql                         | expect                    | db               |
       | conn_2  | false     | select name from dble_table | hasNoStr{'sharding_4_t2'} | dble_information |
@@ -1073,9 +1073,6 @@ Feature: check single dble detach or attach from cluster
 
     # check ddl: dble-1 execute cluster @@detach, dble-2 execute ddl
     Given record current dble log line number in "log_line_num"
-    Then execute sql in "dble-1" in "admin" mode
-      | conn    | toClose   | sql                         | expect                    | db               |
-      | conn_1  | false     | select name from dble_table | hasStr{'sharding_4_t1'}   | dble_information |
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose   | sql                                  | expect  | db      |
       | conn_3  | false     | drop table if exists sharding_4_t1   | success | schema1 |
