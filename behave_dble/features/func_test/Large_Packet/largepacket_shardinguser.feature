@@ -50,7 +50,7 @@ Feature:Support MySQL's large package protocol
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
-    Given create filder content "/opt/dble/logs/insert" in "dble-1"
+    Given create folder content "/opt/dble/logs/insert" in "dble-1"
      ## case 1，tabletpye is sharding table
     Given execute oscmd "python3 /opt/LargePacket.py >/opt/dble/logs/insert/sharding.txt" on "dble-1"
     Then check following text exists in file "/opt/dble/logs/insert/sharding.txt" in host "dble-1" with "8" times
@@ -109,7 +109,7 @@ Feature:Support MySQL's large package protocol
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
-    Given create filder content "/opt/dble/logs/update" in "dble-1"
+    Given create folder content "/opt/dble/logs/update" in "dble-1"
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
       """
       s/insert into {0}({1},{2}) values ({3},/update {0} set {1} =/g
@@ -174,7 +174,7 @@ Feature:Support MySQL's large package protocol
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
-    Given create filder content "/opt/dble/logs/delete" in "dble-1"
+    Given create folder content "/opt/dble/logs/delete" in "dble-1"
 
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
       """
@@ -238,7 +238,7 @@ Feature:Support MySQL's large package protocol
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
-    Given create filder content "/opt/dble/logs/select" in "dble-1"
+    Given create folder content "/opt/dble/logs/select" in "dble-1"
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
       """
       s/insert into {0}({1},{2}) values ({3},/select id from {0} where id = 7 or {1} =/g
@@ -378,7 +378,7 @@ Feature:Support MySQL's large package protocol
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
-    Given create filder content "/opt/dble/logs/mulit" in "dble-1"
+    Given create folder content "/opt/dble/logs/mulit" in "dble-1"
 
     ##### /*!dble:shardingNode=dn1*/insert into sharding_4_t1(id,c) values (7,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
@@ -492,7 +492,7 @@ Feature:Support MySQL's large package protocol
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
-    Given create filder content "/opt/dble/logs/prepared" in "dble-1"
+    Given create folder content "/opt/dble/logs/prepared" in "dble-1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                                                                                                            | expect  | db  |
       | conn_0 | false    | insert into sing values (7,repeat("x",7*1024*1024)),(7,repeat("x",16*1024*1024)),(7,repeat("x",20*1024*1024)),(7,repeat("x",32*1024*1024))                     | success | schema1 |

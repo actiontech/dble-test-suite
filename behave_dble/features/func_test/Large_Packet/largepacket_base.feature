@@ -238,7 +238,7 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       | conn_1 | false   | drop table if exists tb1;create table tb1 (id int,c longblob)                                                          | success | schema1 |
       | conn_1 | true    | drop table if exists sharding_4_t1;create table sharding_4_t1 (id int,c longblob);truncate table sharding_4_t1         | success | schema1 |
 
-    Given create filder content "/opt/dble/logs/insert" in "dble-1"
+    Given create folder content "/opt/dble/logs/insert" in "dble-1"
     Given execute oscmd "python3 /opt/LargePacket.py >/opt/dble/logs/insert/sharding.txt" on "dble-1"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect                 | db               |

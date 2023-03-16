@@ -52,7 +52,7 @@ Feature:Support MySQL's large package protocol
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
-    Given create filder content "/opt/dble/logs/insert" in "dble-1"
+    Given create folder content "/opt/dble/logs/insert" in "dble-1"
     Given execute oscmd "python3 /opt/LargePacket_rw.py >/opt/dble/logs/insert/rw1.txt" on "dble-1"
     Then check following text exists in file "/opt/dble/logs/insert/rw1.txt" in host "dble-1" with "8" times
       """
@@ -72,7 +72,7 @@ Feature:Support MySQL's large package protocol
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
-    Given create filder content "/opt/dble/logs/update" in "dble-1"
+    Given create folder content "/opt/dble/logs/update" in "dble-1"
 
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
       """
@@ -99,7 +99,7 @@ Feature:Support MySQL's large package protocol
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
-    Given create filder content "/opt/dble/logs/delete" in "dble-1"
+    Given create folder content "/opt/dble/logs/delete" in "dble-1"
 
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
       """
@@ -127,7 +127,7 @@ Feature:Support MySQL's large package protocol
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
-    Given create filder content "/opt/dble/logs/select" in "dble-1"
+    Given create folder content "/opt/dble/logs/select" in "dble-1"
 
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
       """
@@ -160,7 +160,7 @@ Feature:Support MySQL's large package protocol
       | user | passwd | conn   | toClose | sql                                                                                                                    | expect  | db  |
       | rw1 | 111111 | conn_0 | false   | drop table if exists sharding_4_t1;create table sharding_4_t1 (id int,c longblob);truncate table sharding_4_t1          | success | db1 |
       | rw1 | 111111 | conn_0 | false   | insert into test1 values (0,repeat("x",16*1024*1024)),(1,repeat("x",16*1024*1024-1)),(2,repeat("x",16*1024*1024-2)),(3,repeat("x",16*1024*1024-3)),(4,repeat("x",16*1024*1024-4)),(5,repeat("x",16*1024*1024-5))               | success | db1 |
-       ## response  16*1024*1024-5的前后是边界
+       ## response  16*1024*1024-5的前后是边界,response里面还有其他占位，包头和包体
       | rw1 | 111111 | conn_0 | false   | insert into sharding_4_t1 values (0,repeat("x",16*1024*1024)),(1,repeat("x",16*1024*1024-1)),(2,repeat("x",16*1024*1024-2)),(3,repeat("x",16*1024*1024-3)),(4,repeat("x",16*1024*1024-4)),(5,repeat("x",16*1024*1024-5))               | success | db1 |
       | rw1 | 111111 | conn_0 | false   | insert into sharding_4_t1 values (6,repeat("x",16*1024*1024-6)),(7,repeat("x",16*1024*1024-7)),(8,repeat("x",16*1024*1024-8)),(9,repeat("x",16*1024*1024-9)),(10,repeat("x",16*1024*1024-10))                                          | success | db1 |
        ## response  32*1024*1024-11的前后是边界
@@ -228,7 +228,7 @@ Feature:Support MySQL's large package protocol
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
-    Given create filder content "/opt/dble/logs/mulit" in "dble-1"
+    Given create folder content "/opt/dble/logs/mulit" in "dble-1"
 
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                    | expect  | db      |
@@ -331,7 +331,7 @@ Feature:Support MySQL's large package protocol
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
-    Given create filder content "/opt/dble/logs/prepared" in "dble-1"
+    Given create folder content "/opt/dble/logs/prepared" in "dble-1"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                   | expect  | db  |
       | rw1 | 111111 | conn_0 | false   | drop table if exists sharding_4_t1;create table sharding_4_t1 (id int,c longblob)      | success | db1 |
