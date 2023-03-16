@@ -39,16 +39,15 @@ def create_conn(args):
     db = args.database
     port = args.port
 
-    conn = MySQLdb.connect(host=host, user=user, passwd=passwd, db=db, port=port, autocommit=True,
-                           charset='utf8mb4')
+    conn = MySQLdb.connect(host=host, user=user, passwd=passwd, db=db, port=port, autocommit=True,charset='utf8mb4')
     return conn
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Usage example: python3 LargePacket.py --host 172.100.9.1 --user test --passwd 111111 --database schema1 --port 8066")
+    parser = argparse.ArgumentParser(description="Usage example: python3 LargePacket.py --host 172.100.9.1 --user rw1 --passwd 111111 --database db1 --port 8066 --max_allowed_packet=1G")
     parser.add_argument('--host', type=str, default='172.100.9.1')
-    parser.add_argument('--user', type=str, default='test')
+    parser.add_argument('--user', type=str, default='rw1')
     parser.add_argument('--passwd', type=str, default='111111')
-    parser.add_argument('--database', type=str, default='schema1', help="database")
+    parser.add_argument('--database', type=str, default='db1', help="database")
     parser.add_argument('--port', type=int, default='8066', help="port")
     parser.add_argument('--max_allowed_packet', type=str, default='1G')
 
@@ -56,14 +55,14 @@ if __name__ == "__main__":
 
 
     conn = create_conn(args)
-    sqlContext = SQLContext(table="sharding_4_t1", cols={"id": "int"}, targetCol={"c": "longblob"})
-    sqlContext1 = SQLContext(table="sharding_4_t1", cols={"id": "int"}, targetCol={"c": "longblob"})
-    sqlContext2 = SQLContext(table="sharding_4_t1", cols={"id": "int"}, targetCol={"c": "longblob"})
-    sqlContext3 = SQLContext(table="sharding_4_t1", cols={"id": "int"}, targetCol={"c": "longblob"})
-    sqlContext4 = SQLContext(table="sharding_4_t1", cols={"id": "int"}, targetCol={"c": "longblob"})
-    sqlContext5 = SQLContext(table="sharding_4_t1", cols={"id": "int"}, targetCol={"c": "longblob"})
-    sqlContext6 = SQLContext(table="sharding_4_t1", cols={"id": "int"}, targetCol={"c": "longblob"})
-    sqlContext7 = SQLContext(table="sharding_4_t1", cols={"id": "int"}, targetCol={"c": "longblob"})
+    sqlContext = SQLContext(table="test1", cols={"id": "int"}, targetCol={"c": "longblob"})
+    sqlContext1 = SQLContext(table="test1", cols={"id": "int"}, targetCol={"c": "longblob"})
+    sqlContext2 = SQLContext(table="test1", cols={"id": "int"}, targetCol={"c": "longblob"})
+    sqlContext3 = SQLContext(table="test1", cols={"id": "int"}, targetCol={"c": "longblob"})
+    sqlContext4 = SQLContext(table="test1", cols={"id": "int"}, targetCol={"c": "longblob"})
+    sqlContext5 = SQLContext(table="test1", cols={"id": "int"}, targetCol={"c": "longblob"})
+    sqlContext6 = SQLContext(table="test1", cols={"id": "int"}, targetCol={"c": "longblob"})
+    sqlContext7 = SQLContext(table="test1", cols={"id": "int"}, targetCol={"c": "longblob"})
 
 
     large_packet_test(12*1024*1024, conn, sqlContext)
@@ -77,7 +76,6 @@ if __name__ == "__main__":
 
 
     #sqlContext = SQLContext(table="sbtest1", cols={"id":"int"}, targetCol={"c":"blob"})
-
     #large_column_test(4*1024*1024+1, conn, sqlContext)
     #large_column_test(4*1024*1024, conn, sqlContext)
     #large_column_test(65574, conn, sqlContext)

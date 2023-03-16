@@ -178,7 +178,7 @@ Feature: test some import nodes attr in sharding.xml
     s/ehcache/rocksdb/
     s/10000,1800/10000,0/
     """
-    Given create filder content "/opt/dble/rocksdb" in "dble-1"
+    Given create folder content "/opt/dble/rocksdb" in "dble-1"
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
     """
     s/debug/info/

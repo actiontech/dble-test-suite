@@ -120,16 +120,17 @@ def step_impl(context):
       """   
     ''')
 
-@Given('create filder content "{fildername}" in "{hostname}"')
-def step_impl(context, fildername,hostname):
-    cmd = "mkdir {0}".format(fildername)
+
+@Given('create folder content "{foldername}" in "{hostname}"')
+def step_impl(context, foldername,hostname):
+    cmd = "rm -rf {} && mkdir {}".format(foldername,foldername)
     context.logger.info("sed cmd is :{0}".format(cmd))
     if hostname.startswith('dble'):
         ssh = get_ssh(hostname)
     else:
         ssh = get_ssh(hostname)
     rc, stdout, stderr = ssh.exec_command(cmd)
-    assert_that(len(stderr) == 0, "create filder content with:{1}, got err:{0}".format(stderr, cmd))
+    assert_that(len(stderr) == 0, "create folder content with:{1}, got err:{0}".format(stderr, cmd))
 
 
 @Given('create local and server file "{filename}" with "{num}" lines')
