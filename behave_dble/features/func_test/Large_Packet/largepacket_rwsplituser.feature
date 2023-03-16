@@ -93,6 +93,7 @@ Feature:Support MySQL's large package protocol
       NullPointerException
       """
 
+
    @restore_mysql_config
    Scenario: test "delete" sql about large packet the sql is "delete from table where c="大包" or id=7"   #3
     """
@@ -120,6 +121,7 @@ Feature:Support MySQL's large package protocol
       NullPointerException
       """
 
+
    @restore_mysql_config
    Scenario: test "select" sql about large packet the sql is "select id from table where c="大包"    #4
     """
@@ -146,6 +148,7 @@ Feature:Support MySQL's large package protocol
       caught err:
       NullPointerException
       """
+
 
    @restore_mysql_config
    Scenario: test "select" sql -- about response has large packet coz:DBLE0REQ-2096      #5
@@ -218,6 +221,7 @@ Feature:Support MySQL's large package protocol
       caught err:
       NullPointerException
       """
+
 
    @restore_mysql_config
    Scenario: test hint  and  mulit sql    #6
@@ -347,7 +351,7 @@ Feature:Support MySQL's large package protocol
     Then check following text exists in file "/opt/dble/logs/prepared/select.txt" in host "dble-1" with "8" times
       """
       PREPARE stmt1 FROM
-      select c from test1 where id = \? and c =
+      select c from test1 where id = ? and c =
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -366,7 +370,7 @@ Feature:Support MySQL's large package protocol
     Then check following text exists in file "/opt/dble/logs/prepared/select1.txt" in host "dble-1" with "8" times
       """
       PREPARE stmt1 FROM
-      select a.id,b.id from test1 a join sharding_4_t1 b on a.id=b.id and a.id= \? or b.c
+      select a.id,b.id from test1 a join sharding_4_t1 b on a.id=b.id and a.id= ? or b.c
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """

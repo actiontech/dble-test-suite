@@ -45,7 +45,7 @@ Feature:Support MySQL's large package protocol
       | conn_0 | true    | drop table if exists sharding_4_t1;create table sharding_4_t1 (id int,c longblob);truncate table sharding_4_t1         | success | schema1 |
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test "insert" sql about large packet the sql is "insert into table (id,c) values (x,大包)"   #1
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
@@ -104,8 +104,7 @@ Feature:Support MySQL's large package protocol
       """
 
 
-
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test "update" sql about large packet the sql is "update table set c="大包"    #2
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
@@ -170,7 +169,7 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test "delete" sql about large packet the sql is "delete from table where c="大包" or id=7"   #3
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
@@ -233,7 +232,8 @@ Feature:Support MySQL's large package protocol
       NullPointerException
       """
 
-   @restore_mysql_config
+
+#   @restore_mysql_config
    Scenario: test "select" sql about large packet the sql is "select id from table where c="大包"    #4
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
@@ -297,7 +297,8 @@ Feature:Support MySQL's large package protocol
       NullPointerException
       """
 
-   @restore_mysql_config
+
+#   @restore_mysql_config
    Scenario: test "select" sql -- about response has large packet coz:DBLE0REQ-2096      #5
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
@@ -371,7 +372,8 @@ Feature:Support MySQL's large package protocol
       NullPointerException
       """
 
-   @restore_mysql_config
+
+#   @restore_mysql_config
    Scenario: test hint  and  mulit sql    #6
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
@@ -484,6 +486,7 @@ Feature:Support MySQL's large package protocol
       NullPointerException
       """
 
+
    @restore_mysql_config
    Scenario: test Prepared sql    #7
     """
@@ -509,7 +512,7 @@ Feature:Support MySQL's large package protocol
     Then check following text exists in file "/opt/dble/logs/prepared/select.txt" in host "dble-1" with "8" times
       """
       PREPARE stmt1 FROM
-      select c from sharding_4_t1 where id = \? and c =
+      select c from sharding_4_t1 where id = ? and c =
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -528,7 +531,7 @@ Feature:Support MySQL's large package protocol
     Then check following text exists in file "/opt/dble/logs/prepared/select1.txt" in host "dble-1" with "8" times
       """
       PREPARE stmt1 FROM
-      select a.id,b.id from sharding_4_t1 a join sing b on a.id=b.id and a.id= \? or b.c
+      select a.id,b.id from sharding_4_t1 a join sing b on a.id=b.id and a.id= ? or b.c
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """

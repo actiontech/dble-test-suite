@@ -11,7 +11,7 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
   @restore_mysql_config
    Scenario: test dble's maxPacketSize and mysql's max_allowed_packet  #1
     """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4M},'mysql-slave1':{'max_allowed_packet':4M},'mysql-master2':{'max_allowed_packet':4M}}}
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
@@ -27,34 +27,20 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                | db               |
       | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('4194304B',),)} | dble_information |
+    Then execute sql in "mysql-master1"
+      | conn   | toClose | sql                                              | expect                                    | timeout |
+      | conn_1 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '4195328'),)} | 10      |
+    Then execute sql in "mysql-master2"
+      | conn   | toClose | sql                                              | expect                                    | timeout |
+      | conn_2 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '4195328'),)} | 10      |
+    Then execute sql in "mysql-slave1"
+      | conn   | toClose | sql                                              | expect                                    | timeout |
+      | conn_3 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '4195328'),)} | 10      |
 
     #### case 2  当mysql的值小于dble的时候，dble会对后端mysql下发 set global max_allowed_packet，还会加上1024
-#    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
-#    """
-#     /max_allowed_packet/d
-#     /server-id/a max_allowed_packet=5242880
-#     """
-#    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
-#    """
-#     /max_allowed_packet/d
-#     /server-id/a max_allowed_packet=5242880
-#     """
-#    Given restart mysql in "mysql-slave1" with sed cmds to update mysql config
-#    """
-#     /max_allowed_packet/d
-#     /server-id/a max_allowed_packet=5242880
-#     """
-
-#    Then execute sql in "mysql-master1"
-#      | conn   | toClose | sql                                              | expect                                    | timeout |
-#      | conn_1 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '5242880'),)} | 10      |
-#    Then execute sql in "mysql-slave1"
-#      | conn   | toClose | sql                                              | expect                                    | timeout |
-#      | conn_3 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '5242880'),)} | 10      |
-#    Then execute sql in "mysql-master2"
-#      | conn   | toClose | sql                                              | expect                                    | timeout |
-#      | conn_2 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '5242880'),)} | 10      |
-
+    Given turn on general log in "mysql-master1"
+    Given turn on general log in "mysql-master2"
+    Given turn on general log in "mysql-slave1"
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
       /DmaxPacketSize/d
@@ -62,9 +48,6 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
     Given Restart dble in "dble-1" success
 
-    Given turn on general log in "mysql-master1"
-    Given turn on general log in "mysql-master2"
-    Given turn on general log in "mysql-slave1"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                | db               |
       | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('9437184B',),)} | dble_information |
@@ -146,7 +129,11 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 
 
 
+  @restore_mysql_config
    Scenario: maxPacketSize 小于大包的值，会报错        #2
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
       <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100" >
@@ -162,6 +149,8 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
     Given upload file "./features/steps/LargePacket.py" to "dble-1" success
     Given upload file "./features/steps/LargePacket_rw.py" to "dble-1" success
     Given upload file "./features/steps/SQLContext.py" to "dble-1" success
+
+     ####case1 当dble和mysql都小于大包值时
     ####mysql_exceptions.OperationalError: (1153, "Got a packet bigger than 'max_allowed_packet' bytes")       # DBLE0REQ-960
     #####Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf  #DBLE0REQ-2004
     Given execute linux command in "dble-1" and contains exception "Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf"
@@ -173,9 +162,29 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
       python3 /opt/LargePacket_rw.py
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+
+     ####case3 当dble小于大包值时，但mysql的值大于大包时
+     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
       """
-      setError
+      /max_allowed_packet/d
+      /server-id/a max_allowed_packet = 17M
+      """
+     Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+      """
+      /max_allowed_packet/d
+      /server-id/a max_allowed_packet = 17M
+      """
+    Given execute linux command in "dble-1" and contains exception "Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf"
+      """
+      python3 /opt/LargePacket.py
+      """
+#    Given execute linux command in "dble-1" and contains exception "Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf"
+#      """
+#      python3 /opt/LargePacket_rw.py
+#      """
+
+     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
       unknown error:
       caught err:
       NullPointerException
@@ -251,7 +260,6 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
        """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       caught err:
       NullPointerException
