@@ -177,8 +177,8 @@ class MySQLObject(object):
             if expect_occur_times_expr is None:
                 expect_occur_times_expr = "==1"
             real_occur_times_as_expected = eval("{0}{1}".format(sto, expect_occur_times_expr))
-            assert real_occur_times_as_expected, "expect '{0}' occured {1} times in general log, but it occured {2} times".format(
-                query, expect_occur_times_expr, sto);
+            times = datetime.datetime.now()
+            assert real_occur_times_as_expected, "expect '{0}' occured {1} times in general log, but it occured {2} times, \nthe datatime {3}".format(query, expect_occur_times_expr, sto, times);
 
         else:
             assert 0 == int(sto), "expect general log has no {0}, but it occurs {1} times".format(query, sto);
