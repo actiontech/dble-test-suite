@@ -154,10 +154,11 @@ Feature: check fingerprint log
     INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# dbGroup=switch \*/dbGroup @@switch name='ha_group2' master='hostM2'
     """
 
-  @restore_global_setting
+  @restore_global_setting @stop_tcpdump
   Scenario: check fingerprint on client side #2
     """
-    {'restore_global_setting':{'mysql-master2':{'general_log':0}}}
+    {'restore_global_setting':{'mysql-master2':{'general_log':0},'mysql-master1':{'general_log':0},'mysql-slave1':{'general_log':0}}}
+    {'stop_tcpdump':'dble-1'}
     """
     Given delete all backend mysql tables
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -166,6 +167,13 @@ Feature: check fingerprint log
     $a -DinstanceName=instance-test
     """
     Then restart dble in "dble-1" success
+    #安装tcpdump并启动抓包
+    Given prepare a thread to run tcpdump in "dble-1"
+     """
+     tcpdump -w /tmp/tcpdump.log
+     """
+    Given turn on general log in "mysql-master1"
+    Given turn on general log in "mysql-slave1"
     Given turn on general log in "mysql-master2"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -198,6 +206,7 @@ Feature: check fingerprint log
       | conn_1 | False   | create index id_index on sharding_4_t1(id)                                      | success | schema1 |
       | conn_1 | False   | insert into sharding_4_t1 values(1,"name1"),(2,"name2"),(3,"name3"),(4,"name4") | success | schema1 |
       | conn_1 | False   | update sharding_4_t1 set name="33" where id=3                                   | success | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1                                                     | length{(4)} | schema1 |
       | conn_1 | False   | delete from sharding_4_t1                                                       | success | schema1 |
       | conn_1 | False   | drop index id_index on sharding_4_t1                                            | success | schema1 |
       | conn_1 | False   | create view test_view as select * from sharding_4_t1                            | success | schema1 |
@@ -224,3 +233,6 @@ Feature: check fingerprint log
     """
     Then check general log in host "mysql-master2" has "from=instance-test reason=heartbeat\*/select user()" occured ">0" times
     Given turn off general log in "mysql-master2"
+    Given turn off general log in "mysql-master1"
+    Given turn off general log in "mysql-slave1"
+    Given stop and destroy tcpdump threads list in "dble-1"
