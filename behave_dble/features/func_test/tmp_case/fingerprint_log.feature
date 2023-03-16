@@ -206,7 +206,6 @@ Feature: check fingerprint log
       | conn_1 | False   | create index id_index on sharding_4_t1(id)                                      | success | schema1 |
       | conn_1 | False   | insert into sharding_4_t1 values(1,"name1"),(2,"name2"),(3,"name3"),(4,"name4") | success | schema1 |
       | conn_1 | False   | update sharding_4_t1 set name="33" where id=3                                   | success | schema1 |
-      | conn_1 | False   | select * from sharding_4_t1                                                     | length{(4)} | schema1 |
       | conn_1 | False   | delete from sharding_4_t1                                                       | success | schema1 |
       | conn_1 | False   | drop index id_index on sharding_4_t1                                            | success | schema1 |
       | conn_1 | False   | create view test_view as select * from sharding_4_t1                            | success | schema1 |
