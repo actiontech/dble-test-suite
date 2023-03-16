@@ -51,7 +51,7 @@ Feature:Support MySQL's large package protocol
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
     Given create folder content "/opt/dble/logs/insert" in "dble-1"
-     ## case 1，tabletpye is sharding table
+     ## case 1，tabletype is sharding table
     Given execute oscmd "python3 /opt/LargePacket.py >/opt/dble/logs/insert/sharding.txt" on "dble-1"
     Then check following text exists in file "/opt/dble/logs/insert/sharding.txt" in host "dble-1" with "8" times
       """
@@ -66,7 +66,7 @@ Feature:Support MySQL's large package protocol
       """
     Given Restart dble in "dble-1" success
 
-     ## case 2，tabletpye is global table
+     ## case 2，tabletype is global table
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
       s/sharding_4_t1/global/g
@@ -85,7 +85,7 @@ Feature:Support MySQL's large package protocol
       """
     Given Restart dble in "dble-1" success
 
-     ## case 3，tabletpye is sing table
+     ## case 3，tabletype is sing table
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
       s/global/sing/g
@@ -116,7 +116,7 @@ Feature:Support MySQL's large package protocol
       s/.format(self.table, cols_keys, target_col_key, cols_values)/.format(self.table,target_col_key)/g
       s/)'\''/ '\''/g
       """
-     ## case 1，tabletpye is sharding table
+     ## case 1，tabletype is sharding table
     Given execute oscmd "python3 /opt/LargePacket.py >/opt/dble/logs/update/sharding.txt" on "dble-1"
     Then check following text exists in file "/opt/dble/logs/update/sharding.txt" in host "dble-1" with "8" times
       """
@@ -131,7 +131,7 @@ Feature:Support MySQL's large package protocol
       NullPointerException
       """
     Given Restart dble in "dble-1" success
-     ## case 2，tabletpye is global table
+     ## case 2，tabletype is global table
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
       s/sharding_4_t1/global/g
@@ -150,7 +150,7 @@ Feature:Support MySQL's large package protocol
       """
     Given Restart dble in "dble-1" success
 
-     ## case 3，tabletpye is sing table
+     ## case 3，tabletype is sing table
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
       s/global/sing/g
@@ -182,7 +182,7 @@ Feature:Support MySQL's large package protocol
       s/.format(self.table, cols_keys, target_col_key, cols_values)/.format(self.table,target_col_key)/g
       s/)'\''/ or id = 7 '\''/g
       """
-     ## case 1，tabletpye is sharding table
+     ## case 1，tabletype is sharding table
     Given execute oscmd "python3 /opt/LargePacket.py >/opt/dble/logs/delete/sharding.txt" on "dble-1"
     Then check following text exists in file "/opt/dble/logs/delete/sharding.txt" in host "dble-1" with "8" times
       """
@@ -196,7 +196,7 @@ Feature:Support MySQL's large package protocol
       NullPointerException
       """
     Given Restart dble in "dble-1" success
-     ## case 2，tabletpye is global table
+     ## case 2，tabletype is global table
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
       s/sharding_4_t1/global/g
@@ -214,7 +214,7 @@ Feature:Support MySQL's large package protocol
       NullPointerException
       """
     Given Restart dble in "dble-1" success
-     ## case 3，tabletpye is sing table
+     ## case 3，tabletype is sing table
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
       s/global/sing/g
@@ -247,7 +247,7 @@ Feature:Support MySQL's large package protocol
       """
 
     Given Restart dble in "dble-1" success
-     ## case 1，tabletpye is sharding table
+     ## case 1，tabletype is sharding table
     Given execute oscmd "python3 /opt/LargePacket.py >/opt/dble/logs/select/sharding.txt" on "dble-1"
     Then check following text exists in file "/opt/dble/logs/select/sharding.txt" in host "dble-1" with "8" times
       """
@@ -261,7 +261,7 @@ Feature:Support MySQL's large package protocol
       NullPointerException
       """
     Given Restart dble in "dble-1" success
-     ## case 2，tabletpye is global table
+     ## case 2，tabletype is global table
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
       s/sharding_4_t1/global/g
@@ -279,7 +279,7 @@ Feature:Support MySQL's large package protocol
       NullPointerException
       """
     Given Restart dble in "dble-1" success
-     ## case 3，tabletpye is sing table
+     ## case 3，tabletype is sing table
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
       s/global/sing/g
