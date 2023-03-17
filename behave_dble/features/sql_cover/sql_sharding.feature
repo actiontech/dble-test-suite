@@ -9,14 +9,14 @@ Feature: sharding table sql cover test
 # Given reset views in "dble-1" if exists
 # """
 
-   Scenario:cover empty line in file, no line in file, chinese character in file, special character in file for sql syntax: load data [local] infile ...#1
+  Scenario:cover empty line in file, no line in file, chinese character in file, special character in file for sql syntax: load data [local] infile ...#1
      Given set sql cover log dir "sql_cover_sharding"
      Given prepare loaddata.sql data for sql test
      Then execute sql in file "sqls_util/syntax/loaddata.sql"
      Given clear dirty data yield by sql
      Given clean loaddata.sql used data
 
-    Scenario Outline:sql cover for sharding table #2
+  Scenario Outline:sql cover for sharding table #2
       Given set sql cover log dir "sql_cover_sharding"
       Then execute sql in file "<filename>"
       Given clear dirty data yield by sql
@@ -48,7 +48,7 @@ Feature: sharding table sql cover test
         | sqls_util/syntax/union.sql                            |
         | sqls_util/syntax/update_syntax.sql                    |
         | sqls_util/syntax/view.sql                             |
-        | sqls_util/syntax/json_function_util.sql               |
+#        | sqls_util/syntax/json_function_util.sql               |
         | sqls_util/transaction/lock.sql                        |
         | sqls_util/transaction/trx_ddl_dml.sql                 |
         | sqls_util/transaction/trx_isolation.sql               |
@@ -58,6 +58,22 @@ Feature: sharding table sql cover test
         | special_sharding/select/select_sharding.sql           |
         | special_sharding/select/er_sharding.sql               |
         | special_sharding/syntax/set_user_var_util.sql         |
+
+    @stop_tcpdump
+    Scenario: sql cover for json_function_util.sql #4
+    """
+    {'stop_tcpdump':'dble-1'}
+    """
+      #安装tcpdump并启动抓包
+      Given prepare a thread to run tcpdump in "dble-1"
+       """
+       tcpdump -w /tmp/tcpdump.log
+       """
+
+      Given set sql cover log dir "sql_cover_sharding"
+      Then execute sql in file "sqls_util/syntax/json_function_util.sql"
+      Given clear dirty data yield by sql
+      Given stop and destroy tcpdump threads list in "dble-1"
 
     Scenario: #5 compare new generated results is same with the standard ones
         When compare results in "sql_cover_sharding" with the standard results in "std_sql_cover_sharding"
