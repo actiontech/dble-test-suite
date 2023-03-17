@@ -240,8 +240,8 @@ def stop_dble_in_node(context, node):
 
     if dble_dir_exist:
         datetime = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
-        # rm_log_cmd = "[ -f {0}/dble/logs/wrapper.log ] && cd {0}/dble/logs && tar -zcf log_{1}.tar.gz *.log".format(dble_install_path, datetime)
-        rm_log_cmd = "cd {0}/dble/logs && tar -zcf log_{1}.tar.gz *.log".format(dble_install_path, datetime)
+        rm_log_cmd = "[ -f {0}/dble/logs/wrapper.log ] && cd {0}/dble/logs && tar -zcf log_{1}.tar.gz *.log".format(
+            dble_install_path, datetime)
         rc, sto, ste = ssh_client.exec_command(rm_log_cmd)
         assert_that(len(ste) == 0, "tar dble logs failed for: {0}".format(ste))
 
