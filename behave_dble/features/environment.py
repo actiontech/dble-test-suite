@@ -3,6 +3,7 @@
 import logging
 import os
 import configparser
+import time
 from pprint import pformat
 from steps.RestoreEnvObject import RestoreEnvObject
 from steps.lib.DbleMeta import DbleMeta
@@ -191,6 +192,8 @@ def after_scenario(context, scenario):
             logger.debug("try to stop tcpdump thread: {0}".format(paras))
             for host_name in paras:
                 logger.debug("the value of host_name is: {0}".format(host_name))
+                # 可能来不及抓包case就结束了，sleep 10s抓取更多信息
+                time.sleep(10)
                 context.execute_steps(u'Given stop and destroy tcpdump threads list in "{0}"'.format(host_name))
 
 
