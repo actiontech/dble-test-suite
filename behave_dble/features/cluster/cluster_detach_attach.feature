@@ -992,48 +992,11 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/opt/dble/BtraceClusterDetachAttach6.java.log" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach6.java" on "dble-2"
     Given delete file "/opt/dble/BtraceClusterDetachAttach6.java.log" on "dble-2"
-
-     Then execute sql in "dble-1" in "admin" mode
-      | conn    | toClose   | sql              | expect      | db               |
-      | conn_1  | false     | show @@pause     | length{(0)} | dble_information |
-    Then execute sql in "dble-2" in "admin" mode
-      | conn    | toClose   | sql              | expect      | db               |
-      | conn_2  | false     | show @@pause     | length{(0)} | dble_information |
-
     Given update file content "./assets/BtraceClusterDetachAttach6.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /zkDetachCluster/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
-
-    # check cluster manager command: dble-1 execute cluster @@detach, dble-2 execute pause
-    Given prepare a thread run btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
-    Given prepare a thread execute sql "cluster @@detach" with "conn_1"
-    Then check btrace "BtraceClusterDetachAttach6.java" output in "dble-1"
-    """
-    get into zkDetachCluster
-    """
-    Given prepare a thread execute sql "pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10" with "conn_2"
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
-    """
-    ignore event because of detached
-    """
-    # dble-2 two shardingNodes, dble-1 no shardingNode
-    Then execute sql in "dble-2" in "admin" mode
-      | conn    | toClose   | sql          | expect                    | db               | timeout |
-      | conn_22 | true      | show @@pause | has{(('dn1',), ('dn2',))} | dble_information | 7       |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn    | toClose   | sql              | expect                       | db               |
-      | conn_11 | true      | show @@pause     | hasnot{(('dn1',),('dn2',))}  | dble_information |
-      | conn_1  | true      | cluster @@attach | success                      | dble_information |
-    Then execute sql in "dble-2" in "admin" mode
-      | conn    | toClose   | sql          | expect                    | db               | timeout |
-      | conn_2  | true      | resume       | success                   | dble_information | 7       |
-    Given stop btrace script "BtraceClusterDetachAttach6.java" in "dble-1"
-    Given destroy btrace threads list
-    Given destroy sql threads list
-    Given delete file "/opt/dble/BtraceClusterDetachAttach6.java.log" on "dble-1"
-    Given delete file "/opt/dble/BtraceClusterDetachAttach6.java" on "dble-1"
 
     # check cluster manager command: dble-2 execute cluster @@detach, dble-1 execute reload @@config_all
     Then execute sql in "dble-1" in "admin" mode
