@@ -8,8 +8,8 @@
 
 Feature: connection test in rwSplit mode
 
-     @skip_restart
-     Scenario: [testOnBorrow=false] when connection already has been obtained, old dbGroup will delay to close        #1
+  @skip_restart
+  Scenario: [testOnBorrow=false] when connection already has been obtained, old dbGroup will delay to close        #1
 
        Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
         """
@@ -102,7 +102,7 @@ Feature: connection test in rwSplit mode
      Given delete file "/opt/dble/BtraceRwSelect.java" on "dble-1"
      Given delete file "/opt/dble/BtraceRwSelect.java" on "dble-1"
 
-   Scenario: [testOnBorrow = true] when connection already has been obtained, old dbGroup will delay to close        #2
+  Scenario: [testOnBorrow = true] when connection already has been obtained, old dbGroup will delay to close        #2
 
      Given delete the following xml segment
         | file          | parent           | child                   |
@@ -179,12 +179,10 @@ Feature: connection test in rwSplit mode
        |user| conn   | toClose | sql                                     | expect  |
        |rwS1| conn_1 | true    | drop database testdb                    | success |
 
-  @stop_tcpdump
+
   Scenario: When the front connection is bound with the dbGroup and trigger reload less ten times, result can return correctly      #3
-    """
-    {'stop_tcpdump':'dble-1'}
-    """
-     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+
+      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
         """
         s/-Dprocessors=1/-Dprocessors=10/
         s/-DprocessorExecutor=1/-DprocessorExecutor=10/
@@ -210,28 +208,25 @@ Feature: connection test in rwSplit mode
             </dbGroup>
           """
       Given Restart dble in "dble-1" success
-    #安装tcpdump并启动抓包 for issue:DBLE0REQ-2116
-    Given prepare a thread to run tcpdump in "dble-1"
-     """
-     tcpdump -w /tmp/tcpdump.log
-     """
-    Given sleep "5" seconds
 
       Given execute sql in "dble-1" in "user" mode
        |user| conn   | toClose | sql                                       | expect  |
        |rwS1| conn_0 | False   | drop database if exists testdb            | success |
        |rwS1| conn_0 | true    | create database testdb                    | success |
-    ###偶现报错 (1045, "Unknown database 'testdb'")   issue:DBLE0REQ-2116
+    ###偶现报错 (1045, "Unknown database 'testdb'")   issue:DBLE0REQ-2116,
+    ###抓包后发现是登录的时候使用了3307这个库，时间问题，3307可能还没有从主上同步到这个database，现改动case顺序
       Given execute sql in "dble-1" in "user" mode
-       |user| conn   | toClose | sql                                     | expect  | db        |
-       |rwS1| conn_1 | False   | create table test(id int)               | success | testdb    |
-       |rwS1| conn_1 | False   | insert into test values(1)              | success | testdb    |
-       |rwS1| conn_1 | False   | select * from test                      | success | testdb    |
+       |user| conn   | toClose | sql                                     | expect  | timeout |
+       |rwS1| conn_1 | False   | use testdb                              | success | 5,2     |
+       |rwS1| conn_1 | False   | create table test(id int)               | success | 5,2     |
+       |rwS1| conn_1 | False   | insert into test values(1)              | success | 5,2     |
+       |rwS1| conn_1 | False   | select * from test                      | success | 5,2     |
+
+
 
      Given delete file "/opt/dble/BtraceSelectRWDbGroup.java" on "dble-1"
      Given delete file "/opt/dble/BtraceSelectRWDbGroup.java.log" on "dble-1"
      Given prepare a thread run Btrace script "BtraceSelectRWDbGroup.java" in "dble-1"
-     Given stop and destroy tcpdump threads list in "dble-1"
      #delete slave dbInstance
      Given prepare a thread execute sql "select * from test" with "conn_1"
      Then execute sql in "dble-1" in "admin" mode
@@ -267,18 +262,8 @@ Feature: connection test in rwSplit mode
     Given delete file "/opt/dble/BtraceSelectRWDbGroup.java.log" on "dble-1"
 
 
-    @stop_tcpdump
     Scenario: When the front connection is bound with the dbGroup, reload is triggered multiple times and the dbgroup connection is obtained recursively ten times    #4
-    """
-    {'stop_tcpdump':'dble-1'}
-    """
-   ###安装tcpdump并启动抓包 for issue:DBLE0REQ-2116
-    Given prepare a thread to run tcpdump in "dble-1"
-     """
-     tcpdump -w /tmp/tcpdump.log
-     """
-
-     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
         """
         s/-Dprocessors=1/-Dprocessors=10/
         s/-DprocessorExecutor=1/-DprocessorExecutor=10/
@@ -309,10 +294,11 @@ Feature: connection test in rwSplit mode
        |rwS1| conn_0 | true    | create database testdb                    | success |
 
       Given execute sql in "dble-1" in "user" mode
-       |user| conn   | toClose | sql                                     | expect  | db        |
-       |rwS1| conn_1 | False   | create table test(id int)               | success | testdb    |
-       |rwS1| conn_1 | False   | insert into test values(1)              | success | testdb    |
-       |rwS1| conn_1 | False   | select * from test                      | length{(1)} | testdb    |
+       |user| conn   | toClose | sql                                     | expect  | timeout |
+       |rwS1| conn_1 | False   | use testdb                              | success | 5,2     |
+       |rwS1| conn_1 | False   | create table test(id int)               | success | 5,2     |
+       |rwS1| conn_1 | False   | insert into test values(1)              | success | 5,2     |
+       |rwS1| conn_1 | False   | select * from test                      | length{(1)} | 5,2     |
 
      Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                             | expect  |
@@ -354,5 +340,5 @@ Feature: connection test in rwSplit mode
        | conn   | toClose | sql                             | expect  |
        | conn_0 | True    | set global max_connections=151  | success |
 
-      Given delete file "/opt/dble/BtraceRwSplitSession.java" on "dble-1"
-      Given delete file "/opt/dble/BtraceRwSplitSession.java.log" on "dble-1"
+     Given delete file "/opt/dble/BtraceRwSplitSession.java" on "dble-1"
+     Given delete file "/opt/dble/BtraceRwSplitSession.java.log" on "dble-1"
