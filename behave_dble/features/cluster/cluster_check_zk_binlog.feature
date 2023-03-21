@@ -1106,10 +1106,12 @@ Feature: test "binlog" in zk cluster
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
 
-  @btrace   @restore_mysql_config
+
+  @btrace   @restore_mysql_config  @delete_mysql_tables
   Scenario: during query ,one dble stop,check other dble status #7
     """
     {'restore_mysql_config':{'mysql-master1':{'log-bin':0,'binlog_format':0,'relay-log':0}}}
+    {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3', 'db4'], 'mysql-master2': ['db1', 'db2', 'db3', 'db4']}}
     """
 
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
