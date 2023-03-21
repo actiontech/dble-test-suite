@@ -194,6 +194,23 @@ sql_log_by_tx_digest_by_entry_by_user
       """
 
 
+  Scenario: 以sql_log为视图的三张表查询测试 from issue：DBLE0REQ-2144  # 1-1
+    Then execute admin cmd "reload @@samplingRate=100"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                     | expect         | db      |
+      | conn_1 | false   | drop table if exists test;create table test (id int,c int)              | success        | schema1 |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                  | expect                        | db               |
+      | conn_0 | False   | select * from sql_log                                                                | success                       | dble_information |
+      | conn_0 | False   | select * from sql_log where sql_stmt like "%test%"                                   | length{(2)}                   | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user where sql_stmt like "%test%"            | column sql_stmt not found     | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                                         | length{(2)}                   | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user where sql_type like "%test%"        | column sql_type not found     | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                                     | length{(2)}                   | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user where avg_duration like "%test%" | column avg_duration not found | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                                  | length{(2)}                   | dble_information |
+
+
 
   Scenario: samplingRate/sqlLogTableSize in bootstrap.cnf and reload @@samplingRate and reload @@sqlLogTableSize  #2
     #case check defalut values
