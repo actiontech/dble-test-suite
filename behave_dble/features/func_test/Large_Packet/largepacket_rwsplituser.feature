@@ -42,9 +42,9 @@ Feature:Support MySQL's large package protocol
     Given Restart dble in "dble-1" success
      ## create table
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                                                            | expect  | db      |
-      | rw1  | 111111 | conn_0 | true    | drop table if exists test1;create table test1 (id int,c longblob);truncate table test1         | success | db1     |
-      | rw1  | 111111 | conn_0 | true    | drop table if exists tb1;create table tb1 (id int,c longblob)                                  | success | db1     |
+      | user | passwd | conn   | toClose | sql                                                                                            | expect  | db      | timeout |
+      | rw1  | 111111 | conn_0 | true    | drop table if exists test1;create table test1 (id int,c longblob);truncate table test1         | success | db1     | 6,2     |
+      | rw1  | 111111 | conn_0 | true    | drop table if exists tb1;create table tb1 (id int,c longblob)                                  | success | db1     |         |
 
 
    @restore_mysql_config
@@ -60,7 +60,6 @@ Feature:Support MySQL's large package protocol
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
@@ -86,7 +85,6 @@ Feature:Support MySQL's large package protocol
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
@@ -113,7 +111,6 @@ Feature:Support MySQL's large package protocol
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
@@ -140,7 +137,6 @@ Feature:Support MySQL's large package protocol
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
@@ -168,49 +164,46 @@ Feature:Support MySQL's large package protocol
       ##### select from largepacket response
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                                                                    | expect       | db  | timeout |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 0                                                                                                                                | length{(1)}  | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 1                                                                                                                                | length{(1)}  | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 2                                                                                                                                | length{(1)}  | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 3                                                                                                                                | length{(1)}  | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 4                                                                                                                                | length{(1)}  | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 5                                                                                                                                | length{(1)}  | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 6                                                                                                                                | length{(1)}  | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 7                                                                                                                                | length{(1)}  | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 8                                                                                                                                | length{(1)}  | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 9                                                                                                                                | length{(1)}  | db1 | 5       |
-      | rw1 | 111111 | conn_0 | true    | select c from sharding_4_t1 where id = 10                                                                                                                               | length{(1)}  | db1 | 5       |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 0                                                                                                                                | length{(1)}  | db1 | 6,2     |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 1                                                                                                                                | length{(1)}  | db1 |         |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 2                                                                                                                                | length{(1)}  | db1 |         |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 3                                                                                                                                | length{(1)}  | db1 |         |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 4                                                                                                                                | length{(1)}  | db1 |         |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 5                                                                                                                                | length{(1)}  | db1 |         |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 6                                                                                                                                | length{(1)}  | db1 |         |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 7                                                                                                                                | length{(1)}  | db1 |         |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 8                                                                                                                                | length{(1)}  | db1 |         |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 9                                                                                                                                | length{(1)}  | db1 |         |
+      | rw1 | 111111 | conn_0 | true    | select c from sharding_4_t1 where id = 10                                                                                                                               | length{(1)}  | db1 |         |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                                                                    | expect       | db  | timeout |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 11;select c from sharding_4_t1 where id = 12;select c from sharding_4_t1 where id = 13;select c from sharding_4_t1 where id = 14 | success      | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 15;select c from sharding_4_t1 where id = 16;select c from sharding_4_t1 where id = 17;select c from sharding_4_t1 where id = 18 | success      | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 19;select c from sharding_4_t1 where id = 20;select c from sharding_4_t1 where id = 21;select c from sharding_4_t1 where id = 22 | success      | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 23                                                                                                                               | length{(1)}  | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 24                                                                                                                               | length{(1)}  | db1 | 5       |
-      | rw1 | 111111 | conn_0 | true    | select c from sharding_4_t1 where id = 25                                                                                                                               | length{(1)}  | db1 | 5       |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 11;select c from sharding_4_t1 where id = 12;select c from sharding_4_t1 where id = 13;select c from sharding_4_t1 where id = 14 | success      | db1 | 6,2     |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 15;select c from sharding_4_t1 where id = 16;select c from sharding_4_t1 where id = 17;select c from sharding_4_t1 where id = 18 | success      | db1 |         |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 19;select c from sharding_4_t1 where id = 20;select c from sharding_4_t1 where id = 21;select c from sharding_4_t1 where id = 22 | success      | db1 |         |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 23                                                                                                                               | length{(1)}  | db1 |         |
+      | rw1 | 111111 | conn_0 | false   | select c from sharding_4_t1 where id = 24                                                                                                                               | length{(1)}  | db1 |         |
+      | rw1 | 111111 | conn_0 | true    | select c from sharding_4_t1 where id = 25                                                                                                                               | length{(1)}  | db1 |         |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                                                                    | expect       | db  | timeout |
-      | rw1 | 111111 | conn_0 | false   | select * from sharding_4_t1 where id in (select a.id from test1 a right join sharding_4_t1 b on a.id = b.id and a.id > 22)                                              | success      | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select 2                                                                                                                                                                | success      | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | select * from sharding_4_t1 a join test1 b using(id,c) where a.id=16 or b.id=32;select 1                                                                                | success      | db1 | 5       |
-      | rw1 | 111111 | conn_0 | false   | /*!dble:db_type=master*/select * from sharding_4_t1 a join test1 b using(id,c) where a.id=16 or b.id=32                                                                 | success      | db1 | 5       |
+      | rw1 | 111111 | conn_0 | false   | select * from sharding_4_t1 where id in (select a.id from test1 a right join sharding_4_t1 b on a.id = b.id and a.id > 22)                                              | success      | db1 | 6,2     |
+      | rw1 | 111111 | conn_0 | false   | select 2                                                                                                                                                                | success      | db1 |         |
+      | rw1 | 111111 | conn_0 | false   | select * from sharding_4_t1 a join test1 b using(id,c) where a.id=16 or b.id=32;select 1                                                                                | success      | db1 |         |
+      | rw1 | 111111 | conn_0 | false   | /*!dble:db_type=master*/select * from sharding_4_t1 a join test1 b using(id,c) where a.id=16 or b.id=32                                                                 | success      | db1 |         |
       | rw1 | 111111 | conn_0 | true    | drop table if exists test1;drop table if exists sharding_4_t1       | success      | db1 | 5       |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
@@ -241,7 +234,6 @@ Feature:Support MySQL's large package protocol
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
@@ -267,7 +259,6 @@ Feature:Support MySQL's large package protocol
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
@@ -286,7 +277,6 @@ Feature:Support MySQL's large package protocol
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
@@ -309,7 +299,6 @@ Feature:Support MySQL's large package protocol
       | rw1  | 111111 | conn_1 | true    | drop table if exists test1;drop table if exists sharding_4_t1                     | success | db1 |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
@@ -344,7 +333,6 @@ Feature:Support MySQL's large package protocol
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
@@ -362,7 +350,6 @@ Feature:Support MySQL's large package protocol
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
@@ -380,7 +367,6 @@ Feature:Support MySQL's large package protocol
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      setError
       unknown error:
       NullPointerException
       """
