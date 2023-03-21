@@ -37,7 +37,7 @@ public final class BtraceClusterDelay {
             clazz = "com.actiontech.dble.services.manager.response.ShowBinlogStatus",
             method = "getQueryResult"
     )
-    public static void ShowBinlogStatus(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+    public static void getQueryResult(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into ShowBinlogStatus,start sleep ");
         BTraceUtils.println(" __________________________ ");
         Thread.sleep(1L);
