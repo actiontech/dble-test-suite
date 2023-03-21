@@ -30,9 +30,14 @@ def check_btrace_running(sshClient, btraceScript):
     # root     20444 20440 78 15:21 ?        00:00:00 /opt/jdk/bin/java -Dcom.sun.btrace.unsafe=true -cp /opt/btrace/build/btrace-client.jar:/opt/jdk/lib/tools.jar:/usr/share/lib/java/dtrace.jar com.sun.btrace.client.Main -v -o /opt/dble/newConnectionBorrow1.java.log 20283 /opt/dble/newConnectionBorrow1.java
 
 def stop_btrace(sshClient, btraceScript):
-    cmd = "kill -SIGINT `jps | grep Main | awk '{{print $1}}'`".format(btraceScript)
-    rc, sto, ste = sshClient.exec_command(cmd)
-    assert len(ste) == 0, "kill btrace err:{0}".format(ste)
+    # 由于有些(集群)case会先kill dble的进程及守护进程，从而导致btrace进程也会被kill掉
+    # 所以改成能kill空集的方式，或者先判断pid存在再kill(此处选择后者)
+    isBtraceRunningSuccess = check_btrace_running(sshClient, btraceScript)
+    if isBtraceRunningSuccess:
+        # 集群中还需要过滤掉zk的干扰
+        cmd = "kill -SIGINT `jps | grep Main |grep -v QuorumPeerMain| awk '{{print $1}}'`"
+        rc, sto, ste = sshClient.exec_command(cmd)
+        assert len(ste) == 0, "kill btrace err:{0}".format(ste)
     time.sleep(5)
 
 
