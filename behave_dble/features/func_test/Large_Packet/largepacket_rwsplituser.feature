@@ -62,7 +62,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
 
@@ -89,7 +88,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
 
@@ -117,7 +115,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
 
@@ -145,7 +142,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
 
@@ -187,7 +183,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
     Given Restart dble in "dble-1" success
@@ -203,7 +198,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
     Given Restart dble in "dble-1" success
@@ -218,7 +212,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
 
@@ -250,7 +243,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
     Given Restart dble in "dble-1" success
@@ -277,7 +269,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
     Given Restart dble in "dble-1" success
@@ -297,7 +288,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
     Given Restart dble in "dble-1" success
@@ -321,7 +311,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
 
@@ -357,7 +346,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
     Given Restart dble in "dble-1" success
@@ -376,7 +364,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
     Given Restart dble in "dble-1" success
@@ -395,7 +382,6 @@ Feature:Support MySQL's large package protocol
       """
       setError
       unknown error:
-      caught err:
       NullPointerException
       """
     Then execute sql in "dble-1" in "user" mode
