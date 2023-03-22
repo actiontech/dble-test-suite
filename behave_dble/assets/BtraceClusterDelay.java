@@ -37,10 +37,10 @@ public final class BtraceClusterDelay {
             clazz = "com.actiontech.dble.services.manager.response.ShowBinlogStatus",
             method = "getQueryResult"
     )
-    public static void ShowBinlogStatus(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+    public static void getQueryResult(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into ShowBinlogStatus,start sleep ");
         BTraceUtils.println(" __________________________ ");
-        Thread.sleep(60000L);
+        Thread.sleep(1L);
         BTraceUtils.println("sleep end ");
         BTraceUtils.println(" __________________________ ");
     }
@@ -412,10 +412,12 @@ public final class BtraceClusterDelay {
     public static void checkBackupStatus(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into NonBlockingSession,start sleep ");
         BTraceUtils.println(" __________________________ ");
-        Thread.sleep(60000L);
+        Thread.sleep(1L);
         BTraceUtils.println("sleep end ");
         BTraceUtils.println(" __________________________ ");
     }
+
+
     @OnMethod(
             clazz = "com.actiontech.dble.meta.table.MultiTablesInitMetaHandler",
             method = "schemaMetaFinish"
@@ -441,7 +443,7 @@ public final class BtraceClusterDelay {
     public static void countdown(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.print("get into countdown ");
         BTraceUtils.print(" for order __________________________ ");
-        Thread.sleep(60000L);
+        Thread.sleep(1L);
     }
     @OnMethod(
             clazz = "com.actiontech.dble.btrace.provider.ClusterDelayProvider",
@@ -450,6 +452,6 @@ public final class BtraceClusterDelay {
     public static void delayDdLToDeliver(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.print("get into delayDdLToDeliver");
         BTraceUtils.print(" for order __________________________ ");
-        Thread.sleep(30000L);
+        Thread.sleep(1L);
     }
 }
