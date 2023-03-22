@@ -149,10 +149,14 @@ Feature: connection pool basic test
      </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_1"
-      | conn   | toClose | sql                                                                                                       | expect        | db                |
-      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false'   | success       | dble_information  |
-    Then kill the redundant connections if "dble_idle_connections_1" is more then expect value "20" in "mysql-master1"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_10"
+      | conn   | toClose | sql                                                                                                                                    | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'  | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_10" is more then expect value "10" in "mysql-master1"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_11"
+      | conn   | toClose | sql                                                                                                                                     | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.6'   | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_11" is more then expect value "10" in "mysql-master2"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                    | expect                     | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                     | success                    | schema1 |
@@ -191,10 +195,14 @@ Feature: connection pool basic test
     </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_2"
-      | conn   | toClose | sql                                                                                                       | expect        | db                |
-      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false'   | success       | dble_information  |
-    Then kill the redundant connections if "dble_idle_connections_2" is more then expect value "8" in "mysql-master1"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_20"
+      | conn   | toClose | sql                                                                                                                                    | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'  | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_20" is more then expect value "4" in "mysql-master1"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_21"
+      | conn   | toClose | sql                                                                                                                                     | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.6'   | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_21" is more then expect value "4" in "mysql-master2"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect                     | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                        | success                    | schema1 |
@@ -246,10 +254,10 @@ Feature: connection pool basic test
     </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_3"
-      | conn   | toClose | sql                                                                                                       | expect        | db                |
-      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false'   | success       | dble_information  |
-    Then kill the redundant connections if "dble_idle_connections_3" is more then expect value "12" in "mysql-master1"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_30"
+      | conn   | toClose | sql                                                                                                                                    | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'  | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_30" is more then expect value "6" in "mysql-master1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                 | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                  | success | schema1 |
@@ -297,10 +305,10 @@ Feature: connection pool basic test
     </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_4"
-      | conn   | toClose | sql                                                                                                       | expect        | db                |
-      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false'   | success       | dble_information  |
-    Then kill the redundant connections if "dble_idle_connections_4" is more then expect value "12" in "mysql-master1"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_40"
+      | conn   | toClose | sql                                                                                                                                    | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'  | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_40" is more then expect value "6" in "mysql-master1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                 | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                  | success | schema1 |
@@ -342,10 +350,10 @@ Feature: connection pool basic test
      </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_5"
-      | conn   | toClose | sql                                                                                                       | expect        | db                |
-      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false'   | success       | dble_information  |
-    Then kill the redundant connections if "dble_idle_connections_5" is more then expect value "16" in "mysql-master1"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_50"
+      | conn   | toClose | sql                                                                                                                                    | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'  | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_50" is more then expect value "6" in "mysql-master1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                        | expect                     | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                         | success                    | schema1 |
@@ -394,10 +402,10 @@ Feature: connection pool basic test
      </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_6"
-      | conn   | toClose | sql                                                                                                       | expect        | db                |
-      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false'   | success       | dble_information  |
-    Then kill the redundant connections if "dble_idle_connections_6" is more then expect value "14" in "mysql-master1"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_idle_connections_60"
+      | conn   | toClose | sql                                                                                                                                    | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'  | success       | dble_information  |
+    Then kill the redundant connections if "dble_idle_connections_60" is more then expect value "4" in "mysql-master1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                        | expect                     | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                         | success                    | schema1 |
