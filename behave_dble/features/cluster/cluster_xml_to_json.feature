@@ -253,7 +253,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {\"value\":\"true\",\"name\":\"testWhileIdle\"},{\"value\":\"50000\",\"name\":\"connectionTimeout\"},{\"value\":\"500\",\"name\":\"connectionHeartbeatTimeout\"}\]},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.4:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"readWeight\":\"12\",\"primary\":false}\]}\],
     \"schema\":\[
-    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
+    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
     {\"type\":\"SingleTable\",\"properties\":{\"name\":\"sharding_1_t1\",\"shardingNode\":\"dn5\",\"sqlMaxLimit\":100,\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"incrementColumn\":\"id2\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
@@ -263,13 +263,13 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     \"childTable\":\[
     {\"name\":\"er_child\",\"joinColumn\":\"id\",\"parentColumn\":\"id\",\"incrementColumn\":\"id3\",\"sqlMaxLimit\":-1,\"specifyCharset\":false}\],\"name\":\"er_parent\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"date_default_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_date_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
-    {\"name\":\"schema2\",\"sqlMaxLimit\":-1,\"logicalCreateADrop\":true,
+    {\"name\":\"schema2\",\"sqlMaxLimit\":-1,
     \"table\":\[
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"\/5 \* \* \* \* \? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"\/10 \* \* \* \* \?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200,\"specifyCharset\":false}}\]},
-    {\"name\":\"schema3\",\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\"}\],
+    {\"name\":\"schema3\",\"shardingNode\":\"dn5\"}\],
     \"shardingNode\":\[
     {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},
     {\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},
@@ -346,7 +346,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {\"value\":\"true\",\"name\":\"testWhileIdle\"},{\"value\":\"50000\",\"name\":\"connectionTimeout\"},{\"value\":\"500\",\"name\":\"connectionHeartbeatTimeout\"}\]},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.4:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"readWeight\":\"12\",\"primary\":false}\]}\],
     \"schema\":\[
-    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
+    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
     {\"type\":\"SingleTable\",\"properties\":{\"name\":\"sharding_1_t1\",\"shardingNode\":\"dn5\",\"sqlMaxLimit\":100,\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"incrementColumn\":\"id2\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
@@ -356,13 +356,13 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     \"childTable\":\[
     {\"name\":\"er_child\",\"joinColumn\":\"id\",\"parentColumn\":\"id\",\"incrementColumn\":\"id3\",\"sqlMaxLimit\":-1,\"specifyCharset\":false}\],\"name\":\"er_parent\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"date_default_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_date_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
-    {\"name\":\"schema2\",\"sqlMaxLimit\":-1,\"logicalCreateADrop\":true,
+    {\"name\":\"schema2\",\"sqlMaxLimit\":-1,
     \"table\":\[
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"\/5 \* \* \* \* \? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"\/10 \* \* \* \* \?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200,\"specifyCharset\":false}}\]},
-    {\"name\":\"schema3\",\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\"}\],
+    {\"name\":\"schema3\",\"shardingNode\":\"dn5\"}\],
     \"shardingNode\":\[
     {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},
     {\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},
@@ -439,7 +439,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {\"value\":\"true\",\"name\":\"testWhileIdle\"},{\"value\":\"50000\",\"name\":\"connectionTimeout\"},{\"value\":\"500\",\"name\":\"connectionHeartbeatTimeout\"}\]},
     {\"name\":\"hostS1\",\"url\":\"172.100.9.4:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"readWeight\":\"12\",\"primary\":false}\]}\],
     \"schema\":\[
-    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
+    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
     {\"type\":\"SingleTable\",\"properties\":{\"name\":\"sharding_1_t1\",\"shardingNode\":\"dn5\",\"sqlMaxLimit\":100,\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"incrementColumn\":\"id2\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
@@ -449,13 +449,13 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     \"childTable\":\[
     {\"name\":\"er_child\",\"joinColumn\":\"id\",\"parentColumn\":\"id\",\"incrementColumn\":\"id3\",\"sqlMaxLimit\":-1,\"specifyCharset\":false}\],\"name\":\"er_parent\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"date_default_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_date_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
-    {\"name\":\"schema2\",\"sqlMaxLimit\":-1,\"logicalCreateADrop\":true,
+    {\"name\":\"schema2\",\"sqlMaxLimit\":-1,
     \"table\":\[
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"\/5 \* \* \* \* \? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"\/10 \* \* \* \* \?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200,\"specifyCharset\":false}}\]},
-    {\"name\":\"schema3\",\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\"}\],
+    {\"name\":\"schema3\",\"shardingNode\":\"dn5\"}\],
     \"shardingNode\":\[
     {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},
     {\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},
@@ -503,7 +503,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1" retry "6,2" times
     """
     {\"schema\":\[
-    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
+    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
     {\"type\":\"SingleTable\",\"properties\":{\"name\":\"sharding_1_t1\",\"shardingNode\":\"dn5\",\"sqlMaxLimit\":100,\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"incrementColumn\":\"id2\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
@@ -513,13 +513,13 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     \"childTable\":\[
     {\"name\":\"er_child\",\"joinColumn\":\"id\",\"parentColumn\":\"id\",\"incrementColumn\":\"id3\",\"sqlMaxLimit\":-1,\"specifyCharset\":false}\],\"name\":\"er_parent\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"date_default_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_date_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
-    {\"name\":\"schema2\",\"sqlMaxLimit\":-1,\"logicalCreateADrop\":true,
+    {\"name\":\"schema2\",\"sqlMaxLimit\":-1,
     \"table\":\[
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"fixed_uniform_string_rule\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"CHECKSUM\",\"cron\":\"\/5 \* \* \* \* \? \*\",\"name\":\"global3\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"checkClass\":\"COUNT\",\"cron\":\"\/10 \* \* \* \* \?\",\"name\":\"global4\",\"shardingNode\":\"dn1,dn3,dn5\",\"specifyCharset\":false}},
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global5\",\"shardingNode\":\"dn1,dn3,dn5\",\"sqlMaxLimit\":200,\"specifyCharset\":false}}\]},
-    {\"name\":\"schema3\",\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\"}\],
+    {\"name\":\"schema3\",\"shardingNode\":\"dn5\"}\],
     \"shardingNode\":\[
     {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},
     {\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},
@@ -664,9 +664,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2" retry "6,2" times
       """
-      schema name=\"schema1\" sqlMaxLimit=\"100\" logicalCreateADrop=\"true\" shardingNode=\"dn5\">
-      name=\"schema2\" sqlMaxLimit=\"-1\" logicalCreateADrop=\"true\"
-      name=\"schema3\" logicalCreateADrop=\"true\" shardingNode=\"dn5\"
+      name=\"schema1\" sqlMaxLimit=\"100\"
+      name=\"schema2\" sqlMaxLimit=\"-1\"
+      name=\"schema3\" shardingNode=\"dn5\"
       """
 
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2" retry "6,2" times
@@ -703,9 +703,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3" retry "6,2" times
       """
-      schema name=\"schema1\" sqlMaxLimit=\"100\" logicalCreateADrop=\"true\" shardingNode=\"dn5\">
-      name=\"schema2\" sqlMaxLimit=\"-1\" logicalCreateADrop=\"true\"
-      name=\"schema3\" logicalCreateADrop=\"true\" shardingNode=\"dn5\"
+      name=\"schema1\" sqlMaxLimit=\"100\"
+      name=\"schema2\" sqlMaxLimit=\"-1\"
+      name=\"schema3\" shardingNode=\"dn5\"
       """
 
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-3" retry "6,2" times
@@ -862,28 +862,28 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1" retry "6,2" times
     """
-    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
+    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
     """
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
-    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
+    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
     """
     Then execute "admin" cmd  in "dble-2" at background
       | conn   | toClose | sql                         | db               |
       | conn_2 | True    | select * from dble_config   | dble_information |
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
-    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
+    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
     """
     Then execute "admin" cmd  in "dble-3" at background
       | conn   | toClose | sql                         | db               |
       | conn_3 | True    | select * from dble_config   | dble_information |
      Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
-    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
+    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}
     """
      Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect            | db               |
@@ -960,12 +960,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-3" retry "6,2" times
     """
     schema\":\[
-    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
+    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
-    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn1\",
+    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",
     \"table\":\[
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}}
     """
@@ -975,12 +975,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     schema\":\[
-    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
+    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
-    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn1\",
+    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",
     \"table\":\[
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}}
     """
@@ -990,12 +990,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     schema\":\[
-    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
+    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
-    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn1\",
+    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",
     \"table\":\[
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}}
     """
@@ -1005,12 +1005,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     schema\":\[
-    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
+    {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
     {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
-    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn1\",
+    {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",
     \"table\":\[
     {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\",\"specifyCharset\":false}}
     """
@@ -1122,7 +1122,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                                   | expect                                              | db               |
-      | conn_1 | true    | insert into dble_db_group value ('ha_group5','select 1',-1,1,60,1,100,-1,null,'false','ture')                                         | Column 'active' is not writable                     | dble_information |
+      | conn_1 | true    | insert into dble_db_group value ('ha_group5','select 1',-1,1,60,1,100,'false','ture')                                                 | Column 'active' is not writable                     | dble_information |
 
     Given execute sql in "dble-2" in "admin" mode
       | conn   | toClose | sql                                                                                                                                | expect                                              | db               |
@@ -1276,7 +1276,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1" retry "6,2" times
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1307,7 +1307,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1328,7 +1328,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1350,7 +1350,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1368,7 +1368,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1" retry "6,2" times
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
@@ -1390,7 +1390,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2" retry "6,2" times
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
@@ -1412,7 +1412,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3" retry "6,2" times
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
@@ -1448,7 +1448,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-3" retry "6,2" times
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM4\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":89757,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1477,7 +1477,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn_1 | True    | select * from dble_config   | dble_information |
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM4\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":89757,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1499,7 +1499,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn_1 | True    | select * from dble_config   | dble_information |
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM4\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":89757,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1521,7 +1521,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn_1 | True    | select * from dble_config   | dble_information |
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM4\",\"url\":\"172.100.9.6:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":89757,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     \"property\":\[
@@ -1540,7 +1540,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1" retry "6,2" times
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group4\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group4\" delayThreshold=\"100\" disableHA=\"false\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select user\(\)</heartbeat>
         <dbInstance name=\"hostM4\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"89757\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
@@ -1563,7 +1563,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2" retry "6,2" times
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group4\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group4\" delayThreshold=\"100\" disableHA=\"false\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select user\(\)</heartbeat>
         <dbInstance name=\"hostM4\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"89757\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
@@ -1585,7 +1585,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3" retry "6,2" times
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group4\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group4\" delayThreshold=\"100\" disableHA=\"false\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select user\(\)</heartbeat>
         <dbInstance name=\"hostM4\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"89757\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
             <property name=\"connectionTimeout\">30000</property>
@@ -1672,7 +1672,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "6,2" times
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     """
@@ -1692,7 +1692,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn_1 | True    | select * from dble_config   | dble_information |
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "6,2" times
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     """
@@ -1706,7 +1706,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn_2 | True    | select * from dble_config   | dble_information |
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "6,2" times
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     """
@@ -1720,7 +1720,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn_3 | True    | select * from dble_config   | dble_information |
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3" retry "6,2" times
     """
-    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"delayPeriodMillis\":-1,\"delayDatabase\":\"null\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
+    {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1,\"keepAlive\":60}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,\"databaseType\":\"mysql\",
     """
@@ -1732,7 +1732,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1" retry "6,2" times
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
     """
@@ -1749,7 +1749,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2" retry "6,2" times
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
     """
@@ -1765,7 +1765,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3" retry "6,2" times
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
     """
@@ -1785,7 +1785,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given sleep "70" seconds
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2" retry "3,3" times
     """
-    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
+    <dbGroup rwSplitMode=\"0\" name=\"ha_group3\" delayThreshold=\"100\" disableHA=\"false\">
         <heartbeat timeout=\"0\" errorRetryCount=\"1\" keepAlive=\"60\">select 1</heartbeat>
         <dbInstance name=\"hostM3\" url=\"172.100.9.1:3306\" password=\"111111\" user=\"test\" maxCon=\"7544\" minCon=\"1\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
     """

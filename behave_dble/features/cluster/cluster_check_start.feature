@@ -86,12 +86,12 @@ Feature: on zookeeper to check start config
     Then check following text exist "Y" in file "/opt/dble/logs/dble_conf_sharding.log" in host "dble-1"
       """
       {\"schema\":\[
-      {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"logicalCreateADrop\":true,\"shardingNode\":\"dn5\",
+      {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
       \"table\":\[
       {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
       {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
       {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]},
-      {\"name\":\"schema2\",\"sqlMaxLimit\":101,\"logicalCreateADrop\":true,\"shardingNode\":\"dn1\",
+      {\"name\":\"schema2\",\"sqlMaxLimit\":101,\"shardingNode\":\"dn1\",
       \"table\":\[
       {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}}\]}\],
       \"shardingNode\":\[
