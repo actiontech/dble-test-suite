@@ -64,7 +64,7 @@ class PostQueryCheck(object):
                 assert_that(self._real_err is None, "sql: {0}, expect query success, but failed for '{1}'".format(self._sql, self._real_err))
                 expectRS = lengthObj.group(1)
                 logger.debug("sql: {0}, expect resultSet:{1}, length equal to real resultSet length:{2}".format(self._sql, eval(expectRS), len(self._real_res)))
-                assert_that(len(self._real_res), equal_to(eval(expectRS)), "sql:{0}, resultSet records count is not as expected".format(self._sql))
+                assert_that(len(self._real_res), equal_to(eval(expectRS)), "sql:{}, resultSet: '{}' not equal to real length: '{}'.\nthe real is:\n{}".format(self._sql, eval(expectRS), len(self._real_res), self._real_res))
                 break
 
             length_balanceObj = re.search(r"length_balance\{(.*?)\}", self._expect, re.I)
@@ -76,7 +76,7 @@ class PostQueryCheck(object):
                     length_per=length_res.split(",")[1]
                 else:
                     length_num=length_res
-                    length_per=1
+                    length_per=0.1
                 self.length_balance(self._real_res, length_num, float(length_per))
                 break
 
@@ -108,8 +108,7 @@ class PostQueryCheck(object):
             if hasString:
                 assert_that(self._real_err is None, "sql: {0}, expect query success, but failed for '{1}'".format(self._sql, self._real_err))
                 expectRS = hasString.group(1)
-                assert_that(str(self._real_res), contains_string(str(expectRS)),
-                            "sql: {0}, expect resultSet containing text: {1}, resultSet:{2}".format(self._sql, expectRS, self._real_res))
+                assert_that(str(self._real_res), contains_string(str(expectRS)), "sql: {0}, expect resultSet containing text: {1}, resultSet:{2}".format(self._sql, expectRS, self._real_res))
                 break
 
             hasNoString = re.search(r"hasNoStr\{(.*?)\}", self._expect, re.I)
@@ -234,4 +233,6 @@ class PostQueryCheck(object):
         re_num = len(self._real_res)
         a = abs(float(re_num) - float(expectRS))
         b = float(expectRS) * percent
-        assert a <= b, "sql:'{0}', expect :'{1}',but real length:'{2}'".format(self._sql, eval(expectRS), len(self._real_res))
+        c = float(expectRS) - float(expectRS) * percent
+        d = float(expectRS) + float(expectRS) * percent
+        assert a <= b, "sql:'{}', expect length:'{}' to '{}',but real length:'{}'.\nthe realresult is {}".format(self._sql, c, d, len(self._real_res), self._real_res)
