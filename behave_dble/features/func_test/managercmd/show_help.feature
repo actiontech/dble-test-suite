@@ -9,7 +9,7 @@ Feature: test show @@help
   Scenario: test "show @@help" #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(121)}  | dble_information |
+      | conn_0 | False   | show @@help             | length{(114)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
@@ -80,8 +80,6 @@ Feature: test show @@help
       | reload @@user_stat                                                                                       | Reset show @@sql  @@sql.sum @@sql.slow                                            |
       | reload @@query_cf[=table&column]                                                                         | Reset show @@sql.condition                                                        |
       | release @@reload_metadata                                                                                | Release reload process , unlock the config meta lock                              |
-      | reload @@load_data.num=?                                                                                 | Set the value of maxRowSizeToFile                                                 |
-      | reload @@xaIdCheck.period=?                                                                              | Set the period for check xaId, the unit is second                                 |
       | offline                                                                                                  | Change Server status to OFF                                                       |
       | online                                                                                                   | Change Server status to ON                                                        |
       | flow_control @@show                                                                                      | Show the current config of the flow control                                       |
@@ -100,7 +98,6 @@ Feature: test show @@help
       | reload @@slow_query.flushperiod                                                                          | Reset the flush period                                                            |
       | show @@slow_query.flushsize                                                                              | Show the min flush size for writing to disk                                       |
       | reload @@slow_query.flushsize                                                                            | Reset the flush size                                                              |
-      | reload @@slow_query.queue_policy                                                                         | Reset the queue policy                                                            |
       | create database @@shardingNode ='dn......'                                                               | create database for shardingNode in config                                        |
       | drop database @@shardingNode ='dn......'                                                                 | drop database for shardingNode set in config                                      |
       | check @@metadata                                                                                         | show last time of `reload @@metadata`/start dble                                  |
@@ -123,8 +120,6 @@ Feature: test show @@help
       | enable @@general_log                                                                                     | Turn on the general log                                                           |
       | disable @@general_log                                                                                    | Turn off the general log                                                          |
       | reload @@general_log_file='?'                                                                            | Reset file path of general log                                                    |
-      | enable @@sqldump_sql                                                                                     | Turn on the sqldump log                                                           |
-      | disable @@sqldump_sql                                                                                    | Turn off the sqldump log                                                          |
       | show @@statistic                                                                                         | Turn off statistic information                                                    |
       | enable @@statistic                                                                                       | Turn on statistic sql                                                             |
       | disable @@statistic                                                                                      | Turn off statistic sql                                                            |
@@ -134,8 +129,6 @@ Feature: test show @@help
       | drop @@statistic_queue.usage                                                                             | Drop the queue usage                                                              |
       | start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]]                                 | Start monitoring queue usage, Unit: (s,m/min,h)                                   |
       | stop @@statistic_queue_monitor                                                                           | Stop monitoring queue usage                                                       |
-      | enable @@memory_buffer_monitor                                                                           | Turn on memory buffer monitor                                                     |
-      | disable @@memory_buffer_monitor                                                                          | Turn off memory buffer monitor                                                    |
 
 
     Then check resultset "rs_A" has not lines with following column values

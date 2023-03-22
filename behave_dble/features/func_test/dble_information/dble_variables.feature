@@ -30,7 +30,7 @@ Feature:  dble_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(143)}     | dble_information |
+      | conn_0 | False   | select * from dble_variables    | length{(129)}     | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
@@ -48,7 +48,6 @@ Feature:  dble_variables test
       | sqlSlowTime                             | 100ms                                       | The threshold of Slow Query, the default is 100ms                                                                                                                                                                    | false       |
       | flushSlowLogPeriod                      | 1s                                          | The period for flushing log to disk, the default is 1 second                                                                                                                                                         | false       |
       | flushSlowLogSize                        | 1000                                        | The max size for flushing log to disk, the default is 1000                                                                                                                                                           | false       |
-      | slowQueueOverflowPolicy                 | 2                                           | Slow log queue overflow policy, the default is 2                                                                                                                                                                     | false       |
       | enableAlert                             | 1                                           | Enable or disable alert                                                                                                                                                                                              | false       |
       | capClientFoundRows                      | false                                       | Whether to turn on EOF_Packet to return found rows, the default value is false                                                                                                                                       | false       |
       | maxRowSizeToFile                        | 100000                                      | The maximum row size,if over this value,row data will be saved to file when load data.The default value is 100000                                                                                                    | false       |
@@ -61,9 +60,6 @@ Feature:  dble_variables test
       | tableByUserByEntryTableSize             | 1024                                        | TableByUserByEntry table size, the default is 1024                                                                                                                                                                   | false       |
       | sqlLogTableSize                         | 1024                                        | SqlLog table size, the default is 1024                                                                                                                                                                               | false       |
       | samplingRate                            | 0                                           | Sampling rate, the default is 0, it is a percentage                                                                                                                                                                  | false       |
-      | xaIdCheckPeriod                         | 300s                                        | The period for check xaId, the default is 300 second                                                                                                                                                                 | false       |
-      | enableSqlDumpLog                        | 0                                           | Whether enable sqlDumpLog, the default value is 0(off)                                                                                                                                                               | false       |
-      | enableMemoryBufferMonitor               | 0                                          | Whether enable memory buffer monitor, enable this option will cost a lot of  resources. the default value is 0(off)                                                                                                  | false       |
       | clusterEnable                           | false                                       | Whether enable the cluster mode                                                                                                                                                                                      | true        |
       | showBinlogStatusTimeout                 | 60000ms                                     | The time out from show @@binlog.status.The default value is 60000ms                                                                                                                                                  | true        |
       | sequenceHandlerType                     | Local TimeStamp(like Snowflake)             | Global Sequence Type. The default is Local TimeStamp(like Snowflake)                                                                                                                                                 | true        |
@@ -168,28 +164,16 @@ Feature:  dble_variables test
       | district                                | null                                        | The location of the DBLE                                                                                                                                                                                             | true        |
       | dataCenter                              | null                                        | The data center where the DBLE resides                                                                                                                                                                               | true        |
       | groupConcatMaxLen                       | 1024                                        | The maximum permitted result length in bytes for the GROUP_CONCAT() function. The default is 1024.                                                                                                                   | true        |
-      | enableAsyncRelease                      | 1                                           | Whether enable async release . default value is 1(on).                                                                                                                                                               | true        |
-      | releaseTimeout                          | 10                                          | time wait for release ,unit is ms,  default value is 10ms                                                                                                                                                            | true        |
-      | sqlDumpLogBasePath                      | sqldump                                     | The base path of sqldump log, the default value is 'sqldump'                                                                                                                                                         | true        |
-      | sqlDumpLogFileName                      | sqldump.log                                 | The sqldump log file name, the default value is 'sqldump.log'                                                                                                                                                        | true        |
-      | sqlDumpLogCompressFilePattern           | ${date:yyyy-MM}/sqldump-%d{MM-dd}-%i.log.gz | The compression of sqldump log file, the default value is '${date:yyyy-MM}/sqldump-%d{MM-dd}-%i.log.gz'                                                                                                              | true        |
-      | sqlDumpLogOnStartupRotate               | 1                                           | The onStartup of rotate policy, the default value is 1; -1 said not to participate in the strategy                                                                                                                   | true        |
-      | sqlDumpLogSizeBasedRotate               | 52428800                                    | The sizeBased of rotate policy, the default value is '50 MB'; default unit is byte                                                                                                                                   | true        |
-      | sqlDumpLogTimeBasedRotate               | 1                                           | The timeBased of rotate policy, the default value is 1; -1 said not to participate in the strategy                                                                                                                   | true        |
-      | sqlDumpLogDeleteFileAge                 | 90d                                         | The expiration time deletion strategy, the default value is '90d'                                                                                                                                                    | true        |
-      | sqlDumpLogCompressFilePath              | */sqldump-*.log.gz                          | The compression of sqldump log file path, the default value is '*/sqldump-*.log.gz'                                                                                                                                  | true        |
-      | enableMemoryBufferMonitorRecordPool     | 1                                           | Whether record the connection pool memory if the memory buffer monitor is ON. the default value is 1(ON).                                                                                                            | true        |
-      | queryForUpdateMaxRowsSize               | 20000                                       | The maximum number of rows in the select result set when update multi-table splitting is delivered. The default value is 20000                                                                                       | true        |
-
-
+      | enableAsyncRelease                      | 0                                           | Whether enable async release . default value is 0(off).                                                                                                                                                              | true        |
+      | releaseTimeout                          | 600000                                      | time wait for release ,unit is ms,  default value is 10mins                                                                                                                                                          | true        |
   #case supported select limit /order by/ where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                               | expect       | db               |
       | conn_0 | False   | select * from dble_variables limit 10                             | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(24)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(24)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(143)}| dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(20)} | dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(20)} | dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(129)}| dble_information |
   #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                              | db               |
@@ -207,17 +191,16 @@ Feature:  dble_variables test
       | conn_0 | False   | select * from dble_variables where read_only like  '%fals%'  order by variable_name desc limit 10 | dble_information |
     Then check resultset "dble_variables_4" has lines with following column values
       | variable_name-0                         | variable_value-1               | read_only-3 |
-      | xaIdCheckPeriod                         | 300s                           | false       |
       | tableByUserByEntryTableSize             | 1024                           | false       |
       | sqlSlowTime                             | 100ms                          | false       |
       | sqlLogTableSize                         | 1024                           | false       |
-      | slowQueueOverflowPolicy                 | 2                              | false       |
       | samplingRate                            | 0                              | false       |
       | maxRowSizeToFile                        | 100000                         | false       |
       | isOnline                                | true                           | false       |
       | generalLogFile                          | /opt/dble/general/general.log  | false       |
       | frontendByBackendByEntryByUserTableSize | 1024                           | false       |
-
+      | flushSlowLogSize                        | 1000                           | false       |
+      | flushSlowLogPeriod                      | 1s                             | false       |
   #case supported select field from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_5"
       | conn   | toClose | sql                                                | db               |
@@ -234,8 +217,8 @@ Feature:  dble_variables test
       | conn_0 | False   | select read_only,count(*) from dble_variables group by read_only | dble_information |
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
-      | false       | 24      |
-      | true        | 119     |
+      | false       | 20      |
+      | true        | 109     |
 
   #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
@@ -259,9 +242,9 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('xalog',),)}   | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('',),)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(125)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(124)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(18)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(112)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(110)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
   #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
       | conn_0 | False   | update dble_variables set comment='sqlSlowTime1' where variable_value='true' | Access denied for table 'dble_variables' | dble_information |
