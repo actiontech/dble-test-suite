@@ -271,6 +271,11 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-3"
+      """
+      get into delayDdLToDeliver
+      """
+
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
       Error can't wait all session finished
@@ -309,6 +314,11 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
+      """
+      get into delayDdLToDeliver
+      """
+
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
       timeout while waiting for unfinished distributed transactions
@@ -337,6 +347,11 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-3"
+      """
+      get into delayDdLToDeliver
+      """
+
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
       Error can't wait all session finished
@@ -373,6 +388,10 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_21 | true    | show @@binlog.status | dble_information |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
+      """
+      get into delayDdLToDeliver
+      """
 #    Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "10,3" times
       """
@@ -399,6 +418,10 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_21 | true    | show @@binlog.status | dble_information |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
+      """
+      get into delayDdLToDeliver
+      """
 #    Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "10,3" times
       """
@@ -425,6 +448,10 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_21 | true    | show @@binlog.status | dble_information |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
+      """
+      get into delayDdLToDeliver
+      """
 #    Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "10,3" times
       """
@@ -508,7 +535,7 @@ Feature: test "binlog" in zk cluster
       | conn_11 | False   | insert into global1 values(2)      | success | schema1 |
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
-      s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
+      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
       /checkBackupStatus/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
@@ -725,6 +752,10 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-3"
+      """
+      get into delayDdLToDeliver
+      """
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.6:3306
@@ -762,6 +793,10 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
+      """
+      get into delayDdLToDeliver
+      """
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.6:3306
@@ -791,6 +826,10 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-3"
+      """
+      get into delayDdLToDeliver
+      """
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.6:3306
@@ -1067,10 +1106,12 @@ Feature: test "binlog" in zk cluster
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
 
-  @btrace   @restore_mysql_config
+
+  @btrace   @restore_mysql_config  @delete_mysql_tables
   Scenario: during query ,one dble stop,check other dble status #7
     """
     {'restore_mysql_config':{'mysql-master1':{'log-bin':0,'binlog_format':0,'relay-log':0}}}
+    {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3', 'db4'], 'mysql-master2': ['db1', 'db2', 'db3', 'db4']}}
     """
 
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
@@ -1100,18 +1141,21 @@ Feature: test "binlog" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /ShowBinlogStatus/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
+      /getQueryResult/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
-
+    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
+      """
+      get into ShowBinlogStatus,start sleep
+      """
     Given execute linux command in "dble-1"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause/status  >/opt/dble/logs/dble_zk_status.log 2>&1 &
       """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_status.log" in host "dble-1" retry "10,3" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_status.log" in host "dble-1"
       """
       \[1, 2, 3\]
       """
@@ -1127,7 +1171,11 @@ Feature: test "binlog" in zk cluster
     Then execute sql in "dble-2" in "admin" mode
       | conn     | toClose | sql                      | expect                                               |
       | conn_2   | true    | show @@binlog.status     | There is another command is showing BinlogStatus     |
-#    Given sleep "15" seconds
+  #### 校验dble是真的stop了
+    Then execute sql in "dble-1" in "user" mode
+      | conn  | toClose | sql          | expect                  | timeout |
+      | new   | true    | select 1     | error totally whack     | 10      |
+
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
