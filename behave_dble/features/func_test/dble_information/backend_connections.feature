@@ -69,8 +69,8 @@ Feature:  backend_connections test
       | conn_0 | False   | select user,sql,db_group_name,schema,xa_status,in_transaction from backend_connections   | dble_information |
     Then check resultset "backend_connections_3" has lines with following column values
       | user-0 | sql-1                                      | db_group_name-2 | schema-3 | xa_status-4 | in_transaction-5 |
-      | test   | INSERT INTO sharding_2_t1 VALUES (1), (3) | ha_group2       | db1      | 0           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (2), (4) | ha_group1       | db1      | 0           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (1),  (3) | ha_group2       | db1      | 0           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (2),  (4) | ha_group1       | db1      | 0           | true             |
   # case 8066 query xa =on DBLE0REQ-508
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  | db      |
@@ -89,8 +89,8 @@ Feature:  backend_connections test
       | user-0 | sql-1                                      | db_group_name-2 | schema-3 | xa_status-4 | in_transaction-5 |
       | test   | insert into test values (1),(2)            | ha_group2       | db2      | 1           | true             |
       | test   | insert into test values (1),(2)            | ha_group1       | db2      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (1), (3)  | ha_group2       | db1      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (2), (4)  | ha_group1       | db1      | 1           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (1),  (3) | ha_group2       | db1      | 1           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (2),  (4) | ha_group1       | db1      | 1           | true             |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  | db      |
       | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |

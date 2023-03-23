@@ -223,7 +223,7 @@ Feature: test hint with left2inner/right2inner
       | conn_1 | false   | explain /*!dble:plan=$left2inner*/select * from Employee a left join Dept b on (select c.deptname from Employee c left join Info d on c.deptname=d.deptname where c.empid=7021)=b.deptname  | schema1|
     Then check resultset "rs_A" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                                                                                                                                                                                                                                   |
-      | dn1             | BASE SQL | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` join  `Dept` `b` on ( SELECT c.deptname FROM Employee c INNER JOIN Info d ON c.deptname = d.deptname WHERE c.empid = 7021 ) = b.deptname where 1=1 |
+      | dn1             | BASE SQL | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Employee` `a` join  `Dept` `b` on ( SELECT c.deptname FROM Employee c  INNER JOIN Info d ON c.deptname = d.deptname WHERE c.empid = 7021 ) = b.deptname where 1=1 |
 
     #left join appeared in in subquery transform to inner join
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_B"

@@ -448,8 +448,8 @@ Feature: support rownum sql
       | conn_2 | False    | explain select parent_id, code, count(0), @rownum:=1 from sharding_2_t1 group by parent_id, code having parent_id > 1 | success | schema1 |
     Then check resultset "rownum_rs8" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1              | BASE SQL | SELECT parent_id, code, count(0) , @rownum := 1 FROM sharding_2_t1 GROUP BY parent_id, code HAVING parent_id > 1 LIMIT 100 |
-      | dn2              | BASE SQL | SELECT parent_id, code, count(0) , @rownum := 1 FROM sharding_2_t1 GROUP BY parent_id, code HAVING parent_id > 1 LIMIT 100 |
+      | dn1              | BASE SQL | SELECT parent_id, code, count(0)  , @rownum := 1 FROM sharding_2_t1 GROUP BY parent_id, code HAVING parent_id > 1 LIMIT 100 |
+      | dn2              | BASE SQL | SELECT parent_id, code, count(0)  , @rownum := 1 FROM sharding_2_t1 GROUP BY parent_id, code HAVING parent_id > 1 LIMIT 100 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                              | expect  | db      |
       | conn_2 | True    | drop table if exists sharding_2_t1;drop table if exists global_2_t1;drop table if exists single_t1               | success | schema1 |
@@ -512,15 +512,15 @@ Feature: support rownum sql
       | conn_2 | False   | explain select a.id, a.parent_id, a.code, @rownum:=@rownum-1 from sharding_2_t1 a, (select @rownum:=0) r order by a.id | success | schema1 |
     Then check resultset "rownum_rs1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1              | BASE SQL | SELECT a.id, a.parent_id, a.code , @rownum := @rownum - 1 FROM sharding_2_t1 a, ( SELECT @rownum := 0 ) r ORDER BY a.id LIMIT 100 |
-      | dn2              | BASE SQL | SELECT a.id, a.parent_id, a.code , @rownum := @rownum - 1 FROM sharding_2_t1 a, ( SELECT @rownum := 0 ) r ORDER BY a.id LIMIT 100 |
+      | dn1              | BASE SQL | SELECT a.id, a.parent_id, a.code  , @rownum := @rownum - 1 FROM sharding_2_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
+      | dn2              | BASE SQL | SELECT a.id, a.parent_id, a.code  , @rownum := @rownum - 1 FROM sharding_2_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs2"
       | conn   | toClose | sql                                             | expect  | db      |
       | conn_2 | False   | explain select id, parent_id, code, @rownum:=@rownum-1 from sharding_2_t1, (select @rownum:=0) r order by id | success | schema1 |
     Then check resultset "rownum_rs2" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1              | BASE SQL | SELECT id, parent_id, code , @rownum := @rownum - 1 FROM sharding_2_t1, ( SELECT @rownum := 0 ) r ORDER BY id LIMIT 100 |
-      | dn2              | BASE SQL | SELECT id, parent_id, code , @rownum := @rownum - 1 FROM sharding_2_t1, ( SELECT @rownum := 0 ) r ORDER BY id LIMIT 100 |
+      | dn1              | BASE SQL | SELECT id, parent_id, code  , @rownum := @rownum - 1 FROM sharding_2_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
+      | dn2              | BASE SQL | SELECT id, parent_id, code  , @rownum := @rownum - 1 FROM sharding_2_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs3"
       | conn   | toClose | sql                                                                                                                                | expect  | db      |
       | conn_2 | False   | explain select t1.id,t2.shard_value,@rownum:=1 from sharding_2_t1 t1,sharding_2_t2 t2 where t1.id=t2.parent_id order by t2.id desc | success | schema1 |
@@ -969,13 +969,13 @@ Feature: support rownum sql
       | conn_2 | False   | explain select a.id,a.code,@rownum:=@rownum-1 from global_2_t1 a, (select @rownum:=0) r order by a.id | success | schema1 |
     Then check resultset "rownum_rs1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1//dn2         | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM global_2_t1 a, ( SELECT @rownum := 0 ) r ORDER BY a.id LIMIT 100 |
+      | dn1//dn2         | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM global_2_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs2"
       | conn   | toClose | sql                                             | expect  | db      |
       | conn_2 | False   | explain select id, code, @rownum:=@rownum-1 from global_2_t1, (select @rownum:=0) r order by id | success | schema1 |
     Then check resultset "rownum_rs2" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1//dn2         | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM global_2_t1, ( SELECT @rownum := 0 ) r ORDER BY id LIMIT 100 |
+      | dn1//dn2         | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM global_2_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs3"
       | conn   | toClose | sql                                                                                                                               | expect  | db      |
       | conn_2 | False   | explain select t1.id,t2.global_value,@rownum:=1 from sharding_2_t1 t1,global_2_t1 t2 where t1.id=t2.parent_id order by t2.id desc | success | schema1 |
@@ -1106,13 +1106,13 @@ Feature: support rownum sql
       | conn_2 | False   | explain select a.id,a.code,@rownum:=@rownum-1 from global_2_t1 a, (select @rownum:=0) r order by a.id | success | schema1 |
     Then check resultset "rownum_rs1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn3//dn4         | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM global_2_t1 a, ( SELECT @rownum := 0 ) r ORDER BY a.id LIMIT 100 |
+      | dn3//dn4         | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM global_2_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs2"
       | conn   | toClose | sql                                             | expect  | db      |
       | conn_2 | False   | explain select id, code, @rownum:=@rownum-1 from global_2_t1, (select @rownum:=0) r order by id | success | schema1 |
     Then check resultset "rownum_rs2" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn3//dn4         | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM global_2_t1, ( SELECT @rownum := 0 ) r ORDER BY id LIMIT 100 |
+      | dn3//dn4         | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM global_2_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs3"
       | conn   | toClose | sql                                                                                                                               | expect  | db      |
       | conn_2 | False   | explain select t1.id,t2.global_value,@rownum:=1 from sharding_2_t1 t1,global_2_t1 t2 where t1.id=t2.parent_id order by t2.id desc | success | schema1 |
@@ -1261,19 +1261,19 @@ Feature: support rownum sql
       | conn_2 | False   | explain select a.id,a.code,@rownum:=@rownum-1 from single_t1 a, (select @rownum:=0) r order by a.id | success | schema1 |
     Then check resultset "rownum_rs1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1              | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM single_t1 a, ( SELECT @rownum := 0 ) r ORDER BY a.id LIMIT 100 |
+      | dn1              | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM single_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
     Then check resultset "rownum_rs1" has not lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn2              | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM single_t1 a, ( SELECT @rownum := 0 ) r ORDER BY a.id LIMIT 100 |
+      | dn2              | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM single_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs2"
       | conn   | toClose | sql                                             | expect  | db      |
       | conn_2 | False   | explain select id, code, @rownum:=@rownum-1 from single_t1, (select @rownum:=0) r order by id | success | schema1 |
     Then check resultset "rownum_rs2" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1              | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM single_t1, ( SELECT @rownum := 0 ) r ORDER BY id LIMIT 100 |
+      | dn1              | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM single_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
     Then check resultset "rownum_rs2" has not lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn2              | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM single_t1, ( SELECT @rownum := 0 ) r ORDER BY id LIMIT 100 |
+      | dn2              | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM single_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs3"
       | conn   | toClose | sql                                                                                                                             | expect  | db      |
       | conn_2 | False   | explain select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1,single_t1 t2 where t1.id=t2.parent_id order by t2.id desc | success | schema1 |

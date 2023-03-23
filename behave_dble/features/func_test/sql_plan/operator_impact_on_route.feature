@@ -146,8 +146,8 @@ Feature: The impact of testing operators on shardingTable routing
       | conn_9   | true    | explain  select * from sharding_2_t1 where id = 1 or 1 = 1    | schema1 |
     Then check resultset "I" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                   |
-      | dn1               | BASE SQL        | SELECT * FROM sharding_2_t1 WHERE id = 1 OR 1 = 1 LIMIT 100 |
-      | dn2               | BASE SQL        | SELECT * FROM sharding_2_t1 WHERE id = 1 OR 1 = 1 LIMIT 100 |
+      | dn1               | BASE SQL        | SELECT * FROM sharding_2_t1 WHERE id = 1  OR 1 = 1 LIMIT 100 |
+      | dn2               | BASE SQL        | SELECT * FROM sharding_2_t1 WHERE id = 1  OR 1 = 1 LIMIT 100 |
     # EXISTS
     Given execute sql in "dble-1" in "user" mode
       | conn     | toClose | sql                                                                                      | db      | expect                                    |
