@@ -264,3 +264,156 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       caught err:
       NullPointerException
       """
+
+  @restore_mysql_config
+  Scenario:  repeat() 函数下发大包校验 --- repeat受后端mysql max_allowed_packet参数限制   #4
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      """
+      <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
+      </dbGroup>
+      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+      <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
+      """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                         | expect  | db      |
+      | conn_0 | false   | drop table if exists test;create table test (id int,c longblob);truncate table test         | success | schema1 |
+      | conn_0 | true    | insert into test values (0,repeat("x",16*1024*1024))                                        | Result of repeat() was larger than max_allowed_packet (4195328) - truncated | schema1 |
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                                                                          | expect  | db      |
+      | rw1  | 111111 | conn_1 | false   | drop table if exists test1;create table test1 (id int,c longblob);truncate table test1       | success | db1     |
+      | rw1  | 111111 | conn_1 | true    | insert into test1 values (0,repeat("x",16*1024*1024))                                        | Result of repeat() was larger than max_allowed_packet (4195328) - truncated | db1     |
+
+     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+      """
+      /max_allowed_packet/d
+      /server-id/a max_allowed_packet = 8M
+      """
+     Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+      """
+      /max_allowed_packet/d
+      /server-id/a max_allowed_packet = 8M
+      """
+    Then execute sql in "dble-1" in "admin" mode
+      | conn  | toClose | sql                                                                              | expect                | db               |
+      | new   | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('4194304B',),)} | dble_information |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                         | expect  | db      | timeout |
+      | conn_0 | false    | insert into test values (1,repeat("x",6*1024*1024))                                        | success | schema1 | 5,2     |
+      | conn_0 | true     | insert into test values (1,repeat("x",16*1024*1024))                                       | Result of repeat() was larger than max_allowed_packet (8388608) - truncated | schema1 | 5,2     |
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                                                         | expect  | db      | timeout |
+      | rw1  | 111111 | conn_1 | false   | insert into test1 values (1,repeat("x",6*1024*1024))                        | success | db1     | 5,2     |
+      | rw1  | 111111 | conn_1 | true    | insert into test1 values (1,repeat("x",16*1024*1024))                       | Result of repeat() was larger than max_allowed_packet (8388608) - truncated | db1     | 5,2     |
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      unknown error:
+      NullPointerException
+      """
+
+
+  @restore_mysql_config
+  Scenario: source 大包校验    #5
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+    """
+    Given set log4j2 log level to "info" in "dble-1"
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      s/-Xmx1G/-Xmx8G/g
+      /DmaxPacketSize/d
+      /# processor/a -DmaxPacketSize=167772160
+      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=8G/g
+      $a -DidleTimeout=180000
+      $a -DbufferPoolPageSize=33554432
+      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      """
+      <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
+      </dbGroup>
+      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+      <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
+      """
+    Given Restart dble in "dble-1" success
+    Given create folder content "/opt/dble/logs/insert" in "dble-1"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                                                                   | expect  | db      |
+      | conn_0 | false   | drop table if exists test;create table test (id int,c longblob);truncate table test                                                                                                   | success | schema1 |
+      | conn_0 | true    | insert into test values (0,repeat("x",16*1024*1024)),(1,repeat("x",16*1024*1024-1)),(2,repeat("x",16*1024*1024-2)),(3,repeat("x",16*1024*1024+1)),(4,repeat("x",16*1024*1024+2))      | success | schema1 |
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                                                                                                                                                                   | expect  | db  |
+      | rw1  | 111111 | conn_1 | false   | drop table if exists test1;create table test1 (id int,c longblob);truncate table test1                                                                                                | success | db1 |
+      | rw1  | 111111 | conn_1 | true    | insert into test1 values (0,repeat("x",16*1024*1024)),(1,repeat("x",16*1024*1024-1)),(2,repeat("x",16*1024*1024-2)),(3,repeat("x",16*1024*1024-3)),(4,repeat("x",16*1024*1024-4))     | success | db1 |
+
+
+    ##### 通过concat函数拼接大包字段和insert到test.sql文件再通过source下发
+    Given execute oscmd in "dble-1"
+      """
+      mysql -utest -P8066 -h172.100.9.1 -Dschema1 --max_allowed_packet=1G -e "select concat('insert into test values (1,\'',c,'\');') as 'select 10086;' from test" >/opt/dble/logs/insert/test.sql && \
+      mysql -utest -P8066 -h172.100.9.1 -Dschema1 --max_allowed_packet=1G -e "source /opt/dble/logs/insert/test.sql" >/opt/dble/logs/insert/test.txt
+      """
+    Then check following text exists in file "/opt/dble/logs/insert/test.sql" in host "dble-1" with "5" times
+      """
+      insert into test values
+      """
+    Then check following text exists in file "/opt/dble/logs/insert/test.txt" in host "dble-1" with "2" times
+      """
+      10086
+      """
+
+    Given execute oscmd in "dble-1"
+      """
+      mysql -urw1 -P8066 -h172.100.9.1 -Ddb1 --max_allowed_packet=1G -e "select concat('insert into test1 values (1,\'',c,'\');') as 'select 10000;' from test1" >/opt/dble/logs/insert/test1.sql && \
+      mysql -urw1 -P8066 -h172.100.9.1 -Ddb1 --max_allowed_packet=1G -e "source /opt/dble/logs/insert/test1.sql" >/opt/dble/logs/insert/test1.txt
+      """
+    Then check following text exists in file "/opt/dble/logs/insert/test1.sql" in host "dble-1" with "5" times
+      """
+      insert into test1 values
+      """
+    Then check following text exists in file "/opt/dble/logs/insert/test1.txt" in host "dble-1" with "2" times
+      """
+      10000
+      """
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      unknown error:
+      NullPointerException
+      """
+
+    #### 依赖case生成的test.sql验证maxPacketSize参数报错
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      /DmaxPacketSize/d
+      """
+    Given Restart dble in "dble-1" success
+    Given execute oscmd in "dble-1"
+      """
+      mysql -utest -P8066 -h172.100.9.1 -Dschema1 --max_allowed_packet=1G -e "source /opt/dble/logs/insert/test.sql" >/opt/dble/logs/insert/test.txt 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/insert/test.txt" in host "dble-1"
+      """
+      Packet for query is too large.* 4194304.*You can change maxPacketSize value in bootstrap.cnf
+      10086
+      """
+
+    Given execute oscmd in "dble-1"
+      """
+      mysql -urw1 -P8066 -h172.100.9.1 -Ddb1 --max_allowed_packet=1G -e "source /opt/dble/logs/insert/test1.sql" >/opt/dble/logs/insert/test1.txt 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/insert/test1.txt" in host "dble-1"
+      """
+      Packet for query is too large.*4194304.*You can change maxPacketSize value in bootstrap.cnf
+      10000
+      """
