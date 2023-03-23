@@ -81,7 +81,7 @@ Feature:  backend_variables test
  #case supoorted select
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_3"
       | conn   | toClose | sql                                                                                                                                                                 | db               |
-      | conn_0 | False   | select * from backend_variables where backend_conn_id in (select backend_conn_id from backend_connections where sql='INSERT INTO sharding_2_t1 VALUES (2), (4)')   | dble_information |
+      | conn_0 | False   | select * from backend_variables where backend_conn_id in (select backend_conn_id from backend_connections where sql='INSERT INTO sharding_2_t1 VALUES (2),  (4)')   | dble_information |
     Then check resultset "backend_variables_3" has lines with following column values
       | variable_name-1          | variable_value-2   | variable_type-3 |
       | autocommit               | false              | sys             |
