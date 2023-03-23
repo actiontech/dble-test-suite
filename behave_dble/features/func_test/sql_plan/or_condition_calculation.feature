@@ -64,10 +64,10 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | explain select * from sharding_4_t1 where aid=1 or aid=2 or aid=3     |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                                   |
-      | dn1             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE aid = 1 OR aid = 2 OR aid = 3 LIMIT 100 |
-      | dn2             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE aid = 1 OR aid = 2 OR aid = 3 LIMIT 100 |
-      | dn3             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE aid = 1 OR aid = 2 OR aid = 3 LIMIT 100 |
-      | dn4             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE aid = 1 OR aid = 2 OR aid = 3 LIMIT 100 |
+      | dn1             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE aid = 1  OR aid = 2  OR aid = 3 LIMIT 100 |
+      | dn2             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE aid = 1  OR aid = 2  OR aid = 3 LIMIT 100 |
+      | dn3             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE aid = 1  OR aid = 2  OR aid = 3 LIMIT 100 |
+      | dn4             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE aid = 1  OR aid = 2  OR aid = 3 LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_2" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\) or \(\) or \(\)\)}
@@ -100,10 +100,10 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | explain select * from sharding_4_t1 where id=1 or aid=2 or aid=3      |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                                  |
-      | dn1             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1 OR aid = 2 OR aid = 3 LIMIT 100 |
-      | dn2             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1 OR aid = 2 OR aid = 3 LIMIT 100 |
-      | dn3             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1 OR aid = 2 OR aid = 3 LIMIT 100 |
-      | dn4             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1 OR aid = 2 OR aid = 3 LIMIT 100 |
+      | dn1             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1  OR aid = 2  OR aid = 3 LIMIT 100 |
+      | dn2             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1  OR aid = 2  OR aid = 3 LIMIT 100 |
+      | dn3             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1  OR aid = 2  OR aid = 3 LIMIT 100 |
+      | dn4             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1  OR aid = 2  OR aid = 3 LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_4" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\) or \(\) or \(\(sharding_4_t1.id = 1\)\)\)}
@@ -148,10 +148,10 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | explain select * from sharding_4_t1 where id=1 or 1=1         |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                    |
-      | dn1             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1 OR 1 = 1 LIMIT 100 |
-      | dn2             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1 OR 1 = 1 LIMIT 100 |
-      | dn3             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1 OR 1 = 1 LIMIT 100 |
-      | dn4             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1 OR 1 = 1 LIMIT 100 |
+      | dn1             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1  OR 1 = 1 LIMIT 100 |
+      | dn2             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1  OR 1 = 1 LIMIT 100 |
+      | dn3             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1  OR 1 = 1 LIMIT 100 |
+      | dn4             | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1  OR 1 = 1 LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_7" in host "dble-1"
     """
     these conditions will try to pruning:\{\}
@@ -278,14 +278,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | show trace   |
     Then check resultset "rs_1" has lines with following column values
       | OPERATION-0  | SHARDING_NODE-4 | SQL/REF-5                                                               |
-      | Execute_SQL  | dn1             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3) OR age = 4 LIMIT 100 |
-      | Execute_SQL  | dn2             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3) OR age = 4 LIMIT 100 |
-      | Execute_SQL  | dn3             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3) OR age = 4 LIMIT 100 |
-      | Execute_SQL  | dn4             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3) OR age = 4 LIMIT 100 |
-      | Fetch_result | dn1             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3) OR age = 4 LIMIT 100 |
-      | Fetch_result | dn2             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3) OR age = 4 LIMIT 100 |
-      | Fetch_result | dn3             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3) OR age = 4 LIMIT 100 |
-      | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3) OR age = 4 LIMIT 100 |
+      | Execute_SQL  | dn1             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3)  OR age = 4 LIMIT 100 |
+      | Execute_SQL  | dn2             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3)  OR age = 4 LIMIT 100 |
+      | Execute_SQL  | dn3             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3)  OR age = 4 LIMIT 100 |
+      | Execute_SQL  | dn4             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3)  OR age = 4 LIMIT 100 |
+      | Fetch_result | dn1             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3)  OR age = 4 LIMIT 100 |
+      | Fetch_result | dn2             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3)  OR age = 4 LIMIT 100 |
+      | Fetch_result | dn3             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3)  OR age = 4 LIMIT 100 |
+      | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE id IN (1, 2, 3)  OR age = 4 LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_4" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\) or \(\(sharding_4_t1.id IN \(1, 2, 3\)\)\)\)}
@@ -341,14 +341,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | show trace   |
     Then check resultset "rs_1" has lines with following column values
       | OPERATION-0  | SHARDING_NODE-4 | SQL/REF-5                                                         |
-      | Execute_SQL  | dn1             | SELECT * FROM sharding_4_t1 WHERE age = 1 AND name = 2 LIMIT 100 |
-      | Execute_SQL  | dn2             | SELECT * FROM sharding_4_t1 WHERE age = 1 AND name = 2 LIMIT 100 |
-      | Execute_SQL  | dn3             | SELECT * FROM sharding_4_t1 WHERE age = 1 AND name = 2 LIMIT 100 |
-      | Execute_SQL  | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1 AND name = 2 LIMIT 100 |
-      | Fetch_result | dn1             | SELECT * FROM sharding_4_t1 WHERE age = 1 AND name = 2 LIMIT 100 |
-      | Fetch_result | dn2             | SELECT * FROM sharding_4_t1 WHERE age = 1 AND name = 2 LIMIT 100 |
-      | Fetch_result | dn3             | SELECT * FROM sharding_4_t1 WHERE age = 1 AND name = 2 LIMIT 100 |
-      | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1 AND name = 2 LIMIT 100 |
+      | Execute_SQL  | dn1             | SELECT * FROM sharding_4_t1 WHERE age = 1  AND name = 2 LIMIT 100 |
+      | Execute_SQL  | dn2             | SELECT * FROM sharding_4_t1 WHERE age = 1  AND name = 2 LIMIT 100 |
+      | Execute_SQL  | dn3             | SELECT * FROM sharding_4_t1 WHERE age = 1  AND name = 2 LIMIT 100 |
+      | Execute_SQL  | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1  AND name = 2 LIMIT 100 |
+      | Fetch_result | dn1             | SELECT * FROM sharding_4_t1 WHERE age = 1  AND name = 2 LIMIT 100 |
+      | Fetch_result | dn2             | SELECT * FROM sharding_4_t1 WHERE age = 1  AND name = 2 LIMIT 100 |
+      | Fetch_result | dn3             | SELECT * FROM sharding_4_t1 WHERE age = 1  AND name = 2 LIMIT 100 |
+      | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1  AND name = 2 LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_7" in host "dble-1"
     """
     these conditions will try to pruning:\{\}
@@ -366,14 +366,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | show trace   |
     Then check resultset "rs_1" has lines with following column values
       | OPERATION-0  | SHARDING_NODE-4 | SQL/REF-5                                                         |
-      | Execute_SQL  | dn1             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR name = 2 LIMIT 100  |
-      | Execute_SQL  | dn2             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR name = 2 LIMIT 100  |
-      | Execute_SQL  | dn3             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR name = 2 LIMIT 100  |
-      | Execute_SQL  | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR name = 2 LIMIT 100  |
-      | Fetch_result | dn1             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR name = 2 LIMIT 100  |
-      | Fetch_result | dn2             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR name = 2 LIMIT 100  |
-      | Fetch_result | dn3             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR name = 2 LIMIT 100  |
-      | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR name = 2 LIMIT 100  |
+      | Execute_SQL  | dn1             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR name = 2 LIMIT 100  |
+      | Execute_SQL  | dn2             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR name = 2 LIMIT 100  |
+      | Execute_SQL  | dn3             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR name = 2 LIMIT 100  |
+      | Execute_SQL  | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR name = 2 LIMIT 100  |
+      | Fetch_result | dn1             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR name = 2 LIMIT 100  |
+      | Fetch_result | dn2             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR name = 2 LIMIT 100  |
+      | Fetch_result | dn3             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR name = 2 LIMIT 100  |
+      | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR name = 2 LIMIT 100  |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_8" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\) or \(\)\)}
@@ -391,14 +391,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | show trace   |
     Then check resultset "rs_1" has lines with following column values
       | OPERATION-0  | SHARDING_NODE-4 | SQL/REF-5                                                                    |
-      | Execute_SQL  | dn1             | SELECT * FROM sharding_4_t1 WHERE id = 1 OR age = 1 OR name = 2 LIMIT 100  |
-      | Execute_SQL  | dn2             | SELECT * FROM sharding_4_t1 WHERE id = 1 OR age = 1 OR name = 2 LIMIT 100  |
-      | Execute_SQL  | dn3             | SELECT * FROM sharding_4_t1 WHERE id = 1 OR age = 1 OR name = 2 LIMIT 100  |
-      | Execute_SQL  | dn4             | SELECT * FROM sharding_4_t1 WHERE id = 1 OR age = 1 OR name = 2 LIMIT 100  |
-      | Fetch_result | dn1             | SELECT * FROM sharding_4_t1 WHERE id = 1 OR age = 1 OR name = 2 LIMIT 100  |
-      | Fetch_result | dn2             | SELECT * FROM sharding_4_t1 WHERE id = 1 OR age = 1 OR name = 2 LIMIT 100  |
-      | Fetch_result | dn3             | SELECT * FROM sharding_4_t1 WHERE id = 1 OR age = 1 OR name = 2 LIMIT 100  |
-      | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE id = 1 OR age = 1 OR name = 2 LIMIT 100  |
+      | Execute_SQL  | dn1             | SELECT * FROM sharding_4_t1 WHERE id = 1  OR age = 1  OR name = 2 LIMIT 100  |
+      | Execute_SQL  | dn2             | SELECT * FROM sharding_4_t1 WHERE id = 1  OR age = 1  OR name = 2 LIMIT 100  |
+      | Execute_SQL  | dn3             | SELECT * FROM sharding_4_t1 WHERE id = 1  OR age = 1  OR name = 2 LIMIT 100  |
+      | Execute_SQL  | dn4             | SELECT * FROM sharding_4_t1 WHERE id = 1  OR age = 1  OR name = 2 LIMIT 100  |
+      | Fetch_result | dn1             | SELECT * FROM sharding_4_t1 WHERE id = 1  OR age = 1  OR name = 2 LIMIT 100  |
+      | Fetch_result | dn2             | SELECT * FROM sharding_4_t1 WHERE id = 1  OR age = 1  OR name = 2 LIMIT 100  |
+      | Fetch_result | dn3             | SELECT * FROM sharding_4_t1 WHERE id = 1  OR age = 1  OR name = 2 LIMIT 100  |
+      | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE id = 1  OR age = 1  OR name = 2 LIMIT 100  |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_9" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\) or \(\) or \(\(sharding_4_t1.id = 1\)\)\)}
@@ -481,14 +481,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | show trace   |
     Then check resultset "rs_1" has lines with following column values
       | OPERATION-0  | SHARDING_NODE-4 | SQL/REF-5                                                                                                         |
-      | Execute_SQL  | dn1             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR (name = 2 AND (pad = 1 AND (id = 2 OR id = 1))) LIMIT 100  |
-      | Execute_SQL  | dn2             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR (name = 2 AND (pad = 1 AND (id = 2 OR id = 1))) LIMIT 100  |
-      | Execute_SQL  | dn3             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR (name = 2 AND (pad = 1 AND (id = 2 OR id = 1))) LIMIT 100  |
-      | Execute_SQL  | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR (name = 2 AND (pad = 1 AND (id = 2 OR id = 1))) LIMIT 100  |
-      | Fetch_result | dn1             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR (name = 2 AND (pad = 1 AND (id = 2 OR id = 1))) LIMIT 100  |
-      | Fetch_result | dn2             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR (name = 2 AND (pad = 1 AND (id = 2 OR id = 1))) LIMIT 100  |
-      | Fetch_result | dn3             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR (name = 2 AND (pad = 1 AND (id = 2 OR id = 1))) LIMIT 100  |
-      | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1 OR (name = 2 AND (pad = 1 AND (id = 2 OR id = 1))) LIMIT 100  |
+      | Execute_SQL  | dn1             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR (name = 2   AND (pad = 1    AND (id = 2     OR id = 1))) LIMIT 100  |
+      | Execute_SQL  | dn2             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR (name = 2   AND (pad = 1    AND (id = 2     OR id = 1))) LIMIT 100  |
+      | Execute_SQL  | dn3             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR (name = 2   AND (pad = 1    AND (id = 2     OR id = 1))) LIMIT 100  |
+      | Execute_SQL  | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR (name = 2   AND (pad = 1    AND (id = 2     OR id = 1))) LIMIT 100  |
+      | Fetch_result | dn1             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR (name = 2   AND (pad = 1    AND (id = 2     OR id = 1))) LIMIT 100  |
+      | Fetch_result | dn2             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR (name = 2   AND (pad = 1    AND (id = 2     OR id = 1))) LIMIT 100  |
+      | Fetch_result | dn3             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR (name = 2   AND (pad = 1    AND (id = 2     OR id = 1))) LIMIT 100  |
+      | Fetch_result | dn4             | SELECT * FROM sharding_4_t1 WHERE age = 1  OR (name = 2   AND (pad = 1    AND (id = 2     OR id = 1))) LIMIT 100  |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_13" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\) or \(\(\(sharding_4_t1.id = 1\)\) or \(\(sharding_4_t1.id = 2\)\)\)\)}
@@ -507,8 +507,8 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | show trace   |
     Then check resultset "rs_1" has lines with following column values
       | OPERATION-0  | SHARDING_NODE-4 | SQL/REF-5                                                                                   |
-      | Execute_SQL  | dn1             | SELECT * FROM sharding_4_t1 WHERE (id = 1 OR id = 2) AND (id = 3 OR id = 4) LIMIT 100  |
-      | Fetch_result | dn1             | SELECT * FROM sharding_4_t1 WHERE (id = 1 OR id = 2) AND (id = 3 OR id = 4) LIMIT 100  |
+      | Execute_SQL  | dn1             | SELECT * FROM sharding_4_t1 WHERE (id = 1   OR id = 2)  AND (id = 3   OR id = 4) LIMIT 100  |
+      | Fetch_result | dn1             | SELECT * FROM sharding_4_t1 WHERE (id = 1   OR id = 2)  AND (id = 3   OR id = 4) LIMIT 100  |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_14" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\(sharding_4_t1.id = 2\)\) or \(\(sharding_4_t1.id = 1\)\)\) and \(\(\(sharding_4_t1.id = 4\)\) or \(\(sharding_4_t1.id = 3\)\)\)}
@@ -2379,7 +2379,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | explain select * from schema2.global_4_t1 where (id=1 or id=2) and (id=3 or id=4)   |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2                                                                                |
-      | /*AllowDiff*/dn1 | BASE SQL | SELECT * FROM global_4_t1 WHERE (id = 1 OR id = 2) AND (id = 3 OR id = 4) LIMIT 100 |
+      | /*AllowDiff*/dn1 | BASE SQL | SELECT * FROM global_4_t1 WHERE (id = 1   OR id = 2)  AND (id = 3   OR id = 4) LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\(schema2.global_4_t1.id = 2\)\) or \(\(schema2.global_4_t1.id = 1\)\)\) and \(\(\(schema2.global_4_t1.id = 4\)\) or \(\(schema2.global_4_t1.id = 3\)\)\)}
@@ -2432,7 +2432,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | explain select * from noshard_t1 where (id=1 or id=2) and (id=3 or id=4)   | schema1 |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                                               |
-      | dn5             | BASE SQL | SELECT * FROM noshard_t1 WHERE (id = 1 OR id = 2) AND (id = 3 OR id = 4) LIMIT 100 |
+      | dn5             | BASE SQL | SELECT * FROM noshard_t1 WHERE (id = 1   OR id = 2)  AND (id = 3   OR id = 4) LIMIT 100 |
     Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\) or \(\)\) and \(\(\) or \(\)\)}
