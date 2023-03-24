@@ -35,6 +35,6 @@ class MyThread(Thread):
                 logger.info("try to exit from sql thread!")
                 return
             elif self._sql_queue.empty():
-                time.sleep(2) 
+                time.sleep(5)
             else:
-                logger.info("self.current_thd_idx[0]: {0}".format(self.current_thd_idx[0]))
+                logger.debug("self.current_thd_idx[0]: {0}".format(self.current_thd_idx[0]))
