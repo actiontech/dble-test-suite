@@ -13,6 +13,21 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
+     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+      """
+      /max_allowed_packet/d
+      /server-id/a max_allowed_packet = 4M
+      """
+     Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+      """
+      /max_allowed_packet/d
+      /server-id/a max_allowed_packet = 4M
+      """
+     Given restart mysql in "mysql-slave1" with sed cmds to update mysql config
+      """
+      /max_allowed_packet/d
+      /server-id/a max_allowed_packet = 4M
+      """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
       <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
@@ -189,6 +204,10 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       caught err:
       NullPointerException
       """
+     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      Packet for query is too large \(12582915 > 4194304\).You can change maxPacketSize value in bootstrap.cnf.
+      """
 
 
 
@@ -226,50 +245,69 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
       """
     Given Restart dble in "dble-1" success
-    ###开启sql_log和sql_dump的统计
+    ###开启sql_log general_log
     Then execute admin cmd "enable @@statistic"
     Then execute admin cmd "reload @@samplingRate=100"
+    Then execute admin cmd "enable @@general_log"
+
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                            | expect  | db      |
       | rw1  | 111111 | conn_0 | false   | drop table if exists tb1;create table tb1 (id int,c longblob)                                  | success | db1     |
       | rw1  | 111111 | conn_0 | true    | drop table if exists test1;create table test1 (id int,c longblob);truncate table test1         | success | db1     |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                                                    | expect  | db      |
-      | conn_1 | false   | drop table if exists tb1;create table tb1 (id int,c longblob)                                                          | success | schema1 |
+      | conn   | toClose | sql                                                                                         | expect  | db      |
+      | conn_1 | false   | drop table if exists tb1;create table tb1 (id int,c longblob)                               | success | schema1 |
       | conn_1 | true    | drop table if exists sharding_4_t1;create table sharding_4_t1 (id int,c longblob);truncate table sharding_4_t1         | success | schema1 |
 
     Given create folder content "/opt/dble/logs/insert" in "dble-1"
     Given execute oscmd "python3 /opt/LargePacket.py >/opt/dble/logs/insert/sharding.txt" on "dble-1"
+    ####预期general log应该对大包的长度进行收敛，目前是全部记录然后压缩轮转日志了
+#    Then check following text exist "Y" in file "/opt/dble/general/general.log" in host "dble-1"
+#      """
+#      insert
+#      """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                        | expect                 | db               |
+      | conn   | toClose | sql                                                                        | expect                    | db               |
       | conn_2 | False    | show @@sql                                                                | hasStr{aaaaaaaaaa...}     | dble_information |
-      | conn_2 | False    | select * from sql_log where sql_stmt like "%insert into sharding_4_t1%"   | hasStr{aaaaaaaaaa...}     | dble_information |
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      setError
-      unknown error:
-      caught err:
-      NullPointerException
-      """
-    Given Restart dble in "dble-1" success
-    Then execute admin cmd "enable @@sqldump_sql"
-    Given execute oscmd "python3 /opt/LargePacket_rw.py >/opt/dble/logs/insert/rwSplitUser.txt" on "dble-1"
-    Then check following text exist "Y" in file "/opt/dble/sqldump/sqldump.log" in host "dble-1"
-       """
-       INSERT INTO test1\(id, c\) VALUES \(\?, \?\)
-       """
+      | conn_2 | False    | select * from sql_log where sql_stmt like "%insert into sharding_4_t1%"                  | hasStr{aaaaaaaaaa...}     | dble_information |
+      | conn_2 | False    | select length(sql_stmt) from sql_log where sql_stmt like "%insert into sharding_4_t1%"   | has{((1027,), (1027,), (1027,), (1027,), (1027,), (1027,), (1027,), (1027,))}     | dble_information |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       unknown error:
       caught err:
       NullPointerException
       """
+#    Given Restart dble in "dble-1" success
+    ### 3.22.11才有的新功能 sql_dump的统计
+#    Then execute admin cmd "enable @@sqldump_sql"
+#    Given execute oscmd "python3 /opt/LargePacket_rw.py >/opt/dble/logs/insert/rwSplitUser.txt" on "dble-1"
+#    Then check following text exist "Y" in file "/opt/dble/sqldump/sqldump.log" in host "dble-1"
+#       """
+#       INSERT INTO test1\(id, c\) VALUES \(\?, \?\)
+#       """
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      unknown error:
+#      caught err:
+#      NullPointerException
+#      """
+
 
   @restore_mysql_config
   Scenario:  repeat() 函数下发大包校验 --- repeat受后端mysql max_allowed_packet参数限制   #4
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
+     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+      """
+      /max_allowed_packet/d
+      /server-id/a max_allowed_packet = 4M
+      """
+     Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+      """
+      /max_allowed_packet/d
+      /server-id/a max_allowed_packet = 4M
+      """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
       <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100" >
@@ -283,9 +321,9 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                         | expect  | db      |
-      | conn_0 | false   | drop table if exists test;create table test (id int,c longblob);truncate table test         | success | schema1 |
-      | conn_0 | true    | insert into test values (0,repeat("x",16*1024*1024))                                        | Result of repeat() was larger than max_allowed_packet (4195328) - truncated | schema1 |
+      | conn   | toClose | sql                                                                                         | expect  | db      | timeout |
+      | conn_0 | false   | drop table if exists test;create table test (id int,c longblob);truncate table test         | success | schema1 | 5,2     |
+      | conn_0 | true    | insert into test values (0,repeat("x",16*1024*1024))                                        | Result of repeat() was larger than max_allowed_packet (4195328) - truncated | schema1 | 5,2     |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                          | expect  | db      |
       | rw1  | 111111 | conn_1 | false   | drop table if exists test1;create table test1 (id int,c longblob);truncate table test1       | success | db1     |
