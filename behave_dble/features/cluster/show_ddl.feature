@@ -29,11 +29,11 @@ Feature: show the ddl statement being executed in different scenario
       | conn_1 | False   | drop table if exists test | success | schema1 |
     Given update file content "./assets/BtraceDelayAfterDdl.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /delayAfterDdlExecuted/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceDelayAfterDdl.java" in "dble-1"
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Given prepare a thread execute sql "drop table if exists test" with "conn_1"
     Then check btrace "BtraceDelayAfterDdl.java" output in "dble-1"
     """
@@ -84,11 +84,11 @@ Feature: show the ddl statement being executed in different scenario
       | conn_2 | False   | drop table if exists test | success | schema2 |
     Given update file content "./assets/BtraceDelayAfterDdl.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /delayAfterDdlExecuted/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceDelayAfterDdl.java" in "dble-1"
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Given prepare a thread execute sql "create table test(id int)" with "conn_1"
     Given prepare a thread execute sql "create table test(id int)" with "conn_2"
     Then check btrace "BtraceDelayAfterDdl.java" output in "dble-1" with "2" times
@@ -136,11 +136,11 @@ Feature: show the ddl statement being executed in different scenario
       | conn_2 | False   | drop table if exists test2 | success | schema1 |
     Given update file content "./assets/BtraceDelayAfterDdl.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /delayAfterDdlExecuted/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceDelayAfterDdl.java" in "dble-1"
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Given prepare a thread execute sql "drop table if exists test1" with "conn_1"
     Given prepare a thread execute sql "drop table if exists test2" with "conn_2"
     Then check btrace "BtraceDelayAfterDdl.java" output in "dble-1" with "2" times

@@ -51,11 +51,11 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
       | conn_0 | false   | drop table if exists test | success | schema1 |
     Given update file content "./assets/BtraceDelayAfterDdl.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /delayAfterDdlExecuted/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceDelayAfterDdl.java" in "dble-1"
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Given prepare a thread execute sql "drop table if exists test" with "conn_0"
     Then check btrace "BtraceDelayAfterDdl.java" output in "dble-1"
     """
