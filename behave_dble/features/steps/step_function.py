@@ -287,7 +287,13 @@ def retry_exec_command(context, ssh_client, exe_cmd, check_str, filename, retry_
     for i in range(execute_times):
         try:
             rc, stdout, stderr = ssh_client.exec_command(exe_cmd)
-            assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1},but not".format(check_str, filename))
+            ###排除dble.log是可以有地方找到dble.log和dble.log打印会占屏
+            if "dble.log" in str(filename):
+                assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1},but not".format(check_str, filename))
+            else:
+                cmd_cat = "cat {}".format(filename)
+                rc1, stdout1, stderr1 = ssh_client.exec_command(cmd_cat)
+                assert_that(len(stdout) > 0, "expect '{}' exist in file '{}', but not exist \nThen file '{}' string is\n({})".format(check_str, filename, filename, stdout1))
             break
         except Exception as e:
             logger.info(f"check text in file not out yet, execute {i + 1} times")
