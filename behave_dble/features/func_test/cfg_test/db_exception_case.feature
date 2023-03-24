@@ -42,7 +42,7 @@ Feature: db basic config test
       """
     Then execute admin cmd "reload @@config_all" get the following output
       """
-      Reload config failure.The reason is db json to map occurred  parse errors,
+      Reload Failure, The reason is db json to map occurred  parse errors,
       """
     Then restart dble in "dble-1" failed for
       """
