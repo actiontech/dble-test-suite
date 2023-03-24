@@ -18,6 +18,6 @@ package com.actiontech.dble.btrace.script;
       public static void delayAfterDdlExecuted(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
           BTraceUtils.print("get into delayAfterDdlExecuted ");
           BTraceUtils.print(" for order __________________________ ");
-          Thread.sleep(60000L);
+          Thread.sleep(1L);
       }
     }
