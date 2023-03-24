@@ -39,6 +39,7 @@ Feature: mixed type tables sql cover test
         | sqls_mixed/syntax/sysfunction1.sql                     |
         | sqls_mixed/syntax/sysfunction2.sql                     |
         | sqls_mixed/syntax/sysfunction3.sql                     |
+        | sqls_mixed/syntax/json_function.sql                    |
         | sqls_mixed/bugs/bug.sql                                |
 
   @current
