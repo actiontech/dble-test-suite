@@ -78,8 +78,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     # test default intervalTime & given normal observeTime (default unit for observeTime & intervalTime is seconds)
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = 10;    | success  | dble_information |
     # more 10s，equal [observeTime + a intervalTime cycle]，checking queueMonitor <3.22.11
-    # more 5s，equal [observeTime + a intervalTime cycle]，checking queueMonitor 3.22.11 due to jira DBLE0REQ-2042
-    Given sleep "10" seconds
+    Given sleep "12" seconds
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect                                                                                       | db               |timeout|
       | conn_0 | False    | show @@statistic;                   | has{(('statistic', 'ON'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '20'), ('queueMonitor', '-'),)}  | dble_information   |5,1|
