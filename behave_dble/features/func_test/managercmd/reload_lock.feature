@@ -43,7 +43,7 @@ Feature: when reload hang,emergency means to deal with it
        | conn   | toClose   | sql                        | db               | expect   |
        | conn_1 | False     | release @@reload_metadata  | dble_information | success  |
 
-     ## failed for: (5999, 'Reload Failure, The reason is reload interruputed by others,metadata should be reload')
+     ## failed for: (5999, 'Reload Failure.The reason is reload interruputed by others,metadata should be reload')
      Then check sql thread output in "err" by retry "15" times
         """
         Reload Failure

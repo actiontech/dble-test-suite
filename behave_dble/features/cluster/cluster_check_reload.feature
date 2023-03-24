@@ -506,7 +506,7 @@ Feature: test "reload @@config" in zk cluster
       maxCon=\"108\"
       """
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
-    #  Reload Failure, The reason is com.actiontech.dble.config.util.ConfigException: org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 70; cvc-datatype-valid.1.2.1: '1.2' is not a valid value for 'integer'.
+    #  Reload Failure.he reason is com.actiontech.dble.config.util.ConfigException: org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 70; cvc-datatype-valid.1.2.1: '1.2' is not a valid value for 'integer'.
       """
       '1.2' is not a valid value for 'integer'
       """
@@ -610,7 +610,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Given sleep "10" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
-    # Reload Failure, The reason is SelfCheck### User[name:test]'s schema [schema4444] is not exist!
+    # Reload Failure.The reason is SelfCheck### User[name:test]'s schema [schema4444] is not exist!
       """
       Reload Failure
       """
@@ -917,7 +917,7 @@ Feature: test "reload @@config" in zk cluster
         | conn    | toClose   | sql                        | db               | expect   |
         | conn_12 | False     | release @@reload_metadata  | dble_information | success  |
 
-     ## failed for: (5999, 'Reload Failure, The reason is reload interruputed by others,metadata should be reload')
+     ## failed for: (5999, 'Reload Failure.The reason is reload interruputed by others,metadata should be reload')
       Then check sql thread output in "err" by retry "20" times
         """
         Reload Failure
@@ -1048,10 +1048,10 @@ Feature: test "reload @@config" in zk cluster
       Then execute sql in "dble-2" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect   |
         | conn_2B | False     | release @@reload_metadata  | dble_information | success  |
-#####(5999, 'Reload Failure, The reason is partial instance reload failed, failed because of:[2:interrupt by command.should reload config again;]')
+#####(5999, 'Reload Failure.The reason is partial instance reload failed, failed because of:[2:interrupt by command.should reload config again;]')
       Then check sql thread output in "err" by retry "20" times
         """
-        The reason is partial instance reload failed
+        Reload config failed partially.
         """
 
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "1b"

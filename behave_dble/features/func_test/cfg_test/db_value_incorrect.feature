@@ -326,7 +326,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload Failure, The reason is dbGroup[ha_group3]'s child database type must be consistent
+    Reload Failure.The reason is dbGroup[ha_group3]'s child database type must be consistent
     """
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -339,7 +339,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload Failure, The reason is dbGroup[ha_group3]'s child database type must be consistent
+    Reload Failure.The reason is dbGroup[ha_group3]'s child database type must be consistent
     """
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -352,7 +352,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload Failure, The reason is The group[ana1.ha_group3] all dbInstance database type must be CLICKHOUSE
+    Reload Failure.The reason is The group[ana1.ha_group3] all dbInstance database type must be CLICKHOUSE
     """
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
