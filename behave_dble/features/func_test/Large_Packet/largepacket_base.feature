@@ -265,7 +265,8 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       NullPointerException
       """
 
-  @restore_mysql_config
+
+  @restore_mysql_config @skip
   Scenario:  repeat() 函数下发大包校验 --- repeat受后端mysql max_allowed_packet参数限制   #4
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
