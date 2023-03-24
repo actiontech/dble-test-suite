@@ -194,7 +194,7 @@ Feature: test fakeMySQLVersion support mysql8.0
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                 | expect                                                                                                                                                              |
-      | conn_2 | True    | reload @@config_all | Reload Failure, The reason is the dble version[=8.0.15] cannot be higher than the minimum version of the backend mysql node,pls check the backend mysql node. |
+      | conn_2 | True    | reload @@config_all | Reload Failure.The reason is the dble version[=8.0.15] cannot be higher than the minimum version of the backend mysql node,pls check the backend mysql node. |
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """

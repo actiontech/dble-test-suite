@@ -28,7 +28,7 @@ Feature: db.xml support fake host
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure, The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group1.hostM1]},{dbInstance[ha_group2.hostM2]}
+    Reload Failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group1.hostM1]},{dbInstance[ha_group2.hostM2]}
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -378,7 +378,7 @@ Feature: db.xml support fake host
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure, The reason is db json to map occurred  parse errors, The detailed results are as follows . java.lang.NumberFormatException: For input string: "0:0:0:0:0:0:1:9066"
+    Reload Failure.The reason is db json to map occurred  parse errors, The detailed results are as follows . java.lang.NumberFormatException: For input string: "0:0:0:0:0:0:1:9066"
     """
     Then restart dble in "dble-1" failed for
     """
@@ -396,7 +396,7 @@ Feature: db.xml support fake host
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "reload @@config_all -r" get the following output
     """
-    Reload Failure, The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
+    Reload Failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -410,7 +410,7 @@ Feature: db.xml support fake host
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "reload @@config_all -r" get the following output
     """
-    Reload Failure, The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
+    Reload Failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
