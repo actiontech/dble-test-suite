@@ -173,7 +173,7 @@ Feature:  backend_connections test
       | conn_0 | True    | insert into backend_connections values (1,'1',1,1,1)                      | Access denied for table 'backend_connections'     |
 
 
-  @btrace @auto_retry
+  @btrace
   Scenario: check backend connection status #2
 
     # state = HEARTBEAT CHECK
@@ -192,7 +192,7 @@ Feature:  backend_connections test
     Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
     Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
         """
-        s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
+        s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
         /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(6000L)/;/\}/!ba}
         """
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
@@ -255,7 +255,7 @@ Feature:  backend_connections test
       | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'      | has{((20,),)}  | dble_information  | 5       |
     Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
         """
-        s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
+        s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
         /compareAndSet/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
         """
     # 连接状态改变时都会调用此方法，-2表示连接状态变为回收的

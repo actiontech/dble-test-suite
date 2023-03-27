@@ -127,6 +127,7 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/tmp/jstack.log" on "dble-1"
     Given delete file "/opt/dble/logs/dble_zk_online.log" on "dble-1"
 
+
   Scenario: check cluster @@detach, cluster @@attach command #2
     Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
@@ -290,6 +291,7 @@ Feature: check single dble detach or attach from cluster
       | conn_0 | False     | drop table if exists sharding_4_t1                       | success | schema1 |
       | conn_0 | True      | drop table if exists sharding_4_t2                       | success | schema1 |
 
+  @btrace
   Scenario: check cluster @@detach and timeout less than default value when other sql is being executed #3
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -320,12 +322,12 @@ Feature: check single dble detach or attach from cluster
       | conn_2  | false     | cluster @@attach | success |
     Given update file content "./assets/BtraceClusterDetachAttach1.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
@@ -360,6 +362,7 @@ Feature: check single dble detach or attach from cluster
       | conn   | toClose   | sql              | expect                                 |
       | conn_1 | True      | cluster @@attach | illegal state: cluster is not detached |
 
+  @btrace
   Scenario: check cluster @@detach and timeout use default value 10s when other sql is being executed #4
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -394,13 +397,13 @@ Feature: check single dble detach or attach from cluster
       | conn_3  | false     | create table sharding_4_t1(pid int,id int) | success | schema1 |
     Given update file content "./assets/BtraceClusterDetachAttach1.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
     """
     # sleep time > detach timeout default value 10s
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(18000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
@@ -440,6 +443,7 @@ Feature: check single dble detach or attach from cluster
       | conn   | toClose   | sql              | expect                                 |
       | conn_1 | True      | cluster @@attach | illegal state: cluster is not detached |
 
+  @btrace
   Scenario: check cluster @@detach and timeout greater than default value when other sql is being executed #5
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -502,12 +506,12 @@ Feature: check single dble detach or attach from cluster
       | conn_3  | false     | create table sharding_4_t1(pid int,id int) | success | schema1 |
     Given update file content "./assets/BtraceClusterDetachAttach1.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
     """
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
@@ -540,6 +544,7 @@ Feature: check single dble detach or attach from cluster
       | conn    | toClose   | sql                                | expect      | db      |
       | conn_3  | true      | drop table if exists sharding_4_t1 | success     | schema1 |
 
+  @btrace
   Scenario: check cluster @@attach and timeout less than default value when other sql is being executed #6
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -569,12 +574,12 @@ Feature: check single dble detach or attach from cluster
       | conn_2  | false     | show @@version   | success |
     Given update file content "./assets/BtraceClusterDetachAttach1.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
@@ -611,6 +616,7 @@ Feature: check single dble detach or attach from cluster
       | conn   | toClose   | sql              | expect  |
       | conn_1 | true      | cluster @@attach | success |
 
+  @btrace
   Scenario: check cluster @@attach and timeout use default value 10s when other sql is being executed #7
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -640,13 +646,13 @@ Feature: check single dble detach or attach from cluster
       | conn_2  | false     | show @@version   | success |
     Given update file content "./assets/BtraceClusterDetachAttach1.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
     """
     # sleep time > detach timeout default value 10s
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(18000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
@@ -684,6 +690,7 @@ Feature: check single dble detach or attach from cluster
       | conn   | toClose   | sql              | expect  |
       | conn_1 | true      | cluster @@attach | success |
 
+  @btrace
   Scenario: check cluster @@attach and timeout greater than default value when other sql is being executed #8
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java.log" on "dble-1"
@@ -695,12 +702,12 @@ Feature: check single dble detach or attach from cluster
       | conn_2  | false     | show @@version   | success |
     Given update file content "./assets/BtraceClusterDetachAttach1.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
     """
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /afterDelayServiceMarkDoing/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
@@ -734,6 +741,7 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
 
+  @btrace
   Scenario: check cluster @@detach, cluster @@attach when other sql will be executed #9
     Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
@@ -777,7 +785,7 @@ Feature: check single dble detach or attach from cluster
 
     Given update file content "./assets/BtraceClusterDetachAttach2.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /waitOtherSessionBlocked/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
 
@@ -910,7 +918,7 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/opt/dble/BtraceClusterDetachAttach2.java" on "dble-1"
 
 
-    @btrace
+  @btrace
   Scenario: dble-1 is executing cluster sql, dble-2 is executing detach sql, dble-1 execute success #10
     Given delete file "/opt/dble/BtraceClusterDetachAttach5.java" on "dble-2"
     Given delete file "/opt/dble/BtraceClusterDetachAttach5.java.log" on "dble-2"
@@ -923,7 +931,7 @@ Feature: check single dble detach or attach from cluster
 
     Given update file content "./assets/BtraceClusterDetachAttach5.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /zkOnEvent/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(6000L)/;/\}/!ba}
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -994,7 +1002,7 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/opt/dble/BtraceClusterDetachAttach6.java.log" on "dble-2"
     Given update file content "./assets/BtraceClusterDetachAttach6.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /zkDetachCluster/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
 

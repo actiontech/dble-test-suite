@@ -18,7 +18,7 @@ public final class BtraceAboutNPE {
 		BTraceUtils.println("---------------");
 		BTraceUtils.Threads.jstack();
 		BTraceUtils.println(BTraceUtils.Time.timestamp("yyyy-MM-dd HH:mm:ss"));
-		Thread.sleep(30000L);
+		Thread.sleep(1L);
 		BTraceUtils.println("sleep end ");
 		BTraceUtils.println("---------------");
 	}

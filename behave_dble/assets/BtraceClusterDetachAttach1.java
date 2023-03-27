@@ -21,7 +21,7 @@ public final class BtraceClusterDetachAttach1 {
     public static void handle(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println(" get into cluster detach or attach handle ");
         BTraceUtils.println("---------------");
-        Thread.sleep(5000L);
+        Thread.sleep(1L);
         BTraceUtils.println(" sleep end ");
         BTraceUtils.println("---------------");
     }

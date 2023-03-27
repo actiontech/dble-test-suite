@@ -21,7 +21,7 @@ public final class BtraceClusterDetachAttach6 {
     public static void zkDetachCluster(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into zkDetachCluster ");
         BTraceUtils.println("---------------");
-        Thread.sleep(15000L);
+        Thread.sleep(1L);
         BTraceUtils.println(" sleep end ");
         BTraceUtils.println("---------------");
     }
