@@ -309,7 +309,6 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
 
 
-  @auto_retry
   Scenario: test "frontWorker"  #4
   # on bootstrap.cnf the default value : -DfrontWorker=1
   # check dble.log has one frontWorker0
@@ -578,6 +577,8 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       NullPointerException
       """
 
+
+
   Scenario: test "backendWorker" and usePerformanceMode=0 #7
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -803,7 +804,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 
-  @btrace @auto_retry
+  @btrace
   Scenario: use btrace check  #9
   # on bootstrap.cnf the default value : -DNIOFrontRW=1
     Then execute sql in "dble-1" in "admin" mode

@@ -54,7 +54,7 @@ Feature: test ddl closed abnormally
 
     Given update file content "./assets/BtraceAddMetaLock.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /sleepWhenAddMetaLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceAddMetaLock.java" in "dble-1"

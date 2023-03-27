@@ -17,7 +17,7 @@ public final class BtraceAboutsqlStatistic {
     public static void updateTableMaxSize(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("reload tablesize");
         BTraceUtils.println("---------------");
-        Thread.sleep(30000L);
+        Thread.sleep(1L);
         BTraceUtils.println("sleep end ");
         BTraceUtils.println("---------------");
     }
@@ -29,7 +29,7 @@ public final class BtraceAboutsqlStatistic {
     public static void getStatisticQueueSize(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into sleep");
         BTraceUtils.println("---------------");
-        Thread.sleep(30000L);
+        Thread.sleep(1L);
         BTraceUtils.println("sleep end ");
         BTraceUtils.println("---------------");
     }
@@ -42,7 +42,7 @@ public final class BtraceAboutsqlStatistic {
     public static void onOffStatistic(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into sleep");
         BTraceUtils.println("---------------");
-        Thread.sleep(30000L);
+        Thread.sleep(1L);
         BTraceUtils.println("sleep end ");
         BTraceUtils.println("---------------");
     }
@@ -55,7 +55,7 @@ public final class BtraceAboutsqlStatistic {
     public static void showStatistic(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into sleep");
         BTraceUtils.println("---------------");
-        Thread.sleep(30000L);
+        Thread.sleep(1L);
         BTraceUtils.println("sleep end ");
         BTraceUtils.println("---------------");
     }

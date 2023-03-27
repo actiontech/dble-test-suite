@@ -4,6 +4,7 @@
 
 Feature: case about load data batch
 
+
   Scenario: Manger CMD enable/disable @@load_data_batch    #1
     #CASE TEST "disable @@load_data_batch"
     Then execute admin cmd "disable @@load_data_batch"
@@ -49,7 +50,6 @@ Feature: case about load data batch
       """
       enableBatchLoadData=0
       """
-
 
 
   Scenario: Manger CMD reload @@load_data.num        #2
@@ -118,7 +118,6 @@ Feature: case about load data batch
         | variable_name-0         | variable_value-1 |
         | maxRowSizeToFile        | 60000            |
         | enableBatchLoadData     | 0                |
-
 
 
   @btrace
@@ -282,7 +281,6 @@ Feature: case about load data batch
       | new_1  | False   | drop table if exists schema1.sharding_2_t1         | schema1 |
       | new_1  | False   | drop table if exists schema1.test                  | schema1 |
       | new_1  | true    | drop table if exists schema1.test1                 | schema1 |
-
 
 
   Scenario: test something wrong with file , the logic of load data batch          #4
@@ -456,7 +454,6 @@ Feature: case about load data batch
       | new_1  | true    | drop table if exists schema1.test1                 | schema1 |
 
 
-
   Scenario: test during execute load data, backend mysql disconnected, the logic of load data batch       #5
     Given execute admin cmd "kill @@load_data" success
     Given execute admin cmd "enable @@load_data_batch" success
@@ -471,9 +468,9 @@ Feature: case about load data batch
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                                                               | db      |
       | conn_1 | true    | load data infile '/opt/dble/data1.txt' into table schema1.test fields terminated by ',' lines terminated by '\n' | schema1 |
-    Given sleep "8" seconds
+#    Given sleep "8" seconds
     Given restart mysql in "mysql-master1"
-    Given sleep "15" seconds
+#    Given sleep "15" seconds
     Then check path "/opt/dble/temp/file" in "dble-1" should exist
     Then check path "/opt/dble/temp/error" in "dble-1" should not exist
     Then execute sql in "mysql-master2" in "mysql" mode
@@ -496,9 +493,10 @@ Feature: case about load data batch
     ls -l /opt/dble/temp/file|grep 'dn3.txt'|wc -l
     """
     Then Check "D" is calculated by "C" according to a certain relationship with "global_table"
+    #### 加上timeout是为了确保停掉的mysql的心跳恢复了正常
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                                              | expect | db      |
-      | conn_2 | true    | load data infile '/opt/dble/data1.txt' into table schema1.test fields terminated by ',' lines terminated by '\n' | success| schema1 |
+      | conn   | toClose | sql                                                                                                              | expect | db      | timeout |
+      | conn_2 | true    | load data infile '/opt/dble/data1.txt' into table schema1.test fields terminated by ',' lines terminated by '\n' | success| schema1 | 6,2     |
     Then execute sql in "mysql-master1" in "mysql" mode
       | conn   | toClose | sql                       | expect           | db  |
       | conn_2 | false   | select count(*) from test | has{((1000000,),)} | db1 |
@@ -516,10 +514,10 @@ Feature: case about load data batch
       | conn_0 | true    | create table schema1.sharding_2_t1(id int,c int,d varchar(10),e varchar(10)) | success | schema1 |
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                                                                        | db      |
-      | conn_1 | true    | load data infile '/opt/dble/data1.txt' into table schema1.sharding_2_t1 fields terminated by ',' lines terminated by '\n' | schema1 |
-    Given sleep "4" seconds
+      | conn_1 | true    | load data infile '/opt/dble/data1.txt' into table schema1.sharding_2_t1 fields terminated by ',' lines terminated by '\n'  | schema1 |
+#    Given sleep "4" seconds
     Given restart mysql in "mysql-master1"
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Then check path "/opt/dble/temp/file" in "dble-1" should exist
     Then check path "/opt/dble/temp/error" in "dble-1" should not exist
     Then execute sql in "mysql-master2" in "mysql" mode
@@ -534,8 +532,8 @@ Feature: case about load data batch
     """
     Then Check "F" is calculated by "E" according to a certain relationship with "sharding_table"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                                                        | expect | db      |
-      | conn_2 | true    | load data infile '/opt/dble/data1.txt' into table schema1.sharding_2_t1 fields terminated by ',' lines terminated by '\n'  | success| schema1 |
+      | conn   | toClose | sql                                                                                                                        | expect | db      | timeout |
+      | conn_2 | true    | load data infile '/opt/dble/data1.txt' into table schema1.sharding_2_t1 fields terminated by ',' lines terminated by '\n'  | success| schema1 | 6,2     |
     Then execute sql in "mysql-master1" in "mysql" mode
       | conn   | toClose | sql                                | expect           | db  |
       | conn_1 | true    | select count(*) from sharding_2_t1 | has{((500000,),)} | db1 |
@@ -553,9 +551,9 @@ Feature: case about load data batch
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                                                                | db      |
       | conn_1 | true    | load data infile '/opt/dble/data1.txt' into table schema1.test1 fields terminated by ',' lines terminated by '\n'  | schema1 |
-    Given sleep "5" seconds
+#    Given sleep "5" seconds
     Given restart mysql in "mysql-master1"
-    Given sleep "10" seconds
+#    Given sleep "10" seconds
     Then check path "/opt/dble/temp/file" in "dble-1" should exist
     Then check path "/opt/dble/temp/error" in "dble-1" should not exist
     Given execute single sql in "mysql-master1" in "mysql" mode and save resultset in "G"
@@ -567,8 +565,8 @@ Feature: case about load data batch
     """
     Then Check "H" is calculated by "G" according to a certain relationship with "single_table"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                                                | expect | db      |
-      | conn_2 | true    | load data infile '/opt/dble/data1.txt' into table schema1.test1 fields terminated by ',' lines terminated by '\n'  | success| schema1 |
+      | conn   | toClose | sql                                                                                                                | expect | db      | timeout |
+      | conn_2 | true    | load data infile '/opt/dble/data1.txt' into table schema1.test1 fields terminated by ',' lines terminated by '\n'  | success| schema1 | 6,2     |
     Given execute sql in "mysql-master1" in "mysql" mode
       | conn   | toClose | sql                        | expect                | db  |
       | conn_1 | true    | select count(*) from test1 | has{((1000000,),)}      | db3 |
@@ -577,6 +575,7 @@ Feature: case about load data batch
       | conn_2 | true    | select count(*) from test1 | has{((1000000,),)} | schema1 |
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
     Given remove local and server file "data1.txt"
+
 
   Scenario: test with kill @@load_data                    #6
     Given execute oscmd in "dble-1"

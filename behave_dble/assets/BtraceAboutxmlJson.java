@@ -30,7 +30,7 @@ public final class BtraceAboutxmlJson {
         BTraceUtils.println("time["+startTime+"], start ... " );
         BTraceUtils.println("befroe updateDbGroupConf ...");
         BTraceUtils.println();
-        Thread.sleep(120000L);
+        Thread.sleep(10L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time["+endTime+"], end ... " );
         BTraceUtils.println();
