@@ -4,9 +4,21 @@
 
 # 2.19.11.0#dble-7860
 Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
-  @btrace
+  @btrace @skip_restart
   Scenario: check 'kill @@ddl_lock where schema=? and table=?' work normal #1
+    #标准流程启动zk，zk online信息丢失不会自动恢复（ucore online信息丢失会自动恢复）
+    Given stop dble cluster and zk service
+    Given replace config files in all dbles with command line config
+    Given config zookeeper cluster in all dble nodes with "local zookeeper host"
     Given reset dble registered nodes in zk
+    Then start dble in order
+    #检测zk中3节点都在线
+    Then Monitored folling nodes online
+    """
+    dble-1
+    dble-2
+    dble-3
+    """
     Given delete the following xml segment
       | file              | parent         | child              |
       | sharding.xml     | {'tag':'root'} | {'tag':'shardingNode'} |
@@ -55,7 +67,6 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
     /delayAfterDdlExecuted/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceDelayAfterDdl.java" in "dble-1"
-#    Given sleep "10" seconds
     Given prepare a thread execute sql "drop table if exists test" with "conn_0"
     Then check btrace "BtraceDelayAfterDdl.java" output in "dble-1"
     """
@@ -80,9 +91,10 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "rs_A"
       | sql                       |
       | show @@backend.statistics |
+    #show @@backend.statistics中的total字段值是指所有后端nio管理的连接（包括心跳）
     Then check resultset "rs_A" has lines with following column values
       | TOTAL-3 |
-      | 5      |
+      | 5       |
     Given stop btrace script "BtraceDelayAfterDdl.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java" on "dble-1"
