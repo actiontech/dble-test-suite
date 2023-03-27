@@ -17,7 +17,7 @@ public final class BtraceAddMetaLock {
     public static void sleepWhenAddMetaLock(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into addMetaLock,start sleep ");
         BTraceUtils.println(" __________________________ ");
-        Thread.sleep(30000L);
+        Thread.sleep(1L);
         BTraceUtils.println("sleep end ");
         BTraceUtils.println(" __________________________ ");
     }
@@ -29,7 +29,7 @@ public final class BtraceAddMetaLock {
     public static void sleepWhenClearIfSession(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into clearIfSessionClosed,start sleep ");
         BTraceUtils.println(" __________________________ ");
-        Thread.sleep(30000L);
+        Thread.sleep(1L);
         BTraceUtils.println("sleep end ");
         BTraceUtils.println(" __________________________ ");
     }

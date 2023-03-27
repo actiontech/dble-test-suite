@@ -19,7 +19,7 @@ public class BtraceAddMetaLockForOnce {
             num.incrementAndGet();
             BTraceUtils.print("get into addMetaLock,start sleep ");
             BTraceUtils.print(" __________________________ ");
-            Thread.sleep(5000L);
+            Thread.sleep(1L);
             BTraceUtils.print("sleep end ");
             BTraceUtils.print(" __________________________ ");
         }

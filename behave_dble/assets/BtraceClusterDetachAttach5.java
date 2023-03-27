@@ -21,7 +21,7 @@ public final class BtraceClusterDetachAttach5 {
     public static void zkOnEvent(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into zkOnEvent ");
         BTraceUtils.println("---------------");
-        Thread.sleep(15000L);
+        Thread.sleep(1L);
         BTraceUtils.println(" sleep end ");
         BTraceUtils.println("---------------");
     }
@@ -36,7 +36,7 @@ public final class BtraceClusterDetachAttach5 {
     public static void ucoreOnEvent(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into ucoreOnEvent ");
         BTraceUtils.println("---------------");
-        Thread.sleep(15000L);
+        Thread.sleep(1L);
         BTraceUtils.println(" sleep end ");
         BTraceUtils.println("---------------");
     }

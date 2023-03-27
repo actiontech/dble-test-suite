@@ -21,7 +21,7 @@ public final class BtraceClusterDetachAttach2 {
     public static void markDoingOrDelay(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into waitOtherSessionBlocked ");
         BTraceUtils.println("---------------");
-        Thread.sleep(10000L);
+        Thread.sleep(1L);
         BTraceUtils.println(" sleep end ");
         BTraceUtils.println("---------------");
     }

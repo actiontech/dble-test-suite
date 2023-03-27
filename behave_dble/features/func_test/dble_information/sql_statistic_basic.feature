@@ -1298,7 +1298,7 @@ Feature:manager Cmd
     Given delete file "/opt/dble/BtraceAboutsqlStatistic.java.log" on "dble-1"
     Given update file content "./assets/BtraceAboutsqlStatistic.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /updateTableMaxSize/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceAboutsqlStatistic.java" in "dble-1"
