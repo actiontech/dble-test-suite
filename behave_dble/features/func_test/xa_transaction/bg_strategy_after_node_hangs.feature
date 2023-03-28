@@ -22,12 +22,11 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | schema1 |
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     /beforeInnerRetry/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
-#    Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_0"
     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
     """
@@ -68,12 +67,11 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
-#    Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_0"
     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
     """
@@ -123,11 +121,10 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | schema1 |
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
-#    Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_0"
     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
     """
@@ -184,11 +181,10 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | schema1 |
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
-#    Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_0"
     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
     """
@@ -232,12 +228,11 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | schema1 |
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /delayBeforeXaPrepare/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
-#    Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_0"
     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
     """
@@ -290,7 +285,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"

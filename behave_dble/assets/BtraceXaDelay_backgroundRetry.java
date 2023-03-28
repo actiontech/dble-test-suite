@@ -19,7 +19,7 @@ public final class BtraceXaDelay_backgroundRetry {
     )
     public static void delayBeforeXaPrepare(String rrnName, String xaId) throws Exception {
         BTraceUtils.println("before xa prepare " + xaId + " in " + rrnName);
-        Thread.sleep(100L);
+        Thread.sleep(1L);
     }
 
     @OnMethod(
@@ -30,7 +30,7 @@ public final class BtraceXaDelay_backgroundRetry {
     public static void delayBeforeXaCommit(String rrnName, String xaId) throws Exception {
         if (isFirst) {
         BTraceUtils.println("before xa commit " + xaId + " in " + rrnName);
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         isFirst=false;
         } else {
         BTraceUtils.println("before xa commit " + xaId + " in " + rrnName);
@@ -43,7 +43,7 @@ public final class BtraceXaDelay_backgroundRetry {
     )
     public static void delayBeforeXaRollback(String rrnName, String xaId) throws Exception {
         BTraceUtils.println("before xa rollback " + xaId + " in " + rrnName);
-        Thread.sleep(100L);
+        Thread.sleep(1L);
     }
 
     @OnMethod(
@@ -52,7 +52,7 @@ public final class BtraceXaDelay_backgroundRetry {
     )
     public static void beforeAddXaToQueue(int count, String xaId) throws Exception {
         BTraceUtils.println("before add xa " + xaId + " to queue in " + count + " time.");
-        Thread.sleep(100L);
+        Thread.sleep(1L);
     }
 
     @OnMethod(
@@ -61,7 +61,7 @@ public final class BtraceXaDelay_backgroundRetry {
     )
     public static void afterAddXaToQueue(int count, String xaId) throws Exception {
         BTraceUtils.println("after add xa " + xaId + " to queue in " + count + " time.");
-        Thread.sleep(100L);
+        Thread.sleep(1L);
     }
 
 }

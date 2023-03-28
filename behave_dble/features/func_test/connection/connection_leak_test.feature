@@ -6,6 +6,7 @@
 Feature: connection leak test
 
   # issue：https://github.com/actiontech/dble/issues/1261
+
   @btrace
   Scenario: modify table's configuration that has been created, reload @@config_all not hang when backend mysql disconnected             #1
 
@@ -37,7 +38,6 @@ Feature: connection leak test
        | dn3    | 2         | 172.100.9.5    | 3306     |   db2             |  test   | 111111     |
        | dn4    | 3         | 172.100.9.6    | 3306     |   db2             |  test   | 111111     |
     Given prepare a thread run btrace script "BtraceLineDelay.java" in "dble-1"
-    Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose   | sql                        | db               |
        | conn_1 | False     | reload @@config_all        | dble_information |
@@ -64,13 +64,13 @@ Feature: connection leak test
     Given delete file "/opt/dble/BtraceLineDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceLineDelay.java.log" on "dble-1"
 
-  @auto_retry
+  @btrace
   Scenario: two case explained below (06 regression added)                            #2
     Given delete the following xml segment
       | file             | parent         | child                   |
       | sharding.xml     | {'tag':'root'} | {'tag':'schema'}        |
-      | sharding.xml     |{'tag':'root'}  | {'tag':'shardingNode'}  |
-      | db.xml           |{'tag':'root'}  | {'tag':'dbGroup'}       |
+      | sharding.xml     | {'tag':'root'} | {'tag':'shardingNode'}  |
+      | db.xml           | {'tag':'root'} | {'tag':'dbGroup'}       |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
       <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
@@ -109,18 +109,16 @@ Feature: connection leak test
        /synAndDoExecute/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelayquery.java" in "dble-1"
-    Given sleep "5" seconds
     Given prepare a thread execute sql "insert into table_c set id =5,name ="xx"" with "conn_0"
-    Given sleep "2" seconds
-    Then check following text exist "Y" in file "/opt/dble/BtraceClusterDelayquery.java.log" in host "dble-1"
-      """
-      get into query
-      """
+    Then check btrace "BtraceClusterDelayquery.java" output in "dble-1"
+       """
+       get into query
+       """
     Given restart mysql in "mysql-master1"
     Given sleep "5" seconds
     Then check sql thread output in "err"
       """
-        1105, "java.io.IOException: the dbInstance[172.100.9.5:3306] can't reach. Please check the dbInstance is accessible"
+      1105, "java.io.IOException: the dbInstance[172.100.9.5:3306] can't reach. Please check the dbInstance is accessible"
       """
     Given stop btrace script "BtraceClusterDelayquery.java" in "dble-1"
     Given destroy btrace threads list
@@ -128,7 +126,12 @@ Feature: connection leak test
     Given delete file "/opt/dble/BtraceClusterDelayquery.java.log" on "dble-1"
 
     #CASE2: transaction nums more than maxCon nums in the same front connection, new front connection can execute sql successfully
-    Given sleep "10" seconds
+
+    #### 确定dble心跳恢复
+    Then execute sql in "dble-1" in "admin" mode
+    | sql                                                                                                               | expect        | db                |timeout  |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose   | sql                                             | db          | expect   |
       | conn_1  | False     | drop table if exists table_b                    | schema1     | success  |

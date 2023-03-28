@@ -14,9 +14,9 @@ public final class BtraceClusterDelayquery {
              clazz = "com.actiontech.dble.services.mysqlsharding.MySQLResponseService",
              method = "synAndDoExecute"
      )
-     public static void query(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+     public static void synAndDoExecute(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
          BTraceUtils.println("get into query");
          BTraceUtils.println(" __________________________ ");
-         Thread.sleep(10000L);
+         Thread.sleep(1L);
     }
 }

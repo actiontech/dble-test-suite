@@ -21,11 +21,10 @@ Feature: check sql execute stage and connection query plan
 # at startProcess stage
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /startProcess/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
-    Given sleep "5" seconds
     Given prepare a thread execute sql "create table sharding_4_t1(id int)" with "conn_0"
     Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
     """
@@ -45,11 +44,10 @@ Feature: check sql execute stage and connection query plan
 # at setBackendResponseTime stage
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /setBackendResponseTime/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
-    Given sleep "5" seconds
     Given prepare a thread execute sql "drop table if exists sharding_4_t1" with "conn_0"
     Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
     """
