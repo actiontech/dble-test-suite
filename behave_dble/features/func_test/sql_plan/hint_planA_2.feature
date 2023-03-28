@@ -3,10 +3,6 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by chenhuiming at 2022/3/8
 Feature: test with hint plan A with other table type
-# DBLE0REQ-1641/DBLE0REQ-1648/DBLE0REQ-1664
-# Affected by the above issue, dble cannot recognize the post-er relationship, so hint does not support the post-er relationship
-# So when there is an er relationship with a post-position, currently it can only be written without an er relationship
-# After the above issue is repaired, you need to pay attention to the sql of such scenarios and modify the case
 
   @delete_mysql_tables
   Scenario: GlobalTable  + Sharding  +  Sharding                              #1
@@ -83,7 +79,7 @@ Feature: test with hint plan A with other table type
       | join_1            | JOIN                  | shuffle_field_1; shuffle_field_4                                                                                                                                                            |
       | order_1           | ORDER                 | join_1                                                                                                                                                                                      |
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                                     |
-      | dn5_0//dn6_0      | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_2's RESULTS; select `b`.`levelname`,`b`.`levelid`,`b`.`salary` from  `Level` `b` where `b`.`levelid` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`levelid` ASC     |
+      | dn5_0//dn6_0      | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `b`.`levelname`,`b`.`levelid`,`b`.`salary` from  `Level` `b` where `b`.`levelid` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`levelid` ASC     |
       | merge_2           | MERGE                 | dn5_0//dn6_0                                                                                                                                                                                |
       | join_2            | JOIN                  | shuffle_field_2; merge_2                                                                                                                                                                    |
       | order_2           | ORDER                 | join_2                                                                                                                                                                                      |
@@ -108,8 +104,8 @@ Feature: test with hint plan A with other table type
       | join_1            | JOIN                  | shuffle_field_1; merge_2                                                                                                                                                                |
       | order_1           | ORDER                 | join_1                                                                                                                                                                                  |
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                                 |
-      | dn1_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_2's RESULTS; select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b` where `b`.`deptname` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`deptname` ASC |
-      | dn2_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_2's RESULTS; select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b` where `b`.`deptname` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`deptname` ASC |
+      | dn1_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b` where `b`.`deptname` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`deptname` ASC |
+      | dn2_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b` where `b`.`deptname` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`deptname` ASC |
       | merge_and_order_1 | MERGE_AND_ORDER       | dn1_0; dn2_0                                                                                                                                                                            |
       | shuffle_field_4   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                                       |
       | join_2            | JOIN                  | shuffle_field_2; shuffle_field_4                                                                                                                                                        |
@@ -227,7 +223,7 @@ Feature: test with hint plan A with other table type
       | join_1            | JOIN                  | shuffle_field_1; shuffle_field_4                                                                                                                                                            |
       | order_1           | ORDER                 | join_1                                                                                                                                                                                      |
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                                     |
-      | dn4_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_2's RESULTS; select `b`.`levelname`,`b`.`levelid`,`b`.`salary` from  `Level` `b` where `b`.`levelid` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`levelid` ASC     |
+      | dn4_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `b`.`levelname`,`b`.`levelid`,`b`.`salary` from  `Level` `b` where `b`.`levelid` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`levelid` ASC     |
       | merge_2           | MERGE                 | dn4_0                                                                                                                                                                                       |
       | shuffle_field_5   | SHUFFLE_FIELD         | merge_2                                                                                                                                                                                     |
       | join_2            | JOIN                  | shuffle_field_2; shuffle_field_5                                                                                                                                                            |
@@ -254,8 +250,8 @@ Feature: test with hint plan A with other table type
       | join_1            | JOIN                  | shuffle_field_1; shuffle_field_4                                                                                                                                                        |
       | order_1           | ORDER                 | join_1                                                                                                                                                                                  |
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                                 |
-      | dn1_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_2's RESULTS; select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b` where `b`.`deptname` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`deptname` ASC |
-      | dn2_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_2's RESULTS; select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b` where `b`.`deptname` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`deptname` ASC |
+      | dn1_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b` where `b`.`deptname` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`deptname` ASC |
+      | dn2_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `b`.`deptname`,`b`.`deptid`,`b`.`manager` from  `Dept` `b` where `b`.`deptname` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`deptname` ASC |
       | merge_and_order_1 | MERGE_AND_ORDER       | dn1_0; dn2_0                                                                                                                                                                            |
       | shuffle_field_5   | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                                                                       |
       | join_2            | JOIN                  | shuffle_field_2; shuffle_field_5                                                                                                                                                        |
@@ -313,7 +309,7 @@ Feature: test with hint plan A with other table type
       | join_1            | JOIN                  | shuffle_field_1; shuffle_field_4                                                                                                                                                            |
       | order_1           | ORDER                 | join_1                                                                                                                                                                                      |
       | shuffle_field_2   | SHUFFLE_FIELD         | order_1                                                                                                                                                                                     |
-      | dn4_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_2's RESULTS; select `b`.`levelname`,`b`.`levelid`,`b`.`salary` from  `Level` `b` where `b`.`levelid` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`levelid` ASC     |
+      | dn4_0             | BASE SQL(May No Need) | HINT_NEST_LOOP - shuffle_field_1's RESULTS; select `b`.`levelname`,`b`.`levelid`,`b`.`salary` from  `Level` `b` where `b`.`levelid` in ('{NEED_TO_REPLACE}') ORDER BY `b`.`levelid` ASC     |
       | merge_2           | MERGE                 | dn4_0                                                                                                                                                                                       |
       | shuffle_field_5   | SHUFFLE_FIELD         | merge_2                                                                                                                                                                                     |
       | join_2            | JOIN                  | shuffle_field_2; shuffle_field_5                                                                                                                                                            |
