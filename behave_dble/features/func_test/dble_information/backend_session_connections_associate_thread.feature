@@ -41,7 +41,7 @@ Feature:test backend_connections_associate_thread   session_connections_associat
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                      | expect              | db               |
-      | conn_0 | True    | select * from dble_variables where variable_name="enableConnectionAssociateThread"      | has{(('enableConnectionAssociateThread', '1', 'Whether to open frontend connection and backend connection are associated with threads. The default value is 1.', 'true'),)}      | dble_information |
+      | conn_0 | True    | select * from dble_variables where variable_name="enableConnectionAssociateThread"      | has{(('enableConnectionAssociateThread', 'true', 'Whether to open frontend connection and backend connection are associated with threads. The default value is 1.', 'true'),)}      | dble_information |
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
      """
@@ -50,7 +50,7 @@ Feature:test backend_connections_associate_thread   session_connections_associat
     Then Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                  | expect               | db               |
-      | conn_0 | True    | select variable_value from dble_variables where variable_name="enableConnectionAssociateThread"      | has{(('0',),)}       | dble_information |
+      | conn_0 | True    | select variable_value from dble_variables where variable_name="enableConnectionAssociateThread"      | has{(('false',),)}   | dble_information |
 
 ##111
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds

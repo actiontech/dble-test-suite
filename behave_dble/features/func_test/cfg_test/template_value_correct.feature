@@ -155,7 +155,7 @@ Feature: config all dble config files correct and restart dble
       | joinQueueSize               | 1024                            |
       | mergeQueueSize              | 1024                            |
       | orderByQueueSize            | 1024                            |
-      | enableSlowLog               | 0                               |
+      | enableSlowLog               | false                           |
       | slowLogBaseDir              | ./slowlogs/                     |
       | slowLogBaseName             | slow-query                      |
       | flushSlowLogPeriod          | 1s                              |
