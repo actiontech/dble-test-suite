@@ -99,8 +99,8 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ backSocketNoDelay \] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       Property \[ backSocketSoRcvbuf \] '-4194304' in bootstrap.cnf is illegal, you may need use the default value 4194304 replaced
       Property \[ backSocketSoSndbuf \] '-1048576' in bootstrap.cnf is illegal, you may need use the default value 1048576 replaced
-      property \[ backendProcessorExecutor \] has been replaced by the property \[ backendWorker \].  Property \[ backendWorker \] '-4' in bootstrap.cnf is illegal, you may need use the default value 80 replaced
-      property \[ backendProcessors \] has been replaced by the property \[ NIOBackendRW \].  Property \[ NIOBackendRW \] '-3' in bootstrap.cnf is illegal, you may need use the default value 80 replaced
+      property \[ backendProcessorExecutor \] has been replaced by the property \[ backendWorker \].  Property \[ backendWorker \] '-4' in bootstrap.cnf is illegal, you may need use the default value.*replaced
+      property \[ backendProcessors \] has been replaced by the property \[ NIOBackendRW \].  Property \[ NIOBackendRW \] '-3' in bootstrap.cnf is illegal, you may need use the default value.*replaced
       Property \[ bufferPoolChunkSize \] '-32767' in bootstrap.cnf is illegal, you may need use the default value 4096 replaced
       Property \[ bufferPoolPageNumber \] '-512' in bootstrap.cnf is illegal, you may need use the default value 409 replaced
       Property \[ bufferPoolPageSize \] '-2000' in bootstrap.cnf is illegal, you may need use the default value 2097152 replaced
@@ -109,7 +109,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ checkTableConsistency \] '-10100101' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       Property \[ checkTableConsistencyPeriod \] '-1800' in bootstrap.cnf is illegal, you may need use the default value 1800000 replaced
       Property \[ clearBigSQLResultSetMapMs \] '-600000' in bootstrap.cnf is illegal, you may need use the default value 600000 replaced
-      property \[ complexExecutor \] has been replaced by the property \[ complexQueryWorker \].  Property \[ complexQueryWorker \] '-4' in bootstrap.cnf is illegal, you may need use the default value 8 replaced
+      property \[ complexExecutor \] has been replaced by the property \[ complexQueryWorker \].  Property \[ complexQueryWorker \] '-4' in bootstrap.cnf is illegal, you may need use the default value.*replaced
       Property \[ costSamplePercent \] '-2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       property \[ enableFlowControl \] '1' data type should be boolean
       Property \[ enableSlowLog \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
@@ -134,8 +134,8 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ orderMemSize \] '-5' in bootstrap.cnf is illegal, you may need use the default value 4 replaced
       Property \[ otherMemSize \] '-5' in bootstrap.cnf is illegal, you may need use the default value 4 replaced
       Property \[ processorCheckPeriod \] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
-      property \[ processors \] has been replaced by the property \[ NIOFrontRW \].  Property \[ NIOFrontRW \] '-3' in bootstrap.cnf is illegal, you may need use the default value 80 replaced
-      property \[ processorExecutor \] has been replaced by the property \[ frontWorker \].  Property \[ frontWorker \] '-3' in bootstrap.cnf is illegal, you may need use the default value 80 replaced
+      property \[ processors \] has been replaced by the property \[ NIOFrontRW \].  Property \[ NIOFrontRW \] '-3' in bootstrap.cnf is illegal, you may need use the default value.*replaced
+      property \[ processorExecutor \] has been replaced by the property \[ frontWorker \].  Property \[ frontWorker \] '-3' in bootstrap.cnf is illegal, you may need use the default value.*replaced
       Property \[ recordTxn \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       Property \[ sqlExecuteTimeout \] '-20' in bootstrap.cnf is illegal, you may need use the default value 300 replaced
       Property \[ sqlRecordCount \] '-10' in bootstrap.cnf is illegal, you may need use the default value 10 replaced
@@ -149,7 +149,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ useSqlStat \] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       Property \[ useThreadUsageStat \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       Property \[ usingAIO \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
-      property \[ writeToBackendExecutor \] has been replaced by the property \[ writeToBackendWorker \].  Property \[ writeToBackendWorker \] '-4' in bootstrap.cnf is illegal, you may need use the default value 80 replaced
+      property \[ writeToBackendExecutor \] has been replaced by the property \[ writeToBackendWorker \].  Property \[ writeToBackendWorker \] '-4' in bootstrap.cnf is illegal, you may need use the default value.*replaced
       Property \[ xaLogCleanPeriod \] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
       Property \[ xaRetryCount \] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       Property \[ xaSessionCheckPeriod \] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
