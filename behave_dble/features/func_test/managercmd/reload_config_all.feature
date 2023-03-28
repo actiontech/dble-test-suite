@@ -9,10 +9,10 @@ Feature: reload @@config_all base test, not including all cases in testlink
 
   Background: prepare for reload @@config_all -?
     Given delete the following xml segment
-      |file        | parent          | child               |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-      |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
+      | file          | parent           | child                   |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'schema'}        |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'shardingNode'}  |
+      | db.xml        | {'tag':'root'}   | {'tag':'dbGroup'}       |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" shardingNode="dn1">
@@ -28,17 +28,20 @@ Feature: reload @@config_all base test, not including all cases in testlink
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+            <property name="connectionTimeout">2000</property>
         </dbInstance>
     </dbGroup>
     """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     a/-DbackendProcessorExecutor=4
+    a/-DprocessorCheckPeriod=1
     """
     Given Restart dble in "dble-1" success
 
   @CRITICAL
   Scenario: reload @@config_all, eg:no dbInstance change, reload @@config_all does not rebuild backend connection pool #1
+
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_A"
       | sql            |
       | show @@backend |
@@ -47,16 +50,16 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | sql            |
       | show @@backend |
     Then check resultsets "backend_rs_A" and "backend_rs_B" are same in following columns
-      |column               | column_index |
-      |processor            | 0            |
-      |BACKEND_ID           | 1            |
-      |MYSQLID              | 2            |
-      |HOST                 | 3            |
-      |PORT                 | 4            |
-      |LOACL_TCP_PORT       | 5            |
-      |CLOSED               | 9            |
-      |SYS_VARIABLES        | 18           |
-      |USER_VARIABLES       | 19           |
+      | column               | column_index |
+      | processor            | 0            |
+      | BACKEND_ID           | 1            |
+      | MYSQLID              | 2            |
+      | HOST                 | 3            |
+      | PORT                 | 4            |
+      | LOACL_TCP_PORT       | 5            |
+      | CLOSED               | 9            |
+      | SYS_VARIABLES        | 18           |
+      | USER_VARIABLES       | 19           |
 
   @BLOCKER @restore_mysql_service
   Scenario: reload @@config_all, eg:remove old dbInstance and add new, drop backend connection pool for old dbInstance, create new connection pool, backend conn in use will not be dropped even the dbInstance was removed, reload @@config_all -f, reload @@config_all -r, reload @@config_all -s #2
@@ -68,6 +71,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+            <property name="connectionTimeout">2000</property>
         </dbInstance>
     </dbGroup>
     """
@@ -98,6 +102,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>show slave status</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+            <property name="connectionTimeout">2000</property>
         </dbInstance>
     </dbGroup>
     """
@@ -123,16 +128,16 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | PORT-4      | HOST-3       |
       | 3306        | 172.100.9.6  |
     Then check resultsets "backend_rs_D" including resultset "backend_rs_E" in following columns
-      |column               | column_index |
-      |processor            | 0            |
-      |BACKEND_ID           | 1            |
-      |MYSQLID              | 2            |
-      |HOST                 | 3            |
-      |PORT                 | 4            |
-      |LOACL_TCP_PORT       | 5            |
-      |CLOSED               | 9            |
-      |SYS_VARIABLES        | 18           |
-      |USER_VARIABLES       | 19           |
+      | column               | column_index |
+      | processor            | 0            |
+      | BACKEND_ID           | 1            |
+      | MYSQLID              | 2            |
+      | HOST                 | 3            |
+      | PORT                 | 4            |
+      | LOACL_TCP_PORT       | 5            |
+      | CLOSED               | 9            |
+      | SYS_VARIABLES        | 18           |
+      | USER_VARIABLES       | 19           |
     #3 reload @@config_all -r, donot do diff, rebuild backend conn, skip in use backend conn
     Then execute admin cmd "reload @@config_all -r"
     Then execute sql in "dble-1" in "admin" mode
@@ -142,11 +147,11 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | sql            |
       | show @@backend |
     Then check resultsets "backend_rs_F" does not including resultset "backend_rs_E" in following columns
-      |column            | column_index |
-      |BACKEND_ID        | 1     |
-      |MYSQLID           | 2     |
-      |HOST              | 3     |
-      |PORT              | 4     |
+      | column            | column_index |
+      | BACKEND_ID        | 1     |
+      | MYSQLID           | 2     |
+      | HOST              | 3     |
+      | PORT              | 4     |
 
     #4 reload @@config_all -s,  skip test new connections
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -161,11 +166,13 @@ Feature: reload @@config_all base test, not including all cases in testlink
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+            <property name="connectionTimeout">2000</property>
         </dbInstance>
     </dbGroup>
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+            <property name="connectionTimeout">2000</property>
         </dbInstance>
     </dbGroup>
     """
@@ -189,18 +196,21 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | PORT-4      | HOST-3       |
       | 3306        | 172.100.9.6  |
     Then check resultsets "backend_rs_G" including resultset "backend_rs_H" in following columns
-      |column               | column_index |
-      |processor            | 0            |
-      |BACKEND_ID           | 1            |
-      |MYSQLID              | 2            |
-      |HOST                 | 3            |
-      |PORT                 | 4            |
-      |LOACL_TCP_PORT       | 5            |
-      |CLOSED               | 9            |
-      |SYS_VARIABLES        | 18           |
-      |USER_VARIABLES       | 19           |
+      | column               | column_index |
+      | processor            | 0            |
+      | BACKEND_ID           | 1            |
+      | MYSQLID              | 2            |
+      | HOST                 | 3            |
+      | PORT                 | 4            |
+      | LOACL_TCP_PORT       | 5            |
+      | CLOSED               | 9            |
+      | SYS_VARIABLES        | 18           |
+      | USER_VARIABLES       | 19           |
     Given start mysql in host "mysql-master2"
-    Given sleep "30" seconds
+    #### 确定dble心跳恢复
+    Then execute sql in "dble-1" in "admin" mode
+    | sql                                                                                                               | expect        | db                |timeout  |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(1)}   | dble_information  | 6,2     |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                   | expect     | db      |
       | conn_1 | False    | drop table if exists test_shard       | success    | schema1 |
@@ -209,14 +219,14 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | conn_1 | False    | insert into test_shard values(1),(2),(3),(4)  | success    | schema1 |
     Then execute admin cmd "reload @@config_all -r -f -s"
     Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                                               | expect        | db                |timeout|
-      | select * from backend_connections where used_for_heartbeat='true'                                 | length{(2)}   | dble_information  | 3     |
+      | sql                                                                                               | expect        | db                | timeout |
+      | select * from backend_connections where used_for_heartbeat='true'                                 | length{(2)}   | dble_information  | 3       |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_I"
       | sql            |
       | show @@backend |
     Then check resultsets "backend_rs_I" does not including resultset "backend_rs_H" in following columns
-      |column            | column_index |
-      |BACKEND_ID        | 1     |
-      |MYSQLID           | 2     |
-      |HOST              | 3     |
-      |PORT              | 4     |
+      | column            | column_index |
+      | BACKEND_ID        | 1     |
+      | MYSQLID           | 2     |
+      | HOST              | 3     |
+      | PORT              | 4     |
