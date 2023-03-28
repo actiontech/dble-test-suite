@@ -23,7 +23,7 @@ Feature: connection pool basic test - heartbeat create connections
     Given update file content "./assets/fillPool.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
-    /newConnectionBorrow1/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    /fillPool/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "fillPool.java" in "dble-1"
     Then execute admin cmd "reload @@config_all -r"

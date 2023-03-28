@@ -47,7 +47,7 @@ public final class BtraceGeneralLog {
         long startTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + startTime + "], start get into updateGeneralLogFile");
         BTraceUtils.println("------- get into updateGeneralLogFile -------");
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into updateGeneralLogFile");
         BTraceUtils.println();
@@ -61,7 +61,7 @@ public final class BtraceGeneralLog {
         long startTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + startTime + "], start get into showGeneralLog");
         BTraceUtils.println("------- get into showGeneralLog -------");
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into showGeneralLog");
         BTraceUtils.println();

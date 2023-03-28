@@ -29,7 +29,7 @@ public final class BtraceSessionStage {
         BTraceUtils.println("time[" + startTime + "], start get into setRequestTime " );
         BTraceUtils.println("------- get into setRequestTime -------");
         BTraceUtils.println();
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into setRequestTime " );
         BTraceUtils.println();
@@ -45,7 +45,7 @@ public final class BtraceSessionStage {
         BTraceUtils.println("time[" + startTime + "], start get into startProcess " );
         BTraceUtils.println("------- get into startProcess -------");
         BTraceUtils.println();
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into startProcess " );
         BTraceUtils.println();
@@ -61,7 +61,7 @@ public final class BtraceSessionStage {
         BTraceUtils.println("time[" + startTime + "], start get into endParse " );
         BTraceUtils.println("------- get into endParse -------");
         BTraceUtils.println();
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into endParse " );
         BTraceUtils.println();
@@ -77,7 +77,7 @@ public final class BtraceSessionStage {
         BTraceUtils.println("time[" + startTime + "], start get into endRoute " );
         BTraceUtils.println("------- get into endRoute -------");
         BTraceUtils.println();
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into endRoute " );
         BTraceUtils.println();
@@ -93,7 +93,7 @@ public final class BtraceSessionStage {
         BTraceUtils.println("time[" + startTime + "], start get into setPreExecuteEnd " );
         BTraceUtils.println("------- get into setPreExecuteEnd -------");
         BTraceUtils.println();
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into setPreExecuteEnd " );
         BTraceUtils.println();
@@ -109,7 +109,7 @@ public final class BtraceSessionStage {
         BTraceUtils.println("time[" + startTime + "], start get into setBackendResponseTime " );
         BTraceUtils.println("------- get into setBackendResponseTime -------");
         BTraceUtils.println();
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into setBackendResponseTime " );
         BTraceUtils.println();
@@ -125,7 +125,7 @@ public final class BtraceSessionStage {
         BTraceUtils.println("time[" + startTime + "], start get into setResponseTime " );
         BTraceUtils.println("------- get into setResponseTime -------");
         BTraceUtils.println();
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into setResponseTime " );
         BTraceUtils.println();
@@ -141,7 +141,7 @@ public final class BtraceSessionStage {
         BTraceUtils.println("time[" + startTime + "], start get into setStageFinished " );
         BTraceUtils.println("------- start get into setStageFinished -------");
         BTraceUtils.println();
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into setStageFinished " );
         BTraceUtils.println();
@@ -157,7 +157,7 @@ public final class BtraceSessionStage {
         BTraceUtils.println("time[" + startTime + "], start get into setBackendResponseEndTime " );
         BTraceUtils.println("------- get into setBackendResponseEndTime -------");
         BTraceUtils.println();
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into setBackendResponseEndTime " );
         BTraceUtils.println();
@@ -173,7 +173,7 @@ public final class BtraceSessionStage {
         BTraceUtils.println("time[" + startTime + "], start get into setBeginCommitTime " );
         BTraceUtils.println("------- get into setBeginCommitTime -------");
         BTraceUtils.println();
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into setBeginCommitTime " );
         BTraceUtils.println();
@@ -189,7 +189,7 @@ public final class BtraceSessionStage {
         BTraceUtils.println("time[" + startTime + "], start get into setHandlerEnd " );
         BTraceUtils.println("------- get into setHandlerEnd -------");
         BTraceUtils.println();
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into setHandlerEnd " );
         BTraceUtils.println();
@@ -205,7 +205,7 @@ public final class BtraceSessionStage {
         BTraceUtils.println("time[" + startTime + "], start get into ok " );
         BTraceUtils.println("------- get into ok -------");
         BTraceUtils.println();
-        Thread.sleep(100L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time[" + endTime + "], end get into ok " );
         BTraceUtils.println();
