@@ -423,7 +423,7 @@ Feature: check joinStrategyType and useJoinStrategy
       | nestLoopRowsSize | 1                |
       | joinStrategyType | 2                |
     # temptable row count > nestLoopConnSize * nestLoopRowsSize
-    Given execute linux command in "dble-1" and contains exception "Merge thread error, Property [nestLoopRowsSize] is 1,property [nestLoopConnSize] is 1,nest loop temp table too much rows, number of temp table rows more than product of nestLoopConnSize and nestLoopRowsSize is 1"
+    Given execute linux command in "dble-1" and contains exception "Merge thread error, temptable too much rows,[rows size is 2]"
     """
     mysql -P{node:client_port} -u{node:client_user} -h{node:ip} -Dschema1 -e "SELECT * FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Level c on a.level=c.levelname order by a.name"
     """
@@ -442,7 +442,7 @@ Feature: check joinStrategyType and useJoinStrategy
       | nestLoopRowsSize | 2                |
       | joinStrategyType | 2                |
     # temptable row count > nestLoopConnSize * nestLoopRowsSize
-    Given execute linux command in "dble-1" and contains exception "Merge thread error, Property [nestLoopRowsSize] is 2,property [nestLoopConnSize] is 1,nest loop temp table too much rows, number of temp table rows more than product of nestLoopConnSize and nestLoopRowsSize is 2"
+    Given execute linux command in "dble-1" and contains exception "Merge thread error, temptable too much rows,[rows size is 3]"
     """
     mysql -P{node:client_port} -u{node:client_user} -h{node:ip} -Dschema1 -e "SELECT * FROM Employee a LEFT JOIN Dept b on a.name=b.manager LEFT JOIN Level c on a.level=c.levelname order by a.name"
     """
