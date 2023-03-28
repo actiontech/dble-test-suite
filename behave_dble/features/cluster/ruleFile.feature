@@ -74,9 +74,9 @@ DBLE0REQ-38
       \"data\":{\"schema\":\[
       {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
       \"table\":\[
-      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},{\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"enum_func\",\"shardingColumn\":\"id\",\"name\":\"enum_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]}\],
+      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},{\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"enum_func\",\"shardingColumn\":\"id\",\"name\":\"enum_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
       \"shardingNode\":\[
       {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},
       {\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},{\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
@@ -162,10 +162,10 @@ DBLE0REQ-38
       """
       {\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
       \"table\":\[
-      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"enum_func\",\"shardingColumn\":\"id\",\"name\":\"enum_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]}\],
+      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"enum_func\",\"shardingColumn\":\"id\",\"name\":\"enum_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
       \"shardingNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},
       {\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},{\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
       \"function\":\[{\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
@@ -253,10 +253,10 @@ DBLE0REQ-38
       """
       data\":{\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
       \"table\":\[
-      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"numberrange_func\",\"shardingColumn\":\"id\",\"name\":\"numberrange_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]}\],
+      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"numberrange_func\",\"shardingColumn\":\"id\",\"name\":\"numberrange_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
       \"shardingNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
       {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
       \"function\":\[
@@ -305,10 +305,10 @@ DBLE0REQ-38
       """
       data\":{\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
       \"table\":\[
-      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"numberrange_func\",\"shardingColumn\":\"id\",\"name\":\"numberrange_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]}\],
+      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"numberrange_func\",\"shardingColumn\":\"id\",\"name\":\"numberrange_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
       \"shardingNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
       {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
       \"function\":\[
@@ -399,10 +399,10 @@ DBLE0REQ-38
       """
       \"data\":{\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
       \"table\":\[
-      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"patternrange_func\",\"shardingColumn\":\"id\",\"name\":\"patternrange_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]}\],
+      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"patternrange_func\",\"shardingColumn\":\"id\",\"name\":\"patternrange_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
       \"shardingNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
       {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
       \"function\":\[
@@ -452,10 +452,10 @@ DBLE0REQ-38
       """
       data\":{\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
       \"table\":\[
-      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"patternrange_func\",\"shardingColumn\":\"id\",\"name\":\"patternrange_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\",\"specifyCharset\":false}}\]}\],
+      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"shardingNode\":\"dn1,dn2\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
+      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"patternrange_func\",\"shardingColumn\":\"id\",\"name\":\"patternrange_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
       \"shardingNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
       {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
       \"function\":\[
