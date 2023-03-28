@@ -87,7 +87,7 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      <shardingTable name=\"sharding2\" shardingNode=\"dn1,dn2\" specifyCharset=\"false\" function=\"hash-two\" shardingColumn=\"id\"/>
+      <shardingTable name=\"sharding2\" shardingNode=\"dn1,dn2\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
@@ -104,7 +104,7 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      <shardingTable name=\"sharding2\" shardingNode=\"dn1,dn2\" specifyCharset=\"false\" function=\"hash-two\" shardingColumn=\"id\"/>
+      <shardingTable name=\"sharding2\" shardingNode=\"dn1,dn2\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
@@ -267,7 +267,7 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" specifyCharset=\"false\" function=\"hash-two\" shardingColumn=\"id\"/>
+      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
@@ -280,7 +280,7 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" specifyCharset=\"false\" function=\"hash-two\" shardingColumn=\"id\"/>
+      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
@@ -388,20 +388,20 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-2,has "function="hash-two""
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" specifyCharset=\"false\" function=\"hash-two\" shardingColumn=\"id\"/>
+      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1\" specifyCharset=\"false\" function=\"hash-three\" shardingColumn=\"id\"/>
+      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1\" function=\"hash-three\" shardingColumn=\"id\"/>
       """
     #check config on dble-3,has "function="hash-two""
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" specifyCharset=\"false\" function=\"hash-two\" shardingColumn=\"id\"/>
+      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" function=\"hash-two\" shardingColumn=\"id\"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1\" specifyCharset=\"false\" function=\"hash-three\" shardingColumn=\"id\"/>
+      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1\" function=\"hash-three\" shardingColumn=\"id\"/>
       """
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
@@ -445,12 +445,12 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1,dn3\" specifyCharset=\"false\" function=\"hash-three\" shardingColumn=\"id\"/>
+      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1,dn3\" function=\"hash-three\" shardingColumn=\"id\"/>
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1,dn3\" specifyCharset=\"false\" function=\"hash-three\" shardingColumn=\"id\"/>
+      <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1,dn3\" function=\"hash-three\" shardingColumn=\"id\"/>
       """
     #case check on zookeeper
     Given execute linux command in "dble-1"
@@ -783,12 +783,12 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      <shardingTable name=\"sharding5\" shardingNode=\"dn2,dn1,dn4,dn3\" specifyCharset=\"false\" function=\"hash-four\" shardingColumn=\"id\"/>
+      <shardingTable name=\"sharding5\" shardingNode=\"dn2,dn1,dn4,dn3\" function=\"hash-four\" shardingColumn=\"id\"/>
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      <shardingTable name=\"sharding5\" shardingNode=\"dn2,dn1,dn4,dn3\" specifyCharset=\"false\" function=\"hash-four\" shardingColumn=\"id\"/>
+      <shardingTable name=\"sharding5\" shardingNode=\"dn2,dn1,dn4,dn3\" function=\"hash-four\" shardingColumn=\"id\"/>
       """
     #check on dble-1 dble-2 dble-3 data currect,query ddl/explain/dml
     Then execute sql in "dble-1" in "user" mode

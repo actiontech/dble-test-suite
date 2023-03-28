@@ -9,7 +9,7 @@ Feature: test show @@help
   Scenario: test "show @@help" #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(114)}  | dble_information |
+      | conn_0 | False   | show @@help             | length{(113)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
@@ -71,7 +71,6 @@ Feature: test show @@help
       | kill @@connection id1,id2,...                                                                            | Kill the specified connections                                                    |
       | kill @@xa_session id1,id2,...                                                                            | Kill the specified sessions that commit/rollback xa transaction in the background |
       | kill @@ddl_lock where schema='?' and table='?'                                                           | Kill ddl lock held by the specified ddl                                           |
-      | kill @@cluster_renew_thread '?'                                                                          | Kill cluster renew thread                                                         |
       | stop @@heartbeat name:time                                                                               | Pause shardingNode heartbeat                                                      |
       | reload @@config                                                                                          | Reload basic config from file                                                     |
       | reload @@config_all                                                                                      | Reload all config from file                                                       |

@@ -64,61 +64,54 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn   | toClose | sql                       | db               |
       | conn_0 | False   | show tables               | dble_information |
     Then check resultset "tables_1" has lines with following column values
-      | Tables_in_dble_information-0                          |
-      | backend_connections                                   |
-      | backend_connections_associate_thread                  |
-      | backend_variables                                     |
-      | dble_algorithm                                        |
-      | dble_blacklist                                        |
-      | dble_child_table                                      |
-      | dble_cluster_renew_thread                             |
-      | dble_config                                           |
-      | dble_db_group                                         |
-      | dble_db_instance                                      |
-      | dble_ddl_lock                                         |
-      | dble_entry                                            |
-      | dble_entry_db_group                                   |
-      | dble_entry_schema                                     |
-      | dble_entry_table_privilege                            |
-      | dble_flow_control                                     |
-      | dble_global_table                                     |
-      | dble_processor                                        |
-      | dble_reload_status                                    |
-      | dble_rw_split_entry                                   |
-      | dble_schema                                           |
-      | dble_sharding_node                                    |
-      | dble_sharding_table                                   |
-      | dble_status                                           |
-      | dble_table                                            |
-      | dble_table_sharding_node                              |
-      | dble_thread_pool                                      |
-      | dble_thread_pool_task                                 |
-      | dble_thread_usage                                     |
-      | dble_variables                                        |
-      | dble_xa_recover                                       |
-      | dble_xa_session                                       |
-      | processlist                                           |
-      | recycling_resource                                    |
-      | session_connections                                   |
-      | session_connections_active_ratio                      |
-      | session_connections_associate_thread                  |
-      | session_variables                                     |
+      | Tables_in_dble_information-0 |
+      | backend_connections          |
+      | backend_variables            |
+      | dble_algorithm               |
+      | dble_blacklist               |
+      | dble_child_table             |
+      | dble_config                  |
+      | dble_db_group                |
+      | dble_db_instance             |
+      | dble_ddl_lock                |
+      | dble_entry                   |
+      | dble_entry_db_group          |
+      | dble_entry_schema            |
+      | dble_entry_table_privilege   |
+      | dble_global_table            |
+      | dble_processor               |
+      | dble_reload_status           |
+      | dble_rw_split_entry          |
+      | dble_schema                  |
+      | dble_sharding_node           |
+      | dble_sharding_table          |
+      | dble_status                  |
+      | dble_table                   |
+      | dble_table_sharding_node     |
+      | dble_thread_pool             |
+      | dble_thread_pool_task        |
+      | dble_thread_usage            |
+      | dble_variables               |
+      | dble_xa_recover              |
+      | dble_xa_session              |
+      | processlist                  |
+      | session_connections          |
+      | session_variables            |
       | sql_log                                               |
+      | sql_log_by_tx_digest_by_entry_by_user                 |
+      | sql_log_by_tx_by_entry_by_user                        |
+      | sql_log_by_digest_by_entry_by_user                    |
       | sql_statistic_by_associate_tables_by_entry_by_user    |
       | sql_statistic_by_frontend_by_backend_by_entry_by_user |
       | sql_statistic_by_table_by_user_by_entry               |
       | version                                               |
-      | sql_log_by_tx_digest_by_entry_by_user                 |
-      | sql_log_by_tx_by_entry_by_user                        |
-      | sql_log_by_digest_by_entry_by_user                    |
-
     Then check resultset "tables_1" has not lines with following column values
       | Tables_in_dble_information-0 |
       | demotest1                    |
       | demotest2                    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect       | db               |
-      | conn_0 | False   | show tables                          | length{(46)} | dble_information |
+      | conn_0 | False   | show tables                          | length{(41)} | dble_information |
  #case The query needs to be printed in the log，when management commands not supported by druid github:issues/1977
     Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql          | expect                |
