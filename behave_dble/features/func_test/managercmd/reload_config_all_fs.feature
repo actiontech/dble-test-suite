@@ -42,12 +42,12 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | sql            |
       | show @@backend |
     Then check resultset "rs_B" has not lines with following column values
-      | HOST-3      |USED_FOR_HEARTBEAT-22|
-      | 172.100.9.6 |false                  |
+      | HOST-3      | USED_FOR_HEARTBEAT-22 |
+      | 172.100.9.6 | false                 |
     Then check resultset "rs_C" has lines with following column values
-      | HOST-3      |
-      | 172.100.9.5 |
-      | 172.100.9.6 |
+      | HOST-3      | USED_FOR_HEARTBEAT-22 |
+      | 172.100.9.5 | false                 |
+      | 172.100.9.6 | false                 |
 
     # 3 reload @@config_all -fs : open transaction, add read dbInstance, execute 'reload @@config_all -fs', transaction successfully
     Then execute sql in "dble-1" in "user" mode
@@ -76,7 +76,7 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | 172.100.9.6 |3306  |
     Then check resultset "rs_D" has not lines with following column values
       | HOST-3      |PORT-4|
-      | 172.100.9.2 |3307  |
+      | 172.100.9.6 |3307  |
     Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs"
       | conn   | toClose | sql               |
