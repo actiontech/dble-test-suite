@@ -61,7 +61,7 @@ Feature: reload @@config_all -sr
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" url="172.100.9.5:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true" readWeight="1">
         </dbInstance>
-        <dbInstance name="hostS1" url="172.100.9.6:3306" user="test" password="errpwd" maxCon="1000" minCon="10" readWeight="2">
+        <dbInstance name="hostS1" url="172.100.9.6:3307" user="test" password="errpwd" maxCon="1000" minCon="10" readWeight="2">
         </dbInstance>
     </dbGroup>
     <dbGroup name="ha_group2" rwSplitMode="0" delayThreshold="100">
@@ -81,8 +81,8 @@ Feature: reload @@config_all -sr
       | sql            |
       | show @@backend |
     Then check resultset "rs_D" has not lines with following column values
-      | HOST-3      |
-      | 172.100.9.2 |
+      | HOST-3      | PORT-4 |
+      | 172.100.9.6 | 3307   |
     Then check resultset "rs_D" has lines with following column values
     #need discuss
       | HOST-3      | STATE-10 |
