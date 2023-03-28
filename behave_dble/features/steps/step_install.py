@@ -166,7 +166,7 @@ def start_dble_in_node(context, node, expect_success=True):
                 rc, sto, ste = node.ssh_conn.exec_command(cmd)
                 cmd_wrapper = "cat /opt/dble/logs/wrapper.log"
                 rc1, sto1, ste1 = node.ssh_conn.exec_command(cmd_wrapper)
-                assert_that(str(sto).strip() != "0", "expect dble restart failed for {0} \nthe wrapper.log is:\n{}".format(row, sto1))
+                assert_that(str(sto).strip() != "0", "expect dble restart failed for {} \nthe wrapper.log is:\n{}".format(row, sto1))
 
 
 def check_dble_started(context, node):
