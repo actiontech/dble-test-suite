@@ -65,7 +65,7 @@ Feature:manager Cmd
       | conn_0 | true    | select * from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')       | dble_information |
     Then check resultset "version_2" has lines with following column values
       | variable_name-0                         | variable_value-1 | comment-2                                                      | read_only-3 |
-      | enableStatistic                         | 0                | Enable statistic sql, the default is 0(false)                  | false       |
+      | enableStatistic                         | false            | Enable statistic sql, the default is false                     | false       |
       | associateTablesByEntryByUserTableSize   | 1024             | AssociateTablesByEntryByUser table size, the default is 1024   | false       |
       | frontendByBackendByEntryByUserTableSize | 1024             | FrontendByBackendByEntryByUser table size, the default is 1024 | false       |
       | tableByUserByEntryTableSize             | 1024             | TableByUserByEntry table size, the default is 1024             | false       |
@@ -124,7 +124,7 @@ Feature:manager Cmd
       | conn_0 | true    | select * from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')       | dble_information |
     Then check resultset "version_5" has lines with following column values
       | variable_name-0                         | variable_value-1 | comment-2                                                      | read_only-3 |
-      | enableStatistic                         | 1                | Enable statistic sql, the default is 0(false)                  | false       |
+      | enableStatistic                         | true             | Enable statistic sql, the default is false                     | false       |
       | associateTablesByEntryByUserTableSize   | 1024             | AssociateTablesByEntryByUser table size, the default is 1024   | false       |
       | frontendByBackendByEntryByUserTableSize | 1024             | FrontendByBackendByEntryByUser table size, the default is 1024 | false       |
       | tableByUserByEntryTableSize             | 1024             | TableByUserByEntry table size, the default is 1024             | false       |
@@ -191,7 +191,7 @@ Feature:manager Cmd
       | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 1                |
+      | enableStatistic                         | true             |
       | associateTablesByEntryByUserTableSize   | 1024             |
       | frontendByBackendByEntryByUserTableSize | 1024             |
       | tableByUserByEntryTableSize             | 1024             |
@@ -230,7 +230,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 1                |
+      | enableStatistic                         | true             |
       | associateTablesByEntryByUserTableSize   | 1024             |
       | frontendByBackendByEntryByUserTableSize | 1024             |
       | tableByUserByEntryTableSize             | 1024             |
@@ -288,7 +288,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 1                |
+      | enableStatistic                         | true             |
       | associateTablesByEntryByUserTableSize   | 2                |
       | frontendByBackendByEntryByUserTableSize | 2                |
       | tableByUserByEntryTableSize             | 2                |
@@ -341,7 +341,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 1                |
+      | enableStatistic                         | true             |
       | associateTablesByEntryByUserTableSize   | 4                |
       | frontendByBackendByEntryByUserTableSize | 4                |
       | tableByUserByEntryTableSize             | 4                |
@@ -359,7 +359,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 0                |
+      | enableStatistic                         | false            |
       | associateTablesByEntryByUserTableSize   | 4                |
       | frontendByBackendByEntryByUserTableSize | 4                |
       | tableByUserByEntryTableSize             | 4                |
@@ -381,7 +381,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 0                |
+      | enableStatistic                         | false            |
       | associateTablesByEntryByUserTableSize   | 1                |
       | frontendByBackendByEntryByUserTableSize | 1                |
       | tableByUserByEntryTableSize             | 1                |
@@ -392,7 +392,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 1                |
+      | enableStatistic                         | true             |
       | associateTablesByEntryByUserTableSize   | 1                |
       | frontendByBackendByEntryByUserTableSize | 1                |
       | tableByUserByEntryTableSize             | 1                |
@@ -448,7 +448,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 0                |
+      | enableStatistic                         | false            |
       | associateTablesByEntryByUserTableSize   | 10               |
       | frontendByBackendByEntryByUserTableSize | 10               |
       | tableByUserByEntryTableSize             | 10               |
@@ -574,7 +574,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 1                |
+      | enableStatistic                         | true             |
       | associateTablesByEntryByUserTableSize   | 1                |
       | frontendByBackendByEntryByUserTableSize | 2                |
       | tableByUserByEntryTableSize             | 3                |
@@ -627,7 +627,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 1                |
+      | enableStatistic                         | true             |
       | associateTablesByEntryByUserTableSize   | 3                |
       | frontendByBackendByEntryByUserTableSize | 3                |
       | tableByUserByEntryTableSize             | 4                |
@@ -658,7 +658,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 0                |
+      | enableStatistic                         | false            |
       | associateTablesByEntryByUserTableSize   | 2                |
       | frontendByBackendByEntryByUserTableSize | 1                |
       | tableByUserByEntryTableSize             | 4                |
@@ -712,7 +712,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 0                |
+      | enableStatistic                         | false            |
       | associateTablesByEntryByUserTableSize   | 6                |
       | frontendByBackendByEntryByUserTableSize | 12               |
       | tableByUserByEntryTableSize             | 13               |
@@ -836,7 +836,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 1                |
+      | enableStatistic                         | true             |
       | associateTablesByEntryByUserTableSize   | 4                |
       | frontendByBackendByEntryByUserTableSize | 3                |
       | tableByUserByEntryTableSize             | 4                |
@@ -897,7 +897,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 1                |
+      | enableStatistic                         | true             |
       | associateTablesByEntryByUserTableSize   | 5                |
       | frontendByBackendByEntryByUserTableSize | 5                |
       | tableByUserByEntryTableSize             | 5                |
@@ -930,7 +930,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 0                |
+      | enableStatistic                         | false            |
       | associateTablesByEntryByUserTableSize   | 3                |
       | frontendByBackendByEntryByUserTableSize | 3                |
       | tableByUserByEntryTableSize             | 2                |
@@ -981,7 +981,7 @@ Feature:manager Cmd
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 0                |
+      | enableStatistic                         | false            |
       | associateTablesByEntryByUserTableSize   | 3                |
       | frontendByBackendByEntryByUserTableSize | 7                |
       | tableByUserByEntryTableSize             | 7                |
@@ -1089,7 +1089,7 @@ Feature:manager Cmd
       | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 0                |
+      | enableStatistic                         | false            |
       | associateTablesByEntryByUserTableSize   | 1024             |
       | frontendByBackendByEntryByUserTableSize | 1024             |
       | tableByUserByEntryTableSize             | 1024             |
@@ -1132,7 +1132,7 @@ Feature:manager Cmd
       | conn_0 | true    | select variable_name,variable_value from dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
-      | enableStatistic                         | 1                |
+      | enableStatistic                         | true             |
       | associateTablesByEntryByUserTableSize   | 1                |
       | frontendByBackendByEntryByUserTableSize | 2                |
       | tableByUserByEntryTableSize             | 3                |
@@ -1316,7 +1316,7 @@ Feature:manager Cmd
 #    Given sleep "10" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                        | expect       | db               | timeout |
-      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', '0'), ('associateTablesByEntryByUserTableSize', '111'), ('frontendByBackendByEntryByUserTableSize', '111'), ('tableByUserByEntryTableSize', '111'))}  | dble_information | 11 |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', 'false'), ('associateTablesByEntryByUserTableSize', '111'), ('frontendByBackendByEntryByUserTableSize', '111'), ('tableByUserByEntryTableSize', '111'))}  | dble_information | 11 |
 
 
     #case reload @@statistic_table_size = 200 where table =
@@ -1330,7 +1330,7 @@ Feature:manager Cmd
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                        | expect       | db               | timeout |
-      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', '0'), ('associateTablesByEntryByUserTableSize', '222'), ('frontendByBackendByEntryByUserTableSize', '111'), ('tableByUserByEntryTableSize', '111'))}  | dble_information | 11 |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', 'false'), ('associateTablesByEntryByUserTableSize', '222'), ('frontendByBackendByEntryByUserTableSize', '111'), ('tableByUserByEntryTableSize', '111'))}  | dble_information | 11 |
 
     #case reload @@statistic_table_size = 200 where table in
     Then execute admin cmd  in "dble-1" at background
@@ -1342,7 +1342,7 @@ Feature:manager Cmd
       | conn_0 | True    | reload @@statistic_table_size = 333 where table in (sql_statistic_by_frontend_by_backend_by_entry_by_user,sql_statistic_by_table_by_user_by_entry)              | dble_information |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                        | expect       | db               | timeout |
-      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', '0'), ('associateTablesByEntryByUserTableSize', '300'), ('frontendByBackendByEntryByUserTableSize', '333'), ('tableByUserByEntryTableSize', '333'))}  | dble_information | 11 |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', 'false'), ('associateTablesByEntryByUserTableSize', '300'), ('frontendByBackendByEntryByUserTableSize', '333'), ('tableByUserByEntryTableSize', '333'))}  | dble_information | 11 |
 
     #case reload and enable
     Then execute admin cmd  in "dble-1" at background
@@ -1354,7 +1354,7 @@ Feature:manager Cmd
       | conn_0 | True    | enable @@statistic                 | dble_information |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                        | expect       | db               | timeout |
-      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', '1'), ('associateTablesByEntryByUserTableSize', '555'), ('frontendByBackendByEntryByUserTableSize', '555'), ('tableByUserByEntryTableSize', '555'))}  | dble_information | 11 |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', 'true'), ('associateTablesByEntryByUserTableSize', '555'), ('frontendByBackendByEntryByUserTableSize', '555'), ('tableByUserByEntryTableSize', '555'))}  | dble_information | 11 |
 
     #case reload and disable
     Then execute admin cmd  in "dble-1" at background
@@ -1366,7 +1366,7 @@ Feature:manager Cmd
       | conn_0 | True    | disable @@statistic                | dble_information |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                        | expect       | db               | timeout |
-      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', '0'), ('associateTablesByEntryByUserTableSize', '666'), ('frontendByBackendByEntryByUserTableSize', '666'), ('tableByUserByEntryTableSize', '666'))}  | dble_information | 11 |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', 'false'), ('associateTablesByEntryByUserTableSize', '666'), ('frontendByBackendByEntryByUserTableSize', '666'), ('tableByUserByEntryTableSize', '666'))}  | dble_information | 11 |
 
 
     Given stop btrace script "BtraceAboutsqlStatistic.java" in "dble-1"
