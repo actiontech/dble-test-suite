@@ -47,7 +47,7 @@ Feature: db config stable test
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group1.hostM1]}
+    Reload Failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly
     """
     Given start mysql in host "mysql-master1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
