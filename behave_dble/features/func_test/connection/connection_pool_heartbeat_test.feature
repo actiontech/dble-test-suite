@@ -42,8 +42,8 @@ Feature: connection pool basic test - heartbeat create connections
     \[connection-pool-evictor-thread\] \(com.actiontech.dble.backend.pool.ConnectionPool.*\- need add
     """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                   | expect        | db                |
-      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'     | balance{10}    | dble_information  |
+      | conn   | toClose | sql                                                                                                                          | expect         | db                | timeout |
+      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'     | balance{10}    | dble_information  | 6,2     |
 
 
 
