@@ -11,7 +11,7 @@ Feature: execute manager cmd "reload @@config_all" and check fault tolerance
       | drop table if exists sharding_4_t1 | success | schema1 |
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /removeMetaLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
