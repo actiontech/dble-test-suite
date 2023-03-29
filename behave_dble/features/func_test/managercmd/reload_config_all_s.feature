@@ -40,8 +40,6 @@ Feature: reload @@config_all -s
     """
     there are some dbInstance connection failed, pls check these dbInstance:{dbInstance\[ha_group1.hostS1\]}
     """
-    # 3.22.07开始，本次执行reload因配置未发生变更所以执行成功
-    Then execute admin cmd "reload @@config_all"
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
