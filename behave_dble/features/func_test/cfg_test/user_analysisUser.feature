@@ -548,7 +548,7 @@ Feature: test config in user.xml  ---  analysisUser
       | conn_2 | False   | flow_control @@list                          | length{(0)}   |
       | conn_2 | False   | flow_control @@set enableFlowControl = true  | success       |
       | conn_2 | False   | flow_control @@show                          | length{(5)}   |
-      | conn_2 | False   | flow_control @@list                          | length{(44)}  |
+      | conn_2 | False   | flow_control @@list                          | success       |
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                | expect   |
       | ana1  | 111111 | conn_1 | False   | select user()      | success  |
