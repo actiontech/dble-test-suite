@@ -51,6 +51,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
      """
     Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master2"
+    # 3.22.07开始，stop mysql后执行reload不会报错，因为这时配置未变更，不会测试连接有效性
+    # -r 不做智能判断，将所有后端连接池全部重新加载一遍
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "reload @@config_all -r" get the following output
       """
