@@ -55,7 +55,7 @@ Feature: test fresh backend connection pool
       | conn_0 | True    | set global transaction ISOLATION level READ UNCOMMITTED             | success     | db1 |
     Given update file content "./assets/BtraceFreshConnLock.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /startReload/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceFreshConnLock.java" in "dble-1"
@@ -102,7 +102,7 @@ Feature: test fresh backend connection pool
       | conn_0 | True    | set global transaction ISOLATION level READ UNCOMMITTED             | success     | db1 |
     Given update file content "./assets/BtraceFreshConnLock.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /freshConnGetRealodLocekAfter/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceFreshConnLock.java" in "dble-1"
@@ -156,7 +156,7 @@ Feature: test fresh backend connection pool
       | conn_0 | True    | set global transaction ISOLATION level READ UNCOMMITTED             | success     | db1 |
     Given update file content "./assets/BtraceFreshConnLock.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /stopConnGetFrenshLocekAfter/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceFreshConnLock.java" in "dble-1"
@@ -213,7 +213,7 @@ Feature: test fresh backend connection pool
       | conn_0 | True    | set global transaction ISOLATION level READ UNCOMMITTED             | success     | db1 |
     Given update file content "./assets/BtraceFreshConnLock.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /getConnGetFrenshLocekAfter/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceFreshConnLock.java" in "dble-1"

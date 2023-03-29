@@ -93,11 +93,10 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn_0 | False   | begin | success | schema1 |
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /ok/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
-    Given sleep "5" seconds
     Given prepare a thread execute sql "insert into sharding_4_t1(id) values(1),(2),(3),(4)" with "conn_0"
     Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
     """
@@ -125,11 +124,10 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
 # case 4.2.2: at receive ok packet stage and not in the transaction
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /ok/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
-    Given sleep "5" seconds
     Given prepare a thread execute sql "insert into sharding_4_t1(id) values(5),(6),(7),(8)" with "conn_0"
     Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
     """
@@ -155,11 +153,10 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
 # case 4.2.3: at endRoute stage
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /endRoute/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
-    Given sleep "5" seconds
     Given prepare a thread execute sql "select * from sharding_4_t1" with "conn_0"
     Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
     """
