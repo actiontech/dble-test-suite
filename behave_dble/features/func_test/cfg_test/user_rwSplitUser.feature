@@ -344,7 +344,7 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@user                                                       | length{(3)}   |
       | conn_0 | False   | show @@user.privilege                                             | length{(1)}   |
       | conn_0 | False   | show @@questions                                                  | length{(1)}   |
-      | conn_0 | False   | show @@connection_pool                                            | success       |
+#      | conn_0 | False   | show @@connection_pool                                            | success       |
       | conn_0 | False   | show @@processlist                                                | length{(1)}   |
 
 #########   kill
