@@ -24,6 +24,9 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    """
+    Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
+    """
     /beforeInnerRetry/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
@@ -38,15 +41,18 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     before inner retry
     """
     Given start mysql in host "mysql-master1"
-#    Given sleep "10" seconds
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
+    #### 确定dble心跳恢复
+    Then execute sql in "dble-1" in "admin" mode
+    | sql                                                                                                               | expect        | db                | timeout |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                 | expect      | db      | timeout |
-      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 | 10,2    |
-      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 | 10,2    |
-      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 | 10,2    |
+      | conn   | toClose | sql                                 | expect      | db      |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
 
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
@@ -69,6 +75,9 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    """
+    Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
+    """
     /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
@@ -91,16 +100,19 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     Given start mysql in host "mysql-master1"
-#    Given sleep "10" seconds
     Then execute oscmd many times in "dble-1" and result is same
     """
     cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
+    #### 确定dble心跳恢复
+    Then execute sql in "dble-1" in "admin" mode
+    | sql                                                                                                               | expect        | db                | timeout |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                 | expect      | db      | timeout |
-      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 | 10,2    |
-      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 | 10,2    |
-      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 | 10,2    |
+      | conn   | toClose | sql                                 | expect      | db      |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
 
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
@@ -145,15 +157,17 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given sleep "10" seconds
     #wait background attempt failed
     Given start mysql in host "mysql-master1"
-#    Given sleep "10" seconds
     #warit Heartbeat successed
+    Then execute sql in "dble-1" in "admin" mode
+    | sql                                                                                                               | expect        | db                | timeout |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                    | expect                     | db      | timeout |
-      | conn_1 | false   | select * from sharding_4_t1            | length{(2)}                | schema1 | 10,2    |
-      | conn_1 | false   | delete from sharding_4_t1 where id = 1 | success                    | schema1 | 10,2    |
-      | conn_1 | false   | delete from sharding_4_t1 where id = 2 | Lock wait timeout exceeded | schema1 | 10,2    |
-      | conn_1 | false   | delete from sharding_4_t1 where id = 3 | success                    | schema1 | 10,2    |
-      | conn_1 | True    | delete from sharding_4_t1 where id = 4 | Lock wait timeout exceeded | schema1 | 10,2    |
+      | conn   | toClose | sql                                    | expect                     | db      |
+      | conn_1 | false   | select * from sharding_4_t1            | length{(2)}                | schema1 |
+      | conn_1 | false   | delete from sharding_4_t1 where id = 1 | success                    | schema1 |
+      | conn_1 | false   | delete from sharding_4_t1 where id = 2 | Lock wait timeout exceeded | schema1 |
+      | conn_1 | false   | delete from sharding_4_t1 where id = 3 | success                    | schema1 |
+      | conn_1 | True    | delete from sharding_4_t1 where id = 4 | Lock wait timeout exceeded | schema1 |
 
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -230,6 +244,9 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /delayBeforeXaPrepare/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    """
+    Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
+    """
     /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
@@ -251,15 +268,19 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     Given start mysql in host "mysql-master1"
-#    Given sleep "10" seconds
+    #warit Heartbeat successed
+    Then execute sql in "dble-1" in "admin" mode
+    | sql                                                                                                               | expect        | db                | timeout |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                    | expect      | db      | timeout |
-      | conn_1 | False   | select * from sharding_4_t1            | length{(0)} | schema1 | 10,2    |
-      | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success     | schema1 | 10,2    |
-      | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success     | schema1 | 10,2    |
-      | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success     | schema1 | 10,2    |
-      | conn_1 | False   | delete from sharding_4_t1 where id = 4 | success     | schema1 | 10,2    |
-      | conn_1 | True    | drop table if exists sharding_4_t1     | success     | schema1 | 10,2    |
+      | conn   | toClose | sql                                    | expect      | db      |
+      | conn_1 | False   | select * from sharding_4_t1            | length{(0)} | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success     | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success     | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success     | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1 where id = 4 | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1     | success     | schema1 |
 
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
@@ -308,7 +329,10 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | key                                        | interval_times | percent |
       | at the 0th time in background              | 20             |  0.5   |
     Given start mysql in host "mysql-master1"
-    Given sleep "10" seconds
+    #warit Heartbeat successed
+    Then execute sql in "dble-1" in "admin" mode
+    | sql                                                                                                               | expect        | db                | timeout |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -337,12 +361,15 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | key                                        | interval_times | percent |
       | at the 0th time in background              | 10             |  0.5   |
     Given start mysql in host "mysql-master1"
-#    Given sleep "15" seconds
+    #warit Heartbeat successed
+    Then execute sql in "dble-1" in "admin" mode
+    | sql                                                                                                               | expect        | db                | timeout |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                 | expect      | db      | timeout |
-      | conn_1 | False   | select * from sharding_4_t1         | length{(8)} | schema1 | 10,2    |
-      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 | 10,2    |
-      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 | 10,2    |
+      | conn   | toClose | sql                                 | expect      | db      |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(8)} | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
 
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
