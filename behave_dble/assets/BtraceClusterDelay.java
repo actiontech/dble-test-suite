@@ -63,7 +63,7 @@ public final class BtraceClusterDelay {
     public static void delayAfterGetLock(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.print("get into delayAfterGetLock ");
         BTraceUtils.print(" for order __________________________ ");
-        Thread.sleep(10L);
+        Thread.sleep(1L);
 
     }
 
@@ -143,7 +143,7 @@ public final class BtraceClusterDelay {
     public static void delayAfterDdlLockMeta(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.print("get into delayAfterDdlLockMeta ");
         BTraceUtils.print(" for order __________________________ ");
-        Thread.sleep(10L);
+        Thread.sleep(1L);
     }
 
     @OnMethod(
@@ -153,7 +153,7 @@ public final class BtraceClusterDelay {
     public static void delayAfterDdlExecuted(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.print("get into delayAfterDdlExecuted ");
         BTraceUtils.print(" for order __________________________ ");
-        Thread.sleep(10L);
+        Thread.sleep(1L);
     }
 
     @OnMethod(
@@ -256,7 +256,7 @@ public final class BtraceClusterDelay {
     public static void delayBeforeDeleteReloadLock(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.print("get into delayBeforeDeleteReloadLock ");
         BTraceUtils.print(" for order __________________________ ");
-        Thread.sleep(10L);
+        Thread.sleep(1L);
     }
 
     @OnMethod(
@@ -306,7 +306,7 @@ public final class BtraceClusterDelay {
     public static void showTableByNodeUnitHandlerFinished(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.print("get into showTableByNodeUnitHandlerFinished ");
         BTraceUtils.print(" for order __________________________ ");
-        Thread.sleep(10L);
+        Thread.sleep(1L);
     }
     @OnMethod(
             clazz = "com.actiontech.dble.backend.mysql.nio.handler.transaction.normal.NormalCommitNodesHandler",
@@ -315,7 +315,7 @@ public final class BtraceClusterDelay {
     public static void setResponseTime(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.print("delay in setResponseTime");
         BTraceUtils.print(" for order __________________________ ");
-        Thread.sleep(1000L);
+        Thread.sleep(1L);
     }
 
 
@@ -326,7 +326,7 @@ public final class BtraceClusterDelay {
     public static void rowResponse(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.print("get into rowResponse ");
         BTraceUtils.print(" for order __________________________ ");
-        Thread.sleep(200);
+        Thread.sleep(1L);
     }
     @OnMethod(
             clazz = "com.actiontech.dble.meta.ProxyMetaManager",
@@ -335,7 +335,7 @@ public final class BtraceClusterDelay {
     public static void removeMetaLock(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.print("delay in removeMetaLock");
         BTraceUtils.print(" for order __________________________ ");
-        Thread.sleep(30000L);
+        Thread.sleep(1L);
     }
    @OnMethod(
             clazz = "com.actiontech.dble.btrace.provider.ClusterDelayProvider",
@@ -399,7 +399,7 @@ public final class BtraceClusterDelay {
     public static void tryResume(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into tryResume,start sleep ");
         BTraceUtils.println(" __________________________ ");
-        Thread.sleep(30000L);
+        Thread.sleep(1L);
         BTraceUtils.println("sleep end ");
         BTraceUtils.println(" __________________________ ");
     }

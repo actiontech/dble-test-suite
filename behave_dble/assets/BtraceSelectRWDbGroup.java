@@ -15,7 +15,7 @@ public class BtraceSelectRWDbGroup{
             method = "reSelectRWDbGroup"
 
     )
-    public static void handle(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+    public static void reSelectRWDbGroup(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into reSelectRWDbGroup");
         Thread.sleep(5000L);
         BTraceUtils.println("sleep end ");
