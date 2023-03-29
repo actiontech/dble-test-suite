@@ -189,6 +189,11 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       /max_allowed_packet/d
       /server-id/a max_allowed_packet = 17M
       """
+    Then execute sql in "dble-1" in "admin" mode
+    | sql                                                                                                               | expect        | db                |timeout  |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
+
     Given execute linux command in "dble-1" and contains exception "Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf"
       """
       python3 /opt/LargePacket.py
@@ -320,10 +325,16 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
       """
     Then execute admin cmd "reload @@config_all"
+    #### 确定dble中mysql心跳恢复
+    Then execute sql in "dble-1" in "admin" mode
+    | sql                                                                                                               | expect        | db                |timeout  |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
+
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                         | expect  | db      | timeout |
-      | conn_0 | false   | drop table if exists test;create table test (id int,c longblob);truncate table test         | success | schema1 | 5,2     |
-      | conn_0 | true    | insert into test values (0,repeat("x",16*1024*1024))                                        | Result of repeat() was larger than max_allowed_packet (4195328) - truncated | schema1 | 5,2     |
+      | conn   | toClose | sql                                                                                         | expect  | db      |
+      | conn_0 | false   | drop table if exists test;create table test (id int,c longblob);truncate table test         | success | schema1 |
+      | conn_0 | true    | insert into test values (0,repeat("x",16*1024*1024))                                        | Result of repeat() was larger than max_allowed_packet (4195328) - truncated | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                          | expect  | db      |
       | rw1  | 111111 | conn_1 | false   | drop table if exists test1;create table test1 (id int,c longblob);truncate table test1       | success | db1     |
@@ -340,16 +351,20 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       /server-id/a max_allowed_packet = 8M
       """
     Then execute sql in "dble-1" in "admin" mode
+    | sql                                                                                                               | expect        | db                |timeout  |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
+     Then execute sql in "dble-1" in "admin" mode
       | conn  | toClose | sql                                                                              | expect                | db               |
       | new   | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('4194304B',),)} | dble_information |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                         | expect  | db      | timeout |
-      | conn_0 | false    | insert into test values (1,repeat("x",6*1024*1024))                                        | success | schema1 | 5,2     |
-      | conn_0 | true     | insert into test values (1,repeat("x",16*1024*1024))                                       | Result of repeat() was larger than max_allowed_packet (8388608) - truncated | schema1 | 5,2     |
+      | conn   | toClose | sql                                                                                         | expect  | db      |
+      | conn_0 | false    | insert into test values (1,repeat("x",6*1024*1024))                                        | success | schema1 |
+      | conn_0 | true     | insert into test values (1,repeat("x",16*1024*1024))                                       | Result of repeat() was larger than max_allowed_packet (8388608) - truncated | schema1 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                                         | expect  | db      | timeout |
-      | rw1  | 111111 | conn_1 | false   | insert into test1 values (1,repeat("x",6*1024*1024))                        | success | db1     | 5,2     |
-      | rw1  | 111111 | conn_1 | true    | insert into test1 values (1,repeat("x",16*1024*1024))                       | Result of repeat() was larger than max_allowed_packet (8388608) - truncated | db1     | 5,2     |
+      | user | passwd | conn   | toClose | sql                                                                         | expect  | db      |
+      | rw1  | 111111 | conn_1 | false   | insert into test1 values (1,repeat("x",6*1024*1024))                        | success | db1     |
+      | rw1  | 111111 | conn_1 | true    | insert into test1 values (1,repeat("x",16*1024*1024))                       | Result of repeat() was larger than max_allowed_packet (8388608) - truncated | db1     |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
