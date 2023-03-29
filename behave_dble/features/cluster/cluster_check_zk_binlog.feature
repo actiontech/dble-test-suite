@@ -1033,7 +1033,7 @@ Feature: test "binlog" in zk cluster
       | conn_11 | False   | insert into global1 values(2)      | success | schema1 |
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
-      s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
+      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
       /checkBackupStatus/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"

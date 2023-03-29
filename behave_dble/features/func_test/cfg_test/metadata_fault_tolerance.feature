@@ -48,7 +48,7 @@ Feature: fault tolerance detection
 #      | conn_1 | True    | log @@file=dble.log | hasStr{show create table `test4`;show create table `test5`;show create table `test2`;show create table `test3`;show create table `test6`;show create table `test1`;}   |
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /showTableByNodeUnitHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
@@ -167,7 +167,7 @@ Feature: fault tolerance detection
     Then execute admin cmd "reload @@config_all -r"
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /showTableByNodeUnitHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
@@ -296,7 +296,7 @@ Feature: fault tolerance detection
     Then execute admin cmd "reload @@config_all -r"
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /showTableByNodeUnitHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
