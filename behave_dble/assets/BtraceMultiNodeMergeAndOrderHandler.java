@@ -24,7 +24,7 @@ public class BtraceMultiNodeMergeAndOrderHandler {
         BTraceUtils.println("get into ownThread");
         BTraceUtils.println("---------------");
         BTraceUtils.Threads.jstack();
-        Thread.sleep(1000L);
+        Thread.sleep(1L);
         BTraceUtils.println(BTraceUtils.Time.timestamp("yyyy-MM-dd HH:mm:ss") + ", end ownThread");
         BTraceUtils.println("---------------");
     }
