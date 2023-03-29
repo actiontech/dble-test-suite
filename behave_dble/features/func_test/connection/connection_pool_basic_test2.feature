@@ -71,7 +71,6 @@ Feature: connection pool basic test, from DBLE0REQ-1867
     /newConnectionBorrow1/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "newConnectionBorrow1.java" in "dble-1"
-    Given sleep "5" seconds
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                             | db      |
       | conn_3 | True    | select * from sharding_8_t1 where id=2          | schema1 |

@@ -11,7 +11,7 @@ Feature:  unexpected packet should not in dble log
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
-      s/Thread.sleep([0-9]*L)/Thread.sleep(1000L)/
+      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
       /rowResponse/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(200L)/;/\}/!ba}
       """
     Given delete the following xml segment

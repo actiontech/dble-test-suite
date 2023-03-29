@@ -23,7 +23,6 @@ Feature: on zookeeper to check "xa"
       /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(2000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
-    Given sleep "3" seconds
     Given prepare a thread execute sql "commit" with "conn_1"
     Given execute linux command in "dble-1"
       """
