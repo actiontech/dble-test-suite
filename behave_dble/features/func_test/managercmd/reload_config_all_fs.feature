@@ -49,7 +49,7 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | 172.100.9.5 | false                 |
       | 172.100.9.6 | false                 |
 
-    # 3 reload @@config_all -fs : open transaction, add read dbInstance, execute 'reload @@config_all -fs', transaction successfully
+    # 3 reload @@config_all -fs : open transaction, add read dbInstance, execute 'reload @@config_all -fs', transaction close successfully
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1              | schema1 |
@@ -86,12 +86,11 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | hostM1 | 172.100.9.5 | 3306   | ok        | None                                                                                                                                 |
       | hostS1 | 172.100.9.6 | 3307   | error     | connection Error//heartbeat conn for sql[/*# from=1 reason=heartbeat*/select user()] is closed, due to abnormal connection |
       | hostM2 | 172.100.9.6 | 3306   | ok        | None                                                                                                                                 |
+    # 增加从节点，3.22.07开始事务连接不会被关闭，3.22.07以前事务连接会被关闭
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                      | expect      | db      |
-      | conn_0 | False   | select * from sharding_4_t1 where id = 2 | length{(1)} | schema1 |
-      | conn_2 | False   | select * from sharding_4_t1 where id = 2 | length{(0)} | schema1 |
-      | conn_0 | True    | commit                                   | success     | schema1 |
-      | conn_2 | True    | select * from sharding_4_t1 where id = 2 | length{(1)} | schema1 |
+      | conn   | toClose | sql                                      | expect                                       | db      |
+      | conn_0 | True    | select * from sharding_4_t1 where id = 2 | Lost connection to MySQL server during query | schema1 |
+      | conn_2 | True    | select * from sharding_4_t1 where id = 2 | length{(0)}                                  | schema1 |
 
     # 4 reload @@config_all -f -s : open transaction, add write dbInstance, execute 'reload @@config_all -f -s', transaction closed successfully
     Then execute sql in "dble-1" in "user" mode
