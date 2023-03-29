@@ -16,7 +16,7 @@ public final class BtraceHeartbeat {
     )
     public static void fieldEofResponse() throws Exception {
         BTraceUtils.println("before fieldEofResponse_________________---1 " );
-        Thread.sleep(10L);
+        Thread.sleep(1L);
     }
 
 
@@ -27,7 +27,7 @@ public final class BtraceHeartbeat {
    public static void heartbeat() throws Exception {
         BTraceUtils.println("_________________________________________" );
         BTraceUtils.println("before heartbeat_________________---1 " );
-        Thread.sleep(10L);
+        Thread.sleep(1L);
     }   
 }
  

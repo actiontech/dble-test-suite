@@ -42,7 +42,7 @@ public final class BtraceFreshConnLock {
         BTraceUtils.println("time["+startTime+"], start ... " );
         BTraceUtils.println("get reload lock");
         BTraceUtils.println();
-        Thread.sleep(10L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time["+endTime+"], end ... " );
         BTraceUtils.println();
@@ -57,7 +57,7 @@ public final class BtraceFreshConnLock {
         BTraceUtils.println("time["+startTime+"], start ... " );
         BTraceUtils.println("freshConnGetRealodLocekAfter");
         BTraceUtils.println();
-        Thread.sleep(10L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time["+endTime+"], end ... " );
         BTraceUtils.println();
@@ -72,7 +72,7 @@ public final class BtraceFreshConnLock {
         BTraceUtils.println("time["+startTime+"], start ... " );
         BTraceUtils.println("stopConnGetFrenshLocekAfter");
         BTraceUtils.println();
-        Thread.sleep(10L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time["+endTime+"], end ... " );
         BTraceUtils.println();
@@ -87,7 +87,7 @@ public final class BtraceFreshConnLock {
         BTraceUtils.println("time["+startTime+"], start ... " );
         BTraceUtils.println("getConnGetFrenshLocekAfter");
         BTraceUtils.println();
-        Thread.sleep(10L);
+        Thread.sleep(1L);
         long endTime = System.currentTimeMillis();
         BTraceUtils.println("time["+endTime+"], end ... " );
         BTraceUtils.println();
