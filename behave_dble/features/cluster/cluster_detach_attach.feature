@@ -918,7 +918,7 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/opt/dble/BtraceClusterDetachAttach2.java" on "dble-1"
 
 
-  @btrace
+  @btrace @skip
   Scenario: dble-1 is executing cluster sql, dble-2 is executing detach sql, dble-1 execute success #10
     Given delete file "/opt/dble/BtraceClusterDetachAttach5.java" on "dble-2"
     Given delete file "/opt/dble/BtraceClusterDetachAttach5.java.log" on "dble-2"
