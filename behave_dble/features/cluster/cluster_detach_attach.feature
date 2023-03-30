@@ -932,7 +932,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach5.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /zkOnEvent/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(6000L)/;/\}/!ba}
+    /zkOnEvent/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -950,11 +950,11 @@ Feature: check single dble detach or attach from cluster
     Given prepare a thread execute sql "cluster @@detach" with "conn_2"
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose   | sql                      | expect                | db               | timeout |
-      | conn_3  | true      | select * from dble_table | hasStr{sharding_4_t2} | dble_information | 8       |
+      | conn_3  | true      | select * from dble_table | hasStr{sharding_4_t2} | dble_information | 11,2    |
     Then execute sql in "dble-2" in "admin" mode
       | conn    | toClose   | sql                      | expect                | db               | timeout |
-      | conn_2  | false     | select * from dble_table | hasStr{sharding_4_t2} | dble_information | 8       |
-      | conn_2  | true      | cluster @@attach         | success               | dble_information | 8       |
+      | conn_2  | false     | select * from dble_table | hasStr{sharding_4_t2} | dble_information | 11,2    |
+      | conn_2  | true      | cluster @@attach         | success               | dble_information | 11,2    |
 
     Given stop btrace script "BtraceClusterDetachAttach5.java" in "dble-2"
     Given destroy btrace threads list

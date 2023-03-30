@@ -285,10 +285,11 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace @restore_mysql_service
+  @btrace @restore_mysql_service @stop_tcpdump
   Scenario: mysql node hangs causing xa transaction fail to commit, automatic recovery in background attempts and check xaSessionCheckPeriod #6
     """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    {'stop_tcpdump':'dble-1'}
     """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
@@ -339,6 +340,13 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     $a\-DxaSessionCheckPeriod=10000
     """
     Then Restart dble in "dble-1" success
+
+    #tcpdump启动抓包(需要加上标签，抓包命令，case最后停止抓包的命令)
+    Given prepare a thread to run tcpdump in "dble-1"
+     """
+     tcpdump -w /tmp/tcpdump.log
+     """
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |
       | conn_2 | False   | set autocommit=0                                        | success | schema1 |
@@ -371,5 +379,6 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |
       | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
 
+    Given stop and destroy tcpdump threads list in "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
