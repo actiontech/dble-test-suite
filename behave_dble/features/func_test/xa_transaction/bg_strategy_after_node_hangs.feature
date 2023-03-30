@@ -339,6 +339,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     $a\-DxaSessionCheckPeriod=10000
     """
     Then Restart dble in "dble-1" success
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |
       | conn_2 | False   | set autocommit=0                                        | success | schema1 |
@@ -365,11 +366,12 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Then execute sql in "dble-1" in "admin" mode
     | sql                                                                                                               | expect        | db                | timeout |
     | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+    ###心跳恢复和xa的定时任务有时间差，还是要加上至少1秒的retry
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                 | expect      | db      |
-      | conn_1 | False   | select * from sharding_4_t1         | length{(8)} | schema1 |
-      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |
-      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
+      | conn   | toClose | sql                                 | expect      | db      | timeout |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(8)} | schema1 | 5       |
+      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |         |
+      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |         |
 
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
