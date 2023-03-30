@@ -9,8 +9,8 @@ Feature: check fingerprint log
   Scenario: check fingerprint on manager side #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
+       <dbGroup rwSplitMode="3" name="ha_group2" delayThreshold="1000" >
+          <heartbeat>show slave status</heartbeat>
            <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
            <dbInstance name="hostS2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" />
        </dbGroup>
@@ -177,8 +177,8 @@ Feature: check fingerprint log
     Given turn on general log in "mysql-master2"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
-    <heartbeat>select user()</heartbeat>
+    <dbGroup rwSplitMode="3" name="ha_group2" delayThreshold="1000" delayPeriodMillis="1000" delayDatabase="delay_test">
+    <heartbeat>show slave status</heartbeat>
     <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
       <property name="heartbeatPeriodMillis">2000</property>
     </dbInstance>
@@ -230,7 +230,8 @@ Feature: check fingerprint log
     """
     heartbeat to [[]172.100.9.6:3306[]] setOK
     """
-    Then check general log in host "mysql-master2" has "from=instance-test reason=heartbeat\*/select user()" occured ">0" times
+    Then check general log in host "mysql-master2" has "from=instance-test reason=heartbeat\*/show slave status" occured ">0" times
+    Then check general log in host "mysql-slave1" has "from=instance-test reason=heartbeat\*/show slave status" occured ">0" times
     Given turn off general log in "mysql-master2"
     Given turn off general log in "mysql-master1"
     Given turn off general log in "mysql-slave1"
