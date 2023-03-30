@@ -11,7 +11,7 @@ from hamcrest import *
 from behave.runner import Context
 from steps.lib.DbleMeta import DbleMeta
 from steps.lib.DBUtil import *
-from steps.lib.utils import get_node, get_ssh, create_dir, exec_command, wait_for
+from steps.lib.utils import get_node, get_ssh, create_dir, exec_command, wait_for, sleep_by_time
 # from lib.utils import wait_for, create_dir
 LOGGER = logging.getLogger('root')
 
@@ -551,3 +551,45 @@ def check_cluster_successd(context, expectNodes):
             delattr(context, "retry_check_zk_nodes")
     else:
         delattr(context, "retry_check_zk_nodes")
+
+@Then('check zk has "{flag}" the following values in "{zk_path}" with retry "{retry_param}" times in "{hostname}"')
+def step_impl(context, zk_path, flag="Y", retry_param=1, hostname="dble-1"):
+    strs = context.text.strip()
+    strs_list = strs.splitlines()
+
+    ssh_client = get_ssh(hostname)
+    for linestr in strs_list:
+        #目前取最后10行（主要是排除过多的登录信息），如果有其他需求可以自行修改
+        cmd = "cd {0}/bin && (./zkCli.sh ls {1}) | tail -10 |grep -E \"{2}\"".format(context.cfg_zookeeper['home'],zk_path,linestr)
+        LOGGER.debug("check cmd is: {}".format(cmd))
+        retry_exec_command(context, ssh_client, linestr, cmd, zk_path, retry_param,flag)
+
+def retry_exec_command(context, ssh_client, linestr, cmd, zk_path, retry_param,flag):
+    if "," in str(retry_param):
+        retry_times = int(retry_param.split(",")[0])
+        sep_time = float(retry_param.split(",")[1])
+    else:
+        retry_times = int(retry_param)
+        sep_time = 1
+
+    execute_times = retry_times + 1
+    for i in range(execute_times):
+        try:
+            rc, stdout, stderr = ssh_client.exec_command(cmd)
+            if flag == "not":
+                assert_that(len(stdout) == 0, "expect has not \"{0}\" in zk \"{1}\",but has".format(linestr, zk_path))
+            else:
+                assert_that(len(stdout) > 0, "expect has \"{0}\" in zk \"{1}\",but has not".format(linestr, zk_path))
+            break
+        except Exception as e:
+            if flag == "not":
+                LOGGER.debug("check has {0} value in zk {1} , execute {2} times".format(flag,zk_path,i+1))
+            else:
+                LOGGER.debug("check has value in zk {0} , execute {1} times".format(zk_path,i+1))
+
+            if i == execute_times - 1:
+                raise e
+            else:
+                sleep_by_time(context, sep_time)
+
+
