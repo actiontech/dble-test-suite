@@ -54,7 +54,6 @@ run_cfg_case1: up
 	features/func_test/connection/rwSplit_connection_test.feature
 
 
-
 ##clone pipline
 run_cluster_unstable_case: up
 	pipenv run behave features/setup.feature \
