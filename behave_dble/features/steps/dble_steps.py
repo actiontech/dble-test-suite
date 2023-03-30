@@ -6,6 +6,7 @@
 import logging
 import os
 import time
+import re
 
 from steps.mysql_steps import *
 from behave import *
@@ -161,3 +162,30 @@ def step_impl(context, host_name, mode_name="user"):
             assert False, "dble and mysql resultSet not same, dbleResultSet's length:{0}, mysqlResultSet's length:{1}".format(len(dble_res), len(mysql_res))
 
     context.logger.info("resultSets of all sql executed in dble and mysql are same")
+
+
+@Then('check mysql "{addr}:{port}" in "{hostname}" heartbeat recover ok')
+@Then('check mysql "{addr}:{port}" in "{hostname}" heartbeat recover ok retry "{retry}" times')
+def step_impl(context, addr, port, hostname, retry=1):
+    node = get_node(hostname)
+    get_query = "select count(*) from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='{}' and port='{}'".format(addr, port)
+    get_times = "mysql -uroot -p111111 -P9066 -c -Ddble_information -h127.0.0.1 -e\"{}\" ".format(get_query)
+    if "," in str(retry):
+        retry_times = int(retry.split(",")[0])
+        sep_time = float(retry.split(",")[1])
+    else:
+        retry_times = int(retry)
+        sep_time = 1
+    execute_times = retry_times + 1
+    for i in range(execute_times):
+        try:
+            rc, sto, ste = node.ssh_conn.exec_command(get_times)
+            num_sto = int(re.findall("\d+", sto)[0])
+            assert num_sto > 0, "\nThe execute query is:{}\nReturn result is '{}'".format(get_times, num_sto)
+            break
+        except Exception as e:
+            logger.info(f"check times in result not out yet, execute {i + 1} times")
+            if i == execute_times - 1:
+                raise e
+            else:
+                sleep_by_time(context, sep_time)
