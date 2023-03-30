@@ -69,10 +69,10 @@ Feature: connection test in rwSplit mode
         """
           (1,)
         """
-
+       #make sure the check log happens 5 seconds after the dbGroup is dropped, because the connection recycle timer task happens every 5 seconds
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1" retry "10" times
         """
-          \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
+          \[background task\]recycle old group\`ha_group2\` resulttrue
         """
 
      Given prepare a thread execute sql "select * from test" with "conn_1"
@@ -87,10 +87,10 @@ Feature: connection test in rwSplit mode
         """
           (1,)
         """
-
-     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_2" in host "dble-1" retry "10" times
+     #make sure the check log happens 5 seconds after the dbGroup is dropped, because the connection recycle timer task happens every 5 seconds
+     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_2" in host "dble-1" retry "10" times
         """
-          \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
+          \[background task\]recycle old group\`ha_group2\` resulttrue
         """
      Then check btrace "BtraceRwSelect.java" output in "dble-1" with "2" times
        """
@@ -143,9 +143,10 @@ Feature: connection test in rwSplit mode
           (1,)
         """
 
+      #make sure the check log happens 5 seconds after the dbGroup is dropped, because the connection recycle timer task happens every 5 seconds
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1" retry "10" times
         """
-          \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
+          \[background task\]recycle old group\`ha_group2\` resulttrue
         """
 
      Given prepare a thread execute sql "select * from test" with "conn_3"
@@ -161,9 +162,10 @@ Feature: connection test in rwSplit mode
           (1,)
         """
 
-     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_num_4" in host "dble-1" retry "10" times
+     #make sure the check log happens 5 seconds after the dbGroup is dropped, because the connection recycle timer task happens every 5 seconds
+     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_4" in host "dble-1" retry "10" times
         """
-          \[background task\]recycle old dbInstance:dbInstance\[name=hostM2,disabled=false,maxCon=10,minCon=3\],result:true
+          \[background task\]recycle old group\`ha_group2\` resulttrue
         """
 
      Then check btrace "BtraceRwSelect.java" output in "dble-1" with "2" times
@@ -249,7 +251,7 @@ Feature: connection test in rwSplit mode
           (1,)
         """
 
-    Then check btrace "BtraceSelectRWDbGroup.java" output in "dble-1" with "2" times
+    Then check btrace "BtraceSelectRWDbGroup.java" output in "dble-1" with "4" times
       """
         get into reSelectRWDbGroup
       """

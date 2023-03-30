@@ -69,10 +69,11 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | False   | drop table if exists test_table         | schema1 |
       | conn_0 | True    | create table test_table(id int,pad int) | schema1 |
     Given stop mysql in host "mysql-master1"
+    #3.22.07 stop mysql后执行reload成功，因为配置未变更不会测试连接有效性
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                 | expect                                                            |
       | conn_0 | False   | dryrun              | hasStr{Can't connect to [dbInstance[ha_group1.hostM1]]}           |
-      | conn_0 | True    | reload @@config_all | success       |
+      | conn_0 | True    | reload @@config_all | there are some dbInstance connection failed                       |
    ## DBLE0REQ-2003 只是停一个mysql不影响reload
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect               | db      |
