@@ -127,9 +127,10 @@ Feature: connection pool basic test
     mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -Ddble_information -e "select remote_processlist_id from backend_connections where used_for_heartbeat='false' and db_instance_name='M1' "
     """
     Given kill mysql conns in "mysql-master1" in "dble_idle_connections"
+    #由于kill连接和查询间隔太快，会偶发查询的时候还没kill完成，会查多余预期条数的连接。改成重试查询kill完成了
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                      | expect        | db                |
-      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'      | length{(10)}  | dble_information  |
+      | conn   | toClose | sql                                                                                      | expect        | db                |timeout|
+      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'      | length{(10)}  | dble_information  | 10,0.5|
     #sleep 5s to go into scaling period
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
