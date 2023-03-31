@@ -220,8 +220,8 @@ Feature: test "pause/resume" in zk cluster
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
      """
      ERROR
-     we will try to resume cluster in the backend
-     please check the dble status and dble log
+     There are some node in cluster can
+     recycle backend
      """
     #case check lock on zookeeper
     Given execute linux command in "dble-1"

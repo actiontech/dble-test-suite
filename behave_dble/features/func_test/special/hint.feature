@@ -31,7 +31,7 @@ Feature: verify hint sql
       | conn_1 | True    | show tables              | hasnot{(('test_index',),)} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                  | expect                                   | db      |
-      | conn_0 | False   | /*!dble:shardingNod=dn1*/ drop table if exists test_table                                            | please following the dble hint syntax: /*!dble:shardingNode=? */ sql | schema1 |
+      | conn_0 | False   | /*!dble:shardingNod=dn1*/ drop table if exists test_table                                            | Not supported hint sql type : shardingnod | schema1 |
       | conn_0 | False   | /*#dble:shardingNode=dn1*/ drop table if exists test_table                                           | success                                  | schema1 |
       | conn_0 | False   | drop table if exists test_shard                                                                      | success                                  | schema1 |
       | conn_0 | False   | create table test_table (id int ,name varchar(20))                                                   | success                                  | schema1 |
@@ -39,7 +39,7 @@ Feature: verify hint sql
       | conn_0 | False   | insert into test_table values(1,'test_table1'),(2,'test_table2'),(3,'test_table3'),(4,'test_table4') | success                                  | schema1 |
       | conn_0 | False   | insert into test_shard values(4,'test_shard4'),(5,'test_shard5'),(6,'test_shard6'),(7,'test_shard7') | success                                  | schema1 |
       | conn_0 | False   | /*!dble:shardingNode=dn1*/ select * from test_table                                                      | has{(2,'test_table2'),(4,'test_table4')} | schema1 |
-      | conn_0 | False   | /*!dble:shardingNode=dn1,dn3*/ select * from test_table                                                  | can't find hint sharding node:dn1,dn3         | schema1 |
+      | conn_0 | False   | /*!dble:shardingNode=dn1,dn3*/ select * from test_table                                                  | can't find hint shardingnode:dn1,dn3         | schema1 |
       | conn_0 | True    | /*!dble:shardingNode=dn1*/ update test_table set name = 'dn1'                                            | success                                  | schema1 |
     Then execute sql in "mysql-master1"
       | sql                      | expect                                   | db  |

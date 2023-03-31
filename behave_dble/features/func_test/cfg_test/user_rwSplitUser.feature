@@ -27,11 +27,11 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Invalid content was found starting with element 'rwSplitser'. One of '{managerUser, shardingUser, rwSplitUser, analysisUser, blacklist}' is expected
+    Invalid content was found starting with element 'rwSplitser'. One of '{managerUser, shardingUser, rwSplitUser, blacklist}' is expected
     """
     Then Restart dble in "dble-1" failed for
      """
-     Invalid content was found starting with element 'rwSplitser'. One of '{managerUser, shardingUser, rwSplitUser, analysisUser, blacklist}' is expected
+     Invalid content was found starting with element 'rwSplitser'. One of '{managerUser, shardingUser, rwSplitUser, blacklist}' is expected
      """
 
 
@@ -329,14 +329,14 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@sql.condition                                              | length{(2)}   |
       | conn_0 | False   | show @@heartbeat                                                  | length{(4)}   |
       | conn_0 | False   | show @@heartbeat.detail  where name='hostM1'                      | success       |
-      | conn_0 | False   | show @@sysparam                                                   | length{(120)} |
+      | conn_0 | False   | show @@sysparam                                                   | length{(116)} |
       | conn_0 | False   | show @@white                                                      | length{(3)}   |
       | conn_0 | False   | show @@directmemory                                               | length{(1)}   |
       | conn_0 | False   | show @@command.count                                              | length{(1)}   |
       | conn_0 | False   | show @@backend.statistics                                         | length{(4)}   |
       | conn_0 | False   | show @@backend.old                                                | length{(0)}   |
       | conn_0 | False   | show @@binlog.status                                              | length{(2)}   |
-      | conn_0 | False   | show @@help                                                       | length{(113)} |
+      | conn_0 | False   | show @@help                                                       | length{(112)} |
       | conn_0 | False   | show @@thread_used                                                | success       |
       | conn_0 | False   | show @@algorithm where schema='schema1' and table='sharding_4_t1' | length{(5)}   |
       | conn_0 | False   | show @@ddl                                                        | length{(0)}   |

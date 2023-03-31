@@ -30,7 +30,7 @@ Feature:  dble_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(124)}     | dble_information |
+      | conn_0 | False   | select * from dble_variables    | length{(120)}     | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
@@ -65,12 +65,12 @@ Feature:  dble_variables test
       | bindIp                                  | 0.0.0.0                         | The host where the server is running. The default is 0.0.0.0                                                                                                                                                         | true        |
       | serverPort                              | 8066                            | User connection port. The default number is 8066                                                                                                                                                                     | true        |
       | managerPort                             | 9066                            | Manager connection port. The default number is 9066                                                                                                                                                                  | true        |
-      | NIOFrontRW                              | 1                               | The size of frontend NIOProcessor, the default value is the number of processors available to the Java virtual machine                                                                                               | true        |
-      | NIOBackendRW                            | 8                               | The size of backend NIOProcessor, the default value is the number of processors available to the Java virtual machine                                                                                                | true        |
-      | frontWorker                             | 1                               | The size of fixed thread pool named of frontWorker, the default value is the number of processors available to the Java virtual machine * 2                                                                          | true        |
-      | backendWorker                           | 8                               | The size of fixed thread pool named of backendWorker,the default value is the number of processors available to the Java virtual machine * 2                                                                         | true        |
-      | complexQueryWorker                      | 8                               | The size of fixed thread pool named of complexQueryWorker,the default is the number of processors available to the Java virtual machine * 2                                                                          | true        |
-      | writeToBackendWorker                    | 8                               | The executor for writeToBackendWorker.The default value is min(8, default value of NIOFrontRW)                                                                                                                       | true        |
+      | processors                              | 1                               | The size of frontend NIOProcessor, the default value is the number of processors available to the Java virtual machine                                                                                               | true        |
+      | backendProcessors                       | 8                               | The size of backend NIOProcessor, the default value is the number of processors available to the Java virtual machine                                                                                                | true        |
+      | processorExecutor                       | 1                               | The size of fixed thread pool named of frontend businessExecutor, the default value is the number of processors available to the Java virtual machine * 2                                                            | true        |
+      | backendProcessorExecutor                | 8                               | The size of fixed thread pool named of backend businessExecutor,the default value is the number of processors available to the Java virtual machine * 2                                                              | true        |
+      | complexExecutor                         | 8                               | The size of fixed thread pool named of writeToBackendExecutor,the default is the number of processors available to the Java virtual machine * 2                                                                      | true        |
+      | writeToBackendExecutor                  | 8                               | The executor for complex query.The default value is min(8, default value of processorExecutor)                                                                                                                       | true        |
       | serverBacklog                           | 2048                            | The NIO/AIO reactor backlog,the max of create connection request at one time. The default value is 2048                                                                                                              | true        |
       | maxCon                                  | 0                               | The number of max connections the server allowed, 0 means number of max connections attributes is not limited                                                                                                        | true        |
       | useCompression                          | 0                               | Whether the Compression is enable, the default number is 0                                                                                                                                                           | true        |
@@ -143,13 +143,9 @@ Feature:  dble_variables test
       | sqlLogTableSize                         | 1024                            | SqlLog table size, the default is 1024                                                                                                                                                                               | false       |
       | samplingRate                            | 0                               | Sampling rate, the default is 0, it is a percentage                                                                                                                                                                  | false       |
       | inSubQueryTransformToJoin               | false                           | The inSubQuery is transformed into the join ,the default value is false                                                                                                                                              | true        |
-      | rwStickyTime                            | 1000ms                          | For rwSplitUser, Implement stickiness for read and write instances, the default value is 1000ms                                                                                                                      | true        |
-      | joinStrategyType                        | -1                              | Nest loop strategy type. The default value is -1                                                                                                                                                                     | true        |
       | closeHeartBeatRecord                    | false                           | close heartbeat record. if closed, `show @@dbinstance.synstatus`,`show @@dbinstance.syndetail`,`show @@heartbeat.detail` will be empty and `show @@heartbeat`'s EXECUTE_TIME will be '-' .The default value is false | true        |
-      | enableRoutePenetration                  | 0                               | Whether enable route penetration.The default value is 0                                                                                                                                                              | true        |
-      | routePenetrationRules                   |                                 | The config of route penetration.The default value is ''                                                                                                                                                              | true        |
-      | district                                | null                            | The location of the DBLE                                                                                                                                                                                             | true        |
-      | dataCenter                              | null                            | The data center where the DBLE resides                                                                                                                                                                               | true        |
+      | enableRoutePenetration                  | 0                               | Whether enable route penetration                                                                                                                                                                                     | true        |
+      | routePenetrationRules                   |                                 | The config of route penetration                                                                                                                                                                                      | true        |
       | isSupportSSL                            | false                           | isSupportSSL in configuration                                                                                                                                                                                        | true        |
       | isSupportOpenSSL                        | false                           | Whether OpenSSL is actually supported                                                                                                                                                                                | true        |
       | serverCertificateKeyStoreUrl            | null                            | Service certificate required of OpenSSL                                                                                                                                                                              | true        |
@@ -159,6 +155,8 @@ Feature:  dble_variables test
       | gmsslRcaPem                             | null                            | Root certificate of GMSSL                                                                                                                                                                                            | true        |
       | gmsslOcaPem                             | null                            | Secondary certificate of GMSSL                                                                                                                                                                                       | true        |
       | groupConcatMaxLen                       | 1024                            | The maximum permitted result length in bytes for the GROUP_CONCAT() function. The default is 1024.                                                                                                                   | true        |
+      | enableAsyncRelease                      | 1                               | Whether enable async release . default value is 1(off).                                                                                                                                                              | true      |
+      | releaseTimeout                          | 10                              | time wait for release ,unit is ms,  default value is 10 ms                                                                                                                                                           | true      |
 
   #case supported select limit /order by/ where like
       Then execute sql in "dble-1" in "admin" mode
@@ -167,8 +165,8 @@ Feature:  dble_variables test
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(20)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(20)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(124)}| dble_information |
-  #case supported select order by concat()
+      | conn_0 | False   | select read_only from dble_variables                              | length{(120)}| dble_information |
+    #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                              | db               |
       | conn_0 | False   | select * from dble_variables order by concat(comment,variable_name) desc limit 5 | dble_information |
@@ -212,7 +210,7 @@ Feature:  dble_variables test
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
       | false       | 20      |
-      | true        | 104     |
+      | true        | 100     |
 
   #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
@@ -236,8 +234,8 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('xalog',),)}   | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('',),)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(107)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(105)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(103)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(100)}        | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
   #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |

@@ -24,7 +24,6 @@ Feature:  dble_db_instance table test
       | read_conn_request                 | int(11)      | YES    |       | 0         |         |
       | write_conn_request                | int(11)      | YES    |       | 0         |         |
       | disabled                          | varchar(5)   | YES    |       | false     |         |
-      | database_type                     | varchar(11)  | YES    |       | mysql     |         |
       | last_heartbeat_ack_timestamp      | varchar(64)  | YES    |       | None      |         |
       | last_heartbeat_ack                | varchar(32)  | YES    |       | None      |         |
       | heartbeat_status                  | varchar(32)  | YES    |       | None      |         |
@@ -47,7 +46,7 @@ Feature:  dble_db_instance table test
       | flow_low_level                    | int(11)      | YES    |       | 262144    |         |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                               | expect        | db               |
-      | conn_0 | False   | desc dble_db_instance             | length{(36)}  | dble_information |
+      | conn_0 | False   | desc dble_db_instance             | length{(33)}  | dble_information |
       | conn_0 | False   | select * from dble_db_instance    | length{(2)}   | dble_information |
   #case change db.xml and reload
     Given delete the following xml segment
