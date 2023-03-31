@@ -95,12 +95,12 @@ Feature: config all dble config files correct and restart dble
       | bindIp                      | 0.0.0.0                         |
       | serverPort                  | 8066                            |
       | managerPort                 | 9066                            |
-      | NIOFrontRW                  | 1                               |
-      | NIOBackendRW                | 4                               |
-      | frontWorker                 | 1                               |
-      | backendWorker               | 4                               |
-      | complexQueryWorker          | 4                               |
-      | writeToBackendWorker        | 4                               |
+      | processors                  | 1                               |
+      | backendProcessors           | 4                               |
+      | processorExecutor           | 1                               |
+      | backendProcessorExecutor    | 4                               |
+      | complexExecutor             | 4                               |
+      | writeToBackendExecutor      | 4                               |
       | fakeMySQLVersion            | 5.6.24                          |
       | sequenceHandlerType         | Local TimeStamp(like Snowflake) |
       | serverBacklog               | 2048                            |

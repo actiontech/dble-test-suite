@@ -35,21 +35,22 @@ Feature:  dble_thread_pool test
       | conn   | toClose | sql                            | db                |
       | conn_0 | False   | select * from dble_thread_pool | dble_information  |
     Then check resultset "dble_thread_pool_2" has lines with following column values
-      | name-0               | core_pool_size-2 | active_count-3 | waiting_task_count-4 |
-      | Timer                | 1                | 0              | 0                    |
-      | frontWorker          | 1                | 1              | 0                    |
-      | backendWorker        | 8                | 0              | 0                    |
-      | complexQueryWorker   | 8                | 1              | 0                    |
-      | writeToBackendWorker | 8                | 8              | 0                    |
-      | NIOFrontRW           | 1                | 1              | 0                    |
-      | NIOBackendRW         | 8                | 8              | 0                    |
+      | name-0                  | core_pool_size-2 | active_count-3 | waiting_task_count-4 |
+      | Timer                   | 1                | 0              | 0                    |
+      | BusinessExecutor        | 1                | 1              | 0                    |
+      | backendBusinessExecutor | 8                | 0              | 0                    |
+      | complexQueryExecutor    | 8                | 1              | 0                    |
+      | writeToBackendExecutor  | 8                | 8              | 0                    |
+      | $_NIO_REACTOR_FRONT-    | 1                | 1              | 0                    |
+      | $_NIO_REACTOR_BACKEND-  | 8                | 8              | 0                    |
+
    #case supported select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                         | expect                                                                               |
       | conn_0 | False   | use dble_information                                        | success                                                                              |
       | conn_0 | False   | select name,core_pool_size from dble_thread_pool limit 1                      | has{(('Timer', 1),)}                                                |
       | conn_0 | False   | select * from dble_thread_pool order by name desc limit 2   | length{(2)}                                                                          |
-      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name like '%Worker%' | has{(('frontWorker', 1), ('backendWorker', 8))}     |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name like '%Business%' | has{(('BusinessExecutor', 1), ('backendBusinessExecutor', 8))}     |
       | conn_0 | False   | select core_pool_size from dble_thread_pool                      | has{((1,), (1,), (8,), (8,), (8,), (1,), (8,))}                                      |
   #case supported select max/min from table
       | conn_0 | False   | select max(core_pool_size) from dble_thread_pool                 | has{((8,),)}   |
@@ -57,7 +58,7 @@ Feature:  dble_thread_pool test
   #case supported where [sub-query]
       | conn_0 | False   | select core_pool_size from dble_thread_pool where name in (select name from dble_thread_pool where active_count>0)  | has{((1,), (8,), (8,), (1,), (8,))}                      |
   #case supported select field from
-      | conn_0 | True    | select name from dble_thread_pool where active_count > 0    | has{(('frontWorker',), ('complexQueryWorker',), ('writeToBackendWorker',), ('NIOFrontRW',), ('NIOBackendRW',))} |
+      | conn_0 | True    | select name from dble_thread_pool where active_count > 0    | has{(('BusinessExecutor',), ('complexQueryExecutor',), ('writeToBackendExecutor',), ('$_NIO_REACTOR_FRONT-',), ('$_NIO_REACTOR_BACKEND-',))} |
 
 
   #case unsupported update/delete/insert
@@ -79,17 +80,17 @@ Feature:  dble_thread_pool test
       | conn   | toClose | sql                            | db                |
       | conn_0 | True    | select * from dble_thread_pool | dble_information  |
     Then check resultset "dble_thread_pool_3" has lines with following column values
-      | name-0               | core_pool_size-2 |
-      | Timer                | 1           |
-      | frontWorker          | 4           |
-      | backendWorker        | 12          |
-      | complexQueryWorker   | 12          |
-      | writeToBackendWorker | 12          |
-      | NIOFrontRW           | 1           |
-      | NIOBackendRW         | 16          |
-    Then check resultset "dble_thread_pool_3" has not lines with following column values
-      | name-0               | core_pool_size-2 |
-      | frontWorker          | 1           |
-      | backendWorker        | 8           |
-      | complexQueryWorker   | 8           |
-      | writeToBackendWorker | 8           |
+      | name-0                  | core_pool_size-2 |
+      | Timer                   | 1           |
+      | BusinessExecutor        | 4           |
+      | backendBusinessExecutor | 12          |
+      | complexQueryExecutor    | 12          |
+      | writeToBackendExecutor  | 12          |
+      | $_NIO_REACTOR_FRONT-    | 1           |
+      | $_NIO_REACTOR_BACKEND-  | 16          |
+     Then check resultset "dble_thread_pool_3" has not lines with following column values
+      | name-0                  | core_pool_size-2 |
+      | BusinessExecutor        | 1           |
+      | backendBusinessExecutor | 8           |
+      | complexQueryExecutor    | 8           |
+      | writeToBackendExecutor  | 8           |

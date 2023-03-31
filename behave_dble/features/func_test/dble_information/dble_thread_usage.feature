@@ -41,32 +41,32 @@ Feature:  dble_thread_usage table test
       | conn_0 | True    | select * from dble_thread_usage | dble_information |
     Then check resultset "dble_thread_usage_2" has lines with following column values
       | thread_name-0               |
-      | 0-NIOBackendRW              |
-      | 1-NIOBackendRW              |
-      | 2-NIOBackendRW              |
-      | 3-NIOBackendRW              |
-      | 4-NIOBackendRW              |
-      | 5-NIOBackendRW              |
-      | 6-NIOBackendRW              |
-      | 7-NIOBackendRW              |
-      | 0-NIOFrontRW                |
-      | 0-frontWorker               |
-      | 0-backendWorker             |
-      | 1-backendWorker             |
-      | 2-backendWorker             |
-      | 3-backendWorker             |
-      | 4-backendWorker             |
-      | 5-backendWorker             |
-      | 6-backendWorker             |
-      | 7-backendWorker             |
-      | 0-writeToBackendWorker     |
-      | 1-writeToBackendWorker     |
-      | 2-writeToBackendWorker     |
-      | 3-writeToBackendWorker     |
-      | 4-writeToBackendWorker     |
-      | 5-writeToBackendWorker     |
-      | 6-writeToBackendWorker     |
-      | 7-writeToBackendWorker     |
+      | $_NIO_REACTOR_BACKEND-0-RW  |
+      | $_NIO_REACTOR_BACKEND-1-RW  |
+      | $_NIO_REACTOR_BACKEND-2-RW  |
+      | $_NIO_REACTOR_BACKEND-3-RW  |
+      | $_NIO_REACTOR_BACKEND-4-RW  |
+      | $_NIO_REACTOR_BACKEND-5-RW  |
+      | $_NIO_REACTOR_BACKEND-6-RW  |
+      | $_NIO_REACTOR_BACKEND-7-RW  |
+      | $_NIO_REACTOR_FRONT-0-RW    |
+      | BusinessExecutor0           |
+      | backendBusinessExecutor0    |
+      | backendBusinessExecutor1    |
+      | backendBusinessExecutor2    |
+      | backendBusinessExecutor3    |
+      | backendBusinessExecutor4    |
+      | backendBusinessExecutor5    |
+      | backendBusinessExecutor6    |
+      | backendBusinessExecutor7    |
+      | writeToBackendExecutor0     |
+      | writeToBackendExecutor1     |
+      | writeToBackendExecutor2     |
+      | writeToBackendExecutor3     |
+      | writeToBackendExecutor4     |
+      | writeToBackendExecutor5     |
+      | writeToBackendExecutor6     |
+      | writeToBackendExecutor7     |
   #case change bootstrap.cnf to check result
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
      """
@@ -81,53 +81,53 @@ Feature:  dble_thread_usage table test
       | conn_0 | False   | select * from dble_thread_usage  | dble_information |
     Then check resultset "dble_thread_usage_4" has lines with following column values
       | thread_name-0              |
-      | 0-NIOBackendRW             |
-      | 1-NIOBackendRW             |
-      | 2-NIOBackendRW             |
-      | 3-NIOBackendRW             |
-      | 0-NIOFrontRW               |
-      | 0-frontWorker              |
-      | 1-frontWorker              |
-      | 0-backendWorker            |
-      | 1-backendWorker            |
-      | 2-backendWorker            |
-      | 3-backendWorker            |
-      | 0-writeToBackendWorker     |
-      | 1-writeToBackendWorker     |
-      | 2-writeToBackendWorker     |
-      | 3-writeToBackendWorker     |
+      | $_NIO_REACTOR_BACKEND-0-RW |
+      | $_NIO_REACTOR_BACKEND-1-RW |
+      | $_NIO_REACTOR_BACKEND-2-RW |
+      | $_NIO_REACTOR_BACKEND-3-RW |
+      | $_NIO_REACTOR_FRONT-0-RW   |
+      | BusinessExecutor0          |
+      | BusinessExecutor1          |
+      | backendBusinessExecutor0   |
+      | backendBusinessExecutor1   |
+      | backendBusinessExecutor2   |
+      | backendBusinessExecutor3   |
+      | writeToBackendExecutor0    |
+      | writeToBackendExecutor1    |
+      | writeToBackendExecutor2    |
+      | writeToBackendExecutor3    |
     Then check resultset "dble_thread_usage_4" has not lines with following column values
       | thread_name-0              |
-      | 4-NIOBackendRW             |
-      | 5-NIOBackendRW             |
-      | 6-NIOBackendRW             |
-      | 7-NIOBackendRW             |
-      | 4-backendWorker            |
-      | 5-backendWorker            |
-      | 6-backendWorker            |
-      | 7-backendWorker            |
-      | 4-writeToBackendWorker     |
-      | 5-writeToBackendWorker     |
-      | 6-writeToBackendWorker     |
-      | 7-writeToBackendWorker     |
+      | $_NIO_REACTOR_BACKEND-4-RW |
+      | $_NIO_REACTOR_BACKEND-5-RW |
+      | $_NIO_REACTOR_BACKEND-6-RW |
+      | $_NIO_REACTOR_BACKEND-7-RW |
+      | backendBusinessExecutor4   |
+      | backendBusinessExecutor5   |
+      | backendBusinessExecutor6   |
+      | backendBusinessExecutor7   |
+      | writeToBackendExecutor4    |
+      | writeToBackendExecutor5    |
+      | writeToBackendExecutor6    |
+      | writeToBackendExecutor7    |
 
    #case supported select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                           | expect                                 |
-      | conn_0 | False   | select thread_name from dble_thread_usage limit 1                             | has{(('0-NIOBackendRW', ),)}           |
-      | conn_0 | False   | select thread_name from dble_thread_usage order by thread_name desc limit 2   | success                                |
-      | conn_0 | False   | select thread_name from dble_thread_usage where thread_name like '%Front%'    | has{(('0-NIOFrontRW',),)}              |
+      | conn   | toClose | sql                                                                           | expect                                             |
+      | conn_0 | False   | select thread_name from dble_thread_usage limit 1                             | has{(('$_NIO_REACTOR_BACKEND-0-RW', ),)}           |
+      | conn_0 | False   | select thread_name from dble_thread_usage order by thread_name desc limit 2   | success                                            |
+      | conn_0 | False   | select thread_name from dble_thread_usage where thread_name like '%FRONT%'    | has{(('$_NIO_REACTOR_FRONT-0-RW',),)}              |
   #case supported select max/min from
-      | conn_0 | False   | select max(thread_name) from dble_thread_usage                                | has{(('3-writeToBackendWorker',),)}    |
-      | conn_0 | False   | select min(thread_name) from dble_thread_usage                                | has{(('0-backendWorker',),)}           |
+      | conn_0 | False   | select max(thread_name) from dble_thread_usage                      | has{(('writeToBackendExecutor3',),)}              |
+      | conn_0 | False   | select min(thread_name) from dble_thread_usage                      | has{(('$_NIO_REACTOR_BACKEND-0-RW',),)}           |
   #case supported where [sub-query]
       | conn_0 | False   | select thread_name from dble_thread_usage where last_minute in (select last_minute from dble_thread_usage where last_five_minute < '10%') | success     |
   #case supported select field from
-      | conn_0 | False   | select last_quarter_min from dble_thread_usage where thread_name = '0-frontWorker'  | success      |
+      | conn_0 | False   | select last_quarter_min from dble_thread_usage where thread_name = 'BusinessExecutor0'       | success      |
   #case unsupported update/delete/insert
-      | conn_0 | False   | delete from dble_thread_usage where thread_name = '0-frontWorker'                   | Access denied for table 'dble_thread_usage'  |
-      | conn_0 | False   | update dble_thread_usage set thread_name = '2' where thread_name = '0-frontWorker'  | Access denied for table 'dble_thread_usage'  |
-      | conn_0 | True    | insert into dble_thread_usage values ('0-NIOFrontRW','1%', '1%', '1%')              | Access denied for table 'dble_thread_usage'  |
+      | conn_0 | False   | delete from dble_thread_usage where thread_name = 'BusinessExecutor0'                        | Access denied for table 'dble_thread_usage'  |
+      | conn_0 | False   | update dble_thread_usage set thread_name = '2' where thread_name = 'BusinessExecutor0'       | Access denied for table 'dble_thread_usage'  |
+      | conn_0 | True    | insert into dble_thread_usage values ('_NIO_REACTOR_FRONT-0','1%', '1%', '1%')               | Access denied for table 'dble_thread_usage'  |
 
 
 
