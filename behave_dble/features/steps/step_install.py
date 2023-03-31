@@ -576,10 +576,12 @@ def retry_exec_command(context, ssh_client, linestr, cmd, zk_path, retry_param,f
     for i in range(execute_times):
         try:
             rc, stdout, stderr = ssh_client.exec_command(cmd)
+            assert_that(len(stderr) == 0, "the command:{1}, got err:{0}".format(stderr, cmd))
+
             if flag == "not":
-                assert_that(len(stdout) == 0, "expect has not \"{0}\" in zk \"{1}\",but has".format(linestr, zk_path))
+                assert_that(len(stdout) == 0, "expect has not \"{0}\" in zk \"{1}\",but has，\nthe real output is {2}".format(linestr, zk_path, stdout))
             else:
-                assert_that(len(stdout) > 0, "expect has \"{0}\" in zk \"{1}\",but has not".format(linestr, zk_path))
+                assert_that(len(stdout) > 0, "expect has \"{0}\" in zk \"{1}\",but has not，\nthe real output is {2}".format(linestr, zk_path, stdout))
             break
         except Exception as e:
             if flag == "not":
@@ -591,5 +593,3 @@ def retry_exec_command(context, ssh_client, linestr, cmd, zk_path, retry_param,f
                 raise e
             else:
                 sleep_by_time(context, sep_time)
-
-
