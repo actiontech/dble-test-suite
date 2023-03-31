@@ -3,7 +3,7 @@ test_conf:
   dble_topo: single # single, cluster
   dble_conf: default # default, global, mixed, nosharding, sharding
   mysql_version: &mysql_version '5.7' # 5.7, 8.0 需要加引号避免被识别为float
-  dble_version: 3.22.01.99
+  dble_version: 3.21.10.99
   dble_package_timestamp: '20220615064550' # dble安装包时间戳, 需要加引号避免被识别为int
   auto_retry: 2 # 0 表示不重试
   dble_remote_host: https://hub.fastgit.org
