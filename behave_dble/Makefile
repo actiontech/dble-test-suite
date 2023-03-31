@@ -117,7 +117,6 @@ run_func_unstable_case: up
 	features/func_test/connection/  \
 	features/func_test/ddl/  \
 	features/func_test/xa_transaction/ \
-	features/func_test/local_read/ \
 
 run_managercmd_case: up
 	pipenv run behave -Dreset=false -D dble_conf=template features/setup.feature \
