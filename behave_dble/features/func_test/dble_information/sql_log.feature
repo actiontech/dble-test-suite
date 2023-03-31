@@ -257,7 +257,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'samplingRate','sqlLogTableSize')       | dble_information |
     Then check resultset "res_1" has lines with following column values
       | variable_name-0 | variable_value-1|
-      | enableStatistic | 0               |
+      | enableStatistic | false           |
       | samplingRate    | 100             |
       | sqlLogTableSize | 100             |
 
@@ -1918,13 +1918,12 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_41 | False   | update test_table1 set age =33 where id=1          | success | db2 |
       | rwS1 | 111111 | conn_41 | False   | delete from test_table1 where id=5                 | success | db2 |
       | rwS1 | 111111 | conn_41 | False   | update test_table1 set age =44 where id=100        | success | db2 |
-  ##### 事务没结束，不落盘
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information | 3       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information | 3       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(0)}  | dble_information | 3       |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information | 3       |
+      | conn_0 | False   | select * from sql_log                                 | length{(2)}  | dble_information | 3       |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(2)}  | dble_information | 3       |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(2)}  | dble_information | 3       |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(2)}  | dble_information | 3       |
 
      Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose | sql                                 | expect  | db  |
@@ -2668,9 +2667,9 @@ sql_log_by_tx_digest_by_entry_by_user
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               | timeout |
       | conn_0 | False   | select * from sql_log                               | length{(4000)}  | dble_information | 10      |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)}  | dble_information | 10      |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information | 10      |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}     | dble_information | 10      |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}     | dble_information | 10      |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information | 10      |
       | conn_0 | true    | truncate dble_information.sql_log                     | success      | dble_information |         |
       | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information | 9       |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information | 9       |
@@ -2682,9 +2681,9 @@ sql_log_by_tx_digest_by_entry_by_user
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               | timeout |
       | conn_0 | False   | select * from sql_log                               | length{(3000)}  | dble_information | 10      |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)}  | dble_information | 10      |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information | 10      |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}     | dble_information | 10      |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}     | dble_information | 10      |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information | 10      |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -2703,10 +2702,10 @@ sql_log_by_tx_digest_by_entry_by_user
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect         | db               | timeout |
-      | conn_0 | False   | select * from sql_log                               | length{(0)}    | dble_information | 10      |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(0)}    | dble_information | 10      |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(0)}    | dble_information | 10      |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user | length{(0)}    | dble_information | 10      |
+      | conn_0 | False   | select * from sql_log                               | length{(300)}  | dble_information | 10      |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(100)}  | dble_information | 10      |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}    | dble_information | 10      |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information | 10      |
       | conn_0 | true    | truncate dble_information.sql_log                     | success      | dble_information |         |
       | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information | 9       |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information | 9       |
