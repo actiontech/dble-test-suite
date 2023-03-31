@@ -214,7 +214,9 @@ class PostQueryCheck(object):
         re_num = int(re.sub("\D", "", str(RS[0])))  # get the number from result of dble
         a = abs(re_num - expectRS)
         b = expectRS * percent
-        assert a <= b, "sql: '{}', expect '{}' but real count is '{}'".format(self._sql, expectRS, re_num)
+        c = float(expectRS) - float(expectRS) * percent
+        d = float(expectRS) + float(expectRS) * percent
+        assert a <= b, "sql: '{}', expect count :' {} to {} ' ,but real count is '{}'".format(self._sql, c, d, re_num)
 
 
     def executeTime(self, RS, expectRS, percent):  # Float a value up and down
@@ -224,7 +226,9 @@ class PostQueryCheck(object):
         duration = self._time_cost.seconds
         a = abs(duration - expectRS)
         b = expectRS * percent
-        assert a <= b, "sql: '{}', expect '{}' but real duration is '{}'".format(self._sql, expectRS, duration)
+        c = float(expectRS) - float(expectRS) * percent
+        d = float(expectRS) + float(expectRS) * percent
+        assert a <= b, "sql: '{}', expect duration time: ' {} to {} ' , but real duration time is '{}'".format(self._sql, c, d, duration)
 
     def length_balance(self,RS, expectRS, percent):  # Float a value up and down
         if percent<0 or percent>1:
@@ -235,4 +239,4 @@ class PostQueryCheck(object):
         b = float(expectRS) * percent
         c = float(expectRS) - float(expectRS) * percent
         d = float(expectRS) + float(expectRS) * percent
-        assert a <= b, "sql:'{}', expect length:'{}' to '{}',but real length:'{}'.\nthe realresult is {}".format(self._sql, c, d, len(self._real_res), self._real_res)
+        assert a <= b, "sql:'{}', expect length:' {} to {} ' ,but real length:'{}'.\nthe realresult is {}".format(self._sql, c, d, len(self._real_res), self._real_res)
