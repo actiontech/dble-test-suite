@@ -317,12 +317,13 @@ Feature: db.xml support fake host
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
+    ### rwSplitMode="2"  读操作在所有实例中均衡。 所以上文建好表了，这边select不一定能立马查询到
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                               | expect  | db      |
-      | conn_0 | false   | select * from sharding_4_t1                       | success | schema1 |
-      | conn_0 | false   | update sharding_4_t1 set name='test' where id=3   | the dbInstance[127.0.0.1:8066] is fake node. Please check the dbInstance whether or not it is used | schema1 |
-      | conn_0 | false   | delete from sharding_4_t1 where id>2              | the dbInstance[127.0.0.1:8066] is fake node. Please check the dbInstance whether or not it is used | schema1 |
-      | conn_0 | true    | drop table if exists sharding_4_t1                | the dbInstance[127.0.0.1:8066] is fake node. Please check the dbInstance whether or not it is used | schema1 |
+      | conn   | toClose | sql                                               | expect  | db      | timeout |
+      | conn_0 | false   | select * from sharding_4_t1                       | success | schema1 | 6,2     |
+      | conn_0 | false   | update sharding_4_t1 set name='test' where id=3   | the dbInstance[127.0.0.1:8066] is fake node. Please check the dbInstance whether or not it is used | schema1 ||
+      | conn_0 | false   | delete from sharding_4_t1 where id>2              | the dbInstance[127.0.0.1:8066] is fake node. Please check the dbInstance whether or not it is used | schema1 ||
+      | conn_0 | true    | drop table if exists sharding_4_t1                | the dbInstance[127.0.0.1:8066] is fake node. Please check the dbInstance whether or not it is used | schema1 ||
 
 
   Scenario: tow dbGroups - one dbGroup have fake write dbInstance and fake read dbInstance #8
