@@ -10,9 +10,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs1" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                                           |
-      | enableRoutePenetration   | 0             | Whether enable route penetration.The default value is 0 |
-      | routePenetrationRules    |               | The config of route penetration.The default value is '' |
+      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                    |
+      | enableRoutePenetration   | 0             | Whether enable route penetration |
+      | routePenetrationRules    |               | The config of route penetration  |
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DenableRoutePenetration=0
@@ -22,9 +22,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs2" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                                           |
-      | enableRoutePenetration   | 0             | Whether enable route penetration.The default value is 0 |
-      | routePenetrationRules    |               | The config of route penetration.The default value is '' |
+      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                    |
+      | enableRoutePenetration   | 0             | Whether enable route penetration |
+      | routePenetrationRules    |               | The config of route penetration  |
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DroutePenetrationRules=abc
@@ -34,9 +34,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs3" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                                           |
-      | enableRoutePenetration   | 0             | Whether enable route penetration.The default value is 0 |
-      | routePenetrationRules    | abc           | The config of route penetration.The default value is '' |
+      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                    |
+      | enableRoutePenetration   | 0             | Whether enable route penetration |
+      | routePenetrationRules    | abc           | The config of route penetration  |
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DenableRoutePenetration/d
@@ -75,9 +75,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs4" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                                           |
-      | enableRoutePenetration   | 1             | Whether enable route penetration.The default value is 0 |
-      | routePenetrationRules    | {"abc":"123"} | The config of route penetration.The default value is '' |
+      | PARAM_NAME-0             | PARAM_VALUE-1 | PARAM_DESCR-2                    |
+      | enableRoutePenetration   | 1             | Whether enable route penetration |
+      | routePenetrationRules    | {"abc":"123"} | The config of route penetration  |
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DroutePenetrationRules={"abc":"123"}/c -DroutePenetrationRules={"rules":"123"}
@@ -117,9 +117,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs5" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1                       | PARAM_DESCR-2                                           |
-      | enableRoutePenetration   | 1                                   | Whether enable route penetration.The default value is 0 |
-      | routePenetrationRules    | {"rules":[{"abc":123,"regex":"1"}]} | The config of route penetration.The default value is '' |
+      | PARAM_NAME-0             | PARAM_VALUE-1                       | PARAM_DESCR-2                    |
+      | enableRoutePenetration   | 1                                   | Whether enable route penetration |
+      | routePenetrationRules    | {"rules":[{"abc":123,"regex":"1"}]} | The config of route penetration  |
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DroutePenetrationRules/d
@@ -151,9 +151,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs6" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1                                              | PARAM_DESCR-2                                           |
-      | enableRoutePenetration   | 1                                                          | Whether enable route penetration.The default value is 0 |
-      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1"}]} | The config of route penetration.The default value is '' |
+      | PARAM_NAME-0             | PARAM_VALUE-1                                              | PARAM_DESCR-2                    |
+      | enableRoutePenetration   | 1                                                          | Whether enable route penetration |
+      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1"}]} | The config of route penetration  |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                               | expect  | db      |
       | conn_1 | False   | drop table if exists sharding_2_t1                                                | success | schema1 |
@@ -190,9 +190,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs7" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                                           |
-      | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration.The default value is 0 |
-      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":false,"caseSensitive":true}]}  | The config of route penetration.The default value is '' |
+      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                    |
+      | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration |
+      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":false,"caseSensitive":true}]}  | The config of route penetration  |
         Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                               | expect  | db      |
       | conn_1 | False   | select id from sharding_2_t1                                                      | success | schema1 |
@@ -226,9 +226,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs8" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                                           |
-      | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration.The default value is 0 |
-      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":false,"caseSensitive":false}]} | The config of route penetration.The default value is '' |
+      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                    |
+      | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration |
+      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":false,"caseSensitive":false}]} | The config of route penetration  |
         Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                               | expect  | db      |
       | conn_1 | False   | select id from sharding_2_t1                                                      | success | schema1 |
@@ -262,9 +262,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs8" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                     | PARAM_DESCR-2                                           |
-      | enableRoutePenetration   | 1                                                                                                 | Whether enable route penetration.The default value is 0 |
-      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":true,"caseSensitive":false}]} | The config of route penetration.The default value is '' |
+      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                     | PARAM_DESCR-2                    |
+      | enableRoutePenetration   | 1                                                                                                 | Whether enable route penetration |
+      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":true,"caseSensitive":false}]} | The config of route penetration  |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                               | expect  | db      |
       | conn_1 | False   | select id from sharding_2_t1                                                      | success | schema1 |
@@ -295,9 +295,9 @@ Feature: support rownum sql
       | sql             |
       | show @@sysparam |
     Then check resultset "rs8" has lines with following column values
-      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                                           |
-      | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration.The default value is 0 |
-      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":true,"caseSensitive":false},{"regex":"rownum","partMatch":true,"caseSensitive":true}]} | The config of route penetration.The default value is '' |
+      | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                    |
+      | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration |
+      | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":true,"caseSensitive":false},{"regex":"rownum","partMatch":true,"caseSensitive":true}]} | The config of route penetration  |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                               | expect  | db      |
       | conn_1 | False   | select id from sharding_2_t1                                                      | success | schema1 |

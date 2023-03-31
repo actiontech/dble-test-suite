@@ -1,7 +1,7 @@
 ===file:sqls_mixed/syntax/identifiers.sql, id:15, sql:[create table "tb2" (col INT)]===
 dble:[None]
 mysql:[()]
-dble err:(5316, "DDL executed successfully, maybe there's something wrong with update_ddl_metadata or notice_cluster_ddl. You are advised to analyze dble log first, then decide whether to execute 'reload @@metadata'.")
+dble err:(5316, 'Create TABLE OK, but generate metedata failed. The reason may be that the current druid parser can not recognize part of the sql or the user for backend mysql does not have permission to execute the heartbeat sql.')
 ===file:sqls_mixed/syntax/identifiers.sql, id:32, sql:[drop view if exists abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm]===
 dble:[()]
 mysql:[None]

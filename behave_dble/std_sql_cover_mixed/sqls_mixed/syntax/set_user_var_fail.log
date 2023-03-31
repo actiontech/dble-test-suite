@@ -1,4 +1,4 @@
 ===file:sqls_mixed/syntax/set_user_var.sql, id:23, sql:[set @.=6]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'error : pos 7, line 1, column 7, token =')
+dble err:(1064, 'com.alibaba.druid.sql.parser.ParserException: error : pos 7, line 1, column 7, token =')
