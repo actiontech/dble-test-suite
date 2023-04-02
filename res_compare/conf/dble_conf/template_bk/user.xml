@@ -3,8 +3,5 @@
 <dble:user xmlns:dble="http://dble.cloud/">
 	<managerUser name="root" password="111111"/>
 	<shardingUser name="test" password="111111" schemas="schema1"/>
-<<<<<<< HEAD
 	<rwSplitUser name="rwsu1" password="111111" dbGroup="dbGroup1" maxCon="20"/>
-=======
->>>>>>> 4068dd40576e96ef79842f053fda0edab74ba0c6
 </dble:user>
