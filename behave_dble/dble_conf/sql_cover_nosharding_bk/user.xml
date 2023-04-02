@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE dble:user SYSTEM "user.dtd">
-<dble:user xmlns:dble="http://dble.cloud/">
-	<managerUser name="root" password="111111"/>
-	<shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
-</dble:user>

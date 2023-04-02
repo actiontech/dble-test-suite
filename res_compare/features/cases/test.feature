@@ -2,6 +2,7 @@
 
 Feature: test_sql_executing_feature
 
+<<<<<<< HEAD
     Scenario Outline:sql execute 
   #循环执行下列步骤
   
@@ -36,3 +37,13 @@ Feature: test_sql_executing_feature
           | maxscale/test_transaction_routing3b.sql      |
           | maxscale/test_transaction_routing4.sql       |
           | maxscale/test_transaction_routing4b.sql      |
+=======
+  Scenario Outline:sql execute 
+  #循环执行下列步骤
+  
+    Given execute sqls in file "<sql_files>"
+
+    Examples:
+      |sql_files|
+      |test.sql|
+>>>>>>> 4068dd40576e96ef79842f053fda0edab74ba0c6

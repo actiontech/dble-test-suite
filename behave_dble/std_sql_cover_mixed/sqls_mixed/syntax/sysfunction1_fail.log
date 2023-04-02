@@ -1,3 +1,0 @@
-===file:sqls_mixed/syntax/sysfunction1.sql, id:226, sql:[SELECT USER(), CHARSET(USER()), COLLATION(USER())]===
-dble:[[('test@172.100.9.1', 'utf8', 'utf8_general_ci')]]
-mysql:[[('test@172.100.9.8', 'utf8', 'utf8_general_ci')]]

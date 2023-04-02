@@ -19,9 +19,12 @@
 # valid for sequenceHandlerType=2 or 3
 -DinstanceId=1
 -DserverId=server_1
+<<<<<<< HEAD
 -Ddistrict=Shanghai 
 -DdataCenter=dataCenterA  
 
+=======
+>>>>>>> 4068dd40576e96ef79842f053fda0edab74ba0c6
 
 # processor
 -Dprocessors=1

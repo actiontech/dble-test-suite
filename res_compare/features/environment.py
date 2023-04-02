@@ -107,7 +107,11 @@ def after_scenario(context,scenario):
     if not context.userDebug:
         if "init_dble_meta" in scenario.tags:
             init_meta(context, "single")
+<<<<<<< HEAD
         #根据scenario的tag进行的环境清理
+=======
+        #这一步是干嘛的没看明白 恢复一些环境选项？ 类似xa_recover等等的 
+>>>>>>> 4068dd40576e96ef79842f053fda0edab74ba0c6
         restore_obj = RestoreEnvObject(scenario)
         restore_obj.restore()
 

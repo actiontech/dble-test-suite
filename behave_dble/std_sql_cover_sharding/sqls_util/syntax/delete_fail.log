@@ -1,7 +1,0 @@
-===file:sqls_util/syntax/delete.sql, id:30, sql:[DELETE FROM test1 order by id limit 3]===
-dble:[None]
-mysql:[()]
-dble err:(1064, 'delete/update schema table with a limit route to multiNode not support')
-===file:sqls_util/syntax/delete.sql, id:31, sql:[SELECT id, R_REGIONKEY, R_NAME, R_COMMENT FROM test1]===
-dble:[[(1, 1, 'Eastern', 'test001'), (2, 2, 'Western', 'test002'), (3, 3, 'Northern', 'test003'), (4, 4, 'Southern', 'test004')]]
-mysql:[[(4, 4, 'Southern', 'test004')]]
