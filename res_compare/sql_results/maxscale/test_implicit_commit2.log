@@ -1,0 +1,75 @@
+当前文件中执行ID为：1的sql：'DROP TABLE IF EXISTS T1 /*dble_dest_expect:M*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：2的sql：'DROP EVENT IF EXISTS myevent /*dble_dest_expect:M*/;'
+dble_res:None
+mysql_res:()
+dble_err:(1064, 'THE DDL is not supported :DROP EVENT IF EXISTS myevent')
+mysql_err:None
+当前文件中执行ID为：3的sql：'SET autocommit=1 /*dble_dest_expect:CS*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：4的sql：'BEGIN /*dble_dest_expect:M*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：5的sql：'CREATE TABLE T1 (id integer) /*dble_dest_expect:CM*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：7的sql：'CREATE EVENT myevent'
+dble_res:None
+mysql_res:None
+dble_err:(1064, 'TODO pos 12, line 1, column 7, token IDENTIFIER EVENT')
+mysql_err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1")
+当前文件中执行ID为：8的sql：'ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 HOUR'
+dble_res:None
+mysql_res:None
+dble_err:(1064, "syntax error, error in :'ON SCHEDULE AT CURRENT_TIMESTA', expect ON, actual ON pos 2, line 1, column 1, token ON")
+mysql_err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 HOUR' at line 1")
+当前文件中执行ID为：9的sql：'DO'
+dble_res:None
+mysql_res:None
+dble_err:(1064, "syntax error, error in :'DO', expect DO, actual DO pos 2, line 1, column 1, token DO")
+mysql_err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1")
+当前文件中执行ID为：10的sql：'UPDATE t1 SET id = id + 1 /*dble_dest_expect:M*/;'
+dble_res:None
+mysql_res:None
+dble_err:(1146, "Table 'db3.t1' doesn't exist")
+mysql_err:(1146, "Table 'test.t1' doesn't exist")
+当前文件中执行ID为：11的sql：'#end multiline'
+dble_res:None
+mysql_res:()
+dble_err:(1064, 'Index: 0, Size: 0')
+mysql_err:None
+当前文件中执行ID为：13的sql：'SELECT (@@version) INTO @a /*dble_dest_expect:M*/;'
+dble_res:None
+mysql_res:()
+dble_err:(1064, 'select ... into is not supported!')
+mysql_err:None
+当前文件中执行ID为：14的sql：'SELECT @a /*dble_dest_expect:S*/; -- should read from slave'
+dble_res:[((None,),), ()]
+mysql_res:[(('5.7.25-log',),), ()]
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：15的sql：'DROP TABLE IF EXISTS T1 /*dble_dest_expect:M*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：16的sql：'DROP EVENT IF EXISTS myevent /*dble_dest_expect:M*/;'
+dble_res:None
+mysql_res:()
+dble_err:(1064, 'THE DDL is not supported :DROP EVENT IF EXISTS myevent')
+mysql_err:None
+当前文件中执行ID为：17的sql：'COMMIT /*dble_dest_expect:CS*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None

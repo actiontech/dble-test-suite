@@ -1,0 +1,45 @@
+当前文件中执行ID为：1的sql：'/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：2的sql：'/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：3的sql：'/*!40101 SET NAMES utf8 */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：4的sql：'/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：5的sql：'/*!40103 SET TIME_ZONE='+00:00' */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：6的sql：'/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：7的sql：'/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：8的sql：'/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：9的sql：'/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None

@@ -1,0 +1,405 @@
+当前文件中执行ID为：3的sql：'drop DATABASE if EXISTS schema1  ;'
+dble_res:None
+mysql_res:()
+dble_err:(1064, 'THE DDL is not supported :DROP DATABASE IF EXISTS schema1')
+mysql_err:None
+当前文件中执行ID为：4的sql：'create database schema1 ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：7的sql：'drop table if EXISTS  t1 ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：8的sql：'CREATE TABLE t1 ( c1 CHAR(1) CHARACTER SET latin1, c2 CHAR(1) CHARACTER SET ascii) ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：9的sql：'INSERT INTO t1 VALUES ('a','b') ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：10的sql：'SELECT CONCAT(c1,c2) FROM t1 ;'
+dble_res:(('ab',),)
+mysql_res:(('ab',),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：13的sql：'drop table if EXISTS  t1 ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：14的sql：'SET NAMES ascii ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：15的sql：'CREATE TABLE t1 (a INT, b VARCHAR(10) CHARACTER SET latin1) ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：16的sql：'INSERT INTO t1 VALUES (1,'b') ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：17的sql：'SELECT CONCAT(FORMAT(a, 4), b) FROM t1 ;'
+dble_res:(('1.0000b',),)
+mysql_res:(('1.0000b',),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：19的sql：'select CONCAT(_ucs2 X'0041', _ucs2 X'0042') ;'
+dble_res:None
+mysql_res:(('AB',),)
+dble_err:(1064, 'syntax error, expect RPAREN, actual IDENTIFIER pos 21, line 1, column 20, token IDENTIFIER X')
+mysql_err:None
+当前文件中执行ID为：21的sql：'drop table if exists t ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：22的sql：'create table t(c character(50) character set latin1) default charset=utf8 ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：23的sql：'insert into t select user() ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：24的sql：'insert into t values('汤姆') ;'
+dble_res:None
+mysql_res:None
+dble_err:("insert into t values('汤姆') ;", 'ordinal not in range(256)')
+mysql_err:("insert into t values('汤姆') ;", 'ordinal not in range(256)')
+当前文件中执行ID为：25的sql：'SELECT * FROM t WHERE c='汤姆' ;'
+dble_res:None
+mysql_res:None
+dble_err:("SELECT * FROM t WHERE c='汤姆' ;", 'ordinal not in range(256)')
+mysql_err:("SELECT * FROM t WHERE c='汤姆' ;", 'ordinal not in range(256)')
+当前文件中执行ID为：27的sql：'drop table if exists t ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：28的sql：'CREATE TABLE `t` ( `c` char(50) CHARACTER SET gbk DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：29的sql：'insert into t values('你') ;'
+dble_res:None
+mysql_res:None
+dble_err:("insert into t values('你') ;", 'ordinal not in range(256)')
+mysql_err:("insert into t values('你') ;", 'ordinal not in range(256)')
+当前文件中执行ID为：30的sql：'select sleep(3) union select * from schema1.t ;'
+dble_res:(('0',),)
+mysql_res:None
+dble_err:None
+mysql_err:(1146, "Table 'schema1.t' doesn't exist")
+当前文件中执行ID为：32的sql：'SELECT _utf8'abc' COLLATE utf8_danish_ci ;'
+dble_res:(('abc',),)
+mysql_res:(('abc',),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：33的sql：'select _ascii'asdf' collate ascii_general_ci ;'
+dble_res:(('asdf',),)
+mysql_res:(('asdf',),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：34的sql：'select _utf8'你' ;'
+dble_res:None
+mysql_res:None
+dble_err:("select _utf8'你' ;", 'ordinal not in range(256)')
+mysql_err:("select _utf8'你' ;", 'ordinal not in range(256)')
+当前文件中执行ID为：36的sql：'SET NAMES sjis ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：37的sql：'SELECT HEX('à\n'), HEX(_latin1'à\n') ;'
+dble_res:(('E05C6E', 'E05C6E'),)
+mysql_res:(('E05C6E', 'E05C6E'),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：39的sql：'set names gbk ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：40的sql：'select '好' ;'
+dble_res:None
+mysql_res:None
+dble_err:("select '好' ;", 'ordinal not in range(256)')
+mysql_err:("select '好' ;", 'ordinal not in range(256)')
+当前文件中执行ID为：41的sql：'SELECT N'hello你' ;'
+dble_res:None
+mysql_res:None
+dble_err:("SELECT N'hello你' ;", 'ordinal not in range(256)')
+mysql_err:("SELECT N'hello你' ;", 'ordinal not in range(256)')
+当前文件中执行ID为：42的sql：'SELECT n'你hello' ;'
+dble_res:None
+mysql_res:None
+dble_err:("SELECT n'你hello' ;", 'ordinal not in range(256)')
+mysql_err:("SELECT n'你hello' ;", 'ordinal not in range(256)')
+当前文件中执行ID为：43的sql：'SELECT _utf8'hello你' ;'
+dble_res:None
+mysql_res:None
+dble_err:("SELECT _utf8'hello你' ;", 'ordinal not in range(256)')
+mysql_err:("SELECT _utf8'hello你' ;", 'ordinal not in range(256)')
+当前文件中执行ID为：45的sql：'set names default ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：46的sql：'select '好' ;'
+dble_res:None
+mysql_res:None
+dble_err:("select '好' ;", 'ordinal not in range(256)')
+mysql_err:("select '好' ;", 'ordinal not in range(256)')
+当前文件中执行ID为：47的sql：'SELECT n'hello' ;'
+dble_res:(('hello',),)
+mysql_res:(('hello',),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：48的sql：'SELECT _utf8'hello你' ;'
+dble_res:None
+mysql_res:None
+dble_err:("SELECT _utf8'hello你' ;", 'ordinal not in range(256)')
+mysql_err:("SELECT _utf8'hello你' ;", 'ordinal not in range(256)')
+当前文件中执行ID为：50的sql：'drop table if exists t ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：51的sql：'create table t(c nchar(10)) ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：52的sql：'insert into t values('你好') ;'
+dble_res:None
+mysql_res:None
+dble_err:("insert into t values('你好') ;", 'ordinal not in range(256)')
+mysql_err:("insert into t values('你好') ;", 'ordinal not in range(256)')
+当前文件中执行ID为：53的sql：'select * from t ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：54的sql：'alter table t change c c national character varying(20) ;'
+dble_res:None
+mysql_res:()
+dble_err:(1064, 'syntax error, expect SET, actual IDENTIFIER pos 51, line 1, column 44, token IDENTIFIER varying')
+mysql_err:None
+当前文件中执行ID为：55的sql：'insert into t values('你好2') ;'
+dble_res:None
+mysql_res:None
+dble_err:("insert into t values('你好2') ;", 'ordinal not in range(256)')
+mysql_err:("insert into t values('你好2') ;", 'ordinal not in range(256)')
+当前文件中执行ID为：56的sql：'select * from t ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：59的sql：'drop table if EXISTS  t ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：60的sql：'create table t(c char(50)) ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：62的sql：'set names 'gbk' ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：63的sql：'insert into t values('a你')  ;'
+dble_res:None
+mysql_res:None
+dble_err:("insert into t values('a你')  ;", 'ordinal not in range(256)')
+mysql_err:("insert into t values('a你')  ;", 'ordinal not in range(256)')
+当前文件中执行ID为：64的sql：'insert into t values(_utf8'a你')  ;'
+dble_res:None
+mysql_res:None
+dble_err:("insert into t values(_utf8'a你')  ;", 'ordinal not in range(256)')
+mysql_err:("insert into t values(_utf8'a你')  ;", 'ordinal not in range(256)')
+当前文件中执行ID为：65的sql：'select * from t ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：66的sql：'select * from t ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：67的sql：'alter table t modify c varchar(50) character set utf8  ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：68的sql：'insert into t values('你')  ;'
+dble_res:None
+mysql_res:None
+dble_err:("insert into t values('你')  ;", 'ordinal not in range(256)')
+mysql_err:("insert into t values('你')  ;", 'ordinal not in range(256)')
+当前文件中执行ID为：70的sql：'select * from t ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：71的sql：'set names 'utf8'  ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：72的sql：'insert into t values("e")  ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：73的sql：'insert into t values("我")  ;'
+dble_res:None
+mysql_res:None
+dble_err:('insert into t values("我")  ;', 'ordinal not in range(256)')
+mysql_err:('insert into t values("我")  ;', 'ordinal not in range(256)')
+当前文件中执行ID为：74的sql：'select * from t ;'
+dble_res:(('e',),)
+mysql_res:(('e',),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：75的sql：'select * from t ;'
+dble_res:(('e',),)
+mysql_res:(('e',),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：77的sql：'insert into t values("他")  ;'
+dble_res:None
+mysql_res:None
+dble_err:('insert into t values("他")  ;', 'ordinal not in range(256)')
+mysql_err:('insert into t values("他")  ;', 'ordinal not in range(256)')
+当前文件中执行ID为：78的sql：'select * from t/* master */ ;'
+dble_res:None
+mysql_res:(('e',),)
+dble_err:(1064, 'Not supported hint sql type : master')
+mysql_err:None
+当前文件中执行ID为：79的sql：'set character set 'gb2312'  ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：80的sql：'insert into t values("她")  ;'
+dble_res:None
+mysql_res:None
+dble_err:('insert into t values("她")  ;', 'ordinal not in range(256)')
+mysql_err:('insert into t values("她")  ;', 'ordinal not in range(256)')
+当前文件中执行ID为：81的sql：'select * from t ;'
+dble_res:(('e',),)
+mysql_res:(('e',),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：83的sql：'insert into t values("它")  ;'
+dble_res:None
+mysql_res:None
+dble_err:('insert into t values("它")  ;', 'ordinal not in range(256)')
+mysql_err:('insert into t values("它")  ;', 'ordinal not in range(256)')
+当前文件中执行ID为：84的sql：'select * from t ;'
+dble_res:(('e',),)
+mysql_res:(('e',),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：85的sql：'set character set 'ascii'  ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：86的sql：'insert into t values("它a")  ;'
+dble_res:None
+mysql_res:None
+dble_err:('insert into t values("它a")  ;', 'ordinal not in range(256)')
+mysql_err:('insert into t values("它a")  ;', 'ordinal not in range(256)')
+当前文件中执行ID为：87的sql：'select * from t ;'
+dble_res:(('e',),)
+mysql_res:(('e',),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：89的sql：'insert into t values("他a")  ;'
+dble_res:None
+mysql_res:None
+dble_err:('insert into t values("他a")  ;', 'ordinal not in range(256)')
+mysql_err:('insert into t values("他a")  ;', 'ordinal not in range(256)')
+当前文件中执行ID为：90的sql：'select * from t ;'
+dble_res:(('e',),)
+mysql_res:(('e',),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：91的sql：'truncate t  ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：92的sql：'set names utf8  ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：93的sql：'insert into t values("它");'
+dble_res:None
+mysql_res:None
+dble_err:('insert into t values("它");', 'ordinal not in range(256)')
+mysql_err:('insert into t values("它");', 'ordinal not in range(256)')
+当前文件中执行ID为：94的sql：'select * FROM t ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：96的sql：'insert into t values("她");'
+dble_res:None
+mysql_res:None
+dble_err:('insert into t values("她");', 'ordinal not in range(256)')
+mysql_err:('insert into t values("她");', 'ordinal not in range(256)')
+当前文件中执行ID为：97的sql：'select * FROM t ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：98的sql：'set @@character_set_results=NULL ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：99的sql：'insert into t values("你");'
+dble_res:None
+mysql_res:None
+dble_err:('insert into t values("你");', 'ordinal not in range(256)')
+mysql_err:('insert into t values("你");', 'ordinal not in range(256)')
+当前文件中执行ID为：100的sql：'select * FROM t ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：102的sql：'insert into t values("我");'
+dble_res:None
+mysql_res:None
+dble_err:('insert into t values("我");', 'ordinal not in range(256)')
+mysql_err:('insert into t values("我");', 'ordinal not in range(256)')
+当前文件中执行ID为：103的sql：'select * FROM t ;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：104的sql：'drop table t;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None

@@ -1,0 +1,40 @@
+当前文件中执行ID为：1的sql：'DROP TABLE IF EXISTS T1 /*dble_dest_expect:M*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：2的sql：'SET autocommit=0 /*dble_dest_expect:CS*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：3的sql：'BEGIN /*dble_dest_expect:M*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：4的sql：'CREATE TEMPORARY TABLE T1 (id integer) /*dble_dest_expect:CM*/; -- NO implicit commit'
+dble_res:None
+mysql_res:None
+dble_err:(1787, 'Statement violates GTID consistency: CREATE TEMPORARY TABLE and DROP TEMPORARY TABLE can only be executed outside transactional context.  These statements are also not allowed in a function or trigger because functions and triggers are also considered to be multi-statement transactions.')
+mysql_err:(1787, 'Statement violates GTID consistency: CREATE TEMPORARY TABLE and DROP TEMPORARY TABLE can only be executed outside transactional context.  These statements are also not allowed in a function or trigger because functions and triggers are also considered to be multi-statement transactions.')
+当前文件中执行ID为：5的sql：'SELECT (@@version) INTO @a /*dble_dest_expect:CM*/;'
+dble_res:None
+mysql_res:()
+dble_err:(1003, 'Transaction error, need to rollback.Reason:[ errNo:1787 Statement violates GTID consistency: CREATE TEMPORARY TABLE and DROP TEMPORARY TABLE can only be executed outside transactional context.  These statements are also not allowed in a function or trigger because functions and triggers are also considered to be multi-statement transactions.]')
+mysql_err:None
+当前文件中执行ID为：6的sql：'SELECT @a /*dble_dest_expect:CM*/; -- should read from master'
+dble_res:None
+mysql_res:[(('5.7.25-log',),), ()]
+dble_err:(1003, 'Transaction error, need to rollback.Reason:[ errNo:1787 Statement violates GTID consistency: CREATE TEMPORARY TABLE and DROP TEMPORARY TABLE can only be executed outside transactional context.  These statements are also not allowed in a function or trigger because functions and triggers are also considered to be multi-statement transactions.]')
+mysql_err:None
+当前文件中执行ID为：7的sql：'DROP TABLE IF EXISTS T1 /*dble_dest_expect:CM*/;'
+dble_res:None
+mysql_res:()
+dble_err:(1003, 'Transaction error, need to rollback.Reason:[ errNo:1787 Statement violates GTID consistency: CREATE TEMPORARY TABLE and DROP TEMPORARY TABLE can only be executed outside transactional context.  These statements are also not allowed in a function or trigger because functions and triggers are also considered to be multi-statement transactions.]')
+mysql_err:None
+当前文件中执行ID为：8的sql：'COMMIT /*dble_dest_expect:CS*/;'
+dble_res:None
+mysql_res:()
+dble_err:(1003, 'Transaction error, need to rollback.Reason:[ errNo:1787 Statement violates GTID consistency: CREATE TEMPORARY TABLE and DROP TEMPORARY TABLE can only be executed outside transactional context.  These statements are also not allowed in a function or trigger because functions and triggers are also considered to be multi-statement transactions.]')
+mysql_err:None

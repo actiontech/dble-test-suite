@@ -1,0 +1,30 @@
+当前文件中执行ID为：2的sql：'drop table if exists T2 /*dble_dest_expect:M*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：3的sql：'START TRANSACTION /*dble_dest_expect:M*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：4的sql：'CREATE TABLE IF NOT EXISTS T2 (id integer) /*dble_dest_expect:CM*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：5的sql：'INSERT INTO T2 VALUES (@@server_id) /*dble_dest_expect:M*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：6的sql：'SET AUTOCOMMIT=1 /*dble_dest_expect:CS*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：7的sql：'SELECT id from T2 /*dble_dest_expect:S*//*allow_diff*/; -- read transaction's modifications from slave'
+dble_res:[((3306,),), ()]
+mysql_res:[((3306,),), ()]
+dble_err:None
+mysql_err:None

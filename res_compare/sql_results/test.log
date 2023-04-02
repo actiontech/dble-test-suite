@@ -1,0 +1,745 @@
+当前文件中执行ID为：1的sql：'drop table if exists test1'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：2的sql：'CREATE TABLE test1(ID INT NOT NULL,FirstName VARCHAR(20),LastName VARCHAR(20),Department VARCHAR(20),Salary INT)'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：3的sql：'create index ID_index on test1(ID)'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：4的sql：'INSERT INTO test1 VALUES(201,'Mazojys','Fxoj','Finance',7800),(202,'Jozzh','Lnanyo','Finance',45800),(203,'Syllauu','Dfaafk','Finance',57000),(204,'Gecrrcc','Srlkrt','Finance',62000),(205,'Jssme','Bdnaa','Development',75000),(206,'Dnnaao','Errllov','Development',55000),(207,'Tyoysww','Osk','Development',49000)'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：5的sql：'select id,FirstName,lastname,department,salary from test1 use index(ID_index) where  Department ='Finance''
+dble_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000))
+mysql_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：6的sql：'select id,FirstName,lastname,department,salary from test1 force index(ID_index) where ID= 205'
+dble_res:((205, 'Jssme', 'Bdnaa', 'Development', 75000),)
+mysql_res:((205, 'Jssme', 'Bdnaa', 'Development', 75000),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：7的sql：'SELECT FirstName, LastName,Department = CASE Department WHEN 'F' THEN 'Financial' WHEN 'D' THEN 'Development'  ELSE 'Other' END FROM test1'
+dble_res:(('Mazojys', 'Fxoj', 0), ('Jozzh', 'Lnanyo', 0), ('Syllauu', 'Dfaafk', 0), ('Gecrrcc', 'Srlkrt', 0), ('Jssme', 'Bdnaa', 0), ('Dnnaao', 'Errllov', 0), ('Tyoysww', 'Osk', 0))
+mysql_res:(('Mazojys', 'Fxoj', 0), ('Jozzh', 'Lnanyo', 0), ('Syllauu', 'Dfaafk', 0), ('Gecrrcc', 'Srlkrt', 0), ('Jssme', 'Bdnaa', 0), ('Dnnaao', 'Errllov', 0), ('Tyoysww', 'Osk', 0))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：8的sql：'select id,FirstName,lastname,department,salary from test1 where Salary >'40000' and Salary <'70000' and Department ='Finance''
+dble_res:((202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000))
+mysql_res:((202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：9的sql：'SELECT count(*), Department  FROM (SELECT * FROM test1 ORDER BY FirstName DESC) AS Actions GROUP BY Department ORDER BY ID DESC'
+dble_res:((3, 'Development'), (4, 'Finance'))
+mysql_res:((3, 'Development'), (4, 'Finance'))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：10的sql：'SELECT id,FirstName,lastname,department,salary FROM test1 ORDER BY FIELD( ID, 203, 207,206)'
+dble_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (207, 'Tyoysww', 'Osk', 'Development', 49000), (206, 'Dnnaao', 'Errllov', 'Development', 55000))
+mysql_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (207, 'Tyoysww', 'Osk', 'Development', 49000), (206, 'Dnnaao', 'Errllov', 'Development', 55000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：11的sql：'SELECT Department, COUNT(ID) FROM test1 GROUP BY Department HAVING COUNT(ID)>3'
+dble_res:(('Finance', 4),)
+mysql_res:(('Finance', 4),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：12的sql：'select id,FirstName,lastname,department,salary from test1 order by ID ASC'
+dble_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+mysql_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：13的sql：'select id,FirstName,lastname,department,salary from test1 group by Department'
+dble_res:((205, 'Jssme', 'Bdnaa', 'Development', 75000), (201, 'Mazojys', 'Fxoj', 'Finance', 7800))
+mysql_res:((205, 'Jssme', 'Bdnaa', 'Development', 75000), (201, 'Mazojys', 'Fxoj', 'Finance', 7800))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：14的sql：'SELECT Department, MIN(Salary) FROM test1  GROUP BY Department HAVING MIN(Salary)>46000'
+dble_res:(('Development', 49000),)
+mysql_res:(('Development', 49000),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：15的sql：'select Department,max(Salary) from test1 group by Department order by Department asc'
+dble_res:(('Development', 75000), ('Finance', 62000))
+mysql_res:(('Development', 75000), ('Finance', 62000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：16的sql：'select Department,min(Salary) from test1 group by Department order by Department asc'
+dble_res:(('Development', 49000), ('Finance', 7800))
+mysql_res:(('Development', 49000), ('Finance', 7800))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：17的sql：'select Department,avg(Salary) from test1 group by Department order by Department asc'
+dble_res:(('Development', Decimal('59666.6667')), ('Finance', Decimal('43150.0000')))
+mysql_res:(('Development', Decimal('59666.6667')), ('Finance', Decimal('43150.0000')))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：18的sql：'select Department,sum(Salary) from test1 group by Department order by Department asc'
+dble_res:(('Development', Decimal('179000')), ('Finance', Decimal('172600')))
+mysql_res:(('Development', Decimal('179000')), ('Finance', Decimal('172600')))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：19的sql：'select ID,Department,Salary from test1 order by 2,3'
+dble_res:((207, 'Development', 49000), (206, 'Development', 55000), (205, 'Development', 75000), (201, 'Finance', 7800), (202, 'Finance', 45800), (203, 'Finance', 57000), (204, 'Finance', 62000))
+mysql_res:((207, 'Development', 49000), (206, 'Development', 55000), (205, 'Development', 75000), (201, 'Finance', 7800), (202, 'Finance', 45800), (203, 'Finance', 57000), (204, 'Finance', 62000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：20的sql：'select id,FirstName,lastname,department,salary from test1 order by Department ,ID desc'
+dble_res:((207, 'Tyoysww', 'Osk', 'Development', 49000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (201, 'Mazojys', 'Fxoj', 'Finance', 7800))
+mysql_res:((207, 'Tyoysww', 'Osk', 'Development', 49000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (201, 'Mazojys', 'Fxoj', 'Finance', 7800))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：21的sql：'SELECT Department, COUNT(Salary) FROM test1 GROUP BY Department'
+dble_res:(('Development', 3), ('Finance', 4))
+mysql_res:(('Development', 3), ('Finance', 4))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：22的sql：'SELECT Department, COUNT(Salary) FROM test1 GROUP BY Department DESC'
+dble_res:(('Finance', 4), ('Development', 3))
+mysql_res:(('Finance', 4), ('Development', 3))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：23的sql：'select Department,count(Salary) as a from test1 group by Department having a=3'
+dble_res:(('Development', 3),)
+mysql_res:(('Development', 3),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：24的sql：'select Department,count(Salary) as a from test1 group by Department having a>0'
+dble_res:(('Development', 3), ('Finance', 4))
+mysql_res:(('Development', 3), ('Finance', 4))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：25的sql：'select Department,count(Salary) from test1 group by Department having count(ID) >2'
+dble_res:(('Development', 3), ('Finance', 4))
+mysql_res:(('Development', 3), ('Finance', 4))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：26的sql：'select Department,count(*) as num from test1 group by Department having count(*) >1'
+dble_res:(('Development', 3), ('Finance', 4))
+mysql_res:(('Development', 3), ('Finance', 4))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：27的sql：'select Department,count(*) as num from test1 group by Department having count(*) <=3'
+dble_res:(('Development', 3),)
+mysql_res:(('Development', 3),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：28的sql：'select Department from test1 having Department >3'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：29的sql：'select Department from test1 where Department >0'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：30的sql：'select Department,max(salary) from test1 group by Department having max(salary) >10'
+dble_res:(('Development', 75000), ('Finance', 62000))
+mysql_res:(('Development', 75000), ('Finance', 62000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：31的sql：'select 12 as Department, Department from test1 group by Department'
+dble_res:((12, 'Development'), (12, 'Finance'))
+mysql_res:((12, 'Development'), (12, 'Finance'))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：32的sql：'select id,FirstName,lastname,department,salary from test1 limit 2,10'
+dble_res:((203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+mysql_res:((203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：33的sql：'select id,FirstName,lastname,department,salary from test1 order by FirstName in ('Syllauu','Dnnaao') desc'
+dble_res:((203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+mysql_res:((203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：34的sql：'select max(salary) from test1 group by department order by department asc'
+dble_res:((75000,), (62000,))
+mysql_res:((75000,), (62000,))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：35的sql：'select min(salary) from test1 group by department order by department asc'
+dble_res:((49000,), (7800,))
+mysql_res:((49000,), (7800,))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：36的sql：'select avg(salary) from test1 group by department order by department asc'
+dble_res:((Decimal('59666.6667'),), (Decimal('43150.0000'),))
+mysql_res:((Decimal('59666.6667'),), (Decimal('43150.0000'),))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：37的sql：'select sum(salary) from test1 group by department order by department asc'
+dble_res:((Decimal('179000'),), (Decimal('172600'),))
+mysql_res:((Decimal('179000'),), (Decimal('172600'),))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：38的sql：'select count(salary) from test1 group by department order by department asc'
+dble_res:((3,), (4,))
+mysql_res:((3,), (4,))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：39的sql：'select Department,sum(Salary) a from test1 group by Department having a >=1 order by Department DESC'
+dble_res:(('Finance', Decimal('172600')), ('Development', Decimal('179000')))
+mysql_res:(('Finance', Decimal('172600')), ('Development', Decimal('179000')))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：40的sql：'select Department,count(*) as num from test1 group by Department having count(*) >=4 order by Department ASC'
+dble_res:(('Finance', 4),)
+mysql_res:(('Finance', 4),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：41的sql：'select FirstName,LastName,Department,ABS(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 75000), ('Dnnaao', 'Errllov', 'Development', 55000), ('Tyoysww', 'Osk', 'Development', 49000), ('Mazojys', 'Fxoj', 'Finance', 7800), ('Jozzh', 'Lnanyo', 'Finance', 45800), ('Syllauu', 'Dfaafk', 'Finance', 57000), ('Gecrrcc', 'Srlkrt', 'Finance', 62000))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 75000), ('Dnnaao', 'Errllov', 'Development', 55000), ('Tyoysww', 'Osk', 'Development', 49000), ('Mazojys', 'Fxoj', 'Finance', 7800), ('Jozzh', 'Lnanyo', 'Finance', 45800), ('Syllauu', 'Dfaafk', 'Finance', 57000), ('Gecrrcc', 'Srlkrt', 'Finance', 62000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：42的sql：'select FirstName,LastName,Department,ACOS(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', None), ('Dnnaao', 'Errllov', 'Development', None), ('Tyoysww', 'Osk', 'Development', None), ('Mazojys', 'Fxoj', 'Finance', None), ('Jozzh', 'Lnanyo', 'Finance', None), ('Syllauu', 'Dfaafk', 'Finance', None), ('Gecrrcc', 'Srlkrt', 'Finance', None))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', None), ('Dnnaao', 'Errllov', 'Development', None), ('Tyoysww', 'Osk', 'Development', None), ('Mazojys', 'Fxoj', 'Finance', None), ('Jozzh', 'Lnanyo', 'Finance', None), ('Syllauu', 'Dfaafk', 'Finance', None), ('Gecrrcc', 'Srlkrt', 'Finance', None))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：43的sql：'select FirstName,LastName,Department,ASIN(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', None), ('Dnnaao', 'Errllov', 'Development', None), ('Tyoysww', 'Osk', 'Development', None), ('Mazojys', 'Fxoj', 'Finance', None), ('Jozzh', 'Lnanyo', 'Finance', None), ('Syllauu', 'Dfaafk', 'Finance', None), ('Gecrrcc', 'Srlkrt', 'Finance', None))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', None), ('Dnnaao', 'Errllov', 'Development', None), ('Tyoysww', 'Osk', 'Development', None), ('Mazojys', 'Fxoj', 'Finance', None), ('Jozzh', 'Lnanyo', 'Finance', None), ('Syllauu', 'Dfaafk', 'Finance', None), ('Gecrrcc', 'Srlkrt', 'Finance', None))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：44的sql：'select FirstName,LastName,Department,ATAN(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 1.570782993461564), ('Dnnaao', 'Errllov', 'Development', 1.5707781449767169), ('Tyoysww', 'Osk', 'Development', 1.5707759186316341), ('Mazojys', 'Fxoj', 'Finance', 1.570668121667394), ('Jozzh', 'Lnanyo', 'Finance', 1.5707744927337648), ('Syllauu', 'Dfaafk', 'Finance', 1.5707787829352493), ('Gecrrcc', 'Srlkrt', 'Finance', 1.5707801977626399))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 1.570782993461564), ('Dnnaao', 'Errllov', 'Development', 1.5707781449767169), ('Tyoysww', 'Osk', 'Development', 1.5707759186316341), ('Mazojys', 'Fxoj', 'Finance', 1.570668121667394), ('Jozzh', 'Lnanyo', 'Finance', 1.5707744927337648), ('Syllauu', 'Dfaafk', 'Finance', 1.5707787829352493), ('Gecrrcc', 'Srlkrt', 'Finance', 1.5707801977626399))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：45的sql：'select FirstName,LastName,Department,ATAN(salary,100) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 1.569462994251686), ('Dnnaao', 'Errllov', 'Development', 1.5689781469802169), ('Tyoysww', 'Osk', 'Development', 1.5687555133016455), ('Mazojys', 'Fxoj', 'Finance', 1.557976516321996), ('Jozzh', 'Lnanyo', 'Finance', 1.5686129241509728), ('Syllauu', 'Dfaafk', 'Finance', 1.5690419426299052), ('Gecrrcc', 'Srlkrt', 'Finance', 1.5691834249677208))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 1.569462994251686), ('Dnnaao', 'Errllov', 'Development', 1.5689781469802169), ('Tyoysww', 'Osk', 'Development', 1.5687555133016455), ('Mazojys', 'Fxoj', 'Finance', 1.557976516321996), ('Jozzh', 'Lnanyo', 'Finance', 1.5686129241509728), ('Syllauu', 'Dfaafk', 'Finance', 1.5690419426299052), ('Gecrrcc', 'Srlkrt', 'Finance', 1.5691834249677208))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：46的sql：'select FirstName,LastName,Department,ATAN2(salary,100) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 1.569462994251686), ('Dnnaao', 'Errllov', 'Development', 1.5689781469802169), ('Tyoysww', 'Osk', 'Development', 1.5687555133016455), ('Mazojys', 'Fxoj', 'Finance', 1.557976516321996), ('Jozzh', 'Lnanyo', 'Finance', 1.5686129241509728), ('Syllauu', 'Dfaafk', 'Finance', 1.5690419426299052), ('Gecrrcc', 'Srlkrt', 'Finance', 1.5691834249677208))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 1.569462994251686), ('Dnnaao', 'Errllov', 'Development', 1.5689781469802169), ('Tyoysww', 'Osk', 'Development', 1.5687555133016455), ('Mazojys', 'Fxoj', 'Finance', 1.557976516321996), ('Jozzh', 'Lnanyo', 'Finance', 1.5686129241509728), ('Syllauu', 'Dfaafk', 'Finance', 1.5690419426299052), ('Gecrrcc', 'Srlkrt', 'Finance', 1.5691834249677208))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：47的sql：'select FirstName,LastName,Department,CEIL(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 75000), ('Dnnaao', 'Errllov', 'Development', 55000), ('Tyoysww', 'Osk', 'Development', 49000), ('Mazojys', 'Fxoj', 'Finance', 7800), ('Jozzh', 'Lnanyo', 'Finance', 45800), ('Syllauu', 'Dfaafk', 'Finance', 57000), ('Gecrrcc', 'Srlkrt', 'Finance', 62000))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 75000), ('Dnnaao', 'Errllov', 'Development', 55000), ('Tyoysww', 'Osk', 'Development', 49000), ('Mazojys', 'Fxoj', 'Finance', 7800), ('Jozzh', 'Lnanyo', 'Finance', 45800), ('Syllauu', 'Dfaafk', 'Finance', 57000), ('Gecrrcc', 'Srlkrt', 'Finance', 62000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：48的sql：'select FirstName,LastName,Department,CEILING(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 75000), ('Dnnaao', 'Errllov', 'Development', 55000), ('Tyoysww', 'Osk', 'Development', 49000), ('Mazojys', 'Fxoj', 'Finance', 7800), ('Jozzh', 'Lnanyo', 'Finance', 45800), ('Syllauu', 'Dfaafk', 'Finance', 57000), ('Gecrrcc', 'Srlkrt', 'Finance', 62000))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 75000), ('Dnnaao', 'Errllov', 'Development', 55000), ('Tyoysww', 'Osk', 'Development', 49000), ('Mazojys', 'Fxoj', 'Finance', 7800), ('Jozzh', 'Lnanyo', 'Finance', 45800), ('Syllauu', 'Dfaafk', 'Finance', 57000), ('Gecrrcc', 'Srlkrt', 'Finance', 62000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：49的sql：'select FirstName,LastName,Department,COT(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 1.055126176601761), ('Dnnaao', 'Errllov', 'Development', 7.231437579987603), ('Tyoysww', 'Osk', 'Development', 1.5283848380509242), ('Mazojys', 'Fxoj', 'Finance', -1.5445941093101545), ('Jozzh', 'Lnanyo', 'Finance', -0.300046703526689), ('Syllauu', 'Dfaafk', 'Finance', -0.5642127571169799), ('Gecrrcc', 'Srlkrt', 'Finance', 1.2648660040338875))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 1.055126176601761), ('Dnnaao', 'Errllov', 'Development', 7.231437579987603), ('Tyoysww', 'Osk', 'Development', 1.5283848380509242), ('Mazojys', 'Fxoj', 'Finance', -1.5445941093101545), ('Jozzh', 'Lnanyo', 'Finance', -0.300046703526689), ('Syllauu', 'Dfaafk', 'Finance', -0.5642127571169799), ('Gecrrcc', 'Srlkrt', 'Finance', 1.2648660040338875))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：50的sql：'select FirstName,LastName,Department,CRC32(Department) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 1179299581), ('Dnnaao', 'Errllov', 'Development', 1179299581), ('Tyoysww', 'Osk', 'Development', 1179299581), ('Mazojys', 'Fxoj', 'Finance', 26596220), ('Jozzh', 'Lnanyo', 'Finance', 26596220), ('Syllauu', 'Dfaafk', 'Finance', 26596220), ('Gecrrcc', 'Srlkrt', 'Finance', 26596220))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 1179299581), ('Dnnaao', 'Errllov', 'Development', 1179299581), ('Tyoysww', 'Osk', 'Development', 1179299581), ('Mazojys', 'Fxoj', 'Finance', 26596220), ('Jozzh', 'Lnanyo', 'Finance', 26596220), ('Syllauu', 'Dfaafk', 'Finance', 26596220), ('Gecrrcc', 'Srlkrt', 'Finance', 26596220))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：51的sql：'select FirstName,LastName,Department,FLOOR(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 75000), ('Dnnaao', 'Errllov', 'Development', 55000), ('Tyoysww', 'Osk', 'Development', 49000), ('Mazojys', 'Fxoj', 'Finance', 7800), ('Jozzh', 'Lnanyo', 'Finance', 45800), ('Syllauu', 'Dfaafk', 'Finance', 57000), ('Gecrrcc', 'Srlkrt', 'Finance', 62000))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 75000), ('Dnnaao', 'Errllov', 'Development', 55000), ('Tyoysww', 'Osk', 'Development', 49000), ('Mazojys', 'Fxoj', 'Finance', 7800), ('Jozzh', 'Lnanyo', 'Finance', 45800), ('Syllauu', 'Dfaafk', 'Finance', 57000), ('Gecrrcc', 'Srlkrt', 'Finance', 62000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：52的sql：'select FirstName,LN(FirstName),LastName,Department from test1 order by Department'
+dble_res:(('Jssme', None, 'Bdnaa', 'Development'), ('Dnnaao', None, 'Errllov', 'Development'), ('Tyoysww', None, 'Osk', 'Development'), ('Mazojys', None, 'Fxoj', 'Finance'), ('Jozzh', None, 'Lnanyo', 'Finance'), ('Syllauu', None, 'Dfaafk', 'Finance'), ('Gecrrcc', None, 'Srlkrt', 'Finance'))
+mysql_res:(('Jssme', None, 'Bdnaa', 'Development'), ('Dnnaao', None, 'Errllov', 'Development'), ('Tyoysww', None, 'Osk', 'Development'), ('Mazojys', None, 'Fxoj', 'Finance'), ('Jozzh', None, 'Lnanyo', 'Finance'), ('Syllauu', None, 'Dfaafk', 'Finance'), ('Gecrrcc', None, 'Srlkrt', 'Finance'))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：53的sql：'select FirstName,LastName,Department,LOG(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 11.225243392518447), ('Dnnaao', 'Errllov', 'Development', 10.915088464214607), ('Tyoysww', 'Osk', 'Development', 10.799575577092764), ('Mazojys', 'Fxoj', 'Finance', 8.961879012677683), ('Jozzh', 'Lnanyo', 'Finance', 10.732039370102276), ('Syllauu', 'Dfaafk', 'Finance', 10.950806546816688), ('Gecrrcc', 'Srlkrt', 'Finance', 11.03488966402723))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 11.225243392518447), ('Dnnaao', 'Errllov', 'Development', 10.915088464214607), ('Tyoysww', 'Osk', 'Development', 10.799575577092764), ('Mazojys', 'Fxoj', 'Finance', 8.961879012677683), ('Jozzh', 'Lnanyo', 'Finance', 10.732039370102276), ('Syllauu', 'Dfaafk', 'Finance', 10.950806546816688), ('Gecrrcc', 'Srlkrt', 'Finance', 11.03488966402723))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：54的sql：'select FirstName,LastName,Department,LOG2(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 16.194602975157967), ('Dnnaao', 'Errllov', 'Development', 15.747143998186745), ('Tyoysww', 'Osk', 'Development', 15.580494128777296), ('Mazojys', 'Fxoj', 'Finance', 12.929258408636972), ('Jozzh', 'Lnanyo', 'Finance', 15.483059977871669), ('Syllauu', 'Dfaafk', 'Finance', 15.79867429882683), ('Gecrrcc', 'Srlkrt', 'Finance', 15.919980595048964))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 16.194602975157967), ('Dnnaao', 'Errllov', 'Development', 15.747143998186745), ('Tyoysww', 'Osk', 'Development', 15.580494128777296), ('Mazojys', 'Fxoj', 'Finance', 12.929258408636972), ('Jozzh', 'Lnanyo', 'Finance', 15.483059977871669), ('Syllauu', 'Dfaafk', 'Finance', 15.79867429882683), ('Gecrrcc', 'Srlkrt', 'Finance', 15.919980595048964))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：55的sql：'select FirstName,LastName,Department,LOG10(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 4.8750612633917), ('Dnnaao', 'Errllov', 'Development', 4.740362689494244), ('Tyoysww', 'Osk', 'Development', 4.690196080028514), ('Mazojys', 'Fxoj', 'Finance', 3.8920946026904804), ('Jozzh', 'Lnanyo', 'Finance', 4.660865478003869), ('Syllauu', 'Dfaafk', 'Finance', 4.7558748556724915), ('Gecrrcc', 'Srlkrt', 'Finance', 4.7923916894982534))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 4.8750612633917), ('Dnnaao', 'Errllov', 'Development', 4.740362689494244), ('Tyoysww', 'Osk', 'Development', 4.690196080028514), ('Mazojys', 'Fxoj', 'Finance', 3.8920946026904804), ('Jozzh', 'Lnanyo', 'Finance', 4.660865478003869), ('Syllauu', 'Dfaafk', 'Finance', 4.7558748556724915), ('Gecrrcc', 'Srlkrt', 'Finance', 4.7923916894982534))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：56的sql：'select FirstName,LastName,Department,MOD(salary,2) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 0), ('Dnnaao', 'Errllov', 'Development', 0), ('Tyoysww', 'Osk', 'Development', 0), ('Mazojys', 'Fxoj', 'Finance', 0), ('Jozzh', 'Lnanyo', 'Finance', 0), ('Syllauu', 'Dfaafk', 'Finance', 0), ('Gecrrcc', 'Srlkrt', 'Finance', 0))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 0), ('Dnnaao', 'Errllov', 'Development', 0), ('Tyoysww', 'Osk', 'Development', 0), ('Mazojys', 'Fxoj', 'Finance', 0), ('Jozzh', 'Lnanyo', 'Finance', 0), ('Syllauu', 'Dfaafk', 'Finance', 0), ('Gecrrcc', 'Srlkrt', 'Finance', 0))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：57的sql：'select FirstName,LastName,Department,RADIANS(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 1308.996938995747), ('Dnnaao', 'Errllov', 'Development', 959.9310885968813), ('Tyoysww', 'Osk', 'Development', 855.2113334772215), ('Mazojys', 'Fxoj', 'Finance', 136.1356816555577), ('Jozzh', 'Lnanyo', 'Finance', 799.3607974134029), ('Syllauu', 'Dfaafk', 'Finance', 994.8376736367678), ('Gecrrcc', 'Srlkrt', 'Finance', 1082.1041362364842))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 1308.996938995747), ('Dnnaao', 'Errllov', 'Development', 959.9310885968813), ('Tyoysww', 'Osk', 'Development', 855.2113334772215), ('Mazojys', 'Fxoj', 'Finance', 136.1356816555577), ('Jozzh', 'Lnanyo', 'Finance', 799.3607974134029), ('Syllauu', 'Dfaafk', 'Finance', 994.8376736367678), ('Gecrrcc', 'Srlkrt', 'Finance', 1082.1041362364842))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：58的sql：'select FirstName,LastName,Department,ROUND(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 75000), ('Dnnaao', 'Errllov', 'Development', 55000), ('Tyoysww', 'Osk', 'Development', 49000), ('Mazojys', 'Fxoj', 'Finance', 7800), ('Jozzh', 'Lnanyo', 'Finance', 45800), ('Syllauu', 'Dfaafk', 'Finance', 57000), ('Gecrrcc', 'Srlkrt', 'Finance', 62000))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 75000), ('Dnnaao', 'Errllov', 'Development', 55000), ('Tyoysww', 'Osk', 'Development', 49000), ('Mazojys', 'Fxoj', 'Finance', 7800), ('Jozzh', 'Lnanyo', 'Finance', 45800), ('Syllauu', 'Dfaafk', 'Finance', 57000), ('Gecrrcc', 'Srlkrt', 'Finance', 62000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：59的sql：'select FirstName,LastName,Department,SIGN(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 1), ('Dnnaao', 'Errllov', 'Development', 1), ('Tyoysww', 'Osk', 'Development', 1), ('Mazojys', 'Fxoj', 'Finance', 1), ('Jozzh', 'Lnanyo', 'Finance', 1), ('Syllauu', 'Dfaafk', 'Finance', 1), ('Gecrrcc', 'Srlkrt', 'Finance', 1))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 1), ('Dnnaao', 'Errllov', 'Development', 1), ('Tyoysww', 'Osk', 'Development', 1), ('Mazojys', 'Fxoj', 'Finance', 1), ('Jozzh', 'Lnanyo', 'Finance', 1), ('Syllauu', 'Dfaafk', 'Finance', 1), ('Gecrrcc', 'Srlkrt', 'Finance', 1))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：60的sql：'select FirstName,LastName,Department,SIN(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', -0.6878921013205519), ('Dnnaao', 'Errllov', 'Development', -0.13698155956977381), ('Tyoysww', 'Osk', 'Development', -0.5475068647790385), ('Mazojys', 'Fxoj', 'Finance', 0.5434645393886025), ('Jozzh', 'Lnanyo', 'Finance', 0.957813972427147), ('Syllauu', 'Dfaafk', 'Finance', -0.8709373957204783), ('Gecrrcc', 'Srlkrt', 'Finance', -0.6201872685349616))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', -0.6878921013205519), ('Dnnaao', 'Errllov', 'Development', -0.13698155956977381), ('Tyoysww', 'Osk', 'Development', -0.5475068647790385), ('Mazojys', 'Fxoj', 'Finance', 0.5434645393886025), ('Jozzh', 'Lnanyo', 'Finance', 0.957813972427147), ('Syllauu', 'Dfaafk', 'Finance', -0.8709373957204783), ('Gecrrcc', 'Srlkrt', 'Finance', -0.6201872685349616))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：61的sql：'select FirstName,LastName,Department,SQRT(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 273.8612787525831), ('Dnnaao', 'Errllov', 'Development', 234.5207879911715), ('Tyoysww', 'Osk', 'Development', 221.35943621178654), ('Mazojys', 'Fxoj', 'Finance', 88.31760866327846), ('Jozzh', 'Lnanyo', 'Finance', 214.00934559032697), ('Syllauu', 'Dfaafk', 'Finance', 238.74672772626644), ('Gecrrcc', 'Srlkrt', 'Finance', 248.99799195977465))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 273.8612787525831), ('Dnnaao', 'Errllov', 'Development', 234.5207879911715), ('Tyoysww', 'Osk', 'Development', 221.35943621178654), ('Mazojys', 'Fxoj', 'Finance', 88.31760866327846), ('Jozzh', 'Lnanyo', 'Finance', 214.00934559032697), ('Syllauu', 'Dfaafk', 'Finance', 238.74672772626644), ('Gecrrcc', 'Srlkrt', 'Finance', 248.99799195977465))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：62的sql：'select FirstName,LastName,Department,TAN(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 0.9477539484620641), ('Dnnaao', 'Errllov', 'Development', 0.13828509047321602), ('Tyoysww', 'Osk', 'Development', 0.6542854751655689), ('Mazojys', 'Fxoj', 'Finance', -0.6474192760236663), ('Jozzh', 'Lnanyo', 'Finance', -3.3328144860323405), ('Syllauu', 'Dfaafk', 'Finance', -1.7723810519808347), ('Gecrrcc', 'Srlkrt', 'Finance', 0.7905975785662815))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 0.9477539484620641), ('Dnnaao', 'Errllov', 'Development', 0.13828509047321602), ('Tyoysww', 'Osk', 'Development', 0.6542854751655689), ('Mazojys', 'Fxoj', 'Finance', -0.6474192760236663), ('Jozzh', 'Lnanyo', 'Finance', -3.3328144860323405), ('Syllauu', 'Dfaafk', 'Finance', -1.7723810519808347), ('Gecrrcc', 'Srlkrt', 'Finance', 0.7905975785662815))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：63的sql：'select FirstName,LastName,Department,TRUNCATE(salary,1) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 75000), ('Dnnaao', 'Errllov', 'Development', 55000), ('Tyoysww', 'Osk', 'Development', 49000), ('Mazojys', 'Fxoj', 'Finance', 7800), ('Jozzh', 'Lnanyo', 'Finance', 45800), ('Syllauu', 'Dfaafk', 'Finance', 57000), ('Gecrrcc', 'Srlkrt', 'Finance', 62000))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 75000), ('Dnnaao', 'Errllov', 'Development', 55000), ('Tyoysww', 'Osk', 'Development', 49000), ('Mazojys', 'Fxoj', 'Finance', 7800), ('Jozzh', 'Lnanyo', 'Finance', 45800), ('Syllauu', 'Dfaafk', 'Finance', 57000), ('Gecrrcc', 'Srlkrt', 'Finance', 62000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：64的sql：'select FirstName,LastName,Department,TRUNCATE(salary*100,0) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', 7500000), ('Dnnaao', 'Errllov', 'Development', 5500000), ('Tyoysww', 'Osk', 'Development', 4900000), ('Mazojys', 'Fxoj', 'Finance', 780000), ('Jozzh', 'Lnanyo', 'Finance', 4580000), ('Syllauu', 'Dfaafk', 'Finance', 5700000), ('Gecrrcc', 'Srlkrt', 'Finance', 6200000))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', 7500000), ('Dnnaao', 'Errllov', 'Development', 5500000), ('Tyoysww', 'Osk', 'Development', 4900000), ('Mazojys', 'Fxoj', 'Finance', 780000), ('Jozzh', 'Lnanyo', 'Finance', 4580000), ('Syllauu', 'Dfaafk', 'Finance', 5700000), ('Gecrrcc', 'Srlkrt', 'Finance', 6200000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：65的sql：'select FirstName,LastName,Department,SIN(salary) from test1 order by Department'
+dble_res:(('Jssme', 'Bdnaa', 'Development', -0.6878921013205519), ('Dnnaao', 'Errllov', 'Development', -0.13698155956977381), ('Tyoysww', 'Osk', 'Development', -0.5475068647790385), ('Mazojys', 'Fxoj', 'Finance', 0.5434645393886025), ('Jozzh', 'Lnanyo', 'Finance', 0.957813972427147), ('Syllauu', 'Dfaafk', 'Finance', -0.8709373957204783), ('Gecrrcc', 'Srlkrt', 'Finance', -0.6201872685349616))
+mysql_res:(('Jssme', 'Bdnaa', 'Development', -0.6878921013205519), ('Dnnaao', 'Errllov', 'Development', -0.13698155956977381), ('Tyoysww', 'Osk', 'Development', -0.5475068647790385), ('Mazojys', 'Fxoj', 'Finance', 0.5434645393886025), ('Jozzh', 'Lnanyo', 'Finance', 0.957813972427147), ('Syllauu', 'Dfaafk', 'Finance', -0.8709373957204783), ('Gecrrcc', 'Srlkrt', 'Finance', -0.6201872685349616))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：66的sql：'select id,FirstName,lastname,department,salary from test1 where Department is Null'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：67的sql：'select id,FirstName,lastname,department,salary from test1 where Department is not Null'
+dble_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+mysql_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：68的sql：'select id,FirstName,lastname,department,salary from test1 where NOT (ID < 200)'
+dble_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+mysql_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：69的sql：'select id,FirstName,lastname,department,salary from test1 where ID <300'
+dble_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+mysql_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：70的sql：'select id,FirstName,lastname,department,salary from test1 where ID <1'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：71的sql：'select id,FirstName,lastname,department,salary from test1 where ID <> 0'
+dble_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+mysql_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：72的sql：'select id,FirstName,lastname,department,salary from test1 where ID <> 0 and ID <=1'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：73的sql：'select id,FirstName,lastname,department,salary from test1 where ID >=205'
+dble_res:((205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+mysql_res:((205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：74的sql：'select id,FirstName,lastname,department,salary from test1 where ID <=205'
+dble_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000))
+mysql_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：75的sql：'select id,FirstName,lastname,department,salary from test1 where ID >=205 and ID <=205'
+dble_res:((205, 'Jssme', 'Bdnaa', 'Development', 75000),)
+mysql_res:((205, 'Jssme', 'Bdnaa', 'Development', 75000),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：76的sql：'select id,FirstName,lastname,department,salary from test1 where ID >1 and ID <=203'
+dble_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000))
+mysql_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：77的sql：'select id,FirstName,lastname,department,salary from test1 where ID >=1 and ID=205'
+dble_res:((205, 'Jssme', 'Bdnaa', 'Development', 75000),)
+mysql_res:((205, 'Jssme', 'Bdnaa', 'Development', 75000),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：78的sql：'select id,FirstName,lastname,department,salary from test1 where ID=(ID>>1)<<1'
+dble_res:((202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (206, 'Dnnaao', 'Errllov', 'Development', 55000))
+mysql_res:((202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (206, 'Dnnaao', 'Errllov', 'Development', 55000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：79的sql：'select id,FirstName,lastname,department,salary from test1 where ID&1'
+dble_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+mysql_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：80的sql：'select id,FirstName,lastname,department,salary from test1 where Salary >'40000' and Salary <'70000' and Department ='Finance' order by Salary ASC'
+dble_res:((202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000))
+mysql_res:((202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：81的sql：'select id,FirstName,lastname,department,salary from test1 where (Salary >'50000' and Salary <'70000') or Department ='Finance' order by Salary ASC'
+dble_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000))
+mysql_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：82的sql：'select id,FirstName,lastname,department,salary from test1 where FirstName like 'J%''
+dble_res:((202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (205, 'Jssme', 'Bdnaa', 'Development', 75000))
+mysql_res:((202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (205, 'Jssme', 'Bdnaa', 'Development', 75000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：83的sql：'select count(*) FROM test1 WHERE Salary is null or FirstName not like '%M%''
+dble_res:((5,),)
+mysql_res:((5,),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：84的sql：'SELECT id,FirstName,lastname,department,salary FROM test1  WHERE ID IN (SELECT ID FROM test1 WHERE ID >0)'
+dble_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+mysql_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (204, 'Gecrrcc', 'Srlkrt', 'Finance', 62000), (205, 'Jssme', 'Bdnaa', 'Development', 75000), (206, 'Dnnaao', 'Errllov', 'Development', 55000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：85的sql：'SELECT distinct salary,id,FirstName,lastname,department FROM test1 WHERE ID IN ( SELECT ID FROM test1 WHERE ID >0)'
+dble_res:((7800, 201, 'Mazojys', 'Fxoj', 'Finance'), (45800, 202, 'Jozzh', 'Lnanyo', 'Finance'), (57000, 203, 'Syllauu', 'Dfaafk', 'Finance'), (62000, 204, 'Gecrrcc', 'Srlkrt', 'Finance'), (75000, 205, 'Jssme', 'Bdnaa', 'Development'), (55000, 206, 'Dnnaao', 'Errllov', 'Development'), (49000, 207, 'Tyoysww', 'Osk', 'Development'))
+mysql_res:((7800, 201, 'Mazojys', 'Fxoj', 'Finance'), (45800, 202, 'Jozzh', 'Lnanyo', 'Finance'), (57000, 203, 'Syllauu', 'Dfaafk', 'Finance'), (62000, 204, 'Gecrrcc', 'Srlkrt', 'Finance'), (75000, 205, 'Jssme', 'Bdnaa', 'Development'), (55000, 206, 'Dnnaao', 'Errllov', 'Development'), (49000, 207, 'Tyoysww', 'Osk', 'Development'))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：86的sql：'select id,FirstName,lastname,department,salary from test1 where FirstName in ('Mazojys','Syllauu','Tyoysww')'
+dble_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+mysql_res:((201, 'Mazojys', 'Fxoj', 'Finance', 7800), (203, 'Syllauu', 'Dfaafk', 'Finance', 57000), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：87的sql：'select id,FirstName,lastname,department,salary from test1 where Salary between 40000 and 50000'
+dble_res:((202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+mysql_res:((202, 'Jozzh', 'Lnanyo', 'Finance', 45800), (207, 'Tyoysww', 'Osk', 'Development', 49000))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：88的sql：'select sum(salary) from test1 where department = 'Finance''
+dble_res:((Decimal('172600'),),)
+mysql_res:((Decimal('172600'),),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：89的sql：'select max(salary) from test1 where department = 'Finance''
+dble_res:((62000,),)
+mysql_res:((62000,),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：90的sql：'select min(salary) from test1 where department = 'Finance''
+dble_res:((7800,),)
+mysql_res:((7800,),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：91的sql：'select avg(salary) from test1 where department = 'Finance''
+dble_res:((Decimal('43150.0000'),),)
+mysql_res:((Decimal('43150.0000'),),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：92的sql：'drop table if exists test1'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：93的sql：'create table test1 (id int(11),R_REGIONKEY int(11) primary key,R_NAME varchar(50),R_COMMENT varchar(50))'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：94的sql：'insert into test1 (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'Eastern','test001'),(3,3, 'Northern','test003'),(2,2, 'Western','test002'),(4,4, 'Southern','test004')'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：95的sql：'select CURRENT_USER FROM test1'
+dble_res:(('test@%',), ('test@%',), ('test@%',), ('test@%',))
+mysql_res:(('test@%',), ('test@%',), ('test@%',), ('test@%',))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：96的sql：'select sum(distinct id) from test1'
+dble_res:((Decimal('10'),),)
+mysql_res:((Decimal('10'),),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：97的sql：'select sum(all id) from test1'
+dble_res:((Decimal('10'),),)
+mysql_res:((Decimal('10'),),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：98的sql：'select id, R_REGIONKEY from test1'
+dble_res:((1, 1), (2, 2), (3, 3), (4, 4))
+mysql_res:((1, 1), (2, 2), (3, 3), (4, 4))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：99的sql：'select id,'user is user' from test1'
+dble_res:((1, 'user is user'), (2, 'user is user'), (3, 'user is user'), (4, 'user is user'))
+mysql_res:((1, 'user is user'), (2, 'user is user'), (3, 'user is user'), (4, 'user is user'))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：100的sql：'select id*5,'user is user',10 from test1'
+dble_res:((5, 'user is user', 10), (10, 'user is user', 10), (15, 'user is user', 10), (20, 'user is user', 10))
+mysql_res:((5, 'user is user', 10), (10, 'user is user', 10), (15, 'user is user', 10), (20, 'user is user', 10))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：101的sql：'select ALL id, R_REGIONKEY, R_NAME, R_COMMENT from test1'
+dble_res:((1, 1, 'Eastern', 'test001'), (2, 2, 'Western', 'test002'), (3, 3, 'Northern', 'test003'), (4, 4, 'Southern', 'test004'))
+mysql_res:((1, 1, 'Eastern', 'test001'), (2, 2, 'Western', 'test002'), (3, 3, 'Northern', 'test003'), (4, 4, 'Southern', 'test004'))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：102的sql：'select DISTINCT id, R_REGIONKEY, R_NAME, R_COMMENT from test1'
+dble_res:((1, 1, 'Eastern', 'test001'), (2, 2, 'Western', 'test002'), (3, 3, 'Northern', 'test003'), (4, 4, 'Southern', 'test004'))
+mysql_res:((1, 1, 'Eastern', 'test001'), (2, 2, 'Western', 'test002'), (3, 3, 'Northern', 'test003'), (4, 4, 'Southern', 'test004'))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：103的sql：'select DISTINCTROW id, R_REGIONKEY, R_NAME, R_COMMENT from test1'
+dble_res:((1, 1, 'Eastern', 'test001'), (2, 2, 'Western', 'test002'), (3, 3, 'Northern', 'test003'), (4, 4, 'Southern', 'test004'))
+mysql_res:((1, 1, 'Eastern', 'test001'), (2, 2, 'Western', 'test002'), (3, 3, 'Northern', 'test003'), (4, 4, 'Southern', 'test004'))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：104的sql：'select ALL HIGH_PRIORITY id,'ID' as detail  from test1'
+dble_res:((1, 'ID'), (2, 'ID'), (3, 'ID'), (4, 'ID'))
+mysql_res:((1, 'ID'), (2, 'ID'), (3, 'ID'), (4, 'ID'))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：105的sql：'drop table if exists test1'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：106的sql：'create table test1 (id int(11),O_ORDERKEY varchar(20) primary key,O_CUSTKEY varchar(20),O_TOTALPRICE int(20),MYDATE date)'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：107的sql：'insert into test1 (id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE) values (1,'ORDERKEY_001','CUSTKEY_003',200000,'20141022'),(2,'ORDERKEY_002','CUSTKEY_003',100000,'19920501'),(4,'ORDERKEY_004','CUSTKEY_111',500,'20080105'),(5,'ORDERKEY_005','CUSTKEY_132',100,'19920628'),(10,'ORDERKEY_010','CUSTKEY_333',88888888,'19920720'),(11,'ORDERKEY_011','CUSTKEY_012',323456,'19920822'),(7,'ORDERKEY_007','CUSTKEY_980',12000,'19920910'),(6,'ORDERKEY_006','CUSTKEY_420',231,'19921111')'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：108的sql：'select id, O_ORDERKEY, O_TOTALPRICE,MYDATE from test1 where id=1'
+dble_res:((1, 'ORDERKEY_001', 200000, datetime.date(2014, 10, 22)),)
+mysql_res:((1, 'ORDERKEY_001', 200000, datetime.date(2014, 10, 22)),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：109的sql：'select id, O_ORDERKEY, O_TOTALPRICE,MYDATE from test1 where id=1 or not id=1'
+dble_res:((1, 'ORDERKEY_001', 200000, datetime.date(2014, 10, 22)), (2, 'ORDERKEY_002', 100000, datetime.date(1992, 5, 1)), (4, 'ORDERKEY_004', 500, datetime.date(2008, 1, 5)), (5, 'ORDERKEY_005', 100, datetime.date(1992, 6, 28)), (6, 'ORDERKEY_006', 231, datetime.date(1992, 11, 11)), (7, 'ORDERKEY_007', 12000, datetime.date(1992, 9, 10)), (10, 'ORDERKEY_010', 88888888, datetime.date(1992, 7, 20)), (11, 'ORDERKEY_011', 323456, datetime.date(1992, 8, 22)))
+mysql_res:((1, 'ORDERKEY_001', 200000, datetime.date(2014, 10, 22)), (2, 'ORDERKEY_002', 100000, datetime.date(1992, 5, 1)), (4, 'ORDERKEY_004', 500, datetime.date(2008, 1, 5)), (5, 'ORDERKEY_005', 100, datetime.date(1992, 6, 28)), (6, 'ORDERKEY_006', 231, datetime.date(1992, 11, 11)), (7, 'ORDERKEY_007', 12000, datetime.date(1992, 9, 10)), (10, 'ORDERKEY_010', 88888888, datetime.date(1992, 7, 20)), (11, 'ORDERKEY_011', 323456, datetime.date(1992, 8, 22)))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：110的sql：'select id, O_ORDERKEY, O_TOTALPRICE,MYDATE from test1 where id=1 and not id=1'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：111的sql：'select id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE from test1 where id=1'
+dble_res:((1, 'ORDERKEY_001', 'CUSTKEY_003', 200000, datetime.date(2014, 10, 22)),)
+mysql_res:((1, 'ORDERKEY_001', 'CUSTKEY_003', 200000, datetime.date(2014, 10, 22)),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：112的sql：'select count(*) counts from test1 a where MYDATE is null'
+dble_res:((0,),)
+mysql_res:((0,),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：113的sql：'select count(*) counts from test1 a where id is null'
+dble_res:((0,),)
+mysql_res:((0,),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：114的sql：'select count(*) counts from test1 a where id is not null'
+dble_res:((8,),)
+mysql_res:((8,),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：115的sql：'select count(*) counts from test1 a where not (id is null)'
+dble_res:((8,),)
+mysql_res:((8,),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：116的sql：'select count(O_ORDERKEY) counts from test1 a where O_ORDERKEY like 'ORDERKEY_00%''
+dble_res:((6,),)
+mysql_res:((6,),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：117的sql：'select count(O_ORDERKEY) counts from test1 a where O_ORDERKEY not like '%00%''
+dble_res:((2,),)
+mysql_res:((2,),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：118的sql：'select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 a where O_ORDERKEY<'ORDERKEY_010' and O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey'
+dble_res:((Decimal('300000'), 'CUSTKEY_003', 2), (Decimal('500'), 'CUSTKEY_111', 1), (Decimal('100'), 'CUSTKEY_132', 1))
+mysql_res:((Decimal('300000'), 'CUSTKEY_003', 2), (Decimal('500'), 'CUSTKEY_111', 1), (Decimal('100'), 'CUSTKEY_132', 1))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：119的sql：'select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 a where O_ORDERKEY<'ORDERKEY_010' or O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey'
+dble_res:((Decimal('300000'), 'CUSTKEY_003', 2), (Decimal('323456'), 'CUSTKEY_012', 1), (Decimal('500'), 'CUSTKEY_111', 1), (Decimal('100'), 'CUSTKEY_132', 1), (Decimal('231'), 'CUSTKEY_420', 1), (Decimal('12000'), 'CUSTKEY_980', 1))
+mysql_res:((Decimal('300000'), 'CUSTKEY_003', 2), (Decimal('323456'), 'CUSTKEY_012', 1), (Decimal('500'), 'CUSTKEY_111', 1), (Decimal('100'), 'CUSTKEY_132', 1), (Decimal('231'), 'CUSTKEY_420', 1), (Decimal('12000'), 'CUSTKEY_980', 1))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：120的sql：'select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 a where O_CUSTKEY in ('CUSTKEY_003','CUSTKEY_420','CUSTKEY_980') group by o_custkey'
+dble_res:((Decimal('300000'), 'CUSTKEY_003', 2), (Decimal('231'), 'CUSTKEY_420', 1), (Decimal('12000'), 'CUSTKEY_980', 1))
+mysql_res:((Decimal('300000'), 'CUSTKEY_003', 2), (Decimal('231'), 'CUSTKEY_420', 1), (Decimal('12000'), 'CUSTKEY_980', 1))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：121的sql：'select sum(O_TOTALPRICE) as sums,count(O_ORDERKEY) counts from test1 a where O_CUSTKEY not in ('CUSTKEY_003','CUSTKEY_420','CUSTKEY_980')'
+dble_res:((Decimal('89212944'), 4),)
+mysql_res:((Decimal('89212944'), 4),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：122的sql：'select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE from test1 where id=1'
+dble_res:((1, 'ORDERKEY_001', 'CUSTKEY_003', 200000, datetime.date(2014, 10, 22)),)
+mysql_res:((1, 'ORDERKEY_001', 'CUSTKEY_003', 200000, datetime.date(2014, 10, 22)),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：123的sql：'select O_CUSTKEY,case when sum(O_TOTALPRICE)<100000 then 'D' when sum(O_TOTALPRICE)>100000 and sum(O_TOTALPRICE)<1000000 then 'C' when sum(O_TOTALPRICE)>1000000 and sum(O_TOTALPRICE)<5000000 then 'B' else 'A' end as jibie  from test1 a group by O_CUSTKEY order by jibie, O_CUSTKEY limit 10'
+dble_res:(('CUSTKEY_333', 'A'), ('CUSTKEY_003', 'C'), ('CUSTKEY_012', 'C'), ('CUSTKEY_111', 'D'), ('CUSTKEY_132', 'D'), ('CUSTKEY_420', 'D'), ('CUSTKEY_980', 'D'))
+mysql_res:(('CUSTKEY_333', 'A'), ('CUSTKEY_003', 'C'), ('CUSTKEY_012', 'C'), ('CUSTKEY_111', 'D'), ('CUSTKEY_132', 'D'), ('CUSTKEY_420', 'D'), ('CUSTKEY_980', 'D'))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：124的sql：'select sum(O_TOTALPRICE) as sums,count(O_ORDERKEY) counts from test1 a where not O_CUSTKEY ='CUSTKEY_003''
+dble_res:((Decimal('89225175'), 6),)
+mysql_res:((Decimal('89225175'), 6),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：125的sql：'select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE from test1 where id=1'
+dble_res:((1, 'ORDERKEY_001', 'CUSTKEY_003', 200000, datetime.date(2014, 10, 22)),)
+mysql_res:((1, 'ORDERKEY_001', 'CUSTKEY_003', 200000, datetime.date(2014, 10, 22)),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：126的sql：'select count(*) from test1 where MYDATE between concat(date_format('1992-05-01','%Y-%m'),'-00') and concat(date_format(date_add('1992-05-01',interval 2 month),'%Y-%m'),'-00')'
+dble_res:((2,),)
+mysql_res:((2,),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：127的sql：'select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT count(*) from test1 where mydate between concat(date_format('1992-05-01','%Y-%m'),'-00') and concat(date_format(date_add('1992-05-01',interval 2 month),'%Y-%m'),'-00')'
+dble_res:((2,),)
+mysql_res:((2,),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：128的sql：'select id,sum(O_TOTALPRICE) from test1 where id>1 and id<50 group by  id'
+dble_res:((2, Decimal('100000')), (4, Decimal('500')), (5, Decimal('100')), (6, Decimal('231')), (7, Decimal('12000')), (10, Decimal('88888888')), (11, Decimal('323456')))
+mysql_res:((2, Decimal('100000')), (4, Decimal('500')), (5, Decimal('100')), (6, Decimal('231')), (7, Decimal('12000')), (10, Decimal('88888888')), (11, Decimal('323456')))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：129的sql：'select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE id,sum(O_TOTALPRICE) from test1 where id>1 and id<50 group by  id'
+dble_res:((2, Decimal('100000')), (4, Decimal('500')), (5, Decimal('100')), (6, Decimal('231')), (7, Decimal('12000')), (10, Decimal('88888888')), (11, Decimal('323456')))
+mysql_res:((2, Decimal('100000')), (4, Decimal('500')), (5, Decimal('100')), (6, Decimal('231')), (7, Decimal('12000')), (10, Decimal('88888888')), (11, Decimal('323456')))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：130的sql：'select count(id) as counts,date_format(MYDATE,'%Y-%m') as mouth from test1 where id>1 and id<50 group by date_format(id,'%Y-%m')'
+dble_res:((7, '1992-05'),)
+mysql_res:((7, '1992-05'),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：131的sql：'select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS count(id) as counts,date_format(MYDATE,'%Y-%m') as mouth from test1 where id>1 and id<50 group by date_format(MYDATE,'%Y-%m')'
+dble_res:((1, '1992-05'), (1, '1992-06'), (1, '1992-07'), (1, '1992-08'), (1, '1992-09'), (1, '1992-11'), (1, '2008-01'))
+mysql_res:((1, '1992-05'), (1, '1992-06'), (1, '1992-07'), (1, '1992-08'), (1, '1992-09'), (1, '1992-11'), (1, '2008-01'))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：132的sql：'select count(id) as counts,date_format(MYDATE,'%Y-%m') as mouth from test1 where id>1 and id<50 group by 2 asc'
+dble_res:((1, '1992-05'), (1, '1992-06'), (1, '1992-07'), (1, '1992-08'), (1, '1992-09'), (1, '1992-11'), (1, '2008-01'))
+mysql_res:((1, '1992-05'), (1, '1992-06'), (1, '1992-07'), (1, '1992-08'), (1, '1992-09'), (1, '1992-11'), (1, '2008-01'))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：133的sql：'select id, O_ORDERKEY, O_TOTALPRICE,MYDATE from test1 group by id,O_ORDERKEY,MYDATE'
+dble_res:((1, 'ORDERKEY_001', 200000, datetime.date(2014, 10, 22)), (2, 'ORDERKEY_002', 100000, datetime.date(1992, 5, 1)), (4, 'ORDERKEY_004', 500, datetime.date(2008, 1, 5)), (5, 'ORDERKEY_005', 100, datetime.date(1992, 6, 28)), (6, 'ORDERKEY_006', 231, datetime.date(1992, 11, 11)), (7, 'ORDERKEY_007', 12000, datetime.date(1992, 9, 10)), (10, 'ORDERKEY_010', 88888888, datetime.date(1992, 7, 20)), (11, 'ORDERKEY_011', 323456, datetime.date(1992, 8, 22)))
+mysql_res:((1, 'ORDERKEY_001', 200000, datetime.date(2014, 10, 22)), (2, 'ORDERKEY_002', 100000, datetime.date(1992, 5, 1)), (4, 'ORDERKEY_004', 500, datetime.date(2008, 1, 5)), (5, 'ORDERKEY_005', 100, datetime.date(1992, 6, 28)), (6, 'ORDERKEY_006', 231, datetime.date(1992, 11, 11)), (7, 'ORDERKEY_007', 12000, datetime.date(1992, 9, 10)), (10, 'ORDERKEY_010', 88888888, datetime.date(1992, 7, 20)), (11, 'ORDERKEY_011', 323456, datetime.date(1992, 8, 22)))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：134的sql：'select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS count(id) as counts,date_format(MYDATE,'%Y-%m') as mouth from test1 where id>1 and id<50 group by 2 asc'
+dble_res:((1, '1992-05'), (1, '1992-06'), (1, '1992-07'), (1, '1992-08'), (1, '1992-09'), (1, '1992-11'), (1, '2008-01'))
+mysql_res:((1, '1992-05'), (1, '1992-06'), (1, '1992-07'), (1, '1992-08'), (1, '1992-09'), (1, '1992-11'), (1, '2008-01'))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：135的sql：'select count(id) as counts,date_format(MYDATE,'%Y-%m') as mouth,id from test1 where id>1 and id<50 group by 2 asc ,id desc'
+dble_res:((1, '1992-05', 2), (1, '1992-06', 5), (1, '1992-07', 10), (1, '1992-08', 11), (1, '1992-09', 7), (1, '1992-11', 6), (1, '2008-01', 4))
+mysql_res:((1, '1992-05', 2), (1, '1992-06', 5), (1, '1992-07', 10), (1, '1992-08', 11), (1, '1992-09', 7), (1, '1992-11', 6), (1, '2008-01', 4))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：136的sql：'select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS count(id) as counts,date_format(MYDATE,'%Y-%m') as mouth,id from test1 where id>1 and id<50 group by 2 asc ,id desc'
+dble_res:((1, '1992-05', 2), (1, '1992-06', 5), (1, '1992-07', 10), (1, '1992-08', 11), (1, '1992-09', 7), (1, '1992-11', 6), (1, '2008-01', 4))
+mysql_res:((1, '1992-05', 2), (1, '1992-06', 5), (1, '1992-07', 10), (1, '1992-08', 11), (1, '1992-09', 7), (1, '1992-11', 6), (1, '2008-01', 4))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：137的sql：'select sum(O_TOTALPRICE) as sums,id from test1 where id>1 and id<50 group by 2 asc'
+dble_res:((Decimal('100000'), 2), (Decimal('500'), 4), (Decimal('100'), 5), (Decimal('231'), 6), (Decimal('12000'), 7), (Decimal('88888888'), 10), (Decimal('323456'), 11))
+mysql_res:((Decimal('100000'), 2), (Decimal('500'), 4), (Decimal('100'), 5), (Decimal('231'), 6), (Decimal('12000'), 7), (Decimal('88888888'), 10), (Decimal('323456'), 11))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：138的sql：'select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,id from test1 where id>1 and id<50 group by 2 asc'
+dble_res:((Decimal('100000'), 2), (Decimal('500'), 4), (Decimal('100'), 5), (Decimal('231'), 6), (Decimal('12000'), 7), (Decimal('88888888'), 10), (Decimal('323456'), 11))
+mysql_res:((Decimal('100000'), 2), (Decimal('500'), 4), (Decimal('100'), 5), (Decimal('231'), 6), (Decimal('12000'), 7), (Decimal('88888888'), 10), (Decimal('323456'), 11))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：139的sql：'select sum(O_TOTALPRICE ) as sums,id from test1 where id>1 and id<50 group by 2 asc having sums>2000000'
+dble_res:((Decimal('88888888'), 10),)
+mysql_res:((Decimal('88888888'), 10),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：140的sql：'select sum(O_TOTALPRICE ) as sums,id from test1 where id>1 and id<50 group by 2 asc   having sums>2000000'
+dble_res:((Decimal('88888888'), 10),)
+mysql_res:((Decimal('88888888'), 10),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：141的sql：'select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE ) as sums,id from test1 where id>1 and id<50 group by 2 asc   having sums>2000000'
+dble_res:((Decimal('88888888'), 10),)
+mysql_res:((Decimal('88888888'), 10),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：142的sql：'select sum(O_TOTALPRICE ) as sums,id,count(O_ORDERKEY) counts from test1 where id>1 and id<50 group by 2 asc   having count(O_ORDERKEY)>2'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：143的sql：'select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE ) as sums,id,count(O_ORDERKEY) counts from test1 where id>1 and id<50 group by 2 asc   having count(O_ORDERKEY)>2'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：144的sql：'select sum(O_TOTALPRICE ) as sums,id,count(O_ORDERKEY) counts from test1 where id>1 and id<50 group by 2 asc   having min(O_ORDERKEY)>10 and max(O_ORDERKEY)<10000000'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：145的sql：'select sum(O_TOTALPRICE ) from test1 where id>1 and id<50 having min(O_ORDERKEY)<10000'
+dble_res:((Decimal('89325175'),),)
+mysql_res:((Decimal('89325175'),),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：146的sql：'select id,O_ORDERKEY,O_TOTALPRICE from test1 where id>36900 and id<36902 group by O_ORDERKEY  having O_ORDERKEY in (select O_ORDERKEY from test1 group by id having sum(id)>10000)'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：147的sql：'select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 a where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey'
+dble_res:((Decimal('300000'), 'CUSTKEY_003', 2), (Decimal('323456'), 'CUSTKEY_012', 1), (Decimal('500'), 'CUSTKEY_111', 1), (Decimal('100'), 'CUSTKEY_132', 1))
+mysql_res:((Decimal('300000'), 'CUSTKEY_003', 2), (Decimal('323456'), 'CUSTKEY_012', 1), (Decimal('500'), 'CUSTKEY_111', 1), (Decimal('100'), 'CUSTKEY_132', 1))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：148的sql：'select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 a where O_CUSTKEY not between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey'
+dble_res:((Decimal('88888888'), 'CUSTKEY_333', 1), (Decimal('231'), 'CUSTKEY_420', 1), (Decimal('12000'), 'CUSTKEY_980', 1))
+mysql_res:((Decimal('88888888'), 'CUSTKEY_333', 1), (Decimal('231'), 'CUSTKEY_420', 1), (Decimal('12000'), 'CUSTKEY_980', 1))
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：149的sql：'select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 a where not (O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300') group by o_custkey'
+dble_res:((Decimal('88888888'), 'CUSTKEY_333', 1), (Decimal('231'), 'CUSTKEY_420', 1), (Decimal('12000'), 'CUSTKEY_980', 1))
+mysql_res:((Decimal('88888888'), 'CUSTKEY_333', 1), (Decimal('231'), 'CUSTKEY_420', 1), (Decimal('12000'), 'CUSTKEY_980', 1))
+dble_err:None
+mysql_err:None

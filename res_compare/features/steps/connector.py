@@ -1,0 +1,64 @@
+#链接mysqldb
+import MySQLdb
+import logging
+
+logger = logging.getLogger('root')
+
+class Connector:
+    def __init__(self, *args, **kwargs):
+        logger.info('create query connection with args:{}, kwargs:{}'.format(args, kwargs))
+        try:
+            self._conn = MySQLdb.connect(*args, **kwargs)
+            self._kwargs = kwargs
+        except MySQLdb.Error as e:
+            errMsg = e.args
+            logger.debug("create connect err: {0}".format(errMsg))
+            raise
+
+    def execute(self, sql):
+        dest_info = "{}:{}".format(self._kwargs.get("host",None), self._kwargs.get("port",None))
+        try:
+            cursor = self._conn.cursor()
+            result = None
+            errMsg = None
+            logger.debug("try to execute sql:{0} in {1}".format(sql[0:500], dest_info))
+            cursor.execute(sql)
+            result = []
+            while True:
+                result.append(cursor.fetchall())
+                if cursor.nextset() is None: break
+
+            cursor.close()
+        except MySQLdb.Error as e:
+            errMsg = e.args
+        except UnicodeEncodeError as codeErr:
+            errMsg = ((codeErr.args[1],codeErr.args[4]))
+        finally:
+            pass
+
+        if errMsg is not None:
+            showErr = "execute sql in {} failed for: {}".format(dest_info, errMsg)
+            logger.debug(showErr);
+        else:
+            logger.debug("execute sql in {} success, resultset: ".format(dest_info))
+            for row in result:
+                logger.debug(row[0:300])
+
+        if result!=None and len(result)==1:
+            res = result[0]
+        else:
+            res = result
+        return res, errMsg
+    def autocommit(self, isautocommit):
+        self._conn.autocommit(isautocommit)
+
+    def __del__(self):
+        self.close()
+
+    def close(self):
+        if hasattr(self, '_conn') and self._conn != None:
+            self._conn.close()
+            self._conn = None
+
+    def commit(self):
+        self._conn.commit()

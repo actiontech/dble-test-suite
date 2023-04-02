@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE dble:db SYSTEM "db.dtd">
+<dble:db xmlns:dble="http://dble.cloud/">
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
+
+    <dbGroup name="dbGroup1" rwSplitMode="1" delayThreshold="100">
+        <dbInstance name="rwM1" url="172.100.9.6:3306" user="test" password="111111"  maxCon="1000" minCon="10" dbDistrict="Shanghai" dbDataCenter="A" primary="true">
+        </dbInstance>
+        <dbInstance name="hostS1" url="172.100.9.6:3307" user="test" password="111111"  maxCon="1000" minCon="10" dbDistrict="Shanghai" dbDataCenter="A">
+        </dbInstance>
+        <dbInstance name="hostS2" url="172.100.9.6:3308" user="test" password="111111" maxCon="1000" minCon="10" dbDistrict="Shanghai" dbDataCenter="A">
+        </dbInstance>
+    </dbGroup>
+</dble:db>

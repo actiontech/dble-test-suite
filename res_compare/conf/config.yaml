@@ -1,0 +1,75 @@
+test_conf:
+  dble_topo: single # single, cluster
+  dble_conf: default # default, global, mixed, nosharding, sharding
+  mysql_version: &mysql_version '5.7'
+
+cfg_dble:
+  single:
+    dble-1:
+      ip: 172.100.9.1
+      hostname: dble-1
+      install_dir: /opt
+      client_user: test
+      client_password: 111111
+      client_port: 8066
+      manager_user: root
+      manager_password: 111111
+      manager_port: 9066
+  sql_cover_log: sql_cover_log
+cfg_server:
+  ssh_user: root
+  ssh_password: sshpass
+cfg_mysql:
+  group1:  #单主
+    inst-1:
+      ip: 172.100.9.5
+      port: 3306
+      hostname: mysql-master1
+      user: test
+      password: 111111
+      install_path: /root/sandboxes/sandbox
+      version: *mysql_version
+  group2:  #1主2从
+    inst-1:
+      ip: 172.100.9.6
+      port: 3306
+      hostname: mysql-master2
+      user: test
+      password: 111111
+      install_path: /root/sandboxes/sandbox/master
+      version: *mysql_version
+    inst-2:
+      ip: 172.100.9.6
+      port: 3307
+      hostname: mysql-slave1
+      user: test
+      password: 111111
+      install_path: /root/sandboxes/sandbox/node1
+      version: *mysql_version
+    inst-3:
+      ip: 172.100.9.6
+      port: 3308
+      hostname: mysql-slave2
+      user: test
+      password: 111111
+      install_path: /root/sandboxes/sandbox/node2
+      version: *mysql_version
+  group3:  #1主1从
+    inst-1:
+      ip: 172.100.9.4
+      port: 3306
+      hostname: mysql
+      user: test
+      password: 111111
+      install_path: /root/sandboxes/sandbox/master
+      version: *mysql_version
+    inst-2:
+      ip: 172.100.9.4
+      port: 3307
+      hostname: mysql-slave3
+      user: test
+      password: 111111
+      install_path: /root/sandboxes/sandbox/node1
+      version: *mysql_version
+
+

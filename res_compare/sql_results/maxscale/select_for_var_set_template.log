@@ -1,0 +1,20 @@
+当前文件中执行ID为：3的sql：'BEGIN /* dble_dest_expect:M */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：4的sql：'SELECT (@@version) INTO @a /* dble_dest_expect:CM */;'
+dble_res:None
+mysql_res:()
+dble_err:(1064, 'select ... into is not supported!')
+mysql_err:None
+当前文件中执行ID为：5的sql：'SELECT @a /* dble_dest_expect:CM */;'
+dble_res:((None,),)
+mysql_res:(('5.7.25-log',),)
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：6的sql：'COMMIT /* dble_dest_expect:CM */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
