@@ -70,28 +70,7 @@ run_cfg_case_unstable: up
 ##master pipline
 run_cluster_case: up
 	pipenv run behave features/setup.feature \
-	features/cluster/check_full_meta_in_cluster.feature \
-	features/cluster/cluster_check_ddl_log.feature \
-	features/cluster/cluster_check_Ha.feature \
-	features/cluster/cluster_check_pause_resume.feature \
-	features/cluster/cluster_check_reload.feature \
-	features/cluster/cluster_check_start.feature \
-	features/cluster/cluster_check_table_ddl.feature \
-	features/cluster/cluster_check_table_view.feature \
-	features/cluster/cluster_check_xa.feature \
-	features/cluster/cluster_check_zk_binlog.feature \
-	features/cluster/cluster_detach_attach.feature \
-	features/cluster/cluster_file_syn.feature \
-	features/cluster/cluster_txIsolation.feature \
-	features/cluster/cluster_xml_to_json.feature \
-	features/cluster/kill_ddl_lock.feature \
-	features/cluster/show_ddl.feature \
-	features/cluster/writeHost_support_weight.feature \
-	features/cluster/xml_exception_case.feature \
-	features/cluster/xml_version_check.feature \
-	features/cluster/zk_global_sequence.feature \
-	features/cluster/zk_onlinekey_check.feature \
-	features/cluster/zk_sequence.feature \
+	features/cluster/
 
 run_func_stable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
