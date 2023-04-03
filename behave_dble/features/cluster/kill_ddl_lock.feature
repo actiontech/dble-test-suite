@@ -4,7 +4,7 @@
 
 # 2.19.11.0#dble-7860
 Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
-  @btrace @skip_restart
+  @btrace
   Scenario: check 'kill @@ddl_lock where schema=? and table=?' work normal #1
     #标准流程启动zk，zk online信息丢失不会自动恢复（ucore online信息丢失会自动恢复）
     Given stop dble cluster and zk service
