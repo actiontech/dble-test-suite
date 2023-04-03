@@ -22,7 +22,6 @@
 -Ddistrict=Shanghai 
 -DdataCenter=dataCenterA  
 
-
 # processor
 -Dprocessors=1
 -DprocessorExecutor=1

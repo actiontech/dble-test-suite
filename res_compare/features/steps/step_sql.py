@@ -100,7 +100,7 @@ def execute_sql(context,sql,type):
     if type=="dble":
         logger.debug("get into executing dble")
         print("get into executing dble")
-        res,err=do_execute(("dble-1"),{"sql":sql,"db":context.db,"toClose":context.toClose,"conn":context.conn_id},"user")
+        res,err=do_execute(("dble-1"),{"sql":sql,"db":context.db,"toClose":context.toClose,"conn":context.conn_id},"rwsplit")
         logger.debug(res)
         logger.debug(err)
         print(res,err)
@@ -116,7 +116,7 @@ def execute_sql(context,sql,type):
     return result
 
 def do_execute(host_name, info_dic, mode):
-    if mode in ["admin", "user"]:
+    if mode in ["admin", "user","rwsplit"]:
         obj = ObjectFactory.create_dble_object(host_name)
         query_meta = QueryMeta(info_dic, mode, obj._dble_meta)
     else:

@@ -12,6 +12,8 @@ class QueryMeta(object):
             self.init_dble_admin_query_meta(info_dict, meta)
         elif mode == "user":
             self.init_dble_client_query_meta(info_dict, meta)
+        elif mode =="rwsplit":
+            self.init_dble_rwsplit_query_meta(info_dict, meta)
         else:
             assert False, "execute queries mode can only be one of [mysql, admin, user], but mode is '{}'".format(mode)
 
@@ -53,6 +55,20 @@ class QueryMeta(object):
         self._port = info_dic.get("port",meta.client_port)
         self._ip = info_dic.get("ip", meta.ip)
 
+        self._bClose = info_dic.get("toClose", "true")
+        self._charset = info_dic.get("charset", None)
+        self._conn_id = info_dic.get("conn", None)
+        self._expect = info_dic.get("expect", "success")
+        self._db = info_dic.get("db", "")
+        self._sql = info_dic.get("sql")
+
+    def init_dble_rwsplit_query_meta(self, info_dic, meta):
+        if info_dic is None: info_dic = {}
+
+        self._user = "rwsu1"#info_dic.get("user",meta.client_user)
+        self._passwd = "111111"#str(info_dic.get("passwd", meta.client_password))
+        self._port = info_dic.get("port",meta.client_port)
+        self._ip = info_dic.get("ip", meta.ip)
         self._bClose = info_dic.get("toClose", "true")
         self._charset = info_dic.get("charset", None)
         self._conn_id = info_dic.get("conn", None)
