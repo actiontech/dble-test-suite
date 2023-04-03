@@ -51,7 +51,7 @@ run_large_packet: up
 	features/func_test/Large_Packet/
 
 
-##3.22.07 pipline
+##3.22.10 pipline
 run_cluster_case: up
 	pipenv run behave features/setup.feature \
 	features/cluster/
