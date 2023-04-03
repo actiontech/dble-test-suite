@@ -27,8 +27,12 @@ class MyThread(Thread):
                 sql = sql_item.get("sql")
                 logger.info("exec sql: {0} in thread: {1}".format(sql, self.getName()))
                 res, err = self._func(sql)
-                sql_item['res'] = res
-                sql_item['err'] = err
+                if self._thread_idx == self.current_thd_idx[0]:
+                    sql_item['dble_res'] = res
+                    sql_item['dble_err'] = err
+                if self._thread_idx == self.current_thd_idx[1]:
+                    sql_item['mysql_res'] = res
+                    sql_item['mysql_err'] = err
                 self._sql_res_queue.put(sql_item)
                 self._sql_queue.task_done()
             elif self.current_thd_idx[0] == -1:
