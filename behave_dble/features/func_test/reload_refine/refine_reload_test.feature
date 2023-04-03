@@ -138,7 +138,7 @@ Feature: refine reload of DBLE0REQ-1793
       | conn_0 | True    | select count(*) from backend_connections where db_instance_name='host4S' and used_for_heartbeat='true'  | equal{((1,),)} | dble_information |
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"host4S\" url=\"172.100.9.4:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"false\" databaseType=\"mysql\">
+      <dbInstance name=\"host4S\" url=\"172.100.9.4:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"false\">
             <property name=\"connectionTimeout\">30000</property>
             <property name=\"connectionHeartbeatTimeout\">20</property>
             <property name=\"testOnCreate\">false</property>
@@ -182,7 +182,7 @@ Feature: refine reload of DBLE0REQ-1793
       | conn_0 | True    | select count(*) from backend_connections where db_instance_name='host6S1' and used_for_heartbeat='true'  | equal{((1,),)} | dble_information |
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"host6S1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"false\" databaseType=\"mysql\">
+      <dbInstance name=\"host6S1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"false\">
             <property name=\"connectionTimeout\">30000</property>
             <property name=\"connectionHeartbeatTimeout\">20</property>
             <property name=\"testOnCreate\">false</property>
@@ -1138,7 +1138,7 @@ Feature: refine reload of DBLE0REQ-1793
       """
        <dbGroup rwSplitMode=\"1\" name=\"ha_group1\" delayThreshold=\"-1\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
           <heartbeat timeout=\"0\" errorRetryCount=\"0\" keepAlive=\"60\">select 1</heartbeat>
-          <dbInstance name=\"host4M\" url=\"172.100.9.4:3306\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
+          <dbInstance name=\"host4M\" url=\"172.100.9.4:3306\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\">
       """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                     | expect         | db               |
@@ -1166,7 +1166,7 @@ Feature: refine reload of DBLE0REQ-1793
       """
        <dbGroup rwSplitMode=\"1\" name=\"ha_group1\" delayThreshold=\"-1\" disableHA=\"false\" delayPeriodMillis=\"-1\" delayDatabase=\"null\">
           <heartbeat timeout=\"0\" errorRetryCount=\"0\" keepAlive=\"60\">select 1</heartbeat>
-          <dbInstance name=\"host4S\" url=\"172.100.9.4:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"false\" databaseType=\"mysql\">
+          <dbInstance name=\"host4S\" url=\"172.100.9.4:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"false\">
       """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                     | expect         | db               |
@@ -1517,7 +1517,7 @@ Feature: refine reload of DBLE0REQ-1793
       | conn_0 | True    | select count(*) from backend_connections where db_instance_name='host4M' and used_for_heartbeat='true'  | equal{((1,),)} | dble_information |
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"host4S\" url=\"172.100.9.4:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"false\" databaseType=\"mysql\">
+      <dbInstance name=\"host4S\" url=\"172.100.9.4:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"false\">
       """
 
   #  测试6：删除被引用的dbGroup 中的唯一一个主实例实例（因为dbGroup被引用，所以删除会失败）
@@ -1546,7 +1546,7 @@ Feature: refine reload of DBLE0REQ-1793
       | conn_0 | True    | select count(*) from backend_connections where db_instance_name='host4M' and used_for_heartbeat='true'  | equal{((1,),)} | dble_information |
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"host4M\" url=\"172.100.9.4:3306\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
+      <dbInstance name=\"host4M\" url=\"172.100.9.4:3306\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\">
       """
 
   #  测试7：删除 引用dbGroup的rwSplitUser (删除从一到零，dbGroup内dbInstance的心跳不会受影响，但连接池会被回收)
@@ -1647,7 +1647,7 @@ Feature: refine reload of DBLE0REQ-1793
       | conn_0 | False   | select count(*) from dble_db_group where name='ha_group1'                                               | equal{((0,),)} | dble_information |
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"host4M\" url=\"172.100.9.4:3306\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
+      <dbInstance name=\"host4M\" url=\"172.100.9.4:3306\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" readWeight=\"0\" primary=\"true\">
       """
 
     @CRITICAL
@@ -1694,7 +1694,7 @@ Feature: refine reload of DBLE0REQ-1793
       | conn_0 | True    | select name,db_group,addr,port,user from dble_db_instance where db_group='ha_group1' | dble_information | has{(('host4M', 'ha_group1', '172.100.9.6', 3306, 'test'),)} |
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"host4M\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" id=\"host4M\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
+      <dbInstance name=\"host4M\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" id=\"host4M\" readWeight=\"0\" primary=\"true\">
       """
     # 测试2：变更port   使用ha_group1作为测试对象
     Given record current dble log line number in "log_linenu"
@@ -1716,7 +1716,7 @@ Feature: refine reload of DBLE0REQ-1793
       | conn_0 | True    | select name,db_group,addr,port,user from dble_db_instance where db_group='ha_group1' | dble_information | has{(('host4M', 'ha_group1', '172.100.9.6', 3307, 'test'),)} |
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name=\"host4M\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" id=\"host4M\" readWeight=\"0\" primary=\"true\" databaseType=\"mysql\">
+      <dbInstance name=\"host4M\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"10\" minCon=\"2\" usingDecrypt=\"false\" disabled=\"false\" id=\"host4M\" readWeight=\"0\" primary=\"true\">
       """
     # 测试3：变更user，password_encrypt，encrypt_configured
     # test env prepare
