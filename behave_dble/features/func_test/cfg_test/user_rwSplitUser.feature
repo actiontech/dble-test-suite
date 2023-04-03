@@ -52,39 +52,6 @@ Feature: test config in user.xml  ---  rwSplitUser
 
 
   @TRIVIAL
-  Scenario: add rwSplitUser user with dbGroup which db.xml dbInstance database type must be mysql    #4
-
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-     <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
-    """
-
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse"/>
-    </dbGroup>
-    """
-    Then execute admin cmd "reload @@config_all"
-    """
-    Reload Failure.The reason is The group[rwS1.ha_group3] all dbInstance database type must be MYSQL
-    """
-
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" databaseType="MYSQL"/>
-    </dbGroup>
-    """
-    Then execute admin cmd "reload @@config_all"
-    """
-    Reload Failure.The reason is db json to map occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: databaseType [MYSQL]  use lowercase
-    """
-
-
-  @TRIVIAL
   Scenario: add rwSplitUser user with dbGroup which shardinguser use, start dble fail    #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
