@@ -1,6 +1,6 @@
 from hamcrest import *
 import time,logging,os,yaml,shutil
-from typing import Any, Callable,Dict
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 from functools import wraps
 from steps.SSHUtil import SSHClient
 from behave.runner import Context
@@ -8,6 +8,9 @@ from pprint import pformat
 from steps.DbleMeta import DbleMeta
 from steps.MySQLMeta import MySQLMeta
 from logging import config
+import shlex
+import subprocess
+
 
 logger=logging.getLogger("root")
 
@@ -201,3 +204,25 @@ def get_node(host):
 def get_ssh(host):
     node = get_node(host)
     return node.ssh_conns
+
+def exec_command(cmd: Union[str, List[str]], capture_output: bool = True, shell: bool = False, text: bool = True,
+                 **other_run_kwargs) -> Tuple[int, str, str]:
+    """
+    本地调用子进程
+
+    :param cmd: 要执行的命令。如果调用的命令里包含管道符'|'则需要设置shell为True
+    :param capture_output: 如果 capture_output 设为 true,stdout 和 stderr 将会被捕获
+    :param shell: 是否将命令直接通过shell执行
+    :param text: std、ste是否以文本的形式返回
+    :param other_run_kwargs: run支持的其他参数, https://docs.python.org/zh-cn/3.7/library/subprocess.html#subprocess.run
+    :return: (re, 标准输出, 标准错误输出)
+    """
+    logger.info(f'Execute command: <{cmd}>')
+    if not shell and isinstance(cmd, str):
+        cmd = shlex.split(cmd)
+    cp = subprocess.run(cmd, capture_output=capture_output,
+                        shell=shell, text=text, **other_run_kwargs)
+    result = (cp.returncode, cp.stdout.strip('\n'), cp.stderr.strip('\n'))
+    logger.debug(
+        f'Return code <{result[0]}>, Stdout: <{result[1]}>, Stderr <{result[2]}>')
+    return result
