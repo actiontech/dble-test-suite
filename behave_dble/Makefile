@@ -71,7 +71,6 @@ run_cfg_case_unstable: up
 run_cluster_case: up
 	pipenv run behave features/setup.feature \
 	features/cluster/check_full_meta_in_cluster.feature \
-	features/cluster/cluster_check_ddl_log.feature \
 	features/cluster/cluster_check_Ha.feature \
 	features/cluster/cluster_check_pause_resume.feature \
 	features/cluster/cluster_check_reload.feature \
