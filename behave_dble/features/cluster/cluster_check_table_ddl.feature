@@ -202,15 +202,15 @@ Feature: test "ddl" in zk cluster
       schema1.sharding_4_t1
       """
     Then execute sql in "dble-2" in "user" mode
-      | conn   | toClose  | sql                                           | expect                                                                                        | db      |
-      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists     | schema1 |
-      | conn_2 | True     | insert into sharding_4_t1 values (1)          | success                                                                                       | schema1 |
+      | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
+      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL, sql: alter table sharding_4_t1 add age1 int    | schema1 |
+      | conn_2 | True     | insert into sharding_4_t1 values (1)          | success                                                                                                                                    | schema1 |
     Then execute sql in "dble-3" in "user" mode
-      | conn   | toClose  | sql                                           | expect                                                                                     | db      |
-      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists  | schema1 |
-      | conn_3 | False    | insert into sharding_4_t1 values (2,2)        | Column count doesn't match value count at row 1                                            | schema1 |
-      | conn_3 | False    | drop table if exists test1                    | success                                                                                    | schema1 |
-      | conn_3 | true     | create table test1 (id int)                   | success                                                                                    | schema1 |
+      | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
+      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL, sql: alter table sharding_4_t1 add age2 int    | schema1 |
+      | conn_3 | False    | insert into sharding_4_t1 values (2,2)        | Column count doesn't match value count at row 1                                                                                            | schema1 |
+      | conn_3 | False    | drop table if exists test1                    | success                                                                                                                                    | schema1 |
+      | conn_3 | true     | create table test1 (id int)                   | success                                                                                                                                    | schema1 |
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
@@ -302,13 +302,13 @@ Feature: test "ddl" in zk cluster
     """
     Given sleep "2" seconds
     Then execute sql in "dble-2" in "user" mode
-      | conn   | toClose  | sql                                           | expect                                                                                     | db      |
-      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists  | schema1 |
-      | conn_2 | true     | alter table sharding_4_t1 drop age1           | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists  | schema1 |
+      | conn   | toClose  | sql                                           | expect                                                                                                                                    | db      |
+      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL, sql: alter table sharding_4_t1 add age1 int   | schema1 |
+      | conn_2 | true     | alter table sharding_4_t1 drop age1           | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL, sql: alter table sharding_4_t1 drop age1      | schema1 |
     Then execute sql in "dble-3" in "user" mode
-      | conn   | toClose  | sql                                           | expect                                                                                       | db      |
-      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists    | schema1 |
-      | conn_3 | true     | alter table sharding_4_t1 drop age2           | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists    | schema1 |
+      | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
+      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL, sql: alter table sharding_4_t1 add age2 int    | schema1 |
+      | conn_3 | true     | alter table sharding_4_t1 drop age2           | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL, sql: alter table sharding_4_t1 drop age2       | schema1 |
     Given sleep "13" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
@@ -475,7 +475,8 @@ Feature: test "ddl" in zk cluster
       | conn_1 | true    | alter table sharding_4_t1 add age int             | Duplicate column name 'age' | schema1 |
     Then check following text exists in file "/opt/dble/logs/dble.log" in host "dble-1" with "5" times
       """
-       <exec_ddl_sql.fail> Duplicate column name 'age'
+      FAILED;DROP_INDEX;schema1;1;alter table sharding_4_t1 add age int
+      CONN_EXECUTE_ERROR
       """
     #case check full @@metadata on admin mode
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_A"
@@ -565,13 +566,13 @@ Feature: test "ddl" in zk cluster
     #case wait idle timeout,check  query ddl on dble-2,dble-3 will has metaLock
     Given sleep "11" seconds
     Then execute sql in "dble-2" in "user" mode
-      | conn   | toClose  | sql                                           | expect                                                                                           | db      |
-      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists        | schema1 |
-      | conn_2 | true     | alter table sharding_4_t1 drop age1           | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists        | schema1 |
+      | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
+      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL, sql: alter table sharding_4_t1 add age1 int    | schema1 |
+      | conn_2 | true     | alter table sharding_4_t1 drop age1           | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL, sql: alter table sharding_4_t1 drop age1       | schema1 |
     Then execute sql in "dble-3" in "user" mode
-      | conn   | toClose  | sql                                           | expect                                                                                          | db      |
-      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists       | schema1 |
-      | conn_3 | true     | alter table sharding_4_t1 drop age2           | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists       | schema1 |
+      | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
+      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL, sql: alter table sharding_4_t1 add age2 int    | schema1 |
+      | conn_3 | true     | alter table sharding_4_t1 drop age2           | The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL, sql: alter table sharding_4_t1 drop age2       | schema1 |
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list

@@ -676,7 +676,7 @@ Feature: check single dble detach or attach from cluster
     """
     Then check sql thread output in "attach_rs_err"
     """
-    attach cluster pause timeout. some frontend connection is doing operation.
+    attach cluster pause timeout
     """
     Given stop btrace script "BtraceClusterDetachAttach3.java" in "dble-1"
     Given stop btrace script "BtraceClusterDetachAttach1.java" in "dble-1"
