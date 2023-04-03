@@ -49,13 +49,14 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     | sql                                                                                                               | expect        | db                | timeout |
     | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                 | expect      | db      |
-      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 |
-      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |
-      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
+      | conn   | toClose | sql                                 | expect      | db      | timeout |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 | 5       |
+      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |         |
+      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |         |
 
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
+
 
   @btrace @restore_mysql_service
   Scenario: mysql node hangs causing xa transaction fail to commit, automatic recovery in background attempts#2
@@ -109,10 +110,10 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     | sql                                                                                                               | expect        | db                | timeout |
     | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                 | expect      | db      |
-      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 |
-      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |
-      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
+      | conn   | toClose | sql                                 | expect      | db      | timeout |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 | 5       |
+      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |         |
+      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |         |
 
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
@@ -162,12 +163,12 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     | sql                                                                                                               | expect        | db                | timeout |
     | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                    | expect                     | db      |
-      | conn_1 | false   | select * from sharding_4_t1            | length{(2)}                | schema1 |
-      | conn_1 | false   | delete from sharding_4_t1 where id = 1 | success                    | schema1 |
-      | conn_1 | false   | delete from sharding_4_t1 where id = 2 | Lock wait timeout exceeded | schema1 |
-      | conn_1 | false   | delete from sharding_4_t1 where id = 3 | success                    | schema1 |
-      | conn_1 | True    | delete from sharding_4_t1 where id = 4 | Lock wait timeout exceeded | schema1 |
+      | conn   | toClose | sql                                    | expect                     | db      | timeout |
+      | conn_1 | false   | select * from sharding_4_t1            | length{(2)}                | schema1 | 5       |
+      | conn_1 | false   | delete from sharding_4_t1 where id = 1 | success                    | schema1 |         |
+      | conn_1 | false   | delete from sharding_4_t1 where id = 2 | Lock wait timeout exceeded | schema1 |         |
+      | conn_1 | false   | delete from sharding_4_t1 where id = 3 | success                    | schema1 |         |
+      | conn_1 | True    | delete from sharding_4_t1 where id = 4 | Lock wait timeout exceeded | schema1 |         |
 
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -274,13 +275,13 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
 
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                    | expect      | db      |
-      | conn_1 | False   | select * from sharding_4_t1            | length{(0)} | schema1 |
-      | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success     | schema1 |
-      | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success     | schema1 |
-      | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success     | schema1 |
-      | conn_1 | False   | delete from sharding_4_t1 where id = 4 | success     | schema1 |
-      | conn_1 | True    | drop table if exists sharding_4_t1     | success     | schema1 |
+      | conn   | toClose | sql                                    | expect      | db      | timeout |
+      | conn_1 | False   | select * from sharding_4_t1            | length{(0)} | schema1 | 5       |
+      | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success     | schema1 |         |
+      | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success     | schema1 |         |
+      | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success     | schema1 |         |
+      | conn_1 | False   | delete from sharding_4_t1 where id = 4 | success     | schema1 |         |
+      | conn_1 | True    | drop table if exists sharding_4_t1     | success     | schema1 |         |
 
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
