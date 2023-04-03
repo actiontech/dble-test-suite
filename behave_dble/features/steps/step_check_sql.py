@@ -698,14 +698,15 @@ def deal_result(context, dble_sql_res_queue, mysql_sql_res_queue):
     while dble_sql_res_queue.qsize() > 0:
         dble_item = dble_sql_res_queue.get()
         mysql_item = mysql_sql_res_queue.get()
-        dble_result = dble_item.get("res")
-        dble_err = dble_item.get("err")
-        mysql_result = mysql_item.get("res")
-        mysql_err = mysql_item.get("err")
+        dble_result = dble_item.get("dble_res")
+        dble_err = dble_item.get("dble_err")
+        mysql_result = mysql_item.get("mysql_res")
+        mysql_err = mysql_item.get("mysql_err")
         line = mysql_item.get("line")
         sql = mysql_item.get("sql")
 
-        context.logger.info("compare cross thread of line:{0} sql: {1}:".format(line, sql))
+        # context.logger.info("compare cross thread of line:{0} sql: {1}:".format(line, sql))
+        context.logger.info("compare cross thread of line:{}, sql:{}, dble_result is:{}, dble_err is: {}, mysql_result is: {}, mysql_err is: {} ".format(line, sql, dble_result, dble_err, mysql_result, mysql_err))
         compare_result(context, line, sql, mysql_result, dble_result, mysql_err, dble_err)
 
 def destroy_sub_threads(context):
