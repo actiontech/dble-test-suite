@@ -13,4 +13,5 @@ select @OLD_COLLATION_CONNECTION;
 select @OLD_TIME_ZONE;
 select @OLD_UNIQUE_CHECKS;
 select @OLD_FOREIGN_KEY_CHECKS;
+##mysql和dble的结果不同
 select @OLD_SQL_MODE;

@@ -1,19 +1,19 @@
-当前文件中执行ID为：1的sql：'drop table if exists t1 /*dble_dest_expect:M*/;'
+当前文件中执行ID为：2的sql：'drop table if exists t1 /*dble_dest_expect:M*/;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：2的sql：'create temporary table t1 (id integer) /*dble_dest_expect:M*/;'
-dble_res:None
-mysql_res:()
-dble_err:(5316, 'Create TABLE OK, but generate metedata failed. The reason may be that the current druid parser can not recognize part of the sql or the user for backend mysql does not have permission to execute the heartbeat sql.')
-mysql_err:None
-当前文件中执行ID为：3的sql：'insert into t1 values(1) /*dble_dest_expect:CM*/;'
+当前文件中执行ID为：3的sql：'create temporary table t1 (id integer) /*dble_dest_expect:M*/;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：4的sql：'select id from t1 /*dble_dest_expect:CM*/;'
+当前文件中执行ID为：4的sql：'insert into t1 values(1) /*dble_dest_expect:CM*/;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：5的sql：'select id from t1 /*dble_dest_expect:CM*/;'
 dble_res:((1,),)
 mysql_res:((1,),)
 dble_err:None

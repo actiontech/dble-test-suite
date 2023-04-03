@@ -1,7 +1,6 @@
-#!default_db:schema1
 #!share_conn
-drop DATABASE if EXISTS schema1  ;
-create database schema1 ;
+drop DATABASE if EXISTS mytest  ;
+create database mytest ;
 #ascii can be transferred to unicode without loss, on the contrary, unicode to ascii maybe loss
 #!share_conn
 drop table if EXISTS  t1 ;

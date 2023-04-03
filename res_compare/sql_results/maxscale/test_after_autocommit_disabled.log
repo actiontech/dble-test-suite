@@ -1,9 +1,9 @@
-当前文件中执行ID为：1的sql：'set autocommit=0 /* dble_dest_expect:CS */;'
+当前文件中执行ID为：2的sql：'set autocommit=0 /* dble_dest_expect:CS */;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：2的sql：'select @@version /* dble_dest_expect:M */;'
+当前文件中执行ID为：3的sql：'select @@version /* dble_dest_expect:M */;'
 dble_res:(('5.7.25-log',),)
 mysql_res:(('5.7.25-log',),)
 dble_err:None

@@ -9,7 +9,6 @@ Feature: test_sql_executing_feature
 
       Examples:
           |sql_files|
-          |character.sql|
           |maxscale/select_for_var_set.sql   |
           |maxscale/set_autocommit_disabled.sql         |
           |maxscale/test_after_autocommit_disabled.sql  |

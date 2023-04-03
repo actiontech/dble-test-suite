@@ -52,7 +52,7 @@ def read_and_execute(context,filepath):
         if lines[0].find("default_db")!= -1:
             context.db=lines[0].strip().split(":")[1]#如果写db就放在第一行
         else:
-            context.db="schema1"
+            context.db="db1"
         num=1
         #从第二行开始读
         while num <len(lines):#行标<行数的时候（行标 0 1 2 行数 1 2 3）

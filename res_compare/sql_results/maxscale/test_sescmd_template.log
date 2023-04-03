@@ -1,20 +1,20 @@
-当前文件中执行ID为：1的sql：'use schema1 /*dble_dest_expect:CS*/;'
+当前文件中执行ID为：2的sql：'use schema1 /*dble_dest_expect:CS*/;'
 dble_res:None
 mysql_res:()
-dble_err:(1049, "Unknown database 'schema1 /*dble_dest_expect:CS*/'")
+dble_err:(1049, "Unknown database 'schema1'")
 mysql_err:None
-当前文件中执行ID为：2的sql：'set autocommit=1 /*dble_dest_expect:CS*/;'
+当前文件中执行ID为：3的sql：'set autocommit=1 /*dble_dest_expect:CS*/;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：3的sql：'use mysql /*dble_dest_expect:CS*/;'
+当前文件中执行ID为：4的sql：'use mysql /*dble_dest_expect:CS*/;'
 dble_res:None
 mysql_res:()
-dble_err:(1049, "Unknown database 'mysql /*dble_dest_expect:CS*/'")
+dble_err:(1049, "Unknown database 'schema1 /*dble_dest_expect:CS*/'")
 mysql_err:None
-当前文件中执行ID为：4的sql：'select count(*) from user where user='maxuser' /*dble_dest_expect:M*/'
+当前文件中执行ID为：5的sql：'select count(*) from user where user='maxuser' /*dble_dest_expect:M*/'
 dble_res:None
 mysql_res:((0,),)
-dble_err:(1146, "Table 'db3.user' doesn't exist")
+dble_err:(1049, "Unknown database 'mysql /*dble_dest_expect:CS*/'")
 mysql_err:None

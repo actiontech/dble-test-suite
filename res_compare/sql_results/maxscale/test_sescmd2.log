@@ -1,44 +1,84 @@
-当前文件中执行ID为：1的sql：'/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;'
+当前文件中执行ID为：2的sql：'/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：2的sql：'/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;'
+当前文件中执行ID为：3的sql：'/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：3的sql：'/*!40101 SET NAMES utf8 */;'
+当前文件中执行ID为：4的sql：'/*!40101 SET NAMES utf8 */;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：4的sql：'/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;'
+当前文件中执行ID为：5的sql：'/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：5的sql：'/*!40103 SET TIME_ZONE='+00:00' */;'
+当前文件中执行ID为：6的sql：'/*!40103 SET TIME_ZONE='+00:00' */;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：6的sql：'/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;'
+当前文件中执行ID为：7的sql：'/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：7的sql：'/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;'
+当前文件中执行ID为：8的sql：'/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：8的sql：'/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;'
+当前文件中执行ID为：9的sql：'/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：9的sql：'/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;'
+当前文件中执行ID为：10的sql：'/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：12的sql：'/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：14的sql：'/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：15的sql：'/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：16的sql：'/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：17的sql：'/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;'
+dble_res:None
+mysql_res:None
+dble_err:(1231, "Variable 'character_set_client' can't be set to the value of 'NULL'")
+mysql_err:(1231, "Variable 'character_set_client' can't be set to the value of 'NULL'")
+当前文件中执行ID为：18的sql：'/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：19的sql：'/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;'
+dble_res:()
+mysql_res:()
+dble_err:None
+mysql_err:None
+当前文件中执行ID为：20的sql：'/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;'
 dble_res:()
 mysql_res:()
 dble_err:None

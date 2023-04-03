@@ -1,49 +1,49 @@
-当前文件中执行ID为：1的sql：'SET autocommit = Off /*dble_dest_expect:CS*/;'
+当前文件中执行ID为：2的sql：'SET autocommit = Off /*dble_dest_expect:CS*/;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：2的sql：'START TRANSACTION /*dble_dest_expect:M*/;'
+当前文件中执行ID为：3的sql：'START TRANSACTION /*dble_dest_expect:M*/;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：3的sql：'CREATE TABLE IF NOT EXISTS myCity (a int, b char(20)) /*dble_dest_expect:CM*/;'
+当前文件中执行ID为：4的sql：'CREATE TABLE IF NOT EXISTS myCity (a int, b char(20)) /*dble_dest_expect:CM*/;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：4的sql：'INSERT INTO myCity VALUES (1, 'Milan') /*dble_dest_expect:M*/;'
+当前文件中执行ID为：5的sql：'INSERT INTO myCity VALUES (1, 'Milan') /*dble_dest_expect:M*/;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：5的sql：'INSERT INTO myCity VALUES (2, 'London') /*dble_dest_expect:CM*/;'
+当前文件中执行ID为：6的sql：'INSERT INTO myCity VALUES (2, 'London') /*dble_dest_expect:CM*/;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：6的sql：'COMMIT /*dble_dest_expect:CM*/;'
+当前文件中执行ID为：7的sql：'COMMIT /*dble_dest_expect:CM*/;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：7的sql：'START TRANSACTION /*dble_dest_expect:M*/;'
+当前文件中执行ID为：8的sql：'START TRANSACTION /*dble_dest_expect:M*/;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：8的sql：'DELETE FROM myCity /*dble_dest_expect:CM*/;'
+当前文件中执行ID为：9的sql：'DELETE FROM myCity /*dble_dest_expect:CM*/;'
 dble_res:()
 mysql_res:()
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：9的sql：'SELECT COUNT(*) FROM myCity /*dble_dest_expect:CM*/; -- read transaction's modifications from master'
+当前文件中执行ID为：10的sql：'SELECT COUNT(*) FROM myCity /*dble_dest_expect:CM*/; -- read transaction's modifications from master'
 dble_res:[((0,),), ()]
 mysql_res:[((0,),), ()]
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：10的sql：'COMMIT /*dble_dest_expect:CM*/;'
+当前文件中执行ID为：11的sql：'COMMIT /*dble_dest_expect:CM*/;'
 dble_res:()
 mysql_res:()
 dble_err:None
