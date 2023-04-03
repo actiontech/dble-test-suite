@@ -44,29 +44,14 @@ reset_mysql:
 used_in_local: create_venv up
 	pipenv run behave features/setup.feature
 
-##debug pipline
-run_cluster_case1: up
-	pipenv run behave features/setup.feature \
-	features/cluster/kill_ddl_lock.feature \
 
-run_cfg_case1: up
+####大包的case 单独的pipline修改dble的版本跑（autotest-dble-LargePacket）
+run_large_packet: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/connection/rwSplit_connection_test.feature
-
-
-##clone pipline
-run_cluster_unstable_case: up
-	pipenv run behave features/setup.feature \
-	features/cluster/ruleFile.feature \
-
-
-run_cfg_case_unstable: up
-	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/tmp_case/ \
 	features/func_test/Large_Packet/
 
 
-##master pipline
+##3.22.11 pipline
 run_cluster_case: up
 	pipenv run behave features/setup.feature \
 	features/cluster/
