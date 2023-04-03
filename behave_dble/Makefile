@@ -57,7 +57,7 @@ run_cfg_case1: up
 ##clone pipline
 run_cluster_unstable_case: up
 	pipenv run behave features/setup.feature \
-	features/cluster/ruleFile.feature.feature \
+	features/cluster/ruleFile.feature \
 
 
 run_cfg_case_unstable: up
