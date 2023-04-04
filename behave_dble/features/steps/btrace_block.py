@@ -106,7 +106,7 @@ def step_impl(context, host):
     sshClient = node.ssh_conn
 
     context.logger.debug("btrace is running, start query!!!")
-    time.sleep(5)
+    # time.sleep(5)
     for row in context.table:
         query_meta = QueryMeta(row.as_dict(), "user", node)
         cmd = u"nohup mysql -u{} -p{} -P{} -c -D{} -h{} -e'{}' >/opt/dble/logs/dble_user_query.log 2>&1 &".format(query_meta.user,query_meta.passwd,query_meta.port,query_meta.db,query_meta.ip,query_meta.sql)

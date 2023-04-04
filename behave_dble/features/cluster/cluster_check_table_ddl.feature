@@ -366,7 +366,7 @@ Feature: test "ddl" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /delayAfterDdlLockMeta/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+      /delayAfterDdlLockMeta/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-2"
     Given execute sqls in "dble-2" at background
@@ -386,14 +386,13 @@ Feature: test "ddl" in zk cluster
     get into delayAfterDdlLockMeta
     """
     Then Restart dble in "dble-1" success
-    Given sleep "20" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "30,2" times
     """
     waiting for DDL finished
     """
-    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
+    Given sleep "20" seconds
     #case check lock on zookeeper values is 0
     Given execute linux command in "dble-1"
       """
