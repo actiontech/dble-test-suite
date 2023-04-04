@@ -22,23 +22,6 @@ def uninstall_dble_in_node(context, node):
         cmd = "cd {0} && rm -rf dble".format(node.install_dir)
         node.ssh_conn.exec_command(cmd)
 
-@given('I clean mysql deploy environment')
-def delete_mysqls(context):
-    for name, ssh_conn in context.ssh_clients.items():
-        if name in INIT_SCOPE:
-            logger.info(f'delete {name}')
-            delete_mysql(ssh_conn)
-
-@log_it
-def delete_mysql(ssh_conn):
-    cmd = "dbdeployer sandboxes | awk '{print $1}' | xargs -r -n 1 dbdeployer delete"
-    rc, sto, ste = ssh_conn.exec_command(cmd)
-    assert_that(rc, equal_to(0), ste)
-
-    cmd = 'dbdeployer sandboxes'
-    rc, sto, ste = ssh_conn.exec_command(cmd)
-    assert_that(rc, equal_to(0), ste)
-    assert_that(sto, empty(), 'MySQL实例没有清理干净')
 
 @Given('Start dble in "{hostname}"')
 @When('Start dble in "{hostname}"')
@@ -56,7 +39,6 @@ def step_impl(context, nodeName):
 def install_dble_in_host(context, hostname):
     node = get_node(hostname)
     install_dble_in_node(context, node)
-
 
 
 def install_dble_in_node(context, node):
@@ -230,3 +212,38 @@ def download_dble_package(context) -> str:
     #     LOGGER.debug('DBLE package is existing, not need download')
 
     return local_path
+
+def disable_cluster_config_in_node(context, node):
+    conf_file = "{0}/dble/conf/cluster.cnf".format(node.install_dir)
+    cmd = "[ -f {0} ] && sed -i 's/clusterEnable=.*/clusterEnable=false/g' {0}".format(conf_file)
+
+    ssh_client = node.ssh_conn
+    _, _, ste = ssh_client.exec_command(cmd)
+    assert_that(ste, is_(""), "expect std err empty, but was:{0}".format(ste))
+
+def install_dble_in_all_nodes(context):
+    for node in DbleMeta.dbles:
+        install_dble_in_node(context, node)
+
+def replace_config(context):
+    for node in DbleMeta.dbles:
+        replace_config_in_node(context, node)
+        # set dble log level to debug
+        set_dble_log_level(context, node, 'debug')
+
+
+    
+def set_dble_log_level(context, node, log_level):
+    ssh_client = node.ssh_conn
+    str_awk = "awk 'FS=\" \" {print $2}'"
+    cmd = "cat {0}/dble/conf/log4j2.xml | grep -e '<asyncRoot*' | {1} | cut -d= -f2 ".format(node.install_dir, str_awk)
+    _, sto, _ = ssh_client.exec_command(cmd)
+
+    if log_level in sto:
+        logger.debug("dble log level is already: {0}, do nothing!".format(log_level))
+        return False
+    else:
+        log = '{0}/dble/conf/log4j2.xml'.format(node.install_dir)
+        cmd = "sed -i 's/{0}/{1}/g' {2} ".format(sto[1:-1], log_level, log)
+        ssh_client.exec_command(cmd)
+        return True
