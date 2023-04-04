@@ -42,11 +42,9 @@ Feature:  dble_db_instance table test
       | evictor_shutdown_timeout_millis   | int(11)      | YES    |       | 10000     |         |
       | idle_timeout                      | int(11)      | YES    |       | 600000    |         |
       | heartbeat_period_millis           | int(11)      | YES    |       | 10000     |         |
-      | flow_high_level                   | int(11)      | YES    |       | 4194304   |         |
-      | flow_low_level                    | int(11)      | YES    |       | 262144    |         |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                               | expect        | db               |
-      | conn_0 | False   | desc dble_db_instance             | length{(33)}  | dble_information |
+      | conn_0 | False   | desc dble_db_instance             | length{(31)}  | dble_information |
       | conn_0 | False   | select * from dble_db_instance    | length{(2)}   | dble_information |
   #case change db.xml and reload
     Given delete the following xml segment

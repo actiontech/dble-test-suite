@@ -184,7 +184,7 @@ Feature: test config in user.xml
       """
     Then execute admin cmd "reload @@config_all" get the following output
       """
-      Reload Failure
+      Reload config failure
       """
     Then restart dble in "dble-1" failed for
       """

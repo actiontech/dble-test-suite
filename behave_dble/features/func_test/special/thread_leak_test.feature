@@ -26,6 +26,7 @@ Feature: check thread leak
       | conn_0 | False   | create table single_t1 (id int)                                                                                    | success | schema1 |
       | conn_0 | False   | insert into sharding_2_t1 values(1,1,1),(2,2,2),(3,3,3),(4,4,4),(5,5,5),(6,6,6),(7,7,7),(8,8,8),(9,9,9),(10,10,10) | success | schema1 |
       | conn_0 | False   | insert into single_t1 values(1)                                                                                    | success | schema1 |
+    ###桩是靠行数的，需要修改btrace文件
     Given update file content "./assets/BtraceMultiNodeMergeAndOrderHandler.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
@@ -33,7 +34,7 @@ Feature: check thread leak
     """
     Given prepare a thread run btrace script "BtraceMultiNodeMergeAndOrderHandler.java" in "dble-1"
     Given prepare a thread execute sql "select t1.id from sharding_2_t1 t1 left join single_t1 t2 on t1.id = t2.id" with "conn_0"
-    Then check btrace "BtraceMultiNodeMergeAndOrderHandler.java" output in "dble-1" with ">1" times
+    Then check btrace "BtraceMultiNodeMergeAndOrderHandler.java" output in "dble-1"
     """
     get into ownThread
     """

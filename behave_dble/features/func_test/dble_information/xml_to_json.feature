@@ -925,7 +925,6 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     \"dbInstance\":\[{\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":99,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,
     \"property\":\[
     {\"value\":\"30000\",\"name\":\"connectionTimeout\"},{\"value\":\"20\",\"name\":\"connectionHeartbeatTimeout\"},{\"value\":\"false\",\"name\":\"testOnCreate\"},{\"value\":\"false\",\"name\":\"testOnBorrow\"},{\"value\":\"false\",\"name\":\"testOnReturn\"},
-    {\"value\":\"false\",\"name\":\"testWhileIdle\"},{\"value\":\"30000\",\"name\":\"timeBetweenEvictionRunsMillis\"},{\"value\":\"10000\",\"name\":\"evictorShutdownTimeoutMillis\"},{\"value\":\"600000\",\"name\":\"idleTimeout\"},{\"value\":\"10000\",\"name\":\"heartbeatPeriodMillis\"},{\"value\":\"4194304\",\"name\":\"flowHighLevel\"},{\"value\":\"262144\",\"name\":\"flowLowLevel\"}\]}\]}\],
     \"schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
     \"table\":\[

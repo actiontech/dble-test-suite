@@ -28,7 +28,7 @@ Feature: db.xml support fake host
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly
+    Reload config failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -379,7 +379,7 @@ Feature: db.xml support fake host
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure.The reason is db json to map occurred  parse errors, The detailed results are as follows . java.lang.NumberFormatException: For input string: "0:0:0:0:0:0:1:9066"
+    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: com.actiontech.dble.config.util.ConfigException: db json to map occurred  parse errors, The detailed results are as follows . java.lang.NumberFormatException: For input string: "0:0:0:0:0:0:1:9066"
     """
     Then restart dble in "dble-1" failed for
     """
@@ -397,7 +397,7 @@ Feature: db.xml support fake host
     # 3.22.07开始，执行reload不会报错，因为这时配置未变更，不会测试连接有效性
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
+    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -411,7 +411,7 @@ Feature: db.xml support fake host
     # 3.22.07开始，执行reload不会报错，因为这时配置未变更，不会测试连接有效性
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
+    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """

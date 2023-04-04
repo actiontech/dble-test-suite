@@ -1050,7 +1050,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     #2.1.split -w with number not power of 2
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                 | expect                                                                   |
-      | split /opt/schema1_with_data.sql  /opt -w500;       | get error call manager command: The value of -w needs to be a power of 2 |
+      | split /opt/schema1_with_data.sql  /opt -w500;       | get error call manager command The value of -w needs to be a power of 2  |
     Then check path "/opt/schema1_with_data.sql-dn1-*.dump" in "dble-1" should exist
     Then check path "/opt/schema1_with_data.sql-dn2-*.dump" in "dble-1" should exist
     Then check path "/opt/schema1_with_data.sql-dn3-*.dump" in "dble-1" should exist

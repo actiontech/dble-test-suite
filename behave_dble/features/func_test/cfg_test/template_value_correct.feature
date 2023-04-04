@@ -36,8 +36,8 @@ Feature: config all dble config files correct and restart dble
       $a\-DmaxCharsPerColumn=65535
       $a\-DmaxRowSizeToFile=10000
       $a\-DenableFlowControl=false
-      $a\-DflowControlHighLevel=4096
-      $a\-DflowControlLowLevel=256
+      $a\-DflowControlStartThreshold=4096
+      $a\-DflowControlStopThreshold=256
       $a\-DsqlSlowTime=100
       $a\-DuseSqlStat=1
       $a\-DuseCompression=0
@@ -271,6 +271,7 @@ Feature: config all dble config files correct and restart dble
         <heartbeat timeout="0" errorRetryCount="0">select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" usingDecrypt="false" maxCon="1000" minCon="10" readWeight="0" primary="true" disabled="false">
           <property name="evictorShutdownTimeoutMillis">1000</property>
+          <property name="numTestsPerEvictionRun">3</property>
           <property name="testOnCreate">false</property>
           <property name="testOnBorrow">false</property>
           <property name="testOnReturn">false</property>

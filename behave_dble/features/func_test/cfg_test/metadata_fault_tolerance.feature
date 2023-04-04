@@ -49,7 +49,7 @@ Feature: fault tolerance detection
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /showTableByNodeUnitHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
+    /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
@@ -57,14 +57,14 @@ Feature: fault tolerance detection
       | root | 111111 | conn_0 | True    | reload @@metadata | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
-    get into showTableByNodeUnitHandlerFinished
+    get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql              | expect  | db  |
       | conn_0 | True    | drop table test4 | success | db1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1" with "2" times
     """
-    get into showTableByNodeUnitHandlerFinished
+    get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql              | expect  | db  |
@@ -168,7 +168,7 @@ Feature: fault tolerance detection
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /showTableByNodeUnitHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
+    /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
@@ -176,14 +176,14 @@ Feature: fault tolerance detection
       | root | 111111 | conn_0 | True    | reload @@metadata | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
-    get into showTableByNodeUnitHandlerFinished
+    get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql              | expect  | db  |
       | conn_0 | True    | drop table test5 | success | db1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1" with "2" times
     """
-    get into showTableByNodeUnitHandlerFinished
+    get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql              | expect  | db  |
@@ -297,7 +297,7 @@ Feature: fault tolerance detection
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /showTableByNodeUnitHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
+    /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
@@ -305,14 +305,14 @@ Feature: fault tolerance detection
       | root | 111111 | conn_0 | True    | reload @@metadata | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
-    get into showTableByNodeUnitHandlerFinished
+    get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql              | expect  | db  |
       | conn_0 | True    | drop table test1 | success | db1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1" with "2" times
     """
-    get into showTableByNodeUnitHandlerFinished
+    get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql              | expect  | db  |

@@ -82,9 +82,9 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | conn   | toClose | sql               |
       | conn_3 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RS_MESSAGE-10                                                                                                                        |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | None                                                                                                                                 |
-      | hostS1 | 172.100.9.6 | 3307   | error     | connection Error//heartbeat conn for sql[/*# from=1 reason=heartbeat*/select user()] is closed, due to abnormal connection |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RS_MESSAGE-10                                                                |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | None                                                                         |
+      | hostS1 | 172.100.9.6 | 3307   | error     | heartbeat conn for sql[select user()] is closed, due to abnormal connection  |
       | hostM2 | 172.100.9.6 | 3306   | ok        | None                                                                                                                                 |
     # 增加从节点，3.22.07开始事务连接不会被关闭，3.22.07以前事务连接会被关闭
     Then execute sql in "dble-1" in "user" mode
@@ -124,10 +124,10 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | conn   | toClose | sql               |
       | conn_3 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RS_MESSAGE-10                                                                                                                        |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | None                                                                                                                                 |
-      | hostS1 | 172.100.9.6 | 3307   | error     | connection Error//heartbeat conn for sql[/*# from=1 reason=heartbeat*/select user()] is closed, due to abnormal connection |
-      | hostM2 | 172.100.9.4 | 3306   | ok        | None                                                                                                                                 |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RS_MESSAGE-10                                                                 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | None                                                                          |
+      | hostS1 | 172.100.9.6 | 3307   | error     | heartbeat conn for sql[select user()] is closed, due to abnormal connection   |
+      | hostM2 | 172.100.9.4 | 3306   | ok        | None                                                                          |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                      | expect                                       | db      |
       | conn_1 | True    | select * from sharding_4_t1 where id = 2 | Lost connection to MySQL server during query | schema1 |

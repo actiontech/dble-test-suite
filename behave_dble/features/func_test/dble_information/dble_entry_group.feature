@@ -438,8 +438,8 @@ Feature:  dble_entry test
      </shardingUser>
     """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect                                                                                                                  |
-      | conn_0 | True    | reload @@config      | Reload Failure.The reason is SelfCheck### privileges's schema[schema2] was not found in the user [name:test]'s schemas  |
+      | conn   | toClose | sql                  | expect                                                                                                                         |
+      | conn_0 | True    | reload @@config      | Reload config failure.The reason is SelfCheck### privileges's schema[schema2] was not found in the user [name:test]'s schemas  |
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |

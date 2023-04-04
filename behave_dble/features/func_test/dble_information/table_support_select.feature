@@ -17,7 +17,7 @@ Feature:  show databases/use dble_information/show tables [like]
 #case  begin query with error shcema or not exists schema
       | conn_0 | False   | desc dble_infor.version                | Unknown database 'dble_infor'                                          |
       | conn_0 | False   | describe schema1.version               | Unknown database 'schema1'                                             |
-      | conn_0 | False   | select * from schema1.version          | get error call manager command: schema schema1 doesn't exist!          |
+      | conn_0 | False   | select * from schema1.version          | get error call manager command schema schema1 doesn't exist!           |
 #case show databases correct or erroneous spelling
       | conn_0 | False   | show database                          | Unsupported statement                                                  |
       | conn_0 | False   | show databasesl                        | Unsupported statement                                                  |
@@ -40,15 +40,15 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | False   | desc version                           | has{(('version', 'varchar(64)', 'NO', 'PRI', None, ''),)}                 |
       | conn_0 | False   | describe version                       | has{(('version', 'varchar(64)', 'NO', 'PRI', None, ''),)}                 |
 #case correct or erroneous spelling
-      | conn_0 | False   | descc version                          | Unsupported statement                                                     |
-      | conn_0 | False   | desc versio                            | Table `dble_information`.`versio` doesn't exist                           |
-      | conn_0 | False   | select * froom version                 | Unsupported statement                                                     |
-      | conn_0 | False   | select * from versio                   | get error call manager command: table versio doesn't exist!               |
+      | conn_0 | False   | descc version                          | Unsupported statement                                                  |
+      | conn_0 | False   | desc versio                            | Table `dble_information`.`versio` doesn't exist                        |
+      | conn_0 | False   | select * froom version                 | Unsupported statement                                                  |
+      | conn_0 | False   | select * from versio                   | get error call manager command table versio doesn't exist!             |
 #case Unsupported create database/table or alter table
       | conn_0 | False   | create database test                                       | The sql did not match create\|drop database @@shardingNode ='dn......' |
-      | conn_0 | False   | create table test (id int)                                 | Unsupported statement                                                  |
+      | conn_0 | False   | create table test (id int)                                 | The sql did not match create\|drop database @@shardingNode ='dn......' |
       | conn_0 | False   | drop database dble_information                             | The sql did not match create\|drop database @@shardingNode ='dn......' |
-      | conn_0 | False   | drop table dble_status                                     | Unsupported statement                                                  |
+      | conn_0 | False   | drop table dble_status                                     | The sql did not match create\|drop database @@shardingNode ='dn......' |
       | conn_0 | False   | alter table version add id int                             | Unsupported statement                                                  |
       | conn_0 | False   | alter table dble_status drop variable_value                | Unsupported statement                                                  |
       | conn_0 | False   | alter table dble_schema modify sql_max_limit varchar       | Unsupported statement                                                  |
@@ -89,7 +89,6 @@ Feature:  show databases/use dble_information/show tables [like]
       | dble_table                   |
       | dble_table_sharding_node     |
       | dble_thread_pool             |
-      | dble_thread_pool_task        |
       | dble_thread_usage            |
       | dble_variables               |
       | dble_xa_recover              |
@@ -111,7 +110,7 @@ Feature:  show databases/use dble_information/show tables [like]
       | demotest2                    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect       | db               |
-      | conn_0 | False   | show tables                          | length{(41)} | dble_information |
+      | conn_0 | False   | show tables                          | length{(39)} | dble_information |
  #case The query needs to be printed in the log，when management commands not supported by druid github:issues/1977
     Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql          | expect                |
@@ -270,11 +269,11 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn   | toClose | sql                                                                                                                                  | db               |
       | conn_0 | True    | SELECT * FROM dble_table a LEFT JOIN dble_schema b ON a.schema = b.NAME where a.id NOT IN (SELECT id FROM dble_table_sharding_node)  | dble_information |
     Then check resultset "4" has lines with following column values
-      | id-0 | name-1   | schema-2 | max_limit-3 | type-4      | name-5  | sharding_node-6 | function-7 | sql_max_limit-8  |
-      | M1   | no_s1    | schema1  | 100         | NO_SHARDING | schema1 | dn1             | -          |  100             |
-      | M2   | no_s2    | schema2  | 1000        | NO_SHARDING | schema2 | dn2             | -          |  1000            |
-      | M3   | no_s3    | schema3  | 100         | NO_SHARDING | schema3 | dn4             | -          |  100             |
-      | M4   | vertical | schema5  | -1          | NO_SHARDING | schema5 | dn6             | -          |  -1              |
+      | id-0 | name-1   | schema-2 | max_limit-3 | type-4      | name-5  | sharding_node-6 | sql_max_limit-7 |
+      | M1   | no_s1    | schema1  | 100         | NO_SHARDING | schema1 | dn1             | 100             |
+      | M2   | no_s2    | schema2  | 1000        | NO_SHARDING | schema2 | dn2             | 1000            |
+      | M3   | no_s3    | schema3  | 100         | NO_SHARDING | schema3 | dn4             | 100             |
+      | M4   | vertical | schema5  | -1          | NO_SHARDING | schema5 | dn6             | -1              |
 #case supported subquery with some
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "5"
       | conn   | toClose | sql                                                                                                          | db               |

@@ -54,7 +54,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     # 3.22.07开始，stop mysql后执行reload不会报错，因为这时配置未变更，不会测试连接有效性
     Then execute admin cmd "reload @@config_all" get the following output
       """
-      Reload Failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]}
+      Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]}
       """
     Then check following text exist "Y" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
