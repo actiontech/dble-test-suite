@@ -252,7 +252,6 @@ Feature: test config in user.xml  ---  rwSplitUser
   Scenario: test 'sqlExecuteTimeout'  #12
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    $a -DfakeMySQLVersion=5.7.13
     $a -DprocessorCheckPeriod=10
     $a -DsqlExecuteTimeout=2
     """

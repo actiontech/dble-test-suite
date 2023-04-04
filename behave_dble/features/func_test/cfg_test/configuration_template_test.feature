@@ -30,13 +30,14 @@ Feature: use template to generate configuration file, check function is normal
     """
     \cp -f /opt/dble/conf/db_template.xml /opt/dble/conf/db.xml
     """
+
+    #### 原本是31,43d，但是db_template的    <!--for clickhouse--> 没有正常启用 dble也是可以启动成功的
     Given update file content "{install_dir}/dble/conf/db.xml" in "dble-1" with sed cmds
     """
     s/ip1:3306/172.100.9.5:3306/
     s/ip2:3306/172.100.9.6:3306/
     s/your_user/test/g
     s/your_psw/111111/g
-    31,42d
     """
     Given update file content "{install_dir}/dble/conf/user.xml" in "dble-1" with sed cmds
     """
