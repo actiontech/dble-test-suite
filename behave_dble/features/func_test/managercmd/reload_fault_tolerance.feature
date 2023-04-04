@@ -24,7 +24,7 @@ Feature: execute manager cmd "reload @@config_all" and check fault tolerance
     """
     Then execute sql in "dble-1" in "admin" mode
       | sql                 | expect                                                                  |
-      | reload @@config_all | Reload Failure.The reason is There is other session is doing DDL        |
+      | reload @@config_all | Reload config failure.The reason is There is other session is doing DDL |
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"

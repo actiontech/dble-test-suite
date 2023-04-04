@@ -43,7 +43,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload Failure.The reason is The user's group[rwS1.ha_group3] for rwSplit isn't configured in db.xml.
+    Reload config failure
     """
     Then Restart dble in "dble-1" failed for
      """
@@ -67,7 +67,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload Failure.The reason is The group[rwS1.ha_group1] has been used by sharding node, can't be used by rwSplit
+    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: com.actiontech.dble.config.util.ConfigException: The group[rwS1.ha_group1] has been used by sharding node, can't be used by rwSplit
     """
 
 
@@ -282,7 +282,6 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@version                                                    | length{(1)}   |
       | conn_0 | False   | show @@server                                                     | length{(1)}   |
       | conn_0 | False   | show @@threadpool                                                 | length{(5)}   |
-      | conn_0 | False   | show @@threadpool.task                                            | length{(5)}   |
       | conn_0 | False   | show @@database                                                   | length{(1)}   |
       | conn_0 | False   | show @@shardingNode                                               | length{(5)}   |
       | conn_0 | False   | show @@shardingNode where schema = "schema2"                      | length{(0)}   |
@@ -296,14 +295,14 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@sql.condition                                              | length{(2)}   |
       | conn_0 | False   | show @@heartbeat                                                  | length{(4)}   |
       | conn_0 | False   | show @@heartbeat.detail  where name='hostM1'                      | success       |
-      | conn_0 | False   | show @@sysparam                                                   | length{(116)} |
+      | conn_0 | False   | show @@sysparam                                                   | length{(108)} |
       | conn_0 | False   | show @@white                                                      | length{(3)}   |
       | conn_0 | False   | show @@directmemory                                               | length{(1)}   |
       | conn_0 | False   | show @@command.count                                              | length{(1)}   |
       | conn_0 | False   | show @@backend.statistics                                         | length{(4)}   |
       | conn_0 | False   | show @@backend.old                                                | length{(0)}   |
       | conn_0 | False   | show @@binlog.status                                              | length{(2)}   |
-      | conn_0 | False   | show @@help                                                       | length{(112)} |
+      | conn_0 | False   | show @@help                                                       | length{(111)} |
       | conn_0 | False   | show @@thread_used                                                | success       |
       | conn_0 | False   | show @@algorithm where schema='schema1' and table='sharding_4_t1' | length{(5)}   |
       | conn_0 | False   | show @@ddl                                                        | length{(0)}   |
@@ -430,27 +429,23 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_2 | False   | start @@statistic_queue_monitor      | success  |
       | conn_2 | False   | stop @@statistic_queue_monitor       | success  |
 #########   flow_control
-      | conn_2 | False   | flow_control @@show                          | length{(0)}   |
-      | conn_2 | False   | flow_control @@list                          | length{(0)}   |
+      | conn_2 | False   | flow_control @@show                          | success   |
+      | conn_2 | False   | flow_control @@list                          | success   |
       | conn_2 | False   | flow_control @@set enableFlowControl = true  | success       |
-      | conn_2 | False   | flow_control @@show                          | length{(5)}   |
+      | conn_2 | False   | flow_control @@show                          | success       |
       | conn_2 | False   | flow_control @@list                          | success       |
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                | expect   |
       | rwS1  | 111111 | conn_1 | False   | select user()      | success  |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                          | expect        |
- ####1700
-      | conn_2 | False   | select * from dble_information.dble_flow_control where connection_info like "%3307%"                          | success   |
+
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                | expect   |
       | rwS1  | 111111 | conn_1 | False   | select user()      | success  |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                          | expect        |
-      | conn_2 | False   | select * from dble_information.dble_flow_control where connection_info like "%3307%"                          | success  |
       | conn_2 | False   | flow_control @@set enableFlowControl = false | success       |
-      | conn_2 | False   | flow_control @@show                          | length{(0)}   |
-      | conn_2 | False   | flow_control @@list                          | length{(0)}   |
+      | conn_2 | False   | flow_control @@show                          | success   |
+      | conn_2 | False   | flow_control @@list                          | success   |
 ####DBLE0REQ-1700
       | conn_0 | False   | show @@backend where port= 3307          | success     |
       | conn_0 | False   | show @@session            | length{(0)}  |

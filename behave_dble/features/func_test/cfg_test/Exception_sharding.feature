@@ -171,7 +171,7 @@ Feature: sharding basic config test
       | conn_0 | False   | reload @@slow_query.flushsize = 500                                                    | success        |
       | conn_0 | True    | show @@slow_query.flushsize                                                            | has{(('500',),)}  |
 
-      | conn_0 | False   | flow_control @@set enableFlowControl = true flowControlHighLevel= 200 flowControlLowLevel = 100 | success        |
+      | conn_0 | False   | flow_control @@set enableFlowControl = true flowControlStart= 200 flowControlEND = 100 | success        |
 
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
     """
@@ -180,8 +180,8 @@ Feature: sharding basic config test
     flushSlowLogPeriod=200
     sqlSlowTime=200
     enableFlowControl=true
-    flowControlHighLevel=200
-    flowControlLowLevel=100
+    flowControlStartThreshold=200
+    flowControlStopThreshold=100
     """
 
     Then Restart dble in "dble-1" success
@@ -193,8 +193,8 @@ Feature: sharding basic config test
     flushSlowLogPeriod=200
     sqlSlowTime=200
     enableFlowControl=true
-    flowControlHighLevel=200
-    flowControlLowLevel=100
+    flowControlStartThreshold=200
+    flowControlStopThreshold=100
     """
 
   Scenario: config with Multi_sharding tables, reload success #10
@@ -407,4 +407,4 @@ Feature: sharding basic config test
       | conn_0 | False   | create table sharding_2_t1(id int,name char(120)) | success                                                | schema1 |
       | conn_0 | False   | insert into sharding_2_t1 value(1,'a')            | success                                                | schema1 |
       | conn_0 | False   | select * from sharding_2_t1 where id =1           | success                                                | schema1 |
-      | conn_0 | False   | select * from sharding_2_t1 where name ='a'       | sqlRequiredSharding is true,the table 'schema1.sharding_2_t1' requires the condition in sql to include the sharding column 'ID' | schema1 |
+      | conn_0 | False   | select * from sharding_2_t1 where name ='a'       | route rule for table schema1.sharding_2_t1 is required | schema1 |

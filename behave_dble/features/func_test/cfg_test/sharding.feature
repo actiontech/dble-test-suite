@@ -47,7 +47,7 @@ Feature: sharding basic config test
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure
+    Reload config failure
     """
 
   @NORMAL
@@ -87,7 +87,7 @@ Feature: sharding basic config test
     #todo: reload should success
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure
+    Reload config failure
     """
 
   @TRIVIAL
@@ -98,7 +98,7 @@ Feature: sharding basic config test
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure
+    Reload config failure
     """
 
   @NORMAL
@@ -109,7 +109,7 @@ Feature: sharding basic config test
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure
+    Reload config failure
     """
 
   @TRIVIAL
@@ -359,7 +359,7 @@ Feature: sharding basic config test
 
     Then execute admin cmd "reload @@config_all" get the following output
       """
-      Reload Failure.The reason is sharding json to map occurred  parse errors, The detailed errors are as follows. The dbGroup[dbGroup2] associated with ShardingNode[dn2] does not exist
+      Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: com.actiontech.dble.config.util.ConfigException: sharding json to map occurred  parse errors, The detailed errors are as follows
       """
     Then Restart dble in "dble-1" failed for
       """

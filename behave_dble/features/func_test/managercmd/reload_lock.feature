@@ -46,7 +46,7 @@ Feature: when reload hang,emergency means to deal with it
      ## failed for: (5999, 'Reload Failure.The reason is reload interruputed by others,metadata should be reload')
      Then check sql thread output in "err" by retry "15" times
         """
-        Reload Failure
+        Reload config failure.The reason is reload interruputed by others,metadata should be reload
         """
      Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
        | conn   | toClose   | sql                      |   db              |

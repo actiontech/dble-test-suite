@@ -12,9 +12,12 @@ Feature: test flow control manager command
      $a\-DenableFlowControl=false
      """
      Then Restart dble in "dble-1" success
-     Then execute sql in "dble-1" in "admin" mode
-      | sql                   | expect      |
-      | flow_control @@show   | length{(0)} |
+     Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
+     | conn   | toClose | sql                     | db               |
+     | conn_0 | true    | flow_control @@show     | dble_information |
+     Then check resultset "A" has lines with following column values
+     | FLOW_CONTROL_ENABLE-0   | FLOW_CONTROL_START-1 |  FLOW_CONTROL_END-2 |
+     | false                   | 4096                 |  256                |
      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
      """
      $a\-DenableFlowControl=true
@@ -24,25 +27,29 @@ Feature: test flow control manager command
      | conn   | toClose | sql                     | db               |
      | conn_0 | true    | flow_control @@show     | dble_information |
      Then check resultset "B" has lines with following column values
-     | FLOW_CONTROL_TYPE-0     | FLOW_CONTROL_HIGH_LEVEL-1 |  FLOW_CONTROL_LOW_LEVEL-2 |
-     | FRONT_END               | 4194304                   |  262144                   |
-     | ha_group1-hostM1        | 4194304                   |  262144                   |
-     | ha_group2-hostM2        | 4194304                   |  262144                   |
+     | FLOW_CONTROL_ENABLE-0   | FLOW_CONTROL_START-1 |  FLOW_CONTROL_END-2 |
+     | true                    | 4096                 |  256                |
 
 
-   Scenario: test flow_control @@set [enableFlowControl = true/false] [flowControlHighLevel = ?] [flowControlLowLevel = ?] #2
+   Scenario: test flow_control @@set[enableFlowControl = true/false] [flowControlStart = ?] [flowControlEnd = ?] #2
      Then execute sql in "dble-1" in "admin" mode
-     | conn   | toClose | sql                                                                                           | expect                                                        |
-     | conn_0 | False   | flow_control @@set enableFlowControl=true flowControlHighLevel=128 flowControlLowLevel=256    | The flowControlHighLevel must bigger than flowControlLowLevel |
-     | conn_0 | False   | flow_control @@set enableFlowControl=true flowControlHighLevel=128                            | The flowControlHighLevel must bigger than flowControlLowLevel |
-     | conn_0 | False   | flow_control @@set enableFlowControl=true flowControlHighLevel=128 flowControlLowLevel=128    | The flowControlHighLevel must bigger than flowControlLowLevel |
-     | conn_0 | False   | flow_control @@set enableFlowControl=true flowControlHighLevel=4096 flowControlLowLevel=256   | success                                                       |
-     | conn_0 | False   | flow_control @@set flowControlHighLevel=1024                                                  | success                                                       |
-     | conn_0 | False   | flow_control @@set flowControlLowLevel=128                                                    | success                                                       |
-     | conn_0 | False   | flow_control @@set enableFlowControl=false                                                    | success                                                       |
+     | conn   | toClose | sql                                                                                  | expect                                                                  |
+     | conn_0 | False   | flow_control @@set enableFlowControl=true flowControlStart=128 flowControlEnd=256    | The flowControlStartThreshold must bigger than flowControlStopThreshold |
+     | conn_0 | False   | flow_control @@set enableFlowControl=true flowControlStart=128                       | The flowControlStartThreshold must bigger than flowControlStopThreshold |
+     | conn_0 | False   | flow_control @@set enableFlowControl=true flowControlStart=128 flowControlEnd=128    | The flowControlStartThreshold must bigger than flowControlStopThreshold |
+     | conn_0 | False   | flow_control @@set enableFlowControl=true flowControlStart=4096 flowControlEnd=256   | success                                                                 |
+     | conn_0 | False   | flow_control @@set flowControlStart=1024                                             | success                                                                 |
+     | conn_0 | False   | flow_control @@set flowControlEnd=128                                                | success                                                                 |
+     | conn_0 | False   | flow_control @@set enableFlowControl=false                                           | success                                                                 |
+     Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
+     | conn   | toClose | sql                     | db               |
+     | conn_0 | true    | flow_control @@show     | dble_information |
+     Then check resultset "C" has lines with following column values
+     | FLOW_CONTROL_ENABLE-0    | FLOW_CONTROL_START-1 |  FLOW_CONTROL_END-2 |
+     | false                    | 1024                 |  128                |
      Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
        """
-       flowControlLowLevel=128
+       flowControlStopThreshold=128
        enableFlowControl=false
-       flowControlHighLevel=1024
+       flowControlStartThreshold=1024
        """

@@ -10,7 +10,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure
+    Reload config failure
     """
 
   Scenario:  config empty password, reload failed #2

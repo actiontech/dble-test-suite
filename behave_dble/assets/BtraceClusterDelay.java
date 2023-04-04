@@ -300,11 +300,11 @@ public final class BtraceClusterDelay {
     }
 
     @OnMethod(
-            clazz = "com.actiontech.dble.btrace.provider.GeneralProvider",
-            method = "showTableByNodeUnitHandlerFinished"
+            clazz = "com.actiontech.dble.meta.table.GetConfigTablesHandler",
+            method = "handleFinished"
     )
-    public static void showTableByNodeUnitHandlerFinished(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
-        BTraceUtils.print("get into showTableByNodeUnitHandlerFinished ");
+    public static void getSpecialNodeTablesHandlerFinished(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.print("get into getSpecialNodeTablesHandlerFinished ");
         BTraceUtils.print(" for order __________________________ ");
         Thread.sleep(1L);
     }
@@ -437,7 +437,7 @@ public final class BtraceClusterDelay {
         Thread.sleep(1L);
     }
    @OnMethod(
-            clazz = "com.actiontech.dble.meta.table.ConfigTableHandler",
+            clazz = "com.actiontech.dble.meta.table.ConfigTableMetaHandler",
             method = "countdown"
     )
     public static void countdown(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {

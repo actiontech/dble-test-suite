@@ -17,8 +17,7 @@ public class BtraceMultiNodeMergeAndOrderHandler {
             //location=@Location(value=Kind.LINE,line=162) for 2.20.04
             //location=@Location(value=Kind.LINE,line=180) for 3.20.07
             //location=@Location(value=Kind.LINE,line=182) for 3.20.10, 3.21.02
-            //location=@Location(value=Kind.LINE,line=183) for 3.21.10
-            location=@Location(value=Kind.LINE,line=185)
+            location=@Location(value=Kind.LINE,line=186)
     )
     public static void ownThread(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception  {
         BTraceUtils.println("get into ownThread");
