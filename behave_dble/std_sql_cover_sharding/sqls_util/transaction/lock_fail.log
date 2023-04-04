@@ -1,0 +1,12 @@
+===file:sqls_util/transaction/lock.sql, id:85, sql:[update schema2.test2 set pad=22 where id=1/*hang*/;]===
+dble:[()]
+mysql:[None]
+===file:sqls_util/transaction/lock.sql, id:104, sql:[update schema2.test2 set pad=22 where id=1/*hang*/;]===
+dble:[()]
+mysql:[None]
+===file:sqls_util/transaction/lock.sql, id:185, sql:[update schema2.test2 set pad=22 where id=1/*hang*/;]===
+dble:[()]
+mysql:[None]
+===file:sqls_util/transaction/lock.sql, id:204, sql:[update schema2.test2 set pad=22 where id=1/*hang*/;]===
+dble:[()]
+mysql:[None]
