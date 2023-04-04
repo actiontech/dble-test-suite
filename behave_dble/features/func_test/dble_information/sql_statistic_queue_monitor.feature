@@ -81,7 +81,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Given sleep "12" seconds
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect                                                                                       | db               |timeout|
-      | conn_0 | False    | show @@statistic;                   | has{(('statistic', 'ON'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '20'), ('queueMonitor', '-'),)}  | dble_information   |5,1|
+      | conn_0 | False    | show @@statistic;                   | has{(('statistic', 'ON'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '20'), ('queueMonitor', '-'),)}  | dble_information   | 10,2 |
       | conn_0 | True     | show @@statistic_queue.usage;       | length{(3)}   | dble_information   |                                                                                                                                                                                                                                               |
 
    #show 和 stop 可能有时间差
