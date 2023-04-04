@@ -49,7 +49,6 @@ Feature: global table sql cover test
         | sqls_util/syntax/union.sql                            |
         | sqls_util/syntax/update_syntax.sql                    |
         | sqls_util/syntax/view.sql                             |
-        | sqls_util/transaction/lock.sql                        |
 #        | sqls_util/transaction/lock.sql                        |
         | sqls_util/transaction/trx_ddl_dml.sql                 |
         | sqls_util/transaction/trx_isolation.sql               |
