@@ -406,7 +406,7 @@ Feature: test "reload @@config" in zk cluster
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
-      Illegal table conf : table \[ sharding4 \] rule function \[ hash-three \] partition size : 3 > table shardingNode size : 2, please make sure table shardingnode size = function partition size
+      Illegal table conf : table \[ sharding4 \] rule function \[ hash-three \] partition size : ID > table shardingNode size : 2, please make sure table shardingnode size = function partition size
       """
     #case check on zookeeper
     Given execute linux command in "dble-1"
@@ -612,7 +612,7 @@ Feature: test "reload @@config" in zk cluster
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     # Reload Failure.The reason is SelfCheck### User[name:test]'s schema [schema4444] is not exist!
       """
-      Reload Failure
+      Reload config failure
       """
     #case check on zookeeper
     Given execute linux command in "dble-2"
@@ -920,7 +920,7 @@ Feature: test "reload @@config" in zk cluster
      ## failed for: (5999, 'Reload Failure.The reason is reload interruputed by others,metadata should be reload')
       Then check sql thread output in "err" by retry "20" times
         """
-        Reload Failure
+        Reload config failure
         """
 
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "1B"
