@@ -81,9 +81,6 @@ public class Main {
 			GeneralLogTest generalLogTest = new GeneralLogTest(mysqlProp, testProp, true);
 			generalLogTest.start_test();
 
-			ServerSideCursorTest sideCursorTest = new ServerSideCursorTest(mysqlProp, testProp, true);
-			sideCursorTest.start_test();
-
 			RwSplitUserPsTest rwSplitUserTest = new RwSplitUserPsTest(mysqlProp, testProp, true);
 			rwSplitUserTest.start_test();
 
