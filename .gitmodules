@@ -1,4 +1,4 @@
-[submodule "behave_dble/conf/secret"]
-	path = behave_dble/conf/secret
+[submodule "res_compare/conf/secret"]
+	path = res_compare/conf/secret
 	url = git@gitlab.actiontech:liuan/dble-secret.git
 	branch = main
