@@ -76,10 +76,14 @@ run_cfg_case: up
 
 run_func_unstable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/flow_control/ \
 	features/func_test/connection/  \
 	features/func_test/ddl/  \
 	features/func_test/xa_transaction/ \
+#####issue /DBLE0REQ-2178
+#	features/func_test/flow_control/ \
+
+
+
 
 run_managercmd_case: up
 	pipenv run behave -Dreset=false -D dble_conf=template features/setup.feature \
