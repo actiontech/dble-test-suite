@@ -10,7 +10,7 @@ from steps.MySQLMeta import MySQLMeta
 from logging import config
 import shlex
 import subprocess
-
+from environs import Env
 
 logger=logging.getLogger("root")
 
@@ -53,6 +53,30 @@ def init_log_directory(symbolic: bool = True) -> str:
 
     return os.path.join(logs_dir, symbolic_link)
 
+def get_sftp(host):
+    node = get_node(host)
+    return node.sftp_conn
+
+def reset_repl(context):
+    context.ssh_clients = create_ssh_client(context)
+    context.execute_steps(
+        u'''
+        Given I clean mysql deploy environment
+        Given I deploy mysql
+        Given I reset the mysql uuid
+        Given I create mysql test user
+        Given I create databases named db1, db2, db3, db4 on group1, group2, group3
+        Given I create databases named schema1,schema2,schema3,testdb,db1,db2,db3,db4 on compare_mysql
+        ''')
+
+
+
+def restore_sys_time():
+    import subprocess
+    res = subprocess.Popen('ntpdate -u 0.centos.pool.ntp.org', shell=True, stdout=subprocess.PIPE)
+    out, err = res.communicate()
+    assert_that(err is None, "expect no err, but err is: {0}".format(err))
+
 def setup_logging(logging_path: str):
     """
     读取logging配置
@@ -88,6 +112,13 @@ def load_yaml_config(config_path):
 
 
 @log_it
+def create_dir(*dirs: str) -> str:
+    dp = os.path.join(*dirs)
+    if not os.path.exists(dp):
+        os.makedirs(dp)
+    return dp
+
+@log_it
 def init_meta(context, flag):
     if flag == "single":
         nodes = []
@@ -96,7 +127,18 @@ def init_meta(context, flag):
             cfg_dic.update(childNode)
             cfg_dic.update(context.cfg_server)
             node = DbleMeta(cfg_dic)
+
         DbleMeta.dbles = (node,)
+    elif flag == "cluster":
+        nodes = []
+        for _, childNode in context.cfg_dble[flag].items():
+            cfg_dic = {}
+            cfg_dic.update(childNode)
+            cfg_dic.update(context.cfg_server)
+
+            node = DbleMeta(cfg_dic)
+            nodes.append(node)
+        DbleMeta.dbles = tuple(nodes)
     elif flag == "mysqls":
         nodes = []
         for k, _ in context.cfg_mysql.items():
@@ -231,3 +273,83 @@ def exec_command(cmd: Union[str, List[str]], capture_output: bool = True, shell:
     logger.debug(
         f'Return code <{result[0]}>, Stdout: <{result[1]}>, Stderr <{result[2]}>')
     return result
+
+def handle_env_variable(context: Context, userdata, var: str, default_value=None, method: str = 'str',
+                        check: Optional[Callable[..., None]] = None):
+    method = method.lower()
+    upper = var.upper()
+    lower = var.lower()
+    env = Env()
+    if os.path.exists('conf/secret/.env'):
+        logger.debug('USE ENVIRONMENT behave_dble/conf/secret/.env')
+        env.read_env('conf/secret/.env')
+    else:
+        logger.debug('DO NOT EXIST behave_dble/conf/secret/.env')
+    assert_that(method, is_in(['str', 'bool', 'int']))
+    env_method = {'str': env.str,
+                  'bool': env.bool,
+                  'int': env.int}
+    ud_method = {'bool': userdata.getbool,
+                 'int': userdata.getint}
+    built_in_method = {'str': str,
+                       'bool': bool,
+                       'int': int}
+
+    # 所有使用的环境变量必须已DBLE_为前缀
+    with env.prefixed("DBLE_"):
+        if default_value is None:
+            var = env_method[method](upper, context.test_conf.get(lower))
+        else:
+            var = env_method[method](upper, default_value)
+    if method == 'str':
+        context.test_conf[lower] = userdata.pop(upper, var)
+    else:
+        context.test_conf[lower] = ud_method[method](upper, var)
+        userdata.pop(upper, None)
+
+    logger.info(f"{upper}=<{context.test_conf.get(lower)}> \n"
+                f'priority 1: behave -D {upper}=xxx\n'
+                f'priority 2: behave.ini - behave.userdata.{upper}\n'
+                f'priority 3: os environment DBLE_{upper}\n'
+                f'priority 4: behave_dble/conf/secret/.env DBLE_{upper}\n'
+                f'priority 5: conf/aute_dble_test.yaml - test_conf.{lower}')
+
+    if check is None:
+        assert_that(context.test_conf[lower],
+                    instance_of(built_in_method[method]))
+    else:
+        check()
+
+def handle_env_variables(context: Context, userdata):
+    handle_env_variable(context, userdata, 'time_weight', method='int')
+    handle_env_variable(context, userdata, 'auto_retry', method='int')
+    handle_env_variable(context, userdata, 'dble_version')
+    # handle_env_variable(context, userdata, 'dble_package_timestamp')
+    handle_env_variable(context, userdata, 'dble_remote_host')
+    handle_env_variable(context, userdata, 'dble_remote_path')
+
+    def dble_topo_check() -> None:
+        assert_that(context.test_conf['dble_topo'], is_in(['single', 'cluster']), 'Not support dble topo')
+
+    handle_env_variable(context, userdata, 'dble_topo', check=dble_topo_check)
+
+    def mysql_version_check() -> None:
+        assert_that(context.test_conf['mysql_version'], is_in(['5.7', '8.0']), 'Not support mysql version')
+
+    handle_env_variable(context, userdata, 'mysql_version', check=mysql_version_check)
+
+    def dble_conf_check() -> None:
+        assert_that(context.test_conf['dble_conf'], is_in(['default', 'global', 'mixed', 'nosharding', 'sharding']),
+                    'Not support dble conf')
+
+    handle_env_variable(context, userdata, 'dble_conf', check=dble_conf_check)
+
+    def ftp_user_check() -> None:
+        assert_that(context.test_conf['ftp_user'], any_of(instance_of(str), none()))  # type: ignore
+
+    handle_env_variable(context, userdata, 'ftp_user', check=ftp_user_check)
+
+    def ftp_password_check() -> None:
+        assert_that(context.test_conf['ftp_password'], any_of(instance_of(str), none()))  # type: ignore
+
+    handle_env_variable(context, userdata, 'ftp_password', check=ftp_password_check)

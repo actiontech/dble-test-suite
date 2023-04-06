@@ -204,3 +204,12 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
                 time.sleep(sep_time)
     return res, err
  
+def restart_mysql(context, host_name, sed_str=None):
+    if not sed_str and context.text is not None and len(context.text) > 0:
+        sed_str = context.text
+
+    mysql = ObjectFactory.create_mysql_object(host_name)
+    # this is temp for debug stop mysql fail
+    execute_sql_in_host(host_name, {'sql': 'show processlist'})
+    # end debug stop mysql fail
+    mysql.restart(sed_str)
