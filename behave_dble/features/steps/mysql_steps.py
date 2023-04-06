@@ -4,6 +4,7 @@
 # @Time    : 2020/4/1 PM1:35
 # @Author  : irene-coming
 import logging
+import os.path
 from threading import Thread
 
 from steps.lib.utils import get_node, wait_for, sleep_by_time
@@ -34,10 +35,18 @@ def check_tcpdump_pid_exist(sshClient):
     rc, sto, ste = sshClient.exec_command(cmd)
     assert len(ste) == 0, "exec cmd fail for:{0}".format(ste)
     tcpdump_pid_exist = str(sto) == '1'
-    logger.debug("check tcpdump pid cmd exists")
+    logger.debug("check tcpdump pid exists.")
     return tcpdump_pid_exist
 
     # tcpdump   9925  9508  1 10:54 ?        00:00:00 tcpdump -w /tmp/tcpdump.log
+
+def check_tcpdump_file_exist(sshClient,file):
+    filepath, filename = os.path.split(file)
+    cmd = "find {} -name {}".format(filepath,filename)
+    rc, sto, ste = sshClient.exec_command(cmd)
+    assert len(ste) == 0, "exec cmd {} fail for:{}".format(cmd,ste)
+    tcpdump_file_exist = len(sto) != 0
+    return tcpdump_file_exist
 
 
 def stop_tcpdump(context, sshClient):
@@ -59,6 +68,7 @@ def step_impl(context, host):
     node = get_node(host)
     sshClient = node.ssh_conn
     run_tcpdump_cmd = context.text.strip()
+    file = run_tcpdump_cmd.split()[-1]
     if check_tcpdump_pid_exist(sshClient):
         stop_tcpdump(context, sshClient)
 
@@ -79,6 +89,14 @@ def step_impl(context, host):
             return True
         return False
     check_tcpdump_started(sshClient)
+
+    # make sure the tcpdump works
+    @wait_for(context, text="tcpdump does not work in 30 seconds!", duration=30, interval=1)
+    def check_tcpdump_works(sshClient,file):
+        if check_tcpdump_file_exist(sshClient,file):
+            return True
+        return False
+    check_tcpdump_works(sshClient,file)
 
 
 def run_tcpdump(sshClient, run_tcpdump_cmd):
