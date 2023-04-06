@@ -9,7 +9,7 @@ Feature: test show @@help
   Scenario: test "show @@help" #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(111)}  | dble_information |
+      | conn_0 | False   | show @@help             | length{(112)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
@@ -47,6 +47,7 @@ Feature: test show @@help
       | show @@heartbeat                                                                                    | Report heartbeat status                                                           |
       | show @@heartbeat.detail where name=?                                                                | Report heartbeat current detail                                                   |
       | show @@sysparam                                                                                     | Report system param                                                               |
+      | show @@syslog limit=?                                                                               | Report system log                                                                 |
       | show @@white                                                                                        | Report server white host                                                          |
       | show @@directmemory                                                                                 | Report server direct memory pool usage                                            |
       | show @@command.count                                                                                | Report the current number of querys                                               |
@@ -57,7 +58,7 @@ Feature: test show @@help
       | show @@help                                                                                         | Report usage of manager port                                                      |
       | show @@processlist                                                                                  | Report correspondence between front and backend session                           |
       | show @@cost_time                                                                                    | Report cost time of query , contains back End ,front End and over all             |
-      | show @@thread_used                                                                                  | Report usage of all bussiness&reactor threads, for optimize performance           |
+      | show @@thread_used                                                                                  | Report all bussiness&reactor thread usage                                         |
       | show @@shardingNodes where schema='?' and table='?'                                                 | Report the sharding nodes info of a table                                         |
       | show @@algorithm where schema='?' and table='?'                                                     | Report the algorithm info of a table                                              |
       | show @@ddl                                                                                          | Report all ddl info in progress                                                   |
@@ -80,9 +81,13 @@ Feature: test show @@help
       | release @@reload_metadata                                                                           | Release reload process , unlock the config meta lock                              |
       | offline                                                                                             | Change Server status to OFF                                                       |
       | online                                                                                              | Change Server status to ON                                                        |
+      | file @@list                                                                                         | List all the file in conf directory                                               |
+      | file @@show filename                                                                                | Show the file data of specific file                                               |
+      | file @@upload filename content                                                                      | Write content to file                                                             |
       | flow_control @@show                                                                                 | Show the current config of the flow control                                       |
       | flow_control @@list                                                                                 | List all the connection be flow-control now                                       |
       | flow_control @@set [enableFlowControl = true/false] [flowControlStart = ?] [flowControlEnd = ?]     | Change the config of flow control                                                 |
+      | log @@[file=? limit=? key=? regex=?]                                                                | Report logs by given regex                                                        |
       | dryrun                                                                                              | Dry run to check config before reload xml                                         |
       | pause @@shardingNode = 'dn1,dn2,....' and timeout = ? [,queue = ?,wait_limit = ?]                   | Block query requests witch specified shardingNodes involved                       |
       | RESUME                                                                                              | Resume the query requests of the paused shardingNodes                             |
@@ -122,30 +127,8 @@ Feature: test show @@help
       | disable @@statistic                                                                                 | Turn off statistic sql                                                            |
       | reload @@statistic_table_size = ? [where table='?' \| where table in (dble_information.tableA,...)] | Statistic table size                                                              |
       | reload @@samplingRate=?                                                                             | Reset the samplingRate size                                                       |
-      | show @@statistic_queue.usage                                                                        | Show the queue usage                                                              |
-      | drop @@statistic_queue.usage                                                                        | Drop the queue usage                                                              |
-      | start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]]                            | Start monitoring queue usage, Unit: (s,m/min,h)                                   |
-      | stop @@statistic_queue_monitor                                                                      | Stop monitoring queue usage                                                       |
-
 
     Then check resultset "rs_A" has not lines with following column values
       | STATEMENT-0                            |
       | switch @@datasources                   |
       | switch @@dbinstance                    |
-      | log @@[file=? limit=? key=? regex=?]   |
-      | show @@syslog limit=?                  |
-      | file @@list                            |
-      | file @@show filename                   |
-      | file @@upload filename content         |
-
-
-
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                              | expect                 | db               |
-      | conn_0 | False   | switch @@datasources             | Unsupported statement  | dble_information |
-      | conn_0 | False   | switch @@dbinstance              | Unsupported statement  | dble_information |
-      | conn_0 | False   | show @@syslog limit=100          | Unsupported statement  | dble_information |
-      | conn_0 | False   | log @@file limit 10              | Unsupported statement  | dble_information
-      | conn_0 | False   | file @@list                      | Unsupported statement  | dble_information |
-      | conn_0 | False   | file @@show filename             | Unsupported statement  | dble_information |
-      | conn_0 | true    | file @@upload filename content   | Unsupported statement  | dble_information |

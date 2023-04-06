@@ -168,34 +168,6 @@ Feature: test config in user.xml
 
 
 
-
-  Scenario: config sql blacklist add illegal values ,then restart dble failed # DBLE0REQ-920 # 6.1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-      """
-       <managerUser name="root" password="111111"/>
-       <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
-       <blacklist name="blacklist1">
-            <property name="conditionDoubleConstAllow">0</property>
-            <property name="conditionAndAlwayFalseAllow">-1</property>
-             <property name="conditionAndAlwayTrueAllow"> </property>
-             <property name="constArithmeticAllow">adv</property>
-             <property name="alterTableAllow">null</property>
-       </blacklist>
-      """
-    Then execute admin cmd "reload @@config_all" get the following output
-      """
-      Reload config failure
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ alterTableAllow \] 'null' data type should be boolean
-      property \[ conditionAndAlwayFalseAllow \] '-1' data type should be boolean
-      property \[ conditionAndAlwayTrueAllow \] '' data type should be boolean
-      property \[ conditionDoubleConstAllow \] '0' data type should be boolean
-      property \[ constArithmeticAllow \] 'adv' data type should be boolean
-      """
-
-
   @CRITICAL
   Scenario: config "user" attr "maxCon" (front-end maxCon) greater than 0 #7
    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"

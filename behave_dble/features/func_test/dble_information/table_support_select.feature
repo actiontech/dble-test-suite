@@ -91,15 +91,12 @@ Feature:  show databases/use dble_information/show tables [like]
       | dble_thread_pool             |
       | dble_thread_usage            |
       | dble_variables               |
-      | dble_xa_recover              |
       | dble_xa_session              |
       | processlist                  |
       | session_connections          |
       | session_variables            |
       | sql_log                                               |
-      | sql_log_by_tx_digest_by_entry_by_user                 |
       | sql_log_by_tx_by_entry_by_user                        |
-      | sql_log_by_digest_by_entry_by_user                    |
       | sql_statistic_by_associate_tables_by_entry_by_user    |
       | sql_statistic_by_frontend_by_backend_by_entry_by_user |
       | sql_statistic_by_table_by_user_by_entry               |
@@ -110,7 +107,7 @@ Feature:  show databases/use dble_information/show tables [like]
       | demotest2                    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect       | db               |
-      | conn_0 | False   | show tables                          | length{(39)} | dble_information |
+      | conn_0 | False   | show tables                          | length{(36)} | dble_information |
  #case The query needs to be printed in the log，when management commands not supported by druid github:issues/1977
     Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql          | expect                |

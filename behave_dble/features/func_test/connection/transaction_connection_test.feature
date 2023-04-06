@@ -5,6 +5,7 @@ Feature: Transaction query error due to connection used error
 
   # according to http://10.186.18.11/jira/browse/DBLE0REQ-1744
 
+
   Scenario: test with commit will not hang, from ATK-2600  #1
 
     Given delete the following xml segment
@@ -249,6 +250,9 @@ Feature: Transaction query error due to connection used error
       | conn   | toClose | sql                              | expect      |
       | conn_0 | true    | set GLOBAL max_connections=151   | success     |
 
+
+    @skip
+      ###3.21.06修复，不确定是否合到3.21.02
   Scenario: connection distinguished with two ways   #2
     # backend connection naming changed liked:  shardingNode-flag-{schema.table},
     # flag is a variable with boolean

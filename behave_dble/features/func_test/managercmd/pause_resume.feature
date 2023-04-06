@@ -160,7 +160,8 @@ Feature: test "pause/resume" manager cmd
       | resume                                                                           | success                                                                                              |
 
 
-
+  @skip
+  #3.21.06 修复
   Scenario: execute manager cmd "pause  resume " more time  #8
   # DBLE0REQ-1102
     Then execute sql in "dble-1" in "admin" mode

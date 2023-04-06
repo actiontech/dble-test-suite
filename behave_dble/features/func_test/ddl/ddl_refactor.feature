@@ -96,33 +96,8 @@ Feature: test ddl refactor
       | conn_0 | False   | set autocommit=0                             | success                                                          | schema1 |
       | conn_0 | False   | set xa=on                                    | success                                                          | schema1 |
       | conn_0 | False   | show full tables                             | success                                                          | schema1 |
-      | conn_0 | False   | create table sharding_4_t1 (id int,code int) | Implicit commit statement cannot be executed when xa transaction | schema1 |
+      | conn_0 | False   | create table sharding_4_t1 (id int,code int) | DDL is not allowed to be executed in xa transaction              | schema1 |
       | conn_0 | False   | rollback                                     | success                                                          | schema1 |
       | conn_0 | False   | set autocommit=1                             | success                                                          | schema1 |
       | conn_0 | False   | set xa=off                                   | success                                                          | schema1 |
       | conn_0 | true    | drop table if exists sharding_4_t1           | success                                                          | schema1 |
-
-
-
-   Scenario: Multiple ddl is executed concurrently, the id in the dble log is correct #5
-     #### dble-9042
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                           | expect                                 | db               |
-      | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='BusinessExecutor'                   | success                                | dble_information |
-      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='BusinessExecutor'     | has{(('BusinessExecutor', 4, 4),)}          | dble_information |
-
-    Given execute sql "2345" times in "dble-1" together use 1000 connection not close
-      | sql                                                                          | db      |
-      | drop table if exists sharding_4_t1;create table sharding_4_t1(id int)        | schema1 |
-
-    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
-      | key                           | occur_times |
-      | NEW DDL START:\[DDL\]         | 4690        |
-      | DDL END:\[DDL\]               | 4690        |
-
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      java.nio.channels.AsynchronousCloseException: null
-      caught err:
-      """

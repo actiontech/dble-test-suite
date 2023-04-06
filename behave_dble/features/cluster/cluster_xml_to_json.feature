@@ -611,7 +611,15 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sequences.log" in host "dble-3" retry "6,2" times
     """
-    {\"sequence_conf.properties\":{\"\`schema2\`.\`GLOBAL\`.MINID\":\"10001\",\"\`schema2\`.\`GLOBAL\`.MAXID\":\"20000\",\"\`schema2\`.\`GLOBAL\`.CURID\":\"10000\"}}}
+    sequence_conf.properties
+    schema2
+    GLOBAL
+    MINID
+    10001
+    MAXID
+    20000
+    CURID
+    10000
     """
 
 

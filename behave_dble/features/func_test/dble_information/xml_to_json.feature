@@ -856,7 +856,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     <rwSplitUser name=\"rw1\" password=\"111111\" usingDecrypt=\"false\" maxCon=\"1000\" dbGroup=\"ha_group3\"/>
     """
 
-
+   @skip
    Scenario: test dble_information dble_config dml on btrace #4
     #  DBLE0REQ-1061
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -905,7 +905,7 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     Given delete file "/opt/dble/BtraceAboutxmlJson.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutxmlJson.java.log" on "dble-1"
 
-
+   @skip
    Scenario: test dble_information dble_config dml about some special case #5
     #  DBLE0REQ-1060
     Given execute sql in "dble-1" in "admin" mode

@@ -23,13 +23,24 @@ Feature: test connection pool
         </dbInstance>
      </dbGroup>
      """
-    Then Restart dble in "dble-1" failed for
+    Then Restart dble in "dble-1" success
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    property [[] connectionTimeout []] 'abc' data type should be long
-    property [[] testOnBorrow []] '4' data type should be boolean
-    property [[] testOnCreate []] '-1' data type should be boolean
-    property [[] testOnReturn []] 'string' data type should be boolean
-    property [[] testWhileIdle []] 'string' data type should be boolean
+    property \[ connectionTimeout \] 'abc' data type should be long
+    property \[ testOnBorrow \] '4' data type should be boolean
+    property \[ testOnCreate \] '-1' data type should be boolean
+    property \[ testOnReturn \] 'string' data type should be boolean
+    property \[ testWhileIdle \] 'string' data type should be boolean
+    """
+
+    Then execute admin cmd "reload @@config_all"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "reload config: load all xml info start" in host "dble-1"
+    """
+    property \[ connectionTimeout \] 'abc' data type should be long
+    property \[ testOnBorrow \] '4' data type should be boolean
+    property \[ testOnCreate \] '-1' data type should be boolean
+    property \[ testOnReturn \] 'string' data type should be boolean
+    property \[ testWhileIdle \] 'string' data type should be boolean
     """
 
   @NORMAL @restore_network
@@ -381,9 +392,3 @@ Feature: test connection pool
     """
     rm -rf /tmp/general.log
     """
-
-
-
-
-
-

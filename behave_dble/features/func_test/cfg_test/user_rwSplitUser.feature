@@ -295,14 +295,14 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@sql.condition                                              | length{(2)}   |
       | conn_0 | False   | show @@heartbeat                                                  | length{(4)}   |
       | conn_0 | False   | show @@heartbeat.detail  where name='hostM1'                      | success       |
-      | conn_0 | False   | show @@sysparam                                                   | length{(108)} |
+      | conn_0 | False   | show @@sysparam                                                   | length{(105)} |
       | conn_0 | False   | show @@white                                                      | length{(3)}   |
       | conn_0 | False   | show @@directmemory                                               | length{(1)}   |
       | conn_0 | False   | show @@command.count                                              | length{(1)}   |
       | conn_0 | False   | show @@backend.statistics                                         | length{(4)}   |
       | conn_0 | False   | show @@backend.old                                                | length{(0)}   |
       | conn_0 | False   | show @@binlog.status                                              | length{(2)}   |
-      | conn_0 | False   | show @@help                                                       | length{(111)} |
+      | conn_0 | False   | show @@help                                                       | length{(112)} |
       | conn_0 | False   | show @@thread_used                                                | success       |
       | conn_0 | False   | show @@algorithm where schema='schema1' and table='sharding_4_t1' | length{(5)}   |
       | conn_0 | False   | show @@ddl                                                        | length{(0)}   |
@@ -424,10 +424,6 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_2 | False   | enable @@statistic                   | success  |
       | conn_2 | False   | reload @@statistic_table_size = 100  | success  |
       | conn_2 | False   | reload @@samplingRate=100            | success  |
-      | conn_2 | False   | show @@statistic_queue.usage         | success  |
-      | conn_2 | False   | drop @@statistic_queue.usage         | success  |
-      | conn_2 | False   | start @@statistic_queue_monitor      | success  |
-      | conn_2 | False   | stop @@statistic_queue_monitor       | success  |
 #########   flow_control
       | conn_2 | False   | flow_control @@show                          | success   |
       | conn_2 | False   | flow_control @@list                          | success   |
