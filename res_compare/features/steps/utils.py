@@ -281,10 +281,10 @@ def handle_env_variable(context: Context, userdata, var: str, default_value=None
     lower = var.lower()
     env = Env()
     if os.path.exists('conf/secret/.env'):
-        logger.debug('USE ENVIRONMENT behave_dble/conf/secret/.env')
+        logger.debug('USE ENVIRONMENT res_compare/conf/secret/.env')
         env.read_env('conf/secret/.env')
     else:
-        logger.debug('DO NOT EXIST behave_dble/conf/secret/.env')
+        logger.debug('DO NOT EXIST res_compare/conf/secret/.env')
     assert_that(method, is_in(['str', 'bool', 'int']))
     env_method = {'str': env.str,
                   'bool': env.bool,
@@ -311,7 +311,7 @@ def handle_env_variable(context: Context, userdata, var: str, default_value=None
                 f'priority 1: behave -D {upper}=xxx\n'
                 f'priority 2: behave.ini - behave.userdata.{upper}\n'
                 f'priority 3: os environment DBLE_{upper}\n'
-                f'priority 4: behave_dble/conf/secret/.env DBLE_{upper}\n'
+                f'priority 4: res_compare/conf/secret/.env DBLE_{upper}\n'
                 f'priority 5: conf/aute_dble_test.yaml - test_conf.{lower}')
 
     if check is None:
