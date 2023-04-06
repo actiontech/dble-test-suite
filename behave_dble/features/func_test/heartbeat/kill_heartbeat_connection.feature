@@ -218,14 +218,14 @@ Feature: heartbeat basic test
      | user | passwd | conn   | toClose  | sql                                                    | expect  | db      |
      | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1                     | success | schema1 |
      | test | 111111 | conn_0 | True     | create table sharding_2_t1(id int,name varchar(30))    | success | schema1 |
-    Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
-    Given update file content "./assets/BtraceHeartbeat.java" in "behave" with sed cmds
+    Given delete file "/opt/dble/BtraceHeartbeat2.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceHeartbeat2.java.log" on "dble-1"
+    Given update file content "./assets/BtraceHeartbeat2.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /heartbeat/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
-    Given prepare a thread run btrace script "BtraceHeartbeat.java" in "dble-1"
+    Given prepare a thread run btrace script "BtraceHeartbeat2.java" in "dble-1"
 
 #    Given record current dble log line number in "log_linenu"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "master1_heartbeat_id"
@@ -233,7 +233,7 @@ Feature: heartbeat basic test
       | conn_0 | True    | select remote_processlist_id from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'                      | length{(1)}   | dble_information  |3,1    |
     Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
     #the first time retry failed, and connection pool is available
-    Then check btrace "BtraceHeartbeat.java" output in "dble-1" with "1" times
+    Then check btrace "BtraceHeartbeat2.java" output in "dble-1" with "1" times
     """
     before heartbeat
     """
@@ -248,7 +248,7 @@ Feature: heartbeat basic test
       | conn_0 | True    | select remote_processlist_id from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'                      | length{(1)}   | dble_information  |3,1    |
     Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
     #the second time retry failed, and connection pool is available
-    Then check btrace "BtraceHeartbeat.java" output in "dble-1" with "2" times
+    Then check btrace "BtraceHeartbeat2.java" output in "dble-1" with "2" times
     """
     before heartbeat
     """
@@ -262,7 +262,7 @@ Feature: heartbeat basic test
       | conn_0 | True    | select remote_processlist_id from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'                      | length{(1)}   | dble_information  |3,1    |
     Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
     #the 3trd time retry failed, the heartbeat set error and connection pool is not available
-    Then check btrace "BtraceHeartbeat.java" output in "dble-1" with "3" times
+    Then check btrace "BtraceHeartbeat2.java" output in "dble-1" with "3" times
     """
     before heartbeat
     """
@@ -272,7 +272,7 @@ Feature: heartbeat basic test
       | conn   | toClose | sql                                                                                                                                      | expect        | db                |timeout|
       | conn_0 | True    | select remote_processlist_id from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'                      | length{(1)}   | dble_information  |3,1    |
     Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
-    Given stop btrace script "BtraceHeartbeat.java" in "dble-1"
+    Given stop btrace script "BtraceHeartbeat2.java" in "dble-1"
     Given destroy btrace threads list
     #在心跳setError之后, 并且有sql对该db下发查询，发现心跳error持续时间超过timeout配置的值，就会打印 "error heartbeat continued for more than"（此时连接池不可用）
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "3,1" times
@@ -289,8 +289,8 @@ Feature: heartbeat basic test
     """
     error heartbeat continued for more than
     """
-    Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
+    Given delete file "/opt/dble/BtraceHeartbeat2.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceHeartbeat2.java.log" on "dble-1"
 
   @btrace
   Scenario: heartbeat connection recover success in retry 'errorRetryCount' times, the heartbeat will set as Ok,and the connection pool is available in retry period #5
@@ -321,14 +321,14 @@ Feature: heartbeat basic test
      | user | passwd | conn   | toClose  | sql                                                    | expect  | db      |
      | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1                     | success | schema1 |
      | test | 111111 | conn_0 | True     | create table sharding_2_t1(id int,name varchar(30))    | success | schema1 |
-    Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
-    Given update file content "./assets/BtraceHeartbeat.java" in "behave" with sed cmds
+    Given delete file "/opt/dble/BtraceHeartbeat2.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceHeartbeat2.java.log" on "dble-1"
+    Given update file content "./assets/BtraceHeartbeat2.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /heartbeat/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
-    Given prepare a thread run btrace script "BtraceHeartbeat.java" in "dble-1"
+    Given prepare a thread run btrace script "BtraceHeartbeat2.java" in "dble-1"
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "master1_heartbeat_id"
       | conn   | toClose | sql                                                                                                                                      | expect        | db                |timeout|
@@ -336,7 +336,7 @@ Feature: heartbeat basic test
     Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
 
     #the first time retry failed,and connection pool is available
-    Then check btrace "BtraceHeartbeat.java" output in "dble-1" with "1" times
+    Then check btrace "BtraceHeartbeat2.java" output in "dble-1" with "1" times
     """
     before heartbeat
     """
@@ -350,7 +350,7 @@ Feature: heartbeat basic test
       | conn_0 | True    | select remote_processlist_id from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'                      | length{(1)}   | dble_information  |4,1    |
     Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
     #the second time retry failed,and connection pool is available
-    Then check btrace "BtraceHeartbeat.java" output in "dble-1" with "2" times
+    Then check btrace "BtraceHeartbeat2.java" output in "dble-1" with "2" times
     """
     before heartbeat
     """
@@ -366,7 +366,7 @@ Feature: heartbeat basic test
     Then kill the redundant connections if "master1_heartbeat_id" is more then expect value "0" in "mysql-master1"
     #the 3trd time retry success, the heartbeat setOk and connection pool is available
 
-    Then check btrace "BtraceHeartbeat.java" output in "dble-1" with "3" times
+    Then check btrace "BtraceHeartbeat2.java" output in "dble-1" with "3" times
     """
     before heartbeat
     """
@@ -381,7 +381,7 @@ Feature: heartbeat basic test
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                         | expect  | db     |
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
-    Given stop btrace script "BtraceHeartbeat.java" in "dble-1"
+    Given stop btrace script "BtraceHeartbeat2.java" in "dble-1"
     Given destroy btrace threads list
-    Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
+    Given delete file "/opt/dble/BtraceHeartbeat2.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceHeartbeat2.java.log" on "dble-1"

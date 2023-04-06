@@ -18,16 +18,5 @@ public final class BtraceHeartbeat {
         BTraceUtils.println("before fieldEofResponse_________________---1 " );
         Thread.sleep(1L);
     }
-
-
-   @OnMethod(
-            clazz = "com.actiontech.dble.backend.heartbeat.MySQLHeartbeat",
-            method = "heartbeat"
-    )
-   public static void heartbeat() throws Exception {
-        BTraceUtils.println("_________________________________________" );
-        BTraceUtils.println("before heartbeat_________________---1 " );
-        Thread.sleep(1L);
-    }   
 }
  
