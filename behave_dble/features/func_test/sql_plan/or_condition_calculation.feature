@@ -658,10 +658,11 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | show trace   |
 
     Then check resultset "rs_1" has lines with following column values
-      | OPERATION-0   | SHARDING_NODE-4   | SQL/REF-5                                                                                                        |
-      | Execute_SQL   | dn2               | select * from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13) |
-      | Fetch_result  | dn2               | select * from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13) |
-
+      | OPERATION-0   | SHARDING_NODE-4   | SQL/REF-5                                                                                                                                                                                                                                                                |
+      | Execute_SQL   | dn2_0             | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad`,`b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`id` in (1) OR `b`.`id` in (5)) AND  ( `a`.`id` in (9) OR `b`.`id` in (13))) |
+      | Fetch_result  | dn2_0             | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad`,`b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`id` in (1) OR `b`.`id` in (5)) AND  ( `a`.`id` in (9) OR `b`.`id` in (13))) |
+      | MERGE         | merge_1           | dn2_0    |
+      | SHUFFLE_FIELD | shuffle_field_1   | merge_1  |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_4" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(b.id = 5\) and \(a.id = 5\)\) or \(\(a.id = 1\) and \(b.id = 1\)\)\)\) and \(\(a.id =\) and \(b.id =\) and \(\(\(b.id = 13\) and \(a.id = 13\)\) or \(\(a.id = 9\) and \(b.id = 9\)\)\)\)}
@@ -685,9 +686,18 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn   | toClose | sql          |
       | conn_0 | False   | show trace   |
     Then check resultset "rs_1" has lines with following column values
-      | OPERATION-0   | SHARDING_NODE-4   | SQL/REF-5                                                                                                                                             |
-      | Execute_SQL   | dn2               | (select id,age,name from sharding_4_t1 where (age=1 and id=1)or (id=1 and name=2)) union (select id,age,name from sharding_4_t2 where age=1 and id=1) |
-      | Fetch_result  | dn2               | (select id,age,name from sharding_4_t1 where (age=1 and id=1)or (id=1 and name=2)) union (select id,age,name from sharding_4_t2 where age=1 and id=1) |
+      | OPERATION-0   | SHARDING_NODE-4   | SQL/REF-5                                                                                                                                                                                                                          |
+      | Execute_SQL   | dn2_0             | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` = 1) OR  ( `sharding_4_t1`.`id` = 1 AND `sharding_4_t1`.`name` = 2)) |
+      | Fetch_result  | dn2_0             | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` = 1) OR  ( `sharding_4_t1`.`id` = 1 AND `sharding_4_t1`.`name` = 2)) |
+      | Execute_SQL   | dn2_1             | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`age` = 1 AND `sharding_4_t2`.`id` = 1)                                         |
+      | Fetch_result  | dn2_1             | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`age` = 1 AND `sharding_4_t2`.`id` = 1)                                         |
+      | MERGE         | merge_1           | dn2_0                             |
+      | SHUFFLE_FIELD | shuffle_field_1   | merge_1                           |
+      | MERGE         | merge_2           | dn2_1                             |
+      | SHUFFLE_FIELD | shuffle_field_3   | merge_2                           |
+      | UNION_ALL     | union_all_1       | shuffle_field_1; shuffle_field_3  |
+      | DISTINCT      | distinct_1        | union_all_1                       |
+      | SHUFFLE_FIELD | shuffle_field_2   | distinct_1                        |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_5" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\(schema1.sharding_4_t1.id = 1\) and \(schema1.sharding_4_t1.name = 2\)\) or \(\(schema1.sharding_4_t1.age = 1\) and \(schema1.sharding_4_t1.id = 1\)\)\)}
@@ -815,10 +825,13 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | true    | show trace   |
 
     Then check resultset "rs_1" has lines with following column values
-      | OPERATION-0      | SHARDING_NODE-4    | SQL/REF-5                                                                                                                                  |
-      | Execute_SQL      | dn2                | select * from (select a.id,b.age from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13))m |
-      | Fetch_result     | dn2                | select * from (select a.id,b.age from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13))m |
-
+      | OPERATION-0                | SHARDING_NODE-4              | SQL/REF-5                                                                                                                                                                                         |
+      | Execute_SQL                | dn2_0                        | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`id` in (1) OR `b`.`id` in (5)) AND  ( `a`.`id` in (9) OR `b`.`id` in (13))) |
+      | Fetch_result               | dn2_0                        | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`id` in (1) OR `b`.`id` in (5)) AND  ( `a`.`id` in (9) OR `b`.`id` in (13))) |
+      | MERGE                      | merge_1                      | dn2_0                             |
+      | SHUFFLE_FIELD              | shuffle_field_1              | merge_1                           |
+      | RENAME_DERIVED_SUB_QUERY   | rename_derived_sub_query_1   | shuffle_field_1                   |
+      | SHUFFLE_FIELD              | shuffle_field_2              | rename_derived_sub_query_1        |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_11" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(a.id =\) and \(b.id =\) and \(\(\(b.id = 5\) and \(a.id = 5\)\) or \(\(a.id = 1\) and \(b.id = 1\)\)\)\) and \(\(a.id =\) and \(b.id =\) and \(\(\(b.id = 13\) and \(a.id = 13\)\) or \(\(a.id = 9\) and \(b.id = 9\)\)\)\)}
@@ -2184,64 +2197,10 @@ Feature: In order to calculate the route, the where condition needs to be proces
     </schema>
     """
     Then execute admin cmd "reload @@config"
-
-    When replace new conf file "log4j2.xml" on "dble-1"
-    """
-    <?xml version="1.0" encoding="UTF-8"?>
-     <Configuration status="WARN" monitorInterval="30">
-    <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d [%-5p][%t] %m %throwable{full} (%C:%F:%L) %n"/>
-        </Console>
-         <RollingRandomAccessFile name="RollingFile" fileName="${sys:homePath}/logs/dble.log"
-                                 filePattern="${sys:homePath}/logs/$${date:yyyy-MM}/dble-%d{MM-dd}-%i.log.gz">
-            <PatternLayout>
-                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [%t] (%l) - %m%n</Pattern>
-            </PatternLayout>
-            <Policies>
-                <OnStartupTriggeringPolicy/>
-                <SizeBasedTriggeringPolicy size="250 MB"/>
-                <TimeBasedTriggeringPolicy/>
-            </Policies>
-            <DefaultRolloverStrategy max="100">
-                <Delete basePath="logs" maxDepth="2">
-                    <IfFileName glob="*/dble-*.log.gz">
-                        <IfLastModified age="30d">
-                            <IfAny>
-                                <IfAccumulatedFileSize exceeds="1 GB"/>
-                                <IfAccumulatedFileCount exceeds="10"/>
-                            </IfAny>
-                        </IfLastModified>
-                    </IfFileName>
-                </Delete>
-            </DefaultRolloverStrategy>
-         </RollingRandomAccessFile>
-          <RollingFile name="DDL_TRACE" fileName="logs/ddl.log"
-                       filePattern="logs/$${date:yyyy-MM}/ddl-%d{MM-dd}-%i.log.gz">
-              <PatternLayout>
-                  <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [%t] (%l) - %m%n</Pattern>
-              </PatternLayout>
-              <Policies>
-                  <OnStartupTriggeringPolicy/>
-                  <SizeBasedTriggeringPolicy size="250 MB"/>
-                  <TimeBasedTriggeringPolicy/>
-              </Policies>
-              <DefaultRolloverStrategy max="10"/>
-          </RollingFile>
-      </Appenders>
-      <Loggers>
-       <Logger name="DDL_TRACE" additivity="false" includeLocation="false" level="trace">
-         <AppenderRef ref="DDL_TRACE"/>
-         <AppenderRef ref="Console"/>
-        </Logger>
-
-        <asyncRoot level="debug" includeLocation="true">
-
-            <AppenderRef ref="RollingFile"/>
-        </asyncRoot>
-     </Loggers>
-    </Configuration>
-    """
+    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
+      """
+      s/debug/trace/g
+      """
     Given Restart dble in "dble-1" success
      #ddl have not trace log
     Then execute sql in "dble-1" in "user" mode
@@ -2258,7 +2217,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | create table nosharding(id int,aid int,name char(20),age int,pad int)                                  | success | schema1 | utf8mb4 |
     Then get result of oscmd named "A" in "dble-1"
      """
-     grep " TRACE " /opt/dble/logs/ddl.log | wc -l
+     grep " TRACE " /opt/dble/logs/dble.log | wc -l
      """
     Then check result "A" value is "0"
 
@@ -2275,7 +2234,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | insert into nosharding values(1,1,1,1,1),(2,2,2,2,2),(3,3,3,3,3),(4,4,4,4,4)             | success | schema1 | utf8mb4 |
     Then get result of oscmd named "A" in "dble-1"
     """
-    grep " TRACE " /opt/dble/logs/ddl.log | wc -l
+    grep " TRACE " /opt/dble/logs/dble.log | wc -l
     """
     Then check result "A" value is "0"
 
@@ -2289,19 +2248,19 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | update nosharding set age = 99    | success | schema1 | utf8mb4 |
     Then get result of oscmd named "A" in "dble-1"
     """
-    grep " TRACE " /opt/dble/logs/ddl.log | wc -l
+    grep " TRACE " /opt/dble/logs/dble.log | wc -l
     """
     Then get result of oscmd named "B" in "dble-1"
     """
-    grep "these conditions will try to pruning:{}" /opt/dble/logs/ddl.log | wc -l
+    grep "these conditions will try to pruning:{}" /opt/dble/logs/dble.log | wc -l
     """
     Then get result of oscmd named "C" in "dble-1"
     """
-    grep "{ RouteCalculateUnit 1 :}" /opt/dble/logs/ddl.log | wc -l
+    grep "{ RouteCalculateUnit 1 :}" /opt/dble/logs/dble.log | wc -l
     """
     Then get result of oscmd named "D" in "dble-1"
     """
-    grep "changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]" /opt/dble/logs/ddl.log | wc -l
+    grep "changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]" /opt/dble/logs/dble.log | wc -l
     """
     Then check result "A" value is "25"
     Then check result "B" value is "5"
@@ -2317,19 +2276,19 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | select id,name from nosharding    | success | schema1 | utf8mb4 |
     Then get result of oscmd named "A" in "dble-1"
     """
-    grep " TRACE " /opt/dble/logs/ddl.log | wc -l
+    grep " TRACE " /opt/dble/logs/dble.log | wc -l
     """
     Then get result of oscmd named "B" in "dble-1"
     """
-    grep "these conditions will try to pruning:{}" /opt/dble/logs/ddl.log | wc -l
+    grep "these conditions will try to pruning:{}" /opt/dble/logs/dble.log | wc -l
     """
     Then get result of oscmd named "C" in "dble-1"
     """
-    grep "{ RouteCalculateUnit 1 :}" /opt/dble/logs/ddl.log | wc -l
+    grep "{ RouteCalculateUnit 1 :}" /opt/dble/logs/dble.log | wc -l
     """
     Then get result of oscmd named "D" in "dble-1"
     """
-    grep "changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]" /opt/dble/logs/ddl.log | wc -l
+    grep "changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]" /opt/dble/logs/dble.log | wc -l
     """
     Then check result "A" value is "50"
     Then check result "B" value is "10"
@@ -2345,19 +2304,19 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | delete from nosharding    | success | schema1 | utf8mb4 |
     Then get result of oscmd named "A" in "dble-1"
     """
-    grep " TRACE " /opt/dble/logs/ddl.log | wc -l
+    grep " TRACE " /opt/dble/logs/dble.log | wc -l
     """
     Then get result of oscmd named "B" in "dble-1"
     """
-    grep "these conditions will try to pruning:{}" /opt/dble/logs/ddl.log | wc -l
+    grep "these conditions will try to pruning:{}" /opt/dble/logs/dble.log | wc -l
     """
     Then get result of oscmd named "C" in "dble-1"
     """
-    grep "{ RouteCalculateUnit 1 :}" /opt/dble/logs/ddl.log | wc -l
+    grep "{ RouteCalculateUnit 1 :}" /opt/dble/logs/dble.log | wc -l
     """
     Then get result of oscmd named "D" in "dble-1"
     """
-    grep "changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]" /opt/dble/logs/ddl.log | wc -l
+    grep "changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]" /opt/dble/logs/dble.log | wc -l
     """
     Then check result "A" value is "75"
     Then check result "B" value is "15"
@@ -2374,13 +2333,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | create table noshard_t1(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` varchar(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8          | success | schema1 | utf8mb4 |
       | conn_0 | False   | insert into noshard_t1 values(1,1,'noshard_t1中id为1',1),(2,2,'test_2',2),(3,3,'noshard_t1中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)                                                                              | success | schema1 | utf8mb4 |
       | conn_0 | False   | insert into schema2.global_4_t1 values(1,1,'global_4_t1中id为1',1),(2,2,'test_2',2),(3,3,'global_4_t1中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1),(6,6,'test6',6)                                                                 | success | schema1 | utf8mb4 |
+    Given record current dble log line number in "log_1"
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                                                 |
       | conn_0 | False   | explain select * from schema2.global_4_t1 where (id=1 or id=2) and (id=3 or id=4)   |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2                                                                                |
       | /*AllowDiff*/dn1 | BASE SQL | SELECT * FROM global_4_t1 WHERE (id = 1   OR id = 2)  AND (id = 3   OR id = 4) LIMIT 100 |
-    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_1" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\(schema2.global_4_t1.id = 2\)\) or \(\(schema2.global_4_t1.id = 1\)\)\) and \(\(\(schema2.global_4_t1.id = 4\)\) or \(\(schema2.global_4_t1.id = 3\)\)\)}
     condition \[schema2.global_4_t1.id = 2\] will be pruned for columnName is not shardingColumn/joinColumn
@@ -2390,6 +2350,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
+    Given record current dble log line number in "log_2"
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                                        |
       | conn_0 | False   | explain update schema2.global_4_t1 set name='test' where id=1 and o_id=1   |
@@ -2399,7 +2360,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn2             | BASE SQL | update global_4_t1 set name='test' where id=1 and o_id=1 |
       | dn3             | BASE SQL | update global_4_t1 set name='test' where id=1 and o_id=1 |
       | dn4             | BASE SQL | update global_4_t1 set name='test' where id=1 and o_id=1 |
-    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_2" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\(schema2.global_4_t1.id = 1\) and \(schema2.global_4_t1.o_id = 1\)\)\)}
     condition \[schema2.global_4_t1.id = 1\] will be pruned for columnName is not shardingColumn/joinColumn
@@ -2408,6 +2369,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
+    Given record current dble log line number in "log_3"
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                            |
       | conn_0 | False   | explain delete from schema2.global_4_t1 where id=1 and o_id=1  |
@@ -2417,7 +2379,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn2             | BASE SQL | delete from global_4_t1 where id=1 and o_id=1 |
       | dn3             | BASE SQL | delete from global_4_t1 where id=1 and o_id=1 |
       | dn4             | BASE SQL | delete from global_4_t1 where id=1 and o_id=1 |
-    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_3" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\(schema2.global_4_t1.id = 1\) and \(schema2.global_4_t1.o_id = 1\)\)\)}
     condition \[schema2.global_4_t1.id = 1\] will be pruned for columnName is not shardingColumn/joinColumn
@@ -2427,13 +2389,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
 
+    Given record current dble log line number in "log_4"
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                                        | db      |
       | conn_0 | False   | explain select * from noshard_t1 where (id=1 or id=2) and (id=3 or id=4)   | schema1 |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                                               |
       | dn5             | BASE SQL | SELECT * FROM noshard_t1 WHERE (id = 1   OR id = 2)  AND (id = 3   OR id = 4) LIMIT 100 |
-    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_4" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\) or \(\)\) and \(\(\) or \(\)\)}
     whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
@@ -2441,25 +2404,27 @@ Feature: In order to calculate the route, the where condition needs to be proces
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
+    Given record current dble log line number in "log_5"
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                             |
       | conn_0 | False   | explain update noshard_t1 set name='test' where id=1 and t_id=1 |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                |
       | dn5             | BASE SQL | update noshard_t1 set name='test' where id=1 and t_id=1  |
-    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_5" in host "dble-1"
     """
     these conditions will try to pruning:\{\}
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
+    Given record current dble log line number in "log_6"
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                 |
       | conn_0 | False   | explain delete from noshard_t1 where id=1 or t_id=1 |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                   |
       | dn5             | BASE SQL | delete from noshard_t1 where id=1 or t_id=1 |
-    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     these conditions will try to pruning:{\(\(\) or \(\)\)}
     whereUnit \[\(\) or \(\)\] will be pruned for contains useless or condition
@@ -2468,10 +2433,6 @@ Feature: In order to calculate the route, the where condition needs to be proces
     """
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
-    Then check following text exist "N" in file "/opt/dble/logs/ddl.log" in host "dble-1"
       """
       NullPointerException
       """

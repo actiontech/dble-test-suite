@@ -277,9 +277,8 @@ Feature: heartbeat basic test
     #在心跳setError之后, 并且有sql对该db下发查询，发现心跳error持续时间超过timeout配置的值，就会打印 "error heartbeat continued for more than"（此时连接池不可用）
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "3,1" times
     """
-    select user\(\)\] is closed, due to stream closed by peer, we will try again immediately
-    retry to do heartbeat for the 3 times
     heartbeat to \[172.100.9.5:3306\] setError
+    retry to do heartbeat for the 3 times
     """
     #sleep 1s (timeout配置的时间为1s) 使其进入心跳timeout逻辑
     Then execute sql in "dble-1" in "user" mode

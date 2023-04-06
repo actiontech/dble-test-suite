@@ -175,7 +175,7 @@ Feature: test "binlog" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /delayDdLToDeliver/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
+      /sleepWhenClearIfSessionClosed/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
       """
     #global table ddl
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-2"
@@ -188,7 +188,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-2"
       """
-      get into delayDdLToDeliver
+      get into clearIfSessionClosed,start sleep
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
@@ -232,7 +232,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-2"
       """
-      get into delayDdLToDeliver
+      get into clearIfSessionClosed,start sleep
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
@@ -273,7 +273,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-3"
       """
-      get into delayDdLToDeliver
+      get into clearIfSessionClosed,start sleep
       """
 
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
@@ -316,7 +316,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
       """
-      get into delayDdLToDeliver
+      get into clearIfSessionClosed,start sleep
       """
 
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
@@ -349,7 +349,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-3"
       """
-      get into delayDdLToDeliver
+      get into clearIfSessionClosed,start sleep
       """
 
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
@@ -390,7 +390,7 @@ Feature: test "binlog" in zk cluster
       | conn_21 | true    | show @@binlog.status | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
       """
-      get into delayDdLToDeliver
+      get into clearIfSessionClosed,start sleep
       """
 #    Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "10,3" times
@@ -420,7 +420,7 @@ Feature: test "binlog" in zk cluster
       | conn_21 | true    | show @@binlog.status | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
       """
-      get into delayDdLToDeliver
+      get into clearIfSessionClosed,start sleep
       """
 #    Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "10,3" times
@@ -450,7 +450,7 @@ Feature: test "binlog" in zk cluster
       | conn_21 | true    | show @@binlog.status | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
       """
-      get into delayDdLToDeliver
+      get into clearIfSessionClosed,start sleep
       """
 #    Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2" retry "10,3" times
@@ -659,7 +659,7 @@ Feature: test "binlog" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /delayDdLToDeliver/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
+      /sleepWhenClearIfSessionClosed/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
       """
     #global table ddl
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-2"
@@ -672,7 +672,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-2"
       """
-      get into delayDdLToDeliver
+      get into clearIfSessionClosed,start sleep
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
@@ -714,7 +714,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-2"
       """
-      get into delayDdLToDeliver
+      get into clearIfSessionClosed,start sleep
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
@@ -754,7 +754,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-3"
       """
-      get into delayDdLToDeliver
+      get into clearIfSessionClosed,start sleep
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
@@ -795,7 +795,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
       """
-      get into delayDdLToDeliver
+      get into clearIfSessionClosed,start sleep
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
@@ -828,7 +828,7 @@ Feature: test "binlog" in zk cluster
       | conn_1  | true    | show @@binlog.status | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-3"
       """
-      get into delayDdLToDeliver
+      get into clearIfSessionClosed,start sleep
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
@@ -914,7 +914,7 @@ Feature: test "binlog" in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /ShowBinlogStatus/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
+      /getQueryResult/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     #the query will be "hang"

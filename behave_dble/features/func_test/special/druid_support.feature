@@ -35,11 +35,11 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
       | conn_1 | False   | create table no_sharding_t1(id int, name varchar(20)) ENGINE=PERFORMANCE_SCHEMA | Invalid performance_schema usage. | schema1 |
       | conn_1 | True    | drop table if exists no_sharding_t1;drop table if exists single_t1              | success | schema1 |
 
-    Given execute linux command in "dble-1" and contains exception "create table only can use ENGINE InnoDB, others not supported:CREATE TABLE sharding_4_t1"
+    Given execute linux command in "dble-1" and contains exception "create table only can use ENGINE InnoDB,others not supported"
     """
     mysql -P8066 -utest -h172.100.9.1 -Dschema1 -e "create table sharding_4_t1(id int, name varchar(20)) ENGINE=MyISAM"
     """
-    Given execute linux command in "dble-1" and contains exception "create table only can use ENGINE InnoDB, others not supported:CREATE TABLE test"
+    Given execute linux command in "dble-1" and contains exception "create table only can use ENGINE InnoDB,others not supported"
     """
     mysql -P8066 -utest -h172.100.9.1 -Dschema1 -e "create table test(id int, name varchar(20)) ENGINE=PERFORMANCE_SCHEMA"
     """
@@ -230,9 +230,9 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                              | expect  | db      |
-      | conn_2 | False   | select t1.* from sharding_4_t1 t1 join test t2 on t1.id=t2.id order by t1.name limit 0           | Intercepted by suspected configuration [limitZeroAllow] in the blacklist of user 'test', so it is considered unsafe SQL | schema1 |
-      | conn_2 | False   | select t2.* from sharding_4_t1 t1,test t2 where t1.id=t2.id and t2.age>40 order by t1.id limit 0 | Intercepted by suspected configuration [limitZeroAllow] in the blacklist of user 'test', so it is considered unsafe SQL | schema1 |
-      | conn_2 | True    | select * from sharding_4_t1 limit 0                                                              | Intercepted by suspected configuration [limitZeroAllow] in the blacklist of user 'test', so it is considered unsafe SQL | schema1 |
+      | conn_2 | False   | select t1.* from sharding_4_t1 t1 join test t2 on t1.id=t2.id order by t1.name limit 0           | The statement is unsafe SQL, reject for user 'test | schema1 |
+      | conn_2 | False   | select t2.* from sharding_4_t1 t1,test t2 where t1.id=t2.id and t2.age>40 order by t1.id limit 0 | The statement is unsafe SQL, reject for user 'test | schema1 |
+      | conn_2 | True    | select * from sharding_4_t1 limit 0                                                              | The statement is unsafe SQL, reject for user 'test | schema1 |
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
      <shardingUser name="test" password="111111" schemas="schema1" blacklist="blacklist1"/>
@@ -254,86 +254,3 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
       | conn_3 | False   | select * from sharding_4_t1 limit 0                                                              | success | schema1 |
       | conn_3 | False   | drop table if exists sharding_4_t1                                                               | success | schema1 |
       | conn_3 | True    | drop table if exists test                                                                        | success | schema1 |
-
-
-  Scenario: check selectAllow #6
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                | expect  | db      |
-      | conn_1 | False   | drop table if exists sharding_4_t1                                 | success | schema1 |
-      | conn_1 | False   | create table sharding_4_t1(id int,name varchar(20),age int)        | success | schema1 |
-      | conn_1 | False   | insert into sharding_4_t1 values(1,1,1),(2,2,12),(3,3,35),(4,4,43) | success | schema1 |
-      | conn_1 | False   | select * from sharding_4_t1                                        | has{((1,'1',1),(2,'2',12),(3,'3',35),(4,'4',43))} | schema1 |
-      | conn_1 | True    | select id,name from sharding_4_t1 where age > 30                   | has{((3,'3'),(4,'4'))} | schema1 |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-     <shardingUser name="test" password="111111" schemas="schema1" blacklist="blacklist1"/>
-      <blacklist name="blacklist1">
-        <property name="selelctAllow">false</property>
-      </blacklist>
-    """
-    Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_blacklist_2"
-      | conn   | toClose | sql                                                       | db               |
-      | conn_0 | True    | select * from dble_blacklist where user_configured='true' | dble_information |
-    Then check resultset "dble_blacklist_2" has lines with following column values
-      | name-0     | property_key-1              | property_value-2 | user_configured-3 |
-      | blacklist1 | selelctAllow                | false            | true              |
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                               | expect  | db      |
-      | conn_2 | False   | select * from sharding_4_t1                                       | Intercepted by suspected configuration [selelctAllow,selectAllColumnAllow] in the blacklist of user 'test', so it is considered unsafe SQL | schema1 |
-      | conn_2 | True    | select id,name from sharding_4_t1 where age > 30                  | Intercepted by suspected configuration [selelctAllow,selectAllColumnAllow] in the blacklist of user 'test', so it is considered unsafe SQL | schema1 |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-     <shardingUser name="test" password="111111" schemas="schema1" blacklist="blacklist1"/>
-      <blacklist name="blacklist1">
-        <property name="selectAllow">false</property>
-      </blacklist>
-    """
-    Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_blacklist_3"
-      | conn   | toClose | sql                                                       | db               |
-      | conn_0 | True    | select * from dble_blacklist where user_configured='true' | dble_information |
-    Then check resultset "dble_blacklist_3" has lines with following column values
-      | name-0     | property_key-1              | property_value-2 | user_configured-3 |
-      | blacklist1 | selectAllow                 | false            | true              |
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                               | expect  | db      |
-      | conn_3 | False   | select * from sharding_4_t1                                       | Intercepted by suspected configuration [selelctAllow,selectAllColumnAllow] in the blacklist of user 'test', so it is considered unsafe SQL | schema1 |
-      | conn_3 | True    | select id,name from sharding_4_t1 where age > 30                  | Intercepted by suspected configuration [selelctAllow,selectAllColumnAllow] in the blacklist of user 'test', so it is considered unsafe SQL | schema1 |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-     <shardingUser name="test" password="111111" schemas="schema1" blacklist="blacklist1"/>
-      <blacklist name="blacklist1">
-        <property name="selelctAllow">true</property>
-      </blacklist>
-    """
-    Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_blacklist_4"
-      | conn   | toClose | sql                                                       | db               |
-      | conn_0 | True    | select * from dble_blacklist where user_configured='true' | dble_information |
-    Then check resultset "dble_blacklist_4" has lines with following column values
-      | name-0     | property_key-1              | property_value-2 | user_configured-3 |
-      | blacklist1 | selelctAllow                | true             | true              |
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                               | expect  | db      |
-      | conn_4 | False   | select * from sharding_4_t1                                       | has{((1,'1',1),(2,'2',12),(3,'3',35),(4,'4',43))} | schema1 |
-      | conn_4 | True    | select id,name from sharding_4_t1 where age > 30                  | has{((3,'3'),(4,'4'))} | schema1 |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-     <shardingUser name="test" password="111111" schemas="schema1" blacklist="blacklist1"/>
-      <blacklist name="blacklist1">
-        <property name="selectAllow">true</property>
-      </blacklist>
-    """
-    Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_blacklist_5"
-      | conn   | toClose | sql                                                       | db               |
-      | conn_0 | True    | select * from dble_blacklist where user_configured='true' | dble_information |
-    Then check resultset "dble_blacklist_5" has lines with following column values
-      | name-0     | property_key-1              | property_value-2 | user_configured-3 |
-      | blacklist1 | selectAllow                 | true             | true              |
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                               | expect  | db      |
-      | conn_5 | False   | select * from sharding_4_t1                                       | has{((1,'1',1),(2,'2',12),(3,'3',35),(4,'4',43))} | schema1 |
-      | conn_5 | True    | select id,name from sharding_4_t1 where age > 30                  | has{((3,'3'),(4,'4'))} | schema1 |
-      | conn_6 | True    | drop table if exists sharding_4_t1                                | success | schema1 |

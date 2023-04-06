@@ -16,8 +16,7 @@ public class BtraceMultiNodeMergeAndOrderHandler {
             clazz="com.actiontech.dble.backend.mysql.nio.handler.query.impl.MultiNodeMergeAndOrderHandler",
             //location=@Location(value=Kind.LINE,line=162) for 2.20.04
             //location=@Location(value=Kind.LINE,line=180) for 3.20.07
-            //location=@Location(value=Kind.LINE,line=182) for 3.20.10, 3.21.02
-            location=@Location(value=Kind.LINE,line=186)
+            location=@Location(value=Kind.LINE,line=182)
     )
     public static void ownThread(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception  {
         BTraceUtils.println("get into ownThread");

@@ -174,7 +174,10 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sequences.log" in host "dble-2"
       """
-      {\"sequence_db_conf.properties\":{\"\`schema1\`.\`test_auto\`\":\"dn1\"}}}
+      sequence_db_conf.properties
+      schema1
+      test_auto
+      dn1
       """
     Given execute linux command in "dble-3"
       """
@@ -851,8 +854,8 @@ Feature: test "reload @@config" in zk cluster
     """
 
 
-    @btrace
-    Scenario: when reload hang,emergency ways to deal with it       #5
+  @btrace
+  Scenario: when reload hang,emergency ways to deal with it       #5
 #CASE1: change sharding.xml and reload hang on the same dble
       Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
       Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"

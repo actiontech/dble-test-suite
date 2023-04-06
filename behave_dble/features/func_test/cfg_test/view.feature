@@ -136,7 +136,8 @@ Feature: #view test except sql cover
       | conn_0 | True    | drop table sharding_1_t1                             | success                                                | schema1 |
 
 
-
+  @skip
+    #3.21.06修复，不确定是否往前合
   Scenario: create some view ,drop view in dble from DBLE0REQ-1163  #3
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"

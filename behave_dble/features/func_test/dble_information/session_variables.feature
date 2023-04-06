@@ -19,7 +19,7 @@ Feature:  session_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                | expect        | db               |
       | conn_0 | False   | desc session_variables             | length{(4)}   | dble_information |
-      | conn_0 | False   | select * from session_variables    | length{(8)}   | dble_information |
+      | conn_0 | False   | select * from session_variables    | length{(6)}   | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_variables_2"
       | conn   | toClose | sql                             | db               |
       | conn_0 | False   | select * from session_variables | dble_information |
@@ -31,9 +31,6 @@ Feature:  session_variables test
       | character_set_results    | latin1            | sys             |
       | character_set_connection | latin1_swedish_ci | sys             |
       | transaction_isolation    | repeatable-read   | sys             |
-      | transaction_read_only    | false             | sys             |
-      | tx_read_only             | false             | sys             |
-
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect  |
       | conn_1 | False   | use schema1                            | success |
@@ -48,16 +45,12 @@ Feature:  session_variables test
       | character_set_results    | latin1            | sys             |
       | character_set_connection | latin1_swedish_ci | sys             |
       | transaction_isolation    | repeatable-read   | sys             |
-      | transaction_read_only    | false             | sys             |
-      | tx_read_only             | false             | sys             |
       | autocommit               | true              | sys             |
       | character_set_client     | latin1            | sys             |
       | collation_connection     | latin1_swedish_ci | sys             |
       | character_set_results    | latin1            | sys             |
       | character_set_connection | latin1_swedish_ci | sys             |
       | transaction_isolation    | repeatable-read   | sys             |
-      | transaction_read_only    | false             | sys             |
-      | tx_read_only             | false             | sys             |
       | xa                       | false             | sys             |
       | trace                    | false             | sys             |
 
@@ -71,22 +64,20 @@ Feature:  session_variables test
       | conn_0 | True    | select * from session_variables | dble_information |
     Then check resultset "session_variables_4" has lines with following column values
       | variable_name-1          | variable_value-2  | variable_type-3 |
-      | autocommit               | false             | sys             |
-      | character_set_client     | latin1            | sys             |
-      | collation_connection     | latin1_swedish_ci | sys             |
-      | character_set_results    | latin1            | sys             |
-      | character_set_connection | latin1_swedish_ci | sys             |
-      | transaction_isolation    | repeatable-read   | sys             |
-      | transaction_read_only    | false             | sys             |
-      | tx_read_only             | false             | sys             |
-      | xa                       | true              | sys             |
-      | trace                    | false             | sys             |
       | autocommit               | true              | sys             |
       | character_set_client     | latin1            | sys             |
       | collation_connection     | latin1_swedish_ci | sys             |
       | character_set_results    | latin1            | sys             |
       | character_set_connection | latin1_swedish_ci | sys             |
       | transaction_isolation    | repeatable-read   | sys             |
+      | autocommit               | false             | sys             |
+      | character_set_client     | latin1            | sys             |
+      | collation_connection     | latin1_swedish_ci | sys             |
+      | character_set_results    | latin1            | sys             |
+      | character_set_connection | latin1_swedish_ci | sys             |
+      | transaction_isolation    | repeatable-read   | sys             |
+      | xa                       | true              | sys             |
+      | trace                    | false             | sys             |
       | transaction_read_only    | false             | sys             |
       | tx_read_only             | false             | sys             |
 
@@ -150,10 +141,7 @@ Feature:  session_variables test
       | conn_1 | False   | set @@session.transaction_read_only=1 | success |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect  |
-      | conn_2 | False   | set session transaction read only     | success |
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                   | expect  |
-      | conn_3 | False   | use schema1                           | success |
+      | conn_2 | False   | use schema1                           | success |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_variables_8"
       | conn   | toClose | sql                                                                                                         | db               |
       | conn_0 | False   | select * from session_variables where variable_name='transaction_read_only' or variable_name='tx_read_only' | dble_information |
@@ -161,18 +149,11 @@ Feature:  session_variables test
       | variable_name-1       | variable_value-2 | variable_type-3 |
       | transaction_read_only | true             | sys             |
       | tx_read_only          | true             | sys             |
-      | transaction_read_only | true             | sys             |
-      | tx_read_only          | true             | sys             |
-      | transaction_read_only | false            | sys             |
-      | tx_read_only          | false            | sys             |
       | transaction_read_only | false            | sys             |
       | tx_read_only          | false            | sys             |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                  | expect  |
       | conn_1 | False   | SET @@tx_read_only=0 | success |
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                | expect  |
-      | conn_2 | False   | set session transaction read write | success |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_variables_9"
       | conn   | toClose | sql                                                                                                         | db               |
       | conn_0 | False   | select * from session_variables where variable_name='transaction_read_only' or variable_name='tx_read_only' | dble_information |
@@ -182,17 +163,9 @@ Feature:  session_variables test
       | tx_read_only          | false            | sys             |
       | transaction_read_only | false            | sys             |
       | tx_read_only          | false            | sys             |
-      | transaction_read_only | false            | sys             |
-      | tx_read_only          | false            | sys             |
-      | transaction_read_only | false            | sys             |
-      | tx_read_only          | false            | sys             |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect                    |
       | conn_1 | False   | SET @@global.tx_read_only=1 | unsupport global          |
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                   | expect                                                                            |
-      | conn_2 | False   | set transaction read only             | setting transaction without any SESSION or GLOBAL keyword is not supported now    |
-      | conn_2 | False   | set global transaction read only      | setting GLOBAL value is not supported                                             |
 
   #case  set @@character_set_results='utf8mb4'
     Then execute sql in "dble-1" in "user" mode
