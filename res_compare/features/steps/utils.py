@@ -110,7 +110,12 @@ def init_meta(context, flag):
         MySQLMeta.mysqls = tuple(nodes)
     else:
         assert False, "get_nodes expect parameter enum in 'dble', 'dble_cluser', 'mysqls'"
-
+@log_it
+def create_dir(*dirs: str) -> str:
+    dp = os.path.join(*dirs)
+    if not os.path.exists(dp):
+        os.makedirs(dp)
+    return dp
 
 def wait_for(context, text: str = 'Timeout', duration: int = 10, interval: int = 3, prefix: int = 0) -> Callable[
     [Callable[..., bool]], Callable[..., Any]]:

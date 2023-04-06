@@ -45,7 +45,7 @@ def before_all(context):
     context.dble_conf="conf/dble_conf/"+userdata["dble_conf"].lower()
     init_meta(context,"single")
     init_meta(context,"mysqls")
-    
+    context.need_download = userdata["install_from_local"].lower() != "true"
     if reset:
         reset_dble(context)
     logger.info('Exit before_all')
