@@ -39,3 +39,6 @@ reset_mysql:
 
 used_in_local: create_venv up
 	pipenv run behave features/setup.feature
+
+run_sql_support_rw: up
+	pipenv run behave features/setup.feature features/cases/test.feature	
