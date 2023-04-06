@@ -176,40 +176,6 @@ Feature:  backend_connections test
   @btrace
   Scenario: check backend connection status #2
 
-    # state = HEARTBEAT CHECK
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-      """
-        <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="10" primary="true">
-                 <property name="testWhileIdle">true</property>
-                 <property name="timeBetweenEvictionRunsMillis">3000</property>
-            </dbInstance>
-        </dbGroup>
-      """
-    Given execute admin cmd "reload @@config_all" success
-    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
-    Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
-        """
-        s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
-        /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(6000L)/;/\}/!ba}
-        """
-    Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
-
-    # sleep time > timeBetweenEvictionRunsMillis = 3
-    Then check btrace "BtraceAboutConnection.java" output in "dble-1"
-    """
-        sending ping signal
-    """
-    Given execute sql in "dble-1" in "admin" mode
-  | conn   | toClose | sql                                                                                                                            | expect             | db               | timeout |
-  | conn_0 | true    | select * from backend_connections where remote_addr="172.100.9.5" and used_for_heartbeat="false" and state="HEARTBEAT CHECK"   | length{(1)}        | dble_information | 6       |
-    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
-    Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
-    Given destroy btrace threads list
-
     #state = EVICT
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -280,3 +246,51 @@ Feature:  backend_connections test
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                 | expect        | db                |
       | conn_0 | true    | drop table if exists sharding_4_t1                                                                                  | success       | schema1           |
+
+    # state = HEARTBEAT CHECK
+    Given delete the following xml segment
+      | file         | parent         | child                  |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+     """
+     <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
+        <singleTable name="sing1" shardingNode="dn1" />
+     </schema>
+
+     <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+     <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
+     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      """
+        <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+            <heartbeat>select user()</heartbeat>
+            <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="1" primary="true">
+                 <property name="testWhileIdle">true</property>#testWhileIdle为true，对所有空闲连接，发送ping命令探测连接有效性
+                 <property name="timeBetweenEvictionRunsMillis">3000</property>
+            </dbInstance>
+        </dbGroup>
+      """
+    Given execute admin cmd "reload @@config_all" success
+    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
+    Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
+        """
+        s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
+        /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(6000L)/;/\}/!ba}
+        """
+    Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
+
+    # sleep time > timeBetweenEvictionRunsMillis = 3
+    Then check btrace "BtraceAboutConnection.java" output in "dble-1"
+    """
+        sending ping signal
+    """
+    Given execute sql in "dble-1" in "admin" mode
+  | conn   | toClose | sql                                                                                                                            | expect             | db               | timeout |
+  | conn_0 | true    | select * from backend_connections where remote_addr="172.100.9.5" and used_for_heartbeat="false" and state="HEARTBEAT CHECK"   | length{(1)}        | dble_information | 6       |
+    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
+    Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given destroy btrace threads list
