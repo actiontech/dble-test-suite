@@ -99,19 +99,19 @@ def get_sql(context,num):
 def execute_sql(context,sql,type):
     if type=="dble":
         logger.debug("get into executing dble")
-        print("get into executing dble")
+        #print("get into executing dble")
         res,err=do_execute(("dble-1"),{"sql":sql,"db":context.db,"toClose":context.toClose,"conn":context.conn_id},"rwsplit")
         logger.debug(res)
         logger.debug(err)
-        print(res,err)
+        #print(res,err)
     elif type=="mysql":
         #只在单主的那个mysql上执行
         logger.debug("get into executing mysql")
-        print("get into executing mysql")
+        #print("get into executing mysql")
         res,err=do_execute(("mysql-master1"),{"sql":sql,"db":"test","toClose":context.toClose,"conn":context.conn_id},"mysql")
         logger.debug(res)
         logger.debug(err)
-        print(res,err)
+        #print(res,err)
     result=[res,err,sql]
     return result
 
