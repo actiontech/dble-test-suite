@@ -46,7 +46,6 @@ def check_tcpdump_file_exist(sshClient,file):
     rc, sto, ste = sshClient.exec_command(cmd)
     assert len(ste) == 0, "exec cmd {} fail for:{}".format(cmd,ste)
     tcpdump_file_exist = len(sto) != 0
-    logger.debug("check tcpdump file exists.")
     return tcpdump_file_exist
 
 
