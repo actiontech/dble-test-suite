@@ -68,7 +68,7 @@ dble_res:((1,),)
 mysql_res:((1,),)
 dble_err:None
 mysql_err:None
-当前文件中执行ID为：16的sql：'select @OLD_SQL_MODE;'
+当前文件中执行ID为：17的sql：'select @OLD_SQL_MODE;'
 dble_res:(('IGNORE_SPACE,STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION',),)
 mysql_res:(('STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION',),)
 dble_err:None

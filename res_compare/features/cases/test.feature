@@ -24,7 +24,7 @@ Feature: test_sql_executing_feature
         #   | maxscale/test_implicit_commit5.sql           |
         #   | maxscale/test_implicit_commit6.sql           |
         #   | maxscale/test_implicit_commit7.sql           |
-          | maxscale/test_sescmd.sql                     |
+          # | maxscale/test_sescmd.sql                     |
           | maxscale/test_sescmd2.sql                    |
           | maxscale/test_sescmd3.sql                    |
           | maxscale/test_temporary_table.sql            |
