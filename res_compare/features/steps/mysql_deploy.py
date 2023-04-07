@@ -29,12 +29,12 @@ use_step_matcher('cfparse')
 INIT_SCOPE = ('compare_mysql', 'group1', 'group2','group3')
 
 
-# @given('I clean mysql deploy environment')
-# def delete_mysqls(context: Context):
-#     for name, ssh_conn in context.ssh_clients.items():
-#         if name in INIT_SCOPE:
-#             LOGGER.info(f'delete {name}')
-#             delete_mysql(ssh_conn)
+@given('I clean mysql deploy environment')
+def delete_mysqls(context: Context):
+    for name, ssh_conn in context.ssh_clients.items():
+        if name in INIT_SCOPE:
+            LOGGER.info(f'delete {name}')
+            delete_mysql(ssh_conn)
                 
 
 @log_it

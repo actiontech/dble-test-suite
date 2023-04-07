@@ -4,7 +4,7 @@ import logging
 from steps.step_env import reset_dble
 from steps.DbleMeta import DbleMeta
 from steps.MySQLMeta import MySQLMeta
-from steps.utils import create_ssh_client,load_yaml_config,init_meta,init_log_directory,setup_logging
+from steps.utils import create_ssh_client,load_yaml_config,init_meta,init_log_directory,setup_logging,handle_env_variables
 from steps.DbleObject import DbleObject
 from steps.MySQLObject import MySQLObject
 from steps.RestoreEnvObject import RestoreEnvObject
@@ -36,6 +36,7 @@ def before_all(context):
     test_conf=load_yaml_config(test_conf_path)
     for key,value in test_conf.items():
         setattr(context, key, value)#put items of conf in context
+    handle_env_variables(context, userdata)
     #处理behave.ini的配置选项
     #是否重置dble
     reset = userdata["reset"].lower() == "true" 

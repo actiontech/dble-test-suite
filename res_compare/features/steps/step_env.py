@@ -43,7 +43,9 @@ def install_dble_in_host(context, hostname):
 
 def install_dble_in_node(context, node):
     if context.need_download:
+        logger.debug("need download ")
         dble_packet = download_dble_package(context)
+        logger.debug("need download and download completed")
     else:
         dble_packet = os.path.join(context.cfg_sys['share_path_docker'], "actiontech-dble.tar.gz")
 
@@ -185,6 +187,7 @@ def download_type(context) -> str:
 
 
 def download_dble_package(context) -> str:
+    logger.debug("now in downloading method")
     dble_remote_path = context.test_conf["dble_remote_path"].format(
         DBLE_VERSION=context.test_conf['dble_version'],
         DBLE_PACKAGE_TIMESTAMP=context.test_conf['dble_package_timestamp'])
@@ -198,12 +201,14 @@ def download_dble_package(context) -> str:
                 'r': remote_path}
     if download_type(context) == 'http':
         cmd = 'wget -q -O {l} {r}'.format(**kwargs)
+        logger.debug(cmd)
+        logger.debug("now before http downloading ")
         rc, _, ste = exec_command(cmd)
+        logger.debug("now after http downloading ")
         assert_that(rc, equal_to(0), ste)
     else:
         kwargs.update({'u': context.test_conf['ftp_user'],
                         'p': context.test_conf['ftp_password']})
-
         cmd = 'wget -q -O {l} --ftp-user={u} --ftp-password={p} {r}'.format(
             **kwargs)
         rc, _, ste = exec_command(cmd)

@@ -324,7 +324,7 @@ def handle_env_variables(context: Context, userdata):
     handle_env_variable(context, userdata, 'time_weight', method='int')
     handle_env_variable(context, userdata, 'auto_retry', method='int')
     handle_env_variable(context, userdata, 'dble_version')
-    # handle_env_variable(context, userdata, 'dble_package_timestamp')
+    handle_env_variable(context, userdata, 'dble_package_timestamp')
     handle_env_variable(context, userdata, 'dble_remote_host')
     handle_env_variable(context, userdata, 'dble_remote_path')
 
