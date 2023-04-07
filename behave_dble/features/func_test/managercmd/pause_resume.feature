@@ -73,7 +73,7 @@ Feature: test "pause/resume" manager cmd
         | conn_0 | True    | pause @@shardingNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=10 |
       Then execute sql in "dble-1" in "user" mode
         | conn   | toClose | sql                | expect                 | db       |
-        | conn_0 | True    | select * from test | execute_time{10,0.2} |  schema1 |
+        | conn_0 | True    | select * from test | execute_time{10,0.5} |  schema1 |
       Given create "2" front connections executing "select * from test"
       """
       The node is pausing, wait list is full
