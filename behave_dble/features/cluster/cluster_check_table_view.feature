@@ -19,40 +19,34 @@ Feature: test view in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                     | db      |
       | conn_1 | false   | create view view_test as select * from sharding_4_t1    | schema1 |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
+       """
+       get into delayAfterGetLock
+       """
     #case check lock on zookeeper values is 1
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
-      """
-      schema1:view_test
-      """
+    Then check zk has "Y" the following values in "/dble/cluster-1/lock/view_lock" with retry "10,3" times in "dble-1"
+    """
+    schema1:view_test
+    """
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose | sql                                                     | expect                                                                                  | db      |
       | conn_2 | true    | create view view_test as select * from sharding_4_t1    | other session/dble instance is operating view, try it later or check the cluster lock   | schema1 |
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose | sql                                                     | expect                                                                                  | db      |
       | conn_3 | true    | create view view_test as select * from sharding_4_t1    | other session/dble instance is operating view, try it later or check the cluster lock   | schema1 |
-    #sleep 10s, because btrace sleep 10s
-    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     #case check lock on zookeeper values is 0
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
-      """
-      schema1:view_test
-      """
+    Then check zk has "not" the following values in "/dble/cluster-1/lock/view_lock" with retry "10,3" times in "dble-1"
+    """
+    schema1:view_test
+    """
     Then check following text exist "N" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
       """
       ERROR
@@ -152,41 +146,34 @@ Feature: test view in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-2"
     Then execute "user" cmd  in "dble-2" at background
       | conn   | toClose | sql                                                                | db      |
       | conn_2 | True    | alter view view_view as select * from sharding_4_t1 where id =1    | schema1 |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-2"
+       """
+       get into delayAfterGetLock
+       """
     #case check lock on zookeeper values is 1
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
-      """
-      schema1:view_view
-      """
-
+    Then check zk has "Y" the following values in "/dble/cluster-1/lock/view_lock" with retry "10,3" times in "dble-1"
+    """
+    schema1:view_view
+    """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                | expect                                                                                  | db      |
       | conn_1 | true    | alter view view_view as select * from sharding_4_t1 where id =1    | other session/dble instance is operating view, try it later or check the cluster lock   | schema1 |
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose | sql                                                                 | expect                                                                                  | db      |
       | conn_3 | true    | alter view view_view as select * from sharding_4_t1 where id =1     | other session/dble instance is operating view, try it later or check the cluster lock   | schema1 |
-    #sleep 10s, because btrace sleep 10s
-    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
     #case check lock on zookeeper values is 0
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
-      """
-      schema1:view_view
-      """
+    Then check zk has "not" the following values in "/dble/cluster-1/lock/view_lock" with retry "10,3" times in "dble-1"
+    """
+    schema1:view_view
+    """
     Then check following text exist "N" in file "/opt/dble/logs/dble_user_query.log" in host "dble-2"
       """
       ERROR
@@ -232,42 +219,38 @@ Feature: test view in zk cluster
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(13000L)/;/\}/!ba}
+      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-3"
     Then execute "user" cmd  in "dble-3" at background
       | conn   | toClose | sql                                                             | db      |
       | conn_3 | True    | alter view view_3 as select * from sharding_4_t1 where id =2    | schema1 |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-3"
+       """
+       get into delayAfterGetLock
+       """
     #case check lock on zookeeper values is 1
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
-      """
-      schema1:view_3
-      """
+    Then check zk has "Y" the following values in "/dble/cluster-1/lock/view_lock" with retry "10,3" times in "dble-1"
+    """
+    schema1:view_3
+    """
     Then stop dble in "dble-1"
-    #sleep 2s, to check dble-1 has stop
-    Given sleep "2" seconds
+     ###确保dble是真的stop了
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                               | expect                 | db      |
+      | new    | true    | show @@help                       | error totally whack    | schema1 |
     Then Start dble in "dble-1"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     waiting for view finished
     """
-    #sleep 10s, because btrace sleep 13s
-    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
     #case check lock on zookeeper values is 0
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
-      """
-      schema1:view_3
-      """
+    Then check zk has "not" the following values in "/dble/cluster-1/lock/view_lock" with retry "10,3" times in "dble-1"
+    """
+    schema1:view_3
+    """
     Then check following text exist "N" in file "/opt/dble/logs/dble_user_query.log" in host "dble-3"
       """
       ERROR
@@ -301,7 +284,3 @@ Feature: test view in zk cluster
       | conn   | toClose | sql                                   | expect      | db      |
       | conn_1 | false   | drop view view_3                      | success     | schema1 |
       | conn_1 | true    | drop table if exists sharding_4_t1    | success     | schema1 |
-    Given execute linux command in "dble-1"
-    """
-    rm -rf /opt/dble/logs/dble_*
-    """
