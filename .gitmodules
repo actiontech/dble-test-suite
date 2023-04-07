@@ -1,0 +1,4 @@
+[submodule "res_compare/conf/secret"]
+	path = res_compare/conf/secret
+	url = git@10.186.18.21:liuan/dble-secret.git
+	branch = main
