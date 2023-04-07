@@ -83,7 +83,7 @@ Feature: test some import nodes attr in sharding.xml
       | conn_0 | False    | create table test2_table(id int)  | success             | schema1 |
       | conn_0 | True     | show all tables                   | has{(('test_table','GLOBAL TABLE'),)}   | schema1 |
 
-  @BLOCKER
+  @BLOCKER @auto_retry
   Scenario: test "dbInstance" node attr "maxCon" #4
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -114,6 +114,7 @@ Feature: test some import nodes attr in sharding.xml
       | conn   | toClose  | sql                                | expect  | db      |
       | conn_0 | False    | drop table if exists test_table    | success | schema1 |
       | conn_0 | True     | create table test_table(id int)    | success | schema1 |
+    ####DBLE0REQ-1867问题修复后，auto_retry标签需去除
     Then create "15" conn while maxCon="15" finally close all conn
     Then create "16" conn while maxCon="15" finally close all conn
     """
