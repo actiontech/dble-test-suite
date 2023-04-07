@@ -973,7 +973,8 @@ Feature: dble support execute set @@variables=true/false test;
       | conn_0 | False    | show  variables like "sql_warnings";                | hasStr{'OFF'}   | schema1 |
       | conn_0 | True     | select @@sql_warnings;                              | has{((0,),)} | schema1 |
 
-
+@skip
+  ##不适合于3.21.02
   Scenario: dble support execute set transaction_read_only test #21
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                          | expect       | db      |
@@ -1020,7 +1021,9 @@ Feature: dble support execute set @@variables=true/false test;
       | conn_0 | False    | show  variables like "transaction_read_only";                | hasStr{'OFF'}   | schema1 |
       | conn_0 | True     | select @@transaction_read_only;                              | has{((0,),)} | schema1 |
 
-  @use.with_mysql_version=5.7
+ @skip
+  ##不适合于3.21.02
+   @use.with_mysql_version=5.7
   Scenario: dble support execute set tx_read_only test #22.1
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                 | expect       | db      |

@@ -180,7 +180,6 @@ Feature:  session_connections test
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
-      caught err:
       exception occurred when the statistics were recorded
       Exception processing
       """

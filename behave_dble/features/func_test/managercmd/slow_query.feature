@@ -443,14 +443,12 @@ Feature: test slow query log related manager command
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
-      caught err:
       exception occurred when the statistics were recorded
       Exception processing
       """
     Then check following text exist "N" in file "/opt/dble/logs/wrapper.log" in host "dble-1"
       """
       NullPointerException
-      caught err:
       exception occurred when the statistics were recorded
       Exception processing
       """

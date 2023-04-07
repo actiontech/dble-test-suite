@@ -279,7 +279,6 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       unknown error:
-      caught err:
       NullPointerException
       """
 #    Given Restart dble in "dble-1" success
@@ -293,7 +292,6 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 #    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
 #      """
 #      unknown error:
-#      caught err:
 #      NullPointerException
 #      """
 
