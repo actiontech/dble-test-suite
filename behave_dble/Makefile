@@ -45,13 +45,11 @@ used_in_local: create_venv up
 	pipenv run behave features/setup.feature
 
 
-####大包的case 单独的pipline修改dble的版本跑（autotest-dble-LargePacket）
 run_large_packet: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
 	features/func_test/Large_Packet/
 
 
-##3.21.06 pipline
 run_cluster_case: up
 	pipenv run behave features/setup.feature \
 	features/cluster/
