@@ -61,7 +61,7 @@ Feature:  dble_table test
     <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3,schema4"/>
     """
     Then execute admin cmd "reload @@config"
-   #clear all table if exists table and restart dble to reset id values
+   #clear all table if exists other tables
     Given execute oscmd in "dble-1"
        """
        mysql -uroot -p111111 -P9066 -h172.100.9.1 -Ddble_information -e "select concat('drop table if exists ',name,';') as 'select 1;' from dble_table" >/opt/dble/test.sql && \
@@ -98,15 +98,15 @@ Feature:  dble_table test
       | conn_0 | True    | select * from dble_table             | length{(9)}  | dble_information |
   #case create new tables to check "NO_SHARDING" table,the vertical table is special NO_SHARDING table
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                     | expect  | db      |
-      | conn_1 | True    | drop table if exists schema1.no_s1      | success | schema1 |
-      | conn_1 | True    | create table schema1.no_s1 (id int)     | success | schema1 |
-      | conn_1 | True    | drop table if exists schema2.no_s2      | success | schema2 |
-      | conn_1 | True    | create table schema2.no_s2 (id int)     | success | schema2 |
-      | conn_1 | True    | drop table if exists schema3.no_s3      | success | schema3 |
-      | conn_1 | True    | create table schema3.no_s3 (id int)     | success | schema3 |
-      | conn_1 | True    | drop table if exists schema4.vertical   | success | schema4 |
-      | conn_1 | True    | create table schema4.vertical (id int)  | success | schema4 |
+      | conn   | toClose | sql                                     | expect  | db      | timeout |
+      | conn_1 | True    | drop table if exists schema1.no_s1      | success | schema1 | 6,2     |
+      | conn_1 | True    | create table schema1.no_s1 (id int)     | success | schema1 |         |
+      | conn_1 | True    | drop table if exists schema2.no_s2      | success | schema2 |         |
+      | conn_1 | True    | create table schema2.no_s2 (id int)     | success | schema2 |         |
+      | conn_1 | True    | drop table if exists schema3.no_s3      | success | schema3 |         |
+      | conn_1 | True    | create table schema3.no_s3 (id int)     | success | schema3 |         |
+      | conn_1 | True    | drop table if exists schema4.vertical   | success | schema4 |         |
+      | conn_1 | True    | create table schema4.vertical (id int)  | success | schema4 |         |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect        | db               |
       | conn_0 | false   | select * from dble_table             | length{(13)}  | dble_information |
