@@ -257,6 +257,7 @@ Feature: heartbeat basic test
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
 
     Given sleep "5" seconds
+    Given record current dble log line number in "log_linenu"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "master1_heartbeat_id"
       | conn   | toClose | sql                                                                                                                                      | expect        | db                |timeout|
       | conn_0 | True    | select remote_processlist_id from backend_connections where used_for_heartbeat='true' and remote_addr='172.100.9.5'                      | length{(1)}   | dble_information  |3,1    |
@@ -266,7 +267,6 @@ Feature: heartbeat basic test
     """
     before heartbeat
     """
-    Given record current dble log line number in "log_linenu"
     Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "master1_heartbeat_id"
       | conn   | toClose | sql                                                                                                                                      | expect        | db                |timeout|
@@ -275,9 +275,10 @@ Feature: heartbeat basic test
     Given stop btrace script "BtraceHeartbeat.java" in "dble-1"
     Given destroy btrace threads list
     #在心跳setError之后, 并且有sql对该db下发查询，发现心跳error持续时间超过timeout配置的值，就会打印 "error heartbeat continued for more than"（此时连接池不可用）
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "3,1" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5,1" times
     """
     heartbeat to \[172.100.9.5:3306\] setError
+    is closed, due to stream closed, we will try again immediately
     retry to do heartbeat for the 3 times
     """
     #sleep 1s (timeout配置的时间为1s) 使其进入心跳timeout逻辑
