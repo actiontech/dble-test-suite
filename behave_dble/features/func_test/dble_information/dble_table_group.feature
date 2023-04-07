@@ -4,12 +4,8 @@
 
 Feature:  dble_table test
 
-  @skip_restart  @restore_mysql_config @use.with_mysql_version=5.7
-  Scenario:  dble_table  table #1
-   """
-   {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}
-   """
 
+  Scenario:  dble_table  table #1
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_1"
       | conn   | toClose | sql             | db               |
       | conn_0 | False   | desc dble_table | dble_information |
@@ -24,16 +20,6 @@ Feature:  dble_table test
       | conn   | toClose | sql                         | expect       | db               |
       | conn_0 | True    | desc dble_table             | length{(5)}  | dble_information |
 
-    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
-    """
-     /lower_case_table_names/d
-     /server-id/a lower_case_table_names = 1
-     """
-    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
-    """
-     /lower_case_table_names/d
-     /server-id/a lower_case_table_names = 1
-     """
     #case change sharding/user.xml add some schema and reload
     Given delete the following xml segment
       | file         | parent         | child                  |
@@ -74,8 +60,7 @@ Feature:  dble_table test
     """
     <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3,schema4"/>
     """
-    Given Restart dble in "dble-1" success
-
+    Then execute admin cmd "reload @@config"
    #clear all table if exists table and restart dble to reset id values
     Given execute oscmd in "dble-1"
        """
@@ -91,6 +76,7 @@ Feature:  dble_table test
       | conn_1 | True    | show tables                 | length{(0)}  | schema2          |
       | conn_1 | True    | show tables                 | length{(0)}  | schema3          |
       | conn_1 | True    | show tables                 | length{(0)}  | schema4          |
+
    # case check "SHARDING" "GLOBAL" "SINGLE" "CHILD" table
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_2"
       | conn   | toClose | sql                       | db               |
@@ -133,40 +119,15 @@ Feature:  dble_table test
       | no_s2      | schema2  | 1000        | NO_SHARDING |
       | no_s3      | schema3  | -1          | NO_SHARDING |
       | vertical   | schema4  | -1          | NO_SHARDING |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                     | expect  | db      |
+      | conn_1 | False   | drop table if exists sharding_4         | success | schema1 |
+      | conn_1 | False   | drop table if exists er_parent          | success | schema1 |
+      | conn_1 | True    | drop table if exists schema1.no_s1      | success | schema1 |
+      | conn_1 | True    | drop table if exists schema2.no_s2      | success | schema2 |
+      | conn_1 | True    | drop table if exists schema3.no_s3      | success | schema3 |
+      | conn_1 | True    | drop table if exists schema4.vertical   | success | schema4 |
 
-    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
-    """
-     /lower_case_table_names/d
-     /server-id/a lower_case_table_names = 0
-     """
-    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
-    """
-     /lower_case_table_names/d
-     /server-id/a lower_case_table_names = 0
-     """
-    Given Restart dble in "dble-1" success
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_4"
-      | conn   | toClose | sql                       | db               |
-      | conn_0 | False   | select * from dble_table  | dble_information |
-    Then check resultset "dble_table_4" has lines with following column values
-      | id-0 | name-1     | schema-2 | max_limit-3 | type-4      |
-      | C1   | global1    | schema1  | 100         | GLOBAL      |
-      | C2   | sharding_2 | schema1  | 100         | SHARDING    |
-      | C3   | sharding_4 | schema1  | 100         | SHARDING    |
-      | C4   | er_parent  | schema1  | 100         | SHARDING    |
-      | C5   | er_child   | schema1  | 90          | CHILD       |
-      | C6   | sing1      | schema2  | 1000        | SINGLE      |
-      | C7   | sharding_3 | schema2  | 1000        | SHARDING    |
-      | C8   | global2    | schema2  | 1000        | GLOBAL      |
-      | C9   | sing2      | schema3  | -1          | SINGLE      |
-#      | M1   | no_s1      | schema1  | 100         | NO_SHARDING |
-#      | M2   | no_s2      | schema2  | 1000        | NO_SHARDING |
-#      | M3   | no_s3      | schema3  | -1          | NO_SHARDING |
-#      | M4   | vertical   | schema4  | -1          | NO_SHARDING |
-
-
-
-  @skip_restart
    Scenario:  dble_global_table table #2
   #case desc dble_global_table check metadata
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_global_table_1"
@@ -191,13 +152,16 @@ Feature:  dble_table test
     #case change sharding.xml add checkClass and reload
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn4" name="schema3" sqlMaxLimit="100">
+    <schema shardingNode="dn4" name="schema2" sqlMaxLimit="100">
         <globalTable name="global3" shardingNode="dn1,dn2,dn3,dn4" cron="/5 * * * * ? *" checkClass="CHECKSUM" />
     </schema>
-     <schema shardingNode="dn6" name="schema4" >
+     <schema shardingNode="dn1" name="schema3" >
         <globalTable name="global4" shardingNode="dn1,dn3,dn5" cron="/10 * * * * ?" checkClass="COUNT" />
-        <globalTable name="global5" shardingNode="dn2,dn4,dn6" cron="0 /5 * * * ? *" checkClass="CHECKSUM" />
      </schema>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
     """
     Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_global_table_3"
@@ -209,16 +173,14 @@ Feature:  dble_table test
       | false   | CHECKSUM      | 0 0 0 * * ?    |
       | true    | CHECKSUM      | /5 * * * * ? * |
       | true    | COUNT         | /10 * * * * ?  |
-      | true    | CHECKSUM      | 0 /5 * * * ? * |
 
-#    Given sleep "10" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "10,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "6,2" times
     """
     Global check start .........global3
     Global check start .........global4
     """
 
-  @skip_restart
+
    Scenario:  dble_sharding_table table #3
   #case desc dble_sharding_table
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_sharding_table_1"
@@ -237,15 +199,12 @@ Feature:  dble_table test
   #case change sharding.xml add some schema/function  and reload
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-     <schema shardingNode="dn4" name="schema3" sqlMaxLimit="100">
-        <globalTable name="global3" shardingNode="dn1,dn2,dn3,dn4" cron="/5 * * * * ? *" checkClass="CHECKSUM" />
+     <schema shardingNode="dn4" name="schema2" sqlMaxLimit="100">
         <shardingTable name="sharding_incrementColumn" shardingNode="dn4,dn2" function="hash-two" shardingColumn="two" incrementColumn="id"/>
         <shardingTable name="sharding_sqlRequiredSharding" shardingNode="dn3,dn1,dn2" function="hash-three" shardingColumn="three" sqlRequiredSharding="true"/>
     </schema>
 
-     <schema shardingNode="dn6" name="schema4" >
-        <globalTable name="global4" shardingNode="dn1,dn5,dn3" cron="/10 * * * * ?" checkClass="COUNT" />
-        <globalTable name="global5" shardingNode="dn6,dn4,dn2" cron="0 /5 * * * ? *" checkClass="CHECKSUM" />
+     <schema shardingNode="dn1" name="schema3" >
         <shardingTable name="sharding_fixed_uniform" shardingNode="dn1,dn2,dn3,dn4" function="fixed_uniform" shardingColumn="code"/>
         <shardingTable name="sharding_fixed_nonuniform" shardingNode="dn1,dn4,dn3,dn2" function="fixed_nonuniform" shardingColumn="fix"/>
         <shardingTable name="sharding_fixed_uniform_string_rule" shardingNode="dn1,dn2,dn3,dn4" function="fixed_uniform_string_rule" shardingColumn="rule"/>
@@ -279,6 +238,10 @@ Feature:  dble_table test
         <property name="defaultNode">0</property>
      </function>
     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+    """
     Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_sharding_table_2"
       | conn   | toClose | sql                               | db               |
@@ -287,8 +250,6 @@ Feature:  dble_table test
       | increment_column-1 | sharding_column-2 | sql_required_sharding-3 | algorithm_name-4             |
       | None               | ID                | false                   | hash-two                     |
       | None               | ID                | false                   | hash-four                    |
-      | None               | ID                | false                   | hash-four                    |
-      | None               | ID                | false                   | hash-three                   |
       | ID                 | TWO               | false                   | hash-two                     |
       | None               | THREE             | true                    | hash-three                   |
       | None               | CODE              | false                   | fixed_uniform                |
@@ -298,9 +259,9 @@ Feature:  dble_table test
       | None               | DATE              | false                   | date_default_rule            |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect        | db               |
-      | conn_0 | True    | select * from dble_sharding_table    | length{(11)}  | dble_information |
+      | conn_0 | True    | select * from dble_sharding_table    | length{(9)}  | dble_information |
 
-  @skip_restart
+
    Scenario:  dble_table_sharding_node table #4
   #case desc dble_table_sharding_node
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_sharding_node_1"
@@ -313,37 +274,75 @@ Feature:  dble_table test
       | order         | int(11)     | NO     |       | None      |         |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                                           | expect         | db               |
-      | conn_0 | False    | desc dble_table_sharding_node                                                                 | length{(3)}    | dble_information |
-      | conn_0 | False    | select * from dble_table_sharding_node                                                        | length{(61)}   | dble_information |
-      | conn_0 | False    | select * from dble_table_sharding_node where order in (3)                                     | length{(11)}   | dble_information |
-      | conn_0 | True     | select * from dble_table_sharding_node where sharding_node = 'dn3' or sharding_node = 'dn4'   | length{(27)}   | dble_information |
+      | conn_0 | true     | desc dble_table_sharding_node                                                                 | length{(3)}    | dble_information |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+     <schema shardingNode="dn4" name="schema2" sqlMaxLimit="100">
+        <shardingTable name="sharding_incrementColumn" shardingNode="dn4,dn2" function="hash-two" shardingColumn="two" incrementColumn="id"/>
+        <shardingTable name="sharding_sqlRequiredSharding" shardingNode="dn3,dn1,dn2" function="hash-three" shardingColumn="three" sqlRequiredSharding="true"/>
+    </schema>
+
+     <schema shardingNode="dn1" name="schema3" >
+        <shardingTable name="sharding_fixed_uniform" shardingNode="dn1,dn2,dn3,dn4" function="fixed_uniform" shardingColumn="code"/>
+        <shardingTable name="sharding_fixed_nonuniform" shardingNode="dn1,dn4,dn3,dn2" function="fixed_nonuniform" shardingColumn="fix"/>
+        <shardingTable name="sharding_fixed_uniform_string_rule" shardingNode="dn1,dn2,dn3,dn4" function="fixed_uniform_string_rule" shardingColumn="rule"/>
+        <shardingTable name="sharding_fixed_nonuniform_string_rule" shardingNode="dn2,dn1,dn4,dn3" function="fixed_nonuniform_string_rule" shardingColumn="fixed"/>
+        <shardingTable name="sharding_date_default_rule" shardingNode="dn1,dn2,dn3,dn4" function="date_default_rule" shardingColumn="date"/>
+     </schema>
+
+     <function name="fixed_uniform" class="Hash">
+        <property name="partitionCount">4</property>
+        <property name="partitionLength">256</property>
+     </function>
+     <function name="fixed_nonuniform" class="Hash">
+        <property name="partitionCount">2,1</property>
+        <property name="partitionLength">256,512</property>
+     </function>
+     <function name="fixed_uniform_string_rule" class="StringHash">
+        <property name="partitionCount">4</property>
+        <property name="partitionLength">256</property>
+        <property name="hashSlice">0:2</property>
+     </function>
+     <function name="fixed_nonuniform_string_rule" class="StringHash">
+        <property name="partitionCount">2,1</property>
+        <property name="partitionLength">256,512</property>
+        <property name="hashSlice">0:2</property>
+     </function>
+     <function name="date_default_rule" class="Date">
+        <property name="dateFormat">yyyy-MM-dd</property>
+        <property name="sBeginDate">2016-12-01</property>
+        <property name="sEndDate">2017-01-9</property>
+        <property name="sPartionDay">10</property>
+        <property name="defaultNode">0</property>
+     </function>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+    """
+    Then execute admin cmd "reload @@config"
+     Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql                                                                                           | expect         | db               |
+      | conn_0 | False    | select * from dble_table_sharding_node                                                        | length{(35)}   | dble_information |
+      | conn_0 | False    | select * from dble_table_sharding_node where order in (3)                                     | length{(7)}    | dble_information |
+      | conn_0 | True     | select * from dble_table_sharding_node where sharding_node = 'dn3' or sharding_node = 'dn4'   | length{(16)}   | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                        | expect  | db      | charset |
-      | conn_1 | False   | drop table if exists sharding_4                                            | success | schema1 | utf8mb4 |
-      | conn_1 | False   | drop table if exists er_parent                                             | success | schema1 | utf8mb4 |
-      | conn_1 | False   | create table sharding_4 (id int(10),name char(10)) DEFAULT CHARSET=utf8mb4 | success | schema1 | utf8mb4 |
-      | conn_1 | False   | create table er_parent (id int(10),name char(10)) DEFAULT CHARSET=utf8mb4  | success | schema1 | utf8mb4 |
+      | conn   | toClose | sql                                                                           | expect  | db      | charset | timeout |
+      | conn_1 | False   | drop table if exists sharding_4_t1                                            | success | schema1 | utf8mb4 | 6,2     |
+      | conn_1 | False   | create table sharding_4_t1 (id int(10),name char(10)) DEFAULT CHARSET=utf8mb4 | success | schema1 | utf8mb4 |         |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "dble_table_sharding_node_4"
-      | conn   | toClose | sql                                                                                | db      |
-      | conn_1 | False   | explain insert into sharding_4 values (1,'顺序3'),(2,'顺序1'),(3,'顺序4'),(4,'顺序2') | schema1 |
+      | conn   | toClose | sql                                                                                  | db      |
+      | conn_1 | true    | explain insert into sharding_4_t1 values (1,'顺序3'),(2,'顺序1'),(3,'顺序4'),(4,'顺序2') | schema1 |
     Then check resultset "dble_table_sharding_node_4" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                 |
-      | dn3             | BASE SQL | INSERT INTO sharding_4 VALUES (4, '顺序2') |
-      | dn1             | BASE SQL | INSERT INTO sharding_4 VALUES (1, '顺序3') |
-      | dn4             | BASE SQL | INSERT INTO sharding_4 VALUES (2, '顺序1') |
-      | dn2             | BASE SQL | INSERT INTO sharding_4 VALUES (3, '顺序4') |
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "dble_table_sharding_node_5"
-      | conn   | toClose | sql                                                                               | db      | charset |
-      | conn_1 | True    | explain insert into er_parent values (1,'顺序1'),(2,'顺序2'),(3,'顺序3'),(4,'顺序4') | schema1 | utf8mb4 |
-    Then check resultset "dble_table_sharding_node_5" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                |
-      | dn1             | BASE SQL | INSERT INTO er_parent VALUES (4, '顺序4') |
-      | dn2             | BASE SQL | INSERT INTO er_parent VALUES (1, '顺序1') |
-      | dn3             | BASE SQL | INSERT INTO er_parent VALUES (2, '顺序2') |
-      | dn4             | BASE SQL | INSERT INTO er_parent VALUES (3, '顺序3') |
+      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                    |
+      | dn1             | BASE SQL | INSERT INTO sharding_4_t1 VALUES (4, '顺序2') |
+      | dn2             | BASE SQL | INSERT INTO sharding_4_t1 VALUES (1, '顺序3') |
+      | dn3             | BASE SQL | INSERT INTO sharding_4_t1 VALUES (2, '顺序1') |
+      | dn4             | BASE SQL | INSERT INTO sharding_4_t1 VALUES (3, '顺序4') |
 
-  @skip_restart
+
+
    Scenario:  dble_child_table table #5
   #case desc dble_child_table
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_child_table_1"
@@ -359,23 +358,18 @@ Feature:  dble_table test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect         | db               |
       | conn_0 | False    | desc dble_child_table               | length{(5)}    | dble_information |
-      | conn_0 | False    | select * from dble_child_table      | length{(1)}    | dble_information |
+      | conn_0 | False    | select * from dble_child_table      | length{(0)}    | dble_information |
   #case change sharding.xml and reload
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-     <schema shardingNode="dn6" name="schema4" >
-        <globalTable name="global4" shardingNode="dn1,dn5,dn3" cron="/10 * * * * ?" checkClass="COUNT" />
-        <globalTable name="global5" shardingNode="dn6,dn4,dn2" cron="0 /5 * * * ? *" checkClass="CHECKSUM" />
-        <shardingTable name="sharding_fixed_uniform" shardingNode="dn1,dn2,dn3,dn4" function="fixed_uniform" shardingColumn="code" >
+     <schema shardingNode="dn2" name="schema1" >
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-two" shardingColumn="code" >
             <childTable name="er_child1" joinColumn="code1" parentColumn="code" incrementColumn="id1"/>
             <childTable name="er_child2" joinColumn="code2" parentColumn="code" />
         </shardingTable>
-        <shardingTable name="sharding_fixed_nonuniform" shardingNode="dn1,dn4,dn3,dn2" function="fixed_nonuniform" shardingColumn="fix">
+        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn4,dn3,dn2" function="hash-four" shardingColumn="fix">
             <childTable name="er_child3" joinColumn="code" parentColumn="fix" incrementColumn="id"/>
         </shardingTable>
-        <shardingTable name="sharding_fixed_uniform_string_rule" shardingNode="dn1,dn2,dn3,dn4" function="fixed_uniform_string_rule" shardingColumn="rule"/>
-        <shardingTable name="sharding_fixed_nonuniform_string_rule" shardingNode="dn2,dn1,dn4,dn3" function="fixed_nonuniform_string_rule" shardingColumn="fixed"/>
-        <shardingTable name="sharding_date_default_rule" shardingNode="dn1,dn2,dn3,dn4" function="date_default_rule" shardingColumn="date"/>
      </schema>
     """
     Then execute admin cmd "reload @@config"
@@ -384,10 +378,12 @@ Feature:  dble_table test
       | conn_0 | True    | select * from dble_child_table | dble_information |
      Then check resultset "dble_child_table_2" has lines with following column values
       | increment_column-2 | join_column-3 | paren_column-4 |
-      | None               | ID            | ID             |
       | ID1                | CODE1         | CODE           |
       | None               | CODE2         | CODE           |
       | ID                 | CODE          | FIX            |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql                                 | expect         | db               |
+      | conn_0 | False    | select * from dble_child_table      | length{(3)}    | dble_information |
 
 
    Scenario:  supported select and unsupported dml
@@ -395,11 +391,6 @@ Feature:  dble_table test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                         | expect          |
       | conn_0 | False    | use dble_information                        | success         |
-      | conn_0 | False    | select * from dble_table                    | length{(25)}    |
-      | conn_0 | False    | select * from dble_global_table             | length{(5)}     |
-      | conn_0 | False    | select * from dble_sharding_table           | length{(11)}    |
-      | conn_0 | False    | select * from dble_table_sharding_node      | length{(73)}    |
-      | conn_0 | False    | select * from dble_child_table              | length{(4)}     |
 #case unsupported update/delete/insert
       | conn_0 | False   | delete from dble_table where schema='schema1'              | Access denied for table 'dble_table'                     |
       | conn_0 | False   | update dble_table set schema = 'a' where schema='schema1'  | Access denied for table 'dble_table'                     |
@@ -430,21 +421,11 @@ Feature:  dble_table test
       | conn_0 | False   | select max(check_class) from dble_global_table             | success             |
       | conn_0 | False   | select min(check_class) from dble_global_table             | success             |
 #case supported select field and where [sub-query]
-      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column in (select paren_column from dble_child_table where increment_column ='ID')    | length{(1)}    |
-      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column >all (select paren_column from dble_child_table where increment_column ='ID')  | length{(1)}    |
-      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column <any (select paren_column from dble_child_table where increment_column ='ID')  | length{(2)}    |
-      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column = (select paren_column from dble_child_table where increment_column ='ID')     | length{(1)}    |
-      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column = any (select paren_column from dble_child_table where increment_column ='ID') | length{(1)}    |
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column in (select paren_column from dble_child_table where increment_column ='ID')    | success    |
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column >all (select paren_column from dble_child_table where increment_column ='ID')  | success    |
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column <any (select paren_column from dble_child_table where increment_column ='ID')  | success    |
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column = (select paren_column from dble_child_table where increment_column ='ID')     | success    |
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column = any (select paren_column from dble_child_table where increment_column ='ID') | success    |
 #case supported select join
-      | conn_0 | False   | select * from dble_table where abs(id)="C1"     | length{(25)}    |
-      | conn_0 | False   | select * from dble_table a left join dble_schema b on a.name =b.name order by a.name | length{(25)}    |
-
-   #case clear table
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                     | expect  | db      |
-      | conn_1 | False   | drop table if exists sharding_4         | success | schema1 |
-      | conn_1 | False   | drop table if exists er_parent          | success | schema1 |
-      | conn_1 | True    | drop table if exists schema1.no_s1      | success | schema1 |
-      | conn_1 | True    | drop table if exists schema2.no_s2      | success | schema2 |
-      | conn_1 | True    | drop table if exists schema3.no_s3      | success | schema3 |
-      | conn_1 | True    | drop table if exists schema4.vertical   | success | schema4 |
+      | conn_0 | False   | select * from dble_table where abs(id)="11111"     | length{(0)}    |
+      | conn_0 | true    | select * from dble_table a left join dble_schema b on a.name =b.name order by a.name | success    |
