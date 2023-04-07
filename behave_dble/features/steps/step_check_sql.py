@@ -219,9 +219,12 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
     d = re.search(c, sql)
     e = re.compile(r'\/\*\s*allow_10%_diff\s*\*\/')
     f = re.search(e, sql)
+    ee = re.compile(r'\/\*\s*allow_1s_diff\s*\*\/')
+    ff = re.search(ee, sql)
     isAllowDiff = d is not None
     isAllowDiffSequ =b is not None
     isAllowTenDiff = f is not None
+    isAllowSecondDiff = ff is not None
     isAllowTen = False
     isNoErr = err1 is None and err2 is None
     g = 0
@@ -241,6 +244,11 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
             if (g >0.9):
                 isAllowTen = True
                 context.logger.info("Meet the condition of g>0.9,and now isAllowTen is:{0}".format(isAllowTen))
+
+        if isAllowSecondDiff:
+            if abs(dble_result - mysql_result) <= 1:
+                isAllowTen = True
+                context.logger.info(f"abs(dble_result - mysql_result) is {abs(dble_result - mysql_result)}")
 
     isResultSame = dble_result == mysql_result or (isNoErr and isAllowDiff) or (isNoErr and isAllowTen)
     context.logger.debug(f"dble_result == mysql_result {dble_result == mysql_result}, isNoErr {isNoErr}, isAllowDiff {isAllowDiff}, isAllowTen {isAllowTen}")
