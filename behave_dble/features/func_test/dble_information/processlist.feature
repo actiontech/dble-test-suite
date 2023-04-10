@@ -13,6 +13,7 @@ Feature:  processlist test
     Then check resultset "processlist_1" has lines with following column values
       | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
       | front_id      | int(11)       | NO     | PRI   | None      |         |
+      | sharding_node | varchar(12)   | NO     |       | None      |         |
       | db_instance   | varchar(12)   | NO     |       | None      |         |
       | mysql_id      | int(11)       | NO     | PRI   | None      |         |
       | user          | varchar(12)   | NO     |       | None      |         |
@@ -24,7 +25,13 @@ Feature:  processlist test
       | info          | varchar(64)   | YES    |       | None      |         |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                          | expect            | db               |
-      | conn_0 | False   | desc processlist             | length{(10)}      | dble_information |
+      | conn_0 | False   | desc processlist             | length{(11)}      | dble_information |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "processlist_2"
+      | conn   | toClose | sql                       | db               |
+      | conn_0 | true    | select * from processlist | dble_information |
+    Then check resultset "processlist_2" has lines with following column values
+      | sharding_node-1 | db_instance-2 | mysql_id-3 | user-4 | mysql_db-6 | command-7 | time-8 | state-9 | info-10 |
+      | None            | None          | None       | root   | None       | None      | 0      |         | None    |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  | db      |
@@ -34,13 +41,14 @@ Feature:  processlist test
       | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "processlist_3"
       | conn   | toClose | sql                                                                             | db               |
-      | conn_0 | true    | select db_instance,user,mysql_db,command,state,info from processlist            | dble_information |
+      | conn_0 | true    | select sharding_node,user,mysql_db,command,state,info from processlist          | dble_information |
     Then check resultset "processlist_3" has lines with following column values
-      | db_instance-0   | user-1 | mysql_db-2 | command-3 | state-4 | info-5 |
-      | hostM1          | test   | db2        | Sleep     |         | None   |
-      | hostM1          | test   | db1        | Sleep     |         | None   |
-      | hostM2          | test   | db2        | Sleep     |         | None   |
-      | hostM2          | test   | db1        | Sleep     |         | None   |
+      | sharding_node-0 | user-1 | mysql_db-2 | command-3 | state-4 | info-5 |
+      | dn3             | test   | db2        | Sleep     |         | None   |
+      | dn2             | test   | db1        | Sleep     |         | None   |
+      | dn4             | test   | db2        | Sleep     |         | None   |
+      | dn1             | test   | db1        | Sleep     |         | None   |
+      | None            | root   | None       | None      |         | None   |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  |
@@ -50,26 +58,27 @@ Feature:  processlist test
       | conn_1 | False   | begin                                            | success |
       | conn_1 | False   | insert into test values (1),(2),(3),(4)          | success |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "processlist_4"
-      | conn   | toClose | sql                                                                           | db               |
-      | conn_0 | False   | select db_instance,user,mysql_db,command,state,info from processlist          | dble_information |
+      | conn   | toClose | sql                                                                             | db               |
+      | conn_0 | False   | select sharding_node,user,mysql_db,command,state,info from processlist          | dble_information |
     Then check resultset "processlist_4" has lines with following column values
-      | db_instance-0   | user-1 | mysql_db-2 | command-3 | state-4 | info-5 |
-      | hostM1          | test   | db2        | Sleep     |         | None   |
-      | hostM1          | test   | db1        | Sleep     |         | None   |
-      | hostM2          | test   | db2        | Sleep     |         | None   |
-      | hostM2          | test   | db1        | Sleep     |         | None   |
+      | sharding_node-0 | user-1 | mysql_db-2 | command-3 | state-4 | info-5 |
+      | dn3             | test   | db2        | Sleep     |         | None   |
+      | dn2             | test   | db1        | Sleep     |         | None   |
+      | dn4             | test   | db2        | Sleep     |         | None   |
+      | dn1             | test   | db1        | Sleep     |         | None   |
+      | None            | root   | None       | None      |         | None   |
 
   #case supported select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                    | expect                       |
       | conn_0 | False   | select user from processlist limit 1                                   | has{(('test',),)}            |
       | conn_0 | False   | select user,command from processlist order by mysql_db desc limit 1    | has{(('test', 'Sleep'),)}    |
-      | conn_0 | False   | select * from processlist where db_instance like '%host%'              | length{(4)}                  |
+      | conn_0 | False   | select * from processlist where sharding_node like '%dn%'              | length{(4)}                  |
   #case supported select max/min from
-      | conn_0 | False   | select max(db_instance) from processlist                  | has{(('hostM2',),)}       |
+      | conn_0 | False   | select max(sharding_node) from processlist                | has{(('dn4',),)}          |
       | conn_0 | False   | select min(command) from processlist                      | has{(('Sleep',),)}        |
   #case supported select field from
-      | conn_0 | False   | select user,db_instance from processlist where time > 0         | success |
+      | conn_0 | False   | select user,sharding_node from processlist where time > 0         | success |
   #case unsupported update/delete/insert
       | conn_0 | False   | delete from processlist where front_id = 3                  | Access denied for table 'processlist'  |
       | conn_0 | False   | update processlist set mysql_id = 1 where mysql_id is null  | Access denied for table 'processlist'  |
@@ -86,6 +95,7 @@ Feature:  processlist test
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
+    <managerUser name="root" password="111111"/>
     <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group1" maxCon="0"/>
     """
     Then execute admin cmd "reload @@config"
@@ -103,7 +113,7 @@ Feature:  processlist test
       | conn_0 | True    | select db_instance,user,mysql_db,command,state,info from processlist          | dble_information |
     Then check resultset "processlist_5" has lines with following column values
       | db_instance-0   | user-1 | mysql_db-2 | command-3 | state-4 | info-5 |
-      | hostM1          | rwS1   | db1        | Sleep     |         | None   |
+      | None            | rwS1   | None       | None      |         | None   |
 
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |

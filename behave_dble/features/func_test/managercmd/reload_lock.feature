@@ -22,7 +22,7 @@ Feature: when reload hang,emergency means to deal with it
      Then Restart dble in "dble-1" success
      Then execute sql in "dble-1" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect       |
-        | conn_0  | False     | show @@reload_status       | dble_information | length{(0)}  |
+        | conn_0  | False     | show @@reload_status       | dble_information | length{(1)}  |
      Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
         """
         <shardingTable name="sharding" shardingNode="dn3,dn4" shardingColumn="id" function="hash-two"/>
@@ -46,7 +46,7 @@ Feature: when reload hang,emergency means to deal with it
      ## failed for: (5999, 'Reload Failure.The reason is reload interruputed by others,metadata should be reload')
      Then check sql thread output in "err" by retry "15" times
         """
-        Reload config failure.The reason is reload interruputed by others,metadata should be reload
+        Reload config failure.The reason is Reload interruputed by others,metadata should be reload
         """
      Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
        | conn   | toClose   | sql                      |   db              |

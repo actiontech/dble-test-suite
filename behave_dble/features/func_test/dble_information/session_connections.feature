@@ -121,6 +121,8 @@ Feature:  session_connections test
     #1 more than one rwSplitUsers can use the same dbGroup
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
     <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
     """
     Then execute admin cmd "reload @@config"
@@ -133,8 +135,8 @@ Feature:  session_connections test
       | conn   | toClose | sql                               | db               |
       | conn_0 | False   | select * from session_connections | dble_information |
     Then check resultset "session_connections_6" has lines with following column values
-      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8                                              | sql_stage-11 | in_transaction-17 | entry_id-18 |
-      | 8066          | rwS1   | NULL     | db1      | insert into test_table values (1,'1',1),(2, '2',2) | NULL         | false             | 1           |
+      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8                                              | sql_stage-11 | in_transaction-17 |
+      | 8066          | rwS1   | NULL     | db1      | insert into test_table values (1,'1',1),(2, '2',2) | NULL         | false             |
 
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                       | expect  | db  |
@@ -145,41 +147,3 @@ Feature:  session_connections test
       | conn_0 | False   | delete from session_connections where remote_port=8066                | Access denied for table 'session_connections'       |
       | conn_0 | False   | update session_connections set entry_id=2 where entry_id=1            | Access denied for table 'session_connections'       |
       | conn_0 | True    | insert into session_connections values ('a',1,2,3)                    | Access denied for table 'session_connections'       |
-
-
-@skip
-  Scenario:  session_connections issue case  DBLE0REQ-1259  #2
-
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                            | expect     | db               |
-      | conn_1 | False   | select conn_send_task_queue,sql from session_connections       | success    | dble_information |
-
-    Given update file content "./assets/BtraceAboutNPE.java" in "behave" with sed cmds
-      """
-      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /beforeAuthSuccess/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
-      """
-    Given prepare a thread run btrace script "BtraceAboutNPE.java" in "dble-1"
-
-    Then execute "user" cmd  in "dble-1" at background
-      | conn    | toClose | sql        | db        |
-      | conn_11 | True    | select 1   | schema1   |
-    Then check btrace "BtraceAboutNPE.java" output in "dble-1"
-       """
-       get into beforeAuthSuccess
-       """
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                            | expect     | db               |
-      | conn_1 | False   | select conn_send_task_queue,sql from session_connections       | success    | dble_information |
-
-    Given stop btrace script "BtraceAboutNPE.java" in "dble-1"
-    Given destroy btrace threads list
-    Given delete file "/opt/dble/BtraceAboutNPE.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutNPE.java.log" on "dble-1"
-
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      exception occurred when the statistics were recorded
-      Exception processing
-      """

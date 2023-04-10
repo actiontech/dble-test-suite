@@ -112,14 +112,14 @@ Feature: config all dble config files correct and restart dble
       | usePerformanceMode          | 0                               |
       | useCostTimeStat             | 0                               |
       | maxCostStatSize             | 100                             |
-      | costSamplePercent           | 1%                              |
+      | costSamplePercent           | 1                               |
       | charset                     | utf8mb4                         |
-      | maxPacketSize               | 4096B                           |
+      | maxPacketSize               | 4096                            |
       | txIsolation                 | REPEATABLE_READ                 |
       | checkTableConsistency       | 0                               |
       | checkTableConsistencyPeriod | 60000ms                         |
       | processorCheckPeriod        | 1000ms                          |
-      | sqlExecuteTimeout           | 300s                            |
+      | sqlExecuteTimeout           | 300 Seconds                     |
       | recordTxn                   | 1                               |
       | transactionLogBaseDir       | ./txlogs/                       |
       | transactionLogBaseName      | server-tx                       |
@@ -138,7 +138,7 @@ Feature: config all dble config files correct and restart dble
       | bufferPoolChunkSize         | 4096B                           |
       | bufferPoolPageSize          | 2097152B                        |
       | bufferPoolPageNumber        | 512                             |
-      | mappedFileSize              | 67108864B                       |
+      | mappedFileSize              | 67108864                        |
       | useSqlStat                  | 1                               |
       | sqlRecordCount              | 10                              |
       | maxResultSet                | 524288B                         |

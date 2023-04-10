@@ -14,7 +14,7 @@ Feature: test config in user.xml
 
     Then execute admin cmd "reload @@config_all"
     """
-    Attribute 'test' is not allowed to appear in element 'shardingUser'
+    Attribute "test" must be declared for element type "shardingUser"
     """
 
 

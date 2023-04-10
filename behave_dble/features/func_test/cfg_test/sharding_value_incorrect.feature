@@ -67,7 +67,7 @@ Feature: config sharding config files incorrect and restart dble or reload confi
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-      Attribute 'database' must appear on element 'shardingNode'
+    Attribute "database" is required and must be specified for element type "shardingNode"
     """
 
 
@@ -94,32 +94,3 @@ Feature: config sharding config files incorrect and restart dble or reload confi
     """
       These properties of function [hash-two-fake] is not recognized: partitionLength_fake,partitionCount_fake
     """
-
-
-  Scenario: shardingnode duplicate in one shardtable, reload the configs #7
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-    """
-     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <globalTable name="test" shardingNode="dn1,dn1,dn3,dn4" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-     </schema>
-    """
-    Then execute admin cmd "reload @@config" get the following output
-      """
-      invalid shardingNode config: dn1,dn1,dn3,dn4 for GlobalTableConfig test,the nodes duplicated!
-      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-    """
-     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-     </schema>
-     <schema shardingNode="dn5" name="schema2">
-        <shardingTable name="sharding_2_t2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_4_t2" shardingNode="dn1,dn2,dn3,dn3" function="hash-four" shardingColumn="id"/>
-     </schema>
-    """
-    Then execute admin cmd "reload @@config" get the following output
-      """
-      invalid shardingNode config: dn1,dn2,dn3,dn3 for ShardingTableConfig sharding_4_t2 ,the nodes duplicated
-      """

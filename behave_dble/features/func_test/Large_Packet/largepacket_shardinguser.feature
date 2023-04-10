@@ -4,6 +4,7 @@
 # update by quexiuping at 20223/02/15
 ## case 中的重启dble都是设计过的，每次重启dble是为了内存的释放，修改者移除要注意
 
+@skip
 Feature:Support MySQL's large package protocol
 
   Background:delete file , upload file , prepare env

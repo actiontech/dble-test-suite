@@ -291,8 +291,8 @@ Feature:  dble_entry test
 #case supported select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                        | expect                                                                    |
-      | conn_0 | False   | select name,property_key from dble_blacklist order by property_key desc limit 2            | has{(('list3', 'wrapAllow'), ('blacklist', 'wrapAllow'))}                 |
-      | conn_0 | False   | select name,property_key from dble_blacklist where property_key like '%truncate%' limit 2  | has{(('list3','truncateAllow',),('blacklist','truncateAllow',))}          |
+      | conn_0 | False   | select name,property_key from dble_blacklist order by property_key desc limit 2            | has{(('black1', 'wrapAllow'), ('blacklist2', 'wrapAllow'))}                 |
+      | conn_0 | False   | select name,property_key from dble_blacklist where property_key like '%truncate%' limit 2  | has{(('black1','truncateAllow',),('blacklist2','truncateAllow',))}          |
 #case supported select max/min
       | conn_0 | False   | select max(property_key) from dble_blacklist                      | has{(('wrapAllow',),)}        |
       | conn_0 | False   | select min(property_key) from dble_blacklist                      | has{(('alterTableAllow',),)}  |
@@ -416,8 +416,7 @@ Feature:  dble_entry test
     """
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                                                                                                 |
-      | conn_0 | False   | reload @@config      | User [test]'s schema [schema1]'s privilege's dml is not correct  |
-      | conn_0 | False   | dryrun                | User [test]'s schema [schema1]'s privilege's dml is not correct  |
+      | conn_0 | False   | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: User [test]'s schema [schema1]'s privilege's dml is not correct   |
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
@@ -439,7 +438,7 @@ Feature:  dble_entry test
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                                                                         |
-      | conn_0 | True    | reload @@config      | Reload config failure.The reason is SelfCheck### privileges's schema[schema2] was not found in the user [name:test]'s schemas  |
+      | conn_0 | False   | reload @@config      | Reload config failure.The reason is SelfCheck### privileges's schema[schema2] was not found in the user [name:test]'s schemas  |
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
@@ -467,7 +466,7 @@ Feature:  dble_entry test
     """
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                                                                                                                    |
-      | conn_0 | true    | reload @@config      | User [test1]'s schema [schema2]'s table [no_s3]'s privilege's dml is not correct  |
+      | conn_0 | true    | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: User [test1]'s schema [schema2]'s table [no_s3]'s privilege's dml is not correct     |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
      """
       dml is not correct

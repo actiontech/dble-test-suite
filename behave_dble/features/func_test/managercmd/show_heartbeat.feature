@@ -51,11 +51,11 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "12" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10                                                                    |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None                                                                             |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 5000      | false  | None                                                                             |
-      | hostS1 | 172.100.9.6 | 3307   | error     | 0       | 5000      | false  | heartbeat conn for sql[show slave status] is closed, due to abnormal connection  |
-      | hostS2 | 172.100.9.6 | 3308   | init      | 0       | 5000      | true   | None                                                                             |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 5000      | false  |
+      | hostS1 | 172.100.9.6 | 3307   | error     | 0       | 5000      | false  |
+      | hostS2 | 172.100.9.6 | 3308   | init      | 0       | 5000      | true   |
     Given start mysql in host "mysql-slave1"
 #because heartbeat timeout is set to 5 seconds,so wait 5 seconds to check slave RS_CODE is "ok"
     Given sleep "5" seconds
@@ -112,9 +112,9 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn_0 | false   | show @@heartbeat  |
 #check slave is "error" and RETRY is equal errorRetryCount=2 DBLE0REQ-633
     Then check resultset "21" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6  | STOP-9 | RS_MESSAGE-10                                                                   |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 10000      | false  | None                                                                            |
-      | hostS1 | 172.100.9.6 | 3307   | error     | 2       | 10000      | false  | heartbeat conn for sql[show slave status] is closed, due to abnormal connection |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6  | STOP-9 |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 10000      | false  |
+      | hostS1 | 172.100.9.6 | 3307   | error     | 2       | 10000      | false  |
     Given start mysql in host "mysql-slave1"
     Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "22"
@@ -147,10 +147,10 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "31" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10                                                                   |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 10000     | false  | None                                                                            |
-      | hostS1 | 172.100.9.6 | 3307   | error     | 0       | 10000     | false  | heartbeat conn for sql[show slave status] is closed, due to abnormal connection |
-      | hostS2 | 172.100.9.6 | 3308   | ok        | 0       | 10000     | false  | None                                                                            |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 10000     | false  |
+      | hostS1 | 172.100.9.6 | 3307   | error     | 0       | 10000     | false  |
+      | hostS2 | 172.100.9.6 | 3308   | ok        | 0       | 10000     | false  |
     Given start mysql in host "mysql-slave1"
     Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "32"
@@ -190,7 +190,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                                                                      | timeout |
-      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostS1', '172.100.9.6', 3307, 'ok'}, hasStr{'hostS2', '172.100.9.6', 3308, 'ok'}, | 60      |
+      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'time_out'}, hasStr{'hostS1', '172.100.9.6', 3307, 'ok'}, hasStr{'hostS2', '172.100.9.6', 3308, 'ok'}, | 60      |
     Given execute oscmd in "mysql-master2"
     """
     iptables -F

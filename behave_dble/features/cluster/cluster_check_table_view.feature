@@ -62,8 +62,8 @@ Feature: test view in zk cluster
       | conn   | toClose | sql                         | db      |
       | conn_1 | true    | show create view view_test  | schema1 |
     Then check resultset "Res_A" has lines with following column values
-      | View-0    | Create View-1                                          | character_set_client-2 | collation_connection-3 |
-      | view_test | create view view_test as select * from sharding_4_t1   | latin1                 | latin1_swedish_ci      |
+      | View-0    | Create View-1                                           | character_set_client-2 | collation_connection-3 |
+      | view_test | create view view_test as  select * from sharding_4_t1   | latin1                 | latin1_swedish_ci      |
     Given execute single sql in "dble-2" in "user" mode and save resultset in "Res_B"
       | conn   | toClose | sql                         | db      |
       | conn_2 | true    | show create view view_test  | schema1 |
@@ -100,7 +100,7 @@ Feature: test view in zk cluster
       | conn_2 | true    | show create view view_test  | schema1 |
     Then check resultset "Res_A" has lines with following column values
       | View-0    | Create View-1                                                     | character_set_client-2 | collation_connection-3 |
-      | view_test | create view view_test as select * from sharding_4_t1 where id =1  | latin1                 | latin1_swedish_ci      |
+      | view_test | create view view_test as  select * from sharding_4_t1 where id =1  | latin1                 | latin1_swedish_ci      |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "Res_B"
       | conn   | toClose | sql                         | db      |
       | conn_1 | true    | show create view view_test  | schema1 |
@@ -183,7 +183,7 @@ Feature: test view in zk cluster
       | conn_2 | true    | show create view view_view  | schema1 |
     Then check resultset "Res_A" has lines with following column values
       | View-0    | Create View-1                                                     | character_set_client-2 | collation_connection-3 |
-      | view_view | create view view_view as select * from sharding_4_t1 where id =1  | latin1                 | latin1_swedish_ci      |
+      | view_view | create view view_view as  select * from sharding_4_t1 where id =1  | latin1                 | latin1_swedish_ci      |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "Res_B"
       | conn   | toClose | sql                         | db      |
       | conn_1 | true    | show create view view_view  | schema1 |
@@ -260,7 +260,7 @@ Feature: test view in zk cluster
       | conn_3 | true    | show create view view_3     | schema1 |
     Then check resultset "Res_A" has lines with following column values
       | View-0    | Create View-1                                                  | character_set_client-2 | collation_connection-3 |
-      | view_3    | create view view_3 as select * from sharding_4_t1 where id =2  | latin1                 | latin1_swedish_ci      |
+      | view_3    | create view view_3 as  select * from sharding_4_t1 where id =2  | latin1                 | latin1_swedish_ci      |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "Res_B"
       | conn   | toClose | sql                         | db      |
       | conn_1 | true    | show create view view_3     | schema1 |

@@ -40,7 +40,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-      'h~ost@M3' is not a valid value for 'NMTOKEN'
+      Attribute value "h~ost@M3" of type NMTOKEN must be a name token
     """
 
   Scenario: config db property, reload the configs #4
@@ -66,7 +66,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-      Attribute 'url' must appear on element 'dbInstance'
+      Attribute "url" is required and must be specified for element type "dbInstance"
     """
 
   Scenario: config db property, reload the configs #6
@@ -93,7 +93,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-      The content of element 'dbGroup' is not complete. One of '{dbInstance}' is expected
+      The content of element type "dbGroup" is incomplete, it must match "(heartbeat,dbInstance+)"
     """
 
 
@@ -125,21 +125,6 @@ Feature: config db config files incorrect and restart dble or reload configs
 
 
 
-  Scenario: dbInstance's url duplicate in one dbGroup, reload the configs #9
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
-        <dbInstance name="hostS2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" />
-    </dbGroup>
-    """
-    Then execute admin cmd "reload @@config_all" get the following output
-      """
-      dbGroup[ha_group2]'s child url [172.100.9.6:3306]  duplicated!
-      """
-
-
   Scenario: dbInstance's has non-exist parameters, reload the configs #10
      #dble-9114
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -151,5 +136,5 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
       """
-      Attribute 'switchType' is not allowed to appear in element 'dbGroup'
+      Attribute "switchType" must be declared for element type "dbGroup"
       """

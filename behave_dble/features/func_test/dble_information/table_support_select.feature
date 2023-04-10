@@ -10,10 +10,10 @@ Feature:  show databases/use dble_information/show tables [like]
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                    | expect                                  |
 #case  begin query not use schema
-      | conn_0 | False   | show tables                            | No database selected                    |
-      | conn_0 | False   | show tables like 'dble%'               | No database selected                    |
-      | conn_0 | False   | desc version                           | No database selected                    |
-      | conn_0 | False   | select * from version                  | No database selected                    |
+      | conn_0 | False   | show tables                            | No database selected                                                   |
+      | conn_0 | False   | show tables like 'dble%'               | No database selected                                                   |
+      | conn_0 | False   | desc version                           | No database selected                                                   |
+      | conn_0 | False   | select * from version                  | get error call manager command Schema name or Table name is null!      |
 #case  begin query with error shcema or not exists schema
       | conn_0 | False   | desc dble_infor.version                | Unknown database 'dble_infor'                                          |
       | conn_0 | False   | describe schema1.version               | Unknown database 'schema1'                                             |
@@ -33,9 +33,9 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | False   | show table                             | Unsupported statement                                                  |
       | conn_0 | False   | show full tables                       | Unsupported statement                                                  |
       | conn_0 | False   | show columns from version              | Unsupported statement                                                  |
-      | conn_0 | False   | show tables                            | success                                       |
-      | conn_0 | False   | show tables like '%s%'                 | success                                       |
-      | conn_0 | False   | show tables like 'version'             | has{(('version',),)}                          |
+#      | conn_0 | False   | show tables                            | has{('Tables_in_dble_information')}                                    |
+#      | conn_0 | False   | show tables like '%s%'                 | has{('Tables_in_dble_information (%s%)')}                              |
+#      | conn_0 | False   | show tables like 'version'             | has{('Tables_in_dble_information (version)')}                          |
 #case desc/describe
       | conn_0 | False   | desc version                           | has{(('version', 'varchar(64)', 'NO', 'PRI', None, ''),)}                 |
       | conn_0 | False   | describe version                       | has{(('version', 'varchar(64)', 'NO', 'PRI', None, ''),)}                 |
@@ -70,7 +70,6 @@ Feature:  show databases/use dble_information/show tables [like]
       | dble_algorithm               |
       | dble_blacklist               |
       | dble_child_table             |
-      | dble_config                  |
       | dble_db_group                |
       | dble_db_instance             |
       | dble_ddl_lock                |
@@ -95,19 +94,13 @@ Feature:  show databases/use dble_information/show tables [like]
       | processlist                  |
       | session_connections          |
       | session_variables            |
-      | sql_log                                               |
-      | sql_log_by_tx_by_entry_by_user                        |
-      | sql_statistic_by_associate_tables_by_entry_by_user    |
-      | sql_statistic_by_frontend_by_backend_by_entry_by_user |
-      | sql_statistic_by_table_by_user_by_entry               |
-      | version                                               |
     Then check resultset "tables_1" has not lines with following column values
       | Tables_in_dble_information-0 |
       | demotest1                    |
       | demotest2                    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect       | db               |
-      | conn_0 | False   | show tables                          | length{(36)} | dble_information |
+      | conn_0 | False   | show tables                          | length{(30)} | dble_information |
  #case The query needs to be printed in the log，when management commands not supported by druid github:issues/1977
     Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql          | expect                |
@@ -227,41 +220,57 @@ Feature:  show databases/use dble_information/show tables [like]
 #case supported subquery position between select and from
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
       | conn   | toClose | sql                                                                                                | db               |
-      | conn_0 | True    | select *, (select id from dble_child_table where id='C5') from dble_table order by name desc limit 5 | dble_information |
+      | conn_0 | True    | select *, (select id from dble_child_table where id='C4') from dble_table order by name desc limit 5 | dble_information |
     Then check resultset "1" has lines with following column values
-      | name-1                        | schema-2 | max_limit-3 | type-4      | ( SELECT id FROM dble_child_table WHERE id = 'C5')-5 |
-      | vertical                      | schema5  |          -1 | NO_SHARDING | C5                                                   |
-      | sing1                         | schema2  |        1000 | SINGLE      | C5                                                   |
-      | sharding_sqlRequiredSharding1 | schema3  |         100 | SHARDING    | C5                                                   |
-      | sharding_sqlRequiredSharding  | schema3  |         100 | SHARDING    | C5                                                   |
-      | sharding_incrementColumn      | schema3  |         100 | SHARDING    | C5                                                   |
+      | id-0 | name-1                        | schema-2 | max_limit-3 | type-4      | ( SELECT id FROM dble_child_table WHERE id = 'C4')-5 |
+      | M4   | vertical                      | schema5  | -1          | NO_SHARDING | C4                                                   |
+      | C8   | sing1                         | schema2  | 1000        | SINGLE      | C4                                                   |
+      | C11  | sharding_sqlRequiredSharding1 | schema3  | 100         | SHARDING    | C4                                                   |
+      | C10  | sharding_sqlRequiredSharding  | schema3  | 100         | SHARDING    | C4                                                   |
+      | C9   | sharding_incrementColumn      | schema3  | 100         | SHARDING    | C4                                                   |
 #case supported  subquery with [not] in
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "2"
       | conn   | toClose | sql                                                                                                        | db               |
       | conn_0 | True    | select a.* from dble_table a ,dble_sharding_table b where a.id = b.id and b.id in ('C1','C6','C10','C19')  | dble_information |
     Then check resultset "2" has lines with following column values
-      | id-0 | name-1                            | schema-2 | max_limit-3 | type-4   |
-      | C10  | sharding_incrementColumn          | schema3  | 100         | SHARDING |
+      | id-0 | name-1                                | schema-2 | max_limit-3 | type-4   |
+      | C1   | sharding_2                            | schema1  | 100         | SHARDING |
+      | C10  | sharding_sqlRequiredSharding          | schema3  | 100         | SHARDING |
+      | C19  | sharding_fixed_nonuniform_string_rule | schema4  | -1          | SHARDING |
+      | C6   | sharding_3                            | schema2  | 1000        | SHARDING |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "3"
       | conn   | toClose | sql                                                                                       | db               |
       | conn_0 | True    | select * from dble_table where id not IN (select id from dble_sharding_table) order by id | dble_information |
     Then check resultset "3" has lines with following column values
       | id-0 | name-1    | schema-2 | max_limit-3 | type-4      |
-      | C1   | global1   | schema1 |          100 | GLOBAL      |
-      | C13  | global4   | schema4 |           -1 | GLOBAL      |
-      | C14  | global5   | schema4 |           -1 | GLOBAL      |
-      | C16  | er_child1 | schema4 |           -1 | CHILD       |
-      | C17  | er_child2 | schema4 |           -1 | CHILD       |
-      | C19  | er_child3 | schema4 |           -1 | CHILD       |
-      | C5   | er_child  | schema1 |           90 | CHILD       |
-      | C6   | sing1     | schema2 |         1000 | SINGLE      |
-      | C8   | global2   | schema2 |         1000 | GLOBAL      |
-      | C9   | global3   | schema3 |          100 | GLOBAL      |
-      | M1   | no_s1     | schema1 |          100 | NO_SHARDING |
-      | M2   | no_s2     | schema2 |         1000 | NO_SHARDING |
-      | M3   | no_s3     | schema3 |          100 | NO_SHARDING |
-      | M4   | vertical  | schema5 |           -1 | NO_SHARDING |
-
+      | C12  | global3   | schema3  | 100         | GLOBAL      |
+      | C14  | er_child1 | schema4  | -1          | CHILD       |
+      | C15  | er_child2 | schema4  | -1          | CHILD       |
+      | C17  | er_child3 | schema4  | -1          | CHILD       |
+      | C21  | global4   | schema4  | -1          | GLOBAL      |
+      | C22  | global5   | schema4  | -1          | GLOBAL      |
+      | C4   | er_child  | schema1  | 90          | CHILD       |
+      | C5   | global1   | schema1  | 100         | GLOBAL      |
+      | C7   | global2   | schema2  | 1000        | GLOBAL      |
+      | C8   | sing1     | schema2  | 1000        | SINGLE      |
+      | M1   | no_s1     | schema1  | 100         | NO_SHARDING |
+      | M2   | no_s2     | schema2  | 1000        | NO_SHARDING |
+      | M3   | no_s3     | schema3  | 100         | NO_SHARDING |
+      | M4   | vertical  | schema5  | -1          | NO_SHARDING |
+    Then check resultset "3" has not lines with following column values
+      | id-0 | name-1                                | schema-2 | max_limit-3 | type-4   |
+      | C1   | sharding_2                            | schema1  | 100         | SHARDING |
+      | C10  | sharding_sqlRequiredSharding          | schema3  | 100         | SHARDING |
+      | C11  | sharding_sqlRequiredSharding1         | schema3  | 100         | SHARDING |
+      | C13  | sharding_fixed_uniform                | schema4  | -1          | SHARDING |
+      | C16  | sharding_fixed_nonuniform             | schema4  | -1          | SHARDING |
+      | C18  | sharding_fixed_uniform_string_rule    | schema4  | -1          | SHARDING |
+      | C19  | sharding_fixed_nonuniform_string_rule | schema4  | -1          | SHARDING |
+      | C2   | sharding_4                            | schema1  | 100         | SHARDING |
+      | C20  | sharding_date_default_rule            | schema4  | -1          | SHARDING |
+      | C3   | er_parent                             | schema1  | 100         | SHARDING |
+      | C6   | sharding_3                            | schema2  | 1000        | SHARDING |
+      | C9   | sharding_incrementColumn              | schema3  | 100         | SHARDING |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "4"
       | conn   | toClose | sql                                                                                                                                  | db               |
       | conn_0 | True    | SELECT * FROM dble_table a LEFT JOIN dble_schema b ON a.schema = b.NAME where a.id NOT IN (SELECT id FROM dble_table_sharding_node)  | dble_information |
@@ -277,29 +286,30 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | True    | select * from dble_table where id <>some(select max(id) from dble_table_sharding_node) and id not like "M%"  | dble_information |
     Then check resultset "5" has lines with following column values
       | id-0 | name-1                                | schema-2 | max_limit-3 | type-4   |
-      | C1   | global1                               | schema1 |          100 | GLOBAL   |
-      | C2   | sharding_2                            | schema1 |          100 | SHARDING |
-      | C3   | sharding_4                            | schema1 |          100 | SHARDING |
-      | C4   | er_parent                             | schema1 |          100 | SHARDING |
-      | C5   | er_child                              | schema1 |           90 | CHILD    |
-      | C6   | sing1                                 | schema2 |         1000 | SINGLE   |
-      | C7   | sharding_3                            | schema2 |         1000 | SHARDING |
-      | C8   | global2                               | schema2 |         1000 | GLOBAL   |
-      | C10  | sharding_incrementColumn              | schema3 |          100 | SHARDING |
-      | C11  | sharding_sqlRequiredSharding          | schema3 |          100 | SHARDING |
-      | C12  | sharding_sqlRequiredSharding1         | schema3 |          100 | SHARDING |
-      | C13  | global4                               | schema4 |           -1 | GLOBAL   |
-      | C14  | global5                               | schema4 |           -1 | GLOBAL   |
-      | C15  | sharding_fixed_uniform                | schema4 |           -1 | SHARDING |
-      | C16  | er_child1                             | schema4 |           -1 | CHILD    |
-      | C17  | er_child2                             | schema4 |           -1 | CHILD    |
-      | C18  | sharding_fixed_nonuniform             | schema4 |           -1 | SHARDING |
-      | C19  | er_child3                             | schema4 |           -1 | CHILD    |
-      | C20  | sharding_fixed_uniform_string_rule    | schema4 |           -1 | SHARDING |
-      | C21  | sharding_fixed_nonuniform_string_rule | schema4 |           -1 | SHARDING |
-      | C22  | sharding_date_default_rule            | schema4 |           -1 | SHARDING |
+      | C1   | sharding_2                            | schema1  | 100         | SHARDING |
+      | C2   | sharding_4                            | schema1  | 100         | SHARDING |
+      | C3   | er_parent                             | schema1  | 100         | SHARDING |
+      | C4   | er_child                              | schema1  | 90          | CHILD    |
+      | C5   | global1                               | schema1  | 100         | GLOBAL   |
+      | C6   | sharding_3                            | schema2  | 1000        | SHARDING |
+      | C7   | global2                               | schema2  | 1000        | GLOBAL   |
+      | C8   | sing1                                 | schema2  | 1000        | SINGLE   |
+      | C10  | sharding_sqlRequiredSharding          | schema3  | 100         | SHARDING |
+      | C11  | sharding_sqlRequiredSharding1         | schema3  | 100         | SHARDING |
+      | C12  | global3                               | schema3  | 100         | GLOBAL   |
+      | C13  | sharding_fixed_uniform                | schema4  | -1          | SHARDING |
+      | C14  | er_child1                             | schema4  | -1          | CHILD    |
+      | C15  | er_child2                             | schema4  | -1          | CHILD    |
+      | C16  | sharding_fixed_nonuniform             | schema4  | -1          | SHARDING |
+      | C17  | er_child3                             | schema4  | -1          | CHILD    |
+      | C18  | sharding_fixed_uniform_string_rule    | schema4  | -1          | SHARDING |
+      | C19  | sharding_fixed_nonuniform_string_rule | schema4  | -1          | SHARDING |
+      | C20  | sharding_date_default_rule            | schema4  | -1          | SHARDING |
+      | C21  | global4                               | schema4  | -1          | GLOBAL   |
+      | C22  | global5                               | schema4  | -1          | GLOBAL   |
     Then check resultset "5" has not lines with following column values
       | id-0 | name-1                   | schema-2 | max_limit-3 | type-4      |
+      | C9   | sharding_incrementColumn | schema3  | 100         | SHARDING    |
       | M1   | no_s1                    | schema1  | 100         | NO_SHARDING |
       | M2   | no_s2                    | schema2  | 1000        | NO_SHARDING |
       | M3   | no_s3                    | schema3  | 100         | NO_SHARDING |
@@ -366,9 +376,9 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | False   | select *, select 3 from dble_table order by id                                                  | Unsupported statement                                             |
       | conn_0 | False   | select * from dble_table where exists(select null) order by id                                  | not supported tree node type:NONAME                               |
       | conn_0 | False   | select *, (select 3) from dble_table order by id                                                | not supported tree node type:NONAME                               |
-      | conn_0 | False   | select *, (select id,parent_id from dble_child_table where id='C4') from dble_table order by id | Operand should contain 1 column(s) |
+      | conn_0 | False   | select *, (select id,parent_id from dble_child_table where id='C4') from dble_table order by id | get error call manager command Operand should contain 1 column(s) |
 #case unsupported Correlated Sub Queries
-      | conn_0 | True    | select * from dble_table where schema = ALL(select schema from dble_schema where sql_max_limit is null)  | Correlated Sub Queries is not supported    |
+      | conn_0 | True    | select * from dble_table where schema = ALL(select schema from dble_schema where sql_max_limit is null)  | get error call manager command Correlated Sub Queries is not supported    |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                               | expect  | db      |

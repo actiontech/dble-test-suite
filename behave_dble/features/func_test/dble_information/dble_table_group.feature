@@ -83,14 +83,14 @@ Feature:  dble_table test
       | conn_0 | False   | select * from dble_table  | dble_information |
     Then check resultset "dble_table_2" has lines with following column values
       | id-0 | name-1     | schema-2 | max_limit-3 | type-4   |
-      | C1   | global1    | schema1  | 100         | GLOBAL   |
-      | C2   | sharding_2 | schema1  | 100         | SHARDING |
-      | C3   | sharding_4 | schema1  | 100         | SHARDING |
-      | C4   | er_parent  | schema1  | 100         | SHARDING |
-      | C5   | er_child   | schema1  | 90          | CHILD    |
-      | C6   | sing1      | schema2  | 1000        | SINGLE   |
-      | C7   | sharding_3 | schema2  | 1000        | SHARDING |
-      | C8   | global2    | schema2  | 1000        | GLOBAL   |
+      | C1   | sharding_2 | schema1  | 100         | SHARDING |
+      | C2   | sharding_4 | schema1  | 100         | SHARDING |
+      | C3   | er_parent  | schema1  | 100         | SHARDING |
+      | C4   | er_child   | schema1  | 90          | CHILD    |
+      | C5   | global1    | schema1  | 100         | GLOBAL   |
+      | C6   | sharding_3 | schema2  | 1000        | SHARDING |
+      | C7   | global2    | schema2  | 1000        | GLOBAL   |
+      | C8   | sing1      | schema2  | 1000        | SINGLE   |
       | C9   | sing2      | schema3  | -1          | SINGLE   |
 
     Then execute sql in "dble-1" in "admin" mode
