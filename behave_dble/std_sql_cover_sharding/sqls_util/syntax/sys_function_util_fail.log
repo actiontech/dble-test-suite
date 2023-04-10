@@ -1,18 +1,17 @@
 ===file:sqls_util/syntax/sys_function_util.sql, id:5, sql:[INSERT INTO test1 VALUES(1),(2),(3);]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'bad insert sql, shardingColumn/joinColumn:ID not provided,INSERT INTO test1\nVALUES (1),\n\t(2),\n\t(3)')
+dble err:(1064, 'bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1\nVALUES (1),\n\t(2),\n\t(3)')
 ===file:sqls_util/syntax/sys_function_util.sql, id:7, sql:[SELECT i, RAND(3) FROM test1]===
 dble:[[]]
-mysql:[[(1, 0.9057697559760601), (2, 0.37307905813034536), (3, 0.14808605345719125)]]
+mysql:[[(1L, 0.9057697559760601), (2L, 0.37307905813034536), (3L, 0.14808605345719125)]]
 ===file:sqls_util/syntax/sys_function_util.sql, id:11, sql:[insert into test1 values('{"id": "3", "name": "Barney"}' ,3),('{"id": "4", "name": "Betty"}' ,3), ('{"id": "2", "name": "Wilma"}',2)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'bad insert sql, shardingColumn/joinColumn:ID not provided,INSERT INTO test1\nVALUES (\'{"id": "3", "name": "Barney"}\', 3),\n\t(\'{"id": "4", "name": "Betty"}\', 3),\n\t(\'{"id": "2", "name": "Wilma"}\', 2)')
+dble err:(1064, 'bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1\nVALUES (\'{"id": "3", "name": "Barney"}\', 3),\n\t(\'{"id": "4", "name": "Betty"}\', 3),\n\t(\'{"id": "2", "name": "Wilma"}\', 2)')
 ===file:sqls_util/syntax/sys_function_util.sql, id:13, sql:[SELECT a, JSON_EXTRACT(a, "$.id"), b FROM test1 WHERE JSON_EXTRACT(a, "$.id") > 1 ORDER BY JSON_EXTRACT(a, "$.name")]===
-dble:[None]
-mysql:[(('{"id": "3", "name": "Barney"}', '"3"', 3), ('{"id": "4", "name": "Betty"}', '"4"', 3), ('{"id": "2", "name": "Wilma"}', '"2"', 2))]
-dble err:(4004, 'Unknown function JSON_EXTRACT')
+dble:[()]
+mysql:[(('{"id": "3", "name": "Barney"}', '"3"', 3L), ('{"id": "4", "name": "Betty"}', '"4"', 3L), ('{"id": "2", "name": "Wilma"}', '"2"', 2L))]
 ===file:sqls_util/syntax/sys_function_util.sql, id:15, sql:[SELECT JSON_UNQUOTE(a->'$.name') AS name FROM test1 WHERE b > 2]===
 dble:[None]
 mysql:[(('Barney',), ('Betty',))]
@@ -24,15 +23,15 @@ dble err:(1064, 'not supported kind expression:SubGtGt')
 ===file:sqls_util/syntax/sys_function_util.sql, id:26, sql:[insert into test1 values ('{"id": "3", "name": "Barney"}' ,3),('{"id": "4", "name": "Betty"}' ,3), ('{"id": "2", "name": "Wilma"}',2)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'bad insert sql, shardingColumn/joinColumn:ID not provided,INSERT INTO test1\nVALUES (\'{"id": "3", "name": "Barney"}\', 3),\n\t(\'{"id": "4", "name": "Betty"}\', 3),\n\t(\'{"id": "2", "name": "Wilma"}\', 2)')
+dble err:(1064, 'bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1\nVALUES (\'{"id": "3", "name": "Barney"}\', 3),\n\t(\'{"id": "4", "name": "Betty"}\', 3),\n\t(\'{"id": "2", "name": "Wilma"}\', 2)')
 ===file:sqls_util/syntax/sys_function_util.sql, id:27, sql:[SELECT c, c->"$.id", g FROM test1 WHERE JSON_EXTRACT(c, "$.id") > 1 ORDER BY c->"$.name"]===
 dble:[None]
-mysql:[(('{"id": "3", "name": "Barney"}', '"3"', 3), ('{"id": "4", "name": "Betty"}', '"4"', 3), ('{"id": "2", "name": "Wilma"}', '"2"', 2))]
-dble err:(4004, 'not supported kind expression:SubGt')
+mysql:[(('{"id": "3", "name": "Barney"}', '"3"', 3L), ('{"id": "4", "name": "Betty"}', '"4"', 3L), ('{"id": "2", "name": "Wilma"}', '"2"', 2L))]
+dble err:(-1, 'error totally whack')
 ===file:sqls_util/syntax/sys_function_util.sql, id:28, sql:[SELECT c, c->"$.id", g FROM test1 WHERE c->"$.id" > 1 ORDER BY c->"$.name"]===
 dble:[None]
-mysql:[(('{"id": "3", "name": "Barney"}', '"3"', 3), ('{"id": "4", "name": "Betty"}', '"4"', 3), ('{"id": "2", "name": "Wilma"}', '"2"', 2))]
-dble err:(4004, 'not supported kind expression:SubGt')
+mysql:[(('{"id": "3", "name": "Barney"}', '"3"', 3L), ('{"id": "4", "name": "Betty"}', '"4"', 3L), ('{"id": "2", "name": "Wilma"}', '"2"', 2L))]
+dble err:(-1, 'error totally whack')
 ===file:sqls_util/syntax/sys_function_util.sql, id:31, sql:[SELECT c, c->"$.id", g, n FROM test1 WHERE JSON_EXTRACT(c, "$.id") > 1 ORDER BY c->"$.name"]===
 dble:[None]
 mysql:[(('{"id": "3", "name": "Barney"}', '"3"', 3, None), ('{"id": "4", "name": "Betty"}', '"4"', 3, 1), ('{"id": "2", "name": "Wilma"}', '"2"', 2, None))]

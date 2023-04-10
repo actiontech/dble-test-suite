@@ -16,5 +16,5 @@ Feature: db basic config test
 
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    dbGroup ha_group1 rwSplitMode should be between 0 and 3!
+    dbGroup ha_group1 rwSplitMode should be between 0 and 2
     """

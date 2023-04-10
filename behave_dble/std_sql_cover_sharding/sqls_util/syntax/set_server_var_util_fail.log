@@ -4,22 +4,22 @@ mysql:[()]
 dble err:(1064, "Sharding column can't be null when the table in MySQL column is not null")
 ===file:sqls_util/syntax/set_server_var_util.sql, id:9, sql:[select id from test1]===
 dble:[[]]
-mysql:[[(10,)]]
+mysql:[[(10L,)]]
 ===file:sqls_util/syntax/set_server_var_util.sql, id:11, sql:[insert into test1 (id) values (null)]===
 dble:[None]
 mysql:[()]
 dble err:(1064, "Sharding column can't be null when the table in MySQL column is not null")
 ===file:sqls_util/syntax/set_server_var_util.sql, id:12, sql:[select id from test1]===
 dble:[[]]
-mysql:[[(10,), (11,)]]
+mysql:[[(10L,), (11L,)]]
 ===file:sqls_util/syntax/set_server_var_util.sql, id:14, sql:[insert into test1 (id) values (null)]===
 dble:[None]
 mysql:[()]
 dble err:(1064, "Sharding column can't be null when the table in MySQL column is not null")
 ===file:sqls_util/syntax/set_server_var_util.sql, id:15, sql:[select id from test1]===
 dble:[[]]
-mysql:[[(10,), (11,), (12,)]]
+mysql:[[(10L,), (11L,), (12L,)]]
 ===file:sqls_util/syntax/set_server_var_util.sql, id:21, sql:[insert into test1 (data) values ('aaa')]===
 dble:[None]
 mysql:[()]
-dble err:(1064, "bad insert sql, shardingColumn/joinColumn:ID not provided,INSERT INTO test1 (data)\nVALUES ('aaa')")
+dble err:(1064, "bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1 (data)\nVALUES ('aaa')")

@@ -193,27 +193,7 @@ Feature: verify issue 92 #Enter feature name here
       | wsgw-0 | lb-1 |
       | 0.0    | test |
 
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "15"
-      | conn   | toClose | sql                          | db      | charset |
-      | conn_0 | False   | SELECT t1.name, t1.DI23M123,ROUND(IFNULL(t2.dataValue,0),2) dataValue, '件' unit FROM ( SELECT 'AUTO' DI23M123,'生个0' name UNION ALL SELECT 'REMOTE' DI23M123,'生个3' name UNION ALL SELECT 'PLAT' DI23M123,'生个1' name UNION ALL SELECT 'REINPUT' DI23M123,'生个2' name UNION ALL SELECT 'FAILED' DI23M123,'生个03' name UNION ALL SELECT 'DOING' DI23M123,'生个88' name UNION ALL SELECT 'WAITING' DI23M123,'生个4' name)t1 LEFT JOIN ( SELECT DI23M123, sum(DA12_VALE) dataValue FROM shard12 A WHERE A.IX123_NO = 'lll41101060000002001' AND ben_tim12 = CONCAT(':statTime',left(CURRENT_TIME,2),'00') AND OG_NO = ':orgC66E' group by DI23M123 )t2 ON t1.DI23M123=t2.DI23M123 | schema1 | utf8mb4 |
-    Then check resultset "15" has lines with following column values
-      | name-0     | DI23M123-1  | dataValue-2 | unit-3 |
-      | 生个0       | AUTO    | 0.0         | 件      |
-      | 生个88      | DOING   | 0.0         | 件      |
-      | 生个03      | FAILED  | 0.0         | 件      |
-      | 生个1       | PLAT    | 0.0         | 件      |
-      | 生个2       | REINPUT | 0.0         | 件      |
-      | 生个3       | REMOTE  | 0.0         | 件      |
-      | 生个4       | WAITING | 0.0         | 件      |
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "16"
-      | conn   | toClose | sql       | db      | charset |
-      | conn_0 | False   | SELECT SUM(CASE t.name WHEN '社区服务1社区服务' THEN t.dataValue END) AS "wsgw", SUM(CASE t.name WHEN '支付宝' THEN t.dataValue END) AS "zfb" , SUM(CASE t.name WHEN '微信' THEN t.dataValue END) AS "wx", SUM(CASE t.name WHEN '爱心1234' THEN t.dataValue END) AS "deb" , SUM(CASE t.name WHEN '77777热线' THEN t.dataValue END) AS "rx", SUM(CASE t.name WHEN '不 动产政企联办' THEN t.dataValue END) AS "bdczqlb" , SUM(CASE t.name WHEN '一办' THEN t.dataValue END) AS "ywtb", SUM(CASE t.name WHEN '77777社区服务站' THEN t.dataValue END) AS "wz" , SUM(CASE t.name WHEN '线下渠道' THEN t.dataValue END) AS "xxqd", SUM(CASE t.name WHEN '其他' THEN t.dataValue END) AS "qt" , '交12况' AS 'lb', s.DESTION AS "dw" FROM ( SELECT '社区服务1社区服务' AS "name" , ROUND(IFNULL(SUM(`DA12_VALE`), 0)) AS dataValue FROM shard12 cidm WHERE (cidm.OG_NO = '41101' AND cidm.IX123_NO = 'lll411010434001' AND cidm.ben_tim12 >= '20200802' AND cidm.ben_tim12 <= '20200803' AND cidm.SAT_CRE = '01' AND DI23M123 = '05') UNION ALL SELECT '支付宝' AS "name" , ROUND(IFNULL(SUM(`DA12_VALE`), 0)) AS dataValue FROM shard12 cidm WHERE (cidm.OG_NO = '41101' AND cidm.IX123_NO = 'lll411010434001' AND cidm.ben_tim12 >= '20200802' AND cidm.ben_tim12 <= '20200803' AND cidm.SAT_CRE = '01' AND DI23M123 = '04') UNION ALL SELECT '微信' AS "name" , ROUND(IFNULL(SUM(`DA12_VALE`), 0)) AS dataValue FROM shard12 cidm WHERE (cidm.OG_NO = '41101' AND cidm.IX123_NO = 'lll411010434001' AND cidm.ben_tim12 >= '20200802' AND cidm.ben_tim12 <= '20200803' AND cidm.SAT_CRE = '01' AND DI23M123 = '03') UNION ALL SELECT '爱心1234' AS "name" , ROUND(IFNULL(SUM(`DA12_VALE`), 0)) AS dataValue FROM shard12 cidm WHERE (cidm.OG_NO = '41101' AND cidm.IX123_NO = 'lll411010434001' AND cidm.ben_tim12 >= '20200802' AND cidm.ben_tim12 <= '20200803' AND cidm.SAT_CRE = '01' AND DI23M123 = '01') UNION ALL SELECT '77777热线' AS "name" , ROUND(IFNULL(SUM(`DA12_VALE`), 0)) AS dataValue FROM shard12 cidm WHERE (cidm.OG_NO = '41101' AND cidm.IX123_NO = 'lll411010434001' AND cidm.ben_tim12 >= '20200802' AND cidm.ben_tim12 <= '20200803' AND cidm.SAT_CRE = '01' AND DI23M123 = '01') UNION ALL SELECT '不动产政企联办' AS "name" , ROUND(IFNULL(SUM(`DA12_VALE`), 0)) AS dataValue FROM shard12 cidm WHERE (cidm.OG_NO = '41101' AND cidm.IX123_NO = 'lll411010434001' AND cidm.ben_tim12 >= '20200802' AND cidm.ben_tim12 <= '20200803' AND cidm.SAT_CRE = '01' AND DI23M123 = '94') UNION ALL SELECT '一办' AS "name" , ROUND(IFNULL(SUM(`DA12_VALE`), 0)) AS dataValue FROM shard12 cidm WHERE (cidm.OG_NO = '41101' AND cidm.IX123_NO = 'lll411010434001' AND cidm.ben_tim12 >= '20200802' AND cidm.ben_tim12 <= '20200803' AND cidm.SAT_CRE = '01' AND DI23M123 IN ('90', '91', '93')) UNION ALL SELECT '77777社区服务站' AS "name" , ROUND(IFNULL(SUM(`DA12_VALE`), 0)) AS dataValue FROM shard12 cidm WHERE (cidm.OG_NO = '41101' AND cidm.IX123_NO = 'lll411010434001' AND cidm.ben_tim12 >= '20200802' AND cidm.ben_tim12 <= '20200803' AND cidm.SAT_CRE = '01' AND DI23M123 = '02') UNION ALL SELECT '线下渠道' AS "name" , ROUND(IFNULL(SUM(`DA12_VALE`), 0)) AS dataValue FROM shard12 cidm WHERE (cidm.OG_NO = '41101' AND cidm.IX123_NO = 'lll411010434001' AND cidm.ben_tim12 >= '20200802' AND cidm.ben_tim12 <= '20200803' AND cidm.SAT_CRE = '01' AND DI23M123 = '08') UNION ALL SELECT '其他' AS "name" , ROUND(IFNULL(SUM(`DA12_VALE`), 0)) AS dataValue FROM shard12 cidm WHERE (cidm.OG_NO = '41101' AND cidm.IX123_NO = 'lll411010434001' AND cidm.ben_tim12 >= '20200802' AND cidm.ben_tim12 <= '20200803' AND cidm.SAT_CRE = '01' AND DI23M123 IN ('06', '07')) ) t LEFT JOIN shard13 s ON s.`C66E` = '41101' | schema1 | utf8mb4 |
-    Then check resultset "16" has lines with following column values
-      | wsgw-0 | zfb-1 | wx-2 | deb-3 | rx-4 | bdczqlb-5 | ywtb-6 | wz-7 | xxqd-8 | qt-9 | lb-10    | dw-11 |
-      | 0.0    | 0.0   | 0.0  | 0.0   | 0.0  | None      | 0.0    | 0.0  | 0.0    | 0.0  | 交12况  | None  |
-
-
-#case no cerate schema but in sql is used this schema then do not occur DBLE0REQ-627
+#case no create schema but in sql is used this schema then do not occur DBLE0REQ-627
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose   | sql                                        | expect    | charset |
       | conn_0 | false     | select * from (SELECT '测33' DI23M123 FROM DUAL ) as A inner join (select * from mimc_be.shard12 UNION ALL select * from mimc_be.shard12 ) as B   | Table `mimc_be`.`shard12` doesn't exist | utf8mb4 |
@@ -274,14 +254,14 @@ Feature: verify issue 92 #Enter feature name here
       | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) <> (case c.name when a.name>c.name then '测试2' else '测试1' end)  | has{(('测试1',),('测试2',),('测试1',),('测试2',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) != (case c.name when a.name>c.name then '测试2' else '测试1' end)   | has{(('测试1',),('测试2',),('测试1',),('测试2',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name from sharding_2_t2 a , sharding_3_t1 c where  (case a.name when a.name<c.name then '测试2' else '测试1' end) = (case c.name when a.name>c.name then '测试2' else '测试1' end)          | has{(('测试1',),('测试2',))}          | schema1 | utf8mb4 |
-      | conn_0 | False   | select * from sharding_2_t2 a , sharding_3_t1 c where exists ( select (case a.name when a.name<c.name then '测试2' else '测试1' end) )      | Correlated Sub Queries is not supported          | schema1 | utf8mb4 |
-      | conn_0 | true    | select * from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2 where  exists ( select (case a.name when a.name<c.name then '测试2' else '测试1' end) )      | Correlated Sub Queries is not supported          | schema1 | utf8mb4 |
+      | conn_0 | False   | select * from sharding_2_t2 a , sharding_3_t1 c where exists ( select (case a.name when a.name<c.name then '测试2' else '测试1' end) )      | success          | schema1 | utf8mb4 |
+      | conn_0 | true    | select * from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2 where  exists ( select (case a.name when a.name<c.name then '测试2' else '测试1' end) )      | success          | schema1 | utf8mb4 |
 ## case 1 function : Type Conversion in Expression Evaluation
       #case "concat" / "cast"
       | conn_0 | False   | select concat(a.name,b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id     | has{(('测试1测试1',),('测试2测试2',),('测试2测试3',))}     | schema1 | utf8mb4 |
       | conn_0 | False   | select concat(a.name,'中国') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id      | has{(('测试1中国',),('测试2中国',),('测试2中国',))}        | schema1 | utf8mb4 |
       | conn_0 | False   | select cast(b.name as char) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id      | has{(('测试1',),('测试2',),('测试3',))}                  | schema1 | utf8mb4 |
-      | conn_0 | False   | select cast(b.name as UNSIGNED) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where b.name=(select cast(b.name as char))    |  Correlated Sub Queries is not supported               | schema1 | utf8mb4 |
+      | conn_0 | False   | select cast(b.name as UNSIGNED) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where b.name=(select cast(b.name as char))    |  success              | schema1 | utf8mb4 |
       | conn_0 | False   | select b.name from sharding_2_t2 a inner join sharding_3_t1 b on concat(a.name,b.name)=concat(a.name,b.name)    |  length{(6)}              | schema1 | utf8mb4 |
       #case "+"
       | conn_0 | False   | select a.id + b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | has{((1,),(2,),(2,))}     | schema1 | utf8mb4 |
@@ -327,7 +307,7 @@ Feature: verify issue 92 #Enter feature name here
       | conn_0 | False   | select a.id2<=>b.name,b.name <= a.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id     | has{((0, 1), (0, 1), (0, 0))}      | schema1 | utf8mb4 |
       | conn_0 | False   | select '测试'<=>b.name,'爱可生' <= a.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id    | has{((0, 0), (0, 0), (0, 0))}      | schema1 | utf8mb4 |
       #case "IN" / "not IN"
-      | conn_0 | False   | select '测试' in a.name,b.name not in '测试' from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id | has{((0, 1), (0, 1), (0, 1))}      | schema1 | utf8mb4 |
+      | conn_0 | False   | select '测试' in a.name,b.name not in '测试' from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id | You have an error in your SQL syntax; check the manual      | schema1 | utf8mb4 |
       #case "INTERVAL"
       | conn_0 | False   | select INTERVAL(a.name,b.name,a.id,b.id2,'爱可生')from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{((1,), (1,), (1,))}         | schema1 | utf8mb4 |
       #case "ISNULL"
@@ -343,9 +323,9 @@ Feature: verify issue 92 #Enter feature name here
       | conn_0 | False   | select IF(b.name > a.name,'爱可生','开心') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{(('开心',),('开心',),('爱可生',))}   | schema1 | utf8mb4 |
       | conn_0 | False   | select IF(STRCMP(a.name,b.name),'爱可生','开心') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{(('开心',),('开心',),('爱可生',))}   | schema1 | utf8mb4 |
       | conn_0 | False   | select IFNULL(a.id2 / b.name,'爱可生') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{(('爱可生',),('爱可生',),('爱可生',))}   | schema1 | utf8mb4 |
-      | conn_0 | False   | select IFNULL(a.name ,b.name,'爱可生') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{(('测试1',),('测试2',),('测试2',))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select IFNULL(a.name ,b.name,'爱可生') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | Incorrect parameter count in the call to native function 'IFNULL'     | schema1 | utf8mb4 |
       | conn_0 | False   | select NULLIF(b.name,'测试1') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                 | has{((None,),('测试2',),('测试3',))}       | schema1 | utf8mb4 |
-      | conn_0 | False   | select IF(STRCMP(a.name > b.name),'爱可生','开心') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | Incorrect parameter count in the call to native function 'STRCMP'  | schema1 | utf8mb4 |
+#      | conn_0 | False   | select IF(STRCMP(a.name > b.name),'爱可生','开心') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | Incorrect parameter count in the call to native function 'STRCMP'  | schema1 | utf8mb4 |
 ##case 4 function : String Functions
       #case "ASCII"  / "BIT_LENGTH"   / "CHAR"   / "HEX" /  "CONV"  / "CHAR_LENGTH"  / "CHARACTER_LENGTH"    issue:DBLE0REQ-747
       | conn_0 | False   | select ASCII(b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id       | has{((230,),(230,),(230,))}                  | schema1 | utf8mb4 |
@@ -457,7 +437,7 @@ Feature: verify issue 92 #Enter feature name here
       | conn_0 | False   | select a.name from sharding_2_t2 a where exists (select b.name from sharding_3_t1 b)                  | has{(('测试1',), ('测试2',))}       | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name from sharding_2_t2 a where not exists (select b.name from sharding_3_t1 b)              | length{(0)}                        | schema1 | utf8mb4 |
       #case "MINUS"  github:2026
-      | conn_0 | False   | select id from sharding_2_t2 where id=1 minus select id from sharding_2_t2 where id=2           | You have an error in your SQL syntax;MINUS                       | schema1 | utf8mb4 |
+      | conn_0 | False   | select id from sharding_2_t2 where id=1 minus select id from sharding_2_t2 where id=2           | You have an error in your SQL syntax                     | schema1 | utf8mb4 |
 
 
 

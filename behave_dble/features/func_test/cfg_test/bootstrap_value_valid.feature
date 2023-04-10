@@ -126,7 +126,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ maxCostStatSize \] '-10' in bootstrap.cnf is illegal, you may need use the default value 100 replaced
       Property \[ maxPacketSize \] '-1000' in bootstrap.cnf is illegal, you may need use the default value 4194304 replaced
       Property \[ maxResultSet \] '-524288' in bootstrap.cnf is illegal, you may need use the default value 524288 replaced
-      Property \[ maxRowSizeToFile \] '-10000' in bootstrap.cnf is illegal, you may need use the default value 100000 replaced
+      Property \[ maxRowSizeToFile \] '-10000' in bootstrap.cnf is illegal, you may need use the default value 10000 replaced
       Property \[ mergeQueueSize \] '-1024' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
       Property \[ nestLoopConnSize \] '-5' in bootstrap.cnf is illegal, you may need use the default value 4 replaced
       Property \[ nestLoopRowsSize \] '-2000' in bootstrap.cnf is illegal, you may need use the default value 2000 replaced
@@ -196,7 +196,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     """
     Then restart dble in "dble-1" failed for
     """
-    homePath is not set
+    You must config instanceName in bootstrap.cnf and make sure it is an unique key for cluster
     """
 
 
@@ -266,7 +266,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                | db               |
       | conn_0 | true    | select @@max_allowed_packet                                                      | has{((6291456,),)}    | dble_information |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('6291456B',),)} | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('6291456',),)} | dble_information |
 #      | conn_0 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet                   | has{((1, 8388608),)}  | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect              | db        |
@@ -307,7 +307,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                 | db               |
       | conn_0 | true    | select @@max_allowed_packet                                                      | has{((9437184,),)}     | dble_information |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('9437184B',),)}  | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('9437184',),)}  | dble_information |
       | conn_0 | true    | SELECT @@session.auto_increment_increment,@@max_allowed_packet                   | has{((1, 9438208),)}  | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect              | db        |
@@ -328,7 +328,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('8000000B',),)} | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('8000000',),)} | dble_information |
       | conn_0 | true    | select @@max_allowed_packet                                                      | has{((8000000,),)}    | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect              | db        |
@@ -364,12 +364,25 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     Then check path "/opt/logs/view_logs" in "dble-1" should exist
     Then check path "/opt/logs/tx_logs" in "dble-1" should exist
 
-  Scenario: DO NOT config 'homePath' in bootstrap.cnf, restart dble failed #10
+  Scenario: homePath and viewPersistenceConfBaseDir in bootstrap.cnf, restart dble and check paths #10
+    Given I remove path "/opt/dble/viewConf" in "dble-1" if exist
+    Then check path "/opt/dble/viewConf" in "dble-1" should not exist
+    Given I remove path "/opt/dble/txlogs" in "dble-1" if exist
+    Then check path "/opt/dble/txlogs" in "dble-1" should not exist
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    /-DhomePath/d
+      /-DhomePath/d
+      $a\-DrecordTxn=1
     """
-    Then restart dble in "dble-1" failed for
-    """
-    homePath is not set
-    """
+    Then restart dble in "dble-1" success
+    Then  execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                      | expect  | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1;                      | success | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20));     | success | schema1 |
+      | conn_0 | False   | drop view if exists view1 ;                              | success | schema1 |
+      | conn_0 | False   | create view view1 as select id from sharding_4_t1;       | success | schema1 |
+      | conn_0 | False   | begin;                                                   | success | schema1 |
+      | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4); | success | schema1 |
+      | conn_0 | True    | commit;                                                  | success | schema1 |
+    Then check path "/opt/dble/viewConf" in "dble-1" should exist
+    Then check path "/opt/dble/txlogs" in "dble-1" should exist

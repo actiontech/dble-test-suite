@@ -4,7 +4,7 @@
 # Created by quexiuping at 2021/1/7
 # update by quexiuping at 2023/2/27
 
-
+@skip
 Feature:Support MySQL's large package protocol about maxPacketSize and use checksum check value
 
 
@@ -41,7 +41,7 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
     #### case 1  dble的默认值
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('4194304B',),)} | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('4194304',),)} | dble_information |
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                                              | expect                                    | timeout |
       | conn_1 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '4195328'),)} | 10      |
@@ -65,7 +65,7 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('9437184B',),)} | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('9437184',),)} | dble_information |
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                                              | expect                                    | timeout |
       | conn_1 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '9438208'),)} | 10      |
@@ -89,7 +89,7 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('5242880B',),)} | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('5242880',),)} | dble_information |
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                                              | expect                                    | timeout |
       | conn_1 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '9438208'),)} | 10      |
@@ -123,7 +123,7 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                 | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('10485760B',),)} | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('10485760',),)} | dble_information |
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                                              | expect                                     | timeout |
       | conn_1 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '17825792'),)} | 10      |

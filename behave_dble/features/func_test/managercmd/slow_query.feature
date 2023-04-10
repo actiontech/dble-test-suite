@@ -457,6 +457,8 @@ Feature: test slow query log related manager command
   Scenario: just shardinguser executed sql enable logged to slow log #6
       Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
        """
+       <managerUser name="root" password="111111"/>
+       <shardingUser name="test" password="111111" schemas="schema1"/>
        <rwSplitUser name="rwSp" password="111111" dbGroup="ha_group3" />
        """
      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"

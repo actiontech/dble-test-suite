@@ -53,7 +53,7 @@ Feature: test manager command :show @@data_distribution where table ='schema.tab
       | conn   | toClose | sql                                                           | expect                                                |
       | conn_0 | false   | show @@data_distribution where table ='schema1.test'          | has{(('dn1', 0), ('dn2', 0), ('dn3', 0), ('dn4', 0))} |
       | conn_0 | false   | show @@data_distribution where table ='schema1.sharding_2_t1' | has{(('dn1', 0), ('dn2', 0))}                         |
-      | conn_0 | false   | show @@data_distribution where table ='schema1.nosharding'    | The table 'schema1.nosharding' is NoSharding table    |
+      | conn_0 | false   | show @@data_distribution where table ='schema1.nosharding'    | The table 'schema1.nosharding' doesn't exist          |
       | conn_0 | false   | show @@data_distribution where table ='schema2.sing'          | The table 'schema2.sing' is Single table              |
       | conn_0 | false   | show @@data_distribution where table ='schema2.sharding_4_t3' | has{(('dn1', 0), ('dn3', 0), ('dn5', 0))}             |
       | conn_0 | false   | show @@data_distribution where table ='schema3.vertical'      | The schema schema3 is no sharding schema              |
@@ -70,7 +70,7 @@ Feature: test manager command :show @@data_distribution where table ='schema.tab
       | conn   | toClose | sql                                                           | expect                                                |
       | conn_0 | false   | show @@data_distribution where table ='schema1.test'          | has{(('dn1', 1), ('dn2', 1), ('dn3', 1), ('dn4', 1))} |
       | conn_0 | false   | show @@data_distribution where table ='schema1.sharding_2_t1' | has{(('dn1', 0), ('dn2', 1))}                         |
-      | conn_0 | false   | show @@data_distribution where table ='schema1.nosharding'    | The table 'schema1.nosharding' is NoSharding table    |
+      | conn_0 | false   | show @@data_distribution where table ='schema1.nosharding'    | The table 'schema1.nosharding' doesn't exist          |
       | conn_0 | false   | show @@data_distribution where table ='schema2.sing'          | The table 'schema2.sing' is Single table              |
       | conn_0 | false   | show @@data_distribution where table ='schema2.sharding_4_t3' | has{(('dn1', 0), ('dn3', 0), ('dn5', 1))}             |
       | conn_0 | false   | show @@data_distribution where table ='schema3.vertical'      | The schema schema3 is no sharding schema              |
@@ -124,7 +124,7 @@ Feature: test manager command :show @@data_distribution where table ='schema.tab
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     error response errNo:1146, Table
-    SELECT COUNT
+    exist from of sql :SELECT COUNT
     AS COUNT FROM test
     """
 #case 2.4 :insert more values on sharding table function :Hash,the result will be correct
@@ -174,7 +174,7 @@ Feature: test manager command :show @@data_distribution where table ='schema.tab
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     error response errNo:1146, Table
-    SELECT COUNT
+    exist from of sql :SELECT COUNT
     AS COUNT FROM sharding_2_t1
     """
 #case 2.5 :insert more values on sharding table function :fixed_uniform_string_rule ,the result will be correct
@@ -227,7 +227,7 @@ Feature: test manager command :show @@data_distribution where table ='schema.tab
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     error response errNo:1146, Table
-    SELECT COUNT
+    exist from of sql :SELECT COUNT
     AS COUNT FROM sharding_4_t3
     """
     Then execute sql in "dble-1" in "user" mode

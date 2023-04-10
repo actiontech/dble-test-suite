@@ -45,12 +45,15 @@ Feature: support rownum sql
     """
     Then restart dble in "dble-1" failed for
     """
-    The system property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
+    The property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: property routePenetrationRules can't be null
     """
-    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: property routePenetrationRules can't be null
+    parse the route-penetration rule, please check the
+    routePenetrationRules
+    detail exception is :java.lang.IllegalStateException: property routePenetrationRules
+    be null
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -59,12 +62,14 @@ Feature: support rownum sql
     """
     Then restart dble in "dble-1" failed for
     """
-    The system property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
+    The property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path $
     """
-    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path \\$
+    parse the route-penetration rule, please check the
+    routePenetrationRules
+    detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -84,12 +89,14 @@ Feature: support rownum sql
     """
     Then restart dble in "dble-1" failed for
     """
-    The system property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
+    The property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was STRING at line 1 column 11 path $.rules
     """
-    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was STRING at line 1 column 11 path \\$.rules
+    parse the route-penetration rule, please check the
+    routePenetrationRules
+    detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was STRING at line 1 column 11 path
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -97,12 +104,15 @@ Feature: support rownum sql
     """
     Then restart dble in "dble-1" failed for
     """
-    The system property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
+    The property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: regex can't be null or empty.
     """
-    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: regex can't be null or empty.
+    parse the route-penetration rule, please check the
+    routePenetrationRules
+    detail exception is :java.lang.IllegalStateException: regex
+    t be null or empty.
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -130,12 +140,15 @@ Feature: support rownum sql
     """
     Then restart dble in "dble-1" failed for
     """
-    The system property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
+    The property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonParseException: Cannot parse json '123' to boolean value
     """
-    can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonParseException: Cannot parse json '123' to boolean value
+    parse the route-penetration rule, please check the
+    routePenetrationRules
+    detail exception is :com.google.gson.JsonParseException: Cannot parse json
+    to boolean value
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -193,7 +206,7 @@ Feature: support rownum sql
       | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                    |
       | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration |
       | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":false,"caseSensitive":true}]}  | The config of route penetration  |
-        Then execute sql in "dble-1" in "user" mode
+    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                               | expect  | db      |
       | conn_1 | False   | select id from sharding_2_t1                                                      | success | schema1 |
       | conn_1 | False   | select id FROM sharding_2_t1                                                      | success | schema1 |
@@ -229,7 +242,7 @@ Feature: support rownum sql
       | PARAM_NAME-0             | PARAM_VALUE-1                                                                                      | PARAM_DESCR-2                    |
       | enableRoutePenetration   | 1                                                                                                  | Whether enable route penetration |
       | routePenetrationRules    | {"rules":[{"regex":"select\\sid\\sfrom\\ssharding_2_t1","partMatch":false,"caseSensitive":false}]} | The config of route penetration  |
-        Then execute sql in "dble-1" in "user" mode
+    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                               | expect  | db      |
       | conn_1 | False   | select id from sharding_2_t1                                                      | success | schema1 |
       | conn_1 | False   | select id FROM sharding_2_t1                                                      | success | schema1 |
@@ -385,25 +398,25 @@ Feature: support rownum sql
       | conn_1 | False   | explain select a.*, @rownum:=1 from global_2_t1 a | success | schema1 |
     Then check resultset "rownum_rs1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1          | SQL/REF-2 |
-      | dn1//dn2         | BASE SQL        | SELECT a.*, @rownum := 1 FROM global_2_t1 a LIMIT 100 |
+      | /*AllowDiff*/dn1 | BASE SQL        | SELECT a.*, @rownum := 1 FROM global_2_t1 a LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs2"
       | conn   | toClose | sql                                                                                                     | expect  | db      |
       | conn_1 | False   | explain select parent_id, count(0), @rownum:=1 from global_2_t1 group by parent_id having parent_id > 1 | success | schema1 |
     Then check resultset "rownum_rs2" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1          | SQL/REF-2 |
-      | dn1//dn2         | BASE SQL        | SELECT parent_id, count(0), @rownum := 1 FROM global_2_t1 GROUP BY parent_id HAVING parent_id > 1 LIMIT 100 |
+      | /*AllowDiff*/dn1 | BASE SQL        | SELECT parent_id, COUNT(0), @rownum := 1 FROM global_2_t1 GROUP BY parent_id HAVING parent_id > 1 LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs3"
       | conn   | toClose | sql                                             | expect  | db      |
       | conn_1 | False   | explain select a.*, @rownum:=1 from single_t1 a | success | schema1 |
     Then check resultset "rownum_rs3" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1          | SQL/REF-2 |
       | dn1              | BASE SQL        | SELECT a.*, @rownum := 1 FROM single_t1 a LIMIT 100 |
-        Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs4"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs4"
       | conn   | toClose | sql                                                                                                   | expect  | db      |
       | conn_1 | True    | explain select parent_id, count(0), @rownum:=1 from single_t1 group by parent_id having parent_id > 1 | success | schema1 |
     Then check resultset "rownum_rs4" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1          | SQL/REF-2 |
-      | dn1              | BASE SQL        | SELECT parent_id, count(0), @rownum := 1 FROM single_t1 GROUP BY parent_id HAVING parent_id > 1 LIMIT 100 |
+      | dn1              | BASE SQL        | SELECT parent_id, COUNT(0), @rownum := 1 FROM single_t1 GROUP BY parent_id HAVING parent_id > 1 LIMIT 100 |
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DenableRoutePenetration/d
@@ -441,15 +454,15 @@ Feature: support rownum sql
       | conn_2 | False   | explain select a.parent_id, count(0), @rownum:=1 from sharding_2_t1 a group by a.parent_id having a.parent_id > 1 | success | schema1 |
     Then check resultset "rownum_rs7" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1              | BASE SQL | SELECT a.parent_id, count(0), @rownum := 1 FROM sharding_2_t1 a GROUP BY a.parent_id HAVING a.parent_id > 1 LIMIT 100 |
-      | dn2              | BASE SQL | SELECT a.parent_id, count(0), @rownum := 1 FROM sharding_2_t1 a GROUP BY a.parent_id HAVING a.parent_id > 1 LIMIT 100 |
+      | dn1              | BASE SQL | SELECT a.parent_id, COUNT(0), @rownum := 1 FROM sharding_2_t1 a GROUP BY a.parent_id HAVING a.parent_id > 1 LIMIT 100 |
+      | dn2              | BASE SQL | SELECT a.parent_id, COUNT(0), @rownum := 1 FROM sharding_2_t1 a GROUP BY a.parent_id HAVING a.parent_id > 1 LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs8"
       | conn   | toClose | sql                                                                                                                    | expect  | db      |
       | conn_2 | False    | explain select parent_id, code, count(0), @rownum:=1 from sharding_2_t1 group by parent_id, code having parent_id > 1 | success | schema1 |
     Then check resultset "rownum_rs8" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1              | BASE SQL | SELECT parent_id, code, count(0)  , @rownum := 1 FROM sharding_2_t1 GROUP BY parent_id, code HAVING parent_id > 1 LIMIT 100 |
-      | dn2              | BASE SQL | SELECT parent_id, code, count(0)  , @rownum := 1 FROM sharding_2_t1 GROUP BY parent_id, code HAVING parent_id > 1 LIMIT 100 |
+      | dn1              | BASE SQL | SELECT parent_id, code, COUNT(0)  , @rownum := 1 FROM sharding_2_t1 GROUP BY parent_id, code HAVING parent_id > 1 LIMIT 100 |
+      | dn2              | BASE SQL | SELECT parent_id, code, COUNT(0)  , @rownum := 1 FROM sharding_2_t1 GROUP BY parent_id, code HAVING parent_id > 1 LIMIT 100 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                              | expect  | db      |
       | conn_2 | True    | drop table if exists sharding_2_t1;drop table if exists global_2_t1;drop table if exists single_t1               | success | schema1 |
@@ -975,13 +988,13 @@ Feature: support rownum sql
       | conn_2 | False   | explain select a.id,a.code,@rownum:=@rownum-1 from global_2_t1 a, (select @rownum:=0) r order by a.id | success | schema1 |
     Then check resultset "rownum_rs1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1//dn2         | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM global_2_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
+      | /*AllowDiff*/dn1 | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM global_2_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs2"
       | conn   | toClose | sql                                             | expect  | db      |
       | conn_2 | False   | explain select id, code, @rownum:=@rownum-1 from global_2_t1, (select @rownum:=0) r order by id | success | schema1 |
     Then check resultset "rownum_rs2" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn1//dn2         | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM global_2_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
+      | /*AllowDiff*/dn1 | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM global_2_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs3"
       | conn   | toClose | sql                                                                                                                               | expect  | db      |
       | conn_2 | False   | explain select t1.id,t2.global_value,@rownum:=1 from sharding_2_t1 t1,global_2_t1 t2 where t1.id=t2.parent_id order by t2.id desc | success | schema1 |
@@ -1112,13 +1125,13 @@ Feature: support rownum sql
       | conn_2 | False   | explain select a.id,a.code,@rownum:=@rownum-1 from global_2_t1 a, (select @rownum:=0) r order by a.id | success | schema1 |
     Then check resultset "rownum_rs1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn3//dn4         | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM global_2_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
+      | /*AllowDiff*/dn2 | BASE SQL | SELECT a.id, a.code, @rownum := @rownum - 1 FROM global_2_t1 a, (   SELECT @rownum := 0  ) r ORDER BY a.id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs2"
       | conn   | toClose | sql                                             | expect  | db      |
       | conn_2 | False   | explain select id, code, @rownum:=@rownum-1 from global_2_t1, (select @rownum:=0) r order by id | success | schema1 |
     Then check resultset "rownum_rs2" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2 |
-      | dn3//dn4         | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM global_2_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
+      | /*AllowDiff*/dn1 | BASE SQL | SELECT id, code, @rownum := @rownum - 1 FROM global_2_t1, (   SELECT @rownum := 0  ) r ORDER BY id LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs3"
       | conn   | toClose | sql                                                                                                                               | expect  | db      |
       | conn_2 | False   | explain select t1.id,t2.global_value,@rownum:=1 from sharding_2_t1 t1,global_2_t1 t2 where t1.id=t2.parent_id order by t2.id desc | success | schema1 |

@@ -9,6 +9,8 @@ Feature: connect dble rwSplitUser in mysql(172.100.9.4), and execute cmd "load d
   Scenario: load data with relative path #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
+      <managerUser name="root" password="111111"/>
+      <shardingUser name="test" password="111111" schemas="schema1"/>
       <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -71,8 +73,11 @@ Feature: connect dble rwSplitUser in mysql(172.100.9.4), and execute cmd "load d
   Scenario: The value of a column in the data is empty, and the data can be successfully inserted  #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
+      <managerUser name="root" password="111111"/>
+      <shardingUser name="test" password="111111" schemas="schema1"/>
       <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
       """
+
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
       <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
@@ -107,6 +112,8 @@ Feature: connect dble rwSplitUser in mysql(172.100.9.4), and execute cmd "load d
   Scenario: When load data empty file, there will be error  #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
+      <managerUser name="root" password="111111"/>
+      <shardingUser name="test" password="111111" schemas="schema1"/>
       <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"

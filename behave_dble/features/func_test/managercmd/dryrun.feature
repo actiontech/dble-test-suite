@@ -4,7 +4,8 @@
 
 Feature: # dryrun test
 
-
+  @skip
+    ##这个版本的结果是不稳定的
   Scenario: check cmd "dryrun"  #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
        """

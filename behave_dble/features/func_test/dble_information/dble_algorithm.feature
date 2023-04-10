@@ -315,7 +315,7 @@ Feature:  dble_algorithm test
       | conn_0 | False   | select name,key from dble_algorithm where is_file <any (select is_file from dble_algorithm where value ='enum-integer.txt')   | length{(52)}                                |
       | conn_0 | False   | select name,key from dble_algorithm where is_file = (select is_file from dble_algorithm where value ='enum-integer.txt')      | has{(('enum_integer_rule','mapFile',),)}     |
       | conn_0 | False   | select name,key from dble_algorithm where is_file = any (select is_file from dble_algorithm where value ='enum-integer.txt')  | has{(('enum_integer_rule','mapFile',),)}     |
-      | conn_0 | False   | select id,sharding_column,algorithm_name from dble_sharding_table where algorithm_name in  (select name from dble_algorithm where is_file ='true')  | has{(('C7', 'ID', 'enum_integer_rule'),)}     |
+      | conn_0 | False   | select id,sharding_column,algorithm_name from dble_sharding_table where algorithm_name in  (select name from dble_algorithm where is_file ='true')  | has{(('C5', 'ID', 'enum_integer_rule'),)}     |
 #case insupported dml
       | conn_0 | False   | delete from dble_algorithm where name='date_rule'               | Access denied for table 'dble_algorithm'   |
       | conn_0 | False   | update dble_algorithm set name = 'a' where name='date_rule'     | Access denied for table 'dble_algorithm'   |

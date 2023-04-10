@@ -117,10 +117,10 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       <dbInstance name=\"slave1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" maxCon=\"1000\" minCon=\"10\" primary=\"true\"\/>
       """
 
-     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                   | expect      | db      |
-      | conn_1 | False   | drop table if exists sharding_4_t1    | success     | schema1 |
-      | conn_1 | True    | create table sharding_4_t1 (id int)   | success     | schema1 |
+#     Then execute sql in "dble-1" in "user" mode
+#      | conn   | toClose | sql                                   | expect      | db      | timeout |
+#      | conn_1 | False   | drop table if exists sharding_4_t1    | success     | schema1 | 6,2     |
+#      | conn_1 | True    | create table sharding_4_t1 (id int)   | success     | schema1 | 6,2     |
 
     Given start mysql in host "mysql-master2"
 

@@ -359,9 +359,9 @@ Feature: sharding basic config test
 
     Then execute admin cmd "reload @@config_all" get the following output
       """
-      Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: com.actiontech.dble.config.util.ConfigException: sharding json to map occurred  parse errors, The detailed errors are as follows
+      Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: dbGroup not exists dbGroup2
       """
     Then Restart dble in "dble-1" failed for
       """
-      The dbGroup\[dbGroup2\] associated with ShardingNode\[dn2\] does not exist
+      dbGroup not exists dbGroup2
       """

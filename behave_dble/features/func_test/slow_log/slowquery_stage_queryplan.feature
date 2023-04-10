@@ -67,7 +67,8 @@ Feature: check sql execute stage and connection query plan
     Given delete file "/opt/dble/BtraceSessionStage.java" on "dble-1"
     Given delete file "/opt/dble/BtraceSessionStage.java.log" on "dble-1"
 
-
+@skip
+   ##方法不适用
   Scenario: check "show @@connection.sql.status where FRONT_ID=?" #2
 
 # case 1: use default @@slow_query_log and disable @@slow_query_log

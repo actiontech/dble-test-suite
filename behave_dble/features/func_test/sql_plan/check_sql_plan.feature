@@ -413,11 +413,10 @@ Feature: check sql plan
       | dn1_1           | BASE SQL      | select `t1`.`fk_store_comp_id` as `remakr` from  `vs_store` `t1` where TO_DAYS(NOW()) - TO_DAYS(t1.fk_store_comp_id) = 1 LIMIT 2 |
       | dn2_1           | BASE SQL      | select `t1`.`fk_store_comp_id` as `remakr` from  `vs_store` `t1` where TO_DAYS(NOW()) - TO_DAYS(t1.fk_store_comp_id) = 1 LIMIT 2 |
       | merge_2         | MERGE         | dn1_1; dn2_1                                                                                                                     |
-      | limit_3         | LIMIT         | merge_2                                                                                                                          |
-      | shuffle_field_3 | SHUFFLE_FIELD | limit_3                                                                                                                          |
+      | limit_2         | LIMIT         | merge_2                                                                                                                          |
+      | shuffle_field_3 | SHUFFLE_FIELD | limit_2                                                                                                                          |
       | union_all_1     | UNION_ALL     | shuffle_field_1; shuffle_field_3                                                                                                 |
-      | limit_2         | LIMIT         | union_all_1                                                                                                                      |
-      | shuffle_field_2 | SHUFFLE_FIELD | limit_2                                                                                                                          |
+      | shuffle_field_2 | SHUFFLE_FIELD | union_all_1                                                                                                                      |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                                                                                                                                                                                    | db      |
       | conn_0 | true    | (SELECT NULL AS ACCOUNTS_ID,t.remakr FROM vs_store_company t WHERE TO_DAYS(NOW())-TO_DAYS(t.pk_id)=1 limit 2) UNION ALL (SELECT NULL AS ACCOUNTS_ID,t1.fk_store_comp_id from vs_store t1 where TO_DAYS(NOW())-TO_DAYS(t1.fk_store_comp_id)=1 limit 2); | schema1 |

@@ -107,8 +107,8 @@ Feature: test "pause/resume" manager cmd
       | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | dble_information   |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                            | expect                  |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | You are paused already  |
+      | sql                                                                            | expect                                            |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | Some shardingNodes is paused, please resume first |
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                                            | expect                                               |
@@ -148,62 +148,13 @@ Feature: test "pause/resume" manager cmd
   Scenario: execute manager cmd "pause @@shardingNode" different  #7
 
     Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                              | expect                                                                                               |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5   | success                                                                                              |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5   | You are paused already                                                                               |
-      | pause @@shardingNode = 'dn1,dn2' and timeout =10 ,queue = 1,wait_limit = 5       | You can't run different PAUSE commands at the same time. Please resume previous PAUSE command first. |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 11,wait_limit = 5  | You can't run different PAUSE commands at the same time. Please resume previous PAUSE command first. |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | You can't run different PAUSE commands at the same time. Please resume previous PAUSE command first. |
-      | resume                                                                           | success                                                                                              |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | success                                                                                              |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =100 ,queue = 1,wait_limit = 15 | You are paused already                                                                               |
-      | resume                                                                           | success                                                                                              |
-
-
-  @skip
-  #3.21.06 修复
-  Scenario: execute manager cmd "pause  resume " more time  #8
-  # DBLE0REQ-1102
-    Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                           | expect  |
-      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
-    Then get result of oscmd named "A" in "dble-1"
-      """
-      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep 'pause' | wc -l
-      """
-    Then check result "A" value is "9"
-    Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                           | expect  |
-      | resume                                                                        | success |
-    Then get result of oscmd named "A" in "dble-1"
-      """
-      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep 'pause' | wc -l
-      """
-    Then check result "A" value is "0"
-
-    Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                           | expect  |
-      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
-      | resume                                                                        | success |
-      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
-      | resume                                                                        | success |
-      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
-      | resume                                                                        | success |
-      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
-      | resume                                                                        | success |
-      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
-      | resume                                                                        | success |
-      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
-    Then get result of oscmd named "A" in "dble-1"
-      """
-      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep 'pause' | wc -l
-      """
-    Then check result "A" value is "9"
-    Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                           | expect  |
-      | resume                                                                        | success |
-    Then get result of oscmd named "A" in "dble-1"
-      """
-      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep 'pause' | wc -l
-      """
-    Then check result "A" value is "0"
+      | sql                                                                              | expect                                            |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5   | success                                           |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5   | Some shardingNodes is paused, please resume first |
+      | pause @@shardingNode = 'dn1,dn2' and timeout =10 ,queue = 1,wait_limit = 5       | Some shardingNodes is paused, please resume first |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 11,wait_limit = 5  | Some shardingNodes is paused, please resume first |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | Some shardingNodes is paused, please resume first |
+      | resume                                                                           | success                                           |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | success                                           |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =100 ,queue = 1,wait_limit = 15 | Some shardingNodes is paused, please resume first |
+      | resume                                                                           | success                                           |

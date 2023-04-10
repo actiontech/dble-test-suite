@@ -10,11 +10,13 @@ Feature: check user hint
 #    Given reset replication and none system databases
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
     <rwSplitUser name="split1" password="111111" dbGroup="ha_group3" />
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100">
+    <dbGroup rwSplitMode="2" name="ha_group3" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
         <dbInstance name="hostS3" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false" />

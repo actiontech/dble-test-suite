@@ -409,7 +409,7 @@ Feature: test "reload @@config" in zk cluster
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
-      Illegal table conf : table \[ sharding4 \] rule function \[ hash-three \] partition size : ID > table shardingNode size : 2, please make sure table shardingnode size = function partition size
+      Reload config failure
       """
     #case check on zookeeper
     Given execute linux command in "dble-1"
@@ -511,7 +511,7 @@ Feature: test "reload @@config" in zk cluster
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     #  Reload Failure.he reason is com.actiontech.dble.config.util.ConfigException: org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 70; cvc-datatype-valid.1.2.1: '1.2' is not a valid value for 'integer'.
       """
-      '1.2' is not a valid value for 'integer'
+      Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: java.lang.NumberFormatException: For input string: \"1.2\"
       """
     #case check on zookeeper
     Given execute linux command in "dble-1"
@@ -880,13 +880,13 @@ Feature: test "reload @@config" in zk cluster
 
       Then execute sql in "dble-1" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect       |
-        | conn_10 | False     | show @@reload_status       | dble_information | length{(0)}  |
+        | conn_10 | False     | show @@reload_status       | dble_information | length{(1)}  |
       Then execute sql in "dble-2" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect       |
-        | conn_20 | true      | show @@reload_status       | dble_information | length{(0)}  |
+        | conn_20 | true      | show @@reload_status       | dble_information | length{(1)}  |
       Then execute sql in "dble-3" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect       |
-        | conn_30 | true      | show @@reload_status       | dble_information | length{(0)}  |
+        | conn_30 | true      | show @@reload_status       | dble_information | length{(1)}  |
       Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
         """
         <shardingTable name="sharding" shardingNode="dn3,dn4" shardingColumn="id" function="hash-two"/>
@@ -911,10 +911,10 @@ Feature: test "reload @@config" in zk cluster
         |   0     | zk        | RELOAD_ALL    | META_RELOAD     |                   |  LOCAL_COMMAND  |            |
       Then execute sql in "dble-2" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect       |
-        | conn_21 | true      | show @@reload_status        | dble_information | length{(0)} |
+        | conn_21 | true      | show @@reload_status        | dble_information | length{(1)} |
       Then execute sql in "dble-3" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect       |
-        | conn_31 | true      | show @@reload_status       | dble_information | length{(0)}  |
+        | conn_31 | true      | show @@reload_status       | dble_information | length{(1)}  |
 
       Then execute sql in "dble-1" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect   |
@@ -934,10 +934,10 @@ Feature: test "reload @@config" in zk cluster
         |   0     | zk        | RELOAD_ALL    | NOT_RELOADING    |  LOCAL_COMMAND  | INTERRUPUTED |
       Then execute sql in "dble-2" in "admin" mode
         | conn    | toClose   | sql                         | db               | expect      |
-        | conn_22 | true      | show @@reload_status        | dble_information | length{(0)} |
+        | conn_22 | true      | show @@reload_status        | dble_information | length{(1)} |
       Then execute sql in "dble-3" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect       |
-        | conn_32 | true      | show @@reload_status       | dble_information | length{(0)}  |
+        | conn_32 | true      | show @@reload_status       | dble_information | length{(1)}  |
       Then check resultsets "1A" and "1B" are same in following columns
         | column                    | column_index |
         | LAST_RELOAD_START         |   4          |
@@ -955,10 +955,10 @@ Feature: test "reload @@config" in zk cluster
         |   1     | zk        | RELOAD_META    | NOT_RELOADING    |  LOCAL_COMMAND  | RELOAD_END   |
       Then execute sql in "dble-2" in "admin" mode
         | conn    | toClose   | sql                         | db               | expect      |
-        | conn_23 | true      | show @@reload_status        | dble_information | length{(0)} |
+        | conn_23 | true      | show @@reload_status        | dble_information | length{(1)} |
       Then execute sql in "dble-3" in "admin" mode
         | conn    | toClose   | sql                        | db               | expect       |
-        | conn_33 | true      | show @@reload_status       | dble_information | length{(0)}  |
+        | conn_33 | true      | show @@reload_status       | dble_information | length{(1)}  |
 
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "1C"
         | conn    | toClose   | sql                                                            |  db                |

@@ -14,7 +14,7 @@ Feature: on zookeeper to check start config
       """
     Then restart dble in "dble-1" failed for
       """
-      The dbGroup\[ha_group22\] associated with ShardingNode\[dn2\] does not exist
+      dbGroup not exists ha_group22
       """
     Given config zookeeper cluster in all dble nodes with "local zookeeper host"
     Given reset dble registered nodes in zk
@@ -122,7 +122,7 @@ Feature: on zookeeper to check start config
       """
     Then execute admin cmd "reload @@config_all" get the following output
       """
-      The dbGroup[ha_group22] associated with ShardingNode[dn2] does not exist
+      dbGroup not exists ha_group22
       """
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """

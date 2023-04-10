@@ -62,7 +62,7 @@ Feature: test fresh backend connection pool
     Then execute admin cmd  in "dble-1" at background
       | user | passwd | conn   | toClose  | sql                                     |db                    |
       | root | 111111 | conn_0 | True    | reload @@config_all                    | dble_information   |
-    Then check btrace "BtraceFreshConnLock.java" output in "dble-1"
+    Then check btrace "BtraceFreshConnLock.java" output in "dble-1" with ">0" times
     """
     get reload lock
     """

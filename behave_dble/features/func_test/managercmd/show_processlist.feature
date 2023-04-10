@@ -38,11 +38,11 @@ Feature: #test show @@processlist
       | sql                |
       | show @@processlist |
     Then check resultset "pro_rs_B" has lines with following column values
-      | db_instance-1 | User-3 | db-5 | Command-6 | Info-9 |
-      | hostM1        | test   | db1  | Sleep     | None   |
-      | hostM2        | test   | db1  | Sleep     | None   |
-      | hostM1        | test   | db2  | Sleep     | None   |
-      | hostM2        | test   | db2  | Sleep     | None   |
+      | shardingNode-1 | User-3 | db-5 | Command-6 | Info-9 |
+      | dn1        | test   | db1  | Sleep     | None   |
+      | dn2        | test   | db1  | Sleep     | None   |
+      | dn3        | test   | db2  | Sleep     | None   |
+      | dn4        | test   | db2  | Sleep     | None   |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                 | db       |
       | conn_1 | False    | begin               | schema1  |
@@ -51,12 +51,12 @@ Feature: #test show @@processlist
       | sql                |
       | show @@processlist |
     Then check resultset "pro_rs_C" has lines with following column values
-      | db_instance-1 | User-3 | db-5 | Command-6 | Info-9 |
-      | hostM1        | test   | db1  | Sleep     | None   |
-      | hostM2        | test   | db1  | Sleep     | None   |
-      | hostM1        | test   | db2  | Sleep     | None   |
-      | hostM2        | test   | db2  | Sleep     | None   |
-      | hostM1        | test   | db1  | Sleep     | None   |
+      | shardingNode-1 | User-3 | db-5 | Command-6 | Info-9 |
+      | dn1        | test   | db1  | Sleep     | None   |
+      | dn2        | test   | db1  | Sleep     | None   |
+      | dn3        | test   | db2  | Sleep     | None   |
+      | dn4        | test   | db2  | Sleep     | None   |
+      | dn1        | test   | db1  | Sleep     | None   |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql    | db       |
       | conn_1 | True     | commit | schema1  |

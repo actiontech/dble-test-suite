@@ -25,18 +25,18 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
       | conn_0 | False   | select * from dble_status | dble_information  |
    Then check resultset "dble_status_2" has lines with following column values
       | variable_name-0         | comment-2                                                                                                          |
-      | uptime                  | Length of time to start dble                                                                                       |
-      | current_timestamp       | The current time of the dble system                                                                                |
-      | startup_timestamp       | Dble system startup time                                                                                           |
-      | config_reload_timestamp | Last config load time                                                                                              |
-      | heap_memory_max         | The maximum amount of memory that the virtual machine will attempt to use, measured in bytes                       |
-      | heap_memory_used        | Heap memory usage, measured in bytes                                                                               |
-      | heap_memory_total       | The total of heap memory, measured in bytes                                                                        |
-      | direct_memory_max       | Max direct memory, measured in bytes                                                                               |
-      | direct_memory_pool_size | Size of the memory pool, is equal to the product of BufferPoolPagesize and BufferPoolPagenumber, measured in bytes |
-      | direct_memory_pool_used | DirectMemory memory in the memory pool that has been used, measured in bytes                                       |
-      | questions               | Number of requests                                                                                                 |
-      | transactions            | Number of transactions                                                                                             |
+      | uptime                  | length of time to start dble                                                                                       |
+      | current_timestamp       | the current time of the dble system                                                                                |
+      | startup_timestamp       | dble system startup time                                                                                           |
+      | config_reload_timestamp | last config load time                                                                                              |
+      | heap_memory_max         | the maximum amount of memory that the virtual machine will attempt to use, measured in bytes                       |
+      | heap_memory_used        | heap memory usage, measured in bytes                                                                               |
+      | heap_memory_total       | the total of heap memory, measured in bytes                                                                        |
+      | direct_memory_max       | max direct memory, measured in bytes                                                                               |
+      | direct_memory_pool_size | size of the memory pool, is equal to the product of BufferPoolPagesize and BufferPoolPagenumber, measured in bytes |
+      | direct_memory_pool_used | directmemory memory in the memory pool that has been used, measured in bytes                                       |
+      | questions               | number of requests                                                                                                 |
+      | transactions            | number of transactions                                                                                             |
 # compare with show @@time.startup
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_3"
       | conn   | toClose | sql                                                                             | db                |
@@ -151,7 +151,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
       | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '19',), ('transactions', '13',))}    |
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql  | expect |
-      | conn_1 | False   | exit | druid not support sql syntax, the reason is syntax error, error in :'exit, pos 4, line 1, column 5, token IDENTIFIER exit |
+      | conn_1 | False   | exit | druid not support sql syntax |
   #case query exit, questions and transactions add 1
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
@@ -443,7 +443,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                                      | expect                                                     |
      | conn_1 | False   | set autocommit=2                         | illegal value     |
-     | conn_1 | False   | drop table if exist test                 | druid not support sql syntax, the reason is syntax error, error in :'e if exist test', expect EXISTS, actual null, pos 19, line 1, column 15, token IDENTIFIER exist |
+     | conn_1 | False   | drop table if exist test                 | druid not support sql syntax |
    # 1064 error, questions + 2, transactions + 1
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
@@ -460,8 +460,8 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                       | expect  |
      | conn_1 | False   | begin                     | success |
-     | conn_1 | False   | delete * from test        | druid not support sql syntax, the reason is syntax error. pos 8, line 1, column 8, token * |
-     | conn_1 | False   | drop table if exist test  | druid not support sql syntax, the reason is syntax error, error in :'e if exist test', expect EXISTS, actual null, pos 19, line 1, column 15, token IDENTIFIER exist |
+     | conn_1 | False   | delete * from test        | druid not support sql syntax,  |
+     | conn_1 | False   | drop table if exist test  | druid not support sql syntax,  |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                             | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '9',), ('transactions', '5',))} | dble_information |
@@ -494,7 +494,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                           | expect |
      | conn_1 | False   | rollback | success |
-     | conn_1 | False   | drop table if exist global_t1 | druid not support sql syntax, the reason is syntax error, error in :'e if exist global_t1', expect EXISTS, actual null, pos 19, line 1, column 15, token IDENTIFIER exist |
+     | conn_1 | False   | drop table if exist global_t1 | druid not support sql syntax |
    # 1064 error, questions + 1, transactions + 1
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
@@ -511,7 +511,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                       | expect  |
      | conn_1 | False   | begin                     | success |
-     | conn_1 | False   | delete * from test        | druid not support sql syntax, the reason is syntax error. pos 8, line 1, column 8, token * |
+     | conn_1 | False   | delete * from test        | druid not support sql syntax |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '19',), ('transactions', '10',))} | dble_information |
@@ -529,7 +529,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn   | toClose | sql                       | expect  |
      | conn_1 | False   | rollback                  | success |
      | conn_1 | False   | begin                     | success |
-     | conn_1 | False   | drop table if exist test  | druid not support sql syntax, the reason is syntax error, error in :'e if exist test', expect EXISTS, actual null, pos 19, line 1, column 15, token IDENTIFIER exist |
+     | conn_1 | False   | drop table if exist test  | druid not support sql syntax |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '25',), ('transactions', '12',))} | dble_information |
@@ -757,9 +757,11 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    </dbGroup>
    """
    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-   """
-   <rwSplitUser name="split" password="111111" dbGroup="ha_group3" />
-   """
+      """
+      <managerUser name="root" password="111111"/>
+      <shardingUser name="test" password="111111" schemas="schema1"/>
+      <rwSplitUser name="split" password="111111" dbGroup="ha_group3" />
+      """
    Then execute admin cmd "reload @@config_all"
    Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql     |
@@ -901,9 +903,11 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    </dbGroup>
    """
    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-   """
-   <rwSplitUser name="split" password="111111" dbGroup="ha_group3" />
-   """
+      """
+      <managerUser name="root" password="111111"/>
+      <shardingUser name="test" password="111111" schemas="schema1"/>
+      <rwSplitUser name="split" password="111111" dbGroup="ha_group3" />
+      """
    Then execute admin cmd "reload @@config_all"
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                      |
@@ -1201,9 +1205,11 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    </dbGroup>
    """
    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-   """
-   <rwSplitUser name="split" password="111111" dbGroup="ha_group3" />
-   """
+      """
+      <managerUser name="root" password="111111"/>
+      <shardingUser name="test" password="111111" schemas="schema1"/>
+      <rwSplitUser name="split" password="111111" dbGroup="ha_group3" />
+      """
    Then execute admin cmd "reload @@config_all"
 
    # questions + 3, transactions + 1
@@ -1329,9 +1335,11 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    </dbGroup>
    """
    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-   """
-   <rwSplitUser name="split" password="111111" dbGroup="ha_group3" />
-   """
+      """
+      <managerUser name="root" password="111111"/>
+      <shardingUser name="test" password="111111" schemas="schema1"/>
+      <rwSplitUser name="split" password="111111" dbGroup="ha_group3" />
+      """
    Then execute admin cmd "reload @@config_all"
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql     |

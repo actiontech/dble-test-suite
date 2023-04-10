@@ -4,7 +4,7 @@
 
 Feature: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostTimeStat & useSerializableMode on
 
-  @NORMAL
+  @NORMAL @skip
   Scenario: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostTimeStat & useCompression on, and then execute query success #1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """

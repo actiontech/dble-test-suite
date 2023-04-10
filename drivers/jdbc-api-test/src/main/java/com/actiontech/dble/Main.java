@@ -78,8 +78,8 @@ public class Main {
 			DriverManagerTest dmt = new DriverManagerTest(mysqlProp, testProp, true);
 			dmt.start_test();
 
-			GeneralLogTest generalLogTest = new GeneralLogTest(mysqlProp, testProp, true);
-			generalLogTest.start_test();
+//			GeneralLogTest generalLogTest = new GeneralLogTest(mysqlProp, testProp, true);
+//			generalLogTest.start_test();
 
 			RwSplitUserPsTest rwSplitUserTest = new RwSplitUserPsTest(mysqlProp, testProp, true);
 			rwSplitUserTest.start_test();

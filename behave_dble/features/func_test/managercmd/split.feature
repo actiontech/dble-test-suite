@@ -165,7 +165,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     Then execute sql in "dble-1" in "admin" mode
       | sql                                             | expect   |
       | split /opt/noschema_only_table_data.sql /opt    | success  |
-      | split /opt/noschema_only_table_data.sql /opt    | has{('ERROR', 'dump file executor exit, because:Please set schema by -s option or make sure that there are statement about schema in dump file.'),}  |
+      | split /opt/noschema_only_table_data.sql /opt    | has{(('null-null','dump file executor exit, because:Please set schema by -s option or make sure that there are statement about schema in dump file.',),)}  |
     Then check path "/opt/noschema_only_table_data.sql-dn1-*.dump" in "dble-1" should not exist
     Then check path "/opt/noschema_only_table_data.sql-dn2-*.dump" in "dble-1" should not exist
     Then check path "/opt/noschema_only_table_data.sql-dn3-*.dump" in "dble-1" should not exist
@@ -949,7 +949,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     #2.split with no '-s' parameter, split success and the split out files will consistent with the original dump file
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                        | expect    |
-      | split /opt/schema1_with_only_table_structure.sql /opt      | has{('ERROR', 'dump file executor exit, because:Please set schema by -s option or make sure that there are statement about schema in dump file.'),}   |
+      | split /opt/schema1_with_only_table_structure.sql /opt      | has{(('null-null', 'dump file executor exit, because:Please set schema by -s option or make sure that there are statement about schema in dump file.'),)}   |
     #check the split out files exist
     Then check path "/opt/schema1_with_only_table_structure.sql-dn1-*.dump" in "dble-1" should not exist
     Then check path "/opt/schema1_with_only_table_structure.sql-dn2-*.dump" in "dble-1" should not exist

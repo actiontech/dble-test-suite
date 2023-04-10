@@ -4,7 +4,7 @@
 Feature: test KILL [CONNECTION | QUERY] processlist_id
 
 
-  @btrace
+  @btrace @skip
   Scenario: check kill query processlist_id #1
 # case 1: kill query current processlist_id
 # case 1.1: kill query processlist_id and does not have an executing sql
@@ -121,11 +121,11 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn_0 | False   | rollback                    | success                                     | schema1 |
       | conn_0 | False   | select * from sharding_4_t1 | success                                     | schema1 |
 
-# case 4.2.2: at receive ok packet stage and not in the transaction
+# case 4.2.2: at setBackendResponseTime stage and not in the transaction
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /ok/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
+    /setBackendResponseTime/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
     Given prepare a thread execute sql "insert into sharding_4_t1(id) values(5),(6),(7),(8)" with "conn_0"

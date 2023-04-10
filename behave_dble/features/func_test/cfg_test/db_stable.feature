@@ -52,7 +52,8 @@ Feature: db config stable test
     Given start mysql in host "mysql-master1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-     <shardingUser name="test" password="111111" schemas="schema1" readOnly="false"/>
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1" readOnly="false"/>
     """
     Then execute admin cmd "reload @@config_all"
     # add sleeptime because Waiting for the recovery of the backend mysql heartbeat

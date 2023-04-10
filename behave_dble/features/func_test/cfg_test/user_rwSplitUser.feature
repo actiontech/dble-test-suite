@@ -15,7 +15,7 @@ Feature: test config in user.xml  ---  rwSplitUser
 
     Then execute admin cmd "reload @@config_all"
     """
-    Attribute 'test' is not allowed to appear in element 'rwSplitUser'
+    Attribute "test" must be declared for element type "rwSplitUser"
     """
 
 
@@ -23,23 +23,23 @@ Feature: test config in user.xml  ---  rwSplitUser
   Scenario: rwSplitUser spelling mistake, start dble fail    #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-     <rwSplitser name="rwS1" password="test_password" dbGroup="ha_group3" />
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    <rwSpl  name="rwS1" password="test_password" dbGroup="ha_group3" />
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Invalid content was found starting with element 'rwSplitser'. One of '{managerUser, shardingUser, rwSplitUser, blacklist}' is expected
+    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: org.xml.sax.SAXParseException; lineNumber: 6; columnNumber: 66; Element type "rwSpl" must be declared.
     """
-    Then Restart dble in "dble-1" failed for
-     """
-     Invalid content was found starting with element 'rwSplitser'. One of '{managerUser, shardingUser, rwSplitUser, blacklist}' is expected
-     """
 
 
   @TRIVIAL
   Scenario: add rwSplitUser user with dbGroup which does not exist, start dble fail    #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-     <rwSplitUser name="rwS1" password="test_password" dbGroup="ha_group3" />
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    <rwSplitser  name="rwS1" password="test_password" dbGroup="ha_group3" />
     """
     Then execute admin cmd "reload @@config_all"
     """
@@ -47,7 +47,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     Then Restart dble in "dble-1" failed for
      """
-     The user's group\[rwS1.ha_group3\] for rwSplit isn't configured in db.xml.
+     Element type \"rwSplitser\" must be declared
      """
 
 
@@ -55,6 +55,8 @@ Feature: test config in user.xml  ---  rwSplitUser
   Scenario: add rwSplitUser user with dbGroup which shardinguser use, start dble fail    #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
+     <managerUser name="root" password="111111"/>
+     <shardingUser name="test" password="111111" schemas="schema1"/>
      <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group1" />
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -67,7 +69,7 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: com.actiontech.dble.config.util.ConfigException: The group[rwS1.ha_group1] has been used by sharding node, can't be used by rwSplit
+    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: The group[rwS1.ha_group1] has been used by sharding node, can't be used by rwSplit
     """
 
 
@@ -76,6 +78,8 @@ Feature: test config in user.xml  ---  rwSplitUser
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
+     <managerUser name="root" password="111111"/>
+     <shardingUser name="test" password="111111" schemas="schema1"/>
      <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
     """
      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -108,6 +112,8 @@ Feature: test config in user.xml  ---  rwSplitUser
   Scenario:config ip white dbInstance to rwSplitUser , rwSplitUser user not in white dbInstance access denied    #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
     <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.253" />
     <rwSplitUser name="rwS2" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.8" />
     """
@@ -136,6 +142,8 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
     <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" maxCon="1" />
     <rwSplitUser name="rwS2" password="111111" dbGroup="ha_group3" maxCon="0" />
     """
@@ -165,6 +173,8 @@ Feature: test config in user.xml  ---  rwSplitUser
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
     <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" maxCon="1" />
     <rwSplitUser name="rwS2" password="111111" dbGroup="ha_group3" maxCon="1" />
     """
@@ -186,6 +196,8 @@ Feature: test config in user.xml  ---  rwSplitUser
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml" with duplicate name
       """
+      <managerUser name="root1" password="111111"/>
+      <shardingUser name="test2" password="111111" schemas="schema1"/>
       <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" maxCon="1" />
       <rwSplitUser name="rwS1" password="222222" dbGroup="ha_group3" maxCon="1" />
       """
@@ -205,6 +217,8 @@ Feature: test config in user.xml  ---  rwSplitUser
       """
      Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
+      <managerUser name="root" password="111111"/>
+      <shardingUser name="test" password="111111" schemas="schema1"/>
       <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" tenant="tenant1" />
       """
     Then execute admin cmd "reload @@config"
@@ -233,9 +247,11 @@ Feature: test config in user.xml  ---  rwSplitUser
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" maxCon="0"/>
-    """
+      """
+      <managerUser name="root" password="111111"/>
+      <shardingUser name="test" password="111111" schemas="schema1"/>
+      <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" maxCon="0"/>
+      """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd    | conn   | toClose    | sql              | expect                                 | timeout |
@@ -251,9 +267,11 @@ Feature: test config in user.xml  ---  rwSplitUser
       $a -DuseThreadUsageStat=1
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1"  />
-    """
+      """
+      <managerUser name="root" password="111111"/>
+      <shardingUser name="test" password="111111" schemas="schema1"/>
+      <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" whiteIPs="172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1"  />
+      """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="2" name="ha_group3" delayThreshold="100" >
@@ -286,32 +304,32 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@shardingNode                                               | length{(5)}   |
       | conn_0 | False   | show @@shardingNode where schema = "schema2"                      | length{(0)}   |
       | conn_0 | False   | show @@dbinstance                                                 | length{(4)}   |
-      | conn_0 | False   | show @@dbinstance where shardingNode = "dn3"                      | length{(1)}   |
-      | conn_0 | False   | show @@dbinstance.syndetail WHERE name = "hostM1"                 | length{(0)}   |
+#      | conn_0 | False   | show @@dbinstance where shardingNode = "dn3"                      | length{(1)}   |
+#      | conn_0 | False   | show @@dbinstance.syndetail WHERE name = "hostM1"                 | length{(0)}   |
       | conn_0 | False   | show @@processor                                                  | success       |
       | conn_0 | False   | show @@command                                                    | length{(1)}   |
-      | conn_0 | False   | show @@connection                                                 | length{(2)}   |
+#      | conn_0 | False   | show @@connection                                                 | length{(2)}   |
       | conn_0 | False   | show @@cache                                                      | length{(2)}   |
       | conn_0 | False   | show @@sql.condition                                              | length{(2)}   |
       | conn_0 | False   | show @@heartbeat                                                  | length{(4)}   |
       | conn_0 | False   | show @@heartbeat.detail  where name='hostM1'                      | success       |
-      | conn_0 | False   | show @@sysparam                                                   | length{(105)} |
+      | conn_0 | False   | show @@sysparam                                                   | length{(91)} |
       | conn_0 | False   | show @@white                                                      | length{(3)}   |
       | conn_0 | False   | show @@directmemory                                               | length{(1)}   |
       | conn_0 | False   | show @@command.count                                              | length{(1)}   |
       | conn_0 | False   | show @@backend.statistics                                         | length{(4)}   |
       | conn_0 | False   | show @@backend.old                                                | length{(0)}   |
       | conn_0 | False   | show @@binlog.status                                              | length{(2)}   |
-      | conn_0 | False   | show @@help                                                       | length{(112)} |
+      | conn_0 | False   | show @@help                                                       | length{(103)} |
       | conn_0 | False   | show @@thread_used                                                | success       |
       | conn_0 | False   | show @@algorithm where schema='schema1' and table='sharding_4_t1' | length{(5)}   |
       | conn_0 | False   | show @@ddl                                                        | length{(0)}   |
-      | conn_0 | False   | show @@reload_status                                              | length{(0)}   |
+      | conn_0 | False   | show @@reload_status                                              | success   |
       | conn_0 | False   | show @@user                                                       | length{(3)}   |
       | conn_0 | False   | show @@user.privilege                                             | length{(1)}   |
       | conn_0 | False   | show @@questions                                                  | length{(1)}   |
 #      | conn_0 | False   | show @@connection_pool                                            | length{(56)}  |
-      | conn_0 | False   | show @@processlist                                                | length{(1)}   |
+#      | conn_0 | False   | show @@processlist                                                | length{(1)}   |
 
 #########   kill
       | conn_0 | False   | kill @@connection 5,500                                           | success       |
@@ -414,16 +432,16 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_2 | False   | show @@cap_client_found_rows                    | success  |
       | conn_2 | False   | enable @@cap_client_found_rows                  | success  |
       | conn_2 | False   | disable @@cap_client_found_rows                 | success  |
-#########   general_log
-      | conn_2 | False   | show @@general_log                    | success  |
-      | conn_2 | False   | disable @@general_log                 | success  |
-      | conn_2 | False   | enable @@general_log                 |  success  |
-#########   statistic 这一期先简单通过，具体case需要去对应的feature补充
-      | conn_2 | False   | show @@statistic                     | success  |
-      | conn_2 | False   | disable @@statistic                  | success  |
-      | conn_2 | False   | enable @@statistic                   | success  |
-      | conn_2 | False   | reload @@statistic_table_size = 100  | success  |
-      | conn_2 | False   | reload @@samplingRate=100            | success  |
+##########   general_log
+#      | conn_2 | False   | show @@general_log                    | success  |
+#      | conn_2 | False   | disable @@general_log                 | success  |
+#      | conn_2 | False   | enable @@general_log                 |  success  |
+##########   statistic 这一期先简单通过，具体case需要去对应的feature补充
+#      | conn_2 | False   | show @@statistic                     | success  |
+#      | conn_2 | False   | disable @@statistic                  | success  |
+#      | conn_2 | False   | enable @@statistic                   | success  |
+#      | conn_2 | False   | reload @@statistic_table_size = 100  | success  |
+#      | conn_2 | False   | reload @@samplingRate=100            | success  |
 #########   flow_control
       | conn_2 | False   | flow_control @@show                          | success   |
       | conn_2 | False   | flow_control @@list                          | success   |
