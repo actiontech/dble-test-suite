@@ -379,11 +379,11 @@ Feature: db.xml support fake host
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: com.actiontech.dble.config.util.ConfigException: db json to map occurred  parse errors, The detailed results are as follows . java.lang.NumberFormatException: For input string: "0:0:0:0:0:0:1:9066"
+    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: java.lang.NumberFormatException: For input string: "0:0:0:0:0:0:1:9066"
     """
     Then restart dble in "dble-1" failed for
     """
-    com.actiontech.dble.config.util.ConfigException: db json to map occurred  parse errors, The detailed results are as follows . java.lang.NumberFormatException: For input string: \"0:0:0:0:0:0:1:9066\"
+    com.actiontech.dble.config.util.ConfigException: db json to map occurred  parse errors
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
