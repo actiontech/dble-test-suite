@@ -3,8 +3,9 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 20223/02/15
 ## case 中的重启dble都是设计过的，每次重启dble是为了内存的释放，修改者移除要注意
+  ###因为是单独job,mysql的配置不影响上下文，这边注释掉，下次挪地方记得mysql的配置影响
 
-@skip
+
 Feature:Support MySQL's large package protocol
 
   Background:delete file , upload file , prepare env
@@ -48,9 +49,9 @@ Feature:Support MySQL's large package protocol
 
 #   @restore_mysql_config
    Scenario: test "insert" sql about large packet the sql is "insert into table (id,c) values (x,大包)"   #1
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
     Given create folder content "/opt/dble/logs/insert" in "dble-1"
      ## case 1，tabletype is sharding table
     Given execute oscmd "python3 /opt/LargePacket.py >/opt/dble/logs/insert/sharding.txt" on "dble-1"
@@ -101,9 +102,9 @@ Feature:Support MySQL's large package protocol
 
 #   @restore_mysql_config
    Scenario: test "update" sql about large packet the sql is "update table set c="大包"    #2
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
     Given create folder content "/opt/dble/logs/update" in "dble-1"
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
       """
@@ -160,9 +161,9 @@ Feature:Support MySQL's large package protocol
 
 #   @restore_mysql_config
    Scenario: test "delete" sql about large packet the sql is "delete from table where c="大包" or id=7"   #3
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
     Given create folder content "/opt/dble/logs/delete" in "dble-1"
 
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
@@ -218,9 +219,9 @@ Feature:Support MySQL's large package protocol
 
 #   @restore_mysql_config
    Scenario: test "select" sql about large packet the sql is "select id from table where c="大包"    #4
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
     Given create folder content "/opt/dble/logs/select" in "dble-1"
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
       """
@@ -277,9 +278,9 @@ Feature:Support MySQL's large package protocol
 
 #   @restore_mysql_config
    Scenario: test "select" sql -- about response has large packet coz:DBLE0REQ-2096      #5
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
     ##prepare large packet values
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                    | expect  | db      |
@@ -346,9 +347,9 @@ Feature:Support MySQL's large package protocol
 
 #   @restore_mysql_config
    Scenario: test hint  and  mulit sql    #6
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
     Given create folder content "/opt/dble/logs/mulit" in "dble-1"
 
     ##### /*!dble:shardingNode=dn1*/insert into sharding_4_t1(id,c) values (7,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -450,9 +451,9 @@ Feature:Support MySQL's large package protocol
 
    @restore_mysql_config
    Scenario: test Prepared sql    #7
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
     Given create folder content "/opt/dble/logs/prepared" in "dble-1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                                                                                                            | expect  | db  |

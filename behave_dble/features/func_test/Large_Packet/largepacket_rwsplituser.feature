@@ -3,8 +3,9 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 20223/02/15
 ## case 中的重启dble都是设计过的，每次重启dble是为了内存的释放，修改者移除要注意
+  ###因为是单独job,mysql的配置不影响上下文，这边注释掉，下次挪地方记得mysql的配置影响
 
-@skip
+
 Feature:Support MySQL's large package protocol
 
    Background:delete file , upload file , prepare env
@@ -29,7 +30,7 @@ Feature:Support MySQL's large package protocol
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
-      <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100" >
+      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
           <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
           <dbInstance name="hostS3" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10"  />
@@ -37,6 +38,8 @@ Feature:Support MySQL's large package protocol
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
+      <managerUser name="root" password="111111"/>
+      <shardingUser name="test" password="111111" schemas="schema1"/>
       <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
       """
     Given Restart dble in "dble-1" success
@@ -47,11 +50,11 @@ Feature:Support MySQL's large package protocol
       | rw1  | 111111 | conn_0 | true    | drop table if exists tb1;create table tb1 (id int,c longblob)                                  | success | db1     |         |
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test "insert" sql about large packet the sql is "insert into table (id,c) values (x,大包)"   #1
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
     Given create folder content "/opt/dble/logs/insert" in "dble-1"
     Given execute oscmd "python3 /opt/LargePacket_rw.py >/opt/dble/logs/insert/rw1.txt" on "dble-1"
     Then check following text exists in file "/opt/dble/logs/insert/rw1.txt" in host "dble-1" with "8" times
@@ -65,11 +68,11 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test "update" sql about large packet the sql is "update table set c="大包"    #2
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
     Given create folder content "/opt/dble/logs/update" in "dble-1"
 
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
@@ -90,11 +93,11 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test "delete" sql about large packet the sql is "delete from table where c="大包" or id=7"   #3
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
     Given create folder content "/opt/dble/logs/delete" in "dble-1"
 
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
@@ -116,11 +119,11 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test "select" sql about large packet the sql is "select id from table where c="大包"    #4
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
     Given create folder content "/opt/dble/logs/select" in "dble-1"
 
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
@@ -142,11 +145,11 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test "select" sql -- about response has large packet coz:DBLE0REQ-2096      #5
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
 #    prepare large packet values
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                    | expect  | db  |
@@ -209,11 +212,11 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test hint  and  mulit sql    #6
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
     Given create folder content "/opt/dble/logs/mulit" in "dble-1"
 
     Then execute sql in "dble-1" in "user" mode
@@ -304,11 +307,11 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test Prepared sql    #7
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+#    """
+#    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+#    """
     Given create folder content "/opt/dble/logs/prepared" in "dble-1"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                   | expect  | db  |
