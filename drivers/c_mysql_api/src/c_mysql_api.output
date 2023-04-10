@@ -6,7 +6,7 @@ IS_DEBUG: 0, argc:1
     pass! after change user, show tables failed. Error: No database selected
     pass! execute ps created before reset connection failed. Error: Incorrect arguments to EXECUTE
     pass! no default db, 'show tables' get Error:No database selected, Error no: 1046
-    pass! mysql_real_escape_string, Failed to insert row, Error: druid not support sql syntax, the reason is syntax error, error in :'What is this','binary data: \0\r\n', pos 4, line 1, column 6, token IDENTIFIER is
+    pass! mysql_real_escape_string, Failed to insert row, Error: druid not support sql syntax, the reason is syntax error, error in :'is this','binary data: \0\r\n'', expect IDENTIFIER, actual IDENTIFIER pos 4, line 1, column 5, token IDENTIFIER null
 debug 1
     *****pass! change user success during read ps statement!*****
     pass! After change user, the new db has no table 'sharding_4_t1'
