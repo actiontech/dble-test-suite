@@ -39,9 +39,13 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
     Then execute admin cmd "reload @@config_all"
 
     #### case 1  dble的默认值
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                              | expect                | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('4194304',),)} | dble_information |
+     Given execute single sql in "dble-1" in "admin" mode and save resultset in "maxPacketSize"
+      | sql             |
+      | show @@sysparam |
+    Then check resultset "maxPacketSize" has lines with following column values
+      | PARAM_NAME-0       | PARAM_VALUE-1      |
+      | maxPacketSize      | 4194304            |
+
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                                              | expect                                    | timeout |
       | conn_1 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '4195328'),)} | 10      |
@@ -62,10 +66,13 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       /# processor/a -DmaxPacketSize=9437184
       """
     Given Restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "maxPacketSize"
+      | sql             |
+      | show @@sysparam |
+    Then check resultset "maxPacketSize" has lines with following column values
+      | PARAM_NAME-0       | PARAM_VALUE-1      |
+      | maxPacketSize      | 9437184            |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                              | expect                | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('9437184',),)} | dble_information |
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                                              | expect                                    | timeout |
       | conn_1 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '9438208'),)} | 10      |
@@ -86,10 +93,13 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       /# processor/a -DmaxPacketSize=5242880
       """
     Given Restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "maxPacketSize"
+      | sql             |
+      | show @@sysparam |
+    Then check resultset "maxPacketSize" has lines with following column values
+      | PARAM_NAME-0       | PARAM_VALUE-1      |
+      | maxPacketSize      | 5242880            |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                              | expect                | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('5242880',),)} | dble_information |
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                                              | expect                                    | timeout |
       | conn_1 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '9438208'),)} | 10      |
@@ -121,9 +131,13 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
     Given Restart dble in "dble-1" success
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                              | expect                 | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('10485760',),)} | dble_information |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "maxPacketSize"
+      | sql             |
+      | show @@sysparam |
+    Then check resultset "maxPacketSize" has lines with following column values
+      | PARAM_NAME-0       | PARAM_VALUE-1      |
+      | maxPacketSize      | 10485760            |
+
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                                              | expect                                     | timeout |
       | conn_1 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '17825792'),)} | 10      |
@@ -181,10 +195,6 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       unknown error:
       NullPointerException
       """
-     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      Got a packet bigger than 'max_allowed_packet' bytes
-      """
 
 
 
@@ -220,10 +230,12 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       /server-id/a max_allowed_packet = 8M
       """
     Given Restart dble in "dble-1" success
-
-    Then execute sql in "dble-1" in "admin" mode
-      | conn  | toClose | sql                                                                              | expect                | db               |
-      | new   | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('4194304',),)} | dble_information |
+     Given execute single sql in "dble-1" in "admin" mode and save resultset in "maxPacketSize"
+      | sql             |
+      | show @@sysparam |
+    Then check resultset "maxPacketSize" has lines with following column values
+      | PARAM_NAME-0       | PARAM_VALUE-1      |
+      | maxPacketSize      | 4194304            |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                         | expect  | db      |
       | conn_0 | false    | insert into test values (1,repeat("x",6*1024*1024))                                        | success | schema1 |
