@@ -399,10 +399,11 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                                                   |
      | conn_1 | False   | begin                                                 |
-     | conn_1 | True    | select * from test                                    |
+     | conn_1 | False   | select sleep(1)                                       |
+     | conn_1 | true    | select * from test                                    |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                       | expect                                               | db               |
-     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '82',), ('transactions', '38',))} | dble_information |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '83',), ('transactions', '38',))} | dble_information |
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                                                                                                                                                 |
      # questions add 1 and transactions add 1
@@ -411,21 +412,21 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn_2 | False   | begin; delete from test where code>4; insert into test values (50,50); update test set code=55 where id>3; select * from test where code=55; commit |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                       | expect                                               |
-     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '89',), ('transactions', '40',))} |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '90',), ('transactions', '40',))} |
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                                      |
      | conn_2 | False   | set autocommit=0; begin; begin; rollback |
      # multiple sql, questions add 4 and transactions add 3
      Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                       | expect                                               |
-     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '93',), ('transactions', '43',))} |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '94',), ('transactions', '43',))} |
    # compare with show @@questions
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_6"
      | conn   | toClose | sql              | db                |
      | conn_0 | True    | show @@questions | dble_information  |
    Then check resultset "dble_status_6" has lines with following column values
      | Questions-0 | Transactions-1 |
-     | 93          | 43             |
+     | 94          | 43             |
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                       | db      |
       | conn_2 | True    | drop table if exists test | schema1 |

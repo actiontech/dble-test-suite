@@ -190,7 +190,7 @@ Feature: case about load data batch
       | conn   | toClose | sql                                    | expect          | db      | timeout |
       | conn_1 | true    | select * from schema1.sharding_2_t1    | length{(13)}    | schema1 | 10      |
     #check dir /opt/dble/temp/file is deleted
-    Given sleep "1" seconds
+    Given sleep "2" seconds
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
 
     #for Multi-node-global table
@@ -237,7 +237,7 @@ Feature: case about load data batch
       | conn   | toClose | sql                                    | expect          | db      | timeout |
       | conn_1 | true    | select * from schema1.test             | length{(13)}    | schema1 | 10      |
     #check dir /opt/dble/temp/file is deleted
-    Given sleep "1" seconds
+    Given sleep "2" seconds
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
 
     #for single-node table
@@ -266,7 +266,7 @@ Feature: case about load data batch
       | conn   | toClose | sql                                          | expect          | db      | timeout |
       | conn_2 | true    | select * from schema1.test1                  | length{(13)}    | schema1 | 10      |
     #check dir /opt/dble/temp/file is deleted
-    Given sleep "1" seconds
+    Given sleep "2" seconds
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
     Then check btrace "BtraceAboutLoadDataBatch.java" output in "dble-1" with "3" times
     """

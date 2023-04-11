@@ -206,7 +206,6 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
      Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       unknown error:
-      caught err:
       NullPointerException
       """
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
@@ -250,8 +249,6 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
       """
     Given Restart dble in "dble-1" success
-    ###开启sql_log general_log
-    Then execute admin cmd "enable @@statistic"
     Then execute admin cmd "reload @@samplingRate=100"
     Then execute admin cmd "enable @@general_log"
 
@@ -266,11 +263,6 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 
     Given create folder content "/opt/dble/logs/insert" in "dble-1"
     Given execute oscmd "python3 /opt/LargePacket.py >/opt/dble/logs/insert/sharding.txt" on "dble-1"
-    ####预期general log应该对大包的长度进行收敛，目前是全部记录然后压缩轮转日志了
-#    Then check following text exist "Y" in file "/opt/dble/general/general.log" in host "dble-1"
-#      """
-#      insert
-#      """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect                    | db               |
       | conn_2 | False    | show @@sql                                                                | hasStr{aaaaaaaaaa...}     | dble_information |
@@ -279,23 +271,8 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       unknown error:
-      caught err:
       NullPointerException
       """
-#    Given Restart dble in "dble-1" success
-    ### 3.22.11才有的新功能 sql_dump的统计
-#    Then execute admin cmd "enable @@sqldump_sql"
-#    Given execute oscmd "python3 /opt/LargePacket_rw.py >/opt/dble/logs/insert/rwSplitUser.txt" on "dble-1"
-#    Then check following text exist "Y" in file "/opt/dble/sqldump/sqldump.log" in host "dble-1"
-#       """
-#       INSERT INTO test1\(id, c\) VALUES \(\?, \?\)
-#       """
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      caught err:
-#      NullPointerException
-#      """
 
 
   @restore_mysql_config
