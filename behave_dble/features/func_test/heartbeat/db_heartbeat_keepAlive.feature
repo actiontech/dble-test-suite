@@ -39,8 +39,8 @@ Feature: check keepAlive
       | conn   | toClose  | sql              | expect                                                                                        | db               | timeout |
       | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                              | expect      |
-      | conn_0 | False   | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} |
+      | conn   | toClose | sql                                                                                                              | expect      | timeout |
+      | conn_0 | False   | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} | 3,2     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_conn_1"
       | conn   | toClose | sql                                                                                                                                  |
       | conn_0 | false   | select remote_processlist_id from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' |
@@ -131,8 +131,8 @@ Feature: check keepAlive
       | conn   | toClose  | sql             | expect                                                                                        | db               | timeout |
       | conn_0 | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                              | expect      |
-      | conn_0 | False   | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} |
+      | conn   | toClose | sql                                                                                                              | expect      | timeout |
+      | conn_0 | False   | select * from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' | length{(1)} | 3,2     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_conn_4"
       | conn   | toClose | sql                                                                                                                                  |
       | conn_0 | false   | select remote_processlist_id from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' |
@@ -219,15 +219,16 @@ Feature: check keepAlive
     iptables -A OUTPUT -p tcp --dport 3306 -j DROP
     """
     Given check remote "3306" in "mysql-master2" connected "N"
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql              | expect                                                                                        | db               | timeout |
-      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
+    #先获取心跳连接，再check心跳状态
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                              | expect      |
-      | conn_0 | True    | select * from dble_information.backend_connections where used_for_heartbeat='true' and db_instance_name='hostM2' | length{(1)} |
+      | conn   | toClose | sql                                                                                                              | expect      | timeout |
+      | conn_0 | True    | select * from dble_information.backend_connections where used_for_heartbeat='true' and db_instance_name='hostM2' | length{(1)} | 3,2     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_conn_7"
       | conn   | toClose | sql                                                                                                                                  |
       | conn_0 | false   | select remote_processlist_id from dble_information.backend_connections where db_instance_name='hostM2' and used_for_heartbeat='true' |
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql              | expect                                                                                        | db               | timeout |
+      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
     Given record current dble log line number in "log_num_5"
     #print log and mysqlId change
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_5" in host "dble-1" retry "5,2" times
