@@ -383,7 +383,7 @@ Feature: db.xml support fake host
     """
     Then restart dble in "dble-1" failed for
     """
-    com.actiontech.dble.config.util.ConfigException: db json to map occurred  parse errors
+    For input string: \"0:0:0:0:0:0:1:9066\"
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """

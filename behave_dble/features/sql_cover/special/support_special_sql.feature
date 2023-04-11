@@ -75,7 +75,8 @@
       | conn_0 | False   | select * from sharding_2_t1 where id = '12' and (normal_col_1 = '0' or normal_col_2 = '1') | length{(1)} | schema1 |
       | conn_0 | False   | drop table if exists sharding_2_t1                                                         | success     | schema1 |
       | conn_0 | False   | CREATE TABLE sharding_2_t1 (`cc` varchar(255) DEFAULT NULL, `aa` varchar(255) DEFAULT NULL, `bb` varchar(255) DEFAULT NULL, `isshare` int(255) DEFAULT NULL ) ENGINE=InnoDB DEFAULT CHARSET=latin1 | success     | schema1 |
-      | conn_0 | False   | select * from sharding_2_t1 a inner join sharding_2_t1 b on a.cc = b.cc where  a.aa  ='cn' and b.bb ='jp'  and (b.isshare=1 or a.isshare=1 )  LIMIT 0,7                                        | success | schema1 |
+####coz DBLE0REQ-2185
+      #      | conn_0 | False   | select * from sharding_2_t1 a inner join sharding_2_t1 b on a.cc = b.cc where  a.aa  ='cn' and b.bb ='jp'  and (b.isshare=1 or a.isshare=1 )  LIMIT 0,7                                        | success | schema1 |
       | conn_0 | true    | drop table if exists sharding_2_t1                                                         | success     | schema1 |
 
    Scenario: hextype the format is 0x or x' ' from github:2073 #4

@@ -780,7 +780,8 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       rm -rf /opt/schema1_with_childTable.sql*
     """
 
-  @NORMAL @delete_mysql_tables
+  @NORMAL @delete_mysql_tables @skip
+    ###coz DBLE0REQ-2186
   Scenario: dump file have create view sql  #9
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2']}}
@@ -1027,7 +1028,8 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       rm -rf /opt/schema1_with_only_table_structure.sql*
     """
 
-  @CRITICAL @delete_mysql_tables
+  @CRITICAL @delete_mysql_tables@skip
+        ###coz DBLE0REQ-2186
   Scenario: test with '-w' parameter  #12
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2']}}

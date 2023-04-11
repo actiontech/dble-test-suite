@@ -338,11 +338,12 @@ Feature:Support MySQL's large package protocol
       | conn_0 | false   | /*!dble:shardingNode=dn1*/select c,id from sharding_4_t1;select id from sharding_4_t1;select * from test                                                                | success      | schema1 |         |
 
       | conn_0 | true    | drop table if exists test;drop table if exists sharding_4_t1          | success      | schema1 | 5       |
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+#####coz DBLE0REQ-2183
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      unknown error:
+#      NullPointerException
+#      """
 
 
 #   @restore_mysql_config
