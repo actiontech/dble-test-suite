@@ -41,7 +41,7 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | True    | reload @@config_all   | Reload config failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly  |
     Then restart dble in "dble-1" failed for
     """
-    Can't get variables from all dbGroups
+    Can't get variables from shardingNode
     """
     Given start mysql in host "mysql-master1"
     Given Restart dble in "dble-1" success
@@ -55,7 +55,7 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | True    | create table test(id int)  | schema1 |
 
   @restore_mysql_service
-  Scenario: # some of the backend nodes was disconnected   #2
+  Scenario:some of the backend nodes was disconnected   #2
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
@@ -72,7 +72,7 @@ Feature: #mysql node disconnected,check the change of dble
     #3.22.07 stop mysql后执行reload成功，因为配置未变更不会测试连接有效性
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                 | expect                                                            |
-      | conn_0 | False   | dryrun              | hasStr{Can't connect to [dbInstance[ha_group1.hostM1]]}           |
+      | conn_0 | False   | dryrun              | hasStr{Can't connect to [ha_group1,hostM1]}           |
       | conn_0 | True    | reload @@config_all | there are some dbInstance connection failed                       |
    ## DBLE0REQ-2003 只是停一个mysql不影响reload
     Then execute sql in "dble-1" in "user" mode
@@ -92,7 +92,7 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | True    | reload @@config_all   | success                                                                                                        |
 
   @restore_mysql_service
-  Scenario: # some of the backend nodes was disconnected in the course of a transaction    #3
+  Scenario:  some of the backend nodes was disconnected in the course of a transaction    #3
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """

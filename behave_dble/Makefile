@@ -85,7 +85,6 @@ run_func_unstable_case: up
 
 run_managercmd_case: up
 	pipenv run behave -Dreset=false -D dble_conf=template features/setup.feature \
-	features/func_test/dble_information/ \
 	features/func_test/managercmd/
 
 run_sql_support_special: up

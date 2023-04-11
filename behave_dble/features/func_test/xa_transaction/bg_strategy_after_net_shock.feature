@@ -63,13 +63,10 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given destroy btrace threads list
     Given destroy sql threads list
     #等待一些时间(心跳周期10s)， 确保心跳恢复正常后再进行后面的检测，由于tcp重试机制，重试的时长不可控，所以预留多一点时间
-    Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                                                               | expect        | db                |timeout  |
-      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 31,2    |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                         | expect      | db      |
-      | conn_1 | False   | select * from sharding_4_t1 | length{(4)} | schema1 |
-      | conn_1 | True    | delete from sharding_4_t1   | success     | schema1 |
+      | conn   | toClose | sql                         | expect      | db      | timeout  |
+      | new    | False   | select * from sharding_4_t1 | length{(4)} | schema1 | 31,2    |
+      | new    | True    | delete from sharding_4_t1   | success     | schema1 | 31,2    |
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 

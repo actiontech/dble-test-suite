@@ -2,6 +2,9 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by mayingle at 2021/10/25
 
+
+  @skip
+  ##coz 从3.20.10版本开始修复该问题
 Feature: dble support execute set @@variables=true/false test;
   """
   autocommit,

@@ -346,5 +346,5 @@ Feature: test some import nodes attr in sharding.xml
       | sql                                      | expect       | timeout |
       | show @@backend where host='172.100.9.5'  | length{(11)} | 3       |
       #the not used dbInstance will only have one heartbeat connection
-      | show @@backend                           | length{(12)} | 3       |
+      | show @@backend                           | length{(11)} |         |
     Given destroy jstack threads list

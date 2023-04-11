@@ -78,3 +78,6 @@ dble err:(1064, 'Unknown function ANY_VALUE')
 dble:[None]
 mysql:[()]
 dble err:(1064, 'bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1 (a, b, c)\nVALUES (1, 2, 3),\n\t(4, 5, 6)\nON DUPLICATE KEY UPDATE c = VALUES(a) + VALUES(b)')
+===file:sqls_util/syntax/sys_function_util.sql, id:65, sql:[select id, group_concat(test_score) from test1 group by id]===
+dble:[[(1, b'1'), (2, b'2'), (3, b'1'), (4, b'8'), (5, b'2')]]
+mysql:[[(1, '1'), (2, '2'), (3, '1'), (4, '8'), (5, '2')]]

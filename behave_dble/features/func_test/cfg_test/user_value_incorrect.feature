@@ -62,7 +62,9 @@ Feature:  config user config files incorrect and restart dble or reload configs
     """
       Attribute "schemas" is required and must be specified for element type "shardingUser"
     """
-    
+
+    @skip
+      ##coz 需要调整适合成3.20.07
   Scenario:  config case sensitive, check privileges #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """

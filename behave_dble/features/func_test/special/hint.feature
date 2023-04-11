@@ -327,7 +327,7 @@ Feature: verify hint sql
 
 
 
-  @restore_view
+#  @restore_view
   Scenario: sql from GUI CLient test,from issue: 1032 author:maofei #8
      """
     {'restore_view':{'dble-1':{'schema1':'view_tt'}}}
@@ -362,6 +362,7 @@ Feature: verify hint sql
       | conn_0 | False   | drop table if exists sharding_4_t1                  | success     | schema1 |
       | conn_0 | False   | create table sharding_4_t1(id int,name varchar(30)) | success     | schema1 |
       | conn_0 | True    | show table status like 'sharding_4_t1'              | length{(1)} | schema1 |
+      | conn_0 | True    |  drop view if exists schema1.view_tt                | success | schema1  |
 
 
 

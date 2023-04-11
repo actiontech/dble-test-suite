@@ -1,12 +1,18 @@
+===file:sqls_mixed/syntax/sysfunction2.sql, id:38, sql:[SELECT @i, ExtractValue(@xml, '//b[$@i]')]===
+dble:[[(1, 'x')]]
+mysql:[[(1, 'X')]]
+===file:sqls_mixed/syntax/sysfunction2.sql, id:39, sql:[SELECT @j, ExtractValue(@xml, '//b[$@j]')]===
+dble:[[(2, 'y')]]
+mysql:[[(2, 'Y')]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:77, sql:[SELECT CONNECTION_ID()]===
-dble:[[(421,)]]
-mysql:[[(2212,)]]
+dble:[[(428,)]]
+mysql:[[(2221,)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:81, sql:[select schema()]===
 dble:[[('db3',)]]
 mysql:[[('schema1',)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:82, sql:[SELECT SESSION_USER()]===
-dble:[[('test@dble-1.dble_test',)]]
-mysql:[[('test@behave.dble_test',)]]
+dble:[[('test@172.100.9.1',)]]
+mysql:[[('test@172.100.9.8',)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:85, sql:[SELECT VERSION()]===
-dble:[[('5.7.21-dble-9.9.9.9-34779f524977e7d02db811cc3e986309049908c5-20210121062858',)]]
-mysql:[[('5.7.13',)]]
+dble:[[('5.6.29-dble-3.20.07.99-3671556befa754df545b0933477fbc8f839944fe-20230321022631',)]]
+mysql:[[('5.7.25-log',)]]

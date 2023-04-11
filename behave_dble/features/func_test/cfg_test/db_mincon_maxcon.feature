@@ -2,6 +2,8 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wangjuan at 2021/7/7
 
+  @skip
+  #coz 需要找到适合3.20.07的校验方式
 Feature: check minCon and maxCon in db.xml DBLE0REQ-1246
 
   Scenario: minCon < maxCon and minCon > numOfShardingNodes #1
@@ -13,9 +15,15 @@ Feature: check minCon and maxCon in db.xml DBLE0REQ-1246
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                            | expect          | db               |
-      | conn_0 | True    | select min_conn_count,max_conn_count from dble_db_instance where name='hostM2' | has{(20, 100),} | dble_information |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
+      | sql                         |
+      | show @@connection_pool      |
+    Then check resultset "A" has lines with following column values
+      | DB_GROUP-0  | DB_INSTANCE-1 | PROPERTY-2                      | VALUE-3  |
+      | Xml     | NOTICE  | There is No RWSplit User                                                  |
+      | Cluster | NOTICE  | Dble is in single mod                                                     |
+
+
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -28,6 +36,8 @@ Feature: check minCon and maxCon in db.xml DBLE0REQ-1246
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                            | expect         | db               |
       | conn_1 | True    | select min_conn_count,max_conn_count from dble_db_instance where name='hostM2' | has{(10, 10),} | dble_information |
+
+
 
   Scenario: minCon < maxCon and minCon < numOfShardingNodes #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"

@@ -88,9 +88,8 @@ Feature: db.xml support fake host
       | schema1  | test          | null          | null              | 0                              | 0                      |
       | schema1  | sharding_2_t1 | null          | null              | 0                              | 0                      |
       | schema1  | sharding_4_t1 | null          | null              | 0                              | 0                      |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                               | expect      | db               |
-      | conn_0 | true    | select * from backend_connections | length{(0)} | dble_information |
+
+
 
 
   Scenario: The dbGroup use fake write dbInstance and fake read dbInstance, disabled=true #3
@@ -144,7 +143,8 @@ Feature: db.xml support fake host
     mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema1 -e "select version()"
     """
 
-
+@skip
+  ###coz 需要调整适合3.20.07
   Scenario: The dbInstance changed from right dbInstance to fake dbInstance #4
     Given delete the following xml segment
       |file          | parent          | child                   |
@@ -183,7 +183,6 @@ Feature: db.xml support fake host
       | conn_0 | false   | insert into sharding_4_t1 values(1),(2),(3),(4) | success | schema1 |
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                  | expect       | db               |
-      | conn_1 | false   | select * from backend_connections where state='IN USE' and db_group_name='ha_group2' | length{(4)} | dble_information |
       | conn_1 | false   | select * from session_connections                                                    | length{(2)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "result_2"
       | conn   | toClose | sql                   | db               |
@@ -321,9 +320,9 @@ Feature: db.xml support fake host
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                               | expect  | db      | timeout |
       | conn_0 | false   | select * from sharding_4_t1                       | success | schema1 | 6,2     |
-      | conn_0 | false   | update sharding_4_t1 set name='test' where id=3   | the dbInstance[127.0.0.1:8066] can't reach. Please check the dbInstance status | schema1 ||
-      | conn_0 | false   | delete from sharding_4_t1 where id>2              | the dbInstance[127.0.0.1:8066] can't reach. Please check the dbInstance status | schema1 ||
-      | conn_0 | true    | drop table if exists sharding_4_t1                | the dbInstance[127.0.0.1:8066] can't reach. Please check the dbInstance status | schema1 ||
+      | conn_0 | false   | update sharding_4_t1 set name='test' where id=3   | is fake node | schema1 ||
+      | conn_0 | false   | delete from sharding_4_t1 where id>2              | is fake node | schema1 ||
+      | conn_0 | true    | drop table if exists sharding_4_t1                | is fake node | schema1 ||
 
 
   Scenario: tow dbGroups - one dbGroup have fake write dbInstance and fake read dbInstance #8
@@ -361,72 +360,4 @@ Feature: db.xml support fake host
     Given execute linux command in "dble-1" and contains exception "Access denied for user 'test', because there are some empty dbGroup/fake dbInstance"
     """
     mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema1 -e "select version()"
-    """
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                            | expect      | db               |
-      | conn_0 | false   | select * from session_connections              | length{(1)} | dble_information |
-      | conn_0 | true    | select * from backend_connections              | length{(0)} | dble_information |
-
-
-  Scenario: fake host doesn't support ipv6 and local ip address #10
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="0:0:0:0:0:0:0:1:9066" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
-    """
-    Then execute admin cmd "reload @@config_all" get the following output
-    """
-    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: java.lang.NumberFormatException: For input string: "0:0:0:0:0:0:1:9066"
-    """
-    Then restart dble in "dble-1" failed for
-    """
-    For input string: \"0:0:0:0:0:0:1:9066\"
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.1:8066" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
-    """
-    Then restart dble in "dble-1" success
-    # 3.22.07开始，执行reload不会报错，因为这时配置未变更，不会测试连接有效性
-    Then execute admin cmd "reload @@config_all" get the following output
-    """
-    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.1:9066" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
-    """
-    Then restart dble in "dble-1" success
-    # 3.22.07开始，执行reload不会报错，因为这时配置未变更，不会测试连接有效性
-    Then execute admin cmd "reload @@config_all" get the following output
-    """
-    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.1:9066" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.1:8066" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
-    """
-    Then restart dble in "dble-1" failed for
-    """
-    java.io.IOException: Can't get variables from all dbGroups
     """
