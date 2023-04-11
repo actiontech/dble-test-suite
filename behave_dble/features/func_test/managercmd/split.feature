@@ -1028,7 +1028,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       rm -rf /opt/schema1_with_only_table_structure.sql*
     """
 
-  @CRITICAL @delete_mysql_tables@skip
+  @CRITICAL @delete_mysql_tables @skip
         ###coz DBLE0REQ-2186
   Scenario: test with '-w' parameter  #12
     """

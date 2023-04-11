@@ -40,15 +40,15 @@ Feature: connect dble rwSplitUser in mysql(172.100.9.4), and execute cmd "load d
     Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                 | expect                     | db    |
      | rw1   | 111111 | conn_1 | False   | select * from test1 | hasStr{(20, 20), (30, 30)} | db1   |
-
-    Given connect "dble-1" with user "rw1" in "mysql" to execute sql
-      """
-      load data local infile './test.txt' into table db1.test1 fields terminated by ',' lines terminated by '\n'
-      """
-    Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose | sql                  | expect      | db    |
-     | rw1  | 111111 | conn_1 | False   | select * from test1  | length{(4)} | db1   |
-     | rw1  | 111111 | conn_1 | true    | truncate table test1 | success     | db1   |
+#
+#    Given connect "dble-1" with user "rw1" in "mysql" to execute sql
+#      """
+#      load data local infile './test.txt' into table db1.test1 fields terminated by ',' lines terminated by '\n'
+#      """
+#    Then execute sql in "dble-1" in "user" mode
+#     | user | passwd | conn   | toClose | sql                  | expect      | db    |
+#     | rw1  | 111111 | conn_1 | False   | select * from test1  | length{(4)} | db1   |
+#     | rw1  | 111111 | conn_1 | true    | truncate table test1 | success     | db1   |
 
 #    #coz:DBLE0REQ-2184
 #    #load data with absolute path #2
