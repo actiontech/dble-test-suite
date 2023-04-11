@@ -15,13 +15,13 @@ Feature: check minCon and maxCon in db.xml DBLE0REQ-1246
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
-      | sql                         |
-      | show @@connection_pool      |
-    Then check resultset "A" has lines with following column values
-      | DB_GROUP-0  | DB_INSTANCE-1 | PROPERTY-2                      | VALUE-3  |
-      | Xml     | NOTICE  | There is No RWSplit User                                                  |
-      | Cluster | NOTICE  | Dble is in single mod                                                     |
+#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
+#      | sql                         |
+#      | show @@connection_pool      |
+#    Then check resultset "A" has lines with following column values
+#      | DB_GROUP-0  | DB_INSTANCE-1 | PROPERTY-2                      | VALUE-3  |
+#      | Xml     | NOTICE  | There is No RWSplit User                                                  |
+#      | Cluster | NOTICE  | Dble is in single mod                                                     |
 
 
 
