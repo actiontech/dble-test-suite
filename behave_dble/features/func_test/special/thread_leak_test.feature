@@ -62,7 +62,8 @@ Feature: check thread leak
 
 
 
-  @btrace
+  @btrace  @skip
+    ###需调整成适于3.20.07
   Scenario: check group by thread #2
     # DBLE0REQ-1239
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"

@@ -114,7 +114,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     Then check resultset "21" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6  | STOP-9 |
       | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 10000      | false  |
-      | hostS1 | 172.100.9.6 | 3307   | error     | 2       | 10000      | false  |
+      | hostS1 | 172.100.9.6 | 3307   | error     | 4       | 10000      | false  |
     Given start mysql in host "mysql-slave1"
     Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "22"

@@ -241,12 +241,7 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
       </blacklist>
     """
     Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_blacklist_1"
-      | conn   | toClose | sql                                                       | db               |
-      | conn_0 | True    | select * from dble_blacklist where user_configured='true' | dble_information |
-    Then check resultset "dble_blacklist_1" has lines with following column values
-      | name-0     | property_key-1              | property_value-2 | user_configured-3 |
-      | blacklist1 | limitZeroAllow              | true             | true              |
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                              | expect  | db      |
       | conn_3 | False   | select t1.* from sharding_4_t1 t1 join test t2 on t1.id=t2.id order by t1.name limit 0           | success | schema1 |

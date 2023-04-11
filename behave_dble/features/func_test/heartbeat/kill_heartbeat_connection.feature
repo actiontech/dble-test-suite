@@ -183,7 +183,8 @@ Feature: heartbeat basic test
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1  | 5       |
 
 
-  @btrace
+  @btrace  @skip
+    #coz case中的方法 3.20.10才适用，后续更改方法优化
   Scenario: heartbeat connection is recover failed in retry 'errorRetryCount' times, the heartbeat will set as error,and the connection pool is available in retry period #4
     Given delete the following xml segment
       | file         | parent         | child                  |
@@ -292,7 +293,8 @@ Feature: heartbeat basic test
     Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
     Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
 
-  @btrace
+  @btrace  @skip
+        #coz case中的方法 3.20.10才适用，后续更改方法优化
   Scenario: heartbeat connection recover success in retry 'errorRetryCount' times, the heartbeat will set as Ok,and the connection pool is available in retry period #5
     Given delete the following xml segment
       | file         | parent         | child                  |

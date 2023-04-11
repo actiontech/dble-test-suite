@@ -9,7 +9,7 @@ Feature: test show @@help
   Scenario: test "show @@help" #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(103)}  | dble_information |
+      | conn_0 | False   | show @@help             | length{(100)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
@@ -113,11 +113,7 @@ Feature: test show @@help
       | dbGroup @@enable name='?' (instance = '?')                                                       | enable some dbGroup/dbInstance                                                    |
       | dbGroup @@switch name='?' master='?'                                                             | switch primary in one dbGroup                                                     |
       | dbGroup @@events                                                                                 | show all the dbGroup ha event which not finished yet                              |
-      | split src dest -sschema -r500 -w500 -l10000 --ignore                                             | split dump file into multi dump files according to shardingNode                   |
-      | fresh conn [forced] where dbGroup ='?' [and dbInstance ='?']                                     | fresh conn some dbGroup/dbInstance                                                |
-      | show @@cap_client_found_rows                                                                     | Show if the clientFoundRows capabilities is enabled                               |
-      | enable @@cap_client_found_rows                                                                   | Turn on the clientFoundRows capabilities                                          |
-      | disable @@cap_client_found_rows                                                                  | Turn off the clientFoundRows capabilities                                         |
+      | split src dest -sschema -r500 -w500 -l10000                                                      | split dump file into multi dump files according to shardingNode                   |
 
 
     Then check resultset "rs_A" has not lines with following column values

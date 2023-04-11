@@ -97,7 +97,8 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
 
 
-  @test-no-dbgroup
+  @test-no-dbgroup @skip
+    ###调整适于3.20。07
   Scenario: config db property, reload the configs #8
     ####  dmp initialization config
     Given update file content "/opt/dble/conf/db.xml" in "dble-1" with sed cmds

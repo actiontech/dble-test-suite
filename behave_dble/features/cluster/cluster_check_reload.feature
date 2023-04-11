@@ -738,11 +738,11 @@ Feature: test "reload @@config" in zk cluster
     Given sleep "3" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-2"
       """
-      Other instance is reloading, please try again later.
+      Other instance is reloading/rolling back, please try again later
       """
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-3"
       """
-      Other instance is reloading, please try again later.
+      Other instance is reloading/rolling back, please try again later
       """
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-2"
       """

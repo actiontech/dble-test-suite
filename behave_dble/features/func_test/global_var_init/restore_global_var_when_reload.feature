@@ -195,15 +195,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given turn on general log in "mysql-master2"
     When Start dble in "dble-1"
     Then check general log in host "mysql-master1" has "SET global autocommit=0,tx_isolation='READ-COMMITTED'"
-    When execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                         | expect  |
-      | conn_1 | False   | fresh conn forced where dbGroup='ha_group1' | success |
-      | conn_1 | True    | fresh conn forced where dbGroup='ha_group2' | success |
     When execute sql in "dble-1" in "user" mode
       | sql                                | expect  | db      |
       | drop table if exists sharding_4_t1 | success | schema1 |
-    Then check general log in host "mysql-master1" has not "SET autocommit=0"
-    Then check general log in host "mysql-master2" has not "SET autocommit=0"
+    Then check general log in host "mysql-master1" has "SET autocommit=0" occured ">0" times
+    Then check general log in host "mysql-master2" has "SET autocommit=0" occured ">0" times
 
   @restore_global_setting
   Scenario: dble default autocommit=1, after executing implicit query(with which dble will add autocommit=0 to the session), the global var will be restored #7
@@ -493,7 +489,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     # find backend conns of query "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" used in dble.log
     Given execute linux command in "dble-1" and save result in "backendIds"
     """
-    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -i "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" |grep "host = 172.100.9.5"| grep -o "mysqlId = [0-9]*"|grep -o "[0-9]*" |sort| uniq
+    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -i "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" |grep "host=172.100.9.5"| grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
     """
     Given kill mysql conns in "mysql-master1" in "backendIds"
     Given sleep "2" seconds

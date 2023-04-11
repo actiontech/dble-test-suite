@@ -45,12 +45,10 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given destroy btrace threads list
     Given destroy sql threads list
     #### 确定dble心跳恢复
-    Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                | timeout |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect      | db      | timeout |
-      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 | 5       |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 | 11,3    |
       | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |         |
       | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |         |
 
@@ -106,12 +104,10 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     #### 确定dble心跳恢复
-    Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                | timeout |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect      | db      | timeout |
-      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 | 5       |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 | 11,3    |
       | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |         |
       | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |         |
 
@@ -159,12 +155,10 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     #wait background attempt failed
     Given start mysql in host "mysql-master1"
     #warit Heartbeat successed
-    Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                | timeout |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect                     | db      | timeout |
-      | conn_1 | false   | select * from sharding_4_t1            | length{(2)}                | schema1 | 5       |
+      | conn_1 | false   | select * from sharding_4_t1            | length{(2)}                | schema1 | 11,3    |
       | conn_1 | false   | delete from sharding_4_t1 where id = 1 | success                    | schema1 |         |
       | conn_1 | false   | delete from sharding_4_t1 where id = 2 | Lock wait timeout exceeded | schema1 |         |
       | conn_1 | false   | delete from sharding_4_t1 where id = 3 | success                    | schema1 |         |
@@ -269,14 +263,10 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     Given start mysql in host "mysql-master1"
-    #warit Heartbeat successed
-    Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                | timeout |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect      | db      | timeout |
-      | conn_1 | False   | select * from sharding_4_t1            | length{(0)} | schema1 | 5       |
+      | conn_1 | False   | select * from sharding_4_t1            | length{(0)} | schema1 | 11,3    |
       | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success     | schema1 |         |
       | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success     | schema1 |         |
       | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success     | schema1 |         |
@@ -331,10 +321,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | at the 0th time in background              | 20             |  0.5   |
     Given start mysql in host "mysql-master1"
     #warit Heartbeat successed
-    Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                | timeout |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
-
+    Given sleep "15" seconds
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a\-DxaSessionCheckPeriod=10000
@@ -364,13 +351,10 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | at the 0th time in background              | 10             |  0.5   |
     Given start mysql in host "mysql-master1"
     #warit Heartbeat successed
-    Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                | timeout |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
     ###心跳恢复和xa的定时任务有时间差，还是要加上至少1秒的retry
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect      | db      | timeout |
-      | conn_1 | False   | select * from sharding_4_t1         | length{(8)} | schema1 | 5       |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(8)} | schema1 | 11,3    |
       | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |         |
       | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |         |
 

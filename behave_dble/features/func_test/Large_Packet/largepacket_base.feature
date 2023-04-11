@@ -149,37 +149,17 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-      """
-      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
-      </dbGroup>
-      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-      """
-      <managerUser name="root" password="111111"/>
-      <shardingUser name="test" password="111111" schemas="schema1"/>
-      <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
-      """
-    Then execute admin cmd "reload @@config_all"
+
     Given upload file "./features/steps/LargePacket.py" to "dble-1" success
-    Given upload file "./features/steps/LargePacket_rw.py" to "dble-1" success
     Given upload file "./features/steps/SQLContext.py" to "dble-1" success
 
      ####case1 当dble和mysql都小于大包值时
     ####mysql_exceptions.OperationalError: (1153, "Got a packet bigger than 'max_allowed_packet' bytes")       # DBLE0REQ-960
     #####Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf  #DBLE0REQ-2004
-    Given execute linux command in "dble-1" and contains exception "Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf"
+    Given execute linux command in "dble-1" and contains exception "Got a packet bigger than 'max_allowed_packet' bytes"
       """
       python3 /opt/LargePacket.py
       """
-     #### 按理，读写分离用户的报错参考应该是mysql的值，后续优化的时候再更改case DBLE0REQ-2051
-    Given execute linux command in "dble-1" and contains exception "Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf"
-      """
-      python3 /opt/LargePacket_rw.py
-      """
-
      ####case3 当dble小于大包值时，但mysql的值大于大包时
      Given restart mysql in "mysql-master1" with sed cmds to update mysql config
       """
@@ -191,20 +171,11 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       /max_allowed_packet/d
       /server-id/a max_allowed_packet = 17M
       """
-    Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                |timeout  |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
-
-    Given execute linux command in "dble-1" and contains exception "Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf"
+    Given Restart dble in "dble-1" success
+    Given execute linux command in "dble-1" and contains exception "Got a packet bigger than 'max_allowed_packet' bytes"
       """
       python3 /opt/LargePacket.py
       """
-#    Given execute linux command in "dble-1" and contains exception "Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf"
-#      """
-#      python3 /opt/LargePacket_rw.py
-#      """
-
      Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       unknown error:
@@ -212,7 +183,7 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      Packet for query is too large \(12582915 > 4194304\).You can change maxPacketSize value in bootstrap.cnf.
+      Got a packet bigger than 'max_allowed_packet' bytes
       """
 
 
@@ -232,34 +203,11 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       /max_allowed_packet/d
       /server-id/a max_allowed_packet = 4M
       """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-      """
-      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
-      </dbGroup>
-      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-      """
-      <managerUser name="root" password="111111"/>
-      <shardingUser name="test" password="111111" schemas="schema1"/>
-      <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
-      """
-    Then execute admin cmd "reload @@config_all"
-    #### 确定dble中mysql心跳恢复
-    Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                |timeout  |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
-
+    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                         | expect  | db      |
       | conn_0 | false   | drop table if exists test;create table test (id int,c longblob);truncate table test         | success | schema1 |
       | conn_0 | true    | insert into test values (0,repeat("x",16*1024*1024))                                        | Result of repeat() was larger than max_allowed_packet (4195328) - truncated | schema1 |
-    Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                                                          | expect  | db      |
-      | rw1  | 111111 | conn_1 | false   | drop table if exists test1;create table test1 (id int,c longblob);truncate table test1       | success | db1     |
-      | rw1  | 111111 | conn_1 | true    | insert into test1 values (0,repeat("x",16*1024*1024))                                        | Result of repeat() was larger than max_allowed_packet (4195328) - truncated | db1     |
 
      Given restart mysql in "mysql-master1" with sed cmds to update mysql config
       """
@@ -271,21 +219,15 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       /max_allowed_packet/d
       /server-id/a max_allowed_packet = 8M
       """
+    Given Restart dble in "dble-1" success
+
     Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                |timeout  |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
-     Then execute sql in "dble-1" in "admin" mode
       | conn  | toClose | sql                                                                              | expect                | db               |
       | new   | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('4194304',),)} | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                         | expect  | db      |
       | conn_0 | false    | insert into test values (1,repeat("x",6*1024*1024))                                        | success | schema1 |
       | conn_0 | true     | insert into test values (1,repeat("x",16*1024*1024))                                       | Result of repeat() was larger than max_allowed_packet (8388608) - truncated | schema1 |
-    Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                                         | expect  | db      |
-      | rw1  | 111111 | conn_1 | false   | insert into test1 values (1,repeat("x",6*1024*1024))                        | success | db1     |
-      | rw1  | 111111 | conn_1 | true    | insert into test1 values (1,repeat("x",16*1024*1024))                       | Result of repeat() was larger than max_allowed_packet (8388608) - truncated | db1     |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -309,30 +251,12 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       $a -DidleTimeout=180000
       $a -DbufferPoolPageSize=33554432
       """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-      """
-      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
-      </dbGroup>
-      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-      """
-      <managerUser name="root" password="111111"/>
-      <shardingUser name="test" password="111111" schemas="schema1"/>
-      <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
-      """
     Given Restart dble in "dble-1" success
     Given create folder content "/opt/dble/logs/insert" in "dble-1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                                   | expect  | db      |
       | conn_0 | false   | drop table if exists test;create table test (id int,c longblob);truncate table test                                                                                                   | success | schema1 |
       | conn_0 | true    | insert into test values (0,repeat("x",16*1024*1024)),(1,repeat("x",16*1024*1024-1)),(2,repeat("x",16*1024*1024-2)),(3,repeat("x",16*1024*1024+1)),(4,repeat("x",16*1024*1024+2))      | success | schema1 |
-    Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                                                                                                                                                   | expect  | db  |
-      | rw1  | 111111 | conn_1 | false   | drop table if exists test1;create table test1 (id int,c longblob);truncate table test1                                                                                                | success | db1 |
-      | rw1  | 111111 | conn_1 | true    | insert into test1 values (0,repeat("x",16*1024*1024)),(1,repeat("x",16*1024*1024-1)),(2,repeat("x",16*1024*1024-2)),(3,repeat("x",16*1024*1024-3)),(4,repeat("x",16*1024*1024-4))     | success | db1 |
-
 
     ##### 通过concat函数拼接大包字段和insert到test.sql文件再通过source下发
     Given execute oscmd in "dble-1"
@@ -349,19 +273,6 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       10086
       """
 
-    Given execute oscmd in "dble-1"
-      """
-      mysql -urw1 -P8066 -h172.100.9.1 -Ddb1 --max_allowed_packet=1G -e "select concat('insert into test1 values (1,\'',c,'\');') as 'select 10000;' from test1" >/opt/dble/logs/insert/test1.sql && \
-      mysql -urw1 -P8066 -h172.100.9.1 -Ddb1 --max_allowed_packet=1G -e "source /opt/dble/logs/insert/test1.sql" >/opt/dble/logs/insert/test1.txt
-      """
-    Then check following text exists in file "/opt/dble/logs/insert/test1.sql" in host "dble-1" with "5" times
-      """
-      insert into test1 values
-      """
-    Then check following text exists in file "/opt/dble/logs/insert/test1.txt" in host "dble-1" with "2" times
-      """
-      10000
-      """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       unknown error:
@@ -382,14 +293,4 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
       Packet for query is too large.* 4194304.*You can change maxPacketSize value in bootstrap.cnf
       10086
-      """
-
-    Given execute oscmd in "dble-1"
-      """
-      mysql -urw1 -P8066 -h172.100.9.1 -Ddb1 --max_allowed_packet=1G -e "source /opt/dble/logs/insert/test1.sql" >/opt/dble/logs/insert/test1.txt 2>&1 &
-      """
-    Then check following text exist "Y" in file "/opt/dble/logs/insert/test1.txt" in host "dble-1"
-      """
-      Packet for query is too large.*4194304.*You can change maxPacketSize value in bootstrap.cnf
-      10000
       """

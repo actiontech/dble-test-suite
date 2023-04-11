@@ -182,7 +182,8 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
 
 
-
+  @skip
+      ##coz 需要调整适合成3.20.07
   Scenario: check kill connection processlist_id for DBLE0REQ-726 #2
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                             | expect  | db      |
