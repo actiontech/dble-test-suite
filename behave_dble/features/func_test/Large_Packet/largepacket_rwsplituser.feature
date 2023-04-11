@@ -47,7 +47,7 @@ Feature:Support MySQL's large package protocol
       | rw1  | 111111 | conn_0 | true    | drop table if exists tb1;create table tb1 (id int,c longblob)                                  | success | db1     |         |
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test "insert" sql about large packet the sql is "insert into table (id,c) values (x,大包)"   #1
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
@@ -65,7 +65,7 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test "update" sql about large packet the sql is "update table set c="大包"    #2
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
@@ -90,7 +90,7 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test "delete" sql about large packet the sql is "delete from table where c="大包" or id=7"   #3
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
@@ -116,7 +116,7 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test "select" sql about large packet the sql is "select id from table where c="大包"    #4
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
@@ -142,7 +142,7 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test "select" sql -- about response has large packet coz:DBLE0REQ-2096      #5
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
@@ -209,7 +209,7 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test hint  and  mulit sql    #6
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
@@ -304,7 +304,7 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test Prepared sql    #7
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}

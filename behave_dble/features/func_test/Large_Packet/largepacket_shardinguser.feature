@@ -447,7 +447,7 @@ Feature:Support MySQL's large package protocol
       """
 
 
-   @restore_mysql_config
+#   @restore_mysql_config
    Scenario: test Prepared sql    #7
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-slave1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
