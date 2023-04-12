@@ -961,31 +961,31 @@ Feature: test "reload @@config" in zk cluster
         | conn_33 | true      | show @@reload_status       | dble_information | length{(1)}  |
 
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "1C"
-        | conn    | toClose   | sql                                                            |  db                |
-        | conn_14 | true      | show @@shardingnodes where schema=schema1 and table=sharding   |  dble_information  |
+        | conn    | toClose   | sql                                                            |
+        | conn_14 | true      | show @@shardingnodes where schema=schema1 and table=sharding   |
       Then check resultset "1C" has lines with following column values
         | NAME-0 | SEQUENCE-1 | HOST-2        | PORT-3 | PHYSICAL_SCHEMA-4 | USER-5 | PASSWORD-6 |
         | dn3    | 0          | 172.100.9.5   | 3306   | db2               | test   | 111111     |
         | dn4    | 1          | 172.100.9.6   | 3306   | db2               | test   | 111111     |
       Then execute sql in "dble-2" in "admin" mode
-        | conn    | toClose   | sql                                                           | db               | expect      |
-        | conn_24 | true      | show @@shardingnodes where schema=schema1 and table=sharding  | dble_information | length{(0)} |
+        | conn    | toClose   | sql                                                           | expect      |
+        | conn_24 | true      | show @@shardingnodes where schema=schema1 and table=sharding  | length{(0)} |
       Then execute sql in "dble-3" in "admin" mode
-        | conn    | toClose   | sql                                                           | db               | expect      |
-        | conn_34 | true      | show @@shardingnodes where schema=schema1 and table=sharding  | dble_information | length{(0)} |
+        | conn    | toClose   | sql                                                           | expect      |
+        | conn_34 | true      | show @@shardingnodes where schema=schema1 and table=sharding  | length{(0)} |
 
      Then execute sql in "dble-1" in "admin" mode
        | conn    | toClose    | sql                        | db               | expect   |
        | conn_15 | False      | reload @@config_all        | dble_information | success  |
       Given execute single sql in "dble-1" in "admin" mode and save resultset in "1D"
-        | conn    | toClose   | sql                    |  db                |
-        | conn_15 | true      | show @@reload_status   |  dble_information  |
+        | conn    | toClose   | sql                    |
+        | conn_15 | true      | show @@reload_status   |
       Then check resultset "1D" has lines with following column values
         | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2 | RELOAD_STATUS-3  | TRIGGER_TYPE-6   | END_TYPE-7 |
-        |     2   | zk        | RELOAD_ALL    | NOT_RELOADING    | LOCAL_COMMAND    | RELOAD_END |
+        |     2   | zk        | RELOAD_ALL    | WAITING_OTHERS   | LOCAL_COMMAND    |            |
       Given execute single sql in "dble-2" in "admin" mode and save resultset in "2A"
-        | conn    | toClose   | sql                         | db               |
-        | conn_15 | true      | show @@reload_status        | dble_information |
+        | conn    | toClose   | sql                         |
+        | conn_15 | true      | show @@reload_status        |
       Then check resultset "2A" has lines with following column values
         | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2 | RELOAD_STATUS-3  | TRIGGER_TYPE-6   | END_TYPE-7 |
         |     0   | zk        | RELOAD_ALL    | NOT_RELOADING    | CLUSTER_NOTIFY   | RELOAD_END |

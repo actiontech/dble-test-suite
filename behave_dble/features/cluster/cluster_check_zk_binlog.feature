@@ -57,13 +57,13 @@ Feature: test "binlog" in zk cluster
       | conn_0 | False   | drop table if exists child1                                  | success | schema1 | 6,2     |
       | conn_0 | False   | drop table if exists sing1                                   | success | schema1 | 6,2     |
       | conn_0 | False   | drop table if exists no_sharding1                            | success | schema1 | 6,2     |
-      | conn_0 | False   | create table global1 (id int)                                | success | schema1 | 6,2     |
-      | conn_0 | False   | create table global2 (id int)                                | success | schema1 | 6,2     |
-      | conn_0 | False   | create table sharding4 (id int, name int)                    | success | schema1 | 6,2     |
-      | conn_0 | False   | create table sharding2 (id int, fid int)                     | success | schema1 | 6,2     |
-      | conn_0 | False   | create table child1 (fid int,name int)                       | success | schema1 | 6,2     |
-      | conn_0 | False   | create table sing1 (id int)                                  | success | schema1 | 6,2     |
-      | conn_0 | True    | create table no_sharding1 (id int, name int)                 | success | schema1 | 6,2     |
+      | conn_0 | False   | create table if not exists global1 (id int)                                | success | schema1 | 6,2     |
+      | conn_0 | False   | create table if not exists global2 (id int)                                | success | schema1 | 6,2     |
+      | conn_0 | False   | create table if not exists sharding4 (id int, name int)                    | success | schema1 | 6,2     |
+      | conn_0 | False   | create table if not exists sharding2 (id int, fid int)                     | success | schema1 | 6,2     |
+      | conn_0 | False   | create table if not exists child1 (fid int,name int)                       | success | schema1 | 6,2     |
+      | conn_0 | False   | create table if not exists sing1 (id int)                                  | success | schema1 | 6,2     |
+      | conn_0 | True    | create table if not exists no_sharding1 (id int, name int)                 | success | schema1 | 6,2     |
 
 
 
