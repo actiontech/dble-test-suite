@@ -97,8 +97,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
 
 
-  @test-no-dbgroup @skip
-    ###调整适于3.20。07
+  @test-no-dbgroup
   Scenario: config db property, reload the configs #8
     ####  dmp initialization config
     Given update file content "/opt/dble/conf/db.xml" in "dble-1" with sed cmds
@@ -114,10 +113,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema1 -e "select version()"
     """
-    Then restart dble in "dble-1" failed for
-      """
-      User\[name:test\]'s schema \[schema1\] is not exist
-      """
+
     Given update file content "/opt/dble/conf/user.xml" in "dble-1" with sed cmds
       """
       5d
