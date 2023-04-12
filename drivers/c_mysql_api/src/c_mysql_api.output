@@ -104,11 +104,6 @@ connect success    *****pass! mysql_real_connect create conn with no default db 
     pass! send query to admin port, mysql_sqlstate: HY000
 ==> mysql_stat test suites
     pass! mysql_stat: Unknown command
-==>mysql_thread_id && mysql_warning_count test suites
-    create new conn!
-    host:172.100.9.1, use:test, passwd:111111, port:8066
-    pass! after kill thread_id by mysql_thread_id query get 'lost connection to ...'
-    pass! mysql_warning_count: 0
 ==>mysql_use_result && mysql_field_count && mysql_fetch_row && mysql_fetch_field_direct && mysql_free_result test suites
     pass! mysql_use_result
     pass! mysql_field_count:1

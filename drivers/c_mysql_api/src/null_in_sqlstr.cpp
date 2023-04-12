@@ -11,7 +11,7 @@ void case_null_in_sql(){
 	printf("==>mysql_real_query send queries end with null test suites\n");
 	MYSQL* mysql = mysql_init(NULL);
 	if(IS_DEBUG){
-		mysql_real_connect(mysql, "172.100.9.4", TEST_USER, TEST_USER_PASSWD, TEST_DB, 3307,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
+		mysql_real_connect(mysql, "172.100.9.4", TEST_USER, TEST_USER_PASSWD, TEST_DB, 3306,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
 	}else{
 		mysql_real_connect(mysql, HOST_DBLE, TEST_USER, TEST_USER_PASSWD, TEST_DB, DBLE_PORT, NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
 	}
@@ -61,7 +61,7 @@ void case_null_in_sql(){
 	}
 	MYSQL* conn = mysql_init(NULL);
 	if(IS_DEBUG){
-		mysql_real_connect(conn, "172.100.9.4", TEST_USER, TEST_USER_PASSWD, TEST_DB, 3307,NULL, CLIENT_DEPRECATE_EOF);
+		mysql_real_connect(conn, "172.100.9.4", TEST_USER, TEST_USER_PASSWD, TEST_DB, 3306,NULL, CLIENT_DEPRECATE_EOF);
 	}else{
 		mysql_real_connect(conn, HOST_DBLE, TEST_USER, TEST_USER_PASSWD, TEST_DB, DBLE_PORT, NULL, CLIENT_DEPRECATE_EOF);
 	}
