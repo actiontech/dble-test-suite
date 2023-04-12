@@ -90,8 +90,6 @@ Feature: db.xml support fake host
       | schema1  | sharding_4_t1 | null          | null              | 0                              | 0                      |
 
 
-
-
   Scenario: The dbGroup use fake write dbInstance and fake read dbInstance, disabled=true #3
     Given delete the following xml segment
       |file          | parent          | child                   |
@@ -143,8 +141,7 @@ Feature: db.xml support fake host
     mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema1 -e "select version()"
     """
 
-@skip
-  ###coz 需要调整适合3.20.07
+
   Scenario: The dbInstance changed from right dbInstance to fake dbInstance #4
     Given delete the following xml segment
       |file          | parent          | child                   |
@@ -181,16 +178,12 @@ Feature: db.xml support fake host
       | conn_0 | false   | create table sharding_4_t1 (id int)             | success | schema1 |
       | conn_0 | false   | begin                                           | success | schema1 |
       | conn_0 | false   | insert into sharding_4_t1 values(1),(2),(3),(4) | success | schema1 |
-      Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                  | expect       | db               |
-      | conn_1 | false   | select * from session_connections                                                    | length{(2)}  | dble_information |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "result_2"
-      | conn   | toClose | sql                   | db               |
-      | conn_1 | false   | select remote_port,processor_id,user,schema,sql,sql_stage from session_connections | dble_information |
-    Then check resultset "result_2" has lines with following column values
-      | remote_port-0 | processor_id-1  | user-2 | schema-3         | sql-4                                                                              | sql_stage-5        |
-      | 9066          | frontProcessor0 | root   | dble_information | select remote_port,processor_id,user,schema,sql,sql_stage from session_connections | Manager connection |
-      | 8066          | frontProcessor0 | test   | schema1          | insert into sharding_4_t1 values(1),(2),(3),(4)                                    | Finished           |
+    ####结果类似 MySQLConnection [backendId=13, lastTime=1681277667995, user=test, schema=db2, old schema=db2, fromSlaveDB=false, mysqlId=327,character_set_client=utf8,character_set_results=utf8,collation_connection=utf8_general_ci, txIsolation=3, autocommit=false,
+    # attachment=dn3{INSERT INTO sharding_4_t1 VALUES (2)}.0, respHandler=com.actiontech.dble.backend.mysql.nio.handler.MultiNodeQueryHandler@416f04b8, host=172.100.9.5, port=3306, statusSync=null, writeQueue=0, xaStatus=0]
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                          | expect                             |
+      | conn_1 | false   | show @@session               | hasStr{INSERT INTO sharding_4_t1}  |
+
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
@@ -203,15 +196,9 @@ Feature: db.xml support fake host
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                               | expect      | db               |
-      | conn_1 | false   | select * from backend_connections | length{(0)} | dble_information |
-      | conn_1 | false   | select * from session_connections | length{(1)} | dble_information |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "result_3"
-      | conn   | toClose | sql                   | db               |
-      | conn_1 | true    | select remote_port,processor_id,user,schema,sql,sql_stage from session_connections | dble_information |
-    Then check resultset "result_3" has lines with following column values
-      | remote_port-0 | processor_id-1  | user-2 | schema-3         | sql-4                                                                              | sql_stage-5        |
-      | 9066          | frontProcessor0 | root   | dble_information | select remote_port,processor_id,user,schema,sql,sql_stage from session_connections | Manager connection |
+      | conn   | toClose | sql              | expect      | db               |
+      | conn_1 | false   | show @@session   | length{(0)} | dble_information |
+
 
 
   Scenario: some shardingNode have null dbGroup #5

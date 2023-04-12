@@ -63,8 +63,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
       Attribute "schemas" is required and must be specified for element type "shardingUser"
     """
 
-    @skip
-      ##coz 需要调整适合成3.20.07
+
   Scenario:  config case sensitive, check privileges #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
@@ -83,10 +82,8 @@ Feature:  config user config files incorrect and restart dble or reload configs
         </schema>
       </privileges>
     """
-    Then execute admin cmd "reload @@config_all" get the following output
-    """
-      privileges's schema[SCHEMA1] was not found in the user [name:sharding_test,tenant:tenant1]'s schemas
-    """
+    ###没有引用的schema 也能reload成功
+    Then execute admin cmd "reload @@config_all"
 
     Given add xml segment to node with attribute "{'tag':'shardingUser','kv_map':{'name':'sharding_test'}}" in "user.xml"
     """
@@ -108,6 +105,8 @@ Feature:  config user config files incorrect and restart dble or reload configs
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql      | expect                        |
       | test | 111111 | conn_3 | False   | select 1 | Access denied for user 'test' |
+
+
 
   Scenario: config db with same url value for different dbInstances in one dbGroup, reload success #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"

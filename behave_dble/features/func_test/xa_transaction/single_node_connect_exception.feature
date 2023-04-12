@@ -5,8 +5,7 @@
 # modified by wjl1619 at 2020/04/21
 
 #2.20.04.0#dble-8177
-  @skip
-      ##coz 需要调整适合成3.20.07
+
 Feature: backend node disconnect,causing xa abnormal
 
   @btrace

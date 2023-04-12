@@ -73,7 +73,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
 
 
   @btrace @restore_network @skip
-  Scenario: mysql node network shock causing xa transaction fail to commit, automatic recovery in background attempts #2
+  Scenario: mysql node network shock causing xa transaction fail to commit, automatic recovery in background attempts #2F
     """
     {'restore_network':'mysql-master1'}
     """

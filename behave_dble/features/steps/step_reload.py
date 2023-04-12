@@ -194,14 +194,13 @@ def step_impl(context, var_version):
 @Then('get first mysqlId of "{host}" from "{result}" named "{mysqlID}"')
 def step_impl(context,host,result,mysqlID):
     session_list = getattr(context,result)
-    list_session = filter(lambda x : x, session_list[0][2].split("]"))
-    # context.logger.info("list_session is {0}".format(list_session))
+    list_session = filter(lambda x : x, session_list[0][2].split("MySQLConnection"))
     ip = get_node(host)._ip
     pattern = re.compile(ip)
     for i in list_session:
         matchObj1 = re.search(pattern,i)
         if matchObj1:
-            matchObj2 = re.search("mysqlId = ([0-9]*)",i)
+            matchObj2 = re.search("mysqlId=([0-9]*)",i)
             break
     assert matchObj2, "not found mysqlID in {0}".format(host)
     setattr(context, mysqlID, matchObj2.group(1))
