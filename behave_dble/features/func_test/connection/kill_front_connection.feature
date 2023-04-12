@@ -175,11 +175,11 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
-
+####偶现Lost connection to MySQL server during query，尝试新起链接加入重试
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                | expect  | db      |
-      | conn_0 | False   | select * from sharding_4_t1        | success | schema1 |
-      | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
+      | conn   | toClose | sql                                | expect  | db      | timeout |
+      | new    | False   | select * from sharding_4_t1        | success | schema1 | 10,3    |
+      | new    | True    | drop table if exists sharding_4_t1 | success | schema1 |         |
 
 
 
