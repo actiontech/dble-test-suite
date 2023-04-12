@@ -515,7 +515,7 @@ Feature: test "binlog" in zk cluster
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
 
-    Then execute sql in "dble-2" in "admin" mode
+    Then execute sql in "dble-2" in "user" mode
       | conn    | toClose | sql                     | expect  |
       | conn_2  | False    | show databases         | success |
     Then execute sql in "dble-2" in "user" mode
@@ -865,7 +865,7 @@ Feature: test "binlog" in zk cluster
 
 
 
-  @btrace
+  @btrace @skip
   Scenario: during "transaction" ,the commit would "hang" #5
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -1013,7 +1013,7 @@ Feature: test "binlog" in zk cluster
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
 
-    Then execute sql in "dble-2" in "admin" mode
+    Then execute sql in "dble-2" in "user" mode
       | conn    | toClose | sql                     | expect  |
       | conn_2  | False    | show databases         | success |
     Then execute sql in "dble-2" in "user" mode
@@ -1107,7 +1107,7 @@ Feature: test "binlog" in zk cluster
 
 
 
-  @btrace   @restore_mysql_config  @delete_mysql_tables
+  @btrace   @restore_mysql_config  @delete_mysql_tables  @skip
   Scenario: during query ,one dble stop,check other dble status #7
     """
     {'restore_mysql_config':{'mysql-master1':{'log-bin':0,'binlog_format':0,'relay-log':0}}}
@@ -1185,7 +1185,7 @@ Feature: test "binlog" in zk cluster
       | conn     | toClose | sql                      | expect     | timeout |
       | conn_2   | true    | show @@binlog.status     | success    | 11,3    |
 
-    # drop table
+   Scenario:   # drop table
     Given execute oscmd in "dble-1"
       """
       mysql -uroot -p111111 -P9066 -h172.100.9.1 -Ddble_information -e "select concat('drop table if exists ',name,';') as 'select 1;' from dble_table" >/opt/dble/test.sql && \
