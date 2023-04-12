@@ -62,8 +62,7 @@ Feature: check thread leak
 
 
 
-  @btrace  @skip
-    ###需调整成适于3.20.07
+  @btrace
   Scenario: check group by thread #2
     # DBLE0REQ-1239
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -92,7 +91,7 @@ Feature: check thread leak
     """
     get into groupByBucket.start
     """
-    Then get index:"0" column value of "select session_conn_id from dble_information.session_connections where sql_stage<>'Manager connection' limit 1" named as "front_id_1"
+    Then get index:"0" column value of "show @@session" named as "front_id_1"
     Given record current dble log line number in "log_num"
     Then execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  | db      |
