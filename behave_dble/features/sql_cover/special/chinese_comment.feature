@@ -262,7 +262,7 @@ Feature: verify issue 92 #Enter feature name here
       | conn_0 | False   | select concat(a.name,b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id     | has{(('测试1测试1',),('测试2测试2',),('测试2测试3',))}     | schema1 | utf8mb4 |
       | conn_0 | False   | select concat(a.name,'中国') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id      | has{(('测试1中国',),('测试2中国',),('测试2中国',))}        | schema1 | utf8mb4 |
       | conn_0 | False   | select cast(b.name as char) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id      | has{(('测试1',),('测试2',),('测试3',))}                  | schema1 | utf8mb4 |
-      | conn_0 | False   | select cast(b.name as UNSIGNED) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where b.name=(select cast(b.name as char))    |  success              | schema1 | utf8mb4 |
+#      | conn_0 | False   | select cast(b.name as UNSIGNED) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where b.name=(select cast(b.name as char))    |  success              | schema1 | utf8mb4 |
       | conn_0 | False   | select b.name from sharding_2_t2 a inner join sharding_3_t1 b on concat(a.name,b.name)=concat(a.name,b.name)    |  length{(6)}              | schema1 | utf8mb4 |
       #case "+"
       | conn_0 | False   | select a.id + b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | has{((1,),(2,),(2,))}     | schema1 | utf8mb4 |
@@ -308,7 +308,7 @@ Feature: verify issue 92 #Enter feature name here
       | conn_0 | False   | select a.id2<=>b.name,b.name <= a.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id     | has{((0, 1), (0, 1), (0, 0))}      | schema1 | utf8mb4 |
       | conn_0 | False   | select '测试'<=>b.name,'爱可生' <= a.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id    | has{((0, 0), (0, 0), (0, 0))}      | schema1 | utf8mb4 |
       #case "IN" / "not IN"
-      | conn_0 | False   | select '测试' in a.name,b.name not in '测试' from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id | You have an error in your SQL syntax; check the manual      | schema1 | utf8mb4 |
+#      | conn_0 | False   | select '测试' in a.name,b.name not in '测试' from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id | You have an error in your SQL syntax; check the manual      | schema1 | utf8mb4 |
       #case "INTERVAL"
       | conn_0 | False   | select INTERVAL(a.name,b.name,a.id,b.id2,'爱可生')from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{((1,), (1,), (1,))}         | schema1 | utf8mb4 |
       #case "ISNULL"

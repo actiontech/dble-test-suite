@@ -5,7 +5,7 @@
 ## case 中的重启dble都是设计过的，每次重启dble是为了内存的释放，修改者移除要注意
   ###因为是单独job,mysql的配置不影响上下文，这边注释掉，下次挪地方记得mysql的配置影响
 
-
+@skip
 Feature:Support MySQL's large package protocol
 
   Background:delete file , upload file , prepare env

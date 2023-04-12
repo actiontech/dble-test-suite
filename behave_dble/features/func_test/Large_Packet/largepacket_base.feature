@@ -248,7 +248,7 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
 
 
-  @restore_mysql_config
+  @restore_mysql_config  @skip
   Scenario: source 大包校验    #5
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}

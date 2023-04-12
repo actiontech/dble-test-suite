@@ -3,8 +3,7 @@
 # Created by mayingle at 2021/10/25
 
 
-  @skip
-  ##coz 从3.20.10版本开始修复该问题
+
 Feature: dble support execute set @@variables=true/false test;
   """
   autocommit,
@@ -507,6 +506,8 @@ Feature: dble support execute set @@variables=true/false test;
       | conn_0 | True     | select @@session_track_state_change;                              | has{((0,),)} | schema1 |
 
 
+   @skip
+  #coz 从3.20.10版本开始修复该问题
   Scenario: dble support execute set show_create_table_verbosity test #11
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                | expect       | db      |

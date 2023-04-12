@@ -119,6 +119,6 @@ Feature: reload @@config_all -f
       | dbGroup @@switch name='ha_group2' master='slave1' | success |
       | dbGroup @@enable name='ha_group2'                 | success |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                             | expect  | db      |
-      | conn_0 | False   | insert into test values(1),(2),(3),(4) | success | schema1 |
-      | conn_0 | true    | drop table if exists test              | success | schema1 |
+      | conn   | toClose | sql                                    | expect  | db      | timeout |
+      | conn_0 | False   | insert into test values(1),(2),(3),(4) | success | schema1 | 11,2    |
+      | conn_0 | true    | drop table if exists test              | success | schema1 | 11,2    |

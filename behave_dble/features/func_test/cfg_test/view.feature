@@ -4,7 +4,7 @@
 Feature: #view test except sql cover
 
 
-  @restore_view
+#  @restore_view
   Scenario:  start dble when the view related table does not exist in configuration  from issue:1100 #1
      """
     {'restore_view':{'dble-1':{'schema1':'view_test'}}}
@@ -34,29 +34,29 @@ Feature: #view test except sql cover
        | conn   | toClose  | sql                               | expect    | db      |
        | conn_0 | False    | select * from schema1.view_test   | success   | schema1 |
        | conn_0 | True     | drop view view_test               | success   | schema1 |
-      #github :2063
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-       """
-       <schema name="schema2" sqlMaxLimit="100" shardingNode="dn1">
-          <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-          <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-       </schema>
-       """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-       """
-       <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
-       """
-     Then execute admin cmd "reload @@config"
-     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                             | expect  | db      |
-      | conn_0 | False   | drop table if exists test1                                                      | success | schema2 |
-      | conn_0 | False   | create table test1(id int,code varchar(10))                                     | success | schema2 |
-      | conn_0 | False   | drop table if exists test2                                                      | success | schema2 |
-      | conn_0 | False   | create table test2(id int,code varchar(10))                                     | success | schema2 |
-      | conn_0 | False   | create view test_view(id,name) AS select * from test1 union select * from test2 | success | schema2 |
-      | conn_0 | False   | drop view schema2.test_view                                                     | success | schema2 |
-      | conn_0 | False   | drop table if exists test1                                                      | success | schema2 |
-      | conn_0 | True    | drop table if exists test2                                                      | success | schema2 |
+      #github :2063   3.20.10修复
+#     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+#       """
+#       <schema name="schema2" sqlMaxLimit="100" shardingNode="dn1">
+#          <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+#          <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+#       </schema>
+#       """
+#     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+#       """
+#       <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
+#       """
+#     Then execute admin cmd "reload @@config"
+#     Then execute sql in "dble-1" in "user" mode
+#      | conn   | toClose | sql                                                                             | expect  | db      |
+#      | conn_0 | False   | drop table if exists test1                                                      | success | schema2 |
+#      | conn_0 | False   | create table test1(id int,code varchar(10))                                     | success | schema2 |
+#      | conn_0 | False   | drop table if exists test2                                                      | success | schema2 |
+#      | conn_0 | False   | create table test2(id int,code varchar(10))                                     | success | schema2 |
+#      | conn_0 | False   | create view test_view(id,name) AS select * from test1 union select * from test2 | success | schema2 |
+#      | conn_0 | False   | drop view schema2.test_view                                                     | success | schema2 |
+#      | conn_0 | False   | drop table if exists test1                                                      | success | schema2 |
+#      | conn_0 | True    | drop table if exists test2                                                      | success | schema2 |
 
 
 

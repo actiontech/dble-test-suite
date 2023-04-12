@@ -572,8 +572,8 @@ Feature: test dml sql which can penetrate to mysql
       | conn_0 | False   | drop table if exists schema1.single_t1;                                                                                    | success                                                            | schema1 |
       | conn_0 | False   | create table schema1.single_t1(id int,name char(20),age int);                                                              | success                                                            | schema1 |
       | conn_0 | False   | insert into schema1.single_t1 values (1,1,1),(2,2,2),(3,3,3),(4,4,4),(5,5,5),(6,6,6);                                      | success                                                            | schema1 |
-      #case: all tables correspond to the different node update多表已支持
-#      | conn_0 | False   | update schema1.single_t1 a,schema2.single_t2 b set a.age=b.age where a.name=b.name;                                               | This `Complex Delete Syntax` is not supported!   | schema1 |
+      #case: all tables correspond to the different node
+      | conn_0 | False   | update schema1.single_t1 a,schema2.single_t2 b set a.age=b.age+1,b.name=a.name-1 where a.name=b.name;                             | This `Complex Update Syntax` is not supported!   | schema1 |
       | conn_0 | False   | delete schema1.single_t1 from schema1.single_t1,schema2.single_t2 where schema1.single_t1.name=schema2.single_t2.name;            | This `Complex Delete Syntax` is not supported!   | schema1 |
       ##case: has privilege and no Subquery and update/delete the operated all tables is global table
       # prepare sql
@@ -614,7 +614,7 @@ Feature: test dml sql which can penetrate to mysql
       | conn_0 | False   | select * from schema3.t3;                                                                                                         | has{(2,'2',2),(3,'3',3),(4,'4',4),(5,'5',5),(6,'6',6)}             | schema3 |
       | conn_0 | False   | select * from schema3.t5;                                                                                                         | has{(2,'2',2),(3,'3',3),(4,'4',4),(5,'5',5),(6,'6',6)}             | schema3 |
       #case: have one table are on the different vertical sharding node
-#      | conn_0 | False   | update schema3.t3 a,schema4.t1 b set a.age=b.age where a.name=b.name and a.age=1;                                                        | This `Complex Delete Syntax` is not supported!         | schema3 |
+      | conn_0 | False   | update schema3.t3 a,schema4.t1 b set a.age=b.age+1,b.name=a.name-1 where a.name=b.name and a.age=1;                                      | This `Complex Update Syntax` is not supported!         | schema3 |
       | conn_0 | False   | delete schema3.t3,schema4.t2 from schema3.t3,schema4.t2 where schema3.t3.name=schema4.t2.name and schema4.t2.age=1;                      | This `Complex Delete Syntax` is not supported!         | schema3 |
       ##case: has privilege and no Subquery and update/delete the operated all tables is sharding table
       # prepare sql
@@ -631,14 +631,14 @@ Feature: test dml sql which can penetrate to mysql
       | conn_0 | False   | delete schema1.sharding_4_t1 from schema1.sharding_4_t1,schema2.sharding_4_t2 where schema1.sharding_4_t1.id=1 and schema2.sharding_4_t2.id =1; | success                                                            | schema1 |
       | conn_0 | False   | select * from schema1.sharding_4_t1;                                                                                                            | has{(2,'2',2),(3,'3',3),(4,'4',4),(5,'5',5),(6,'6',6)}             | schema1 |
       #case: have where condition and route to the different node
-#      | conn_0 | False   | update schema1.sharding_4_t1 a,schema2.sharding_4_t2 b set a.age=b.age where a.id=1 and b.id=2;                                     | This `Complex Update Syntax` is not supported!         | schema1 |
+      | conn_0 | False   | update schema1.sharding_4_t1 a,schema2.sharding_4_t2 b set a.age=b.age+1,b.name=a.name-1 where a.id=1 and b.id=2;                                     | This `Complex Update Syntax` is not supported!         | schema1 |
       | conn_0 | False   | delete schema1.sharding_4_t1 from schema1.sharding_4_t1,schema2.sharding_4_t2 where schema1.sharding_4_t1.id=1 and schema2.sharding_4_t2.id =2;       | This `Complex Delete Syntax` is not supported!         | schema1 |
       #case: no have where condition
-#      | conn_0 | False   | update schema1.sharding_4_t1 a,schema2.sharding_4_t2 b set a.age=b.age                    | This `Complex Update Syntax` is not supported!         | schema1 |
+      | conn_0 | False   | update schema1.sharding_4_t1 a,schema2.sharding_4_t2 b set a.age=b.age+1,b.name=a.name-1                    | This `Complex Update Syntax` is not supported!         | schema1 |
       | conn_0 | False   | delete schema1.sharding_4_t1 from schema1.sharding_4_t1,schema2.sharding_4_t2                               | This `Complex Delete Syntax` is not supported!         | schema1 |
       ##case: has privilege and no Subquery and update/delete the operated all tables is different table
       #case: only have single table and sharding table but no have where condition
-#      | conn_0 | False   | update schema1.sharding_2_t1 a,schema2.single_t2 b set a.age=b.age;                    | This `Complex Update Syntax` is not supported!         | schema1 |
+      | conn_0 | False   | update schema1.sharding_2_t1 a,schema2.single_t2 b set a.age=b.age+1,b.name=a.name-1;                    | This `Complex Update Syntax` is not supported!         | schema1 |
       | conn_0 | False   | delete schema1.sharding_2_t1 from schema1.sharding_2_t1,schema2.single_t2 ;                              | This `Complex Delete Syntax` is not supported!         | schema1 |
       # prepare sql
       | conn_0 | False   | drop table if exists schema1.sharding_2_t1;                                                    | success           | schema1 |
@@ -654,13 +654,13 @@ Feature: test dml sql which can penetrate to mysql
       | conn_0 | False   | delete schema2.single_t2 from schema1.sharding_2_t1,schema2.single_t2 where schema1.sharding_2_t1.id=2 and schema2.single_t2.id =2;             | success                                                            | schema1 |
       | conn_0 | False   | select * from schema2.single_t2;                                                                                                                | has{(1,'1',1),(3,'3',3),(4,'4',4),(5,'5',5),(6,'6',6)}             | schema2 |
       #case: only have single table and sharding table and have where condition and route to the different node
-#      | conn_0 | False   | update schema1.sharding_2_t1 a,schema2.single_t3 b set a.age=b.age where a.id=2 and b.id=1;                                   | This `Complex Update Syntax` is not supported!         | schema1 |
+      | conn_0 | False   | update schema1.sharding_2_t1 a,schema2.single_t3 b set a.age=b.age+1,b.name=a.name-1 where a.id=2 and b.id=1;                                   | This `Complex Update Syntax` is not supported!         | schema1 |
       | conn_0 | False   | delete schema2.single_t3 from schema1.sharding_2_t1,schema2.single_t3 where schema1.sharding_2_t1.id=2 and schema3.single_t2.id =2;             | This `Complex Delete Syntax` is not supported!         | schema2 |
       #case: have global table
-#      | conn_0 | False   | update schema1.sharding_2_t1 a,schema2.global_t2 b set a.age=b.age where a.id=1 and b.id=1;          | This `Complex Update Syntax` is not supported!         | schema1 |
+      | conn_0 | False   | update schema1.sharding_2_t1 a,schema2.global_t2 b set a.age=b.age+1,b.name=a.name-1 where a.id=1 and b.id=1;          | This `Complex Update Syntax` is not supported!         | schema1 |
       | conn_0 | False   | delete schema1.sharding_2_t1 from schema1.sharding_2_t1,schema2.global_t2 where schema1.sharding_2_t1.id=1             | This `Complex Delete Syntax` is not supported!         | schema1 |
       #case: some issue
       | conn_0 | False   | update schema2.sharding_2_t1 a,db1.single_t2 b set a.age=b.age+1,b.name=a.name-1 where a.id=2 and b.id=1;                                       | Table `db1`.`single_t2` doesn't exist          | schema1 |
       | conn_0 | False   | update db1.sharding_2_t1 a,schema2.single_t2 b set a.age=b.age+1,b.name=a.name-1 where a.id=2 and b.id=1;                                       | Table `db1`.`sharding_2_t1` doesn't exist      | schema1 |
       | conn_0 | False   | delete db1.single_t2 from schema1.sharding_2_t1,schema2.single_t2 where schema1.sharding_2_t1.id=2 and schema2.single_t2.id =2;                 | Table `db1`.`single_t2` doesn't exist          | schema1 |
-      | conn_0 | False   | delete schema2.single_t2 from schema1.sharding_2_t1,schema2.single_t2 where db1.sharding_2_t1.id=2 and schema2.single_t2.id =2;         | Table `db1`.`sharding_2_t1` doesn't exist      | schema1 |
+      | conn_0 | False   | delete schema2.single_t2 from schema1.sharding_2_t1,schema2.single_t2 where db1.sharding_2_t1.id=2 and schema2.single_t2.id =2;                 | Table db1.sharding_2_t1 not exists         | schema1 |
