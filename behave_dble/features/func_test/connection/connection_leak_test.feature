@@ -109,7 +109,8 @@ Feature: connection leak test
       """
     Given prepare a thread run btrace script "BtraceClusterDelayquery.java" in "dble-1"
     Given prepare a thread execute sql "insert into table_c set id =5,name ="xx"" with "conn_0"
-    Then check btrace "BtraceClusterDelayquery.java" output in "dble-1"
+    # 心跳语句也可能进桩
+    Then check btrace "BtraceClusterDelayquery.java" output in "dble-1" with ">0" times
        """
        get into query
        """
