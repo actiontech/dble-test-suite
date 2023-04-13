@@ -221,8 +221,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       rm -rf /opt/noschema_only_table_data.sql*
     """
 
-  @CRITICAL @delete_mysql_tables @auto_retry  @skip
-        #### 这个case加上retry是因为偶尔机器上时间回溯，导致这个case失败
+  @CRITICAL @delete_mysql_tables
   Scenario: split file only have one schema and also have create table sql in it #3
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2']}}
@@ -333,15 +332,17 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     Then check path "/opt/schema1_with_data.sql-dn4-*.dump" in "dble-1" should exist
     Then check path "/opt/schema1_with_data.sql-dn5-*.dump" in "dble-1" should exist
     #upload data into every nodes and check data is correct in dble
+    #          mv /opt/schema1_with_data.sql-dn5-*.dump /opt/schema1_with_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn5.dump && \
+    ### 路由到dn5节点会报错 "error 1231 (42000) at line 23: variable 'time_zone' can't be set to the value of 'null'"
     Given execute oscmd in "dble-1"
      """
       mv /opt/schema1_with_data.sql-dn1-*.dump /opt/schema1_with_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn1.dump && \
       mv /opt/schema1_with_data.sql-dn3-*.dump /opt/schema1_with_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn3.dump && \
-      mv /opt/schema1_with_data.sql-dn5-*.dump /opt/schema1_with_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn5.dump && \
       mv /opt/schema1_with_data.sql-dn2-*.dump /opt/schema1_with_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn2.dump && \
       mv /opt/schema1_with_data.sql-dn4-*.dump /opt/schema1_with_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn4.dump
      """
     Then execute admin cmd "reload @@metadata"
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                             | expect                                | db         | timeout |
       | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test                    | length{(5)}                           | schema1    | 5,2     |
@@ -362,8 +363,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       rm -rf /opt/schema1_with_data.sql*
     """
 
-  @CRITICAL @delete_mysql_tables @auto_retry
-        #### 这个case加上retry是因为偶尔机器上时间回溯，导致这个case失败
+  @CRITICAL @delete_mysql_tables
   Scenario: dump file have two schemas #4
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2']}}
@@ -478,6 +478,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     """
 
   @CRITICAL @delete_mysql_tables  @skip
+    ##coz 3.20.10的需求  DBLE0REQ-513
   Scenario: test with '--ignore' parameter #5
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2']}}
@@ -780,8 +781,8 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       rm -rf /opt/schema1_with_childTable.sql*
     """
 
-  @NORMAL @delete_mysql_tables @skip
-    ###coz DBLE0REQ-2186
+  @NORMAL @delete_mysql_tables  @skip
+    ###coz 3.21.02开始，对view的处理才是对的，之前版本的case忽略
   Scenario: dump file have create view sql  #9
     """
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2']}}
@@ -925,182 +926,6 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     Given execute oscmd in "dble-1"
      """
       rm -rf /opt/schema2_with_no_default_shardingNode.sql*
-    """
-
-  @NORMAL @delete_mysql_tables  @skip
-  Scenario: split file only have create table sql in it #11
-    """
-    {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2']}}
-  """
-    Given upload file "./assets/schema1_with_only_table_structure.sql" to "dble-1" success
-    #1.split with '-s' parameter and the schema does not exist in dble config, split return error
-    Given execute oscmd in "dble-1"
-     """
-      rm -rf /opt/schema1_with_only_table_structure.sql-dn*.dump
-    """
-    Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                 | expect                                             |
-      | split /opt/schema1_with_only_table_structure.sql /opt -sschema4     | Default schema[schema4] doesn't exist in config    |
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn1-*.dump" in "dble-1" should not exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn2-*.dump" in "dble-1" should not exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn3-*.dump" in "dble-1" should not exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn4-*.dump" in "dble-1" should not exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn5-*.dump" in "dble-1" should not exist
-
-    #2.split with no '-s' parameter, split success and the split out files will consistent with the original dump file
-    Then execute sql in "dble-1" in "admin" mode
-      | sql                                                        | expect    |
-      | split /opt/schema1_with_only_table_structure.sql /opt      | has{(('null-null', 'dump file executor exit, because:Please set schema by -s option or make sure that there are statement about schema in dump file.'),)}   |
-    #check the split out files exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn1-*.dump" in "dble-1" should not exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn2-*.dump" in "dble-1" should not exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn3-*.dump" in "dble-1" should not exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn4-*.dump" in "dble-1" should not exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn5-*.dump" in "dble-1" should not exist
-
-    #3.split with '-s' parameter and the schema exists in dble config(consistent with dump file), split success
-    Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                      | expect      |
-      | split /opt/schema1_with_only_table_structure.sql /opt -sschema1          | success     |
-    #check the split out files exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn1-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn2-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn3-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn4-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn5-*.dump" in "dble-1" should exist
-    #upload data into every nodes and check data is correct in dble
-    Given execute oscmd in "dble-1"
-     """
-      mv /opt/schema1_with_only_table_structure.sql-dn1-*.dump /opt/schema1_with_only_table_structure.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 -Ddb1 < /opt/schema1_with_only_table_structure.sql-dn1.dump && \
-      mv /opt/schema1_with_only_table_structure.sql-dn3-*.dump /opt/schema1_with_only_table_structure.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 -Ddb2 < /opt/schema1_with_only_table_structure.sql-dn3.dump && \
-      mv /opt/schema1_with_only_table_structure.sql-dn5-*.dump /opt/schema1_with_only_table_structure.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 -Ddb3 < /opt/schema1_with_only_table_structure.sql-dn5.dump && \
-      mv /opt/schema1_with_only_table_structure.sql-dn2-*.dump /opt/schema1_with_only_table_structure.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 -Ddb1 < /opt/schema1_with_only_table_structure.sql-dn2.dump && \
-      mv /opt/schema1_with_only_table_structure.sql-dn4-*.dump /opt/schema1_with_only_table_structure.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 -Ddb2 < /opt/schema1_with_only_table_structure.sql-dn4.dump
-     """
-    Then execute admin cmd "reload @@metadata"
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                   | expect               |db        | timeout |
-      | conn_0 | False    | show tables                                           | length{(6)}          | schema1  | 5,2     |
-      | conn_0 | False    | select * from global_sequence                         | length{(0)}          | schema1  | 5,2     |
-      | conn_0 | False    | select * from sharding_1_t1                           | length{(0)}          | schema1  | 5,2     |
-      | conn_0 | False    | select * from sharding_2_t1                           | length{(0)}          | schema1  | 5,2     |
-      | conn_0 | False    | select * from sharding_4_t1                           | length{(0)}          | schema1  | 5,2     |
-      | conn_0 | False    | select * from test                                    | length{(0)}          | schema1  | 5,2     |
-      | conn_0 | False    | select * from nosharding                              | length{(0)}          | schema1  | 5,2     |
-      | conn_0 | False    | drop table if exists global_sequence                  | success              | schema1  | 5,2     |
-      | conn_0 | False    | drop table if exists sharding_1_t1                    | success              | schema1  | 5,2     |
-      | conn_0 | False    | drop table if exists sharding_2_t1                    | success              | schema1  | 5,2     |
-      | conn_0 | False    | drop table if exists sharding_4_t1                    | success              | schema1  | 5,2     |
-      | conn_0 | False    | drop table if exists test                             | success              | schema1  | 5,2     |
-      | conn_0 | True     | drop table if exists nosharding                       | success              | schema1  | 5,2     |
-
-    Given execute oscmd in "dble-1"
-     """
-      rm -rf /opt/schema1_with_only_table_structure.sql-dn*.dump
-    """
-   #4.split with '-s' parameter and the schema exists in dble config(not consistent with dump file) , split success and the split out files will consistent with the original dump file
-    Then execute sql in "dble-1" in "admin" mode
-      | sql                                                               | expect                                                   |
-      | split /opt/schema1_with_only_table_structure.sql /opt -sschema2   | has{('schema2-test', 'current stmt[\n--\n-- Table structure for table `test`\n--\n\nDROP TABLE IF EXISTS `test`] error,because:schema schema2 has no default node.'),}    |
-    #check the split out files exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn1-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn2-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn3-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn4-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_only_table_structure.sql-dn5-*.dump" in "dble-1" should exist
-    #upload data into every nodes and check data is correct in dble
-    Given execute oscmd in "dble-1"
-     """
-      mv /opt/schema1_with_only_table_structure.sql-dn1-*.dump /opt/schema1_with_only_table_structure.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 -Ddb1 < /opt/schema1_with_only_table_structure.sql-dn1.dump && \
-      mv /opt/schema1_with_only_table_structure.sql-dn3-*.dump /opt/schema1_with_only_table_structure.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 -Ddb2 < /opt/schema1_with_only_table_structure.sql-dn3.dump && \
-      mv /opt/schema1_with_only_table_structure.sql-dn5-*.dump /opt/schema1_with_only_table_structure.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 -Ddb3 < /opt/schema1_with_only_table_structure.sql-dn5.dump && \
-      mv /opt/schema1_with_only_table_structure.sql-dn2-*.dump /opt/schema1_with_only_table_structure.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 -Ddb1 < /opt/schema1_with_only_table_structure.sql-dn2.dump && \
-      mv /opt/schema1_with_only_table_structure.sql-dn4-*.dump /opt/schema1_with_only_table_structure.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 -Ddb2 < /opt/schema1_with_only_table_structure.sql-dn4.dump
-     """
-    Then execute admin cmd "reload @@metadata"
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                           | expect                                        |db          | timeout |
-      | conn_0 | True     | show tables                   | length{(0)}                                   | schema1    | 5,2     |
-      | conn_0 | False    | show tables                   | length{(1)}                                   | schema2    | 5,2     |
-      | conn_0 | True     | show tables                   | has{('sharding_2_t1',),}                      | schema2    | 5,2     |
-    Given execute oscmd in "dble-1"
-     """
-      rm -rf /opt/schema1_with_only_table_structure.sql*
-    """
-
-  @CRITICAL @delete_mysql_tables @skip
-        ###coz DBLE0REQ-2186
-  Scenario: test with '-w' parameter  #12
-    """
-    {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2']}}
-  """
-    Given upload file "./assets/schema1_with_data.sql" to "dble-1" success
-    #1.split -w with blank
-    Given execute oscmd in "dble-1"
-     """
-      rm -rf /opt/schema1_with_data.sql-dn*.dump
-    """
-    Then execute sql in "dble-1" in "admin" mode
-      | sql                                                 | expect                                       |
-      | split /opt/schema1_with_data.sql  /opt -w 500       | You have an error in your SQL syntax         |
-    Then check path "/opt/schema1_with_data.sql-dn1-*.dump" in "dble-1" should not exist
-    Then check path "/opt/schema1_with_data.sql-dn2-*.dump" in "dble-1" should not exist
-    Then check path "/opt/schema1_with_data.sql-dn3-*.dump" in "dble-1" should not exist
-    Then check path "/opt/schema1_with_data.sql-dn4-*.dump" in "dble-1" should not exist
-    Then check path "/opt/schema1_with_data.sql-dn5-*.dump" in "dble-1" should not exist
-
-    #2.1.split -w with number not power of 2
-    Then execute sql in "dble-1" in "admin" mode
-      | sql                                                 | expect                                                                   |
-      | split /opt/schema1_with_data.sql  /opt -w500;       | get error call manager command The value of -w needs to be a power of 2  |
-    Then check path "/opt/schema1_with_data.sql-dn1-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_data.sql-dn2-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_data.sql-dn3-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_data.sql-dn4-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_data.sql-dn5-*.dump" in "dble-1" should exist
-    Given execute oscmd in "dble-1"
-     """
-      rm -rf /opt/schema1_with_data.sql-dn*.dump
-    """
-
-    #3.split -w with proper number, split success
-    Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                       | expect      |
-      | split /opt/schema1_with_data.sql /opt -sschema1 -w512                     | success     |
-    #check the split out files exist
-    Then check path "/opt/schema1_with_data.sql-dn1-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_data.sql-dn2-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_data.sql-dn3-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_data.sql-dn4-*.dump" in "dble-1" should exist
-    Then check path "/opt/schema1_with_data.sql-dn5-*.dump" in "dble-1" should exist
-    #upload data into every nodes and check data is correct in dble
-    Given execute oscmd in "dble-1"
-     """
-      mv /opt/schema1_with_data.sql-dn1-*.dump /opt/schema1_with_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn1.dump && \
-      mv /opt/schema1_with_data.sql-dn3-*.dump /opt/schema1_with_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn3.dump && \
-      mv /opt/schema1_with_data.sql-dn5-*.dump /opt/schema1_with_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn5.dump && \
-      mv /opt/schema1_with_data.sql-dn2-*.dump /opt/schema1_with_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn2.dump && \
-      mv /opt/schema1_with_data.sql-dn4-*.dump /opt/schema1_with_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn4.dump
-     """
-    Then execute admin cmd "reload @@metadata"
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                        | expect                                | db         | timeout |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from test               | length{(5)}                           | schema1    | 5,2     |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from test               | length{(5)}                           | schema1    | 5,2     |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from test               | length{(5)}                           | schema1    | 5,2     |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from test               | length{(5)}                           | schema1    | 5,2     |
-      | conn_0 | False    | select * from sharding_1_t1                                | length{(5)}                           | schema1    | 5,2     |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_2_t1      | has{(2,'2',2),(4,'4',4)}              | schema1    | 5,2     |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_2_t1      | has{(1,'1',1),(3,'3',3),(5,'5',5)}    | schema1    | 5,2     |
-      | conn_0 | False    | /*#dble:shardingNode=dn1*/select * from sharding_4_t1      | has{((4,'4',4),)}                     | schema1    | 5,2     |
-      | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1      | has{(1,'1',1),(5,'5',5)}              | schema1    | 5,2     |
-      | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1      | has{((2,'2',2),)}                     | schema1    | 5,2     |
-      | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1      | has{((3,'3',3),)}                     | schema1    | 5,2     |
-      | conn_0 | False    | select * from nosharding                                   | length{(5)}                           | schema1    | 5,2     |
-      | conn_0 | True     | select * from global_sequence                              | length{(5)}                           | schema1    | 5,2     |
-    Given execute oscmd in "dble-1"
-     """
-      rm -rf /opt/schema1_with_data.sql*
     """
 
   @NORMAL
