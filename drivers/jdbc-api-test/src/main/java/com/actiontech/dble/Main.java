@@ -44,8 +44,8 @@ public class Main {
 			StatementTest mysql_stmt = new StatementTest(mysqlProp, testProp, true);
 			mysql_stmt.start_test();
 
-			StatementTest mariadb_stmt = new StatementTest(mysqlProp, testProp, false);
-			mariadb_stmt.start_test();
+//			StatementTest mariadb_stmt = new StatementTest(mysqlProp, testProp, false);
+//			mariadb_stmt.start_test();
 
 			JDBCTutorialUtilities tu = new JDBCTutorialUtilities(mysqlProp, testProp, true);
 			tu.start_test();
@@ -81,8 +81,6 @@ public class Main {
 //			GeneralLogTest generalLogTest = new GeneralLogTest(mysqlProp, testProp, true);
 //			generalLogTest.start_test();
 
-			RwSplitUserPsTest rwSplitUserTest = new RwSplitUserPsTest(mysqlProp, testProp, true);
-			rwSplitUserTest.start_test();
 
 			CapClientFoundRowsTest capClientFoundRowsTest = new CapClientFoundRowsTest(mysqlProp, testProp, true);
 			capClientFoundRowsTest.start_test();

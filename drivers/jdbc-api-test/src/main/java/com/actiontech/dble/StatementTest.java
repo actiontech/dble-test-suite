@@ -12,8 +12,8 @@ import java.sql.Statement;
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 public class StatementTest extends InterfaceTest {
-	public StatementTest(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
-		super(mysqlProp, dbleProp);
+	public StatementTest(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
+		super(mysqlProp, dbleProp ,isMysqlDriver);
 	}
 
 	protected void start() throws SQLException {
