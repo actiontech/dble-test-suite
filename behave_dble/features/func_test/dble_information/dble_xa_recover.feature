@@ -85,6 +85,7 @@ Feature: check dble_xa_recover and exception xa transactions
 
 
   @restore_xa_recover
+  @auto_retry #原因：DBLE0REQ-2140暂不合并至3.21.06
   Scenario: check xa transactions in mysql #2
     """
     {'restore_xa_recover':['mysql-master1', 'mysql-master2']}
