@@ -79,8 +79,8 @@
       #      | conn_0 | False   | select * from sharding_2_t1 a inner join sharding_2_t1 b on a.cc = b.cc where  a.aa  ='cn' and b.bb ='jp'  and (b.isshare=1 or a.isshare=1 )  LIMIT 0,7                                        | success | schema1 |
       | conn_0 | true    | drop table if exists sharding_2_t1                                                         | success     | schema1 |
 
-     @skip
-       #coz 3.20.10修复的
+
+
    Scenario: hextype the format is 0x or x' ' from github:1997 #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
        """
