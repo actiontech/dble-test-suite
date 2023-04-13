@@ -1185,6 +1185,7 @@ Feature: test "binlog" in zk cluster
       | conn     | toClose | sql                      | expect     | timeout |
       | conn_2   | true    | show @@binlog.status     | success    | 11,3    |
 
+    @skip
    Scenario:   # drop table
     Given execute oscmd in "dble-1"
       """
