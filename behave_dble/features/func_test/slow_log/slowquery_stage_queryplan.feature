@@ -67,10 +67,8 @@ Feature: check sql execute stage and connection query plan
     Given delete file "/opt/dble/BtraceSessionStage.java" on "dble-1"
     Given delete file "/opt/dble/BtraceSessionStage.java.log" on "dble-1"
 
-@skip
-   ##方法不适用
-  Scenario: check "show @@connection.sql.status where FRONT_ID=?" #2
 
+  Scenario: check "show @@connection.sql.status where FRONT_ID=?"   ---admin #2
 # case 1: use default @@slow_query_log and disable @@slow_query_log
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                        | expect                               |
@@ -89,27 +87,29 @@ Feature: check sql execute stage and connection query plan
       | conn_2 | False   | show @@connection.sql.status where front_id=aaaa   | front_id must be a number                              |
 
 # check manager front_id
-    Then get index:"0" column value of "select session_conn_id from dble_information.session_connections where sql_stage = 'Manager connection' limit 1" named as "admin_front_id"
-
+    Then get index:"1" column value of "show @@connection" named as "admin_front_id"
     Then execute the sql in "dble-1" in "admin" mode by parameter from resultset "admin_front_id"
       | conn   | toClose | sql                                               | expect                                   |
       | conn_2 | False   | show @@connection.sql.status where front_id = {0} | The front_id {0} is a manager connection |
 
-# check user front_id not execute sql
+@skip
+  ##coz DBLE0REQ-2188 命令的字段类型修复后
+  Scenario: check "show @@connection.sql.status where FRONT_ID=?"  ---user #3
+    Then execute admin cmd "enable @@slow_query_log"
+      # check user front_id not execute sql
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql         | expect  |
       | conn_3 | False   | use schema1 | success |
+    Then get index:"1" column value of "show @@connection" named as "user_front_id"
 
-    Then get index:"0" column value of "select session_conn_id from dble_information.session_connections where sql_stage <> 'Manager connection' limit 1" named as "user_front_id"
-
-    Then execute the sql in "dble-1" in "admin" mode by parameter from resultset "user_front_id" and save resultset in "connection_sql_3"
-      | conn   | toClose | sql                                                 |
-      | conn_2 | False   | show @@connection.sql.status where front_id = {0}   |
-
-    Then check resultset "connection_sql_3" has lines with following column values
-      | OPERATION-0 | SHARDING_NODE-4 | SQL/REF-5 |
-      | Read_SQL    | -               | -         |
-      | Parse_SQL   | -               | -         |
+#    Then execute the sql in "dble-1" in "admin" mode by parameter from resultset "user_front_id" and save resultset in "connection_sql_3"
+#      | conn   | toClose | sql                                                 |
+#      | conn_2 | False   | show @@connection.sql.status where front_id = {0}   |
+#
+#    Then check resultset "connection_sql_3" has lines with following column values
+#      | OPERATION-0 | SHARDING_NODE-4 | SQL/REF-5 |
+#      | Read_SQL    | -               | -         |
+#      | Parse_SQL   | -               | -         |
 
 # check front_id executed sql
 # no sharding table
