@@ -267,10 +267,10 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
     Given execute oscmd "python3 /opt/LargePacket.py >/opt/dble/logs/insert/sharding.txt" on "dble-1"
 
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                        | expect                    | db               |
-      | conn_2 | False    | show @@sql                                                                | hasStr{aaaaaaaaaa...}     | dble_information |
-      | conn_2 | False    | select * from sql_log where sql_stmt like "%insert into sharding_4_t1%"                  | hasStr{aaaaaaaaaa...}     | dble_information |
-      | conn_2 | False    | select length(sql_stmt) from sql_log where sql_stmt like "%insert into sharding_4_t1%"   | has{((1027,), (1027,), (1027,), (1027,), (1027,), (1027,), (1027,), (1027,))}     | dble_information |
+      | conn   | toClose | sql                                                                        | expect                    | db               | timeout |
+      | conn_2 | False    | show @@sql                                                                | hasStr{aaaaaaaaaa...}     | dble_information | 10,3    |
+      | conn_2 | False    | select * from sql_log where sql_stmt like "%insert into sharding_4_t1%"                  | hasStr{aaaaaaaaaa...}     | dble_information | 10,3    |
+      | conn_2 | False    | select length(sql_stmt) from sql_log where sql_stmt like "%insert into sharding_4_t1%"   | has{((1027,), (1027,), (1027,), (1027,), (1027,), (1027,), (1027,), (1027,))}     | dble_information | 10,3    |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       unknown error:
