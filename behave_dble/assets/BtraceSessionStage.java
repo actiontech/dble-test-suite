@@ -101,22 +101,6 @@ public final class BtraceSessionStage {
 
     @OnMethod(
             clazz = "com.actiontech.dble.server.NonBlockingSession",
-            method = "setBackendResponseTime",
-            location = @Location(Kind.RETURN)
-    )
-    public static void setBackendResponseTime(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
-        long startTime = System.currentTimeMillis();
-        BTraceUtils.println("time[" + startTime + "], start get into setBackendResponseTime " );
-        BTraceUtils.println("------- get into setBackendResponseTime -------");
-        BTraceUtils.println();
-        Thread.sleep(1L);
-        long endTime = System.currentTimeMillis();
-        BTraceUtils.println("time[" + endTime + "], end get into setBackendResponseTime " );
-        BTraceUtils.println();
-    }
-
-    @OnMethod(
-            clazz = "com.actiontech.dble.server.NonBlockingSession",
             method = "setResponseTime",
             location = @Location(Kind.RETURN)
     )
