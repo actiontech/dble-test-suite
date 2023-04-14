@@ -12,7 +12,7 @@ import re
 import time
 
 from steps.lib.ConnUtil import MysqlConnUtil
-from steps.lib.utils import update_file_with_sed,get_mysql_cnf_path
+from steps.lib.utils import update_file_with_sed,get_mysql_cnf_path,sleep_by_time
 
 logger = logging.getLogger('root')
 
@@ -115,6 +115,36 @@ class MySQLObject(object):
 
         assert isSuccess, "can not connect to {0} after 25s wait".format(self._mysql_meta.ip)
 
+    def check_general_log_status(self, conn, retry_param, status):
+        if "," in str(retry_param):
+            execute_times = int(retry_param.split(",")[0])
+            sep_time = float(retry_param.split(",")[1])
+        else:
+            execute_times = int(retry_param)
+            sep_time = 1
+        sql = "select VARIABLE_VALUE from performance_schema.global_variables where VARIABLE_NAME='general_log'"
+        for i in range(execute_times):
+            try:
+                res, err = conn.execute(sql)
+                assert err is None, "execute sql: {} fail for {}".format(sql, err[1])
+                res_status = res[0][0].lower()
+                logger.debug("general_log status is: {}".format(res_status))
+                if status == "on":
+                    assert res_status == 'on', "expect general_log is on, but real is {}".format(res_status)
+                else:
+                    assert res_status == 'off', "expect general_log is off, but real is {}".format(res_status)
+                break
+            except Exception as e:
+                if status == "on":
+                    logger.debug("check general_log status is on , execute {} times".format(i + 1))
+                else:
+                    logger.debug("check general_log status is off , execute {} times".format(i + 1))
+
+                if i == execute_times - 1:
+                    raise e
+                else:
+                    sleep_by_time(sep_time)
+
     def turn_on_general_log(self, to_clean_old_file=True):
         if to_clean_old_file:
             self.turn_off_general_log_and_clean()
@@ -124,6 +154,8 @@ class MySQLObject(object):
 
         res, err = conn.execute("set global general_log=on")
         assert err is None, "set general log on fail for {0}".format(err[1])
+        # 检测在5s内开启成功
+        self.check_general_log_status(conn, "5", "on")
 
         conn.close()
 
@@ -133,6 +165,8 @@ class MySQLObject(object):
 
         res, err = conn.execute("set global general_log=off")
         assert err is None, "turn off general log fail for {0}".format(err[1])
+        # 检测在5s内关闭成功
+        self.check_general_log_status(conn, "5", "off")
 
         conn.close()
 
