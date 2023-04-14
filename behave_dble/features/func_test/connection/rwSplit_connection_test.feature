@@ -59,7 +59,7 @@ Feature: connection test in rwSplit mode
 
      Given record current dble log line number in "log_num_1"
      Given prepare a thread execute sql "select * from test" with "conn_1"
-
+     #为何没有进桩判断，还是很多活动都会进桩 所以此处才不做判断的？
        #use delete dbInstance to trigger reload
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                               | expect           | db      |
@@ -231,10 +231,16 @@ Feature: connection test in rwSplit mode
      Given prepare a thread run Btrace script "BtraceSelectRWDbGroup.java" in "dble-1"
      #delete slave dbInstance
      Given prepare a thread execute sql "select * from test" with "conn_1"
+    # 先判断执行select * from test语句进入桩了，再执行delete from dble_db_instance*
+    Then check btrace "BtraceSelectRWDbGroup.java" output in "dble-1" with "1" times
+      """
+        get into reSelectRWDbGroup
+      """
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                                   | expect             | db      |
         | conn_2 | False   | delete from dble_db_instance where name='hostM2'      | success            | dble_information   |
-
+     # 偶发超过10s后 select * from test 语句都未返回结果，观测到和delete from dble_db_instance*语句（此语句会触发reload）执行时间非常近
+     # 先在未返回时打印jstack再分析具体原因
      Then check sql thread output in "res" by retry "10" times
         """
           (1,)
@@ -250,8 +256,8 @@ Feature: connection test in rwSplit mode
         """
           (1,)
         """
-
-    Then check btrace "BtraceSelectRWDbGroup.java" output in "dble-1" with "4" times
+    # 前面select * from test进入了1次桩，加上本次select * from test就是2次，触发reload不会进入桩
+    Then check btrace "BtraceSelectRWDbGroup.java" output in "dble-1" with "2" times
       """
         get into reSelectRWDbGroup
       """
