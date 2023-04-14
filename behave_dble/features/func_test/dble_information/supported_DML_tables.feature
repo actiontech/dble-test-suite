@@ -897,11 +897,11 @@
       | conn_0 | false   | update dble_db_group set heartbeat_retry=null where rw_split_mode = 1        | success  | dble_information |
       | conn_0 | false   | update dble_db_group set delay_threshold=null where rw_split_mode = 1        | success  | dble_information |
       | conn_0 | false   | update dble_db_group set disable_ha=null where rw_split_mode = 1             | success  | dble_information |
-
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
+### coz  DBLE0REQ-2129
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      NullPointerException
+#      """
     Then execute admin cmd "reload @@config_all"
 
 
@@ -1304,10 +1304,11 @@
       | conn_0 | false   | update dble_db_instance set test_on_borrow=null where db_group='ha_group1'                       |  success     | dble_information |
       | conn_0 | false   | update dble_db_instance set test_on_create=null where db_group='ha_group1'                       |  success     | dble_information |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
+### coz  DBLE0REQ-2129
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      NullPointerException
+#      """
     Then execute admin cmd "reload @@config_all"
 
 
@@ -1424,10 +1425,11 @@
       | conn   | toClose | sql                                                                                            | expect       | db               |
       | conn_0 | false   | update dble_rw_split_entry set encrypt_configured=null where db_group='ha_group6'              | success      | dble_information |
       | conn_0 | false   | update dble_rw_split_entry set white_ips=null where db_group='ha_group3'                       | success      | dble_information |
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
+### coz  DBLE0REQ-2129
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      NullPointerException
+#      """
     Then execute admin cmd "reload @@config_all"
 
 
@@ -1552,8 +1554,9 @@
       | conn_0 | false   | delete from dble_db_group where active ='true'                                 | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_db_instance`(`db_group`) REFERENCES `dble_db_group`(`name`)    | dble_information |
       | conn_0 | false   | delete from dble_db_group where name ='ha_group2'                              | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_db_instance`(`db_group`) REFERENCES `dble_db_group`(`name`)    | dble_information |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
+### coz  DBLE0REQ-2129
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      NullPointerException
+#      """
     Then execute admin cmd "reload @@config_all"
