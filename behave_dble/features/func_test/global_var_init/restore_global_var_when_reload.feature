@@ -50,6 +50,8 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Then check general log in host "mysql-master2" has not "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
 #    create new conns,and check new conn will not set global xxx
     Given turn on general log in "mysql-master1"
+    #开启general log后，立即执行kill all backend中可能会导致查询到中间态的连接 (111, 'test', '172.100.9.8:34742', None, 'Query', 0, 'Sending to client', 'set global general_log=on')，增加sleep时间
+    Given sleep "2" seconds
     Given kill all backend conns in "mysql-master1"
     When execute sql in "dble-1" in "user" mode
       | sql                                | db      |
