@@ -2,7 +2,7 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wangjuan at 2020/12/2
-
+# DBLE0REQ-79
 Feature: check sql execute stage and connection query plan
 
   @btrace
@@ -19,6 +19,8 @@ Feature: check sql execute stage and connection query plan
       | test    | schema1   | drop table if exists sharding_4_t1     | Finished           |
 
 # at startProcess stage
+    Given delete file "/opt/dble/BtraceSessionStage.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceSessionStage.java.log" on "dble-1"
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
@@ -26,9 +28,9 @@ Feature: check sql execute stage and connection query plan
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
     Given prepare a thread execute sql "create table sharding_4_t1(id int)" with "conn_0"
-    Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
+    Then check btrace "BtraceSessionStage.java" output in "dble-1" with ">0" times
     """
-    end get into setRequestTime
+    get into startProcess
     """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "connection_sql_1"
       | conn   | toClose | sql                   |
@@ -40,18 +42,22 @@ Feature: check sql execute stage and connection query plan
     Given stop btrace script "BtraceSessionStage.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
+    Given delete file "/opt/dble/BtraceSessionStage.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceSessionStage.java.log" on "dble-1"
 
 # at setBackendResponseTime stage
-    Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
+    Given delete file "/opt/dble/BtraceSessionStage1.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceSessionStage1.java.log" on "dble-1"
+    Given update file content "./assets/BtraceSessionStage1.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /setBackendResponseTime/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
     """
-    Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
+    Given prepare a thread run btrace script "BtraceSessionStage1.java" in "dble-1"
     Given prepare a thread execute sql "drop table if exists sharding_4_t1" with "conn_0"
-    Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
+    Then check btrace "BtraceSessionStage1.java" output in "dble-1" with ">0" times
     """
-    end get into setPreExecuteEnd
+    get into setBackendResponseTime
     """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "connection_sql_2"
       | conn   | toClose | sql                   |
@@ -61,11 +67,11 @@ Feature: check sql execute stage and connection query plan
       | root    |           | show @@connection.sql                  | Manager connection |
       | test    | schema1   | drop table if exists sharding_4_t1     | Fetching_Result    |
 
-    Given stop btrace script "BtraceSessionStage.java" in "dble-1"
+    Given stop btrace script "BtraceSessionStage1.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
-    Given delete file "/opt/dble/BtraceSessionStage.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceSessionStage.java.log" on "dble-1"
+    Given delete file "/opt/dble/BtraceSessionStage1.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceSessionStage1.java.log" on "dble-1"
 
 
   Scenario: check "show @@connection.sql.status where FRONT_ID=?"   ---admin #2
