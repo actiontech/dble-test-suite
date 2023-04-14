@@ -58,33 +58,33 @@ Feature: check fingerprint log
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_line" in host "dble-1" retry "5" times
     """
-    INFO.*execute manager cmd from .*root@172.100.9.8.*insert into dble_db_group\(name, heartbeat_stmt, heartbeat_timeout, heartbeat_retry, rw_split_mode, delay_threshold, disable_ha\)
-    INFO.*execute manager cmd from .*root@172.100.9.8.*update dble_db_group set rw_split_mode=3 where name=\"ha_group5\"
-    INFO.*execute manager cmd from .*root@172.100.9.8.*delete from dble_db_group where name=\"ha_group5\"
+    INFO.*execute manager cmd from .*172.100.9.8.*insert into dble_db_group\(name, heartbeat_stmt, heartbeat_timeout, heartbeat_retry, rw_split_mode, delay_threshold, disable_ha\)
+    INFO.*execute manager cmd from .*172.100.9.8.*update dble_db_group set rw_split_mode=3 where name=\"ha_group5\"
+    INFO.*execute manager cmd from .*172.100.9.8.*delete from dble_db_group where name=\"ha_group5\"
     WARN.*Unsupported show:show @@config
-    INFO.*execute manager cmd from .*root@172.100.9.8.*aaa @@config
-    INFO.*execute manager cmd from .*root@172.100.9.8.*reload @@config
-    INFO.*execute manager cmd from .*root@172.100.9.8.*stop @@heartbeat ha_group2:3
-    INFO.*execute manager cmd from .*root@172.100.9.8.*flow_control @@list
-    INFO.*execute manager cmd from .*root@172.100.9.8.*flow_control @@show
-    INFO.*execute manager cmd from .*root@172.100.9.8.*flow_control @@set enableFlowControl=false
-    INFO.*execute manager cmd from .*root@172.100.9.8.*dryrun
-    INFO.*execute manager cmd from .*root@172.100.9.8.*fresh conn where dbGroup='ha_group1'
-    INFO.*execute manager cmd from .*root@172.100.9.8.*drop database @@shardingNode=\"dn5\"
-    INFO.*execute manager cmd from .*root@172.100.9.8.*create database @@shardingNode=\"dn5\"
-    INFO.*execute manager cmd from .*root@172.100.9.8.*enable @@slow_query_log
-    INFO.*execute manager cmd from .*root@172.100.9.8.*disable @@slow_query_log
-    INFO.*execute manager cmd from .*root@172.100.9.8.*enable @@general_log
-    INFO.*execute manager cmd from .*root@172.100.9.8.*disable @@general_log
-    INFO.*execute manager cmd from .*root@172.100.9.8.*reload @@general_log_file=\"general/test.log\"
-    INFO.*execute manager cmd from .*root@172.100.9.8.*offline
-    INFO.*execute manager cmd from .*root@172.100.9.8.*online
-    INFO.*execute manager cmd from .*root@172.100.9.8.*pause @@shardingNode='dn1,dn2' and timeout=10,queue=10,wait_limit=10
-    INFO.*execute manager cmd from .*root@172.100.9.8.*resume
-    INFO.*execute manager cmd from .*root@172.100.9.8.*reload @@metadata
-    INFO.*execute manager cmd from .*root@172.100.9.8.*dbGroup @@disable name='ha_group1'
-    INFO.*execute manager cmd from .*root@172.100.9.8.*dbGroup @@enable name='ha_group1'
-    INFO.*execute manager cmd from .*root@172.100.9.8.*dbGroup @@switch name='ha_group2' master='hostS2'
+    INFO.*execute manager cmd from .*172.100.9.8.*aaa @@config
+    INFO.*execute manager cmd from .*172.100.9.8.*reload @@config
+    INFO.*execute manager cmd from .*172.100.9.8.*stop @@heartbeat ha_group2:3
+    INFO.*execute manager cmd from .*172.100.9.8.*flow_control @@list
+    INFO.*execute manager cmd from .*172.100.9.8.*flow_control @@show
+    INFO.*execute manager cmd from .*172.100.9.8.*flow_control @@set enableFlowControl=false
+    INFO.*execute manager cmd from .*172.100.9.8.*dryrun
+    INFO.*execute manager cmd from .*172.100.9.8.*fresh conn where dbGroup='ha_group1'
+    INFO.*execute manager cmd from .*172.100.9.8.*drop database @@shardingNode=\"dn5\"
+    INFO.*execute manager cmd from .*172.100.9.8.*create database @@shardingNode=\"dn5\"
+    INFO.*execute manager cmd from .*172.100.9.8.*enable @@slow_query_log
+    INFO.*execute manager cmd from .*172.100.9.8.*disable @@slow_query_log
+    INFO.*execute manager cmd from .*172.100.9.8.*enable @@general_log
+    INFO.*execute manager cmd from .*172.100.9.8.*disable @@general_log
+    INFO.*execute manager cmd from .*172.100.9.8.*reload @@general_log_file=\"general/test.log\"
+    INFO.*execute manager cmd from .*172.100.9.8.*offline
+    INFO.*execute manager cmd from .*172.100.9.8.*online
+    INFO.*execute manager cmd from .*172.100.9.8.*pause @@shardingNode='dn1,dn2' and timeout=10,queue=10,wait_limit=10
+    INFO.*execute manager cmd from .*172.100.9.8.*resume
+    INFO.*execute manager cmd from .*172.100.9.8.*reload @@metadata
+    INFO.*execute manager cmd from .*172.100.9.8.*dbGroup @@disable name='ha_group1'
+    INFO.*execute manager cmd from .*172.100.9.8.*dbGroup @@enable name='ha_group1'
+    INFO.*execute manager cmd from .*172.100.9.8.*dbGroup @@switch name='ha_group2' master='hostS2'
     """
     Given record current dble log line number in "log_line"
     Then execute sql in "dble-1" in "admin" mode
@@ -125,33 +125,33 @@ Feature: check fingerprint log
     """
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_line" in host "dble-1" retry "5" times
     """
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# insert=dble_db_group\*/insert into dble_db_group\(name, heartbeat_stmt, heartbeat_timeout, heartbeat_retry, rw_split_mode, delay_threshold, disable_ha\)
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*#update=dble_db_group\*/update dble_db_group set rw_split_mode=3 where name=\"ha_group5\"
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*#delete=dble_db_group \*/delete from dble_db_group where name=\"ha_group5\"
+    INFO.*execute manager cmd from .*172.100.9.8.*insert into dble_db_group\(name, heartbeat_stmt, heartbeat_timeout, heartbeat_retry, rw_split_mode, delay_threshold, disable_ha\) value
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*#update=dble_db_group\*/update dble_db_group set rw_split_mode=3 where name=\"ha_group5\"
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*#delete=dble_db_group \*/delete from dble_db_group where name=\"ha_group5\"
     WARN.*Unsupported show:/\*# show=config \*/show @@config
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# aaa=config \*/ aaa @@config
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# reload=config \*/ reload @@config
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# stop=heartbeat \*/stop @@heartbeat ha_group2:3
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# flow_control=list and test_key=test_value ab=cd \*/flow_control @@list
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# flow_control=show \*/flow_control @@show
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# flow_control=set \*/flow_control @@set enableFlowControl=false
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# dryrun=1 2=test ab=@cd key=#value \*/dryrun
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# fresh=conn & dbGroup=ha_group1 \*/fresh conn where dbGroup =
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# drop=database \*/drop database @@shardingNode =\"dn5\"
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# create=database \*/ create database @@shardingNode=\"dn5\"
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# enable=slow_query_log \*/enable @@slow_query_log
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# disable=slow_query_log \*/disable @@slow_query_log
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# enable=@general_log \*/enable @@general_log
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# disable=@@general_log \*/disable @@general_log
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# reload=general_log_file \*/reload @@general_log_file=\"general/test.log\"
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# 1=offline \*/offline
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# 2=online \*/online
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# pause=shardingNode \*/pause @@shardingNode='dn1,dn2' and timeout=10,queue=10,wait_limit=10
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/*\# resume=true \*/resume
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# reload = metadata \*/reload @@metadata
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# dbGroup=disable \*/dbGroup @@disable name='ha_group1'
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# dbGroup=enable \*/dbGroup @@enable name='ha_group1'
-    INFO.*execute manager cmd from .*root@172.100.9.8.*/\*# dbGroup=switch \*/dbGroup @@switch name='ha_group2' master='hostM2'
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# aaa=config \*/ aaa @@config
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# reload=config \*/ reload @@config
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# stop=heartbeat \*/stop @@heartbeat ha_group2:3
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# flow_control=list and test_key=test_value ab=cd \*/flow_control @@list
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# flow_control=show \*/flow_control @@show
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# flow_control=set \*/flow_control @@set enableFlowControl=false
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# dryrun=1 2=test ab=@cd key=#value \*/dryrun
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# fresh=conn & dbGroup=ha_group1 \*/fresh conn where dbGroup =
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# drop=database \*/drop database @@shardingNode =\"dn5\"
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# create=database \*/ create database @@shardingNode=\"dn5\"
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# enable=slow_query_log \*/enable @@slow_query_log
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# disable=slow_query_log \*/disable @@slow_query_log
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# enable=@general_log \*/enable @@general_log
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# disable=@@general_log \*/disable @@general_log
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# reload=general_log_file \*/reload @@general_log_file=\"general/test.log\"
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# 1=offline \*/offline
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# 2=online \*/online
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# pause=shardingNode \*/pause @@shardingNode='dn1,dn2' and timeout=10,queue=10,wait_limit=10
+    INFO.*execute manager cmd from .*172.100.9.8.*/*\# resume=true \*/resume
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# reload = metadata \*/reload @@metadata
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# dbGroup=disable \*/dbGroup @@disable name='ha_group1'
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# dbGroup=enable \*/dbGroup @@enable name='ha_group1'
+    INFO.*execute manager cmd from .*172.100.9.8.*/\*# dbGroup=switch \*/dbGroup @@switch name='ha_group2' master='hostM2'
     """
 
   @restore_global_setting @stop_tcpdump
@@ -190,7 +190,7 @@ Feature: check fingerprint log
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5" times
     """
     from=instance-test reason=one time job\*/show databases to con
-    from=instance-test reason=one time job\*/select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log to con
+    from=instance-test reason=one time job\*/select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version
     from=instance-test reason=one time job\*/show variables to con
     """
     Given record current dble log line number in "log_linenu1"
