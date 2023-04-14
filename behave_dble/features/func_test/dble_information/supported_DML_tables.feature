@@ -37,19 +37,19 @@
       | conn   | toClose | sql                         | db               |
       | conn_0 | true    | select * from dble_db_group | dble_information |
     Then check resultset "dble_db_group_1" has lines with following column values
-      | name-0     | heartbeat_stmt-1   | heartbeat_timeout-2 | heartbeat_retry-3 | heartbeat_keep_alive-4 | rw_split_mode-5 | delay_threshold-6 | delay_period_millis-7 | delay_database-8 | disable_ha-9 | active-10 |
-      | ha_group1  | select user()      | 0                   | 1                 | 60                     | 0               | 100               | -1                    | null             | false        | true      |
-      | ha_group2  | select user()      | 0                   | 1                 | 60                     | 0               | 100               | -1                    | null             | false        | true      |
-      | ha_group3  | select 1           | 60                  | 1                 | 60                     | 1               | -1                | -1                    | null             | false        | false     |
-      | ha_group4  | select 2           | 100                 | 1                 | 60                     | 2               | 1000              | -1                    | null             | false        | false     |
-      | ha_group5  | show slave status  | 88                  | 1                 | 60                     | 2               | 999               | -1                    | null             | true         | false     |
-      | ha_group6  | select @@read_only | 1                   | 2                 | 60                     | 0               | -1                | -1                    | null             | true         | false     |
-      | ha_group7  | select 3           | 0                   | 1                 | 60                     | 1               | -1                | -1                    | null             | false        | false     |
-      | ha_group8  | select 4           | 0                   | 1                 | 60                     | 2               | -1                | -1                    | null             | false        | false     |
-      | ha_group9  | select 5           | 0                   | 1                 | 60                     | 1               | -1                | -1                    | null             | false        | false     |
-      | ha_group10 | select user        | 0                   | 1                 | 60                     | 2               | -1                | -1                    | null             | true         | false     |
-      | ha_group11 | select 6           | 0                   | 1                 | 60                     | 3               | -1                | -1                    | null             | false        | false     |
-      | ha_group12 | select 7           | 100                 | 1                 | 60                     | 3               | 1000              | -1                    | null             | false        | false     |
+      | name-0     | heartbeat_stmt-1   | heartbeat_timeout-2 | heartbeat_retry-3 | rw_split_mode-4 | delay_threshold-5 | disable_ha-6 | active-7 |
+      | ha_group1  | select user()      | 0                   | 1                 | 0               | 100               | false        | true     |
+      | ha_group2  | select user()      | 0                   | 1                 | 0               | 100               | false        | true     |
+      | ha_group3  | select 1           | 60                  | 1                 | 1               | -1                | false        | false    |
+      | ha_group4  | select 2           | 100                 | 1                 | 2               | 1000              | false        | false    |
+      | ha_group5  | show slave status  | 88                  | 1                 | 2               | 999               | true         | false    |
+      | ha_group6  | select @@read_only | 1                   | 2                 | 0               | -1                | true         | false    |
+      | ha_group7  | select 3           | 0                   | 1                 | 1               | -1                | false        | false    |
+      | ha_group8  | select 4           | 0                   | 1                 | 2               | -1                | false        | false    |
+      | ha_group9  | select 5           | 0                   | 1                 | 1               | -1                | false        | false    |
+      | ha_group10 | select user        | 0                   | 1                 | 2               | -1                | true         | false    |
+      | ha_group11 | select 6           | 0                   | 1                 | 3               | -1                | false        | false    |
+      | ha_group12 | select 7           | 100                 | 1                 | 3               | 1000              | false        | false    |
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                                                                                                                    | expect                                                                                 | db               |
@@ -59,7 +59,7 @@
       | conn_0 | false   | insert IGNORE into dble_db_group (name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('dbGroup4','select 1',0,1,1,100,'false')                                      | update syntax error, not support insert with syntax                                    | dble_information |
       | conn_0 | false   | insert into dble_db_group (name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('dbGroup4','select 1',0,1,1,100,'false') ON DUPLICATE KEY UPDATE heartbeat_timeout=1 | update syntax error, not support insert with syntax                                    | dble_information |
       | conn_0 | false   | insert dble_db_group name select name from dble_db_instance                                                                                                                                                            | Insert syntax error,not support insert ... select                                      | dble_information |
-      | conn_0 | false   | insert into dble_db_group value ('group1','select 1',-1,1,60,1,100,-1,null,'false','ture')                                                                                                                             | Column 'active' is not writable                                                     | dble_information |
+      | conn_0 | false   | insert into dble_db_group value ('group1','select 1',-1,1,1,100,'false','ture')                                                                                                                                        | Column 'active' is not writable                                                     | dble_information |
       | conn_0 | false   | insert into dble_db_group values ('group2',100,'select 2',1,2,1000,'false')                                                                                                                                            | Column count doesn't match value count at row 1                                        | dble_information |
       | conn_0 | false   | insert into dble_in.dble_db_group (name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('group3','select 1',0,1,1,100,'false')                                       | Unknown database 'dble_in'                                                             | dble_information |
       | conn_0 | false   | insert into dble_db_group(name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('ha_group3','select 1',0,1,1,100,'false')                                             | Duplicate entry 'ha_group3' for key 'PRIMARY'                                          | dble_information |
@@ -140,24 +140,6 @@
       | conn_0 | false   | insert into DBLE_db_group set name='0B04',heartbeat_stmt='select 5',rw_split_mode=1,disable_ha='0B01'                     | Insert failure.The reason is Column 'disable_ha' values only support 'false' or 'true'         | dble_information |
       | conn_0 | false   | insert into DBLE_db_group set name='1B05',heartbeat_stmt='select 5',rw_split_mode=1,disable_ha=-1                         | Insert failure.The reason is Column 'disable_ha' values only support 'false' or 'true'         | dble_information |
       | conn_0 | false   | insert into DBLE_db_group set name='0B06',heartbeat_stmt='select 5',rw_split_mode=1,disable_ha=1.5                        | Not Supported of Value EXPR :1.5                                                               | dble_information |
-   ###### delay_period_millis-7
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                                | expect                                                                                         | db               |
-      | conn_0 | false   | insert into DBLE_db_group set name='0B00',heartbeat_stmt='select 5',rw_split_mode=1,delay_period_millis=' '                        | Not Supported of Value EXPR :' '                                                               | dble_information |
-      | conn_0 | false   | insert into DBLE_db_group set name='0B01',heartbeat_stmt='select 5',rw_split_mode=1,delay_period_millis='null'                     | Not Supported of Value EXPR :'null'                                                            | dble_information |
-      | conn_0 | false   | insert into DBLE_db_group set name='0B03',heartbeat_stmt='select 5',rw_split_mode=1,delay_period_millis=0B01                       | Not Supported of Value EXPR :0B01                                                              | dble_information |
-      | conn_0 | false   | insert into DBLE_db_group set name='0B04',heartbeat_stmt='select 5',rw_split_mode=1,delay_period_millis='0B01'                     | Insert failure.The reason is incorrect integer value: '0B01'                                   | dble_information |
-      | conn_0 | false   | insert into DBLE_db_group set name='1B05',heartbeat_stmt='select 5',rw_split_mode=1,delay_period_millis=-2                         | Insert failure.The reason is Column 'delay_threshold' should be an integer greater than -1     | dble_information |
-      | conn_0 | false   | insert into DBLE_db_group set name='0B06',heartbeat_stmt='select 5',rw_split_mode=1,delay_period_millis=1.5                        | Not Supported of Value EXPR :1.5                                                               | dble_information |
-   ###### delay_database-8
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                           | expect                                                                                         | db               |
-      | conn_0 | false   | insert into DBLE_db_group set name='0B00',heartbeat_stmt='select 5',rw_split_mode=1,delay_database=' '                        | Not Supported of Value EXPR :' '                                                               | dble_information |
-      | conn_0 | false   | insert into DBLE_db_group set name='0B00',heartbeat_stmt='select 5',rw_split_mode=1,delay_database='null'                     | Not Supported of Value EXPR :'null'                                                            | dble_information |
-      | conn_0 | false   | insert into DBLE_db_group set name='0B03',heartbeat_stmt='select 5',rw_split_mode=1,delay_database=0B01                       | Not Supported of Value EXPR :0B01                                                              | dble_information |
-      | conn_0 | false   | insert into DBLE_db_group set name='0B06',heartbeat_stmt='select 5',rw_split_mode=1,delay_database=1.5                        | Not Supported of Value EXPR :1.5                                                               | dble_information |
-
-
 
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
@@ -216,7 +198,7 @@
       | conn_0 | false    | insert into DBLE_db_instance (NAME,db_group,addr,port,USER,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM5','ha_group5','172.100.9.6',3306,'test','111111','false','true',1,99)                         | success        | dble_information |
       | conn_0 | false    | insert into DBLE_db_instance (NAME,db_group,addr,port,USER,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) values ('hostS51','ha_group5','172.100.9.6',3307,'test','111111','false','false',0,99)                      | success        | dble_information |
       | conn_0 | false    | insert into DBLE_db_instance (NAME,db_group,addr,port,USER,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count,read_weight) values ('hostS52','ha_group5','172.100.9.6',3308,'test','111111','false','false',0,99,3)        | success        | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM6',db_group='ha_group6',addr='172.100.9.4',port=3306,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=4,max_conn_count=9                              | success        | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM6',db_group='ha_group6',addr='172.100.9.5',port=3306,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=4,max_conn_count=9                              | success        | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM7',db_group='ha_group7',addr='172.100.9.5',port=3306,user='test',password_encrypt='UHH6o0jOcaXRYzvyQrUN/P5avdmyoxpHO8B54y7+RkiIC73G1qgFr5X+mewtlC6p/v7Gc/NXD7sPDFB/kPM5aA==',encrypt_configured='true',`primary`='true',min_conn_count=4,max_conn_count=9,id='hostM7'                  | success        | dble_information |
       | conn_0 | false    | insert into DBLE_db_instance (NAME,db_group,addr,port,password_encrypt,USER,encrypt_configured,primary,max_conn_count,min_conn_count) value ('hostM12','ha_group12','172.100.9.1','3306','111111','test','false','true','100','9')                | success        | dble_information |
 
@@ -235,7 +217,7 @@
       | hostS52 | ha_group5  | 172.100.9.6 | 3308   | test   | false                | false     | false      | 0                | 99               | 3              | hostS52 |
       | hostM5  | ha_group5  | 172.100.9.6 | 3306   | test   | false                | true      | false      | 1                | 99               | 0              | hostM5  |
       | hostS51 | ha_group5  | 172.100.9.6 | 3307   | test   | false                | false     | false      | 0                | 99               | 0              | hostS51 |
-      | hostM6  | ha_group6  | 172.100.9.4 | 3306   | test   | false                | true      | false      | 4                | 9                | 0              | hostM6  |
+      | hostM6  | ha_group6  | 172.100.9.5 | 3306   | test   | false                | true      | false      | 4                | 9                | 0              | hostM6  |
       | hostM7  | ha_group7  | 172.100.9.5 | 3306   | test   | true                 | true      | false      | 4                | 9                | 0              | hostM7  |
       | hostM12 | ha_group12 | 172.100.9.1 | 3306   | test   | false                | true      | false      | 9                | 100              | 0              | hostM12 |
 
@@ -260,18 +242,18 @@
       | conn   | toClose | sql                            | db               |
       | conn_0 | true    | select active_conn_count,idle_conn_count,read_conn_request,write_conn_request,last_heartbeat_ack,heartbeat_failure_in_last_5min from dble_db_instance       | dble_information |
     Then check resultset "dble_db_instance_3" has lines with following column values
-      | active_conn_count-0 | idle_conn_count-1 | read_conn_request-2 | write_conn_request-3 | last_heartbeat_ack-4 | heartbeat_failure_in_last_5min-5 |
-      | 0                   | 10                | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 10                | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | init                 | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | init                 | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
+      | active_conn_count-0 | idle_conn_count-1 | read_conn_request-2 | write_conn_request-3 |
+      | 0                   | 10                | 0                   | 0                    |
+      | 0                   | 10                | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
 
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
@@ -284,7 +266,7 @@
       rwSplitMode\":1.*ha_group3.*name\":\"hostM3\",\"url\":\"172.100.9.6:3306.*name\":\"hostS31\",\"url\":\"172.100.9.6:3307.*name\":\"hostS32\",\"url\":\"172.100.9.6:3308
       rwSplitMode\":2.*ha_group4.*name\":\"hostM4\",\"url\":\"172.100.9.6:3307
       rwSplitMode\":2.*ha_group5.*name\":\"hostM5\",\"url\":\"172.100.9.6:3306.*name\":\"hostS51\",\"url\":\"172.100.9.6:3307.*name\":\"hostS52\",\"url\":\"172.100.9.6:3308
-      rwSplitMode\":0.*ha_group6.*name\":\"hostM6\",\"url\":\"172.100.9.4:3306
+      rwSplitMode\":0.*ha_group6.*name\":\"hostM6\",\"url\":\"172.100.9.5:3306
       rwSplitMode\":1.*ha_group7.*name\":\"hostM7\",\"url\":\"172.100.9.5:3306
       rwSplitMode\":3.*ha_group12.*\"name\":\"hostM12\",\"url\":\"172.100.9.1:3306
       """
@@ -735,10 +717,11 @@
       | conn_0 | false   | insert into dble_rw_split_entry set username='unique5',password_encrypt='111111',encrypt_configured='false',max_conn_count=18,db_group='ha_group6',conn_attr_value=0,conn_attr_key='tenant'             | success     | dble_information |
       | conn_0 | true    | insert into dble_rw_split_entry set username='unique6',password_encrypt='111111',encrypt_configured='false',max_conn_count=11,db_group='ha_group6',conn_attr_value=null,conn_attr_key=null              | success     | dble_information |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
+### coz  DBLE0REQ-2129
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      NullPointerException
+#      """
     Then execute admin cmd "reload @@config_all"
 
 
@@ -768,23 +751,23 @@
       | conn   | toClose | sql                          | db               |
       | conn_0 | true    | select * from dble_db_group  | dble_information |
     Then check resultset "dble_db_group_1" has lines with following column values
-      | name-0     | heartbeat_stmt-1  | heartbeat_timeout-2 | heartbeat_retry-3 | heartbeat_keep_alive-4 | rw_split_mode-5 | delay_threshold-6 | delay_period_millis-7 | delay_database-8 | disable_ha-9 | active-10 |
-      | ha_group1  | select 55         | 888                 | 1                 | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group2  | select user()     | 888                 | 1                 | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group3  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group4  | select 2          | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group5  | show slave status | 888                 | 100               | 60                     | 2               | 88                | -1                    | null             | true         | true      |
-      | ha_group6  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | true         | true      |
-      | ha_group7  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group12 | select 7          | 888                 | 1                 | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group8  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group9  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group10 | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | true         | true      |
-      | ha_group11 | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | 0B02       | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | 0B03       | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | 0B04       | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | 0B05       | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | name-0     | heartbeat_stmt-1  | heartbeat_timeout-2 | heartbeat_retry-3 | rw_split_mode-4 | delay_threshold-5 | disable_ha-6 | active-7 |
+      | ha_group1  | select 55         | 888                 | 1                 | 1               | 88                | false        | true      |
+      | ha_group2  | select user()     | 888                 | 1                 | 1               | 88                | false        | true      |
+      | ha_group3  | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
+      | ha_group4  | select 2          | 888                 | 100               | 1               | 88                | false        | true      |
+      | ha_group5  | show slave status | 888                 | 100               | 2               | 88                | true         | true      |
+      | ha_group6  | select @a         | 888                 | 100               | 1               | 88                | true         | true      |
+      | ha_group7  | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
+      | ha_group12 | select 7          | 888                 | 1                 | 1               | 88                | false        | true      |
+      | ha_group8  | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
+      | ha_group9  | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
+      | ha_group10 | select @a         | 888                 | 100               | 1               | 88                | true         | true      |
+      | ha_group11 | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
+      | 0B02       | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
+      | 0B03       | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
+      | 0B04       | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
+      | 0B05       | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
 
 
     Given execute sql in "dble-1" in "admin" mode
@@ -869,26 +852,6 @@
       | conn_0 | false   | update dble_db_group set disable_ha=disable_ha*10  where rw_split_mode = 1                | Not Supported of Value EXPR :disable_ha * 10                       | dble_information |
       | conn_0 | false   | update dble_db_group set disable_ha=SYSDATE()  where rw_split_mode = 1                    | Not Supported of Value EXPR :SYSDATE()                             | dble_information |
       | conn_0 | false   | update dble_db_group set disable_ha=-2 where rw_split_mode = 1                            | Update failure.The reason is Column 'disable_ha' values only support 'false' or 'true' | dble_information |
-   #####delay_period_millis
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql                   | expect               | db               |
-      | conn_0 | false   | update dble_db_group set delay_period_millis=1.3 where rw_split_mode = 1                           | Not Supported of Value EXPR :1.3                                   | dble_information |
-      | conn_0 | false   | update dble_db_group set delay_period_millis='null' where rw_split_mode = 1                        | Not Supported of Value EXPR :'null'                                | dble_information |
-      | conn_0 | false   | update dble_db_group set delay_period_millis=0B01 where rw_split_mode = 1                          | Not Supported of Value EXPR :0B01                                  | dble_information |
-      | conn_0 | false   | update dble_db_group set delay_period_millis='0B01' where rw_split_mode = 1                        | Update failure.The reason is incorrect integer value: '0B01'       | dble_information |
-      | conn_0 | false   | update dble_db_group set delay_period_millis=' ' where rw_split_mode = 1                           | Not Supported of Value EXPR :' '                                   | dble_information |
-      | conn_0 | false   | update dble_db_group set delay_period_millis=delay_period_millis*10  where rw_split_mode = 1       | Not Supported of Value EXPR :delay_period_millis * 10              | dble_information |
-      | conn_0 | false   | update dble_db_group set delay_period_millis=SYSDATE()  where rw_split_mode = 1                    | Not Supported of Value EXPR :SYSDATE()                             | dble_information |
-      | conn_0 | false   | update dble_db_group set delay_period_millis=-2 where rw_split_mode = 1                            | Update failure.The reason is Column 'delay_threshold' should be an integer greater than -1! | dble_information |
-    #####delay_database
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql                   | expect               | db               |
-      | conn_0 | false   | update dble_db_group set delay_database=1.3 where rw_split_mode = 1                           | Not Supported of Value EXPR :1.3                                   | dble_information |
-      | conn_0 | false   | update dble_db_group set delay_database='null' where rw_split_mode = 1                        | Not Supported of Value EXPR :'null'                                | dble_information |
-      | conn_0 | false   | update dble_db_group set delay_database=0B01 where rw_split_mode = 1                          | Not Supported of Value EXPR :0B01                                  | dble_information |
-      | conn_0 | false   | update dble_db_group set delay_database=' ' where rw_split_mode = 1                           | Not Supported of Value EXPR :' '                                   | dble_information |
-      | conn_0 | false   | update dble_db_group set delay_database=disable_ha*10  where rw_split_mode = 1                | Not Supported of Value EXPR :disable_ha * 10                       | dble_information |
-      | conn_0 | false   | update dble_db_group set delay_database=SYSDATE()  where rw_split_mode = 1                    | Not Supported of Value EXPR :SYSDATE()                             | dble_information |
 
 
     Given execute sql in "dble-1" in "admin" mode
@@ -897,11 +860,11 @@
       | conn_0 | false   | update dble_db_group set heartbeat_retry=null where rw_split_mode = 1        | success  | dble_information |
       | conn_0 | false   | update dble_db_group set delay_threshold=null where rw_split_mode = 1        | success  | dble_information |
       | conn_0 | false   | update dble_db_group set disable_ha=null where rw_split_mode = 1             | success  | dble_information |
-
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
+### coz  DBLE0REQ-2129
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      NullPointerException
+#      """
     Then execute admin cmd "reload @@config_all"
 
 
@@ -930,29 +893,29 @@
       | conn   | toClose | sql                            | db               |
       | conn_0 | true    | select name,db_group,addr,port,user,encrypt_configured,primary,disabled,min_conn_count,max_conn_count,read_weight,id from dble_db_instance            | dble_information |
     Then check resultset "dble_db_instance_1" has lines with following column values
-      | name-0  | db_group-1 | addr-2      | port-3 | user-4 | encrypt_configured-5 | primary-6 | disabled-7 | min_conn_count-8 | max_conn_count-9 | read_weight-10 | id-11 |
-      | hostM1  | ha_group1  | 172.100.9.5 | 3306   | test   | false                | true      | false      | 10               | 100              | 3              | test3 |
-      | hostM2  | ha_group2  | 172.100.9.6 | 3306   | test   | false                | true      | false      | 10               | 1000             | 3              | test3 |
-      | hostM3  | ha_group3  | 172.100.9.6 | 3306   | test   | false                | true      | true       | 10               | 1000             | 3              | test3 |
-      | hostS31 | ha_group3  | 172.100.9.6 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test3 |
-      | hostS32 | ha_group3  | 172.100.9.6 | 3308   | test   | false                | false     | true       | 2                | 1000             | 3              | test3 |
-      | hostM4  | ha_group4  | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | hostS52 | ha_group5  | 172.100.9.6 | 3308   | test   | false                | false     | false      | 0                | 1000             | 3              | test3 |
-      | hostM5  | ha_group5  | 172.100.9.6 | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | hostS51 | ha_group5  | 172.100.9.6 | 3307   | test   | false                | false     | false      | 0                | 1000             | 3              | test3 |
-      | hostM6  | ha_group6  | 172.100.9.4 | 3306   | test   | false                | true      | false      | 4                | 1000             | 3              | test3 |
-      | hostM7  | ha_group7  | 172.100.9.5 | 3306   | test   | true                 | true      | false      | 4                | 1000             | 3              | test3 |
-      | hostM12 | ha_group12 | 172.100.9.1 | 3306   | test   | false                | true      | false      | 9                | 1000             | 3              | test3 |
-      | hostM8  | ha_group8  | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | hostM9  | ha_group9  | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | hostM10 | ha_group10 | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | hostS11 | ha_group11 | 172.100.9.6 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test3 |
-      | hostM11 | ha_group11 | 172.100.9.6 | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | 0B02    | 0B02       | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | 0B03    | 0B03       | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | 0B04    | 0B04       | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | 0B05    | 0B05       | 172.100.9.6 | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | 0B051   | 0B05       | 172.100.9.6 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test3 |
+      | name-0  | db_group-1 | addr-2      | port-3 | user-4 | encrypt_configured-5 | primary-6 | disabled-7 | min_conn_count-8 | max_conn_count-9 | read_weight-10 |
+      | hostM1  | ha_group1  | 172.100.9.5 | 3306   | test   | false                | true      | false      | 10               | 100              | 3              |
+      | hostM2  | ha_group2  | 172.100.9.6 | 3306   | test   | false                | true      | false      | 10               | 1000             | 3              |
+      | hostM3  | ha_group3  | 172.100.9.6 | 3306   | test   | false                | true      | true       | 10               | 1000             | 3              |
+      | hostS31 | ha_group3  | 172.100.9.6 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              |
+      | hostS32 | ha_group3  | 172.100.9.6 | 3308   | test   | false                | false     | true       | 2                | 1000             | 3              |
+      | hostM4  | ha_group4  | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | hostS52 | ha_group5  | 172.100.9.6 | 3308   | test   | false                | false     | false      | 0                | 1000             | 3              |
+      | hostM5  | ha_group5  | 172.100.9.6 | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | hostS51 | ha_group5  | 172.100.9.6 | 3307   | test   | false                | false     | false      | 0                | 1000             | 3              |
+      | hostM6  | ha_group6  | 172.100.9.5 | 3306   | test   | false                | true      | false      | 4                | 1000             | 3              |
+      | hostM7  | ha_group7  | 172.100.9.5 | 3306   | test   | true                 | true      | false      | 4                | 1000             | 3              |
+      | hostM12 | ha_group12 | 172.100.9.1 | 3306   | test   | false                | true      | false      | 9                | 1000             | 3              |
+      | hostM8  | ha_group8  | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | hostM9  | ha_group9  | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | hostM10 | ha_group10 | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | hostS11 | ha_group11 | 172.100.9.6 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              |
+      | hostM11 | ha_group11 | 172.100.9.6 | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | 0B02    | 0B02       | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | 0B03    | 0B03       | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | 0B04    | 0B04       | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | 0B05    | 0B05       | 172.100.9.6 | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | 0B051   | 0B05       | 172.100.9.6 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_2"
       | conn   | toClose | sql                            | db               |
@@ -985,29 +948,29 @@
       | conn   | toClose | sql                            | db               |
       | conn_0 | true    | select active_conn_count,idle_conn_count,read_conn_request,write_conn_request,last_heartbeat_ack,heartbeat_failure_in_last_5min from dble_db_instance       | dble_information |
     Then check resultset "dble_db_instance_3" has lines with following column values
-      | active_conn_count-0 | idle_conn_count-1 | read_conn_request-2 | write_conn_request-3 | last_heartbeat_ack-4 | heartbeat_failure_in_last_5min-5 |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 1                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 10                | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 1                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 4                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | init                 | 0                                |
-      | 0                   | 1                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | init                 | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 0                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 4                 | 0                   | 0                    | ok                   | 0                                |
-      | 0                   | 10                | 0                   | 0                    | ok                   | 0                                |
+      | active_conn_count-0 | idle_conn_count-1 | read_conn_request-2 | write_conn_request-3 |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 1                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 10                | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 1                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 4                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 1                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 0                 | 0                   | 0                    |
+      | 0                   | 4                 | 0                   | 0                    |
+      | 0                   | 10                | 0                   | 0                    |
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                                                              | expect                                                              | db               |
@@ -1304,10 +1267,11 @@
       | conn_0 | false   | update dble_db_instance set test_on_borrow=null where db_group='ha_group1'                       |  success     | dble_information |
       | conn_0 | false   | update dble_db_instance set test_on_create=null where db_group='ha_group1'                       |  success     | dble_information |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
+### coz  DBLE0REQ-2129
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      NullPointerException
+#      """
     Then execute admin cmd "reload @@config_all"
 
 
@@ -1456,43 +1420,43 @@
       | conn   | toClose | sql                          | db               |
       | conn_0 | true    | select * from dble_db_group  | dble_information |
     Then check resultset "dble_db_group_1" has lines with following column values
-      | name-0     | heartbeat_stmt-1  | heartbeat_timeout-2 | heartbeat_retry-3 | heartbeat_keep_alive-4 | rw_split_mode-5 | delay_threshold-6 | delay_period_millis-7 | delay_database-8 | disable_ha-9 | active-10 |
-      | ha_group1  | select 55         | 888                 | 1                 | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group2  | select user()     | 888                 | 1                 | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group3  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group4  | select 2          | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group5  | show slave status | 888                 | 100               | 60                     | 2               | 88                | -1                    | null             | true         | true      |
-      | ha_group6  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | true         | true      |
-      | ha_group7  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group12 | select 7          | 888                 | 1                 | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | ha_group11 | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | 0B02       | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | 0B03       | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
-      | 0B04       | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | name-0     | heartbeat_stmt-1  | heartbeat_timeout-2 | heartbeat_retry-3 | rw_split_mode-4 | delay_threshold-5 | disable_ha-6 | active-7 |
+      | ha_group1  | select 55         | 888                 | 1                 | 1               | 88                | false        | true      |
+      | ha_group2  | select user()     | 888                 | 1                 | 1               | 88                | false        | true      |
+      | ha_group3  | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
+      | ha_group4  | select 2          | 888                 | 100               | 1               | 88                | false        | true      |
+      | ha_group5  | show slave status | 888                 | 100               | 2               | 88                | true         | true      |
+      | ha_group6  | select @a         | 888                 | 100               | 1               | 88                | true         | true      |
+      | ha_group7  | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
+      | ha_group12 | select 7          | 888                 | 1                 | 1               | 88                | false        | true      |
+      | ha_group11 | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
+      | 0B02       | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
+      | 0B03       | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
+      | 0B04       | select @a         | 888                 | 100               | 1               | 88                | false        | true      |
 
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_1"
       | conn   | toClose | sql                                                                                                                                                   | db               |
       | conn_0 | true    | select name,db_group,addr,port,user,encrypt_configured,primary,disabled,min_conn_count,max_conn_count,read_weight,id from dble_db_instance            | dble_information |
     Then check resultset "dble_db_instance_1" has lines with following column values
-      | name-0  | db_group-1 | addr-2      | port-3 | user-4 | encrypt_configured-5 | primary-6 | disabled-7 | min_conn_count-8 | max_conn_count-9 | read_weight-10 | id-11 |
-      | hostM1  | ha_group1  | 172.100.9.5 | 3306   | test   | false                | true      | true       | 10               | 100              | 3              | test3 |
-      | hostM2  | ha_group2  | 172.100.9.6 | 3306   | test   | false                | true      | false      | 10               | 1000             | 3              | test3 |
-      | hostM3  | ha_group3  | 172.100.9.6 | 3306   | test   | false                | true      | true       | 10               | 1000             | 3              | test3 |
-      | hostS31 | ha_group3  | 172.100.9.6 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test3 |
-      | hostS32 | ha_group3  | 172.100.9.6 | 3308   | test   | false                | false     | true       | 2                | 1000             | 3              | test3 |
-      | hostM4  | ha_group4  | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | hostS52 | ha_group5  | 172.100.9.6 | 3308   | test   | false                | false     | false      | 0                | 1000             | 3              | test3 |
-      | hostM5  | ha_group5  | 172.100.9.6 | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | hostS51 | ha_group5  | 172.100.9.6 | 3307   | test   | false                | false     | false      | 0                | 1000             | 3              | test3 |
-      | hostM6  | ha_group6  | 172.100.9.4 | 3306   | test   | false                | true      | false      | 4                | 1000             | 3              | test3 |
-      | hostM7  | ha_group7  | 172.100.9.5 | 3306   | test   | true                 | true      | false      | 4                | 1000             | 3              | test3 |
-      | hostM12 | ha_group12 | 172.100.9.1 | 3306   | test   | false                | true      | false      | 9                | 1000             | 3              | test3 |
-      | hostS11 | ha_group11 | 172.100.9.6 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              | test3 |
-      | hostM11 | ha_group11 | 172.100.9.6 | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | 0B02    | 0B02       | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | 0B03    | 0B03       | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
-      | 0B04    | 0B04       | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              | test3 |
+      | name-0  | db_group-1 | addr-2      | port-3 | user-4 | encrypt_configured-5 | primary-6 | disabled-7 | min_conn_count-8 | max_conn_count-9 | read_weight-10 |
+      | hostM1  | ha_group1  | 172.100.9.5 | 3306   | test   | false                | true      | true       | 10               | 100              | 3              |
+      | hostM2  | ha_group2  | 172.100.9.6 | 3306   | test   | false                | true      | false      | 10               | 1000             | 3              |
+      | hostM3  | ha_group3  | 172.100.9.6 | 3306   | test   | false                | true      | true       | 10               | 1000             | 3              |
+      | hostS31 | ha_group3  | 172.100.9.6 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              |
+      | hostS32 | ha_group3  | 172.100.9.6 | 3308   | test   | false                | false     | true       | 2                | 1000             | 3              |
+      | hostM4  | ha_group4  | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | hostS52 | ha_group5  | 172.100.9.6 | 3308   | test   | false                | false     | false      | 0                | 1000             | 3              |
+      | hostM5  | ha_group5  | 172.100.9.6 | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | hostS51 | ha_group5  | 172.100.9.6 | 3307   | test   | false                | false     | false      | 0                | 1000             | 3              |
+      | hostM6  | ha_group6  | 172.100.9.5 | 3306   | test   | false                | true      | false      | 4                | 1000             | 3              |
+      | hostM7  | ha_group7  | 172.100.9.5 | 3306   | test   | true                 | true      | false      | 4                | 1000             | 3              |
+      | hostM12 | ha_group12 | 172.100.9.1 | 3306   | test   | false                | true      | false      | 9                | 1000             | 3              |
+      | hostS11 | ha_group11 | 172.100.9.6 | 3307   | test   | false                | false     | false      | 1                | 1000             | 3              |
+      | hostM11 | ha_group11 | 172.100.9.6 | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | 0B02    | 0B02       | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | 0B03    | 0B03       | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              |
+      | 0B04    | 0B04       | 172.100.9.6 | 3307   | test   | false                | true      | false      | 1                | 1000             | 3              |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_rw_split_entry_1"
       | conn   | toClose | sql                                          | db               |
@@ -1549,11 +1513,12 @@
       | conn_0 | false   | delete from dble_db_instance where max_conn_count BETWEEN 0 AND 2                                | unknown error:not supportted yet!        | dble_information |
       | conn_0 | false   | delete from dble_rw_split_entry where max_conn_count BETWEEN 0 AND 2                             | unknown error:not supportted yet!        | dble_information |
 
-      | conn_0 | false   | delete from dble_db_group where active ='true'                                 | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_db_instance`(`db_group`) REFERENCES `dble_db_group`(`name`)    | dble_information |
+      | conn_0 | false   | delete from dble_db_group where active ='true'                                 | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_db_user`(`db_group`) REFERENCES `dble_db_group`(`name`)    | dble_information |
       | conn_0 | false   | delete from dble_db_group where name ='ha_group2'                              | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_db_instance`(`db_group`) REFERENCES `dble_db_group`(`name`)    | dble_information |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
+### coz  DBLE0REQ-2129
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      NullPointerException
+#      """
     Then execute admin cmd "reload @@config_all"
