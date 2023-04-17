@@ -12,7 +12,6 @@ from behave import *
 
 from steps.lib.QueryMeta import QueryMeta
 from steps.lib.utils import get_sftp, get_ssh, get_node, wait_for, sleep_by_time
-from steps.mysql_steps import print_jstack
 import logging
 logger = logging.getLogger('root')
 
@@ -212,11 +211,6 @@ def check_sql_thread(context, result, retry_param=1):
         except Exception as e:
             logger.info(f"sql thread result is not out yet, execute {i + 1} times")
             if i == execute_times - 1:
-                # 抛出报错前打印jstack
-                node = get_node("dble-1")
-                print_jstack(node)
-                logger.debug(f"print dble jstack end")
-
                 raise e
             else:
                 sleep_by_time(context, sep_time)
