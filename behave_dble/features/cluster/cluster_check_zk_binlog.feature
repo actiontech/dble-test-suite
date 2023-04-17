@@ -44,26 +44,26 @@ Feature: test "binlog" in zk cluster
       """
       <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
       """
-    Then execute admin cmd "reload @@config_all"
+    Given Restart dble in "dble-1" success
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                          | expect  | db      | timeout |
-      | conn_1 | False   | drop table if exists vertical1                               | success | schema2 | 6,2     |
-      | conn_1 | True    | create table vertical1 (id int)                              | success | schema2 | 6,2     |
-      | conn_0 | False   | drop table if exists global1                                 | success | schema1 | 6,2     |
-      | conn_0 | False   | drop table if exists global2                                 | success | schema1 | 6,2     |
-      | conn_0 | False   | drop table if exists sharding4                               | success | schema1 | 6,2     |
-      | conn_0 | False   | drop table if exists sharding2                               | success | schema1 | 6,2     |
-      | conn_0 | False   | drop table if exists child1                                  | success | schema1 | 6,2     |
-      | conn_0 | False   | drop table if exists sing1                                   | success | schema1 | 6,2     |
-      | conn_0 | False   | drop table if exists no_sharding1                            | success | schema1 | 6,2     |
-      | conn_0 | False   | create table global1 (id int)                                | success | schema1 | 6,2     |
-      | conn_0 | False   | create table global2 (id int)                                | success | schema1 | 6,2     |
-      | conn_0 | False   | create table sharding4 (id int, name int)                    | success | schema1 | 6,2     |
-      | conn_0 | False   | create table sharding2 (id int, fid int)                     | success | schema1 | 6,2     |
-      | conn_0 | False   | create table child1 (fid int,name int)                       | success | schema1 | 6,2     |
-      | conn_0 | False   | create table sing1 (id int)                                  | success | schema1 | 6,2     |
-      | conn_0 | True    | create table no_sharding1 (id int, name int)                 | success | schema1 | 6,2     |
+      | conn_1 | False   | drop table if exists vertical1                               | success | schema2 | 11,3    |
+      | conn_1 | True    | create table vertical1 (id int)                              | success | schema2 |         |
+      | conn_0 | False   | drop table if exists global1                                 | success | schema1 | 11,3    |
+      | conn_0 | False   | drop table if exists global2                                 | success | schema1 |       |
+      | conn_0 | False   | drop table if exists sharding4                               | success | schema1 |       |
+      | conn_0 | False   | drop table if exists sharding2                               | success | schema1 |       |
+      | conn_0 | False   | drop table if exists child1                                  | success | schema1 |       |
+      | conn_0 | False   | drop table if exists sing1                                   | success | schema1 |       |
+      | conn_0 | False   | drop table if exists no_sharding1                            | success | schema1 |       |
+      | conn_0 | False   | create table global1 (id int)                                | success | schema1 |       |
+      | conn_0 | False   | create table global2 (id int)                                | success | schema1 |       |
+      | conn_0 | False   | create table sharding4 (id int, name int)                    | success | schema1 |       |
+      | conn_0 | False   | create table sharding2 (id int, fid int)                     | success | schema1 |       |
+      | conn_0 | False   | create table child1 (fid int,name int)                       | success | schema1 |       |
+      | conn_0 | False   | create table sing1 (id int)                                  | success | schema1 |       |
+      | conn_0 | True    | create table no_sharding1 (id int, name int)                 | success | schema1 |       |
 
 
 
