@@ -197,14 +197,6 @@ Feature: test "binlog" in zk cluster
       """
    # during "hang",to check on zk cluster has binlog_pause "status"
 
-#    Given execute linux command in "dble-1"
-#      """
-#      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
-#      """
-#    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
-#      """
-#      status
-#      """
     Then check zk has "Y" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
     """
     status
@@ -1087,11 +1079,7 @@ Feature: test "binlog" in zk cluster
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
 
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
-      """
-    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
       """
       status
       """
