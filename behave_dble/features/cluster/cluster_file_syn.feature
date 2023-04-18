@@ -45,13 +45,9 @@ Feature: Cluster file synchronization test
       4=1
       """
     Then Start dble in "dble-2"
-    Given execute linux command in "dble-1"
+    Then check zk has "Y" the following values in "/dble/cluster-1/online" with retry "10,3" times in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/online  >/opt/dble/logs/dble_zk_online.log 2>&1 &
-      """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_online.log" in host "dble-1"
-      """
-       [1,2,3]
+      [1,2,3]
       """
     Then check following text exist "Y" in file "/opt/dble/conf/enum.txt" in host "dble-2"
       """
