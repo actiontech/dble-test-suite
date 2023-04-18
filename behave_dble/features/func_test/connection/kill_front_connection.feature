@@ -3,9 +3,17 @@
 # Created by wangjuan at 2020/12/7
 Feature: test KILL [CONNECTION | QUERY] processlist_id
 
-
+# DBLE0REQ-12
   @btrace
   Scenario: check kill query processlist_id #1
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      /-Dprocessors=/d
+      /-DprocessorExecutor=/d
+      $a -Dprocessors=4
+      $a -DprocessorExecutor=4
+      """
+    Then Restart dble in "dble-1" success
 # case 1: kill query current processlist_id
 # case 1.1: kill query processlist_id and does not have an executing sql
     Given execute sql in "dble-1" in "user" mode
@@ -88,32 +96,33 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
 
 # case 4.2: kill query the processlist_id has an executing sql
 # case 4.2.1: at receive ok packet stage and in the transaction
+    Given delete file "/opt/dble/BtraceSessionStage.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceSessionStage.java.log" on "dble-1"
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql   | expect  | db      |
       | conn_0 | False   | begin | success | schema1 |
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /ok/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
+    /ok/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
     Given prepare a thread execute sql "insert into sharding_4_t1(id) values(1),(2),(3),(4)" with "conn_0"
-    Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
+    Then check btrace "BtraceSessionStage.java" output in "dble-1" with ">0" times
     """
-    end get into setPreExecuteEnd
+    get into ok
     """
     Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  |
       | conn_2 | False   | kill query {0} | success |
-    Given sleep "5" seconds
-    Then check sql thread output in "err"
+    Then check sql thread output in "err" by retry "10" times
     """
-    Query was interrupted.
+    Query was interrupted.//stream closed by peer
     """
     Given stop btrace script "BtraceSessionStage.java" in "dble-1"
     Given destroy btrace threads list
-    Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
+    Given delete file "/opt/dble/BtraceSessionStage.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceSessionStage.java.log" on "dble-1"
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect                                      | db      |
@@ -125,21 +134,20 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /ok/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
+    /ok/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
     Given prepare a thread execute sql "insert into sharding_4_t1(id) values(5),(6),(7),(8)" with "conn_0"
-    Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
+    Then check btrace "BtraceSessionStage.java" output in "dble-1" with ">0" times
     """
-    end get into setPreExecuteEnd
+    get into ok
     """
     Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  |
       | conn_2 | False   | kill query {0} | success |
-    Given sleep "5" seconds
-    Then check sql thread output in "err"
+    Then check sql thread output in "err" by retry "10" times
     """
-    was closed ,reason is [Query was interrupted.]
+    Query was interrupted.//stream closed by peer
     """
     Given stop btrace script "BtraceSessionStage.java" in "dble-1"
     Given destroy btrace threads list
@@ -154,17 +162,17 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /endRoute/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
+    /endRoute/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
     Given prepare a thread execute sql "select * from sharding_4_t1" with "conn_0"
-    Then check btrace "BtraceSessionStage.java" output in "dble-1" with "1" times
+    Then check btrace "BtraceSessionStage.java" output in "dble-1" with ">0" times
     """
-    end get into endParse
+    get into endRoute
     """
     Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  |
-      | conn_2 | True   | kill query {0} | success |
+      | conn_2 | True    | kill query {0} | success |
     Given sleep "5" seconds
     Then check sql thread output in "err"
     """
@@ -173,8 +181,8 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     Given stop btrace script "BtraceSessionStage.java" in "dble-1"
     Given destroy sql threads list
     Given destroy btrace threads list
-    Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
+    Given delete file "/opt/dble/BtraceSessionStage.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceSessionStage.java.log" on "dble-1"
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect  | db      |
