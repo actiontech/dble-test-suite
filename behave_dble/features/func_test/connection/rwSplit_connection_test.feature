@@ -256,8 +256,9 @@ Feature: connection test in rwSplit mode
         """
           (1,)
         """
-    # 前面select * from test进入了1次桩，加上本次select * from test就是2次，触发reload不会进入桩
-    Then check btrace "BtraceSelectRWDbGroup.java" output in "dble-1" with "2" times
+    # 前面select * from test进入了1次桩，加上本次select * from test就是2次，另外删增dbInstance会触发2次桩，所以一共是4次。
+    # 针对删除dbInstance和增加dbInstance，在reload重构（DBLE0REQ-1793）之前的版本，会引起dbGroup的失效再重建，reload重构之后的版本，粒度变小不会引起dbGroup的失效再重建。
+    Then check btrace "BtraceSelectRWDbGroup.java" output in "dble-1" with "4" times
       """
         get into reSelectRWDbGroup
       """
