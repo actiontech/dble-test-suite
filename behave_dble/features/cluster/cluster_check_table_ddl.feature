@@ -77,11 +77,7 @@ Feature: test "ddl" in zk cluster
       | consistent_in_sharding_nodes | 4            |
       | consistent_in_memory         | 5            |
     #case check lock on zookeeper values is 0
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -163,11 +159,7 @@ Feature: test "ddl" in zk cluster
       | conn    | toClose | sql                                                                     | expect                                                       | db               |
       | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  | has{(('schema1', 'sharding_4_t1', 'null', 'null', 0, 0),)}   | dble_information |
     #case check lock on zookeeper values is 0
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -193,11 +185,7 @@ Feature: test "ddl" in zk cluster
     get into delayAfterDdlLockMeta
     """
     #case check lock on zookeeper values is 1
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
+    Then check zk has "Y" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -216,11 +204,7 @@ Feature: test "ddl" in zk cluster
     Given destroy btrace threads list
     Given sleep "5" seconds
     #case check lock on zookeeper values is 0
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -283,11 +267,7 @@ Feature: test "ddl" in zk cluster
     get into delayAfterDdlLockMeta
     """
     #case check lock on zookeeper values is 1
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
+    Then check zk has "Y" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -314,11 +294,7 @@ Feature: test "ddl" in zk cluster
     Given destroy btrace threads list
     #case check lock on zookeeper values is 0,to wait can't conn dble-1
     Given sleep "30" seconds
-    Given execute linux command in "dble-2"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-2"
+    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -373,11 +349,7 @@ Feature: test "ddl" in zk cluster
       | conn   | toClose | sql                                     | db      |
       | conn_2 | true    | alter table sharding_4_t1 drop age1     | schema1 |
     #case check lock on zookeeper values is 1
-    Given execute linux command in "dble-2"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-2"
+    Then check zk has "Y" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -394,11 +366,7 @@ Feature: test "ddl" in zk cluster
     Given destroy btrace threads list
     Given sleep "20" seconds
     #case check lock on zookeeper values is 0
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -504,11 +472,7 @@ Feature: test "ddl" in zk cluster
       | consistent_in_sharding_nodes | 4            |
       | consistent_in_memory         | 5            |
     #case check lock on zookeeper values is 0
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -553,11 +517,7 @@ Feature: test "ddl" in zk cluster
     get into delayAfterDdlLockMeta
     """
     #case check lock on zookeeper values is 1
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
+    Then check zk has "Y" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -577,11 +537,7 @@ Feature: test "ddl" in zk cluster
     #wait metaLock
     Given sleep "30" seconds
     #case check lock on zookeeper values is 0
-    Given execute linux command in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
-      """
-    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
