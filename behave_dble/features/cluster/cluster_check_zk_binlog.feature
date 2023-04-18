@@ -44,6 +44,8 @@ Feature: test "binlog" in zk cluster
       """
       <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
       """
+    ###集群中更改一个dble的xml配置，一定要先reload同步到集群配置中心再重启dble
+    Then execute admin cmd "reload @@config_all"
     Given Restart dble in "dble-1" success
 
     Then execute sql in "dble-1" in "user" mode
