@@ -47,7 +47,7 @@ Feature: support rownum sql
     """
     The system property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "5" times
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: property routePenetrationRules can't be null
     """
     can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: property routePenetrationRules can't be null
@@ -61,7 +61,7 @@ Feature: support rownum sql
     """
     The system property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "5" times
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path $
     """
     can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path \\$
@@ -86,7 +86,7 @@ Feature: support rownum sql
     """
     The system property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "5" times
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was STRING at line 1 column 11 path $.rules
     """
     can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_ARRAY but was STRING at line 1 column 11 path \\$.rules
@@ -99,7 +99,7 @@ Feature: support rownum sql
     """
     The system property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "5" times
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: regex can't be null or empty.
     """
     can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :java.lang.IllegalStateException: regex can't be null or empty.
@@ -132,7 +132,7 @@ Feature: support rownum sql
     """
     The system property routePenetrationRules in bootstrap.cnf is illegal or unset, for more detail, please check dble.log
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "5" times
     # can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonParseException: Cannot parse json '123' to boolean value
     """
     can't parse the route-penetration rule, please check the 'routePenetrationRules', detail exception is :com.google.gson.JsonParseException: Cannot parse json '123' to boolean value
