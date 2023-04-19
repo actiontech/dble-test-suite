@@ -83,8 +83,11 @@ Feature: test some import nodes attr in sharding.xml
       | conn_0 | False    | create table test2_table(id int)  | success             | schema1 |
       | conn_0 | True     | show all tables                   | has{(('test_table','GLOBAL TABLE'),)}   | schema1 |
 
-  @BLOCKER
+  @BLOCKER @cp_btrace_log
   Scenario: test "dbInstance" node attr "maxCon" #4
+  """
+    {'cp_btrace_log':'dble-1'}
+  """
     Given delete the following xml segment
       |file        | parent          | child               |
       |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -114,7 +117,17 @@ Feature: test some import nodes attr in sharding.xml
       | conn   | toClose  | sql                                | expect  | db      |
       | conn_0 | False    | drop table if exists test_table    | success | schema1 |
       | conn_0 | True     | create table test_table(id int)    | success | schema1 |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql                                 | expect    | db                |
+      | conn_1 | True     | select * from backend_connections   | success   | dble_information  |
+    Given delete file "/opt/dble/BtraceConnectionPool.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceConnectionPool.java.log" on "dble-1"
+    Given prepare a thread run btrace script "BtraceConnectionPool.java" in "dble-1"
     Then create "15" conn while maxCon="15" finally close all conn
+    Given stop btrace script "BtraceConnectionPool.java" in "dble-1"
+    Given destroy btrace threads list
+    Given delete file "/opt/dble/BtraceConnectionPool.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceConnectionPool.java.log" on "dble-1"
     Then create "16" conn while maxCon="15" finally close all conn
     """
     Connection is not available

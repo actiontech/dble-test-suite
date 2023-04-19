@@ -196,6 +196,23 @@ def after_scenario(context, scenario):
                 time.sleep(10)
                 context.execute_steps(u'Given stop and destroy tcpdump threads list in "{0}"'.format(host_name))
 
+        if "cp_btrace_log" in scenario.tags:
+            params_dic = restore_obj.get_tag_params("{'cp_btrace_log'")
+            logger.debug("params_dic is: {0}".format(params_dic))
+            if params_dic:
+                paras = params_dic["cp_btrace_log"].split(",")
+            else:
+                paras = ""
+
+            logger.debug("try to copy btrace log to dble log directory: {0}".format(paras))
+            for host_name in paras:
+                logger.debug("the value of host_name is: {0}".format(host_name))
+                ssh_client = get_ssh(host_name)
+                rc, sto, ste = ssh_client.exec_command("find /opt/dble -name *.java.log | wc -l")
+                logger.debug(f"btrace log file count is: {sto}")
+                if int(sto) > 0:
+                    mv_cmd = "mv /opt/dble/*.java.log /opt/dble/logs"
+                    ssh_client.exec_command(mv_cmd)
 
 
     # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
