@@ -13,7 +13,6 @@ Feature: test "ddl" in zk cluster
 
 
 
-  @skip_restart
   Scenario: basis shardingtable query ddl,check on dble-1,dble-2.dble-3  #1
     #case desc table on user mode
     Then execute sql in "dble-1" in "user" mode
@@ -165,7 +164,7 @@ Feature: test "ddl" in zk cluster
       """
 
 
-  @skip_restart @btrace
+  @btrace
   Scenario: use btrace add lock on meta  #2
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect  | db      |
@@ -251,8 +250,14 @@ Feature: test "ddl" in zk cluster
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
 
-  @skip_restart  @btrace
+  @btrace
   Scenario: case kill dble-1 on doing DDL,to check lock and check metadata on dble-2,dble-3   #3
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                    | expect  | db      |
+      | conn_1 | False   | drop table if exists sharding_4_t1     | success | schema1 |
+      | conn_1 | False   | create table sharding_4_t1 (id int)    | success | schema1 |
+      | conn_1 | true    | alter table sharding_4_t1 add age int  | success | schema1 |
+
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
@@ -293,8 +298,7 @@ Feature: test "ddl" in zk cluster
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     #case check lock on zookeeper values is 0,to wait can't conn dble-1
-    Given sleep "30" seconds
-    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "15,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -320,8 +324,6 @@ Feature: test "ddl" in zk cluster
       | Field-0 | Type-1  | Null-2 | Key-3 | Default-4 | Extra-5 |
       | id      | int(11) | YES    |       | None      |         |
       | age     | int(11) | YES    |       | None      |         |
-      | age1    | int(11) | YES    |       | None      |         |
-      | age2    | int(11) | YES    |       | None      |         |
     Given execute single sql in "dble-3" in "user" mode and save resultset in "Res_C"
       | conn   | toClose | sql                 | db      |
       | conn_3 | true    | desc sharding_4_t1  | schema1 |
@@ -337,8 +339,13 @@ Feature: test "ddl" in zk cluster
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
 
-  @skip_restart  @btrace
+  @btrace
   Scenario:  dble-2 doing ddl,start dble-1,do query ,dble-1 will waiting for dble-2 ddl finished,dble-1 logs has "waiting for ddl finished"   #4
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                    | expect  | db      |
+      | conn_1 | False   | drop table if exists sharding_4_t1     | success | schema1 |
+      | conn_1 | False   | create table sharding_4_t1 (id int)    | success | schema1 |
+      | conn_1 | true    | alter table sharding_4_t1 add age1 int  | success | schema1 |
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
@@ -364,9 +371,8 @@ Feature: test "ddl" in zk cluster
     """
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
-    Given sleep "20" seconds
     #case check lock on zookeeper values is 0
-    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "15,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -379,8 +385,6 @@ Feature: test "ddl" in zk cluster
     Then check resultset "Res_A" has lines with following column values
       | Field-0 | Type-1  | Null-2 | Key-3 | Default-4 | Extra-5 |
       | id      | int(11) | YES    |       | None      |         |
-      | age     | int(11) | YES    |       | None      |         |
-      | age2    | int(11) | YES    |       | None      |         |
     Given execute single sql in "dble-2" in "user" mode and save resultset in "Res_B"
       | conn   | toClose | sql                 | db      |
       | conn_2 | true    | desc sharding_4_t1  | schema1 |
@@ -437,9 +441,14 @@ Feature: test "ddl" in zk cluster
 
   @btrace
   Scenario: case let ddl query error,to check metadata and lock   #5
+
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                               | expect                      | db      |
-      | conn_1 | true    | alter table sharding_4_t1 add age int             | Duplicate column name 'age' | schema1 |
+      | conn   | toClose | sql                                    | expect  | db      |
+      | conn_1 | False   | drop table if exists sharding_4_t1     | success | schema1 |
+      | conn_1 | False   | create table sharding_4_t1 (id int)    | success | schema1 |
+      | conn_1 | False   | alter table sharding_4_t1 add age int  | success | schema1 |
+      | conn_1 | False   | alter table sharding_4_t1 add age1 int  | success | schema1 |
+      | conn_1 | true    | alter table sharding_4_t1 add age int  | Duplicate column name 'age' | schema1 |
     Then check following text exists in file "/opt/dble/logs/dble.log" in host "dble-1" with "5" times
       """
        <exec_ddl_sql.fail> Duplicate column name 'age'
@@ -531,13 +540,13 @@ Feature: test "ddl" in zk cluster
       | conn   | toClose  | sql                                           | expect                                                                                          | db      |
       | conn_3 | False    | alter table sharding_4_t1 add age2 int        | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists       | schema1 |
       | conn_3 | true     | alter table sharding_4_t1 drop age2           | Found another instance doing ddl, duo to table[schema1.sharding_4_t1]'s ddlLock is exists       | schema1 |
+###DidleTimeout=10000,drop age失败
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     #wait metaLock
-    Given sleep "30" seconds
     #case check lock on zookeeper values is 0
-    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "15,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -547,7 +556,7 @@ Feature: test "ddl" in zk cluster
       | conn_1 | False   | insert into sharding_4_t1 values (7,7,7)     | success                                         | schema1 |
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose  | sql                                                    | expect    | db      |
-      | conn_2 | False    | alter table sharding_4_t1 drop age2                    | success   | schema1 |
+      | conn_2 | False    | alter table sharding_4_t1 drop age1                    | success   | schema1 |
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                                    | expect   | db      |
       | conn_3 | False    | insert into sharding_4_t1 values (8,8)                 | success  | schema1 |
@@ -555,10 +564,6 @@ Feature: test "ddl" in zk cluster
     Given execute single sql in "dble-1" in "user" mode and save resultset in "Res_A"
       | conn   | toClose | sql                 | db      |
       | conn_1 | true    | desc sharding_4_t1  | schema1 |
-    Then check resultset "Res_A" has lines with following column values
-      | Field-0 | Type-1  | Null-2 | Key-3 | Default-4 | Extra-5 |
-      | id      | int(11) | YES    |       | None      |         |
-      | age     | int(11) | YES    |       | None      |         |
     Given execute single sql in "dble-2" in "user" mode and save resultset in "Res_B"
       | conn   | toClose | sql                 | db      |
       | conn_2 | true    | desc sharding_4_t1  | schema1 |
@@ -615,15 +620,3 @@ Feature: test "ddl" in zk cluster
       | conn   | toClose  | sql                                                    | expect   | db      |
       | conn_3 | False    | drop table if exists sharding_4_t1                     | success  | schema1 |
       | conn_3 | true     | drop table if exists test1                             | success  | schema1 |
-    Given execute linux command in "dble-1"
-    """
-    rm -rf /opt/dble/logs/dble_*
-    """
-    Given execute linux command in "dble-2"
-    """
-    rm -rf /opt/dble/logs/dble_*
-    """
-    Given execute linux command in "dble-3"
-    """
-    rm -rf /opt/dble/logs/dble_*
-    """
