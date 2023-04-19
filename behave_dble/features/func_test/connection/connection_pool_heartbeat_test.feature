@@ -75,7 +75,7 @@ Feature: connection pool basic test - heartbeat create connections
     Given sleep "10" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5,1" times
     """
-    complexQueryWorker\] \(com.actiontech.dble.backend.pool.ConnectionPool.*\- need add
+    complexQueryExecutor[0-9]{1,2}\] \(com.actiontech.dble.backend.pool.ConnectionPool.*\- need add
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                    | expect       | db                |
@@ -122,7 +122,7 @@ Feature: connection pool basic test - heartbeat create connections
     Given sleep "10" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    complexQueryWorker\] \(com.actiontech.dble.backend.pool.ConnectionPool.*\- need add
+    complexQueryExecutor[0-9]{1,2}\] \(com.actiontech.dble.backend.pool.ConnectionPool.*\- need add
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                    | expect       | db                |
