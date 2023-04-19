@@ -38,7 +38,7 @@ Feature: connection pool basic test, from DBLE0REQ-1867
     #关闭XA事务定期检测周期（默认300s），防止启动后自动新建一根连接，为了方便测试，所以先关闭此功能。from DBLE0REQ-1614
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    $a\-DbackendWorker=8
+    $a\-DbackendProcessorExecutor=8
     """
     Then Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
