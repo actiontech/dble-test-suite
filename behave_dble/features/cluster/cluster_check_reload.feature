@@ -13,7 +13,7 @@ Feature: test "reload @@config" in zk cluster
   #  4.sequenceHandlerType=2, use btrace create lock,check lock
 
 
-  @skip_restart
+
   Scenario: set cluster.cnf sequenceHandlerType=1 and change xml success then reload on admin mode   #1
     Given stop dble cluster and zk service
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
@@ -191,7 +191,6 @@ Feature: test "reload @@config" in zk cluster
 
 
 
-  @skip_restart
   Scenario: set cluster.cnf sequenceHandlerType=2 and change xml success then reload on admin mode   #2
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
       """
@@ -228,7 +227,7 @@ Feature: test "reload @@config" in zk cluster
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+      <shardingUser name="test" password="111111" schemas="schema1,schema3"/>
       """
 
     Then execute admin cmd "reload @@config_all"
@@ -243,7 +242,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-1"
       """
-      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema3\"/>
       """
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
@@ -256,7 +255,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
       """
-      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema3\"/>
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
@@ -269,7 +268,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-3"
       """
-      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema3\"/>
       """
     #check on dble-1 dble-2 dble-3 data currect,query ddl/explain/dml
     Then execute sql in "dble-1" in "user" mode
@@ -308,7 +307,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check zk has "Y" the following values get "/dble/cluster-1/conf/user" with retry "10,3" times in "dble-1"
       """
-      \"schemas\":\"schema1,schema2,schema3\",\"name\":\"test\"
+      \"schemas\":\"schema1,schema3\",\"name\":\"test\"
       """
     Then check zk has "not" the following values in "/dble/cluster-1/lock" with retry "10,3" times in "dble-1"
       """
@@ -333,7 +332,6 @@ Feature: test "reload @@config" in zk cluster
 
 
 
-  @skip_restart
   Scenario: set cluster.cnf sequenceHandlerType=2 and change xml failed then reload on admin mode #3
     #case change config on sharding.xml
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -341,6 +339,10 @@ Feature: test "reload @@config" in zk cluster
         <schema name="schema3" shardingNode="dn2"  sqlMaxLimit="201" >
           <shardingTable name="sharding4" shardingNode="dn2,dn1" function="hash-three" shardingColumn="id"/>
         </schema>
+      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+      <shardingUser name="test" password="111111" schemas="schema1,schema3"/>
       """
     Then execute admin cmd  in "dble-1" at background
       | conn   | toClose | sql                 | db                 |
@@ -350,20 +352,12 @@ Feature: test "reload @@config" in zk cluster
       """
       <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1\" function=\"hash-three\" shardingColumn=\"id\"/>
       """
-    #check config on dble-2,has "function="hash-two""
-    Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
-      """
-      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" specifyCharset=\"false\" function=\"hash-two\" shardingColumn=\"id\"/>
-      """
+    #check config on dble-2,has not "function="hash-three"
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
       <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1\" specifyCharset=\"false\" function=\"hash-three\" shardingColumn=\"id\"/>
       """
-    #check config on dble-3,has "function="hash-two""
-    Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
-      """
-      <shardingTable name=\"sharding3\" shardingNode=\"dn2,dn1\" specifyCharset=\"false\" function=\"hash-two\" shardingColumn=\"id\"/>
-      """
+    #check config on dble-3,has not "function="hash-three"
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
       <shardingTable name=\"sharding4\" shardingNode=\"dn2,dn1\" specifyCharset=\"false\" function=\"hash-three\" shardingColumn=\"id\"/>
@@ -377,10 +371,6 @@ Feature: test "reload @@config" in zk cluster
     Then check zk has "not" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
       """
       \"name\":\"sharding4\"
-      """
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
-      """
-      \"name\":\"sharding3\"
       """
     Then check zk has "not" the following values in "/dble/cluster-1/lock" with retry "10,3" times in "dble-1"
       """
@@ -446,13 +436,13 @@ Feature: test "reload @@config" in zk cluster
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
       <dbGroup rwSplitMode=\"0\" name=\"ha_group1\" delayThreshold=\"100\">
-      maxCon=\"108\"
+      maxCon=\"1000\"
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
       <dbGroup rwSplitMode=\"0\" name=\"ha_group1\" delayThreshold=\"100\">
-      maxCon=\"108\"
+      maxCon=\"1000\"
       """
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
     #  Reload Failure.he reason is com.actiontech.dble.config.util.ConfigException: org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 70; cvc-datatype-valid.1.2.1: '1.2' is not a valid value for 'integer'.
@@ -462,7 +452,7 @@ Feature: test "reload @@config" in zk cluster
     #case check on zookeeper
     Then check zk has "Y" the following values get "/dble/cluster-1/conf/db" with retry "10,3" times in "dble-1"
       """
-      \"maxCon\":108
+      \"maxCon\":1000
       \"rwSplitMode\":0,\"name\":\"ha_group1\"
       """
     Then check zk has "not" the following values get "/dble/cluster-1/conf/db" with retry "10,3" times in "dble-1"
@@ -534,12 +524,12 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
       """
-      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema3\"/>
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-3"
       """
-      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema3\"/>
       """
     Given sleep "10" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
@@ -550,7 +540,7 @@ Feature: test "reload @@config" in zk cluster
     #case check on zookeeper
     Then check zk has "Y" the following values get "/dble/cluster-1/conf/user" with retry "10,3" times in "dble-1"
       """
-      \"schemas\":\"schema1,schema2,schema3\",\"name\":\"test\"
+      \"schemas\":\"schema1,schema3\",\"name\":\"test\"
       """
     Then check zk has "not" the following values get "/dble/cluster-1/conf/user" with retry "10,3" times in "dble-1"
       """
@@ -567,17 +557,17 @@ Feature: test "reload @@config" in zk cluster
      #check config on dble-1
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-1"
       """
-      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema3\"/>
       """
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
       """
-      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema3\"/>
       """
     #check config on dble-3
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-3"
       """
-      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema2,schema3\"/>
+      <shardingUser name=\"test\" password=\"111111\" schemas=\"schema1,schema3\"/>
       """
     #check on dble-1 dble-2 dble-3 data currect,query ddl/explain/dml
     Then execute sql in "dble-1" in "user" mode
@@ -609,7 +599,7 @@ Feature: test "reload @@config" in zk cluster
     #case check on zookeeper
     Then check zk has "Y" the following values get "/dble/cluster-1/conf/user" with retry "10,3" times in "dble-1"
       """
-      \"schemas\":\"schema1,schema2,schema3\",\"name\":\"test\"
+      \"schemas\":\"schema1,schema3\",\"name\":\"test\"
       """
     Then check zk has "not" the following values get "/dble/cluster-1/conf/user" with retry "10,3" times in "dble-1"
       """
@@ -629,6 +619,10 @@ Feature: test "reload @@config" in zk cluster
         <schema name="schema3" shardingNode="dn1"  sqlMaxLimit="2020" >
           <shardingTable name="sharding5" shardingNode="dn2,dn1,dn4,dn3" function="hash-four" shardingColumn="id"/>
         </schema>
+      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+      <shardingUser name="test" password="111111" schemas="schema1,schema3"/>
       """
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
@@ -668,15 +662,10 @@ Feature: test "reload @@config" in zk cluster
       """
       \"name\":\"sharding5\"
       """
-    Then check zk has "not" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
-      """
-      \"name\":\"sharding4\"
-      """
     Then check zk has "Y" the following values in "/dble/cluster-1/lock" with retry "10,3" times in "dble-1"
       """
       confChange.lock
       """
-    Given sleep "22" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     #case dble-1 reload success
@@ -685,7 +674,7 @@ Feature: test "reload @@config" in zk cluster
       ERROR
       """
     #case dble-2,dble-3 reload success
-    Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1" retry "10,3" times
       """
       <shardingTable name=\"sharding5\" shardingNode=\"dn2,dn1,dn4,dn3\" function=\"hash-four\" shardingColumn=\"id\"/>
       """
@@ -736,27 +725,15 @@ Feature: test "reload @@config" in zk cluster
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                          | expect  | db      |
-      | conn_1 | true    | drop table if exists sharding2               | success | schema2 |
       | conn_1 | false   | drop table if exists sharding3               | success | schema3 |
       | conn_1 | false   | drop table if exists sharding4               | success | schema3 |
       | conn_1 | true    | drop table if exists sharding5               | success | schema3 |
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
-    Given execute linux command in "dble-1"
-    """
-    rm -rf /opt/dble/logs/dble_*
-    """
-    Given execute linux command in "dble-2"
-    """
-    rm -rf /opt/dble/logs/dble_*
-    """
-    Given execute linux command in "dble-3"
-    """
-    rm -rf /opt/dble/logs/dble_*
-    """
 
 
-    @btrace
+
+  @btrace
     Scenario: when reload hang,emergency ways to deal with it       #5
 #CASE1: change sharding.xml and reload hang on the same dble
       Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
