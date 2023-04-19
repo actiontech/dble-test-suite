@@ -197,10 +197,14 @@ Feature: test "binlog" in zk cluster
       """
    # during "hang",to check on zk cluster has binlog_pause "status"
 
-    Then check zk has "Y" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
+      """
+      status
+      """
 
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
@@ -235,11 +239,15 @@ Feature: test "binlog" in zk cluster
       Error can't wait all session finished
       mysql-bin
       """
-    Then check zk has "Y" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
-
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
+      """
+      status
+      """
+ 
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       Error can't wait all session finished
@@ -273,11 +281,15 @@ Feature: test "binlog" in zk cluster
       Error can't wait all session finished
       3307
       """
-    Then check zk has "Y" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
-
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
+      """
+      status
+      """
+ 
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       Error can't wait all session finished
@@ -345,11 +357,14 @@ Feature: test "binlog" in zk cluster
       Error can't wait all session finished
       3307
       """
-    Then check zk has "Y" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
-
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
+      """
+      status
+      """
  
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
@@ -555,11 +570,14 @@ Feature: test "binlog" in zk cluster
       | conn_24 | true    | insert into vertical1 values (1),(2)          | success | schema2 |
 
    # check on zk cluster has binlog_pause "status"
-    Then check zk has "Y" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
-
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
+      """
+      status
+      """
     #wait 15s,because btrace sleep 15s,create timeout showBinlogStatusTimeout=5000
 #    Given sleep "15" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
@@ -570,11 +588,14 @@ Feature: test "binlog" in zk cluster
       Error can't wait all session finished
       """
    # check on zk cluster hasn't binlog_pause "status"
-    Then check zk has "not" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
-
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                | expect      | db      | timeout |
       | conn_11 | False   | select * from global1              | length{(2)} | schema1 | 11,3    |
@@ -659,11 +680,14 @@ Feature: test "binlog" in zk cluster
       172.100.9.5:3306
       """
    # during "hang",to check on zk cluster has binlog_pause "status"
-    Then check zk has "Y" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
-
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
+      """
+      status
+      """
 #    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
@@ -697,10 +721,15 @@ Feature: test "binlog" in zk cluster
       172.100.9.6:3306
       172.100.9.5:3306
       """
-    Then check zk has "Y" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
+      """
+      status
+      """
+#    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "10,3" times
@@ -732,10 +761,15 @@ Feature: test "binlog" in zk cluster
       172.100.9.6:3306
       172.100.9.5:3306
       """
-    Then check zk has "Y" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
+      """
+      status
+      """
+#    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "10,3" times
@@ -801,10 +835,15 @@ Feature: test "binlog" in zk cluster
       172.100.9.6:3306
       172.100.9.5:3306
       """
-    Then check zk has "Y" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
+#    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "10,3" times
@@ -889,11 +928,14 @@ Feature: test "binlog" in zk cluster
       get into ShowBinlogStatus,start sleep
       """
    # during "hang",to check on zk cluster has binlog_pause "status"
-    Then check zk has "Y" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
-
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     #"hang" query has not result
     Then check following text exist "N" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1"
       """
@@ -906,11 +948,14 @@ Feature: test "binlog" in zk cluster
     Given destroy btrace threads list
     Given destroy sql threads list
    # check on zk cluster hasn't binlog_pause "status"
-    Then check zk has "not" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
-
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Then check following text exist "Y" in file "/opt/dble/logs/dble_admin_query.log" in host "dble-1" retry "10,3" times
       """
       172.100.9.5:3306
@@ -1017,11 +1062,14 @@ Feature: test "binlog" in zk cluster
       | conn_23 | true    | insert into no_sharding1 values (3,3)         | success | schema1 |
       | conn_24 | true    | insert into vertical1 values (3)              | success | schema2 |
    # check on zk cluster has binlog_pause "status"
-    Then check zk has "Y" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
-
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1" retry "10,3" times
+      """
+      status
+      """
     #wait 18s,because btrace sleep 18s,create not timeout ,showBinlogStatusTimeout=30000
     Given sleep "30" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
@@ -1032,11 +1080,14 @@ Feature: test "binlog" in zk cluster
       Error can't wait all session finished
       """
    # check on zk cluster hasn't binlog_pause "status"
-    Then check zk has "not" the following values in "/dble/cluster-1/binlog_pause" with retry "10,3" times in "dble-1"
-    """
-    status
-    """
-
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/opt/dble/logs/dble_zk_binlog.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                | expect      | db      | timeout |
       | conn_11 | False   | select * from global1              | length{(2)} | schema1 | 10,3    |
@@ -1096,11 +1147,14 @@ Feature: test "binlog" in zk cluster
       """
       get into ShowBinlogStatus,start sleep
       """
-
-    Then check zk has "Y" the following values in "/dble/cluster-1/binlog_pause/status" with retry "10,3" times in "dble-1"
-    """
-    \[1, 2, 3\]
-    """
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause/status  >/opt/dble/logs/dble_zk_status.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_status.log" in host "dble-1"
+      """
+      \[1, 2, 3\]
+      """
     # Given stop dble in "dble-1" # coz "./dble stop" will release the all locks in dble
     Given execute linux command in "dble-1"
     """

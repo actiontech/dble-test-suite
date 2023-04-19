@@ -560,23 +560,9 @@ def step_impl(context, zk_path, flag="Y", retry_param=1, hostname="dble-1"):
     ssh_client = get_ssh(hostname)
     for linestr in strs_list:
         #目前取最后10行（主要是排除过多的登录信息），如果有其他需求可以自行修改
-        cmd = "cd {0}/bin && (./zkCli.sh ls {1}) | tail -10 |grep -E -n \"{2}\"".format(context.cfg_zookeeper['home'],zk_path,linestr)
+        cmd = "cd {0}/bin && (./zkCli.sh ls {1}) | tail -10 |grep -E \"{2}\"".format(context.cfg_zookeeper['home'],zk_path,linestr)
         LOGGER.debug("check cmd is: {}".format(cmd))
         retry_exec_command(context, ssh_client, linestr, cmd, zk_path, retry_param,flag)
-
-@Then('check zk has "{flag}" the following values get "{zk_path}" with retry "{retry_param}" times in "{hostname}"')
-def step_impl(context, zk_path, flag="Y", retry_param=1, hostname="dble-1"):
-    strs = context.text.strip()
-    strs_list = strs.splitlines()
-
-    ssh_client = get_ssh(hostname)
-    for linestr in strs_list:
-        #目前取最后10行（主要是排除过多的登录信息），如果有其他需求可以自行修改
-        cmd = "cd {0}/bin && ./zkCli.sh get {1} | tail -10 |grep -E -n \"{2}\"".format(context.cfg_zookeeper['home'],zk_path,linestr)
-        LOGGER.debug("check cmd is: {}".format(cmd))
-        retry_exec_command(context, ssh_client, linestr, cmd, zk_path, retry_param,flag)
-
-
 
 def retry_exec_command(context, ssh_client, linestr, cmd, zk_path, retry_param,flag):
     if "," in str(retry_param):

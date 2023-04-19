@@ -24,7 +24,11 @@ Feature: on zookeeper to check "xa"
       """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given prepare a thread execute sql "commit" with "conn_1"
-    Then check zk has "Y" the following values in "/dble/cluster-1" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1  >/opt/dble/logs/dble_zk_xa.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_xa.log" in host "dble-1"
       """
       xalog
       """

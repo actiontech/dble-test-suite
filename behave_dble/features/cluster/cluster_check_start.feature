@@ -67,7 +67,11 @@ Feature: on zookeeper to check start config
     Given reset dble registered nodes in zk
     Then start dble in order
 
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/db" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_conf_db.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_conf_db.log" in host "dble-1"
       """
       {\"dbGroup\":\[
       {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"heartbeat\":{\"value\":\"select user\(\)\"},
@@ -75,7 +79,11 @@ Feature: on zookeeper to check start config
       {\"rwSplitMode\":0,\"name\":\"ha_group2\",\"delayThreshold\":1000,\"heartbeat\":{\"value\":\"select 5\"},
       \"dbInstance\":\[{\"name\":\"hostM2\",\"url\":\"172.100.9.6:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1111,\"minCon\":22,\"primary\":true}
       """
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_conf_sharding.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_conf_sharding.log" in host "dble-1"
       """
       {\"schema\":\[
       {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\"
@@ -95,7 +103,11 @@ Feature: on zookeeper to check start config
       {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
       {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}
       """
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/user" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_conf_user.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_conf_user.log" in host "dble-1"
       """
       {\"user\":\[{\"type\":\"ManagerUser\",\"properties\":{\"name\":\"root\",\"password\":\"111111\"}},{\"type\":\"ShardingUser\",\"properties\":{\"schemas\":\"schema1,schema2\",\"name\":\"test\",\"password\":\"111111\"}
       """
@@ -120,13 +132,17 @@ Feature: on zookeeper to check start config
       """
       dbGroup=\"ha_group22\"
       """
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_conf_sharding.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_conf_sharding.log" in host "dble-1"
       """
       \"shardingNode\":\[
       {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
       {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
       """
-    Then check zk has "not" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_conf_sharding.log" in host "dble-1"
       """
       {\"name\":\"dn2\",\"dbGroup\":\"ha_group22\",\"database\":\"db1\"}
       """

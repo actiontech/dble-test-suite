@@ -496,7 +496,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     \"sequence_conf.properties\":{\"\`schema2\`.\`GLOBAL\`.MINID\":\"10001\",\"\`schema2\`.\`GLOBAL\`.MAXID\":\"20000\",\"\`schema2\`.\`GLOBAL\`.CURID\":\"10000\"}}
     """
 
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_zk_sharding.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1" retry "6,2" times
     """
     {\"schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
@@ -537,7 +541,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
 
 
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/db" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "6,2" times
     """
     {\"dbGroup\":\[
     {\"rwSplitMode\":0,\"name\":\"ha_group1\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":10,\"errorRetryCount\":0},
@@ -571,7 +579,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {\"name\":\"hostS1\",\"url\":\"172.100.9.4:3307\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":1000,\"minCon\":10,\"readWeight\":\"12\",\"primary\":false}\]
     """
 
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/user" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-3"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-3" retry "6,2" times
     """
     \"user\":\[
     {\"type\":\"ManagerUser\",\"properties\":{\"readOnly\":false,\"name\":\"root\",\"password\":
@@ -593,7 +605,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {\"name\":\"blacklist1\",\"property\":\[{\"value\":\"true\",\"name\":\"metadataAllow\"},{\"value\":\"false\",\"name\":\"conditionDoubleConstAllow\"},{\"value\":\"false\",\"name\":\"conditionDoubleConstAllow\"}\]},
     {\"name\":\"black2\",\"property\":\[{\"value\":\"false\",\"name\":\"conditionDoubleConstAllow\"},{\"value\":\"false\",\"name\":\"conditionDoubleConstAllow\"},{\"value\":\"false\",\"name\":\"intersectAllow\"},{\"value\":\"true\",\"name\":\"metadataAllow\"}\]}\]
     """
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sequences/common" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-3"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sequences/common  >/opt/dble/logs/dble_zk_sequences.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sequences.log" in host "dble-3" retry "6,2" times
     """
     sequence_conf.properties
     schema2
@@ -746,7 +762,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     dbGroup ha_group3 rwSplitMode should be between 0 and 3
     """
-    Then check zk has "not" the following values get "/dble/cluster-1/conf/db" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
     """
     \"rwSplitMode\":99
     \"name\":\"ha_group3\"
@@ -844,7 +864,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       name=\"global99\"
       """
 
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_zk_sharding.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-1" retry "6,2" times
     """
     {\"name\":\"schema2\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn1\",\"table\":\[{\"type\":\"GlobalTable\",\"properties\":{\"name\":\"global99\",\"shardingNode\":\"dn1,dn2,dn4,dn3\"}
     """
@@ -936,7 +960,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       name=\"schema2\"
       name=\"global99\"
       """
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
+
+    Given execute linux command in "dble-3"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_zk_sharding.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_sharding.log" in host "dble-3" retry "6,2" times
     """
     schema\":\[
     {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
@@ -1021,13 +1050,21 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn_1 | true    | insert into dble_db_instance(name,db_group,addr,min_conn_count,max_conn_count,read_weight) value ('M111','ha_group1','172.100.9.1','1','100','1')                     | Field '[port, user, password_encrypt, primary]' doesn't have a default value and cannot be null           | dble_information |
       | conn_1 | true    | insert into dble_rw_split_entry(id,type,db_group) value('5','rwSplitUser','ha_group1')                                                                                | Field '[username, password_encrypt, max_conn_count]' doesn't have a default value and cannot be null      | dble_information |
 
-    Then check zk has "not" the following values get "/dble/cluster-1/conf/db" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
     """
     \"name\":\"ha_group4\"
     M111
     """
 
-    Then check zk has "not" the following values get "/dble/cluster-1/conf/user" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-1"
     """
     \"type\":\"rwSplitUser\"
     """
@@ -1103,12 +1140,20 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn   | toClose | sql                                                                                                                                | expect                                              | db               |
       | conn_3 | true    | insert into dble_rw_split_entry (id,username,password_encrypt,max_conn_count,db_group) value (1,'rw21','111111',10,'ha_group5')    | Column 'id' is not writable                         | dble_information |
 
-    Then check zk has "not" the following values get "/dble/cluster-1/conf/db" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
     """
     \"name\":\"ha_group5\"
     M89757
     """
-    Then check zk has "not" the following values get "/dble/cluster-1/conf/user" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-1"
     """
     rw21
     ha_group5
@@ -1180,7 +1225,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn   | toClose | sql                                                                                                                                                                        | expect                                              | db               |
       | conn_3 | true    | insert into dble_db_group(name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('ha_group6',null,0,1,1,100,'false')       | Column 'heartbeat_stmt' cannot be null              | dble_information |
 
-    Then check zk has "not" the following values get "/dble/cluster-1/conf/db" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1"
     """
     ha_group6
     """
@@ -1229,7 +1278,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn_1 | true    | insert into dble_db_instance(name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM3','ha_group3','172.100.9.1','3306','test','111111','false','true','1','7544')       | success        | dble_information |
       | conn_1 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw1','111111','false','100','ha_group3')                                                                                 | success        | dble_information |
 
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/db" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-1" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1}
     \"dbInstance\":\[
@@ -1247,7 +1300,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {\"value\":\"10000\",\"name\":\"heartbeatPeriodMillis\"}
     """
 
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/user" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-1" retry "6,2" times
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
     """
@@ -1393,7 +1450,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn   | toClose | sql                                                                                                                                                                                                                                    | expect         | db               |
       | conn_3 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw2','111111','false','999','ha_group4')                                                                                 | success        | dble_information |
 
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/db" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-3"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-3" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group4\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select user\(\)\",\"timeout\":0,\"errorRetryCount\":1}
     \"dbInstance\":\[
@@ -1410,7 +1471,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {\"value\":\"600000\",\"name\":\"idleTimeout\"},
     {\"value\":\"10000\",\"name\":\"heartbeatPeriodMillis\"}
     """
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/user" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-2" retry "6,2" times
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group4\",\"name\":\"rw2\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":999}
     """
@@ -1609,14 +1674,22 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn_1 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw2','111111','false','100','ha_group3')                     | Other instance is reloading, please try again later        | dble_information |
       | conn_1 | true    | select * from dble_config                                                                                                                                                  | hasNoStr{rw2}                                              | dble_information |
 
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/db" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/opt/dble/logs/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "6,2" times
     """
     {\"rwSplitMode\":0,\"name\":\"ha_group3\",\"delayThreshold\":100,\"disableHA\":\"false\",\"heartbeat\":{\"value\":\"select 1\",\"timeout\":0,\"errorRetryCount\":1}
     \"dbInstance\":\[
     {\"name\":\"hostM3\",\"url\":\"172.100.9.1:3306\",\"password\":\"111111\",\"user\":\"test\",\"maxCon\":7544,\"minCon\":1,\"usingDecrypt\":\"false\",\"disabled\":\"false\",\"readWeight\":\"0\",\"primary\":true,
     """
 
-    Then check zk has "not" the following values get "/dble/cluster-1/conf/user" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-3"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/opt/dble/logs/dble_zk_user.log 2>&1 &
+    """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_user.log" in host "dble-3"
     """
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw1\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
     {\"type\":\"RwSplitUser\",\"properties\":{\"dbGroup\":\"ha_group3\",\"name\":\"rw2\",\"password\":\"111111\",\"usingDecrypt\":\"false\",\"maxCon\":100}
@@ -1785,7 +1858,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Given Restart dble in "dble-3" success
 
     Then execute admin cmd "dbGroup @@disable name='ha_group2' instance = 'hostM2'"
-    Then check zk has "Y" the following values get "/dble/cluster-1/dbGroups/dbGroup_status/ha_group2" with retry "10,3" times in "dble-1"
+
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/opt/dble/logs/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "6,2" times
     """
     {\"dbGroup\":\"ha_group2\",\"dbInstance\":\[{\"name\":\"hostM2\",\"disable\":true,\"primary\":true},{\"name\":\"hostS1\",\"disable\":false,\"primary\":false},{\"name\":\"hostS2\",\"disable\":false,\"primary\":false}\]}
     """
@@ -1854,7 +1932,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then execute admin cmd "dbGroup @@enable name='ha_group2' instance = 'hostM2'"
 
-    Then check zk has "Y" the following values get "/dble/cluster-1/dbGroups/dbGroup_status/ha_group2" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/opt/dble/logs/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "6,2" times
     """
     {\"dbGroup\":\"ha_group2\",\"dbInstance\":\[{\"name\":\"hostM2\",\"disable\":false,\"primary\":true},{\"name\":\"hostS1\",\"disable\":false,\"primary\":false},{\"name\":\"hostS2\",\"disable\":false,\"primary\":false}\]}
     """
@@ -1939,11 +2021,15 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn   | toClose | sql                                                                   | expect                                                               | db               |
       | conn_3 | true    | dbGroup @@switch name='ha_group2' master='hostS1'                     | Other instance is changing the dbGroup, please try again later       | dble_information |
 
-    Then check zk has "Y" the following values get "/dble/cluster-1/dbGroups/dbGroup_status/ha_group2" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/opt/dble/logs/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "6,2" times
     """
     {\"dbGroup\":\"ha_group2\",\"dbInstance\":\[{\"name\":\"hostM2\",\"disable\":true,\"primary\":true},{\"name\":\"hostS1\",\"disable\":true,\"primary\":false},{\"name\":\"hostS2\",\"disable\":true,\"primary\":false}\]}
     """
-    Then check zk has "not" the following values get "/dble/cluster-1/dbGroups/dbGroup_status/ha_group2" with retry "10,3" times in "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2"
     """
     {\"dbGroup\":\"ha_group2\",\"dbInstance\":\[{\"name\":\"hostM2\",\"disable\":true,\"primary\":false},{\"name\":\"hostS1\",\"disable\":true,\"primary\":true},{\"name\":\"hostS2\",\"disable\":true,\"primary\":false}\]}
     """
@@ -2033,7 +2119,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then execute admin cmd "dbGroup @@switch name='ha_group2' master='hostS1'"
 
-    Then check zk has "Y" the following values get "/dble/cluster-1/dbGroups/dbGroup_status/ha_group2" with retry "30,3" times in "dble-1"
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/opt/dble/logs/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "30,3" times
     """
     {\"dbGroup\":\"ha_group2\",\"dbInstance\":\[{\"name\":\"hostM2\",\"disable\":true,\"primary\":false},{\"name\":\"hostS1\",\"disable\":true,\"primary\":true},{\"name\":\"hostS2\",\"disable\":true,\"primary\":false}\]}
     """
@@ -2103,7 +2193,11 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then execute admin cmd "dbGroup @@enable name = 'ha_group2'"
 
-    Then check zk has "Y" the following values get "/dble/cluster-1/dbGroups/dbGroup_status/ha_group2" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/opt/dble/logs/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_db.log" in host "dble-2" retry "6,2" times
     """
     {\"dbGroup\":\"ha_group2\",\"dbInstance\":\[{\"name\":\"hostM2\",\"disable\":false,\"primary\":false},{\"name\":\"hostS1\",\"disable\":false,\"primary\":true},{\"name\":\"hostS2\",\"disable\":false,\"primary\":false}\]}
     """

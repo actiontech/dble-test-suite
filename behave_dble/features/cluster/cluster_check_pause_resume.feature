@@ -59,7 +59,11 @@ Feature: test "pause/resume" in zk cluster
       | conn   | toClose  | sql                                       | expect        | db       |
       | conn_3 | True     | select * from sharding_4_t1               | length{(4)}   | schema1  |
     #case check lock on zookeeper
-    Then check zk has "not" the following values in "/dble/cluster-1/lock" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -83,7 +87,11 @@ Feature: test "pause/resume" in zk cluster
       | conn_11 | false   | pause @@shardingNode = 'dn1,dn2' and timeout = 20,queue=10,wait_limit=1        | dble_information   |
     Given sleep "5" seconds
     #case check lock on zookeeper
-    Then check zk has "Y" the following values in "/dble/cluster-1/lock" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -97,7 +105,11 @@ Feature: test "pause/resume" in zk cluster
       | conn   | toClose  | sql        | expect    | db       |
       | conn_3 | True     | commit     | success   | schema1  |
     #case check lock on zookeeper
-    Then check zk has "not" the following values in "/dble/cluster-1/lock" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -135,10 +147,15 @@ Feature: test "pause/resume" in zk cluster
       | conn    | toClose | sql                                                                                | db                 |
       | conn_11 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 60,queue=10,wait_limit=1            | dble_information   |
     #case check lock on zookeeper
-    Then check zk has "Y" the following values in "/dble/cluster-1/lock" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
+
     Then restart dble in "dble-3" failed for
     """
     Other node in cluster is doing pause/resume operation. We can't bootstrap unless this operation is ok.
@@ -159,7 +176,11 @@ Feature: test "pause/resume" in zk cluster
       | conn    | toClose | sql     | expect                     |
       | conn_11 | false   | resume  | success                    |
     #case check lock on zookeeper
-    Then check zk has "not" the following values in "/dble/cluster-1/lock" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -187,7 +208,11 @@ Feature: test "pause/resume" in zk cluster
       | conn    | toClose | sql                                                                        | db                 |
       | conn_11 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 10,queue=10,wait_limit=1    | dble_information   |
     #case check lock on zookeeper
-    Then check zk has "Y" the following values in "/dble/cluster-1/lock" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -199,7 +224,11 @@ Feature: test "pause/resume" in zk cluster
      recycle backend
      """
     #case check lock on zookeeper
-    Then check zk has "not" the following values in "/dble/cluster-1/lock" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -249,7 +278,11 @@ Feature: test "pause/resume" in zk cluster
       | conn    | toClose | sql       | db                 |
       | conn_11 | True    | resume    | dble_information   |
     #case check lock on zookeeper
-    Then check zk has "Y" the following values in "/dble/cluster-1/lock" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """
@@ -279,7 +312,11 @@ Feature: test "pause/resume" in zk cluster
       | conn    | toClose | sql     | expect                     |
       | conn_11 | true    | resume  | No shardingNode paused     |
     #case check lock on zookeeper
-    Then check zk has "not" the following values in "/dble/cluster-1/lock" with retry "10,3" times in "dble-1"
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/opt/dble/logs/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/opt/dble/logs/dble_zk_lock.log" in host "dble-1"
       """
       pause_node.lock
       """

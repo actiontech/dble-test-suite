@@ -63,7 +63,13 @@ DBLE0REQ-38
       | conn_0 | True     | insert into enum_table values ('aaa') | Please check if the format satisfied | schema1 |
 
     # check zk that the result is right
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
+#    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "enum.txt" on dble-1
+    #change check function
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_sharidng.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_sharidng.log" in host "dble-1"
       """
       {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
       \"table\":\[
@@ -145,7 +151,13 @@ DBLE0REQ-38
     """
 
     # check zk that the result is right
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
+#    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "enum.txt" on dble-1
+    #change check function
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_sharidng.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_sharidng.log" in host "dble-1"
       """
       {\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
       \"table\":\[
@@ -231,7 +243,12 @@ DBLE0REQ-38
     {"table":"numberrange_table","key":"id"}
     """
      # check zk that the result is right
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
+#    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "partition.txt" on dble-1
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_sharidng.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_sharidng.log" in host "dble-1"
       """
       schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
       \"table\":\[
@@ -278,7 +295,12 @@ DBLE0REQ-38
     Then Test the data types supported by the sharding column in "range.sql"
 
     # check zk that the result is right
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
+#    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "partition.txt" on dble-1
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_sharidng.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_sharidng.log" in host "dble-1"
       """
       schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
       \"table\":\[
@@ -367,7 +389,12 @@ DBLE0REQ-38
     """
 
     # check zk that the result is right
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
+#    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "patternrange.txt" on dble-1
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_sharidng.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_sharidng.log" in host "dble-1"
       """
       schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
       \"table\":\[
@@ -415,7 +442,12 @@ DBLE0REQ-38
     Then Test the data types supported by the sharding column in "range.sql"
 
     # check zk that the result is right
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
+#    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "patternrange.txt" on dble-1
+    Given execute linux command in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/opt/dble/logs/dble_sharidng.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/opt/dble/logs/dble_sharidng.log" in host "dble-1"
       """
       schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"shardingNode\":\"dn5\",
       \"table\":\[
