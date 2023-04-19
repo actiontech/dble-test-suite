@@ -262,12 +262,13 @@ Feature:  backend_connections test
      <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
      <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
      """
+    # testWhileIdle为true，对所有空闲连接，发送ping命令探测连接有效性
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
         <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="1" primary="true">
-                 <property name="testWhileIdle">true</property>#testWhileIdle为true，对所有空闲连接，发送ping命令探测连接有效性
+                 <property name="testWhileIdle">true</property>
                  <property name="timeBetweenEvictionRunsMillis">3000</property>
             </dbInstance>
         </dbGroup>
