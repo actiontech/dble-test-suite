@@ -10,7 +10,7 @@ Feature: test view in zk cluster
   #  3.during alter view use btrace on shardingtable,one dble stop or one dble add
 
 
-  @skip_restart @btrace
+  @btrace
   Scenario: create view，alter view，drop view could success on shardingtable  #1
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect    | db      |
@@ -135,7 +135,7 @@ Feature: test view in zk cluster
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
 
-   @skip_restart @btrace
+  @btrace
   Scenario: during alter view use btrace on shardingtable,to check has lock   #2
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect    | db      |
