@@ -193,6 +193,7 @@ def check_sql_thread(context, result, retry_param=1):
         retry_times = int(retry_param)
         sep_time = 1
 
+    text_info = context.text.strip()
     execute_times = retry_times + 1
     for i in range(execute_times):
         try:
@@ -206,8 +207,13 @@ def check_sql_thread(context, result, retry_param=1):
                 output = getattr(context, result.lower())
                 context.logger.debug("sql thread output from result set: {0}".format(output))
 
-            assert str(output).find(context.text.strip()) > -1, "expect output: {0} in {1}, but was: {2}".format(
-                context.text, result, output)
+            if text_info.rfind("//") > -1:
+                expect = text_info.split("//")
+                for x in expect:
+                    if str(output).find(x.strip()) > -1:
+                        text_info = x.strip()
+                        break
+            assert str(output).find(text_info) > -1, "expect output: {0} in {1}, but was: {2}".format(context.text, result, output)
             break
         except Exception as e:
             logger.info(f"sql thread result is not out yet, execute {i + 1} times")
@@ -222,7 +228,7 @@ def check_sql_thread(context, result, retry_param=1):
                 sleep_by_time(context, sep_time)
                 # time.sleep(sep_time)
 
-    assert str(output).find(context.text.strip()) > -1, "expect output: {0} in {1}, but was: {2}".format(context.text, result, output)
+    assert str(output).find(text_info) > -1, "expect output: {0} in {1}, but was: {2}".format(context.text, result, output)
 
 
 @Given('check sql thread output in "{result}" by retry "{retry_param}" times and check sleep time use "{sleep_end_key}"')
