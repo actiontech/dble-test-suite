@@ -77,13 +77,16 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | show @@statistic_queue.usage;       | length{(0)}   | dble_information   |
     # test default intervalTime & given normal observeTime (default unit for observeTime & intervalTime is seconds)
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = 10;    | success  | dble_information |
-    # more 10s，equal [observeTime + a intervalTime cycle]，checking queueMonitor <3.22.11
-    # more 5s，equal [observeTime + a intervalTime cycle]，checking queueMonitor 3.22.11 due to jira DBLE0REQ-2042
-    Given sleep "10" seconds
+    Given sleep "5" seconds
     Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql                                 | expect                                                                                       | db               |timeout|
-      | conn_0 | False    | show @@statistic;                   | has{(('statistic', 'ON'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '20'), ('queueMonitor', '-'),)}  | dble_information   |5,1|
-      | conn_0 | True     | show @@statistic_queue.usage;       | length{(3)}   | dble_information   |                                                                                                                                                                                                                                               |
+      | conn   | toClose  | sql                                 | expect                                                                                       | db               |
+      | conn_0 | False    | show @@statistic;                   | has{(('statistic', 'ON'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '20'), ('queueMonitor', 'monitoring'),)}  | dble_information   |
+        # more 5s，equal [observeTime + a intervalTime cycle]， jira DBLE0REQ-2042
+    Given sleep "8" seconds
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql                                 | expect                                                                                       | db               |
+      | conn_0 | False    | show @@statistic;                   | has{(('statistic', 'ON'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '20'), ('queueMonitor', '-'),)}  | dble_information   |
+      | conn_0 | True     | show @@statistic_queue.usage;       | length{(3)}   | dble_information   |
 
    #show 和 stop 可能有时间差
   Scenario: test start statistic_queue_monitor with the last statistic_queue_monitor is running  #5
