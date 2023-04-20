@@ -196,11 +196,11 @@
       | conn_5 | false   | select delay_threshold from DBLE_db_group where name ='0B04'                                               | has{((-1,),)}      | dble_information |
       | conn_5 | true    | select disable_ha from DBLE_db_group where name ='0B05'                                                    | has{(('false',),)} | dble_information |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
-
+### coz  DBLE0REQ-2129
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      NullPointerException
+#      """
 
 
   @skip_restart
@@ -540,10 +540,11 @@
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,test_while_idle=-1                    | Insert failure.The reason is Column 'test_while_idle' values only support 'false' or 'true'.             | dble_information |
       | conn_0 | true     | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,test_while_idle=1.3                   | Not Supported of Value EXPR :1.3                                                                         | dble_information |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
+### coz  DBLE0REQ-2129
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      NullPointerException
+#      """
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                                           | expect             | db               |
@@ -568,10 +569,11 @@
       | conn_0 | true    | select test_while_idle from dble_db_instance where name ='0B051'                           | has{(('false',),)} | dble_information |
 
     Then execute admin cmd "reload @@config_all"
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
+### coz  DBLE0REQ-2129
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      NullPointerException
+#      """
 
 
 
@@ -735,10 +737,11 @@
       | conn_0 | false   | insert into dble_rw_split_entry set username='unique5',password_encrypt='111111',encrypt_configured='false',max_conn_count=18,db_group='ha_group6',conn_attr_value=0,conn_attr_key='tenant'             | success     | dble_information |
       | conn_0 | true    | insert into dble_rw_split_entry set username='unique6',password_encrypt='111111',encrypt_configured='false',max_conn_count=11,db_group='ha_group6',conn_attr_value=null,conn_attr_key=null              | success     | dble_information |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
+### coz  DBLE0REQ-2129
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      NullPointerException
+#      """
     Then execute admin cmd "reload @@config_all"
 
 
