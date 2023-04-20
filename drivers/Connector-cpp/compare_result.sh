@@ -17,7 +17,7 @@ generate_simple_cmp_file () {
 		else
 #		    echo "source: $1/$s, dest:"$2/$s""
             mkdir -p "$2"
-            grep '===file:' "$1/$s" > "$2/$s"
+            grep '===file:\|dble' "$1/$s" > "$2/$s"
             #added by zhaohongjie(for driver testing)
             #grep '===id:' "$1/$s" >> "$2/$s"
         fi
@@ -30,3 +30,11 @@ generate_simple_cmp_file ${std_result_dir} ${cmp_std_res_dir}
 generate_simple_cmp_file ${real_result_dir} ${cmp_real_res_dir}
 
 res=`diff -qwr ${cmp_std_res_dir} ${cmp_real_res_dir}`
+if [ ${#res} -gt 0 ]; then
+    echo "Oop! results are different with the standard ones, try 'diff -qwr ${cmp_std_res_dir}/.../file1 ${cmp_real_res_dir}/.../file2' to see the details"
+    echo "${res}"
+    exit 1
+else
+    echo "pass"
+    exit 0
+fi
