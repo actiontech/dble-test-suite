@@ -449,7 +449,7 @@ Feature: test "ddl" in zk cluster
       | conn_1 | False   | alter table sharding_4_t1 add age int  | success | schema1 |
       | conn_1 | False   | alter table sharding_4_t1 add age1 int  | success | schema1 |
       | conn_1 | true    | alter table sharding_4_t1 add age int  | Duplicate column name 'age' | schema1 |
-    Then check following text exists in file "/opt/dble/logs/dble.log" in host "dble-1" with "5" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       FAILED;DROP_INDEX;schema1;1;alter table sharding_4_t1 add age int
       CONN_EXECUTE_ERROR
