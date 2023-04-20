@@ -4,7 +4,7 @@
 # Update by caiwei at 2021/08/02
 
 @skip
-  ###case 3 reload返回结果不稳，后续修改case，去掉skip_restart的依赖
+  ###case 3 reload返回结果不稳，后续修改case，DBLE0REQ-2192
 Feature: test "reload @@config" in zk cluster
   #  db.xml  user.xml  sharding.xml sequence_db_conf.properties
   ######case points:

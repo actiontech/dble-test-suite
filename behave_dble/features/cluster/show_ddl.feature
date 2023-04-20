@@ -117,7 +117,8 @@ Feature: show the ddl statement being executed in different scenario
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java" on "dble-1"
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java.log" on "dble-1"
 
-  @btrace
+  @skip @btrace
+    #coz DBLE0REQ-2192
   Scenario: same database with different table #3
     Given stop dble cluster and zk service
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
