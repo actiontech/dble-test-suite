@@ -183,15 +183,15 @@ Feature:  backend_connections test
         <heartbeat>select user()</heartbeat>
         <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="4" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
-             <property name="idleTimeout">3000</property>
-             <property name="timeBetweenEvictionRunsMillis">5000</property>
+             <property name="idleTimeout">8000</property>
+             <property name="timeBetweenEvictionRunsMillis">10000</property>
         </dbInstance>
      </dbGroup>
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="20" minCon="4" primary="true">
-             <property name="idleTimeout">3000</property>
+             <property name="idleTimeout">8000</property>
         </dbInstance>
     </dbGroup>
      """
@@ -218,23 +218,24 @@ Feature:  backend_connections test
       | conn_5 | False   | commit                                                    | success                    | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                             | expect         | db                | timeout |
-      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'      | has{((20,),)}  | dble_information  | 5       |
+      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'      | has{((20,),)}  | dble_information  | 10      |
+    # 连接状态改变时都会调用此方法，-2表示连接状态变为回收的
     Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
         """
         s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
-        /compareAndSet/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+        /compareAndSet/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
         """
-    # 连接状态改变时都会调用此方法，-2表示连接状态变为回收的
+    #桩开启时间过久会导致连接已idle timeout
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
-    #sleep 5s to wait connections idle timeout and into scaling period
-    Given sleep "5" seconds
+    #sleep 10s to wait connections idle timeout and into scaling period
+    Given sleep "10" seconds
     Then check btrace "BtraceAboutConnection.java" output in "dble-1"
       """
         get into compareAndSet
       """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                 | expect        | db                | timeout |
-      | conn_0 | false   | select * from backend_connections where remote_addr="172.100.9.5" and state="EVICT" and used_for_heartbeat='false'  | length{(1)}   | dble_information  | 5       |
+      | conn_0 | false   | select * from backend_connections where remote_addr="172.100.9.5" and state="EVICT" and used_for_heartbeat='false'  | length{(1)}   | dble_information  | 15      |
     Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
@@ -242,7 +243,7 @@ Feature:  backend_connections test
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                 | expect         | db                | timeout |
-      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'                          | has{((14,),)}  | dble_information  | 10      |
+      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'                          | has{((14,),)}  | dble_information  | 20      |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                 | expect        | db                |
       | conn_0 | true    | drop table if exists sharding_4_t1                                                                                  | success       | schema1           |
@@ -267,7 +268,7 @@ Feature:  backend_connections test
       """
         <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
             <heartbeat>select user()</heartbeat>
-            <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="1" primary="true">
+            <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="2" primary="true">
                  <property name="testWhileIdle">true</property>
                  <property name="timeBetweenEvictionRunsMillis">3000</property>
             </dbInstance>
@@ -279,8 +280,12 @@ Feature:  backend_connections test
     Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
         """
         s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
-        /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(6000L)/;/\}/!ba}
+        /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
         """
+    #开启桩之前先查询连接池信息
+    Given execute sql in "dble-1" in "admin" mode
+     | conn   | toClose | sql                                                                                               | expect         | db               |
+     | conn_0 | false   | select * from backend_connections where remote_addr="172.100.9.5" and used_for_heartbeat="false"  | success        | dble_information |
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
 
     # sleep time > timeBetweenEvictionRunsMillis = 3
@@ -290,7 +295,7 @@ Feature:  backend_connections test
     """
     Given execute sql in "dble-1" in "admin" mode
   | conn   | toClose | sql                                                                                                                            | expect             | db               | timeout |
-  | conn_0 | true    | select * from backend_connections where remote_addr="172.100.9.5" and used_for_heartbeat="false" and state="HEARTBEAT CHECK"   | length{(1)}        | dble_information | 6       |
+  | conn_0 | true    | select * from backend_connections where remote_addr="172.100.9.5" and used_for_heartbeat="false" and state="HEARTBEAT CHECK"   | length{(1)}        | dble_information | 8       |
     Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
     Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
