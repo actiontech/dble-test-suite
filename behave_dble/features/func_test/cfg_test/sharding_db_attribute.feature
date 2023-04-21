@@ -83,7 +83,8 @@ Feature: test some import nodes attr in sharding.xml
       | conn_0 | False    | create table test2_table(id int)  | success             | schema1 |
       | conn_0 | True     | show all tables                   | has{(('test_table','GLOBAL TABLE'),)}   | schema1 |
 
-  @BLOCKER
+  @BLOCKER @auto_retry
+    ##coz DBLE0REQ-1867
   Scenario: test "dbInstance" node attr "maxCon" #4
     Given delete the following xml segment
       |file        | parent          | child               |
