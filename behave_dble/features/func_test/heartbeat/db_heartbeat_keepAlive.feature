@@ -49,7 +49,7 @@ Feature: check keepAlive
     # case 1.1: sleep more than keepAlive
     Given sleep "60" seconds
     #print log and mysqlId change
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1" retry "5,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_1" in host "dble-1" retry "5,3" times
     """
       \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
@@ -141,7 +141,7 @@ Feature: check keepAlive
     # case 2.1: sleep more than keepAlive
     Given sleep "30" seconds
     #print log and mysqlId change
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1" retry "5,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_3" in host "dble-1" retry "5,3" times
     """
       \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
@@ -213,6 +213,7 @@ Feature: check keepAlive
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                   | db               | timeout |
       | conn_0  | false   | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 3,2     |
+    Given record current dble log line number in "log_num_5"
     Given execute oscmd in "mysql-master2"
     """
     iptables -A INPUT -p tcp --dport 3306 -j DROP
@@ -229,9 +230,8 @@ Feature: check keepAlive
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                        | db               | timeout |
       | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostM1', '172.100.9.5', 3306, 'ok'} | dble_information | 6,2     |
-    Given record current dble log line number in "log_num_5"
     #print log and mysqlId change
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_5" in host "dble-1" retry "5,2" times
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_num_5" in host "dble-1" retry "5,3" times
     """
       \[heartbeat\]connect timeout,the connection may be unreachable for a long time due to TCP retransmission
     """
