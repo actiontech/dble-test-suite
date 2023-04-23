@@ -64,6 +64,8 @@
 []
 ===file:assets/sql/driver_test_client.sql,id:36,sql:select * from test_shard where id>(SELECT ABS(2)) order by id limit 1 offset 1;===
 []
+===file:assets/sql/driver_test_client.sql,id:37,sql:select pad,count(id) t from schema2.test2 group by pad having t>1;===
+[{pad=1, t=2}]
 ===file:assets/sql/driver_test_client.sql,id:39,sql:select * from test_shard order by id lock in share mode;===
 [{b=false, t=2012-12-31 11:30:45.0, r_regionkey=1.0, id=1, r_name=a string}, {b=false, t=2012-12-31 11:30:45.0, r_regionkey=2.0, id=2, r_name=a string}, {b=false, t=2018-12-03 11:30:45.0, r_regionkey=5.0, id=5, r_name=a string}]
 ===file:assets/sql/driver_test_client.sql,id:40,sql:select * from test_shard where id=2 for update;===
