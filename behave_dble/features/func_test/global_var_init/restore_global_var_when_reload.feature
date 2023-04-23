@@ -24,7 +24,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     When execute admin cmd "reload @@config_all -r" success
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
+    select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation
     """
     Then check general log in host "mysql-master1" has not "set global autocommit=1"
     Then check general log in host "mysql-master2" has not "set global autocommit=1"
@@ -46,8 +46,8 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
     When execute admin cmd "reload @@config_all -r" success
-    Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
-    Then check general log in host "mysql-master2" has not "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has "set global autocommit=1,transaction_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master2" has not "set global autocommit=1,transaction_isolation='REPEATABLE-READ'"
 #    create new conns,and check new conn will not set global xxx
     Given turn on general log in "mysql-master1"
     #开启general log后，立即执行kill all backend中可能会导致查询到中间态的连接 (111, 'test', '172.100.9.8:34742', None, 'Query', 0, 'Sending to client', 'set global general_log=on')，增加sleep时间
@@ -93,7 +93,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
 #    heartbeat check period is 2s, 3s makes sure waiting more than a heartbeat time
     Given sleep "3" seconds
-    Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has "set global autocommit=1,transaction_isolation='REPEATABLE-READ'"
 
   @restore_global_setting
   Scenario:set global vars failed for user has no priviledges, then set session context if values are not same as config at conn used #4
@@ -119,7 +119,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given turn on general log in "mysql-master1"
     Given Start dble in "dble-1"
     #    try to set global but failed for having no priviledges
-    Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'" occured ">0" times
+    Then check general log in host "mysql-master1" has "set global autocommit=1,transaction_isolation='REPEATABLE-READ'" occured ">0" times
 #    when dble start, it need to check metadata by show create table, during which will set session context if it find autocommit is different with config
     Then check general log in host "mysql-master1" has "SET autocommit=1" occured ">0" times
     Given kill all backend conns in "mysql-master1"
@@ -141,7 +141,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     When execute admin cmd "reload @@config_all " success
     Given sleep "5" seconds
-    Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has "set global autocommit=1,transaction_isolation='REPEATABLE-READ'"
 
   @restore_global_setting
   Scenario:backend mysql global var read_only=true, then every heartbeat will try to select the global vars,and try to set autocommit and tx_isolation if their values different between dble and mysql#5
@@ -172,11 +172,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn_0 | True    | set global tx_isolation='READ-COMMITTED' |
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
-    Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has "SET global autocommit=1,transaction_isolation='REPEATABLE-READ'"
 #    a heartbeat period is 2, 5 means wait more than 2 heartbeat period
     Given sleep "5" seconds
     # optimize by DBLE0REQ-1868 since 3.22.07.0
-    Then check general log in host "mysql-master1" has "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" occured "1" times
+    Then check general log in host "mysql-master1" has "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation" occured "1" times
 
   @restore_global_setting
   Scenario:config autocommit/txIsolation to not default value, and backend mysql values are different, dble will set backend same as dble configed #6
@@ -196,7 +196,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
     When Start dble in "dble-1"
-    Then check general log in host "mysql-master1" has "SET global autocommit=0,tx_isolation='READ-COMMITTED'"
+    Then check general log in host "mysql-master1" has "SET global autocommit=0,transaction_isolation='READ-COMMITTED'"
     When execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                         | expect  |
       | conn_1 | False   | fresh conn forced where dbGroup='ha_group1' | success |
@@ -360,10 +360,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn_0 | True    | set global tx_isolation='READ-COMMITTED'  | success |
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
-    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,transaction_isolation='REPEATABLE-READ'"
     When execute admin cmd "dbGroup @@enable name='ha_group1'" success
     Given sleep "5" seconds
-    Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has "SET global autocommit=1,transaction_isolation='REPEATABLE-READ'"
 
   @restore_global_setting
   Scenario:dble starts at disabled=true, global vars values are different, then change it to enable by config and reload, dble send set global query #10
@@ -385,7 +385,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn_0 | True    | set global tx_isolation='READ-COMMITTED'  |
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
-    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,transaction_isolation='REPEATABLE-READ'"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -395,7 +395,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     </dbGroup>
     """
     When execute admin cmd "reload @@config" success
-    Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has "SET global autocommit=1,transaction_isolation='REPEATABLE-READ'"
 
   @restore_global_setting
   Scenario:dble starts at disabled=true, global vars values are same, then change it to enable by manager command, dble will not send set global query #11
@@ -413,9 +413,9 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given stop dble in "dble-1"
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
-    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,transaction_isolation='REPEATABLE-READ'"
     When execute admin cmd "dbGroup @@enable name='ha_group1'" success
-    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,transaction_isolation='REPEATABLE-READ'"
 
   @restore_global_setting
   Scenario:dble starts at disabled=true, global vars values are same, then change it to enable by config and reload, dble will not send set global query #12
@@ -433,7 +433,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given stop dble in "dble-1"
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
-    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='READ-COMMITTED'"
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,transaction_isolation='READ-COMMITTED'"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -443,7 +443,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     </dbGroup>
     """
     When execute admin cmd "reload @@config" success
-    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,transaction_isolation='REPEATABLE-READ'"
 
   @restore_global_setting
   Scenario:dble disabled loop state by false-true-false, global vars values are different at step false-true, dble will not send set global query #13
@@ -464,7 +464,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn_0 | False   | set global autocommit=0                   |
       | conn_0 | True    | set global tx_isolation='READ-COMMITTED'  |
     Given execute admin cmd "dbGroup @@enable name='ha_group1'" success
-    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,transaction_isolation='REPEATABLE-READ'"
 
   @restore_mysql_service
   Scenario: if global var detect query failed at heartbeat restore, the heartbeat restore failed #14
@@ -492,10 +492,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     get into fieldEofResponse
     """
-    # find backend conns of query "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" used in dble.log
+    # find backend conns of query "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation" used in dble.log
     Given execute linux command in "dble-1" and save result in "backendIds"
     """
-    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -i "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" |grep "host = 172.100.9.5"| grep -o "mysqlId = [0-9]*"|grep -o "[0-9]*" |sort| uniq
+    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -i "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation" |grep "host = 172.100.9.5"| grep -o "mysqlId = [0-9]*"|grep -o "[0-9]*" |sort| uniq
     """
     Given kill mysql conns in "mysql-master1" in "backendIds"
     Given sleep "2" seconds

@@ -113,12 +113,12 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     #reload @@config_all -r returns failed,and failed info includes the output
     Then execute admin cmd "reload @@config_all -r" get the following output
     """
-    these MySQL's value is not 0 :ha_group2:hostM2
+    These MySQL's value is not 0 :ha_group2:hostM2
     """
     #dryrun returns success,and success info includes the output
     Then execute admin cmd "dryrun" get the following output
     """
-    hasStr{these MySQL's value is not 0 :ha_group2:hostM2}
+    hasStr{These MySQL's value is not 0 :ha_group2:hostM2}
     """
   @restore_mysql_config @restore_mysql_service
   Scenario: backend mysql heartbeat fail, restore the mysql but its lower_case_table_names are different with the running backend mysqls, then heartbeat to this backend mysql fail #4
