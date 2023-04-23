@@ -20,6 +20,7 @@ Feature: connection pool basic test - heartbeat create connections
     Given delete file "/opt/dble/fillPool.java" on "dble-1"
     Given delete file "/opt/dble/fillPool.java.log" on "dble-1"
     Given record current dble log line number in "log_linenu"
+    # 桩fillPool的作用是：连接池建连接之前hang住，检查元数据建连接时不会进入这个桩
     Given update file content "./assets/fillPool.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
@@ -35,15 +36,18 @@ Feature: connection pool basic test - heartbeat create connections
     Given destroy btrace threads list
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    complexQueryWorker\] \(com.actiontech.dble.backend.pool.ConnectionPool.*\- need add
+    complexQueryWorker[0-9]{1,2}\] \(com.actiontech.dble.backend.pool.ConnectionPool.*\- need add
     """
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     \[connection-pool-evictor-thread\] \(com.actiontech.dble.backend.pool.ConnectionPool.*\- need add
     """
+    # 此处的连接包含检查元数据的并发连接，reload时每个节点下发都会下发 show full tables where Table_type ='BASE TABLE'（日志中有体现），show create table（日志中没体现）
+    # 检查元数据时会先检查默认节点，然后是其他节点（其他节点之间是异步的），此处有1默认节点，2个其他节点，并且reload检查元数据时创建连接和使用连接都是异步的，所以最大可能用到3*2=6根连接
+    # 后面再出现连接超过最大范围值的话：1.可以考虑是issue；2.或者是reload逻辑变更其他地方也需要用到连接
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                          | expect         | db                | timeout |
-      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'     | balance{10}    | dble_information  | 6,2     |
+      | conn   | toClose | sql                                                                                                                   | expect                     | db                | timeout |
+      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'     | length_balance{10,0.6}     | dble_information  | 6,2     |
 
 
 
