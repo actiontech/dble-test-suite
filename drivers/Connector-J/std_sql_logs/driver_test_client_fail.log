@@ -4,9 +4,6 @@ mysql: [(1064): You have an error in your SQL syntax; check the manual that corr
 ===file:assets/sql/driver_test_client.sql,id:25,sql:select (@aa:=id) AS a, (@aa+3) AS b from test_shard where R_NAME=(select CHARSET(X'4D7953514C'));===
 dble: [(4004): not support assignment]
 mysql: []
-===file:assets/sql/driver_test_client.sql,id:37,sql:select pad,count(id) t from schema2.test2 group by pad having t>1;===
-dble: [{pad=1, count(id)=2}]
-mysql: [{pad=1, t=2}]
 ===file:assets/sql/driver_test_client.sql,id:38,sql:select pad,count(id) t from schema2.test2 group by pad with rollup;===
 dble: [(4004): with rollup is not supported yet!]
 mysql: [{pad=1, t=2}, {pad=3, t=1}, {pad=4, t=1}, {pad=6, t=1}, {pad=null, t=5}]
