@@ -17,8 +17,9 @@ public class BtraceRwSplitSession{
             location = @Location(Kind.RETURN)
     )
     public static void bindRwSplitSession(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
-        BTraceUtils.println("get into bindRwSplitSession");
+        BTraceUtils.println(BTraceUtils.timestamp("yyyy-MM-dd HH:mm:ss.SSS") + "-----get into bindRwSplitSession");
         Thread.sleep(2000L);
-        BTraceUtils.println("sleep end ");
+        BTraceUtils.println(BTraceUtils.timestamp("yyyy-MM-dd HH:mm:ss.SSS") + "-----sleep end ");
+        BTraceUtils.println();
     }
 }
