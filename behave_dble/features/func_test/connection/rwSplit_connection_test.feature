@@ -267,7 +267,6 @@ Feature: connection test in rwSplit mode
     Given delete file "/opt/dble/BtraceSelectRWDbGroup.java" on "dble-1"
     Given delete file "/opt/dble/BtraceSelectRWDbGroup.java.log" on "dble-1"
 
-    @a
     Scenario: When the front connection is bound with the dbGroup, reload is triggered multiple times and the dbgroup connection is obtained recursively ten times    #4
       Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
         """
@@ -325,7 +324,7 @@ Feature: connection test in rwSplit mode
         """
          sleep end
         """
-      
+
      # 打印btrace日志，以便追踪autotest-dble-3.22.01.99/365/test_case/1/unstable_test的偶发失败
      Given execute linux command in "dble-1"
       """
