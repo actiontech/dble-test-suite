@@ -310,6 +310,11 @@ Feature: connection test in rwSplit mode
       | conn   | toClose | sql                             | expect  |
       | conn_0 | True    | set global max_connections=1000 | success |
 
+      # 此步骤无实际意义，仅用来避开DBLE0REQ-2200中描述的首次执行实例的增删改查耗时过长的问题，使后面的步骤能稳定执行。
+      Then execute sql in "dble-1" in "admin" mode
+        | conn       | toClose | sql                                                     | expect             | db                 |
+        | conn_admin | True    | select * from dble_db_instance where name='hostM2'      | success            | dble_information   |
+
      Given delete file "/opt/dble/BtraceRwSplitSession.java" on "dble-1"
      Given delete file "/opt/dble/BtraceRwSplitSession.java.log" on "dble-1"
      Given prepare a thread run Btrace script "BtraceRwSplitSession.java" in "dble-1"
