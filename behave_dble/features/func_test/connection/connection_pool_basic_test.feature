@@ -398,7 +398,7 @@ Feature: connection pool basic test
         <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="4" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="idleTimeout">1000</property>
-             <property name="timeBetweenEvictionRunsMillis">5000</property>
+             <property name="timeBetweenEvictionRunsMillis">10000</property>
         </dbInstance>
      </dbGroup>
      """
@@ -437,9 +437,9 @@ Feature: connection pool basic test
       | db_instance_name            | 2            |
       | remote_processlist_id       | 5            |
       | state                       | 18           |
-    #sleep 5s to wait into default scaling period
+    #sleep 10s to wait into default scaling period
     # 由于扩缩容任务是“延迟”类型的定时任务，所以实际进入下个扩缩容需要的时间要大于配置的周期
-    Given sleep "5" seconds
+    Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_C"
-      | conn   | toClose | sql                                                                                                                               | expect        | db                |timeout|
-      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5'                 | length{(4)}   | dble_information  |5,1    |
+      | conn   | toClose | sql                                                                                                                               | expect        | db                | timeout |
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5'                 | length{(4)}   | dble_information  | 5,1     |
