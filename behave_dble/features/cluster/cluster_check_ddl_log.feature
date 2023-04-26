@@ -9,7 +9,8 @@ Feature:check DDL log in cluster
     Given execute sql in "dble-1" in "user" mode
       | sql                                 | expect   | db      |
       | drop table if exists sharding_4_t1  | success  | schema1 |
-
+    ####为了drop 这个ddl的日志完全输出，避开被下一步的记录dble日志行数记录到
+    Given sleep "2" seconds
     Given record current dble log line number in "log_num_1" in "dble-1"
     Given record current dble log line number in "log_num_2" in "dble-2"
     Given record current dble log line number in "log_num_3" in "dble-3"
@@ -64,6 +65,8 @@ Feature:check DDL log in cluster
       | conn   | toClose | sql                                | expect   | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1 | success  | schema1 |
       | conn_0 | True    | create table sharding_4_t1(id int) | success  | schema1 |
+    ####为了避免drop 这个ddl的日志完全输出，避开被下一步的记录dble日志行数记录到
+    Given sleep "2" seconds
     Then execute sql in "mysql-master1"
       | sql                                | expect    | db     |
       | drop table if exists sharding_4_t1 | success   | db1    |
