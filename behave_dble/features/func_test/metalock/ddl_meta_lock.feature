@@ -36,7 +36,7 @@ Feature: about ddl metalock test
       |conn_2| False   |truncate table sharding_2_t1           | schema1 | SCHEMA[schema1], TABLE[sharding_2_t1] is doing DDL     |
       |conn_2| False   |truncate table sharding_2_t1           | schema1 | SCHEMA[schema1], TABLE[sharding_2_t1] is doing DDL     |
     #make sure btrace time over
-    Given sleep "5" seconds
+    Given sleep "15" seconds
 
     Given stop btrace script "BtraceAddMetaLockForOnce.java" in "dble-1"
     Given destroy btrace threads list
