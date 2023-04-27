@@ -67,25 +67,21 @@ run_func_stable_case: up
 	features/func_test/trace/  \
 	features/func_test/heartbeat/ \
 	features/func_test/metalock/
+#####issue /DBLE0REQ-2178
+#	features/func_test/flow_control/ \
 
 run_cfg_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
 	features/func_test/cfg_test/
 
-run_func_unstable_case: up
-	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/connection/  \
-	features/func_test/ddl/  \
-	features/func_test/xa_transaction/ \
-#####issue /DBLE0REQ-2178
-#	features/func_test/flow_control/ \
-
-
-
 
 run_managercmd_case: up
 	pipenv run behave -Dreset=false -D dble_conf=template features/setup.feature \
-	features/func_test/managercmd/
+	features/func_test/managercmd/   \
+	features/func_test/connection/  \
+	features/func_test/ddl/  \
+	features/func_test/xa_transaction/ \
+
 
 run_sql_support_special: up
 	pipenv run behave -Dreset=false -D dble_conf=sql_cover_mixed features/setup.feature \
