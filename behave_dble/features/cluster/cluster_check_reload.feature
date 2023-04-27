@@ -616,6 +616,14 @@ Feature: test "reload @@config" in zk cluster
 
   @btrace
   Scenario: change xml ,use btrace create lock   #4
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      /-Dprocessors=/d
+      /-DprocessorExecutor=/d
+      $a -Dprocessors=4
+      $a -DprocessorExecutor=4
+      """
+    Given Restart dble in "dble-1" success
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
