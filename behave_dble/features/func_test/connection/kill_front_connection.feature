@@ -45,7 +45,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn_0 | False   | set autocommit=1 | success | schema1 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "connection_1"
-      | conn   | toClose | sql                         | expect                    | db      |
+      | conn   | toClose | sql                         | expect                        | db      |
       | conn_0 | False   | select * from sharding_4_t1 | has{((1,), (2,), (3,), (4,))} | schema1 |
 
 # case 1.3: kill query processlist_id multiple times
@@ -107,7 +107,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     /ok/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
-    Given prepare a thread execute sql "insert into sharding_4_t1(id) values(1),(2),(3),(4)" with "conn_0"
+    Given prepare a thread execute sql "insert into sharding_4_t1(id) values(5),(6),(7),(8)" with "conn_0"
     Then check btrace "BtraceSessionStage.java" output in "dble-1" with ">0" times
     """
     get into ok
@@ -115,9 +115,10 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  |
       | conn_2 | False   | kill query {0} | success |
+    # Query was interrupted：还没有下发就被拦截了，其他2种是下发之后被拦截，一个是下发到后端，一个是下发到前段
     Then check sql thread output in "err" by retry "10" times
     """
-    Query was interrupted.//stream closed by peer
+    Query was interrupted.//stream closed by peer//[stream closed]
     """
     Given stop btrace script "BtraceSessionStage.java" in "dble-1"
     Given destroy btrace threads list
@@ -128,7 +129,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn   | toClose | sql                         | expect                                      | db      |
       | conn_0 | False   | select * from sharding_4_t1 | Transaction error, need to rollback.Reason: | schema1 |
       | conn_0 | False   | rollback                    | success                                     | schema1 |
-      | conn_0 | False   | select * from sharding_4_t1 | success                                     | schema1 |
+      | conn_0 | False   | select * from sharding_4_t1 | has{((1,), (2,), (3,), (4,))}               | schema1 |
 
 # case 4.2.2: at receive ok packet stage and not in the transaction
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
@@ -137,7 +138,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     /ok/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
-    Given prepare a thread execute sql "insert into sharding_4_t1(id) values(5),(6),(7),(8)" with "conn_0"
+    Given prepare a thread execute sql "insert into sharding_4_t1(id) values(9),(10),(11),(12)" with "conn_0"
     Then check btrace "BtraceSessionStage.java" output in "dble-1" with ">0" times
     """
     get into ok
@@ -147,7 +148,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn_2 | False   | kill query {0} | success |
     Then check sql thread output in "err" by retry "10" times
     """
-    Query was interrupted.//stream closed by peer
+    Query was interrupted.//stream closed by peer//[stream closed]
     """
     Given stop btrace script "BtraceSessionStage.java" in "dble-1"
     Given destroy btrace threads list
@@ -155,22 +156,24 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     Given delete file "/opt/dble/BtraceSessionStage.java.log" on "dble-1"
 
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                         | expect  | db      |
-      | conn_0 | False    | select * from sharding_4_t1 | success | schema1 |
+      | conn   | toClose | sql                         | expect                        | db      |
+      | conn_0 | True    | select * from sharding_4_t1 | length{(4)}                   | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 | has{((1,), (2,), (3,), (4,))} | schema1 |
 
 # case 4.2.3: at endRoute stage
+    Then get index:"0" column value of "select session_conn_id from dble_information.session_connections where sql_stage <> 'Manager connection' limit 1" named as "front_id_2"
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
     /endRoute/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceSessionStage.java" in "dble-1"
-    Given prepare a thread execute sql "select * from sharding_4_t1" with "conn_0"
+    Given prepare a thread execute sql "select * from sharding_4_t1" with "conn_1"
     Then check btrace "BtraceSessionStage.java" output in "dble-1" with ">0" times
     """
     get into endRoute
     """
-    Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
+    Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_2"
       | conn   | toClose | sql            | expect  |
       | conn_2 | True    | kill query {0} | success |
     Given sleep "5" seconds
@@ -186,10 +189,8 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect  | db      |
-      | conn_0 | False   | select * from sharding_4_t1        | success | schema1 |
-      | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
-
-
+      | conn_1 | False   | select * from sharding_4_t1        | success | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1 | success | schema1 |
 
   Scenario: check kill connection processlist_id for DBLE0REQ-726 #2
     Given execute sql in "dble-1" in "user" mode
