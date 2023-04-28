@@ -441,6 +441,10 @@ Feature: test "ddl" in zk cluster
 
   @btrace
   Scenario: case let ddl query error,to check metadata and lock   #5
+    # 开启线程每隔一秒打印一次jstack
+    Given prepare a thread to run jstack in "dble-1"
+    Given prepare a thread to run jstack in "dble-2"
+    Given prepare a thread to run jstack in "dble-3"
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect  | db      |
@@ -620,3 +624,4 @@ Feature: test "ddl" in zk cluster
       | conn   | toClose  | sql                                                    | expect   | db      |
       | conn_3 | False    | drop table if exists sharding_4_t1                     | success  | schema1 |
       | conn_3 | true     | drop table if exists test1                             | success  | schema1 |
+    Given destroy jstack threads list
