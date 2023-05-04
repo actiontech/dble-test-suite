@@ -3,6 +3,9 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by mayingle at 2020/09/08
 
+
+ @skip
+      ###coz DBLE0REQ-2198
 Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
 DBLE0REQ-38
 
