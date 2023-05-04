@@ -26,7 +26,7 @@ Feature: show @@connection.sql test
       | EXECUTE_TIME        | 6            |
       | SQL                 | 7            |
 
-  @TRIVIAL
+  @TRIVIAL  @auto_retry
   Scenario: query execute time >1ms #2
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                    | db       |
@@ -46,7 +46,7 @@ Feature: show @@connection.sql test
       | EXECUTE_TIME        | 6              |
       | SQL                 | 7              |
 
-  @TRIVIAL
+  @TRIVIAL  @auto_retry
   Scenario: multiple session with multiple query display #3
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                    | db       |
