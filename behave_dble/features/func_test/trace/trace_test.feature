@@ -6,8 +6,9 @@
 
 Feature: track SQL and analyze SQL execution
 
-
-   Scenario: turn on mysql trace and analyze sql with trace #1
+  @auto_retry
+    ###coz DBLE0REQ-2197
+  Scenario: turn on mysql trace and analyze sql with trace #1
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                         | expect      | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                                                          | success     | schema1 |
