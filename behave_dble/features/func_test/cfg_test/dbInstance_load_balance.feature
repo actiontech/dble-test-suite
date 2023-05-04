@@ -481,7 +481,7 @@ Feature: test read load balance
       | False   | drop table if exists test                   | success  | schema1 |
       | True    | create table test(id int,name varchar(20))  | success  | schema1 |
     Then connect "dble-1" to insert "1000" of data for "test"
-      Then execute sql in "mysql-slave1"
+    Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                              |
       | conn_0 | False   | set global general_log=on        |
       | conn_0 | False   | set global log_output='table'    |
@@ -491,6 +491,14 @@ Feature: test read load balance
       | conn_0 | False   | set global general_log=on        |
       | conn_0 | False   | set global log_output='table'    |
       | conn_0 | True    | truncate table mysql.general_log |
+    ###确保主从数据已经同步
+    Then execute sql in "mysql-slave1"
+      | conn    | toClose | sql                | expect        | db  | timeout |
+      | conn_21 | true    | select * from test | length{(250)} | db1 | 11,3    |
+      | conn_22 | true    | select * from test | length{(250)} | db2 | 11,3    |
+      | conn_23 | true    | select * from test | length{(250)} | db3 | 11,3    |
+      | conn_24 | true    | select * from test | length{(250)} | db4 | 11,3    |
+
     Given execute sql "1000" times in "dble-1" at concurrent
       | sql                                | db      |
       | select name from test where id ={} | schema1 |
