@@ -22,6 +22,8 @@ Feature: reload @@config_all -fsr
       | sql            |
       | show @@backend |
     Then execute admin cmd "reload @@config_all -fsr"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_B"
       | sql            |
       | show @@backend |
@@ -46,6 +48,8 @@ Feature: reload @@config_all -fsr
     <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all -fsr"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_C"
       | sql            |
       | show @@backend |
@@ -84,6 +88,8 @@ Feature: reload @@config_all -fsr
       | conn_0 | False   | begin                                            | schema1 |
       | conn_0 | false   | insert into sharding_4_t1 values (1),(2),(3),(4) | schema1 |
     Then execute admin cmd "reload @@config_all -fsr"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_D"
       | sql            |
       | show @@backend |
@@ -115,6 +121,8 @@ Feature: reload @@config_all -fsr
     s/172.100.9.4/172.100.9.6/g
     """
     Then execute admin cmd "reload @@config_all -f -s -r"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_E"
       | sql            |
       | show @@backend |
