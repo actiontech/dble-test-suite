@@ -149,6 +149,8 @@ Feature:  backend_connections test
      </dbGroup>
      """
     Then execute admin cmd "reload @@config"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_4"
       | conn   | toClose | sql                                                                               | db               |
       | conn_0 | False   | select db_group_name,db_instance_name,remote_addr,schema from backend_connections | dble_information |
@@ -275,6 +277,8 @@ Feature:  backend_connections test
         </dbGroup>
       """
     Given execute admin cmd "reload @@config_all" success
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
     Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
