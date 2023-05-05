@@ -20,6 +20,8 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | sql            |
       | show @@backend |
     Then execute admin cmd "reload @@config_all -fs"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_B"
       | sql            |
       | show @@backend |
@@ -38,6 +40,8 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
        <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all -fs"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_C"
       | sql            |
       | show @@backend |
@@ -67,6 +71,8 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       </dbGroup>
     """
     Then execute admin cmd "reload @@config_all -fs"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_D"
       | sql            |
       | show @@backend |
@@ -77,7 +83,6 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
     Then check resultset "rs_D" has not lines with following column values
       | HOST-3      |PORT-4|
       | 172.100.9.6 |3307  |
-    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs"
       | conn   | toClose | sql               |
       | conn_3 | false   | show @@heartbeat  |
@@ -109,6 +114,8 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all -f -s"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_E"
       | sql            |
       | show @@backend |
@@ -120,7 +127,6 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | HOST-3      |PORT-4|
       | 172.100.9.6 |3306  |
       | 172.100.9.6 |3307  |
-    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs"
       | conn   | toClose | sql               |
       | conn_3 | false   | show @@heartbeat  |
