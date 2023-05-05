@@ -284,8 +284,11 @@ Feature: test "check full @@metadata...'"
       | test  | 111111 | conn_0 | True    | drop table if exists test5  | success                             | schema1   |
       | test  | 111111 | conn_0 | True    | drop table if exists test2  | success                             | schema1   |
 
-  @NORMAL
+  @NORMAL @restore_mysql_service
   Scenario: Some of datahost's writehost(with or without readhost) cannot be connectted, check metadata and query #6
+    """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1},'mysql-master2':{'start_mysql':1}}}
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
@@ -349,8 +352,11 @@ Feature: test "check full @@metadata...'"
       | test | 111111 | conn_0 | True    | drop table if exists test_two      | success | schema1 |
       | test | 111111 | conn_0 | True    | drop table if exists test_no_shard | success | schema1 |
 
-  @regression
+  @regression @restore_view
   Scenario: default schema table or sharding table contains view in part of backend database,  check metadata and query #7
+    """
+    {'restore_view':{'mysql-master1':{'db1':'view_test,view_test1'}}}
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
@@ -394,8 +400,8 @@ Feature: test "check full @@metadata...'"
       | test | 111111 | conn_0 | True    | drop table if exists test_shard        | success  | schema1 |
       | test | 111111 | conn_0 | True    | drop table if exists test_no_shard     | success  | schema1 |
 
-  @regression
-  Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadate、rload and dble.log #8
+  @regression #coz DBLE0REQ-870
+  Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadata、rload and dble.log #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
       <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
