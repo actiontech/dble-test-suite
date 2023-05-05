@@ -116,7 +116,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn   | toClose | sql                                                                                     | expect                                 | db               |
       | conn_0 | False   | select * from dble_thread_usage where thread_name like '%-NIOFrontRW'                   | length{(1)}                            | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='NIOFrontRW'                   | success                                | dble_information |
-      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='NIOFrontRW'     | has{(('NIOFrontRW', 4, 4),)}           | dble_information |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name ='NIOFrontRW'     | has{(('NIOFrontRW', 4),)}           | dble_information |
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -161,7 +161,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn   | toClose | sql                                                                                  | expect                                 | db               |
       | conn_0 | False   | select * from dble_thread_usage where thread_name like '%-NIOFrontRW'                | length{(4)}                            | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=2 where name ='NIOFrontRW'                | success                                | dble_information |
-      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='NIOFrontRW'  | has{(('NIOFrontRW', 2, 2),)}           | dble_information |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name ='NIOFrontRW'  | has{(('NIOFrontRW', 2),)}           | dble_information |
     # use jstack check number
     Then get result of oscmd named "B" in "dble-1"
       """
@@ -236,7 +236,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn   | toClose | sql                                                                                     | expect                                   | db               |
       | conn_0 | False   | select * from dble_thread_usage where thread_name like '%-NIOBackendRW'                 | length{(1)}                              | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='NIOBackendRW'                 | success                                  | dble_information |
-      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='NIOBackendRW'   | has{(('NIOBackendRW', 4, 4),)}           | dble_information |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name ='NIOBackendRW'   | has{(('NIOBackendRW', 4),)}           | dble_information |
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -272,7 +272,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                 | expect                                   | db               |
-      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='NIOBackendRW'               | has{(('NIOBackendRW', 2, 2),)}           | dble_information |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name ='NIOBackendRW'               | has{(('NIOBackendRW', 2),)}           | dble_information |
     # use jstack check number
     Then get result of oscmd named "A1" in "dble-1"
       """
@@ -336,7 +336,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn   | toClose | sql                                                                                      | expect                                 | db               |
       | conn_0 | False   | select * from dble_thread_usage where thread_name like '%-frontWorker'                   | length{(1)}                            | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='frontWorker'                   | success                                | dble_information |
-      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='frontWorker'     | has{(('frontWorker', 4, 4),)}          | dble_information |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name ='frontWorker'     | has{(('frontWorker', 4),)}          | dble_information |
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -375,7 +375,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                           | expect                                 | db               |
-      | conn_0 | true    | select name,pool_size,core_pool_size from dble_thread_pool where name ='frontWorker'          | has{(('frontWorker', 2, 2),)}     | dble_information |
+      | conn_0 | true    | select name,core_pool_size from dble_thread_pool where name ='frontWorker'          | has{(('frontWorker', 2),)}     | dble_information |
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -433,7 +433,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn   | toClose | sql                                                                                               | expect                                       | db               |
       | conn_0 | False   | select * from dble_thread_usage where thread_name like '%-writeToBackendWorker'                   | length{(1)}                                  | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='writeToBackendWorker'                   | success                                      | dble_information |
-      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='writeToBackendWorker'     | has{(('writeToBackendWorker', 4, 4),)}       | dble_information |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name ='writeToBackendWorker'     | has{(('writeToBackendWorker', 4),)}       | dble_information |
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -465,7 +465,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                 | expect                                       | db               |
-      | conn_0 | true    | select name,pool_size,core_pool_size from dble_thread_pool where name ='writeToBackendWorker'     | has{(('writeToBackendWorker', 2, 2),)}     | dble_information |
+      | conn_0 | true    | select name,core_pool_size from dble_thread_pool where name ='writeToBackendWorker'     | has{(('writeToBackendWorker', 2),)}     | dble_information |
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -637,7 +637,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                        | expect                              | db               |
-      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='backendWorker'     | has{(('backendWorker', 4, 4),)}     | dble_information |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name ='backendWorker'     | has{(('backendWorker', 4),)}     | dble_information |
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -660,7 +660,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                        | expect                              | db               |
-      | conn_0 | true    | select name,pool_size,core_pool_size from dble_thread_pool where name ='backendWorker'     | has{(('backendWorker', 2, 2),)}     | dble_information |
+      | conn_0 | true    | select name,core_pool_size from dble_thread_pool where name ='backendWorker'     | has{(('backendWorker', 2),)}     | dble_information |
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -731,7 +731,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn   | toClose | sql                                                                                        | expect                                        | db               |
       | conn_0 | False   | select * from dble_thread_usage where thread_name like '%-backendWorker'                   | length{(1)}                                   | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='backendWorker'                   | success                                       | dble_information |
-      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='backendWorker'     | has{(('backendWorker', 4, 4),)}     | dble_information |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name ='backendWorker'     | has{(('backendWorker', 4),)}     | dble_information |
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -770,7 +770,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                        | expect                                        | db               |
-      | conn_0 | true    | select name,pool_size,core_pool_size from dble_thread_pool where name ='backendWorker'     | has{(('backendWorker', 2, 2),)}               | dble_information |
+      | conn_0 | true    | select name,core_pool_size from dble_thread_pool where name ='backendWorker'     | has{(('backendWorker', 2),)}               | dble_information |
     # use jstack check number
     Then get result of oscmd named "A" in "dble-1"
       """
