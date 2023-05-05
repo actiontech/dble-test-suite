@@ -22,6 +22,8 @@ Feature: reload @@config_all -fr
       | sql            |
       | show @@backend |
     Then execute admin cmd "reload @@config_all -fr"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_B"
       | sql            |
       | show @@backend |
@@ -40,6 +42,8 @@ Feature: reload @@config_all -fr
     <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all -fr"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_C"
       | sql            |
       | show @@backend |
@@ -93,6 +97,8 @@ Feature: reload @@config_all -fr
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all -fr"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_D"
       | sql            |
       | show @@backend |
@@ -123,6 +129,8 @@ Feature: reload @@config_all -fr
     s/172.100.9.4/172.100.9.6/g
     """
     Then execute admin cmd "reload @@config_all -f -r"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_E"
       | sql            |
       | show @@backend |
