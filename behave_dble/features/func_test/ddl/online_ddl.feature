@@ -82,8 +82,8 @@ Feature: test online ddl
 #    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect          | db      | timeout |
-      | conn_1 | false   | show index from nosharding       | hasStr{ceshi1}  | schema1 | 21      |
-      | conn_1 | false   | show index from nosharding       | hasStr{index1}  | schema1 | 21      |
+      | conn_1 | false   | show index from nosharding       | hasStr{ceshi1}  | schema1 | 41      |
+      | conn_1 | false   | show index from nosharding       | hasStr{index1}  | schema1 | 41      |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
        """
        stage = LOCK
@@ -102,8 +102,8 @@ Feature: test online ddl
 #    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect           | db      | timeout |
-      | conn_1 | false   | show index from sing             | hasStr{ceshi2}   | schema1 | 21      |
-      | conn_1 | false   | show index from sing             | hasStr{index2}   | schema1 | 21      |
+      | conn_1 | false   | show index from sing             | hasStr{ceshi2}   | schema1 | 41      |
+      | conn_1 | false   | show index from sing             | hasStr{index2}   | schema1 | 41      |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
        """
        stage = LOCK
@@ -122,8 +122,8 @@ Feature: test online ddl
 #    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect           | db      | timeout |
-      | conn_1 | false   | show index from global             | hasStr{ceshi3}   | schema1 | 21      |
-      | conn_1 | false   | show index from global             | hasStr{index3}   | schema1 | 21      |
+      | conn_1 | false   | show index from global             | hasStr{ceshi3}   | schema1 | 41      |
+      | conn_1 | false   | show index from global             | hasStr{index3}   | schema1 | 41      |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
        """
        stage = LOCK
@@ -142,8 +142,8 @@ Feature: test online ddl
 #    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect           | db      | timeout |
-      | conn_1 | false   | show index from sharding2             | hasStr{ceshi4}   | schema1 | 21      |
-      | conn_1 | true    | show index from sharding2             | hasStr{index4}   | schema1 | 21      |
+      | conn_1 | false   | show index from sharding2             | hasStr{ceshi4}   | schema1 | 41      |
+      | conn_1 | true    | show index from sharding2             | hasStr{index4}   | schema1 | 41      |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
        """
        stage = LOCK
@@ -162,8 +162,8 @@ Feature: test online ddl
 #    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                             | expect         | db      | timeout |
-      | conn_3 | false   | show index from ver             | hasStr{ceshi5} | schema2 | 21      |
-      | conn_3 | true    | show index from ver             | hasStr{index5} | schema2 | 21      |
+      | conn_3 | false   | show index from ver             | hasStr{ceshi5} | schema2 | 41      |
+      | conn_3 | true    | show index from ver             | hasStr{index5} | schema2 | 41      |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
        """
        stage = LOCK
@@ -184,8 +184,8 @@ Feature: test online ddl
 #    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect              | db      | timeout |
-      | conn_1 | false   | show index from nosharding       | hasStr{aks1}        | schema1 | 21      |
-      | conn_1 | false   | show create table nosharding     | hasStr{USING HASH}  | schema1 | 21      |
+      | conn_1 | false   | show index from nosharding       | hasStr{aks1}        | schema1 | 41      |
+      | conn_1 | false   | show create table nosharding     | hasStr{USING HASH}  | schema1 | 41      |
 
     #sing table
     Given execute sqls in "dble-1" at background
@@ -198,7 +198,7 @@ Feature: test online ddl
 #    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect           | db      | timeout |
-      | conn_1 | false   | show index from sing             | hasStr{aks2}     | schema1 | 21      |
+      | conn_1 | false   | show index from sing             | hasStr{aks2}     | schema1 | 41      |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
        """
        stage = LOCK
@@ -215,7 +215,7 @@ Feature: test online ddl
 #    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect         | db      | timeout |
-      | conn_1 | false   | show index from global             | hasStr{aks3}   | schema1 | 21      |
+      | conn_1 | false   | show index from global             | hasStr{aks3}   | schema1 | 41      |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
        """
        stage = LOCK
@@ -232,7 +232,7 @@ Feature: test online ddl
 #    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect           | db      | timeout |
-      | conn_1 | true    | show index from sharding2             | hasStr{aks4}     | schema1 | 21      |
+      | conn_1 | true    | show index from sharding2             | hasStr{aks4}     | schema1 | 41      |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
        """
        stage = LOCK
@@ -249,7 +249,7 @@ Feature: test online ddl
 #    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                             | expect         | db      | timeout |
-      | conn_3 | true    | show index from ver             | hasStr{aks5}   | schema2 | 21      |
+      | conn_3 | true    | show index from ver             | hasStr{aks5}   | schema2 | 41      |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
        """
        stage = LOCK
