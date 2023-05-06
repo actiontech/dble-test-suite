@@ -82,13 +82,9 @@ Feature: case about load data batch
         | conn_0 | False   | reload @@load_data.num = 500                               | dble_information  |
         | conn_0 | False   | reload @@load_data.num = 5000                              | dble_information  |
         | conn_0 | False   | reload @@load_data.num = 50000                             | dble_information  |
-      Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
-        | conn   | toClose  | sql                                                                                                                   | db               |
-        | conn_0 | true     | select * from dble_information.dble_variables where variable_name in ('enableBatchLoadData','maxRowSizeToFile')       | dble_information |
-      Then check resultset "B" has lines with following column values
-        | variable_name-0         | variable_value-1 |
-        | maxRowSizeToFile        | 50000            |
-        | enableBatchLoadData     | true             |
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                                             | expect                                                        | db                |
+      | conn_0 | True    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableBatchLoadData','maxRowSizeToFile')      | has{(('maxRowSizeToFile', '50000'), ('enableBatchLoadData', 'true'),)}  | dble_information  |
       Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
       """
       enableBatchLoadData=1
@@ -97,13 +93,9 @@ Feature: case about load data batch
 
       #CASE after changing load_data.num,then execute disable @@load_data_batch and check the status
       Then execute admin cmd "disable @@load_data_batch"
-      Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
-        | conn   | toClose  | sql                                                                                                                   | db               |
-        | conn_0 | true     | select * from dble_information.dble_variables where variable_name in ('enableBatchLoadData','maxRowSizeToFile')       | dble_information |
-      Then check resultset "C" has lines with following column values
-        | variable_name-0         | variable_value-1 |
-        | maxRowSizeToFile        | 50000            |
-        | enableBatchLoadData     | false            |
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                                             | expect                                                        | db                |
+      | conn_0 | True    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableBatchLoadData','maxRowSizeToFile')      | has{(('maxRowSizeToFile', '50000'), ('enableBatchLoadData', 'false'),)}  | dble_information  |
       Then execute admin cmd "reload @@load_data.num=60000"
       Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
       """
@@ -111,13 +103,11 @@ Feature: case about load data batch
       maxRowSizeToFile=60000
       """
       Given restart dble in "dble-1" success
-      Given execute single sql in "dble-1" in "admin" mode and save resultset in "D"
-        | conn   | toClose  | sql                                                                                                                   | db               |
-        | conn_1 | true     | select * from dble_information.dble_variables where variable_name in ('enableBatchLoadData','maxRowSizeToFile')       | dble_information |
-      Then check resultset "D" has lines with following column values
-        | variable_name-0         | variable_value-1 |
-        | maxRowSizeToFile        | 60000            |
-        | enableBatchLoadData     | false            |
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                                             | expect                                                        | db                |
+      | conn_0 | True    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableBatchLoadData','maxRowSizeToFile')      | has{(('maxRowSizeToFile', '60000'), ('enableBatchLoadData', 'false'),)}  | dble_information  |
+
+
   @btrace
   Scenario: test with Btrace script to check file slice is right     #3
     #Preparation: Create test file and table  for loading data
@@ -141,13 +131,9 @@ Feature: case about load data batch
 
     Then execute admin cmd "enable @@load_data_batch"
     Then execute admin cmd "reload @@load_data.num=2"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
-      | conn   | toClose   | sql                                                                                                                   | db               |
-      | conn_0 | true      | select * from dble_information.dble_variables where variable_name in ('enableBatchLoadData','maxRowSizeToFile')       | dble_information |
-    Then check resultset "A" has lines with following column values
-      | variable_name-0         | variable_value-1 |
-      | maxRowSizeToFile        | 2                |
-      | enableBatchLoadData     | true             |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                                             | expect                                                        | db                |
+      | conn_0 | True    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableBatchLoadData','maxRowSizeToFile')      | has{(('maxRowSizeToFile', '2'), ('enableBatchLoadData', 'true'),)}  | dble_information  |
 
     #CASE1:  execute load data  with Btrace script to check file slice is right
     Given delete file "/opt/dble/BtraceAboutLoadDataBatch.java" on "dble-1"
@@ -163,6 +149,10 @@ Feature: case about load data batch
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose   | sql                                                                                                                       |  db      |
       | conn_0 | true      | load data infile '/opt/dble/data.txt' into table schema1.sharding_2_t1 fields terminated by ',' lines terminated by '\n'  |  schema1 |
+    Then check btrace "BtraceAboutLoadDataBatch.java" output in "dble-1" with "1" times
+    """
+    get into delayBeforeLoadData
+    """
     Given sleep "2" seconds
     Then check path "/opt/dble/temp/file" in "dble-1" should exist
     Then check following "Y" exist in dir "/opt/dble/temp/file" in "dble-1"
@@ -196,6 +186,10 @@ Feature: case about load data batch
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose   | sql                                                                                                                       |  db      |
       | conn_0 | true      | load data infile '/opt/dble/data.txt' into table schema1.test fields terminated by ',' lines terminated by '\n'           |  schema1 |
+    Then check btrace "BtraceAboutLoadDataBatch.java" output in "dble-1" with "2" times
+    """
+    get into delayBeforeLoadData
+    """
     Given sleep "2" seconds
     Then check path "/opt/dble/temp/file" in "dble-1" should exist
     Then check following "Y" exist in dir "/opt/dble/temp/file" in "dble-1"
@@ -242,6 +236,10 @@ Feature: case about load data batch
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose   | sql                                                                                                                       |  db      |
       | conn_0 | true      | load data infile '/opt/dble/data.txt' into table schema1.test1 fields terminated by ',' lines terminated by '\n'          |  schema1 |
+    Then check btrace "BtraceAboutLoadDataBatch.java" output in "dble-1" with "3" times
+    """
+    get into delayBeforeLoadData
+    """
     Given sleep "2" seconds
     Then check path "/opt/dble/temp/file" in "dble-1" should exist
     Then check following "Y" exist in dir "/opt/dble/temp/file" in "dble-1"
