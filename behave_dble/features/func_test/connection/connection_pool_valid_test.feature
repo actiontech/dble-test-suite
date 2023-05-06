@@ -196,14 +196,23 @@ Feature: test connection pool
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="3" primary="true">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="4" primary="true">
              <property name="testOnCreate">true</property>
              <property name="connectionHeartbeatTimeout">2000</property>
              <property name="timeBetweenEvictionRunsMillis">180000</property>
+             <property name="heartbeatPeriodMillis">180000</property>
         </dbInstance>
      </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
+    #等待reload结束及连接建立完成
+    Given sleep "2" seconds
+    #kill掉多余minCon的连接
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_1"
+      | conn   | toClose | sql                                                                                                                                      | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'    | success       | dble_information  |
+    Then kill the redundant connections if "rs_1" is more then expect value "4" in "mysql-master1"
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                    | expect      | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                     | success     | schema1 |
