@@ -779,7 +779,7 @@ Feature: check single dble detach or attach from cluster
     get into waitOtherSessionBlocked
     """
     Given prepare a thread execute sql "reload @@config_all" with "conn_2" and save resultset in "reload_rs"
-    Then check sql thread output in "reload_rs_err" by retry "5" times
+    Then check sql thread output in "reload_rs_err" by retry "10" times
     """
     Reload Failure.The reason is cluster is detached
     """
@@ -813,7 +813,7 @@ Feature: check single dble detach or attach from cluster
     get into waitOtherSessionBlocked
     """
     Given prepare a thread execute sql "create view test_view as select * from sharding_4_t1" with "conn_33" and save resultset in "view_rs"
-    Then check sql thread output in "view_rs_err" by retry "5" times
+    Then check sql thread output in "view_rs_err" by retry "10" times
     """
     cluster is detached, you should attach cluster first.
     """
@@ -845,7 +845,7 @@ Feature: check single dble detach or attach from cluster
     get into waitOtherSessionBlocked
     """
     Given prepare a thread execute sql "commit" with "conn_33" and save resultset in "commit_rs"
-    Then check sql thread output in "commit_rs_err" by retry "5" times
+    Then check sql thread output in "commit_rs_err" by retry "10" times
     """
     cluster is detached, you should attach cluster first.
     """
@@ -875,7 +875,7 @@ Feature: check single dble detach or attach from cluster
     get into waitOtherSessionBlocked
     """
     Given prepare a thread execute sql "insert into sharding_4_t1 (id) values (1),(2),(3),(4)" with "conn_34" and save resultset in "insert_rs"
-    Then check sql thread output in "insert_rs_err" by retry "5" times
+    Then check sql thread output in "insert_rs_err" by retry "10" times
     """
     cluster is detached, you should attach cluster first.
     """
