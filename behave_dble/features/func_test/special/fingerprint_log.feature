@@ -154,11 +154,10 @@ Feature: check fingerprint log
     INFO.*execute manager cmd from .*172.100.9.8.*/\*# dbGroup=switch \*/dbGroup @@switch name='ha_group2' master='hostM2'
     """
 
-  @restore_global_setting @stop_tcpdump
+  @restore_global_setting
   Scenario: check fingerprint on client side #2
     """
     {'restore_global_setting':{'mysql-master2':{'general_log':0},'mysql-master1':{'general_log':0},'mysql-slave1':{'general_log':0}}}
-    {'stop_tcpdump':'dble-1'}
     """
     Given delete all backend mysql tables
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -167,11 +166,6 @@ Feature: check fingerprint log
     $a -DinstanceName=instance-test
     """
     Then restart dble in "dble-1" success
-    #安装tcpdump并启动抓包
-    Given prepare a thread to run tcpdump in "dble-1"
-     """
-     tcpdump -w /tmp/tcpdump.log
-     """
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-slave1"
     Given turn on general log in "mysql-master2"
@@ -235,4 +229,3 @@ Feature: check fingerprint log
     Given turn off general log in "mysql-master2"
     Given turn off general log in "mysql-master1"
     Given turn off general log in "mysql-slave1"
-    Given stop and destroy tcpdump threads list in "dble-1"
