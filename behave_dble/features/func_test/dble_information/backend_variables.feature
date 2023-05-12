@@ -182,11 +182,11 @@ Feature:  backend_variables test
     $a -Dcharset=latin1
     """
     Given Restart dble in "dble-1" success
-    ###根据minCon="4" 加一根心跳 backend_connections总数5   backend_variables=5*8
+    ###根据minCon="4" 加一根心跳 backend_connections总数5   backend_variables=5*6
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                               | expect       | db               | timeout |
       | conn_0 | False   | select * from backend_connections | length{(5)}  | dble_information | 10,3    |
-      | conn_0 | False   | select * from backend_variables   | length{(40)} | dble_information | 10,3    |
+      | conn_0 | False   | select * from backend_variables   | length{(30)} | dble_information | 10,3    |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                      | expect          |
