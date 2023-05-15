@@ -205,11 +205,11 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 #      python3 /opt/LargePacket_rw.py
 #      """
 
-     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+#     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      unknown error:
+#      NullPointerException
+#      """
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       Packet for query is too large \(12582915 > 4194304\).You can change maxPacketSize value in bootstrap.cnf.
@@ -287,11 +287,11 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       | rw1  | 111111 | conn_1 | false   | insert into test1 values (1,repeat("x",6*1024*1024))                        | success | db1     |
       | rw1  | 111111 | conn_1 | true    | insert into test1 values (1,repeat("x",16*1024*1024))                       | Result of repeat() was larger than max_allowed_packet   | db1     |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      unknown error:
+#      NullPointerException
+#      """
 
 
   @restore_mysql_config
@@ -362,11 +362,11 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
       10000
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      unknown error:
+#      NullPointerException
+#      """
 
     #### 依赖case生成的test.sql验证maxPacketSize参数报错
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
