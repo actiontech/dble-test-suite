@@ -63,18 +63,18 @@ Feature: test connection pool
       | conn_0 | True    | select * from backend_connections where state='IDLE' and used_for_heartbeat='false' and db_instance_name='M1'    | dble_information |
     Then get index:"0" column value of "select local_port from dble_information.backend_connections where db_instance_name='M1' and used_for_heartbeat='false' and state='IDLE'" named as "local_port_1"
     #simulate the rest connection's network was broken
-    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
-    Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
+    Given delete file "/opt/dble/BtraceConnectionPing.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceConnectionPing.java.log" on "dble-1"
+    Given update file content "./assets/BtraceConnectionPing.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
     /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
-    Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given prepare a thread run btrace script "BtraceConnectionPing.java" in "dble-1"
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                  | db      |
       | conn_3 | True    | select * from sharding_4_t1 where id=2          | schema1 |
-    Then check btrace "BtraceAboutConnection.java" output in "dble-1" with "1" times
+    Then check btrace "BtraceConnectionPing.java" output in "dble-1" with "1" times
     """
     sending ping signal
     """
@@ -88,7 +88,7 @@ Feature: test connection pool
     """
     ERROR
     """
-    Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given stop btrace script "BtraceConnectionPing.java" in "dble-1"
     Given destroy btrace threads list
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_B"
       | conn   | toClose | sql                                                                                                                             | db                 |
@@ -105,8 +105,8 @@ Feature: test connection pool
     """
     2	2
     """
-    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
+    Given delete file "/opt/dble/BtraceConnectionPing.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceConnectionPing.java.log" on "dble-1"
 
   @NORMAL @btrace @restore_network
   Scenario: test connection param "testOnReturn"  #3
@@ -137,18 +137,18 @@ Feature: test connection pool
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_A"
       | conn   | toClose | sql                                                                                                                            | db               |
       | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false' and db_instance_name='M1'   | dble_information |
-    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
-    Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
+    Given delete file "/opt/dble/BtraceConnectionPing.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceConnectionPing.java.log" on "dble-1"
+    Given update file content "./assets/BtraceConnectionPing.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
     /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
-    Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given prepare a thread run btrace script "BtraceConnectionPing.java" in "dble-1"
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                  | db      |
       | conn_3 | True    | insert into sharding_4_t1 values(4,4)           | schema1 |
-    Then check btrace "BtraceAboutConnection.java" output in "dble-1" with "1" times
+    Then check btrace "BtraceConnectionPing.java" output in "dble-1" with "1" times
     """
     sending ping signal
     """
@@ -165,13 +165,13 @@ Feature: test connection pool
     """
     ERROR
     """
-    Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given stop btrace script "BtraceConnectionPing.java" in "dble-1"
     Given destroy btrace threads list
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                           | expect                    | db      |
       | conn_0 | True    | select * from sharding_4_t1                | has{((2,'2'),(4,'4'),)} | schema1 |
-    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
+    Given delete file "/opt/dble/BtraceConnectionPing.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceConnectionPing.java.log" on "dble-1"
 
   @NORMAL @btrace @restore_network
   Scenario: test connection param "testOnCreate"  #4
@@ -209,18 +209,18 @@ Feature: test connection pool
       | conn_2 | False   | begin                                                  | success     | schema1 |
       | conn_2 | False   | select * from sharding_4_t1                            | success     | schema1 |
     #simulate the rest connection's network was broken
-    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
-    Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
+    Given delete file "/opt/dble/BtraceConnectionPing.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceConnectionPing.java.log" on "dble-1"
+    Given update file content "./assets/BtraceConnectionPing.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
     /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
-    Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given prepare a thread run btrace script "BtraceConnectionPing.java" in "dble-1"
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                  | db      |
       | conn_3 | True    | insert into sharding_4_t1 values(4,4)           | schema1 |
-    Then check btrace "BtraceAboutConnection.java" output in "dble-1" with "1" times
+    Then check btrace "BtraceConnectionPing.java" output in "dble-1" with "1" times
     """
     sending ping signal
     """
@@ -236,7 +236,7 @@ Feature: test connection pool
     """
     ERROR
     """
-   Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
+   Given stop btrace script "BtraceConnectionPing.java" in "dble-1"
    Given destroy btrace threads list
    #create a new connection to execute sql and then release
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_A"
@@ -245,8 +245,8 @@ Feature: test connection pool
    Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                           | expect                    | db      |
       | conn_0 | True    | select * from sharding_4_t1                | has{((2,'2'),(4,'4'),)} | schema1 |
-   Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-   Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
+   Given delete file "/opt/dble/BtraceConnectionPing.java" on "dble-1"
+   Given delete file "/opt/dble/BtraceConnectionPing.java.log" on "dble-1"
 
   @NORMAL @auto_retry
   Scenario: test connection param "testWhileIdle"  #5
@@ -301,14 +301,14 @@ Feature: test connection pool
       | conn   | toClose | sql                                                              | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                           | success | schema1 |
       | conn_0 | True    | create table sharding_4_t1(id int,name varchar(20))        | success | schema1 |
-    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
-    Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
+    Given delete file "/opt/dble/BtraceConnectionPing.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceConnectionPing.java.log" on "dble-1"
+    Given update file content "./assets/BtraceConnectionPing.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
     /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
-    Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given prepare a thread run btrace script "BtraceConnectionPing.java" in "dble-1"
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                     | db      |
       | conn_3 | False   | insert into sharding_4_t1 values(4,4)                          | schema1 |
@@ -321,10 +321,10 @@ Feature: test connection pool
     """
     Connection is not available, request timed out after
     """
-   Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
+   Given stop btrace script "BtraceConnectionPing.java" in "dble-1"
    Given destroy btrace threads list
-   Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-   Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
+   Given delete file "/opt/dble/BtraceConnectionPing.java" on "dble-1"
+   Given delete file "/opt/dble/BtraceConnectionPing.java.log" on "dble-1"
 
   @CRITICAL @restore_global_setting
   Scenario: test reuse connection  #7
