@@ -176,9 +176,23 @@ Feature:  backend_connections test
 
 
   @btrace
-  Scenario: check backend connection status #2
+  Scenario: check backend connection status = EVICT #2
+    # dble中连接的状态和值的对应关系为：STATE_REMOVED = -4、STATE_HEARTBEAT = -3、STATE_RESERVED = -2、STATE_IN_USE = -1、INITIAL = 0、STATE_NOT_IN_USE = 1
+    # 执行commit的时候，从-1变成1；在扩缩容时，从1变成-2
+    Given delete the following xml segment
+      | file         | parent         | child                  |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+     """
+     <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+     </schema>
 
-    #state = EVICT
+     <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+     <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
+     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -189,55 +203,51 @@ Feature:  backend_connections test
              <property name="timeBetweenEvictionRunsMillis">10000</property>
         </dbInstance>
      </dbGroup>
-
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="20" minCon="4" primary="true">
-             <property name="idleTimeout">8000</property>
-        </dbInstance>
-    </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
+    #sleep 2s，等待所有连接回收及新建成功
+    Given sleep "2" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_1"
+      | conn   | toClose | sql                                                                                                                                      | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'    | success       | dble_information  |
+    Then kill the redundant connections if "rs_1" is more then expect value "4" in "mysql-master1"
+    #建立多余minCon的连接，使缩容时会回收多余minCon的连接
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect                     | db      |
-      | conn_0 | False   | drop table if exists sharding_4_t1                        | success                    | schema1 |
-      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))       | success                    | schema1 |
-      | conn_0 | True    | insert into sharding_4_t1 values(2,2)                     | success                    | schema1 |
+      | conn_0 | False   | drop table if exists sharding_2_t1                        | success                    | schema1 |
+      | conn_0 | False   | create table sharding_2_t1(id int,name varchar(20))       | success                    | schema1 |
+      | conn_0 | True    | insert into sharding_2_t1 values(2,2)                     | success                    | schema1 |
       | conn_1 | False   | begin                                                     | success                    | schema1 |
-      | conn_1 | False   | select * from sharding_4_t1                               | success                    | schema1 |
+      | conn_1 | False   | select * from sharding_2_t1                               | success                    | schema1 |
       | conn_2 | False   | begin                                                     | success                    | schema1 |
-      | conn_2 | False   | select * from sharding_4_t1                               | success                    | schema1 |
+      | conn_2 | False   | select * from sharding_2_t1                               | success                    | schema1 |
       | conn_3 | False   | begin                                                     | success                    | schema1 |
-      | conn_3 | False   | select * from sharding_4_t1                               | success                    | schema1 |
-      | conn_4 | False   | begin                                                     | success                    | schema1 |
-      | conn_4 | False   | select * from sharding_4_t1                               | success                    | schema1 |
-      | conn_5 | False   | begin                                                     | success                    | schema1 |
-      | conn_5 | False   | select * from sharding_4_t1                               | success                    | schema1 |
+      | conn_3 | False   | select * from sharding_2_t1                               | success                    | schema1 |
       | conn_1 | False   | commit                                                    | success                    | schema1 |
       | conn_2 | False   | commit                                                    | success                    | schema1 |
       | conn_3 | False   | commit                                                    | success                    | schema1 |
-      | conn_4 | False   | commit                                                    | success                    | schema1 |
-      | conn_5 | False   | commit                                                    | success                    | schema1 |
+    #重试多次，使commit完成
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                             | expect         | db                | timeout |
-      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'      | has{((20,),)}  | dble_information  | 10      |
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle'             | length{(6)}    | dble_information  | 10      |
     # 连接状态改变时都会调用此方法，-2表示连接状态变为回收的
+    # 1、在连接被释放回连接池的时候会调用 -- 外层操作：commit，从-1变为1
+    # 2、还会在连接关闭的时候操作，-- 定时缩容时，从1变为-2
     Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
         """
         s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
-        /compareAndSet/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+        /compareAndSet/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
         """
-    #桩开启时间过久会导致连接已idle timeout
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
-    #sleep 10s to wait connections idle timeout and into scaling period
-    Given sleep "10" seconds
+    # timeBetweenEvictionRunsMillis <= wait time <= timeBetweenEvictionRunsMillis + idleTimeout
     Then check btrace "BtraceAboutConnection.java" output in "dble-1"
       """
         get into compareAndSet
       """
+    #重试直至桩结束
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                 | expect        | db                | timeout |
-      | conn_0 | false   | select * from backend_connections where remote_addr="172.100.9.5" and state="EVICT" and used_for_heartbeat='false'  | length{(1)}   | dble_information  | 15      |
+      | conn_0 | false   | select * from backend_connections where remote_addr="172.100.9.5" and state="EVICT" and used_for_heartbeat='false'  | length{(1)}   | dble_information  | 8       |
     Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
@@ -245,12 +255,13 @@ Feature:  backend_connections test
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                 | expect         | db                | timeout |
-      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'                          | has{((14,),)}  | dble_information  | 20      |
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle'                                 | length{(4)}    | dble_information  | 8      |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                                                 | expect        | db                |
-      | conn_0 | true    | drop table if exists sharding_4_t1                                                                                  | success       | schema1           |
+      | conn   | toClose | sql                                                                                                                 | expect                       | db                | timeout |
+      | conn_0 | true    | drop table if exists sharding_2_t1                                                                                  | success                      | schema1           |         |
 
-    # state = HEARTBEAT CHECK
+  @btrace
+  Scenario: check backend connection status = HEARTBEAT CHECK #3
     Given delete the following xml segment
       | file         | parent         | child                  |
       | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
@@ -265,13 +276,16 @@ Feature:  backend_connections test
      <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
      <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
      """
-    # testWhileIdle为true，对所有空闲连接，发送ping命令探测连接有效性
+    # testWhileIdle为true，对所有空闲连接，发送ping命令探测连接有效性，检测的周期为timeBetweenEvictionRunsMillis
+    # 同一个 connection pool里的连接串行调用 ping这个 api，但下发可能还是并行的
+    # 如果测试空闲连接，但是超过了connectionHeartbeatTimeout还没返回就报错
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
         <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="2" primary="true">
                  <property name="testWhileIdle">true</property>
+                 <property name="connectionHeartbeatTimeout">180000</property>
                  <property name="timeBetweenEvictionRunsMillis">3000</property>
             </dbInstance>
         </dbGroup>
@@ -279,28 +293,24 @@ Feature:  backend_connections test
     Given execute admin cmd "reload @@config_all" success
     #sleep 2s，等待所有连接回收及新建成功
     Given sleep "2" seconds
-    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
-    Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
+    Given delete file "/opt/dble/BtraceConnectionPing.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceConnectionPing.java.log" on "dble-1"
+    Given update file content "./assets/BtraceConnectionPing.java" in "behave" with sed cmds
         """
         s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
         /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
         """
-    #开启桩之前先查询连接池信息
-    Given execute sql in "dble-1" in "admin" mode
-     | conn   | toClose | sql                                                                                               | expect         | db               |
-     | conn_0 | false   | select * from backend_connections where remote_addr="172.100.9.5" and used_for_heartbeat="false"  | success        | dble_information |
-    Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given prepare a thread run btrace script "BtraceConnectionPing.java" in "dble-1"
 
     # sleep time > timeBetweenEvictionRunsMillis = 3
-    Then check btrace "BtraceAboutConnection.java" output in "dble-1"
+    Then check btrace "BtraceConnectionPing.java" output in "dble-1"
     """
         sending ping signal
     """
     Given execute sql in "dble-1" in "admin" mode
   | conn   | toClose | sql                                                                                                                            | expect             | db               | timeout |
   | conn_0 | true    | select * from backend_connections where remote_addr="172.100.9.5" and used_for_heartbeat="false" and state="HEARTBEAT CHECK"   | length{(1)}        | dble_information | 8       |
-    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
-    Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given delete file "/opt/dble/BtraceConnectionPing.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceConnectionPing.java.log" on "dble-1"
+    Given stop btrace script "BtraceConnectionPing.java" in "dble-1"
     Given destroy btrace threads list
