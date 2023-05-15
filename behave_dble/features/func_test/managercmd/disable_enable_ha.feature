@@ -148,7 +148,9 @@ Feature: test high-availability related commands
       | conn   | toClose  | sql                                                                        | expect   | db      |
       | conn_1 | False    | drop table if exists test_table;create table test_table(id int)            | success  | schema1 |
 
+    Then execute admin cmd "dbGroup @@disable name = 'ha_group2'"
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master='slave1'"
+    Then execute admin cmd "dbGroup @@enable name = 'ha_group2'"
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                      | expect   | db       |
@@ -232,6 +234,8 @@ Feature: test high-availability related commands
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
+      <managerUser name="root" password="111111"/>
+      <shardingUser name="test" password="111111" schemas="schema1"/>
       <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
       """
     Then execute admin cmd "reload @@config"
@@ -247,7 +251,9 @@ Feature: test high-availability related commands
     Then check general log in host "mysql-master2" has "insert into test1 values(1)"
     Then check general log in host "mysql-slave1" has not "insert into test1 values(1)"
 
+    Then execute admin cmd "dbGroup @@disable name = 'ha_group3'"
     Then execute admin cmd "dbGroup @@switch name = 'ha_group3' master='slave1'"
+    Then execute admin cmd "dbGroup @@enable name = 'ha_group3'"
 
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                           | expect  | db      |
