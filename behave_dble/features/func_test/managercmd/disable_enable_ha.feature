@@ -153,8 +153,8 @@ Feature: test high-availability related commands
     Then execute admin cmd "dbGroup @@enable name = 'ha_group2'"
 
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                      | expect   | db       |
-      | conn_1 | False    | set autocommit = 0;insert into test_table values (1)     | success  | schema1  |
+      | conn   | toClose  | sql                                                      | expect   | db       | timeout |
+      | conn_1 | False    | set autocommit = 0;insert into test_table values (1)     | success  | schema1  | 10,3    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect       |
       | conn_0 | False    | show @@session   | length{(1)}  |
@@ -256,8 +256,8 @@ Feature: test high-availability related commands
     Then execute admin cmd "dbGroup @@enable name = 'ha_group3'"
 
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                           | expect  | db      |
-      | rw1  | 111111 | conn_1 | False   | /*!dble:db_type=master */ insert into test1 values(3)         | success | db1     |
+      | user | passwd | conn   | toClose | sql                                                           | expect  | db      | timeout |
+      | rw1  | 111111 | conn_1 | False   | /*!dble:db_type=master */ insert into test1 values(3)         | success | db1     | 10,3    |
 
     Then check general log in host "mysql-master2" has not "insert into test1 values(3)"
     Then check general log in host "mysql-slave1" has "insert into test1 values(3)"
