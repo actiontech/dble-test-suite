@@ -153,11 +153,17 @@ def start_dble_in_node(context, node, expect_success=True):
         ssh_client.exec_command(cmd)
 
         check_dble_started(context, node)
-        cmd2 = "cat /opt/dble/logs/wrapper.log"
-        rc2, sto2, ste2 = node.ssh_conn.exec_command(cmd2)
-        cmd3 = "free -h && cat /proc/loadavg"
-        rc3, sto3, ste3 = node.ssh_conn.exec_command(cmd3)
-        assert_that(context.dble_start_success == expect_success, "Expect restart dble {0} success {1},but wrapper log is\n{2} ,\n\nthe:'{3}' :\n{4}".format(node.host_name, expect_success, sto2, cmd3, sto3))
+
+        if context.dble_start_success != expect_success:
+            cmd2 = "cat /opt/dble/logs/wrapper.log"
+            rc2, sto2, ste2 = node.ssh_conn.exec_command(cmd2)
+            assert_that(len(ste2) == 0, "cat /opt/dble/logs/wrapper.log failed for: {0}".format(ste2))
+
+            cmd3 = "free -h && cat /proc/loadavg"
+            rc3, sto3, ste3 = node.ssh_conn.exec_command(cmd3)
+            assert_that(len(ste3) == 0, "free -h && cat /proc/loadavg failed for: {0}".format(ste3))
+
+            assert_that(context.dble_start_success == expect_success, "Expect restart dble {0} success {1},but wrapper log is\n{2} ,\n\nthe:'{3}' :\n{4}".format(node.host_name, expect_success, sto2, cmd3, sto3))
 
         if not expect_success:
             expect_err_info = context.text.strip()
