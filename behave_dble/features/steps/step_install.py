@@ -189,7 +189,7 @@ def check_dble_started(context, node):
     cmd = "cat /opt/dble/logs/wrapper.log"
     rc, sto, ste = node.ssh_conn.exec_command(cmd)
     ###当wrapper.log已经告知有参数配置错误导致dble启动失败了，就不去循环5次判断dble已经完全启动成功
-    if "Wrapper Stopped" in sto:
+    if "Wrapper Stopped" in sto[-50:]:
         LOGGER.debug("dble restart failed coz config wrapper.log:\n{0}".format(sto))
         return
 
