@@ -7,6 +7,70 @@ Feature: test rwStickyTime on rwSplit mode
   #about http://10.186.18.11/jira/browse/DBLE0REQ-1305
 
 
+  Scenario: test rwStickyTime parameters  #1
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      $a -DrwStickyTime=99.99
+      """
+    Then restart dble in "dble-1" failed for
+      """
+      property \[ rwStickyTime \] '99.99' data type should be long
+      """
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      s/-DrwStickyTime=99.99/-DrwStickyTime=-199/
+      """
+    Then restart dble in "dble-1" failed for
+      """
+      Property \[ rwStickyTime \] '-199' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
+      """
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      s/-DrwStickyTime=-199/-DrwStickyTime=abc/
+      """
+    Then restart dble in "dble-1" failed for
+      """
+      property \[ rwStickyTime \] 'abc' data type should be long
+      """
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      s/-DrwStickyTime=abc/-DrwStickyTime=null/
+      """
+    Then restart dble in "dble-1" failed for
+      """
+      property \[ rwStickyTime \] 'null' data type should be long
+      """
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      s/-DrwStickyTime=null/-DrwStickyTime=/
+      """
+    Then restart dble in "dble-1" failed for
+      """
+      property \[ rwStickyTime \] '' data type should be long
+      """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      s/-DrwStickyTime=/-DrwStickyTime=@/
+      """
+    Then restart dble in "dble-1" failed for
+      """
+      property \[ rwStickyTime \] '@' data type should be long
+      """
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      /-DrwStickyTime/d
+      """
+    Then restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                       | expect                  | db               |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('1000ms',),)}     | dble_information |
+
+
   @restore_global_setting
   Scenario: test rwStickyTime when db.xml rwSplitMode="0"  #1
     """
@@ -140,70 +204,6 @@ Feature: test rwStickyTime on rwSplit mode
        """
        because in the sticky time range，so select write instance
        """
-
-###########invalid data
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=0/-DrwStickyTime=99.99/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] '99.99' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=99.99/-DrwStickyTime=-199/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      Property \[ rwStickyTime \] '-199' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=-199/-DrwStickyTime=abc/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] 'abc' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=abc/-DrwStickyTime=null/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] 'null' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=null/-DrwStickyTime=/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] '' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=/-DrwStickyTime=@/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] '@' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      /-DrwStickyTime/d
-      """
-    Then restart dble in "dble-1" success
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                       | expect                  | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('1000ms',),)}     | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                       | expect  | db     |
       | rwS1 | 111111 | conn_0 | False   | drop table if exists testtb               | success | testdb |
@@ -380,70 +380,6 @@ Feature: test rwStickyTime on rwSplit mode
       | key                                                   | occur_times |
       | because in the sticky time range                      | 0           |
 
-
-###########invalid data
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=0/-DrwStickyTime=9.99/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] '9.99' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=9.99/-DrwStickyTime=-19/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      Property \[ rwStickyTime \] '-19' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=-19/-DrwStickyTime=abcd/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] 'abcd' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=abcd/-DrwStickyTime=null/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] 'null' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=null/-DrwStickyTime=/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] '' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=/-DrwStickyTime=@@/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] '@@' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      /-DrwStickyTime/d
-      """
-    Then restart dble in "dble-1" success
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                       | expect                   | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('1000ms',),)}      | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                       | expect  | db     |
       | rwS1 | 111111 | conn_0 | False   | drop table if exists testtb               | success | testdb |
@@ -611,69 +547,6 @@ Feature: test rwStickyTime on rwSplit mode
       | key                                                   | occur_times |
       | because in the sticky time range                      | 0           |
 
-##########invalid data
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=0/-DrwStickyTime=9.9/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] '9.9' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=9.9/-DrwStickyTime=-190/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      Property \[ rwStickyTime \] '-190' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=-190/-DrwStickyTime=abcde/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] 'abcde' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=abcde/-DrwStickyTime=null/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] 'null' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=null/-DrwStickyTime=/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] '' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=/-DrwStickyTime=@@@/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] '@@@' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      /-DrwStickyTime/d
-      """
-    Then restart dble in "dble-1" success
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                       | expect                   | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('1000ms',),)}      | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                       | expect  | db     |
       | rwS1 | 111111 | conn_0 | False   | drop table if exists testtb               | success | testdb |
@@ -851,71 +724,6 @@ Feature: test rwStickyTime on rwSplit mode
     Then check the occur times of following key in file "/opt/dble/logs/dble.log" after line "log_num_4" in "dble-1"
       | key                                                   | occur_times |
       | because in the sticky time range                      | 0           |
-
-
-###########invalid data
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=0/-DrwStickyTime=9.99/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] '9.99' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=9.99/-DrwStickyTime=-19/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      Property \[ rwStickyTime \] '-19' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=-19/-DrwStickyTime=abcd/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] 'abcd' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=abcd/-DrwStickyTime=null/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] 'null' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=null/-DrwStickyTime=/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] '' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-DrwStickyTime=/-DrwStickyTime=@@/
-      """
-    Then restart dble in "dble-1" failed for
-      """
-      property \[ rwStickyTime \] '@@' data type should be long
-      """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      /-DrwStickyTime/d
-      """
-    Then restart dble in "dble-1" success
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                       | expect                   | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name = 'rwStickyTime'            | has{(('1000ms',),)}      | dble_information |
 
 
 
@@ -1129,16 +937,3 @@ Feature: test rwStickyTime on rwSplit mode
       | user | passwd | conn   | toClose | sql                                       | expect  | db     |
       | rwS1 | 111111 | conn_0 | False   | drop table if exists testtb               | success | testdb |
       | rwS1 | 111111 | conn_0 | true    | drop database if exists testdb            | success |        |
-
-
-
-
-
-
-
-
-
-
-
-
-
