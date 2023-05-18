@@ -94,7 +94,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     # 不同环境默认值不同，可能导致案例失败， 如 backendProcessorExecutor，backendProcessors 默认值为宿主机核数
     Then restart dble in "dble-1" failed for
       """
-      sequenceHandlerType value is 20, it will use default value:2
+      sequenceHandlerType value is 20, you can use default value:2
       Property \[ autocommit \] '-3' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       Property \[ backSocketNoDelay \] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       Property \[ backSocketSoRcvbuf \] '-4194304' in bootstrap.cnf is illegal, you may need use the default value 4194304 replaced
