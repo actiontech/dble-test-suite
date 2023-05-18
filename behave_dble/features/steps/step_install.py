@@ -153,11 +153,22 @@ def start_dble_in_node(context, node, expect_success=True):
         ssh_client.exec_command(cmd)
 
         check_dble_started(context, node)
-        cmd2 = "cat /opt/dble/logs/wrapper.log"
-        rc2, sto2, ste2 = node.ssh_conn.exec_command(cmd2)
-        cmd3 = "free -h && cat /proc/loadavg"
-        rc3, sto3, ste3 = node.ssh_conn.exec_command(cmd3)
-        assert_that(context.dble_start_success == expect_success, "Expect restart dble {0} success {1},but wrapper log is\n{2} ,\n\nthe:'{3}' :\n{4}".format(node.host_name, expect_success, sto2, cmd3, sto3))
+
+        if context.dble_start_success != expect_success:
+            cmd2 = "cat /opt/dble/logs/wrapper.log"
+            rc2, sto2, ste2 = node.ssh_conn.exec_command(cmd2)
+            assert_that(len(ste2) == 0, "cat /opt/dble/logs/wrapper.log failed for: {0}".format(ste2))
+
+            cmd3 = "free -h && cat /proc/loadavg"
+            rc3, sto3, ste3 = node.ssh_conn.exec_command(cmd3)
+            assert_that(len(ste3) == 0, "free -h && cat /proc/loadavg failed for: {0}".format(ste3))
+
+            ####复制一份当时失败的 dble.pid 便于后续环境问题分析,不一定存在pid文件
+            cmd4 = "cp /opt/dble/dble.pid /opt/dble/logs/dble{}.pid".format(time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()))
+            rc4, sto4, ste4 = node.ssh_conn.exec_command(cmd4)
+            # assert_that(len(ste4) == 0, "cp failed for: {0}".format(ste4))
+
+            assert_that(context.dble_start_success == expect_success, "Expect restart dble {0} success {1},but wrapper log is\n{2} ,\n\nthe:'{3}' :\n{4}".format(node.host_name, expect_success, sto2, cmd3, sto3))
 
         if not expect_success:
             expect_err_info = context.text.strip()
@@ -174,10 +185,17 @@ def check_dble_started(context, node):
         context.retry_start_dble = 0
         context.dble_start_success = False
 
+    cmd = "cat /opt/dble/logs/wrapper.log"
+    rc, sto, ste = node.ssh_conn.exec_command(cmd)
+    ###当wrapper.log已经告知有参数配置错误导致dble启动失败了，就不去循环5次判断dble已经完全启动成功
+    if "Wrapper Stopped" in sto:
+        LOGGER.debug("dble restart failed coz config wrapper.log:\n{0}".format(sto))
+        delattr(context, "retry_start_dble")
+        return
+
     dble_conn = None
     try:
-        dble_conn = DBUtil(node.ip, node.manager_user, node.manager_password, "",
-                           node.manager_port, context)
+        dble_conn = DBUtil(node.ip, node.manager_user, node.manager_password, "",node.manager_port, context)
         res, err = dble_conn.query("show @@version")
     except MySQLdb.Error as e:
         err = e.args
@@ -185,8 +203,7 @@ def check_dble_started(context, node):
         if dble_conn: dble_conn.close()
 
     context.dble_start_success = err is None
-    LOGGER.debug(
-        "dble started success:{0}, loop {1}, err:{2}".format(context.dble_start_success, context.retry_start_dble, err))
+    LOGGER.debug("dble started success:{0}, loop {1}, err:{2}".format(context.dble_start_success, context.retry_start_dble, err))
     if not context.dble_start_success:
         if context.retry_start_dble < 5:
             context.retry_start_dble = context.retry_start_dble + 1
@@ -194,8 +211,8 @@ def check_dble_started(context, node):
             check_dble_started(context, node)
         else:
             LOGGER.debug("dble started failed after 5 times try")
-            cmd = "cat /opt/dble/logs/wrapper.log"
-            rc, sto, ste = node.ssh_conn.exec_command(cmd)
+            # cmd = "cat /opt/dble/logs/wrapper.log"
+            # rc, sto, ste = node.ssh_conn.exec_command(cmd)
             LOGGER.debug("Please check the error message in wrapper.log:\n{0}".format(sto))
             delattr(context, "retry_start_dble")
     else:
