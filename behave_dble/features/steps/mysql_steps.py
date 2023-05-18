@@ -215,7 +215,7 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
             post_delegater.check_result()
             break
         except Exception as e:
-            logger.info(f"result is not out yet,retry {i} times")
+            logger.info(f"result is not out yet,retry {i+1} times")
             if i == timeout-1:
                 node = get_node(host_name)
                 if mode in ["admin", "user"]:  #print dble jstack
