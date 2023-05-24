@@ -28,7 +28,7 @@ class PostQueryCheck(object):
     def check_result(self):
         while True:
             if self._expect == "success":
-                logger.debug("sql: {0}, expect no err, but outcomes: {1}".format(self._sql, self._real_err))
+                # logger.debug("sql: {0}, expect no err, but outcomes: {1}".format(self._sql, self._real_err))
                 assert self._real_err is None, "sql: {0}, expect no err, but outcomes '{1}'".format(self._sql, self._real_err)
                 break
             dest_host = re.search(r'dest_node:(.*)', self._expect, re.I)
