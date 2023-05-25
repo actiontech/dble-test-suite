@@ -22,14 +22,14 @@ Feature: slowlog_blockage
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
+        <heartbeat errorRetryCount="0" timeout="10" >select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="4" primary="true">
             <property name="heartbeatPeriodMillis">2000</property>
         </dbInstance>
       </dbGroup>
 
       <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
+        <heartbeat errorRetryCount="0" timeout="10" >select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="100" minCon="4" primary="true">
             <property name="heartbeatPeriodMillis">2000</property>
         </dbInstance>
@@ -162,7 +162,7 @@ Feature: slowlog_blockage
       /-DprocessorExecutor=/d
       $a -Dprocessors=2
       $a -DprocessorExecutor=2
-      $a -DbackendProcessorExecutor=1
+      $a -DbackendProcessorExecutor=2
       $a -DsqlSlowTime=1
       $a -DenableSlowLog=1
       $a -DsqlSlowTime=1
@@ -170,14 +170,14 @@ Feature: slowlog_blockage
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
+        <heartbeat errorRetryCount="0" timeout="10" >select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="4" primary="true">
             <property name="heartbeatPeriodMillis">2000</property>
         </dbInstance>
       </dbGroup>
 
       <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
+        <heartbeat errorRetryCount="0" timeout="10" >select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="100" minCon="4" primary="true">
             <property name="heartbeatPeriodMillis">2000</property>
         </dbInstance>
