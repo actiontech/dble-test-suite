@@ -351,6 +351,15 @@ def step_impl(context,flag,dirname,hostname):
         else:
             assert_that(len(stdout) > 0, "expect \"{0}\" exist in dir {1},but not".format(str, dirname))
 
+@Then('check "{str}" not exist in file "{filename}" in host "{hostname}"')
+def check_npe(context,filename,str,hostname):
+    ssh = get_ssh(hostname)
+    cmd = "grep -nE '{}' {}".format(str,filename)
+    rc, stdout, stderr = ssh.exec_command(cmd)
+    assert_that(len(stderr) == 0, "oop,has some err:'{}'".format(stderr))
+    assert_that(len(stdout) == 0, "expect '{}' not exist in file '{}', but exist, \n{}".format(str,filename ,stdout))
+
+
 @Then('get id binary named "{binary_name}" from "{rs_name}" and add 0 if binary length less than 64 bits')
 def step_impl(context, binary_name, rs_name):
     binary = getattr(context, rs_name)[0][0]
