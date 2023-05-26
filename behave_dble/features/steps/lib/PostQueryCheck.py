@@ -28,7 +28,7 @@ class PostQueryCheck(object):
     def check_result(self):
         while True:
             if self._expect == "success":
-                logger.debug("sql: {0}, expect no err, but outcomes: {1}".format(self._sql, self._real_err))
+                logger.debug("sql: {0}, expect no err, but outcomes: {1}".format(self._sql[0:10240], self._real_err))
                 assert self._real_err is None, "sql: {0}, expect no err, but outcomes '{1}'".format(self._sql, self._real_err)
                 break
             dest_host = re.search(r'dest_node:(.*)', self._expect, re.I)
@@ -64,7 +64,7 @@ class PostQueryCheck(object):
                 assert_that(self._real_err is None, "sql: {0}, expect query success, but failed for '{1}'".format(self._sql, self._real_err))
                 expectRS = lengthObj.group(1)
                 logger.debug("sql: {0}, expect resultSet:{1}, length equal to real resultSet length:{2}".format(self._sql, eval(expectRS), len(self._real_res)))
-                assert_that(len(self._real_res), equal_to(eval(expectRS)), "sql:{}, resultSet: '{}' not equal to real length: '{}'.\nthe real is:\n{}".format(self._sql, eval(expectRS), len(self._real_res), self._real_res))
+                assert_that(len(self._real_res), equal_to(eval(expectRS)), "sql:{}, resultSet: '{}' not equal to real length: '{}'.\nThe real resultSet is:\n{}".format(self._sql, eval(expectRS), len(self._real_res), "\n".join(map(str, self._real_res))))
                 break
 
             length_balanceObj = re.search(r"length_balance\{(.*?)\}", self._expect, re.I)
@@ -159,7 +159,7 @@ class PostQueryCheck(object):
             for subResExpect in resExpect:
                 assert isinstance(res, list), "expect mult-resultset, but real not"
                 real = self.findFromMultiRes(res, subResExpect)
-                assert real == bHas, "expect {0} in resultset {1},\nbut realresult is {2}".format(eval(expectRS), bHas, res)
+                assert real == bHas, "expect {0} in resultset {1},\nbut realresult is {2}".format(eval(expectRS), bHas, "\n".join(map(str, res)))
         else:  # for single query resultset
             assert type(resExpect[0]) is tuple, "expect result format not expected, please check"
             resExpect_list = list(map(list, resExpect))
@@ -168,7 +168,7 @@ class PostQueryCheck(object):
                 real = realRS_list.__contains__(i)
                 if real:
                     realRS_list.remove(i)          # prevent duplication in expected results
-                assert real == bHas, "sql: '{0}', expect '{1}' is {2} in resultSet , \nbut realresult is {3}".format(self._sql, eval(expectRS), bHas, res)
+                assert real == bHas, "sql: '{0}', expect '{1}' is {2} in resultSet , \nbut realresult is \n{3}".format(self._sql, eval(expectRS), bHas, "\n".join(map(str, res)))
 
     def matchResultSet(self, res, expect, num):
         subRes_list = []
