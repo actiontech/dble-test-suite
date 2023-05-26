@@ -68,7 +68,7 @@ def step_impl(context, rs_name):
                 real_col = rs_row[col_idx]
                 isFound = str(real_col) == str(expect_col)
                 if not isFound: break
-            assert not isFound, "expect line '{}' not in resultset '{}',but '{}' is \n{}".format(expect_row, rs_name, rs_name, txt)
+            assert not isFound, "expect line '{}' not in resultset '{}',but '{}' is \n{}".format(expect_row, rs_name, rs_name, "\n".join(map(str, txt)))
         context.logger.debug("expect row:{0}, not found".format(expect_row))
 
 
@@ -142,7 +142,7 @@ def step_impl(context, rs_name):
                         # context.logger.debug("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
                 if not isFound: break
             if isFound: break
-        assert isFound, "expect line '{}' in resultset '{}', but not found!!!! \nthe real resultset '{}' is:\n{}".format(expect_row, rs_name, rs_name, txt)
+        assert isFound, "expect line '{}' in resultset '{}', but not found!!!! \nthe real resultset '{}' is:\n{}".format(expect_row, rs_name, rs_name, "\n".join(map(str, txt)))
         context.logger.info("expect row:{0}, is found".format(expect_row))
 
 @Then('check "{rs_name}" only has "{num}" connection of "{host}"')
