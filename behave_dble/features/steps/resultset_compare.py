@@ -51,7 +51,6 @@ def step_impl(context, rs_A_name, rs_B_name):
 @Then('check resultset "{rs_name}" has not lines with following column values')
 def step_impl(context, rs_name):
     # headings in form "columnName-columnIndex"
-    txt = getattr(context, rs_name)
     col_idx_list = []
     for str1 in context.table.headings:
         assert str1.rfind('-')!=-1, "context.table heading format error. expect:columnName-columnIndex"
@@ -68,52 +67,51 @@ def step_impl(context, rs_name):
                 real_col = rs_row[col_idx]
                 isFound = str(real_col) == str(expect_col)
                 if not isFound: break
-            assert not isFound, "expect line '{}' not in resultset '{}',but '{}' is \n{}".format(expect_row, rs_name, rs_name, "\n".join(map(str, txt)))
+            assert not isFound, "expect line '{}' not in resultset '{}',but '{}' is \n{}".format(expect_row, rs_name, rs_name, "\n".join(map(str, rs)))
         context.logger.debug("expect row:{0}, not found".format(expect_row))
 
 
-#once found expect, break loop
 @Then('check resultset "{rs_name}" has lines with following column values')
 def step_impl(context, rs_name):
-    txt = getattr(context, rs_name)
     col_idx_list = []
-    check_line =False
+    check_line = False
 
     for str1 in context.table.headings:
-        if str1.rfind('expect_result_line')!=-1:
-            check_line =True
+        if str1.rfind('expect_result_line') != -1:
+            check_line = True
             continue
         else:
             # headings in form "columnName-columnIndex"
-            assert str1.rfind('-')!=-1, "context.table heading format error. expect:columnName-columnIndex"
+            assert str1.rfind('-') != -1, "context.table heading format error. expect:columnName-columnIndex"
             idx = int(str1.split("-")[-1])
             col_idx_list.append(idx)
 
     rs = getattr(context, rs_name)
+    not_found = []  # 记录没有找到的期望行
     for expect_row in context.table:
         isFound = False
         real_line = 0
         expect_line = 0
         for rs_row in rs:
-            real_line = real_line +1
+            real_line = real_line + 1
             for i in range(len(expect_row)):
-                if check_line: #need to check the number of rows,the comparison need to start from the second column
+                if check_line:  # need to check the number of rows,the comparison need to start from the second column
                     col_idx = col_idx_list[i - 1]
                 else:
                     col_idx = col_idx_list[i]
 
-                if expect_row[i].rfind('expect_result_line:') != -1: #Get the expected number of rows when comparing the number of rows
+                if expect_row[i].rfind('expect_result_line:') != -1:  # Get the expected number of rows when comparing the number of rows
                     expect_line = int(expect_row[i].split(":")[-1])
                     continue
 
                 real_col = rs_row[col_idx]
-                if expect_row[i].rfind('+') != -1: #actual result tolerance,in the format:"expect_result+tolerance_scope"
+                if expect_row[i].rfind('+') != -1:  # actual result tolerance,in the format:"expect_result+tolerance_scope"
                     expect = expect_row[i].split("+")
                     expect_min = int(expect[0])
-                    expect_max = int(expect[-1])+expect_min
+                    expect_max = int(expect[-1]) + expect_min
                     real_col = int(real_col)
                     isFound = (real_col >= expect_min) and (real_col <= expect_max)
-                    context.logger.debug("col index:{0}, expect col_min:{1}<= real_col:{2}<=col_max:{3}".format(i, expect_min, real_col, expect_max))
+                    context.logger.debug("col index:{0}, expect col_min:{1}<= real_col:{2}<=col_max:{3}".format(i, expect_min, real_col,expect_max))
                 else:
                     expect_col = expect_row[i]
                     if expect_col.rfind('/*AllowDiff*/') != -1:
@@ -130,20 +128,26 @@ def step_impl(context, rs_name):
                             else:
                                 isFound = False
                     elif expect_row[i].rfind('[0-9].[0-9]') != -1:
-                        # dble_version =  context.cfg_dble['ftp_path'].split('/')[-2]
-                        # expect_col = expect_col.replace("${version}",dble_version)
-                        isFound = fnmatchcase(real_col,expect_col)
-                        context.logger.info(
-                            "col index:{0}, expect col:{1}, real_col:{2}".format(i, expect_col, real_col))
+                        isFound = fnmatchcase(real_col, expect_col)
+                        context.logger.debug("col index:{0}, expect col:{1}, real_col:{2}".format(i, expect_col, real_col))
                     elif check_line:
                         isFound = (str(real_col) == str(expect_col)) and (real_line == expect_line)
                     else:
                         isFound = (str(real_col).strip() == str(expect_col).strip())
                         # context.logger.debug("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
-                if not isFound: break
-            if isFound: break
-        assert isFound, "expect line '{}' in resultset '{}', but not found!!!! \nthe real resultset '{}' is:\n{}".format(expect_row, rs_name, rs_name, "\n".join(map(str, txt)))
-        context.logger.info("expect row:{0}, is found".format(expect_row))
+                if not isFound:
+                    break
+            if isFound:
+                break
+        if not isFound:
+            not_found.append(expect_row)  # 将没有找到的期望行加入列表
+        else:
+            context.logger.debug("expect row:{0}, is found".format(expect_row))
+
+    if not_found:  # 如果有数据行没有找到，则抛出异常
+        assert False, "Opps!! in resultset '{1}' not found row\n{0}, \nThe actual result is:\n{2}".format("\n".join(map(str, not_found)), rs_name, "\n".join(map(str, rs)))
+
+
 
 @Then('check "{rs_name}" only has "{num}" connection of "{host}"')
 def step_impl(context,rs_name,num,host):
