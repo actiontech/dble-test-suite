@@ -10,13 +10,13 @@ sql_log_by_digest_by_entry_by_user
 sql_log_by_tx_digest_by_entry_by_user
 
   ### truncate table前的sleep是因为数据写入sql_log是异步的，加sleep是为了数据正常写入并被truncate
-  ### 3.23.04 coz DBLE0REQ-2101 变更部分内容
+
 
 
   Scenario: desc table and unsupported dml  #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                        | expect        | db               |
-      | conn_0 | False   | desc sql_log                               | length{(14)}  | dble_information |
+      | conn_0 | False   | desc sql_log                               | length{(13)}  | dble_information |
       | conn_0 | False   | desc sql_log_by_tx_by_entry_by_user        | length{(10)}  | dble_information |
       | conn_0 | False   | desc sql_log_by_digest_by_entry_by_user    | length{(8)}   | dble_information |
       | conn_0 | False   | desc sql_log_by_tx_digest_by_entry_by_user | length{(11)}  | dble_information |
@@ -24,7 +24,6 @@ sql_log_by_tx_digest_by_entry_by_user
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_1"
       | conn   | toClose | sql          | db               |
       | conn_0 | False   | desc sql_log | dble_information |
-    ## coz DBLE0REQ-2101 新增参数 result_size
     Then check resultset "table_1" has lines with following column values
       | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
       | sql_id        | int(11)       | NO     | PRI   | None      |         |
@@ -38,7 +37,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | source_port   | int(11)       | NO     |       | None      |         |
       | rows          | int(11)       | NO     |       | None      |         |
       | examined_rows | int(11)       | NO     |       | None      |         |
-      | result_size   | int(11)       | NO     |       | None      |         |
       | start_time    | timestamp     | NO     |       | None      |         |
       | duration      | int(11)       | NO     |       | None      |         |
 
@@ -105,26 +103,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | update sql_log_by_tx_digest_by_entry_by_user set entry=22 where entry=1 | Access denied for table 'sql_log_by_tx_digest_by_entry_by_user' | dble_information |
       | conn_0 | True    | insert into sql_log_by_tx_digest_by_entry_by_user (entry) values (22)   | Access denied for table 'sql_log_by_tx_digest_by_entry_by_user' | dble_information |
 
-
-  Scenario: 以sql_log为视图的三张表查询测试 from issue：DBLE0REQ-2144  # 1-1
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                     | expect         | db      |
-      | conn_1 | false   | drop table if exists test;create table test (id int,c int)              | success        | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                  | expect                        | db               |
-      | conn_0 | False   | select * from sql_log                                                                | success                       | dble_information |
-      | conn_0 | False   | select * from sql_log where sql_stmt like "%test%"                                   | length{(2)}                   | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user where sql_stmt like "%test%"            | column sql_stmt not found     | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                                         | length{(2)}                   | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user where sql_type like "%test%"        | column sql_type not found     | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                                     | length{(2)}                   | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user where avg_duration like "%test%" | column avg_duration not found | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                                  | length{(2)}                   | dble_information |
-
-    Then check "NullPointerException|caught err|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
-
-
-  Scenario: 验证 group_concat函数  #1-2
+    Then execute admin cmd "reload @@samplingRate=100"
     Then execute admin cmd "reload @@statistic_table_size =10000000 where table ='sql_log'"
     Given execute sql "283" times in "dble-1" together use 1000 connection not close
       | sql            | db      |
@@ -206,16 +185,40 @@ sql_log_by_tx_digest_by_entry_by_user
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect         | db      |
       | conn_0 | true    | drop table if exists test        | success        | schema1 |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
 
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
+  Scenario: 以sql_log为视图的三张表查询测试 from issue：DBLE0REQ-2144  # 1-1
+    Then execute admin cmd "reload @@samplingRate=100"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                     | expect         | db      |
+      | conn_1 | false   | drop table if exists test;create table test (id int,c int)              | success        | schema1 |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                  | expect                        | db               |
+      | conn_0 | False   | select * from sql_log                                                                | success                       | dble_information |
+      | conn_0 | False   | select * from sql_log where sql_stmt like "%test%"                                   | length{(2)}                   | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user where sql_stmt like "%test%"            | column sql_stmt not found     | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                                         | length{(2)}                   | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user where sql_type like "%test%"        | column sql_type not found     | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                                     | length{(2)}                   | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user where avg_duration like "%test%" | column avg_duration not found | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                                  | length{(2)}                   | dble_information |
+
 
 
   Scenario: samplingRate/sqlLogTableSize in bootstrap.cnf and reload @@samplingRate and reload @@sqlLogTableSize  #2
-   ##默认值  samplingRate 100  sqlLogTableSize  1024
-   Then execute sql in "dble-1" in "admin" mode
-     | conn   | toClose | sql                                                                                                                                                   | expect                                                                                | db               |
-     | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'samplingRate','sqlLogTableSize') | has{(('enableStatistic', '0'), ('sqlLogTableSize', '1024'), ('samplingRate', '100'))} | dble_information |
-
+    #case check defalut values
+    Then check following text exist "N" in file "/opt/dble/conf/bootstrap.cnf" in host "dble-1"
+      """
+      -DsamplingRate=0
+      -DsqlLogTableSize=1024
+      """
     #error values
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -224,7 +227,7 @@ sql_log_by_tx_digest_by_entry_by_user
     """
     Then restart dble in "dble-1" failed for
     """
-    Property \[ samplingRate \] '-1' in bootstrap.cnf is illegal, you may need use the default value 100 replaced
+    Property \[ samplingRate \] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
     Property \[ sqlLogTableSize \] '-1' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
     """
 
@@ -235,7 +238,7 @@ sql_log_by_tx_digest_by_entry_by_user
     """
     Then restart dble in "dble-1" failed for
     """
-    Property \[ samplingRate \] '1000' in bootstrap.cnf is illegal, you may need use the default value 100 replaced
+    Property \[ samplingRate \] '1000' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
     property \[ sqlLogTableSize \] '99.99' data type should be int
     """
 
@@ -249,34 +252,48 @@ sql_log_by_tx_digest_by_entry_by_user
     """
     Given Restart dble in "dble-1" success
    #case check dble_information.dble_variables
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                                                   | expect                                                                               | db               |
-      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'samplingRate','sqlLogTableSize') | has{(('enableStatistic', '0'), ('sqlLogTableSize', '100'), ('samplingRate', '100'))} | dble_information |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_1"
+      | conn   | toClose | sql                                                                                                                                                         | db               |
+      | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'samplingRate','sqlLogTableSize')       | dble_information |
+    Then check resultset "res_1" has lines with following column values
+      | variable_name-0 | variable_value-1|
+      | enableStatistic | 0               |
+      | samplingRate    | 100             |
+      | sqlLogTableSize | 100             |
 
   #case : reload @@samplingRate and reload @@sqlLogTableSize
     Then execute admin cmd "reload @@samplingRate=0"
     Then execute admin cmd "reload @@statistic_table_size =1024 where table ='sql_log'"
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                                | expect                                                    | db               |
-      | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('samplingRate','sqlLogTableSize') | has{(('sqlLogTableSize', '1024'), ('samplingRate', '0'))} | dble_information |
-
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_2"
+      | conn   | toClose | sql                                                                                                                                      | db               |
+      | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('samplingRate','sqlLogTableSize')       | dble_information |
+    Then check resultset "res_2" has lines with following column values
+      | variable_name-0 | variable_value-1|
+      | samplingRate    | 0               |
+      | sqlLogTableSize | 1024            |
    #case check bootstrap.dynamic.cnf
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
       """
       sqlLogTableSize=1024
       """
     Given Restart dble in "dble-1" success
-
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                                | expect                                                    | db               |
-      | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('samplingRate','sqlLogTableSize') | has{(('sqlLogTableSize', '1024'), ('samplingRate', '0'))} | dble_information |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_3"
+      | conn   | toClose | sql                                                                                                                                      | db               |
+      | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('samplingRate','sqlLogTableSize')       | dble_information |
+    Then check resultset "res_3" has lines with following column values
+      | variable_name-0 | variable_value-1|
+      | samplingRate    | 0               |
+      | sqlLogTableSize | 1024            |
 
     Then execute admin cmd "reload @@samplingRate=100"
     Then execute admin cmd "reload @@statistic_table_size =2000"
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                                | expect                                                      | db               |
-      | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('samplingRate','sqlLogTableSize') | has{(('sqlLogTableSize', '2000'), ('samplingRate', '100'))} | dble_information |
-
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_3"
+      | conn   | toClose | sql                                                                                                                                      | db               |
+      | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('samplingRate','sqlLogTableSize')       | dble_information |
+    Then check resultset "res_3" has lines with following column values
+      | variable_name-0 | variable_value-1|
+      | samplingRate    | 100             |
+      | sqlLogTableSize | 2000            |
    #case check bootstrap.dynamic.cnf
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
       """
@@ -371,10 +388,18 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}    | dble_information | 10      |
       | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}    | dble_information | 10      |
 
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
+
 
 
   Scenario: test samplingRate=0    #3
+
     #CASE PREPARE env
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -400,18 +425,18 @@ sql_log_by_tx_digest_by_entry_by_user
     """
     <managerUser name="root" password="111111"/>
     <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
-    <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
     <rwSplitUser name="rwS2" password="111111" dbGroup="ha_group3" />
     """
+    Then execute admin cmd "reload @@config"
+
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /DsamplingRate/d
     /# processor/a -DsamplingRate=0
-    $a -DmaxResultSet=1
     """
     Given Restart dble in "dble-1" success
-    ##设置慢sql的时间阈值为0，即所有sql都是慢sql
-    Then execute admin cmd "reload @@slow_query.time=0"
+    Then execute admin cmd "enable @@statistic"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect      | db               |
       | conn_0 | False   | select * from sql_log                               | length{(0)} | dble_information |
@@ -430,31 +455,20 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | select 5                                  | success | schema1 |
       | conn_1 | False   | show databases                            | success | schema1 |
       | conn_1 | False   | truncate test1                            | success | schema1 |
-    Then connect "dble-1" to insert "15000" of data for "test1"
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                            | expect  | db      |
-      | conn_1 | False   | select * from test1 limit 200000               | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect      | db               |
       | conn_0 | False   | select * from sql_log                               | length{(0)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(0)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(0)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user | length{(0)} | dble_information |
-      ### 依赖与sql_log的show命令
-      | conn_0 | False   | show @@sql                                          | length{(0)} |                  |
-      | conn_0 | False   | show @@sql.high                                     | length{(0)} |                  |
-      | conn_0 | False   | show @@sql.slow                                     | length{(0)} |                  |
-      | conn_0 | False   | show @@sql.large                                    | length{(0)} |                  |
-      | conn_0 | False   | show @@sql.resultset                                | length{(0)} |                  |
-
 
     Then execute admin cmd "disable @@statistic"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
-      | rw1 | 111111 | conn_3 | False   | drop table if exists test_table               | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | create table test_table(id int,name char(20)) | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | insert into test_table values (1,2)           | success | db1 |
-      | rw1 | 111111 | conn_3 | true    | select 2                                      | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | drop table if exists test_table               | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | create table test_table(id int,name char(20)) | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | insert into test_table values (1,2)           | success | db1 |
+      | rwS1 | 111111 | conn_3 | true    | select 2                                      | success | db1 |
       | rwS2 | 111111 | conn_4 | False   | drop table if exists test_table               | success | db2 |
       | rwS2 | 111111 | conn_4 | False   | create table test_table(id int,name char(20)) | success | db2 |
       | rwS2 | 111111 | conn_4 | False   | insert into test_table values (1,2)           | success | db2 |
@@ -464,157 +478,124 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log                               | length{(0)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(0)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(0)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user | length{(0)} | dble_information |
-      | conn_0 | False   | show @@sql                                          | length{(0)} |                  |
-      | conn_0 | False   | show @@sql.high                                     | length{(0)} |                  |
-      | conn_0 | False   | show @@sql.slow                                     | length{(0)} |                  |
-      | conn_0 | False   | show @@sql.large                                    | length{(0)} |                  |
-      | conn_0 | true    | show @@sql.resultset                                | length{(0)} |                  |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(0)} | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                       | expect  | db      |
       | conn_1 | true    | drop table if exists test1                | success | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
-      | rw1  | 111111 | conn_3 | true    | drop table if exists test_table               | success | db1 |
+      | rwS1 | 111111 | conn_3 | true    | drop table if exists test_table               | success | db1 |
       | rwS2 | 111111 | conn_4 | true    | drop table if exists test_table               | success | db2 |
-
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
 
 
   Scenario: test samplingRate=100 and simple sql   #4
     #CASE PREPARE env
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-       """
-       <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true" />
-       </dbGroup>
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="10" primary="false" />
+    </dbGroup>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
+    """
+    Then execute admin cmd "reload @@config"
 
-       <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" >
-          <heartbeat>select 1</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.10:9004" user="test" maxCon="100" minCon="10" primary="true" databaseType="clickhouse"/>
-       </dbGroup>
-      """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-       """
-       <shardingUser name="test1" password="111111" schemas="schema1"/>
-       <shardingUser name="test2" password="111111" schemas="schema1" tenant="ten1"/>
-       <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
-       <analysisUser name="ana1" password="111111" dbGroup="ha_group4"  />
-       """    
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-       """
-       <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <globalTable name="global" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-       </schema>
-       """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    $a -DmaxResultSet=1
+    /DsamplingRate/d
+    /# processor/a -DsamplingRate=100
     """
     Given Restart dble in "dble-1" success
-    ##设置慢sql的时间阈值为0，即所有sql都是慢sql
-    Then execute admin cmd "reload @@slow_query.time=0"
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                        | expect  | db      |
-      | conn_1 | False   | drop table if exists global                | success | schema1 |
-      | conn_1 | False   | create table global (id int,name char(20)) | success | schema1 |
-    ## 10001，包含2条sql insert into global (id,name) values(1,'NJ100001')  and  'exit', 'Other', 'Other'
-    Then connect "dble-1" to insert "10001" of data for "global"
-    Given sleep "4" seconds
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                        | expect  | db      |
-      | conn_1 | False   | insert into global values (1,1),(2,2)      | success | schema1 |
-      | conn_1 | False   | select * from global                       | success | schema1 |
-      | conn_1 | False   | update global set name= '3' where id=1     | success | schema1 |
-      | conn_1 | False   | delete from global where id=6              | success | schema1 |
-      | conn_1 | False   | select 5                                   | success | schema1 |
-      | conn_1 | False   | show databases                             | success | schema1 |
-      | conn_1 | False   | select * from global limit 10002           | success | schema1 |
 
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                       | expect  | db      |
+      | conn_1 | False   | drop table if exists test1                | success | schema1 |
+      | conn_1 | False   | create table test1 (id int,name char(20)) | success | schema1 |
+      | conn_1 | False   | insert into test1 values (1,1),(2,2)      | success | schema1 |
+      | conn_1 | False   | select * from test1                       | success | schema1 |
+      | conn_1 | False   | update test1 set name= '3' where id=1     | success | schema1 |
+      | conn_1 | False   | delete from test1 where id=6              | success | schema1 |
+      | conn_1 | False   | select 5                                  | success | schema1 |
+      | conn_1 | False   | show databases                            | success | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
-      | rw1  | 111111 | conn_3 | False   | drop table if exists test_table               | success | db1 |
-      | rw1  | 111111 | conn_3 | False   | create table test_table(id int,name char(20)) | success | db1 |
-      | rw1  | 111111 | conn_3 | False   | insert into test_table values (1,2)           | success | db1 |
-      | rw1  | 111111 | conn_3 | False   | select 2                                      | success | db1 |
-     #DBLE0REQ-1112
+      | rwS1 | 111111 | conn_3 | False   | drop table if exists test_table               | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | create table test_table(id int,name char(20)) | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | insert into test_table values (1,2)           | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | select 2                                      | success | db1 |
+#DBLE0REQ-1112
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                 | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                               | length{(15)} | dble_information | 10      |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                        | length{(14)} | dble_information | 10      |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                    | length{(15)} | dble_information | 10      |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                 | length{(14)} | dble_information | 10      |
+      | conn_0 | False   | select * from sql_log                                               | length{(12)} | dble_information | 10      |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                        | length{(12)} | dble_information | 10      |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                    | length{(12)} | dble_information | 10      |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                 | length{(12)} | dble_information | 10      |
 
-    ### exit 不管是在事务中 还是非事务中 ，他的txid 与上一个sql相同
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
-      | sql_stmt-1                                          | sql_digest-2                                        | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | result_size-11 |
-      | drop table if exists global                         | DROP TABLE IF EXISTS global                         | DDL        | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 44             |
-      | create table global (id int,name char(20))          | CREATE TABLE global (  id int,  name char(20) )     | DDL        | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 44             |
-#      | insert into global (id,name) values(1,'NJ100001').* | INSERT INTO global(id, name) VALUES (?, ?)          | Insert     | 3       | 2       | test   | 172.100.9.8   | 8066          | 10001  | 224             |
-      | exit                                                | Other                                               | Other      | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0              |
-      | insert into global values (1,1),(2,2)               | INSERT INTO global VALUES (?, ?)                    | Insert     | 4       | 2       | test   | 172.100.9.8   | 8066          | 2      | 200            |
-      | select * from global                                | select * from global                                | Select     | 5       | 2       | test   | 172.100.9.8   | 8066          | 100    | 1709           |
-      | update global set name= '3' where id=1              | UPDATE global SET name = ? WHERE id = ?             | Update     | 6       | 2       | test   | 172.100.9.8   | 8066          | 2      | 208            |
-      | delete from global where id=6                       | DELETE FROM global WHERE id = ?                     | Delete     | 7       | 2       | test   | 172.100.9.8   | 8066          | 1      | 44             |
-      | select 5                                            | SELECT ?                                            | Select     | 8       | 2       | test   | 172.100.9.8   | 8066          | 1      | 56             |
-      | show databases                                      | show databases                                      | Show       | 9       | 2       | test   | 172.100.9.8   | 8066          | 1      | 0              |
-      | select * from global limit 10002                    | SELECT * FROM global LIMIT ?                        | Select     | 10      | 2       | test   | 172.100.9.8   | 8066          | 10002  | 179024         |
-      | drop table if exists test_table                     | DROP TABLE IF EXISTS test_table                     | DDL        | 11      | 5       | rw1    | 172.100.9.8   | 8066          | 0      | 11             |
-      | create table test_table(id int,name char(20))       | CREATE TABLE test_table (  id int,  name char(20) ) | DDL        | 12      | 5       | rw1    | 172.100.9.8   | 8066          | 0      | 11             |
-      | insert into test_table values (1,2)                 | INSERT INTO test_table VALUES (?, ?)                | Insert     | 13      | 5       | rw1    | 172.100.9.8   | 8066          | 1      | 11             |
-      | select 2                                            | SELECT ?                                            | Select     | 14      | 5       | rw1    | 172.100.9.8   | 8066          | 1      | 56             |
-
+      | sql_id-0 | sql_stmt-1                                    | sql_digest-2                                        | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
+      | 1        | drop table if exists test1                    | DROP TABLE IF EXISTS test1                          | DDL        | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 2        | create table test1 (id int,name char(20))     | CREATE TABLE test1 (  id int,  name char(20) )      | DDL        | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 3        | insert into test1 values (1,1),(2,2)          | INSERT INTO test1 VALUES (?, ?)                     | Insert     | 3       | 2       | test   | 172.100.9.8   | 8066          | 2      |
+      | 4        | select * from test1                           | select * from test1                                 | Select     | 4       | 2       | test   | 172.100.9.8   | 8066          | 2      |
+      | 5        | update test1 set name= '3' where id=1         | UPDATE test1 SET name = ? WHERE id = ?              | Update     | 5       | 2       | test   | 172.100.9.8   | 8066          | 1      |
+      | 6        | delete from test1 where id=6                  | DELETE FROM test1 WHERE id = ?                      | Delete     | 6       | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 7        | select 5                                      | SELECT ?                                            | Select     | 7       | 2       | test   | 172.100.9.8   | 8066          | 1      |
+      | 8        | show databases                                | show databases                                      | Show       | 8       | 2       | test   | 172.100.9.8   | 8066          | 1      |
+      | 9        | drop table if exists test_table               | DROP TABLE IF EXISTS test_table                     | DDL        | 9       | 3       | rwS1   | 172.100.9.8   | 8066          | 0      |
+      | 10       | create table test_table(id int,name char(20)) | CREATE TABLE test_table (  id int,  name char(20) ) | DDL        | 10      | 3       | rwS1   | 172.100.9.8   | 8066          | 0      |
+      | 11       | insert into test_table values (1,2)           | INSERT INTO test_table VALUES (?, ?)                | Insert     | 11      | 3       | rwS1   | 172.100.9.8   | 8066          | 1      |
+      | 12       | select 2                                      | SELECT ?                                            | Select     | 12      | 3       | rwS1   | 172.100.9.8   | 8066          | 1      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6 |
-      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1          |
-      | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1          |
-      | 3       | 2       | test   | 172.100.9.8   | 8066          | 3,4       | 2          |
-      | 4       | 2       | test   | 172.100.9.8   | 8066          | 5         | 1          |
-      | 5       | 2       | test   | 172.100.9.8   | 8066          | 6         | 1          |
-      | 6       | 2       | test   | 172.100.9.8   | 8066          | 7         | 1          |
-      | 7       | 2       | test   | 172.100.9.8   | 8066          | 8         | 1          |
-      | 8       | 2       | test   | 172.100.9.8   | 8066          | 9         | 1          |
-      | 9       | 2       | test   | 172.100.9.8   | 8066          | 10        | 1          |
-      | 10      | 2       | test   | 172.100.9.8   | 8066          | 11        | 1          |
-      | 11      | 5       | rw1    | 172.100.9.8   | 8066          | 12        | 1          |
-      | 12      | 5       | rw1    | 172.100.9.8   | 8066          | 13        | 1          |
-      | 13      | 5       | rw1    | 172.100.9.8   | 8066          | 14        | 1          |
-      | 14      | 5       | rw1    | 172.100.9.8   | 8066          | 15        | 1          |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
+      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           |
+      | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           |
+      | 3       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1           |
+      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4         | 1           |
+      | 5       | 2       | test   | 172.100.9.8   | 8066          | 5         | 1           |
+      | 6       | 2       | test   | 172.100.9.8   | 8066          | 6         | 1           |
+      | 7       | 2       | test   | 172.100.9.8   | 8066          | 7         | 1           |
+      | 8       | 2       | test   | 172.100.9.8   | 8066          | 8         | 1           |
+      | 9       | 3       | rwS1   | 172.100.9.8   | 8066          | 9         | 1           |
+      | 10      | 3       | rwS1   | 172.100.9.8   | 8066          | 10        | 1           |
+      | 11      | 3       | rwS1   | 172.100.9.8   | 8066          | 11        | 1           |
+      | 12      | 3       | rwS1   | 172.100.9.8   | 8066          | 12        | 1           |
 
-
-    #DBLE0REQ-1112
+#DBLE0REQ-1112
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
       | sql_digest-0                                        | entry-1 | user-2 | exec-3 | rows-5 |
-      | CREATE TABLE global (  id int,  name char(20) )     | 2       | test   | 1      | 0      |
-      | CREATE TABLE test_table (  id int,  name char(20) ) | 5       | rw1    | 1      | 0      |
-      | DELETE FROM global WHERE id = ?                     | 2       | test   | 1      | 1      |
-      | DROP TABLE IF EXISTS global                         | 2       | test   | 1      | 0      |
-      | DROP TABLE IF EXISTS test_table                     | 5       | rw1    | 1      | 0      |
-      | INSERT INTO global VALUES (?, ?)                    | 2       | test   | 1      | 2      |
-      | INSERT INTO global(id, name) VALUES (?, ?)          | 2       | test   | 1      | 10001  |
-      | INSERT INTO test_table VALUES (?, ?)                | 5       | rw1    | 1      | 1      |
-      | Other                                               | 2       | test   | 1      | 0      |
-      | select * from global                                | 2       | test   | 1      | 100    |
-      | SELECT * FROM global LIMIT ?                        | 2       | test   | 1      | 10002  |
+      | CREATE TABLE test1 (  id int,  name char(20) )      | 2       | test   | 1      | 0      |
+      | CREATE TABLE test_table (  id int,  name char(20) ) | 3       | rwS1   | 1      | 0      |
+      | DELETE FROM test1 WHERE id = ?                      | 2       | test   | 1      | 0      |
+      | DROP TABLE IF EXISTS test1                          | 2       | test   | 1      | 0      |
+      | DROP TABLE IF EXISTS test_table                     | 3       | rwS1   | 1      | 0      |
+      | INSERT INTO test1 VALUES (?, ?)                     | 2       | test   | 1      | 2      |
+      | INSERT INTO test_table VALUES (?, ?)                | 3       | rwS1   | 1      | 1      |
+      | select * from test1                                 | 2       | test   | 1      | 2      |
+      | SELECT ?                                            | 3       | rwS1   | 1      | 1      |
       | SELECT ?                                            | 2       | test   | 1      | 1      |
-      | SELECT ?                                            | 5       | rw1    | 1      | 1      |
       | show databases                                      | 2       | test   | 1      | 1      |
-      | UPDATE global SET name = ? WHERE id = ?             | 2       | test   | 1      | 2      |
+      | UPDATE test1 SET name = ? WHERE id = ?              | 2       | test   | 1      | 1      |
 
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
@@ -622,21 +603,18 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                         | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
-      | CREATE TABLE global (  id int,  name char(20) )     | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 2         |
-      | CREATE TABLE test_table (  id int,  name char(20) ) | 1      | rw1    | 5       | 1          | 172.100.9.8   | 8066          | 13        |
-      | DELETE FROM global WHERE id = ?                     | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 8         |
-      | DROP TABLE IF EXISTS global                         | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 1         |
-      | DROP TABLE IF EXISTS test_table                     | 1      | rw1    | 5       | 1          | 172.100.9.8   | 8066          | 12        |
-      | INSERT INTO global VALUES (?, ?)                    | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 5         |
-      | INSERT INTO global(id, name) VALUES (?, ?),Other    | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 3,4       |
-      | INSERT INTO test_table VALUES (?, ?)                | 1      | rw1    | 5       | 1          | 172.100.9.8   | 8066          | 14        |
-      | select * from global                                | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 6         |
-      | SELECT * FROM global LIMIT ?                        | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 11        |
-      | SELECT ?                                            | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 9         |
-      | SELECT ?                                            | 1      | rw1    | 5       | 1          | 172.100.9.8   | 8066          | 15        |
-      | show databases                                      | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 10        |
-      | UPDATE global SET name = ? WHERE id = ?             | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 7         |
-
+      | CREATE TABLE test1 (  id int,  name char(20) )      | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 2         |
+      | CREATE TABLE test_table (  id int,  name char(20) ) | 1      | rwS1   | 3       | 1          | 172.100.9.8   | 8066          | 10        |
+      | DELETE FROM test1 WHERE id = ?                      | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 6         |
+      | DROP TABLE IF EXISTS test1                          | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 1         |
+      | DROP TABLE IF EXISTS test_table                     | 1      | rwS1   | 3       | 1          | 172.100.9.8   | 8066          | 9         |
+      | INSERT INTO test1 VALUES (?, ?)                     | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 3         |
+      | INSERT INTO test_table VALUES (?, ?)                | 1      | rwS1   | 3       | 1          | 172.100.9.8   | 8066          | 11        |
+      | select * from test1                                 | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 4         |
+      | SELECT ?                                            | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 7         |
+      | SELECT ?                                            | 1      | rwS1   | 3       | 1          | 172.100.9.8   | 8066          | 12        |
+      | show databases                                      | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 8         |
+      | UPDATE test1 SET name = ? WHERE id = ?              | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 5         |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect       | db               | timeout  |
@@ -646,19 +624,18 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(0)}  | dble_information | 10       |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information | 10       |
 
-      ### view 视图
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  | db      |
       | conn_1 | False   | drop view if exists view_test                    | success | schema1 |
-      | conn_1 | False   | create view view_test as select * from global    | success | schema1 |
+      | conn_1 | False   | create view view_test as select * from test1     | success | schema1 |
       | conn_1 | False   | select * from view_test                          | success | schema1 |
       | conn_1 | False   | drop view view_test                              | success | schema1 |
-      | conn_1 | False   | truncate  global                                 | success | schema1 |
+      | conn_1 | False   | truncate  test1                                  | success | schema1 |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
       | conn_0 | False   | select * from sql_log                                 | length{(5)}  | dble_information | 3       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(5)}  | dble_information | 3       |
+      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user          | length{(5)}  | dble_information | 3       |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(5)}  | dble_information | 3       |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(5)}  | dble_information | 3       |
 
@@ -666,51 +643,57 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
-      | sql_id-0 | sql_stmt-1                                    | sql_digest-2                                  | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
-      | 16       | drop view if exists view_test                 | DROP VIEW IF EXISTS view_test                 | Other      | 15      | 2       | test   | 172.100.9.8   | 8066          | 0      |
-      | 17       | create view view_test as select * from global | CREATE VIEW view_test AS SELECT * FROM global | Other      | 16      | 2       | test   | 172.100.9.8   | 8066          | 0      |
-      | 18       | select * from view_test                       | select * from view_test                       | Select     | 17      | 2       | test   | 172.100.9.8   | 8066          | 10002  |
-      | 19       | drop view view_test                           | DROP VIEW view_test                           | Other      | 18      | 2       | test   | 172.100.9.8   | 8066          | 0      |
-      | 20       | truncate  global                              | truncate  global                              | DDL        | 19      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | sql_id-0 | sql_stmt-1                                   | sql_digest-2                                 | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
+      | 13       | drop view if exists view_test                | DROP VIEW IF EXISTS view_test                | Other      | 13      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 14       | create view view_test as select * from test1 | CREATE VIEW view_test AS SELECT * FROM test1 | Other      | 14      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 15       | select * from view_test                      | select * from view_test                      | Select     | 15      | 2       | test   | 172.100.9.8   | 8066          | 2      |
+      | 16       | drop view view_test                          | DROP VIEW view_test                          | Other      | 16      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 17       | truncate  test1                              | truncate  test1                              | DDL        | 17      | 2       | test   | 172.100.9.8   | 8066          | 0      |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
-      | 15      | 2       | test   | 172.100.9.8   | 8066          | 16        | 1           |
-      | 16      | 2       | test   | 172.100.9.8   | 8066          | 17        | 1           |
-      | 17      | 2       | test   | 172.100.9.8   | 8066          | 18        | 1           |
-      | 18      | 2       | test   | 172.100.9.8   | 8066          | 19        | 1           |
-      | 19      | 2       | test   | 172.100.9.8   | 8066          | 20        | 1           |
+      | 13      | 2       | test   | 172.100.9.8   | 8066          | 13        | 1           |
+      | 14      | 2       | test   | 172.100.9.8   | 8066          | 14        | 1           |
+      | 15      | 2       | test   | 172.100.9.8   | 8066          | 15        | 1           |
+      | 16      | 2       | test   | 172.100.9.8   | 8066          | 16        | 1           |
+      | 17      | 2       | test   | 172.100.9.8   | 8066          | 17        | 1           |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
-      | sql_digest-0                                  | entry-1 | user-2 | exec-3 | rows-5 |
-      | CREATE VIEW view_test AS SELECT * FROM global | 2       | test   | 1      | 0      |
-      | DROP VIEW IF EXISTS view_test                 | 2       | test   | 1      | 0      |
-      | DROP VIEW view_test                           | 2       | test   | 1      | 0      |
-      | select * from view_test                       | 2       | test   | 1      | 10002  |
-      | truncate  global                              | 2       | test   | 1      | 0      |
+      | sql_digest-0                                 | entry-1 | user-2 | exec-3 | rows-5 |
+      | CREATE VIEW view_test AS SELECT * FROM test1 | 2       | test   | 1      | 0      |
+      | DROP VIEW IF EXISTS view_test                | 2       | test   | 1      | 0      |
+      | DROP VIEW view_test                          | 2       | test   | 1      | 0      |
+      | select * from view_test                      | 2       | test   | 1      | 2      |
+      | truncate  test1                              | 2       | test   | 1      | 0      |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
       | conn   | toClose | sql                                                   | db               |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
-      | tx_digest-0                                   | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
-      | CREATE VIEW view_test AS SELECT * FROM global | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 17        |
-      | DROP VIEW IF EXISTS view_test                 | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 16        |
-      | DROP VIEW view_test                           | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 19        |
-      | select * from view_test                       | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 18        |
-      | truncate  global                              | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 20        |
+      | tx_digest-0                                  | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
+      | CREATE VIEW view_test AS SELECT * FROM test1 | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 14        |
+      | DROP VIEW IF EXISTS view_test                | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 13        |
+      | DROP VIEW view_test                          | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 16        |
+      | select * from view_test                      | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 15        |
+      | truncate  test1                              | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 17        |
 
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                        | expect  | db      |
-      | conn_1 | true    | drop table if exists global                | success | schema1 |
+      | conn   | toClose | sql                                       | expect  | db      |
+      | conn_1 | true    | drop table if exists test1                | success | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
-      | rw1 | 111111 | conn_3 | true    | drop table if exists test_table                | success | db1 |
+      | rwS1 | 111111 | conn_3 | true    | drop table if exists test_table               | success | db1 |
 
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
 
 
 
@@ -737,7 +720,7 @@ sql_log_by_tx_digest_by_entry_by_user
     """
     <shardingUser name="test" password="111111" schemas="schema1,schema2,"/>
     <shardingUser name="test1" password="111111" schemas="schema1,schema2"/>
-    <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
     """
 
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -747,7 +730,6 @@ sql_log_by_tx_digest_by_entry_by_user
     Then restart dble in "dble-1" success
 
     #case for mysql 5.7 shrdinguser
-    Then execute admin cmd "reload @@samplingRate=0"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                  | expect  | db      |
       | conn_1 | False   | drop table if exists test                                                            | success | schema1 |
@@ -766,6 +748,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | insert into schema2.sharding2 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | success | schema1 |
       | conn_1 | true    | insert into schema2.sing1 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')     | success | schema1 |
 
+    Then execute admin cmd "enable @@statistic"
     Then execute admin cmd "reload @@samplingRate=100"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                    | expect  | db      |
@@ -793,37 +776,37 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log   | dble_information |
     #### sql_id为7的那一行，因为join数据的时候，后端返回的影响行数不固定，所以去除examined_rows一列的比对
     Then check resultset "resulte_1" has lines with following column values
-      | sql_id-0 | sql_stmt-1                                                                                                             | sql_digest-2                                                                                                                | sql_type-3 | tx_id-4  | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
-      | 1        | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                              | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                                   | Insert     | 16       | 2       | test   | 172.100.9.8   | 8066          | 4      |
-      | 2        | insert into test(id, name) select id,name from schema2.global2                                                         | insert into test(id, name) select id,name from schema2.global2                                                              | Insert     | 17       | 2       | test   | 172.100.9.8   | 8066          | 4      |
-      | 3        | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                  | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                       | Insert     | 18       | 2       | test   | 172.100.9.8   | 8066          | 4      |
-      | 4        | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                          | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                               | Insert     | 19       | 2       | test   | 172.100.9.8   | 8066          | 4      |
-      | 5        | select * from test a inner join sharding_2_t1 b on a.name=b.name where a.id =1                                         | SELECT * FROM test a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                                          | Select     | 20       | 2       | test   | 172.100.9.8   | 8066          | 4      |
-      | 6        | select * from schema2.global2 a inner join sharding_2_t1 b on a.name=b.name where a.id =1                              | SELECT * FROM schema2.global2 a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                               | Select     | 21       | 2       | test   | 172.100.9.8   | 8066          | 2      |
-      | 7        | select * from sharding_2_t1 a inner join schema2.sing1 b on a.name=b.name where a.id =1                                | SELECT * FROM sharding_2_t1 a  INNER JOIN schema2.sing1 b ON a.name = b.name WHERE a.id = ?                                 | Select     | 22       | 2       | test   | 172.100.9.8   | 8066          | 4      |
-      | 8        | select * from sharding_2_t1 where name in (select name from schema2.sharding2 where id !=1)                            | SELECT * FROM sharding_2_t1 WHERE name IN (  SELECT name  FROM schema2.sharding2  WHERE id != ? )                           | Select     | 23       | 2       | test   | 172.100.9.8   | 8066          | 6      |
-      | 9        | update test set name= '3' where name = (select name from schema2.global2 order by id desc limit 1)                     | UPDATE test SET name = ? WHERE name = (   SELECT name   FROM schema2.global2   ORDER BY id DESC   LIMIT ?  )                | Update     | 24       | 2       | test   | 172.100.9.8   | 8066          | 2      |
-      | 10       | update test set name= '4' where name in (select name from schema2.global2 )                                            | UPDATE test SET name = ? WHERE name IN (   SELECT name   FROM schema2.global2  )                                            | Update     | 25       | 2       | test   | 172.100.9.8   | 8066          | 6      |
-      | 11       | update sharding_2_t1 a,schema2.sharding2 b set a.name=b.name where a.id=2 and b.id=2                                   | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.name = b.name WHERE a.id = ?  AND b.id = ?                                | Update     | 26       | 2       | test   | 172.100.9.8   | 8066          | 0      |
-      | 12       | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1 | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | Delete     | 27       | 2       | test   | 172.100.9.8   | 8066          | 2      |
+      | sql_id-0 | sql_stmt-1                                                                                                             | sql_digest-2                                                                                                                | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
+      | 1        | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                              | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                                   | Insert     | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      |
+      | 2        | insert into test(id, name) select id,name from schema2.global2                                                         | insert into test(id, name) select id,name from schema2.global2                                                              | Insert     | 2       | 2       | test   | 172.100.9.8   | 8066          | 4      |
+      | 3        | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                  | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                       | Insert     | 3       | 2       | test   | 172.100.9.8   | 8066          | 4      |
+      | 4        | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                          | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                               | Insert     | 4       | 2       | test   | 172.100.9.8   | 8066          | 4      |
+      | 5        | select * from test a inner join sharding_2_t1 b on a.name=b.name where a.id =1                                         | SELECT * FROM test a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                                          | Select     | 5       | 2       | test   | 172.100.9.8   | 8066          | 4      |
+      | 6        | select * from schema2.global2 a inner join sharding_2_t1 b on a.name=b.name where a.id =1                              | SELECT * FROM schema2.global2 a  INNER JOIN sharding_2_t1 b ON a.name = b.name WHERE a.id = ?                               | Select     | 6       | 2       | test   | 172.100.9.8   | 8066          | 2      |
+      | 7        | select * from sharding_2_t1 a inner join schema2.sing1 b on a.name=b.name where a.id =1                                | SELECT * FROM sharding_2_t1 a  INNER JOIN schema2.sing1 b ON a.name = b.name WHERE a.id = ?                                 | Select     | 7       | 2       | test   | 172.100.9.8   | 8066          | 4      |
+      | 8        | select * from sharding_2_t1 where name in (select name from schema2.sharding2 where id !=1)                            | SELECT * FROM sharding_2_t1 WHERE name IN (  SELECT name  FROM schema2.sharding2  WHERE id != ? )                           | Select     | 8       | 2       | test   | 172.100.9.8   | 8066          | 6      |
+      | 9        | update test set name= '3' where name = (select name from schema2.global2 order by id desc limit 1)                     | UPDATE test SET name = ? WHERE name = (   SELECT name   FROM schema2.global2   ORDER BY id DESC   LIMIT ?  )                | Update     | 9       | 2       | test   | 172.100.9.8   | 8066          | 2      |
+      | 10       | update test set name= '4' where name in (select name from schema2.global2 )                                            | UPDATE test SET name = ? WHERE name IN (   SELECT name   FROM schema2.global2  )                                            | Update     | 10      | 2       | test   | 172.100.9.8   | 8066          | 6      |
+      | 11       | update sharding_2_t1 a,schema2.sharding2 b set a.name=b.name where a.id=2 and b.id=2                                   | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.name = b.name WHERE a.id = ?  AND b.id = ?                                | Update     | 11      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 12       | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1 | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | Delete     | 12      | 2       | test   | 172.100.9.8   | 8066          | 2      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | tx_id-0  | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
-      | 16       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           |
-      | 17       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           |
-      | 18       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1           |
-      | 19       | 2       | test   | 172.100.9.8   | 8066          | 4         | 1           |
-      | 20       | 2       | test   | 172.100.9.8   | 8066          | 5         | 1           |
-      | 21       | 2       | test   | 172.100.9.8   | 8066          | 6         | 1           |
-      | 22       | 2       | test   | 172.100.9.8   | 8066          | 7         | 1           |
-      | 23       | 2       | test   | 172.100.9.8   | 8066          | 8         | 1           |
-      | 24       | 2       | test   | 172.100.9.8   | 8066          | 9         | 1           |
-      | 25       | 2       | test   | 172.100.9.8   | 8066          | 10        | 1           |
-      | 26       | 2       | test   | 172.100.9.8   | 8066          | 11        | 1           |
-      | 27       | 2       | test   | 172.100.9.8   | 8066          | 12        | 1           |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
+      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           |
+      | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           |
+      | 3       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1           |
+      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4         | 1           |
+      | 5       | 2       | test   | 172.100.9.8   | 8066          | 5         | 1           |
+      | 6       | 2       | test   | 172.100.9.8   | 8066          | 6         | 1           |
+      | 7       | 2       | test   | 172.100.9.8   | 8066          | 7         | 1           |
+      | 8       | 2       | test   | 172.100.9.8   | 8066          | 8         | 1           |
+      | 9       | 2       | test   | 172.100.9.8   | 8066          | 9         | 1           |
+      | 10      | 2       | test   | 172.100.9.8   | 8066          | 10        | 1           |
+      | 11      | 2       | test   | 172.100.9.8   | 8066          | 11        | 1           |
+      | 12      | 2       | test   | 172.100.9.8   | 8066          | 12        | 1           |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -909,35 +892,35 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
-      | sql_id-0 | sql_stmt-1                                                                                                                  | sql_digest-2                                                                                                                | sql_type-3 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
-      | 25       | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | Insert     | 3       | test1  | 172.100.9.8   | 8066          | 2      |
-      | 26       | update no_sharding_t1 set name='test_name' where id in (select id from schema2.no_shar)                                     | UPDATE no_sharding_t1 SET name = ? WHERE id IN (   SELECT id   FROM schema2.no_shar  )                                      | Update     | 3       | test1  | 172.100.9.8   | 8066          | 4      |
-      | 27       | update no_sharding_t1 set age=age-1 where name != (select name from schema2.no_shar where name ='name1')                    | UPDATE no_sharding_t1 SET age = age - ? WHERE name != (   SELECT name   FROM schema2.no_shar   WHERE name = ?  )            | Update     | 3       | test1  | 172.100.9.8   | 8066          | 4      |
-      | 28       | select n.id,s.name from no_sharding_t1 n join schema2.no_shar s on n.id=s.id                                                | select n.id,s.name from no_sharding_t1 n join schema2.no_shar s on n.id=s.id                                                | Select     | 3       | test1  | 172.100.9.8   | 8066          | 4      |
-      | 29       | select * from no_sharding_t1 where age <> (select age from schema2.no_shar where id !=1)                                    | SELECT * FROM no_sharding_t1 WHERE age <> (  SELECT age  FROM schema2.no_shar  WHERE id != ? )                              | Select     | 3       | test1  | 172.100.9.8   | 8066          | 4      |
-      | 30       | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | Delete     | 3       | test1  | 172.100.9.8   | 8066          | 2      |
-      | 31       | insert into sharding_2_t1 (id) select id from schema2.sharding2                                                             | insert into sharding_2_t1 (id) select id from schema2.sharding2                                                             | Insert     | 3       | test1  | 172.100.9.8   | 8066          | 2      |
-      | 32       | update sharding_2_t1 a,schema2.sharding2 b set a.age=b.age-1 where a.id=2 and b.id=2                                        | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                              | Update     | 3       | test1  | 172.100.9.8   | 8066          | 2      |
-      | 33       | select n.id,s.name from sharding_2_t1 n join schema2.sharding2 s on n.id=s.id                                               | select n.id,s.name from sharding_2_t1 n join schema2.sharding2 s on n.id=s.id                                               | Select     | 3       | test1  | 172.100.9.8   | 8066          | 4      |
-      | 34       | select * from sharding_2_t1 where age <> (select age from schema2.sharding2 where id !=1)                                   | SELECT * FROM sharding_2_t1 WHERE age <> (  SELECT age  FROM schema2.sharding2  WHERE id != ? )                             | Select     | 3       | test1  | 172.100.9.8   | 8066          | 3      |
-      | 35       | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1      | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | Delete     | 3       | test1  | 172.100.9.8   | 8066          | 2      |
+      | sql_id-0 | sql_stmt-1                                                                                                                  | sql_digest-2                                                                                                                | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
+      | 25       | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | Insert     | 25      | 3       | test1  | 172.100.9.8   | 8066          | 2      |
+      | 26       | update no_sharding_t1 set name='test_name' where id in (select id from schema2.no_shar)                                     | UPDATE no_sharding_t1 SET name = ? WHERE id IN (   SELECT id   FROM schema2.no_shar  )                                      | Update     | 26      | 3       | test1  | 172.100.9.8   | 8066          | 4      |
+      | 27       | update no_sharding_t1 set age=age-1 where name != (select name from schema2.no_shar where name ='name1')                    | UPDATE no_sharding_t1 SET age = age - ? WHERE name != (   SELECT name   FROM schema2.no_shar   WHERE name = ?  )            | Update     | 27      | 3       | test1  | 172.100.9.8   | 8066          | 4      |
+      | 28       | select n.id,s.name from no_sharding_t1 n join schema2.no_shar s on n.id=s.id                                                | select n.id,s.name from no_sharding_t1 n join schema2.no_shar s on n.id=s.id                                                | Select     | 28      | 3       | test1  | 172.100.9.8   | 8066          | 4      |
+      | 29       | select * from no_sharding_t1 where age <> (select age from schema2.no_shar where id !=1)                                    | SELECT * FROM no_sharding_t1 WHERE age <> (  SELECT age  FROM schema2.no_shar  WHERE id != ? )                              | Select     | 29      | 3       | test1  | 172.100.9.8   | 8066          | 4      |
+      | 30       | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | Delete     | 30      | 3       | test1  | 172.100.9.8   | 8066          | 2      |
+      | 31       | insert into sharding_2_t1 (id) select id from schema2.sharding2                                                             | insert into sharding_2_t1 (id) select id from schema2.sharding2                                                             | Insert     | 31      | 3       | test1  | 172.100.9.8   | 8066          | 2      |
+      | 32       | update sharding_2_t1 a,schema2.sharding2 b set a.age=b.age-1 where a.id=2 and b.id=2                                        | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                              | Update     | 32      | 3       | test1  | 172.100.9.8   | 8066          | 2      |
+      | 33       | select n.id,s.name from sharding_2_t1 n join schema2.sharding2 s on n.id=s.id                                               | select n.id,s.name from sharding_2_t1 n join schema2.sharding2 s on n.id=s.id                                               | Select     | 33      | 3       | test1  | 172.100.9.8   | 8066          | 4      |
+      | 34       | select * from sharding_2_t1 where age <> (select age from schema2.sharding2 where id !=1)                                   | SELECT * FROM sharding_2_t1 WHERE age <> (  SELECT age  FROM schema2.sharding2  WHERE id != ? )                             | Select     | 34      | 3       | test1  | 172.100.9.8   | 8066          | 3      |
+      | 35       | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1      | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | Delete     | 35      | 3       | test1  | 172.100.9.8   | 8066          | 2      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
-      | 3       | test1  | 172.100.9.8   | 8066          | 25        | 1           |
-      | 3       | test1  | 172.100.9.8   | 8066          | 26        | 1           |
-      | 3       | test1  | 172.100.9.8   | 8066          | 27        | 1           |
-      | 3       | test1  | 172.100.9.8   | 8066          | 28        | 1           |
-      | 3       | test1  | 172.100.9.8   | 8066          | 29        | 1           |
-      | 3       | test1  | 172.100.9.8   | 8066          | 30        | 1           |
-      | 3       | test1  | 172.100.9.8   | 8066          | 31        | 1           |
-      | 3       | test1  | 172.100.9.8   | 8066          | 32        | 1           |
-      | 3       | test1  | 172.100.9.8   | 8066          | 33        | 1           |
-      | 3       | test1  | 172.100.9.8   | 8066          | 34        | 1           |
-      | 3       | test1  | 172.100.9.8   | 8066          | 35        | 1           |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
+      | 25      | 3       | test1  | 172.100.9.8   | 8066          | 25        | 1           | 2               |
+      | 26      | 3       | test1  | 172.100.9.8   | 8066          | 26        | 1           | 4               |
+      | 27      | 3       | test1  | 172.100.9.8   | 8066          | 27        | 1           | 4               |
+      | 28      | 3       | test1  | 172.100.9.8   | 8066          | 28        | 1           | 4               |
+      | 29      | 3       | test1  | 172.100.9.8   | 8066          | 29        | 1           | 4               |
+      | 30      | 3       | test1  | 172.100.9.8   | 8066          | 30        | 1           | 2               |
+      | 31      | 3       | test1  | 172.100.9.8   | 8066          | 31        | 1           | 2               |
+      | 32      | 3       | test1  | 172.100.9.8   | 8066          | 32        | 1           | 2               |
+      | 33      | 3       | test1  | 172.100.9.8   | 8066          | 33        | 1           | 4               |
+      | 34      | 3       | test1  | 172.100.9.8   | 8066          | 34        | 1           | 4               |
+      | 35      | 3       | test1  | 172.100.9.8   | 8066          | 35        | 1           | 2               |
 
      Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -976,12 +959,12 @@ sql_log_by_tx_digest_by_entry_by_user
       # rwSplitUser sql_id:36-41
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                       | expect  | db  |
-      | rw1 | 111111 | conn_3 | False   | drop table if exists test_table                           | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | create table test_table(id int,name varchar(20),age int)  | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | insert into test_table values (1,'1',1),(2, '2',2)        | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | drop table if exists test_table1                          | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | create table test_table1(id int,name varchar(20),age int) | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | insert into test_table1 values (1,'1',1),(2, '2',2)       | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | drop table if exists test_table                           | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | create table test_table(id int,name varchar(20),age int)  | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | insert into test_table values (1,'1',1),(2, '2',2)        | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | drop table if exists test_table1                          | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | create table test_table1(id int,name varchar(20),age int) | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | insert into test_table1 values (1,'1',1),(2, '2',2)       | success | db1 |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
@@ -992,15 +975,15 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information |         |
 
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                                                                                | expect  | db  |
-      | rw1 | 111111 | conn_3 | False   | insert into test_table(id,name,age) select id,name,age from test_table1                                             | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | update test_table set name='test_name' where id in (select id from test_table1 )                                    | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | update test_table a,test_table1 b set a.age=b.age-1 where a.id=2 and b.id=2                                         | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | select * from test_table where age <> (select age from test_table1 where id !=1)                                    | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | select * from test_table where age <> (select age from test_table1 where id !=1)                                    | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | delete test_table from test_table,test_table1 where test_table.id=1 and test_table1.id =1                           | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | success | db1 |
+      | user | passwd | conn   | toClose | sql                                                                                                                 | expect  | db  |
+      | rwS1 | 111111 | conn_3 | False   | insert into test_table(id,name,age) select id,name,age from test_table1                                             | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | update test_table set name='test_name' where id in (select id from test_table1 )                                    | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | update test_table a,test_table1 b set a.age=b.age-1 where a.id=2 and b.id=2                                         | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | select * from test_table where age <> (select age from test_table1 where id !=1)                                    | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | select * from test_table where age <> (select age from test_table1 where id !=1)                                    | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | delete test_table from test_table,test_table1 where test_table.id=1 and test_table1.id =1                           | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | success | db1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
       | conn_0 | False   | select * from sql_log                                 | length{(8)}  | dble_information | 5       |
@@ -1011,55 +994,55 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
-      | sql_id-0 | sql_stmt-1                                                                                                          | sql_digest-2                                                                                                        | sql_type-3 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
-      | 42       | insert into test_table(id,name,age) select id,name,age from test_table1                                             | insert into test_table(id,name,age) select id,name,age from test_table1                                             | Insert     | 4       | rw1   | 172.100.9.8   | 8066          | 2      |
-      | 43       | update test_table set name='test_name' where id in (select id from test_table1 )                                    | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | Update     | 4       | rw1   | 172.100.9.8   | 8066          | 4      |
-      | 44       | update test_table a,test_table1 b set a.age=b.age-1 where a.id=2 and b.id=2                                         | UPDATE test_table a, test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               | Update     | 4       | rw1   | 172.100.9.8   | 8066          | 2      |
-      | 45       | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | Select     | 4       | rw1   | 172.100.9.8   | 8066          | 4      |
-      | 46       | select * from test_table where age <> (select age from test_table1 where id !=1)                                    | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | Select     | 4       | rw1   | 172.100.9.8   | 8066          | 4      |
-      | 47       | select * from test_table where age <> (select age from test_table1 where id !=1)                                    | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | Select     | 4       | rw1   | 172.100.9.8   | 8066          | 4      |
-      | 48       | delete test_table from test_table,test_table1 where test_table.id=1 and test_table1.id =1                           | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | Delete     | 4       | rw1   | 172.100.9.8   | 8066          | 2      |
-      | 49       | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | Delete     | 4       | rw1   | 172.100.9.8   | 8066          | 1      |
+      | sql_id-0 | sql_stmt-1                                                                                                          | sql_digest-2                                                                                                        | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
+      | 42       | insert into test_table(id,name,age) select id,name,age from test_table1                                             | insert into test_table(id,name,age) select id,name,age from test_table1                                             | Insert     | 42      | 4       | rwS1   | 172.100.9.8   | 8066          | 2      |
+      | 43       | update test_table set name='test_name' where id in (select id from test_table1 )                                    | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | Update     | 43      | 4       | rwS1   | 172.100.9.8   | 8066          | 4      |
+      | 44       | update test_table a,test_table1 b set a.age=b.age-1 where a.id=2 and b.id=2                                         | UPDATE test_table a, test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               | Update     | 44      | 4       | rwS1   | 172.100.9.8   | 8066          | 2      |
+      | 45       | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | Select     | 45      | 4       | rwS1   | 172.100.9.8   | 8066          | 4      |
+      | 46       | select * from test_table where age <> (select age from test_table1 where id !=1)                                    | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | Select     | 46      | 4       | rwS1   | 172.100.9.8   | 8066          | 4      |
+      | 47       | select * from test_table where age <> (select age from test_table1 where id !=1)                                    | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | Select     | 47      | 4       | rwS1   | 172.100.9.8   | 8066          | 4      |
+      | 48       | delete test_table from test_table,test_table1 where test_table.id=1 and test_table1.id =1                           | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | Delete     | 48      | 4       | rwS1   | 172.100.9.8   | 8066          | 2      |
+      | 49       | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | Delete     | 49      | 4       | rwS1   | 172.100.9.8   | 8066          | 1      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
-      | 57      | 4       | rw1   | 172.100.9.8   | 8066          | 42        | 1           |
-      | 58      | 4       | rw1   | 172.100.9.8   | 8066          | 43        | 1           |
-      | 59      | 4       | rw1   | 172.100.9.8   | 8066          | 44        | 1           |
-      | 60      | 4       | rw1   | 172.100.9.8   | 8066          | 45        | 1           |
-      | 61      | 4       | rw1   | 172.100.9.8   | 8066          | 46        | 1           |
-      | 62      | 4       | rw1   | 172.100.9.8   | 8066          | 47        | 1           |
-      | 63      | 4       | rw1   | 172.100.9.8   | 8066          | 48        | 1           |
-      | 64      | 4       | rw1   | 172.100.9.8   | 8066          | 49        | 1           |
+      | 42      | 4       | rwS1   | 172.100.9.8   | 8066          | 42        | 1           |
+      | 43      | 4       | rwS1   | 172.100.9.8   | 8066          | 43        | 1           |
+      | 44      | 4       | rwS1   | 172.100.9.8   | 8066          | 44        | 1           |
+      | 45      | 4       | rwS1   | 172.100.9.8   | 8066          | 45        | 1           |
+      | 46      | 4       | rwS1   | 172.100.9.8   | 8066          | 46        | 1           |
+      | 47      | 4       | rwS1   | 172.100.9.8   | 8066          | 47        | 1           |
+      | 48      | 4       | rwS1   | 172.100.9.8   | 8066          | 48        | 1           |
+      | 49      | 4       | rwS1   | 172.100.9.8   | 8066          | 49        | 1           |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
+   Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
       | sql_digest-0                                                                                                        | entry-1 | user-2 | exec-3 | rows-5 |
-      | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | 4       | rw1   | 1      | 1      |
-      | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | 4       | rw1   | 1      | 2      |
-      | insert into test_table(id,name,age) select id,name,age from test_table1                                             | 4       | rw1   | 1      | 2      |
-      | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | 4       | rw1   | 2      | 8      |
-      | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | 4       | rw1   | 1      | 4      |
-      | UPDATE test_table a, test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               | 4       | rw1   | 1      | 2      |
-      | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | 4       | rw1   | 1      | 4      |
+      | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | 4       | rwS1   | 1      | 1      |
+      | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | 4       | rwS1   | 1      | 2      |
+      | insert into test_table(id,name,age) select id,name,age from test_table1                                             | 4       | rwS1   | 1      | 2      |
+      | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | 4       | rwS1   | 2      | 8      |
+      | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | 4       | rwS1   | 1      | 4      |
+      | UPDATE test_table a, test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               | 4       | rwS1   | 1      | 2      |
+      | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | 4       | rwS1   | 1      | 4      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
       | conn   | toClose | sql                                                   | db               |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                                                                                         | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
-      | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | 1      | rw1   | 4       | 1          | 172.100.9.8   | 8066          | 49        |
-      | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | 1      | rw1   | 4       | 1          | 172.100.9.8   | 8066          | 48        |
-      | insert into test_table(id,name,age) select id,name,age from test_table1                                             | 1      | rw1   | 4       | 1          | 172.100.9.8   | 8066          | 42        |
-      | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | 2      | rw1   | 4       | 2          | 172.100.9.8   | 8066          | 46,47     |
-      | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | 1      | rw1   | 4       | 1          | 172.100.9.8   | 8066          | 45        |
-      | UPDATE test_table a, test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               | 1      | rw1   | 4       | 1          | 172.100.9.8   | 8066          | 44        |
-      | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | 1      | rw1   | 4       | 1          | 172.100.9.8   | 8066          | 43        |
+      | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 49        |
+      | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 48        |
+      | insert into test_table(id,name,age) select id,name,age from test_table1                                             | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 42        |
+      | SELECT * FROM test_table WHERE age <> (  SELECT age  FROM test_table1  WHERE id != ? )                              | 2      | rwS1   | 4       | 2          | 172.100.9.8   | 8066          | 46,47     |
+      | select n.id,s.name from test_table n join test_table1 s on n.id=s.id                                                | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 45        |
+      | UPDATE test_table a, test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 44        |
+      | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | 1      | rwS1   | 4       | 1          | 172.100.9.8   | 8066          | 43        |
 
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
@@ -1084,23 +1067,23 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
-      | sql_id-0 | sql_stmt-1                                                                               | sql_digest-2                                                                                    | sql_type-3 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
-      | 50       | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                      | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                             | Other      | 2       | test   | 172.100.9.8   | 8066          | 2      |
-      | 51       | drop view if exists test_view                                                            | DROP VIEW IF EXISTS test_view                                                                   | Other      | 2       | test   | 172.100.9.8   | 8066          | 0      |
-      | 52       | create view test_view(id,name) AS select * from test union select * from schema2.global2 | CREATE VIEW test_view (  id,   name ) AS SELECT * FROM test UNION SELECT * FROM schema2.global2 | Other      | 2       | test   | 172.100.9.8   | 8066          | 0      |
-      | 53       | select * from test union select * from schema2.global2                                   | select * from test union select * from schema2.global2                                          | Select     | 2       | test   | 172.100.9.8   | 8066          | 8      |
-      | 54       | drop view test_view                                                                      | DROP VIEW test_view                                                                             | Other      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | sql_id-0 | sql_stmt-1                                                                               | sql_digest-2                                                                                    | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
+      | 50       | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                      | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                             | Other      | 50      | 2       | test   | 172.100.9.8   | 8066          | 2      |
+      | 51       | drop view if exists test_view                                                            | DROP VIEW IF EXISTS test_view                                                                   | Other      | 51      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 52       | create view test_view(id,name) AS select * from test union select * from schema2.global2 | CREATE VIEW test_view (  id,   name ) AS SELECT * FROM test UNION SELECT * FROM schema2.global2 | Other      | 52      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 53       | select * from test union select * from schema2.global2                                   | select * from test union select * from schema2.global2                                          | Select     | 53      | 2       | test   | 172.100.9.8   | 8066          | 8      |
+      | 54       | drop view test_view                                                                      | DROP VIEW test_view                                                                             | Other      | 54      | 2       | test   | 172.100.9.8   | 8066          | 0      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
-      | 65      | 2       | test   | 172.100.9.8   | 8066          | 50        | 1           |
-      | 66      | 2       | test   | 172.100.9.8   | 8066          | 51        | 1           |
-      | 67      | 2       | test   | 172.100.9.8   | 8066          | 52        | 1           |
-      | 68      | 2       | test   | 172.100.9.8   | 8066          | 53        | 1           |
-      | 69      | 2       | test   | 172.100.9.8   | 8066          | 54        | 1           |
+      | 50      | 2       | test   | 172.100.9.8   | 8066          | 50        | 1           |
+      | 51      | 2       | test   | 172.100.9.8   | 8066          | 51        | 1           |
+      | 52      | 2       | test   | 172.100.9.8   | 8066          | 52        | 1           |
+      | 53      | 2       | test   | 172.100.9.8   | 8066          | 53        | 1           |
+      | 54      | 2       | test   | 172.100.9.8   | 8066          | 54        | 1           |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -1138,15 +1121,18 @@ sql_log_by_tx_digest_by_entry_by_user
       | test1 | 111111 | conn_2 | true    | drop table if exists schema2.sharding2                            | success | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                       | expect  | db  |
-      | rw1  | 111111 | conn_3 | true    | drop table if exists test_table                           | success | db1 |
-
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+      | rwS1 | 111111 | conn_3 | true    | drop table if exists test_table                           | success | db1 |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
 
 
 
   Scenario: test samplingRate=100 and sharding user hint sql  #6
-    ##先不开启记录
-    Then execute admin cmd "reload @@samplingRate=0"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_1 | False    | drop table if exists sharding_4_t1                                              | success | schema1 |
@@ -1171,20 +1157,20 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
       | sql_id-0 | sql_stmt-1                                                                    | sql_digest-2                                   | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
-      | 1        | /*!dble:shardingNode=dn1*/ select * from sharding_4_t1                        | SELECT * FROM sharding_4_t1                    | Select     | 4       | 2       | test   | 172.100.9.8   | 8066          | 1      |
-      | 2        | /*!dble:shardingNode=dn2*/ insert into sharding_4_t1 values(666, 'name666')   | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 5       | 2       | test   | 172.100.9.8   | 8066          | 1      |
-      | 3        | /*!dble:shardingNode=dn3*/ update sharding_4_t1 set name = 'dn1' where id=666 | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 6       | 2       | test   | 172.100.9.8   | 8066          | 0      |
-      | 4        | /*!dble:shardingNode=dn4*/ delete from sharding_4_t1 where id=666             | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 7       | 2       | test   | 172.100.9.8   | 8066          | 0      |
-      | 5        | exit                                                                          | Other                                          | Other      | 7       | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 1        | /*!dble:shardingNode=dn1*/ select * from sharding_4_t1                        | SELECT * FROM sharding_4_t1                    | Select     | 1       | 2       | test   | 172.100.9.8   | 8066          | 1      |
+      | 2        | /*!dble:shardingNode=dn2*/ insert into sharding_4_t1 values(666, 'name666')   | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      |
+      | 3        | /*!dble:shardingNode=dn3*/ update sharding_4_t1 set name = 'dn1' where id=666 | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 4        | /*!dble:shardingNode=dn4*/ delete from sharding_4_t1 where id=666             | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 5        | exit                                                                          | Other                                          | Other      | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
-      | 4       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           |
-      | 5       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           |
-      | 6       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1           |
-      | 7       | 2       | test   | 172.100.9.8   | 8066          | 4,5       | 2           |
+      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           |
+      | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           |
+      | 3       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1           |
+      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4,5       | 2           |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -1217,37 +1203,37 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                                                   | expect        | db               | timeout |
       | conn_0 | False   | select * from sql_log                                 | length{(10)}  | dble_information | 5       |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(8)}   | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(5)}   | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(5)}  | dble_information | 5       |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(4)}   | dble_information | 5       |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
       | sql_id-0 | sql_stmt-1                                                                    | sql_digest-2                                   | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
-      | 1        | /*!dble:shardingNode=dn1*/ select * from sharding_4_t1                        | SELECT * FROM sharding_4_t1                    | Select     | 4       | 2       | test   | 172.100.9.8   | 8066          | 1      |
-      | 2        | /*!dble:shardingNode=dn2*/ insert into sharding_4_t1 values(666, 'name666')   | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 5       | 2       | test   | 172.100.9.8   | 8066          | 1      |
-      | 3        | /*!dble:shardingNode=dn3*/ update sharding_4_t1 set name = 'dn1' where id=666 | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 6       | 2       | test   | 172.100.9.8   | 8066          | 0      |
-      | 4        | /*!dble:shardingNode=dn4*/ delete from sharding_4_t1 where id=666             | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 7       | 2       | test   | 172.100.9.8   | 8066          | 0      |
-      | 5        | exit                                                                          | Other                                          | Other      | 7       | 2       | test   | 172.100.9.8   | 8066          | 0      |
-      | 6        | SELECT * FROM sharding_4_t1                                                   | SELECT * FROM sharding_4_t1                    | Select     | 8       | 2       | test   | 172.100.9.8   | 8066          | 5      |
-      | 7        | insert into sharding_4_t1 values(666, 'name666')                              | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 9       | 2       | test   | 172.100.9.8   | 8066          | 1      |
-      | 8        | update sharding_4_t1 set name = 'dn1' where id=666                            | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 10      | 2       | test   | 172.100.9.8   | 8066          | 1      |
-      | 9        | delete from sharding_4_t1 where id=666                                        | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 11      | 2       | test   | 172.100.9.8   | 8066          | 1      |
-      | 10       | exit                                                                          | Other                                          | Other      | 11      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 1        | /*!dble:shardingNode=dn1*/ select * from sharding_4_t1                        | SELECT * FROM sharding_4_t1                    | Select     | 1       | 2       | test   | 172.100.9.8   | 8066          | 1      |
+      | 2        | /*!dble:shardingNode=dn2*/ insert into sharding_4_t1 values(666, 'name666')   | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      |
+      | 3        | /*!dble:shardingNode=dn3*/ update sharding_4_t1 set name = 'dn1' where id=666 | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 4        | /*!dble:shardingNode=dn4*/ delete from sharding_4_t1 where id=666             | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 5        | exit                                                                          | Other                                          | Other      | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 6        | SELECT * FROM sharding_4_t1                                                   | SELECT * FROM sharding_4_t1                    | Select     | 5       | 2       | test   | 172.100.9.8   | 8066          | 5      |
+      | 7        | insert into sharding_4_t1 values(666, 'name666')                              | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 6       | 2       | test   | 172.100.9.8   | 8066          | 1      |
+      | 8        | update sharding_4_t1 set name = 'dn1' where id=666                            | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 7       | 2       | test   | 172.100.9.8   | 8066          | 1      |
+      | 9        | delete from sharding_4_t1 where id=666                                        | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 8       | 2       | test   | 172.100.9.8   | 8066          | 1      |
+      | 10       | exit                                                                          | Other                                          | Other      | 8       | 2       | test   | 172.100.9.8   | 8066          | 0      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6 |
-      | 4       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1          |
-      | 5       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1          |
-      | 6       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1          |
-      | 7       | 2       | test   | 172.100.9.8   | 8066          | 4,5       | 2          |
-      | 8       | 2       | test   | 172.100.9.8   | 8066          | 6         | 1          |
-      | 9       | 2       | test   | 172.100.9.8   | 8066          | 7         | 1          |
-      | 10      | 2       | test   | 172.100.9.8   | 8066          | 8         | 1          |
-      | 11      | 2       | test   | 172.100.9.8   | 8066          | 9,10      | 2          |
+      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1          |
+      | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1          |
+      | 3       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1          |
+      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4,5       | 2          |
+      | 5       | 2       | test   | 172.100.9.8   | 8066          | 6         | 1          |
+      | 6       | 2       | test   | 172.100.9.8   | 8066          | 7         | 1          |
+      | 7       | 2       | test   | 172.100.9.8   | 8066          | 8         | 1          |
+      | 8       | 2       | test   | 172.100.9.8   | 8066          | 9,10      | 2          |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -1274,13 +1260,17 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_1 | true     | drop table if exists sharding_4_t1                                              | success | schema1 |
 
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
 
 
 
   Scenario: test samplingRate=100 and transaction sql  ---- shardinguser  #7
-
-    Then execute admin cmd "reload @@samplingRate=0"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_1 | False    | drop table if exists sharding_4_t1                                              | success | schema1 |
@@ -1290,7 +1280,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False    | insert into sharding_4_t1 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | success | schema1 |
       | conn_1 | true     | insert into sharding_2_t1 values(1,'name1'),(2,'name2')                         | success | schema1 |
 
-    Then execute admin cmd "enable @@statistic"
     Then execute admin cmd "reload @@samplingRate=100"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect      | db               |
@@ -1318,29 +1307,27 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(2)}  | dble_information | 5       |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(7)}  | dble_information | 5       |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(2)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user                                 | success  | dble_information | 5       |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
       | sql_id-0 | sql_stmt-1                                       | sql_digest-2                                   | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-      | 1        | begin                                            | begin                                          | Begin      | 7       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 2        | select * from sharding_4_t1                      | select * from sharding_4_t1                    | Select     | 7       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 3        | insert into sharding_4_t1 values(5,'name5')      | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 7       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 4        | commit                                           | commit                                         | Commit     | 7       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 5        | start transaction                                | start transaction                              | Other      | 8       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 6        | update sharding_4_t1 set name='dn2' where id=1   | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 8       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 7        | delete from sharding_4_t1 where id=5             | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 8       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 8        | update sharding_4_t1 set name='dn1' where id=100 | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 8       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 9        | commit                                           | commit                                         | Commit     | 8       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-
+      | 1        | begin                                            | begin                                          | Begin      | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 2        | select * from sharding_4_t1                      | select * from sharding_4_t1                    | Select     | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
+      | 3        | insert into sharding_4_t1 values(5,'name5')      | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 1       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 4        | commit                                           | commit                                         | Commit     | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 5        | start transaction                                | start transaction                              | Other      | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 6        | update sharding_4_t1 set name='dn2' where id=1   | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 7        | delete from sharding_4_t1 where id=5             | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 8        | update sharding_4_t1 set name='dn1' where id=100 | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 9        | commit                                           | commit                                         | Commit     | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
-      | 7       | 2       | test   | 172.100.9.8   | 8066          | 1,2,3,4   | 4           | 5               |
-      | 8       | 2       | test   | 172.100.9.8   | 8066          | 5,6,7,8,9 | 5           | 2               |
+      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1,2,3,4   | 4           | 5               |
+      | 2       | 2       | test   | 172.100.9.8   | 8066          | 5,6,7,8,9 | 5           | 2               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -1385,22 +1372,22 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
       | sql_id-0 | sql_stmt-1                                              | sql_digest-2                                   | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-      | 10       | begin                                                   | begin                                          | Begin      | 9       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 11       | insert into sharding_4_t1 values(5,'name5'),(6,'name6') | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 9       | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 12       | delete from sharding_4_t1 where id=6                    | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 9       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 13       | rollback                                                | rollback                                       | Rollback   | 9       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 14       | start transaction                                       | start transaction                              | Other      | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 15       | select * from sharding_4_t1 where id=2                  | SELECT * FROM sharding_4_t1 WHERE id = ?       | Select     | 10      | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 16       | update sharding_4_t1 set name='dn4' where id=3          | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 10      | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 17       | update sharding_4_t1 set name='dn1' where id=100        | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 18       | rollback                                                | rollback                                       | Rollback   | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 10       | begin                                                   | begin                                          | Begin      | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 11       | insert into sharding_4_t1 values(5,'name5'),(6,'name6') | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 3       | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
+      | 12       | delete from sharding_4_t1 where id=6                    | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 3       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 13       | rollback                                                | rollback                                       | Rollback   | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 14       | start transaction                                       | start transaction                              | Other      | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 15       | select * from sharding_4_t1 where id=2                  | SELECT * FROM sharding_4_t1 WHERE id = ?       | Select     | 4       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 16       | update sharding_4_t1 set name='dn4' where id=3          | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 4       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 17       | update sharding_4_t1 set name='dn1' where id=100        | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 18       | rollback                                                | rollback                                       | Rollback   | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5      | sql_exec-6  | examined_rows-9 |
-      | 9       | 2       | test   | 172.100.9.8   | 8066          | 10,11,12,13    | 4           | 3               |
-      | 10      | 2       | test   | 172.100.9.8   | 8066          | 14,15,16,17,18 | 5           | 2               |
+      | 3       | 2       | test   | 172.100.9.8   | 8066          | 10,11,12,13    | 4           | 3               |
+      | 4       | 2       | test   | 172.100.9.8   | 8066          | 14,15,16,17,18 | 5           | 2               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -1454,18 +1441,18 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
       | sql_id-0 | sql_stmt-1                | sql_digest-2              | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-      | 19       | start transaction         | start transaction         | Other      | 11      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 20       | delete from sharding_2_t1 | delete from sharding_2_t1 | Delete     | 11      | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 21       | begin                     | begin                     | Begin      | 12      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 22       | delete from sharding_4_t1 | delete from sharding_4_t1 | Delete     | 12      | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 23       | exit                      | Other                     | Other      | 12      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 19       | start transaction         | start transaction         | Other      | 5       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 20       | delete from sharding_2_t1 | delete from sharding_2_t1 | Delete     | 5       | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
+      | 21       | begin                     | begin                     | Begin      | 5       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 22       | delete from sharding_4_t1 | delete from sharding_4_t1 | Delete     | 6       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
+      | 23       | exit                      | Other                     | Other      | 6       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | tx_id-0  | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
-      | 11       | 2       | test   | 172.100.9.8   | 8066          | 19,20     | 2           | 2               |
-      | 12       | 2       | test   | 172.100.9.8   | 8066          | 21,22,23  | 3           | 4               |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
+      | 5       | 2       | test   | 172.100.9.8   | 8066          | 19,20,21  | 3           | 2               |
+      | 6       | 2       | test   | 172.100.9.8   | 8066          | 22,23     | 2           | 4               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -1483,13 +1470,18 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                       | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | begin,delete from sharding_4_t1,Other             | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 21,22,23  | 4                |
-      | start transaction,delete from sharding_2_t1       | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 19,20     | 2                |
+      | delete from sharding_4_t1,Other                   | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 22,23     | 4                |
+      | start transaction,delete from sharding_2_t1,begin | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 19,20,21  | 2                |
 
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
-
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
     Given Restart dble in "dble-1" success
-    #### set autocommit=0  session 内，begin/commit/rollback 是下一个事务的开始，txid 新增+1
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_3 | False    | set autocommit=0                                                                | success | schema1 |
@@ -1513,10 +1505,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | 1        | set autocommit=0                                        | SET autocommit = ?                        | Set        | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 2        | update sharding_4_t1 set name='test_name'               | UPDATE sharding_4_t1 SET name = ?         | Update     | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
       | 3        | select * from sharding_4_t1                             | select * from sharding_4_t1               | Select     | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 4        | commit                                                  | commit                                    | Commit     | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 4        | commit                                                  | commit                                    | Commit     | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 5        | delete from sharding_4_t1 where id in (3, 4)            | DELETE FROM sharding_4_t1 WHERE id IN (?) | Delete     | 2       | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
       | 6        | insert into sharding_4_t1 values(3,'name3'),(4,'name4') | INSERT INTO sharding_4_t1 VALUES (?, ?)   | Insert     | 2       | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 7        | rollback                                                | rollback                                  | Rollback   | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 7        | rollback                                                | rollback                                  | Rollback   | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 8        | delete from sharding_4_t1                               | delete from sharding_4_t1                 | Delete     | 3       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
       | 9        | exit                                                    | Other                                     | Other      | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
@@ -1524,9 +1516,9 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
-      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1,2,3     | 3           | 8               |
-      | 2       | 2       | test   | 172.100.9.8   | 8066          | 4,5,6     | 3           | 4               |
-      | 3       | 2       | test   | 172.100.9.8   | 8066          | 7,8,9     | 3           | 4               |
+      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1,2,3,4   | 4           | 8               |
+      | 2       | 2       | test   | 172.100.9.8   | 8066          | 5,6,7     | 3           | 4               |
+      | 3       | 2       | test   | 172.100.9.8   | 8066          | 8,9       | 2           | 4               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -1547,25 +1539,30 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                                                                | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | commit,DELETE FROM sharding_4_t1 WHERE id IN (?),INSERT INTO sharding_4_t1 VALUES (?, ?)   | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 4,5,6     | 4                |
-      | rollback,delete from sharding_4_t1,Other                                                   | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 7,8,9     | 4                |
-      | SET autocommit = ?,UPDATE sharding_4_t1 SET name = ?,select * from sharding_4_t1           | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 1,2,3     | 8                |
+      | DELETE FROM sharding_4_t1 WHERE id IN (?),INSERT INTO sharding_4_t1 VALUES (?, ?),rollback | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 5,6,7     | 4                |
+      | delete from sharding_4_t1,Other                                                            | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 8,9       | 4                |
+      | SET autocommit = ?,UPDATE sharding_4_t1 SET name = ?,select * from sharding_4_t1,commit    | 1      | test   | 2       | 4          | 172.100.9.8   | 8066          | 1,2,3,4   | 8                |
 
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
-
-    Given Restart dble in "dble-1" success
-    ### begin 开始就会记录sql_log
+    Given sleep "2" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                   | expect       | db               | timeout |
+      | conn_0 | true    | truncate dble_information.sql_log                     | success      | dble_information |         |
+      | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information |         |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(0)}  | dble_information |         |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information |         |
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose  | sql                                                                             | expect  | db      |
       | conn_11 | False    | begin                                                                           | success | schema1 |
       | conn_11 | False    | select * from sharding_4_t1                                                     | success | schema1 |
       | conn_11 | False    | insert into sharding_4_t1 values(5,'name5')                                     | success | schema1 |
+
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect      | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(3)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)} | dble_information |
+      | conn_0 | False   | select * from sql_log                               | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user | length{(0)} | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose  | sql                                                                             | expect  | db      |
@@ -1575,10 +1572,10 @@ sql_log_by_tx_digest_by_entry_by_user
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect      | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(6)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(2)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(6)} | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)} | dble_information |
+      | conn_0 | False   | select * from sql_log                               | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(0)} | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(0)} | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | conn     | toClose  | sql                                            | expect  | db      |
@@ -1586,9 +1583,13 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_11  | true     | drop table if exists sharding_4_t1             | success | schema1 |
       | conn_12  | false    | commit                                         | success | schema1 |
       | conn_12  | true     | drop table if exists sharding_2_t1             | success | schema1 |
-
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
-
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
 
 
 
@@ -1604,36 +1605,39 @@ sql_log_by_tx_digest_by_entry_by_user
     #1 more than one rwSplitUsers can use the same dbGroup
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
     """
     Then execute admin cmd "reload @@config"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                       | expect  | db  |
-      | rw1 | 111111 | conn_3 | False   | drop table if exists test_table                           | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | create table test_table(id int,name varchar(20),age int)  | success | db1 |
-      | rw1 | 111111 | conn_3 | true    | insert into test_table values (1,'1',1),(2, '2',2)        | success | db1 |
-      | rw1 | 111111 | conn_4 | False   | drop table if exists test_table1                          | success | db2 |
-      | rw1 | 111111 | conn_4 | False   | create table test_table1(id int,name varchar(20),age int) | success | db2 |
-      | rw1 | 111111 | conn_4 | true    | insert into test_table1 values (1,'1',1),(2, '2',2)       | success | db2 |
+      | rwS1 | 111111 | conn_3 | False   | drop table if exists test_table                           | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | create table test_table(id int,name varchar(20),age int)  | success | db1 |
+      | rwS1 | 111111 | conn_3 | true    | insert into test_table values (1,'1',1),(2, '2',2)        | success | db1 |
+      | rwS1 | 111111 | conn_4 | False   | drop table if exists test_table1                          | success | db2 |
+      | rwS1 | 111111 | conn_4 | False   | create table test_table1(id int,name varchar(20),age int) | success | db2 |
+      | rwS1 | 111111 | conn_4 | true    | insert into test_table1 values (1,'1',1),(2, '2',2)       | success | db2 |
 
-    Given Restart dble in "dble-1" success
+    Then execute admin cmd "reload @@samplingRate=100"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect      | db               |
       | conn_0 | False   | select * from sql_log                               | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user | length{(0)} | dble_information |
 
     #case  begin ... commit
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                              | expect  | db  |
-      | rw1 | 111111 | conn_3 | False   | begin                                            | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | select * from test_table                         | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | insert into test_table values(5,'name5',5)       | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | commit                                           | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | begin                                            | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | select * from test_table                         | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | insert into test_table values(5,'name5',5)       | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | commit                                           | success | db1 |
 
-      | rw1 | 111111 | conn_4 | False   | start transaction                                  | success | db2 |
-      | rw1 | 111111 | conn_4 | False   | update test_table1 set age =33 where id=1          | success | db2 |
-      | rw1 | 111111 | conn_4 | False   | delete from test_table1 where id=5                 | success | db2 |
-      | rw1 | 111111 | conn_4 | False   | update test_table1 set age =44 where id=100        | success | db2 |
-      | rw1 | 111111 | conn_4 | False   | commit                                             | success | db2 |
+      | rwS1 | 111111 | conn_4 | False   | start transaction                                  | success | db2 |
+      | rwS1 | 111111 | conn_4 | False   | update test_table1 set age =33 where id=1          | success | db2 |
+      | rwS1 | 111111 | conn_4 | False   | delete from test_table1 where id=5                 | success | db2 |
+      | rwS1 | 111111 | conn_4 | False   | update test_table1 set age =44 where id=100        | success | db2 |
+      | rwS1 | 111111 | conn_4 | False   | commit                                             | success | db2 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
       | conn_0 | False   | select * from sql_log                                 | length{(9)}  | dble_information | 5       |
@@ -1645,59 +1649,59 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
       | sql_id-0 | sql_stmt-1                                  | sql_digest-2                                | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-      | 1        | begin                                       | begin                                       | Begin      | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 2        | select * from test_table                    | select * from test_table                    | Select     | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 3        | insert into test_table values(5,'name5',5)  | INSERT INTO test_table VALUES (?, ?, ?)     | Insert     | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 4        | commit                                      | commit                                      | Commit     | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 5        | start transaction                           | start transaction                           | Other      | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 6        | update test_table1 set age =33 where id=1   | UPDATE test_table1 SET age = ? WHERE id = ? | Update     | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 7        | delete from test_table1 where id=5          | DELETE FROM test_table1 WHERE id = ?        | Delete     | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 8        | update test_table1 set age =44 where id=100 | UPDATE test_table1 SET age = ? WHERE id = ? | Update     | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 9        | commit                                      | commit                                      | Commit     | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 1        | begin                                       | begin                                       | Begin      | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 2        | select * from test_table                    | select * from test_table                    | Select     | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 2      | 2                |
+      | 3        | insert into test_table values(5,'name5',5)  | INSERT INTO test_table VALUES (?, ?, ?)     | Insert     | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 4        | commit                                      | commit                                      | Commit     | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 5        | start transaction                           | start transaction                           | Other      | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 6        | update test_table1 set age =33 where id=1   | UPDATE test_table1 SET age = ? WHERE id = ? | Update     | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 7        | delete from test_table1 where id=5          | DELETE FROM test_table1 WHERE id = ?        | Delete     | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 8        | update test_table1 set age =44 where id=100 | UPDATE test_table1 SET age = ? WHERE id = ? | Update     | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 9        | commit                                      | commit                                      | Commit     | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
-      | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 1,2,3,4   | 4           | 3               |
-      | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 5,6,7,8,9 | 5           | 1               |
+      | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 1,2,3,4   | 4           | 3               |
+      | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 5,6,7,8,9 | 5           | 1               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
       | sql_digest-0                                | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-      | begin                                       | 1       | rw1   | 1      | 0      | 0               |
-      | commit                                      | 1       | rw1   | 2      | 0      | 0               |
-      | DELETE FROM test_table1 WHERE id = ?        | 1       | rw1   | 1      | 0      | 0               |
-      | INSERT INTO test_table VALUES (?, ?, ?)     | 1       | rw1   | 1      | 1      | 1               |
-      | select * from test_table                    | 1       | rw1   | 1      | 2      | 2               |
-      | start transaction                           | 1       | rw1   | 1      | 0      | 0               |
-      | UPDATE test_table1 SET age = ? WHERE id = ? | 1       | rw1   | 2      | 1      | 1               |
+      | begin                                       | 1       | rwS1   | 1      | 0      | 0               |
+      | commit                                      | 1       | rwS1   | 2      | 0      | 0               |
+      | DELETE FROM test_table1 WHERE id = ?        | 1       | rwS1   | 1      | 0      | 0               |
+      | INSERT INTO test_table VALUES (?, ?, ?)     | 1       | rwS1   | 1      | 1      | 1               |
+      | select * from test_table                    | 1       | rwS1   | 1      | 2      | 2               |
+      | start transaction                           | 1       | rwS1   | 1      | 0      | 0               |
+      | UPDATE test_table1 SET age = ? WHERE id = ? | 1       | rwS1   | 2      | 1      | 1               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
       | conn   | toClose | sql                                                   | db               |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                                                                                                                           | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | begin,select * from test_table,INSERT INTO test_table VALUES (?, ?, ?),commit                                                                         | 1      | rw1   | 1       | 4          | 172.100.9.8   | 8066          | 1,2,3,4   | 3                |
-      | start transaction,UPDATE test_table1 SET age = ? WHERE id = ?,DELETE FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = ? WHERE id = ?,commit | 1      | rw1   | 1       | 5          | 172.100.9.8   | 8066          | 5,6,7,8,9 | 1                |
+      | begin,select * from test_table,INSERT INTO test_table VALUES (?, ?, ?),commit                                                                         | 1      | rwS1   | 1       | 4          | 172.100.9.8   | 8066          | 1,2,3,4   | 3                |
+      | start transaction,UPDATE test_table1 SET age = ? WHERE id = ?,DELETE FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = ? WHERE id = ?,commit | 1      | rwS1   | 1       | 5          | 172.100.9.8   | 8066          | 5,6,7,8,9 | 1                |
 
 
     #case  begin ... rollback
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                      | expect  | db  |
-      | rw1 | 111111 | conn_3 | False   | begin                                                    | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | insert into test_table values(5,'name5',5),(6,'name6',6) | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | delete from test_table where id=6                        | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | rollback                                                 | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | begin                                                    | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | insert into test_table values(5,'name5',5),(6,'name6',6) | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | delete from test_table where id=6                        | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | rollback                                                 | success | db1 |
 
-      | rw1 | 111111 | conn_4 | False   | start transaction                                        | success | db2 |
-      | rw1 | 111111 | conn_4 | False   | select * from test_table1 where id=2                     | success | db2 |
-      | rw1 | 111111 | conn_4 | False   | update test_table1 set age=age-1 where id=1              | success | db2 |
-      | rw1 | 111111 | conn_4 | False   | update test_table1 set age=age*3 where id=2              | success | db2 |
-      | rw1 | 111111 | conn_4 | False   | rollback                                                 | success | db2 |
+      | rwS1 | 111111 | conn_4 | False   | start transaction                                        | success | db2 |
+      | rwS1 | 111111 | conn_4 | False   | select * from test_table1 where id=2                     | success | db2 |
+      | rwS1 | 111111 | conn_4 | False   | update test_table1 set age=age-1 where id=1              | success | db2 |
+      | rwS1 | 111111 | conn_4 | False   | update test_table1 set age=age*3 where id=2              | success | db2 |
+      | rwS1 | 111111 | conn_4 | False   | rollback                                                 | success | db2 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect        | db               | timeout |
       | conn_0 | False   | select * from sql_log                                 | length{(18)}  | dble_information | 5       |
@@ -1707,63 +1711,63 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
       | sql_id-0 | sql_stmt-1                                               | sql_digest-2                                      | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-      | 10       | begin                                                    | begin                                             | Begin      | 3       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 11       | insert into test_table values(5,'name5',5),(6,'name6',6) | INSERT INTO test_table VALUES (?, ?, ?)           | Insert     | 3       | 1       | rw1   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 12       | delete from test_table where id=6                        | DELETE FROM test_table WHERE id = ?               | Delete     | 3       | 1       | rw1   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 13       | rollback                                                 | rollback                                          | Rollback   | 3       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 14       | start transaction                                        | start transaction                                 | Other      | 4       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 15       | select * from test_table1 where id=2                     | SELECT * FROM test_table1 WHERE id = ?            | Select     | 4       | 1       | rw1   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 16       | update test_table1 set age=age-1 where id=1              | UPDATE test_table1 SET age = age - ? WHERE id = ? | Update     | 4       | 1       | rw1   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 17       | update test_table1 set age=age*3 where id=2              | UPDATE test_table1 SET age = age * ? WHERE id = ? | Update     | 4       | 1       | rw1   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 18       | rollback                                                 | rollback                                          | Rollback   | 4       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 10       | begin                                                    | begin                                             | Begin      | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 11       | insert into test_table values(5,'name5',5),(6,'name6',6) | INSERT INTO test_table VALUES (?, ?, ?)           | Insert     | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 2      | 2                |
+      | 12       | delete from test_table where id=6                        | DELETE FROM test_table WHERE id = ?               | Delete     | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 13       | rollback                                                 | rollback                                          | Rollback   | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 14       | start transaction                                        | start transaction                                 | Other      | 4       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 15       | select * from test_table1 where id=2                     | SELECT * FROM test_table1 WHERE id = ?            | Select     | 4       | 1       | rwS1   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 16       | update test_table1 set age=age-1 where id=1              | UPDATE test_table1 SET age = age - ? WHERE id = ? | Update     | 4       | 1       | rwS1   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 17       | update test_table1 set age=age*3 where id=2              | UPDATE test_table1 SET age = age * ? WHERE id = ? | Update     | 4       | 1       | rwS1   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 18       | rollback                                                 | rollback                                          | Rollback   | 4       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5      | sql_exec-6 | examined_rows-9 |
-      | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 1,2,3,4        | 4          | 3               |
-      | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 5,6,7,8,9      | 5          | 1               |
-      | 3       | 1       | rw1   | 172.100.9.8   | 8066          | 10,11,12,13    | 4          | 3               |
-      | 4       | 1       | rw1   | 172.100.9.8   | 8066          | 14,15,16,17,18 | 5          | 3               |
+      | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 1,2,3,4        | 4          | 3               |
+      | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 5,6,7,8,9      | 5          | 1               |
+      | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 10,11,12,13    | 4          | 3               |
+      | 4       | 1       | rwS1   | 172.100.9.8   | 8066          | 14,15,16,17,18 | 5          | 3               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
       | sql_digest-0                                      | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-      | begin                                             | 1       | rw1   | 2      | 0      | 0               |
-      | commit                                            | 1       | rw1   | 2      | 0      | 0               |
-      | DELETE FROM test_table WHERE id = ?               | 1       | rw1   | 1      | 1      | 1               |
-      | DELETE FROM test_table1 WHERE id = ?              | 1       | rw1   | 1      | 0      | 0               |
-      | INSERT INTO test_table VALUES (?, ?, ?)           | 1       | rw1   | 2      | 3      | 3               |
-      | rollback                                          | 1       | rw1   | 2      | 0      | 0               |
-      | select * from test_table                          | 1       | rw1   | 1      | 2      | 2               |
-      | SELECT * FROM test_table1 WHERE id = ?            | 1       | rw1   | 1      | 1      | 1               |
-      | start transaction                                 | 1       | rw1   | 2      | 0      | 0               |
-      | UPDATE test_table1 SET age = ? WHERE id = ?       | 1       | rw1   | 2      | 1      | 1               |
-      | UPDATE test_table1 SET age = age * ? WHERE id = ? | 1       | rw1   | 1      | 1      | 1               |
-      | UPDATE test_table1 SET age = age - ? WHERE id = ? | 1       | rw1   | 1      | 1      | 1               |
+      | begin                                             | 1       | rwS1   | 2      | 0      | 0               |
+      | commit                                            | 1       | rwS1   | 2      | 0      | 0               |
+      | DELETE FROM test_table WHERE id = ?               | 1       | rwS1   | 1      | 1      | 1               |
+      | DELETE FROM test_table1 WHERE id = ?              | 1       | rwS1   | 1      | 0      | 0               |
+      | INSERT INTO test_table VALUES (?, ?, ?)           | 1       | rwS1   | 2      | 3      | 3               |
+      | rollback                                          | 1       | rwS1   | 2      | 0      | 0               |
+      | select * from test_table                          | 1       | rwS1   | 1      | 2      | 2               |
+      | SELECT * FROM test_table1 WHERE id = ?            | 1       | rwS1   | 1      | 1      | 1               |
+      | start transaction                                 | 1       | rwS1   | 2      | 0      | 0               |
+      | UPDATE test_table1 SET age = ? WHERE id = ?       | 1       | rwS1   | 2      | 1      | 1               |
+      | UPDATE test_table1 SET age = age * ? WHERE id = ? | 1       | rwS1   | 1      | 1      | 1               |
+      | UPDATE test_table1 SET age = age - ? WHERE id = ? | 1       | rwS1   | 1      | 1      | 1               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
       | conn   | toClose | sql                                                   | db               |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                                                                                                                                           | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7      | examined_rows-10 |
-      | begin,INSERT INTO test_table VALUES (?, ?, ?),DELETE FROM test_table WHERE id = ?,rollback                                                                            | 1      | rw1   | 1       | 4          | 172.100.9.8   | 8066          | 10,11,12,13    | 3                |
-      | begin,select * from test_table,INSERT INTO test_table VALUES (?, ?, ?),commit                                                                                         | 1      | rw1   | 1       | 4          | 172.100.9.8   | 8066          | 1,2,3,4        | 3                |
-      | start transaction,SELECT * FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = age - ? WHERE id = ?,UPDATE test_table1 SET age = age * ? WHERE id = ?,rollback | 1      | rw1   | 1       | 5          | 172.100.9.8   | 8066          | 14,15,16,17,18 | 3                |
-      | start transaction,UPDATE test_table1 SET age = ? WHERE id = ?,DELETE FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = ? WHERE id = ?,commit                 | 1      | rw1   | 1       | 5          | 172.100.9.8   | 8066          | 5,6,7,8,9      | 1                |
+      | begin,INSERT INTO test_table VALUES (?, ?, ?),DELETE FROM test_table WHERE id = ?,rollback                                                                            | 1      | rwS1   | 1       | 4          | 172.100.9.8   | 8066          | 10,11,12,13    | 3                |
+      | begin,select * from test_table,INSERT INTO test_table VALUES (?, ?, ?),commit                                                                                         | 1      | rwS1   | 1       | 4          | 172.100.9.8   | 8066          | 1,2,3,4        | 3                |
+      | start transaction,SELECT * FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = age - ? WHERE id = ?,UPDATE test_table1 SET age = age * ? WHERE id = ?,rollback | 1      | rwS1   | 1       | 5          | 172.100.9.8   | 8066          | 14,15,16,17,18 | 3                |
+      | start transaction,UPDATE test_table1 SET age = ? WHERE id = ?,DELETE FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = ? WHERE id = ?,commit                 | 1      | rwS1   | 1       | 5          | 172.100.9.8   | 8066          | 5,6,7,8,9      | 1                |
 
 
     #case  begin ... start transaction
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose | sql                          | expect  | db  |
-      | rw1 | 111111 | conn_31 | False   | start transaction            | success | db1 |
-      | rw1 | 111111 | conn_31 | False   | delete from test_table       | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | start transaction            | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | delete from test_table       | success | db1 |
 
-      | rw1 | 111111 | conn_31 | False   | begin                        | success | db1 |
-      | rw1 | 111111 | conn_31 | true    | delete from db2.test_table1  | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | begin                        | success | db1 |
+      | rwS1 | 111111 | conn_31 | true    | delete from db2.test_table1  | success | db1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect        | db               | timeout |
       | conn_0 | False   | select * from sql_log                                 | length{(23)}  | dble_information | 5       |
@@ -1772,72 +1776,77 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
       | sql_id-0 | sql_stmt-1                  | sql_digest-2                | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-      | 19       | start transaction           | start transaction           | Other      | 5       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 20       | delete from test_table      | delete from test_table      | Delete     | 5       | 1       | rw1   | 172.100.9.8   | 8066          | 3      | 3                |
-      | 21       | begin                       | begin                       | Begin      | 5       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 22       | delete from db2.test_table1 | delete from db2.test_table1 | Delete     | 6       | 1       | rw1   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 23       | exit                        | Other                       | Other      | 6       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 19       | start transaction           | start transaction           | Other      | 5       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 20       | delete from test_table      | delete from test_table      | Delete     | 5       | 1       | rwS1   | 172.100.9.8   | 8066          | 3      | 3                |
+      | 21       | begin                       | begin                       | Begin      | 5       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 22       | delete from db2.test_table1 | delete from db2.test_table1 | Delete     | 6       | 1       | rwS1   | 172.100.9.8   | 8066          | 2      | 2                |
+      | 23       | exit                        | Other                       | Other      | 6       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5      | sql_exec-6 | examined_rows-9 |
-      | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 1,2,3,4        | 4          | 3               |
-      | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 5,6,7,8,9      | 5          | 1               |
-      | 3       | 1       | rw1   | 172.100.9.8   | 8066          | 10,11,12,13    | 4          | 3               |
-      | 4       | 1       | rw1   | 172.100.9.8   | 8066          | 14,15,16,17,18 | 5          | 3               |
-      | 5       | 1       | rw1   | 172.100.9.8   | 8066          | 19,20,21       | 3          | 3               |
-      | 6       | 1       | rw1   | 172.100.9.8   | 8066          | 22,23          | 2          | 2               |
+      | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 1,2,3,4        | 4          | 3               |
+      | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 5,6,7,8,9      | 5          | 1               |
+      | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 10,11,12,13    | 4          | 3               |
+      | 4       | 1       | rwS1   | 172.100.9.8   | 8066          | 14,15,16,17,18 | 5          | 3               |
+      | 5       | 1       | rwS1   | 172.100.9.8   | 8066          | 19,20,21       | 3          | 3               |
+      | 6       | 1       | rwS1   | 172.100.9.8   | 8066          | 22,23          | 2          | 2               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
       | sql_digest-0                                      | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-      | Other                                             | 1       | rw1   | 1      | 0      | 0               |
-      | begin                                             | 1       | rw1   | 3      | 0      | 0               |
-      | commit                                            | 1       | rw1   | 2      | 0      | 0               |
-      | delete from db2.test_table1                       | 1       | rw1   | 1      | 2      | 2               |
-      | delete from test_table                            | 1       | rw1   | 1      | 3      | 3               |
-      | DELETE FROM test_table WHERE id = ?               | 1       | rw1   | 1      | 1      | 1               |
-      | DELETE FROM test_table1 WHERE id = ?              | 1       | rw1   | 1      | 0      | 0               |
-      | INSERT INTO test_table VALUES (?, ?, ?)           | 1       | rw1   | 2      | 3      | 3               |
-      | rollback                                          | 1       | rw1   | 2      | 0      | 0               |
-      | select * from test_table                          | 1       | rw1   | 1      | 2      | 2               |
-      | SELECT * FROM test_table1 WHERE id = ?            | 1       | rw1   | 1      | 1      | 1               |
-      | start transaction                                 | 1       | rw1   | 3      | 0      | 0               |
-      | UPDATE test_table1 SET age = ? WHERE id = ?       | 1       | rw1   | 2      | 1      | 1               |
-      | UPDATE test_table1 SET age = age * ? WHERE id = ? | 1       | rw1   | 1      | 1      | 1               |
-      | UPDATE test_table1 SET age = age - ? WHERE id = ? | 1       | rw1   | 1      | 1      | 1               |
+      | Other                                             | 1       | rwS1   | 1      | 0      | 0               |
+      | begin                                             | 1       | rwS1   | 3      | 0      | 0               |
+      | commit                                            | 1       | rwS1   | 2      | 0      | 0               |
+      | delete from db2.test_table1                       | 1       | rwS1   | 1      | 2      | 2               |
+      | delete from test_table                            | 1       | rwS1   | 1      | 3      | 3               |
+      | DELETE FROM test_table WHERE id = ?               | 1       | rwS1   | 1      | 1      | 1               |
+      | DELETE FROM test_table1 WHERE id = ?              | 1       | rwS1   | 1      | 0      | 0               |
+      | INSERT INTO test_table VALUES (?, ?, ?)           | 1       | rwS1   | 2      | 3      | 3               |
+      | rollback                                          | 1       | rwS1   | 2      | 0      | 0               |
+      | select * from test_table                          | 1       | rwS1   | 1      | 2      | 2               |
+      | SELECT * FROM test_table1 WHERE id = ?            | 1       | rwS1   | 1      | 1      | 1               |
+      | start transaction                                 | 1       | rwS1   | 3      | 0      | 0               |
+      | UPDATE test_table1 SET age = ? WHERE id = ?       | 1       | rwS1   | 2      | 1      | 1               |
+      | UPDATE test_table1 SET age = age * ? WHERE id = ? | 1       | rwS1   | 1      | 1      | 1               |
+      | UPDATE test_table1 SET age = age - ? WHERE id = ? | 1       | rwS1   | 1      | 1      | 1               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
       | conn   | toClose | sql                                                   | db               |
       | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                                                                                                                                           | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7      | examined_rows-10 |
-      | begin,INSERT INTO test_table VALUES (?, ?, ?),DELETE FROM test_table WHERE id = ?,rollback                                                                            | 1      | rw1   | 1       | 4          | 172.100.9.8   | 8066          | 10,11,12,13    | 3                |
-      | begin,select * from test_table,INSERT INTO test_table VALUES (?, ?, ?),commit                                                                                         | 1      | rw1   | 1       | 4          | 172.100.9.8   | 8066          | 1,2,3,4        | 3                |
-      | delete from db2.test_table1,Other                                                                                                                                     | 1      | rw1   | 1       | 2          | 172.100.9.8   | 8066          | 22,23          | 2                |
-      | start transaction,delete from test_table,begin                                                                                                                        | 1      | rw1   | 1       | 3          | 172.100.9.8   | 8066          | 19,20,21       | 3                |
-      | start transaction,SELECT * FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = age - ? WHERE id = ?,UPDATE test_table1 SET age = age * ? WHERE id = ?,rollback | 1      | rw1   | 1       | 5          | 172.100.9.8   | 8066          | 14,15,16,17,18 | 3                |
-      | start transaction,UPDATE test_table1 SET age = ? WHERE id = ?,DELETE FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = ? WHERE id = ?,commit                 | 1      | rw1   | 1       | 5          | 172.100.9.8   | 8066          | 5,6,7,8,9      | 1                |
+      | begin,INSERT INTO test_table VALUES (?, ?, ?),DELETE FROM test_table WHERE id = ?,rollback                                                                            | 1      | rwS1   | 1       | 4          | 172.100.9.8   | 8066          | 10,11,12,13    | 3                |
+      | begin,select * from test_table,INSERT INTO test_table VALUES (?, ?, ?),commit                                                                                         | 1      | rwS1   | 1       | 4          | 172.100.9.8   | 8066          | 1,2,3,4        | 3                |
+      | delete from db2.test_table1,Other                                                                                                                                     | 1      | rwS1   | 1       | 2          | 172.100.9.8   | 8066          | 22,23          | 2                |
+      | start transaction,delete from test_table,begin                                                                                                                        | 1      | rwS1   | 1       | 3          | 172.100.9.8   | 8066          | 19,20,21       | 3                |
+      | start transaction,SELECT * FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = age - ? WHERE id = ?,UPDATE test_table1 SET age = age * ? WHERE id = ?,rollback | 1      | rwS1   | 1       | 5          | 172.100.9.8   | 8066          | 14,15,16,17,18 | 3                |
+      | start transaction,UPDATE test_table1 SET age = ? WHERE id = ?,DELETE FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = ? WHERE id = ?,commit                 | 1      | rwS1   | 1       | 5          | 172.100.9.8   | 8066          | 5,6,7,8,9      | 1                |
 
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
-
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
 
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose | sql                                                           | expect  | db  |
-      | rw1 | 111111 | conn_31 | False   | set autocommit=0                                              | success | db1 |
-      | rw1 | 111111 | conn_31 | False   | update test_table set name='test_name'                        | success | db1 |
-      | rw1 | 111111 | conn_31 | False   | select * from test_table                                      | success | db1 |
-      | rw1 | 111111 | conn_31 | False   | commit                                                        | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | set autocommit=0                                              | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | update test_table set name='test_name'                        | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | select * from test_table                                      | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | commit                                                        | success | db1 |
 
-      | rw1 | 111111 | conn_31 | False   | delete from db2.test_table1 where id in (1, 4)                | success | db1 |
-      | rw1 | 111111 | conn_31 | False   | insert into db2.test_table1 values(3,'name3',3),(4,'name4',4) | success | db1 |
-      | rw1 | 111111 | conn_31 | False   | rollback                                                      | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | delete from db2.test_table1 where id in (1, 4)                | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | insert into db2.test_table1 values(3,'name3',3),(4,'name4',4) | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | rollback                                                      | success | db1 |
 
-      | rw1 | 111111 | conn_31 | true    | delete from db2.test_table1                                   | success | db1 |
+      | rwS1 | 111111 | conn_31 | true    | delete from db2.test_table1                                   | success | db1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
       | conn_0 | False   | select * from sql_log                                 | length{(9)}  | dble_information | 5       |
@@ -1849,61 +1858,66 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
       | sql_id-0 | sql_stmt-1                                                    | sql_digest-2                                 | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-      | 1        | set autocommit=0                                              | SET autocommit = ?                           | Set        | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 2        | update test_table set name='test_name'                        | UPDATE test_table SET name = ?               | Update     | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 3        | select * from test_table                                      | select * from test_table                     | Select     | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 4        | commit                                                        | commit                                       | Commit     | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 5        | delete from db2.test_table1 where id in (1, 4)                | DELETE FROM db2.test_table1 WHERE id IN (?)  | Delete     | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 6        | insert into db2.test_table1 values(3,'name3',3),(4,'name4',4) | INSERT INTO db2.test_table1 VALUES (?, ?, ?) | Insert     | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 7        | rollback                                                      | rollback                                     | Rollback   | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 8        | delete from db2.test_table1                                   | delete from db2.test_table1                  | Delete     | 3       | 1       | rw1   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 9        | exit                                                          | Other                                        | Other      | 3       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 1        | set autocommit=0                                              | SET autocommit = ?                           | Set        | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 2        | update test_table set name='test_name'                        | UPDATE test_table SET name = ?               | Update     | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 3        | select * from test_table                                      | select * from test_table                     | Select     | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 4        | commit                                                        | commit                                       | Commit     | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 5        | delete from db2.test_table1 where id in (1, 4)                | DELETE FROM db2.test_table1 WHERE id IN (?)  | Delete     | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 6        | insert into db2.test_table1 values(3,'name3',3),(4,'name4',4) | INSERT INTO db2.test_table1 VALUES (?, ?, ?) | Insert     | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 2      | 2                |
+      | 7        | rollback                                                      | rollback                                     | Rollback   | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 8        | delete from db2.test_table1                                   | delete from db2.test_table1                  | Delete     | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 2      | 2                |
+      | 9        | exit                                                          | Other                                        | Other      | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                          | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6 | examined_rows-9 |
-      | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 1,2,3,4   | 4           | 0               |
-      | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 5,6,7     | 3           | 3               |
-      | 3       | 1       | rw1   | 172.100.9.8   | 8066          | 8,9       | 2           | 2               |
+      | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 1,2,3,4   | 4           | 0               |
+      | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 5,6,7     | 3           | 3               |
+      | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 8,9       | 2           | 2               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
       | sql_digest-0                                 | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-      | Other                                        | 1       | rw1   | 1      | 0      | 0               |
-      | commit                                       | 1       | rw1   | 1      | 0      | 0               |
-      | delete from db2.test_table1                  | 1       | rw1   | 1      | 2      | 2               |
-      | DELETE FROM db2.test_table1 WHERE id IN (?)  | 1       | rw1   | 1      | 1      | 1               |
-      | INSERT INTO db2.test_table1 VALUES (?, ?, ?) | 1       | rw1   | 1      | 2      | 2               |
-      | rollback                                     | 1       | rw1   | 1      | 0      | 0               |
-      | select * from test_table                     | 1       | rw1   | 1      | 0      | 0               |
-      | SET autocommit = ?                           | 1       | rw1   | 1      | 0      | 0               |
-      | UPDATE test_table SET name = ?               | 1       | rw1   | 1      | 0      | 0               |
+      | Other                                        | 1       | rwS1   | 1      | 0      | 0               |
+      | commit                                       | 1       | rwS1   | 1      | 0      | 0               |
+      | delete from db2.test_table1                  | 1       | rwS1   | 1      | 2      | 2               |
+      | DELETE FROM db2.test_table1 WHERE id IN (?)  | 1       | rwS1   | 1      | 1      | 1               |
+      | INSERT INTO db2.test_table1 VALUES (?, ?, ?) | 1       | rwS1   | 1      | 2      | 2               |
+      | rollback                                     | 1       | rwS1   | 1      | 0      | 0               |
+      | select * from test_table                     | 1       | rwS1   | 1      | 0      | 0               |
+      | SET autocommit = ?                           | 1       | rwS1   | 1      | 0      | 0               |
+      | UPDATE test_table SET name = ?               | 1       | rwS1   | 1      | 0      | 0               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
       | conn   | toClose | sql                                                   | db               |
       | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                                                                       | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | DELETE FROM db2.test_table1 WHERE id IN (?),INSERT INTO db2.test_table1 VALUES (?, ?, ?),rollback | 1      | rw1   | 1       | 3          | 172.100.9.8   | 8066          | 5,6,7     | 3                |
-      | delete from db2.test_table1,Other                                                                 | 1      | rw1   | 1       | 2          | 172.100.9.8   | 8066          | 8,9       | 2                |
-      | SET autocommit = ?,UPDATE test_table SET name = ?,select * from test_table,commit                 | 1      | rw1   | 1       | 4          | 172.100.9.8   | 8066          | 1,2,3,4   | 0                |
+      | DELETE FROM db2.test_table1 WHERE id IN (?),INSERT INTO db2.test_table1 VALUES (?, ?, ?),rollback | 1      | rwS1   | 1       | 3          | 172.100.9.8   | 8066          | 5,6,7     | 3                |
+      | delete from db2.test_table1,Other                                                                 | 1      | rwS1   | 1       | 2          | 172.100.9.8   | 8066          | 8,9       | 2                |
+      | SET autocommit = ?,UPDATE test_table SET name = ?,select * from test_table,commit                 | 1      | rwS1   | 1       | 4          | 172.100.9.8   | 8066          | 1,2,3,4   | 0                |
 
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
-
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
     Given Restart dble in "dble-1" success
 
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose | sql                                              | expect  | db  |
-      | rw1 | 111111 | conn_31 | False   | begin                                            | success | db1 |
-      | rw1 | 111111 | conn_31 | False   | select * from test_table                         | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | begin                                            | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | select * from test_table                         | success | db1 |
 
-      | rw1 | 111111 | conn_41 | False   | start transaction                                  | success | db2 |
-      | rw1 | 111111 | conn_41 | False   | update test_table1 set age =33 where id=1          | success | db2 |
-      | rw1 | 111111 | conn_41 | False   | delete from test_table1 where id=5                 | success | db2 |
-      | rw1 | 111111 | conn_41 | False   | update test_table1 set age =44 where id=100        | success | db2 |
+      | rwS1 | 111111 | conn_41 | False   | start transaction                                  | success | db2 |
+      | rwS1 | 111111 | conn_41 | False   | update test_table1 set age =33 where id=1          | success | db2 |
+      | rwS1 | 111111 | conn_41 | False   | delete from test_table1 where id=5                 | success | db2 |
+      | rwS1 | 111111 | conn_41 | False   | update test_table1 set age =44 where id=100        | success | db2 |
   ##### 事务没结束，不落盘
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
@@ -1914,10 +1928,10 @@ sql_log_by_tx_digest_by_entry_by_user
 
      Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose | sql                                 | expect  | db  |
-      | rw1 | 111111 | conn_31 | False   | commit                              | success | db1 |
-      | rw1 | 111111 | conn_31 | true    | drop table if exists test_table     | success | db1 |
-      | rw1 | 111111 | conn_41 | False   | commit                              | success | db2 |
-      | rw1 | 111111 | conn_41 | true    | drop table if exists test_table1    | success | db2 |
+      | rwS1 | 111111 | conn_31 | False   | commit                              | success | db1 |
+      | rwS1 | 111111 | conn_31 | true    | drop table if exists test_table     | success | db1 |
+      | rwS1 | 111111 | conn_41 | False   | commit                              | success | db2 |
+      | rwS1 | 111111 | conn_41 | true    | drop table if exists test_table1    | success | db2 |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
@@ -1926,7 +1940,14 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(9)}  | dble_information | 3       |
       | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(4)}  | dble_information | 3       |
 
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
 
 
 
