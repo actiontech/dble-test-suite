@@ -172,8 +172,8 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
       python3 /opt/LargePacket.py
       """
-     #### 按理，读写分离用户的报错参考应该是mysql的值，后续优化的时候再更改case DBLE0REQ-2051
-    Given execute linux command in "dble-1" and contains exception "Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf"
+     #### 读写分离用户的报错参考应该是mysql的值，DBLE0REQ-2048
+    Given execute linux command in "dble-1" and contains exception "Got a packet bigger than 'max_allowed_packet' bytes"
       """
       python3 /opt/LargePacket_rw.py
       """
@@ -198,18 +198,9 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
       python3 /opt/LargePacket.py
       """
-#    Given execute linux command in "dble-1" and contains exception "Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf"
-#      """
-#      python3 /opt/LargePacket_rw.py
-#      """
 
-     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      caught err:
-      NullPointerException
-      """
-     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       Packet for query is too large \(12582915 > 4194304\).You can change maxPacketSize value in bootstrap.cnf.
       """
