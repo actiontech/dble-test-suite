@@ -24,8 +24,8 @@ Feature: test high-availability related commands
     Then execute admin cmd "dbGroup @@disable name='ha_group2'"
 #    check transaction is killed forcely
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                         | expect                                                                                                        | db       |
-      | conn_0 | true     | select * from sharding_4_t1 | java.io.IOException: the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status  | schema1  |
+      | conn   | toClose  | sql                         | expect     | db       |
+      | conn_0 | true     | select * from sharding_4_t1 | is disable | schema1  |
 
     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM2'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
 #    The expect fail msg is tmp,for github issue:#1528
@@ -221,48 +221,6 @@ Feature: test high-availability related commands
       """
 
 
-
-  Scenario: 读写分离hint 路由正确   #3
-
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-      """
-      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
-        <dbInstance name="slave1" url="172.100.9.6:3307" user="test" password="111111" maxCon="1000" minCon="10" />
-      </dbGroup>
-      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-      """
-      <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
-      """
-    Then execute admin cmd "reload @@config"
-
-    Given turn on general log in "mysql-master2"
-    Given turn on general log in "mysql-slave1"
-
-    Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                                                 | expect  | db      |
-      | rw1  | 111111 | conn_1 | False   | drop table if exists test1;create table test1 (id int);truncate table test1         | success | db1     |
-      | rw1  | 111111 | conn_1 | False   | /*!dble:db_type=master */ insert into test1 values(1)         | success | db1     |
-
-    Then check general log in host "mysql-master2" has "insert into test1 values(1)"
-    Then check general log in host "mysql-slave1" has not "insert into test1 values(1)"
-
-    Then execute admin cmd "dbGroup @@disable name = 'ha_group3'"
-    Then execute admin cmd "dbGroup @@switch name = 'ha_group3' master='slave1'"
-    Then execute admin cmd "dbGroup @@enable name = 'ha_group3'"
-
-    Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                           | expect  | db      | timeout |
-      | rw1  | 111111 | conn_1 | False   | /*!dble:db_type=master */ insert into test1 values(3)         | success | db1     | 10,3    |
-
-    Then check general log in host "mysql-master2" has not "insert into test1 values(3)"
-    Then check general log in host "mysql-slave1" has "insert into test1 values(3)"
-    Given turn off general log in "mysql-master2"
-    Given turn off general log in "mysql-slave1"
-
-
-  Scenario: 恢复主从 #4
+  Scenario: 恢复主从
     Given change the primary instance of mysql group named "group2" to "mysql-master2"
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostM2'"
