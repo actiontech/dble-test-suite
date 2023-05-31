@@ -25,20 +25,20 @@ Feature: test fresh backend connection pool
     # The 4 in-used connections in hostM2 have not been refresh, and other connections in hostM2 have been refreshed
     # except hostM2, the other dbInstances' connections all have been refreshed
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                              | expect                         | db      |
-      | conn_0 | False   | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
-      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation   |  has{('READ-UNCOMMITTED',),}   | schema1  |
-      | conn_2 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.tx_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
+      | conn   | toClose | sql                                                                | expect                         | db      |
+      | conn_0 | False   | /*!dble:shardingNode=dn2*/SELECT @@session.transaction_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
+      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.transaction_isolation   |  has{('READ-UNCOMMITTED',),}   | schema1  |
+      | conn_2 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.transaction_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
     #2.fresh dbGroup
     When execute sql in "dble-1" in "admin" mode
       | sql                                                                          | expect  |db                 |
-      | fresh conn forced where dbGroup ='ha_group2'                                  | success |dble_information   |
+      | fresh conn forced where dbGroup ='ha_group2'                                 | success |dble_information   |
     # all the connections(include connections in transaction) in ha_group2 will be refresh when the command contains force keyword
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                       |  expect                                         | db      |
-      | conn_0 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation   |  Lost connection to MySQL server during query   | schema1  |
-      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation   |  has{('READ-UNCOMMITTED',),}                    | schema1  |
-      | conn_2 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.tx_isolation   |  has{('REPEATABLE-READ',),}                     | schema1  |
+      | conn   | toClose | sql                                                                |  expect                                         | db      |
+      | conn_0 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.transaction_isolation   |  Lost connection to MySQL server during query   | schema1  |
+      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.transaction_isolation   |  has{('READ-UNCOMMITTED',),}                    | schema1  |
+      | conn_2 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.transaction_isolation   |  has{('REPEATABLE-READ',),}                     | schema1  |
 
   @CRITICAL @btrace
   Scenario: execute fresh command during executing reload command, fresh command will return error #2
@@ -78,9 +78,9 @@ Feature: test fresh backend connection pool
     ERROR
     """
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                       | expect                         | db      |
-      | conn_0 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.tx_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
-      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
+      | conn   | toClose | sql                                                                | expect                         | db      |
+      | conn_0 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.transaction_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
+      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.transaction_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect           |
       | conn_2 | True    | fresh conn where dbGroup ='ha_group1'                 | success          |
@@ -107,14 +107,14 @@ Feature: test fresh backend connection pool
     """
     Given prepare a thread run btrace script "BtraceFreshConnLock.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | user | passwd | conn   | toClose | sql                                       |db                    |
+      | user | passwd | conn   | toClose | sql                                   |db                    |
       | root | 111111 | conn_0 | True    | fresh conn where dbGroup ='ha_group1' | dble_information   |
     Then check btrace "BtraceFreshConnLock.java" output in "dble-1"
     """
     freshConnGetRealodLocekAfter
     """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                        | expect                                                                                  |
+      | conn   | toClose | sql                                                   | expect                                                                          |
       | conn_1 | True    | fresh conn where dbGroup ='ha_group1'                 | may be other mutex events that cause interrupt, try again later                 |
     Given stop btrace script "BtraceFreshConnLock.java" in "dble-1"
     Given destroy btrace threads list
@@ -126,9 +126,9 @@ Feature: test fresh backend connection pool
     """
     #after the first fresh command return ok, then execute other fresh command will execute success
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                       | expect                         | db      |
-      | conn_0 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.tx_isolation   |  has{('READ-UNCOMMITTED',),}   | schema1  |
-      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
+      | conn   | toClose | sql                                                                | expect                         | db      |
+      | conn_0 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.transaction_isolation   |  has{('READ-UNCOMMITTED',),}   | schema1  |
+      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.transaction_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect           |
       | conn_2 | True    | fresh conn where dbGroup ='ha_group1'                 | success          |
@@ -186,12 +186,12 @@ Feature: test fresh backend connection pool
     102
     """
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                              | expect                         | db      |
-      | conn_0 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.tx_isolation   |  has{('READ-UNCOMMITTED',),}   | schema1  |
-      | conn_0 | True    | /*!dble:shardingNode=dn3*/SELECT @@session.tx_isolation   |  has{('READ-UNCOMMITTED',),}   | schema1  |
-      | conn_0 | True    | /*!dble:shardingNode=dn5*/SELECT @@session.tx_isolation   |  has{('READ-UNCOMMITTED',),}   | schema1  |
-      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
-      | conn_1 | True    | /*!dble:shardingNode=dn4*/SELECT @@session.tx_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
+      | conn   | toClose | sql                                                                | expect                         | db      |
+      | conn_0 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.transaction_isolation   |  has{('READ-UNCOMMITTED',),}   | schema1  |
+      | conn_0 | True    | /*!dble:shardingNode=dn3*/SELECT @@session.transaction_isolation   |  has{('READ-UNCOMMITTED',),}   | schema1  |
+      | conn_0 | True    | /*!dble:shardingNode=dn5*/SELECT @@session.transaction_isolation   |  has{('READ-UNCOMMITTED',),}   | schema1  |
+      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.transaction_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
+      | conn_1 | True    | /*!dble:shardingNode=dn4*/SELECT @@session.transaction_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
     #after the first fresh command return ok, then execute other sql will return ok
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                        | expect      | db      |
@@ -218,7 +218,7 @@ Feature: test fresh backend connection pool
     """
     Given prepare a thread run btrace script "BtraceFreshConnLock.java" in "dble-1"
     Then execute "user" cmd  in "dble-1" at background
-      | conn   | toClose | sql                                       | db      |
+      | conn   | toClose | sql                                    | db      |
       | conn_1 | True    | select * from nosharding               | schema1 |
     Then check btrace "BtraceFreshConnLock.java" output in "dble-1" with "1" times
     """
@@ -244,19 +244,19 @@ Feature: test fresh backend connection pool
     ERROR
     """
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                       | expect                         | db      |
-      | conn_0 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.tx_isolation   |  has{('READ-UNCOMMITTED',),}   | schema1  |
-      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation    |  has{('REPEATABLE-READ',),}    | schema1  |
+      | conn   | toClose | sql                                                                | expect                         | db      |
+      | conn_0 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.transaction_isolation   |  has{('READ-UNCOMMITTED',),}   | schema1  |
+      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.transaction_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
     #after the sql return ok, then execute other fresh command will return ok
     Given execute sql in "mysql-master1"
       | conn   | toClose | sql                                                                 | expect      | db  |
       | conn_0 | True    | set global transaction ISOLATION level REPEATABLE READ              | success     | db1 |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                         | expect           |
+      | conn   | toClose | sql                                                          | expect           |
       | conn_3 | True    | fresh conn forced where dbGroup ='ha_group1'                 | success          |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                       | expect                         | db      |
-      | conn_0 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.tx_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
-      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation    |  has{('REPEATABLE-READ',),}    | schema1  |
+      | conn   | toClose | sql                                                                | expect                         | db      |
+      | conn_0 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.transaction_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
+      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.transaction_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
