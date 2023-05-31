@@ -4,6 +4,7 @@
 # @Time    : 2020/3/13 下午12:14
 # @Author  : irene-coming
 
+@use.with_mysql_version=5.7
 Feature: if dble rebuild conn pool with reload, then global vars dble concerned will be redetected
 #dble cared global vars:
 #| dble config name     | dble default value | mysql variable name    | mysql default value   | mysql effect Scope |
