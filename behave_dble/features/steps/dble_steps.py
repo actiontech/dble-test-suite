@@ -189,3 +189,22 @@ def step_impl(context, addr, port, hostname, retry=1):
                 raise e
             else:
                 sleep_by_time(context, sep_time)
+
+@Then('execute PrepStmts sql "{sql}" with conn "{conn}" and params "{params}"')
+def step_impl(context, conn, sql, params):
+    conn = DbleObject.dble_long_live_conns.get(conn, None)
+    assert conn, "conn '{0}' is not exists in dble_long_live_conns".format(conn)
+    sql_cmd = sql.strip()
+    assert params, "params cannot be empty"
+    params_regex = r'\((.*?)\)' # 匹配括号内的内容，以分号作为分隔符
+    params_match = re.findall(params_regex, params) # 找到所有匹配结果
+    logger.debug("the params_match:'{}'".format(params_match))
+    params_list = [p.split(',') for p in params_match] # 将每个匹配结果按逗号分隔成一个列表
+    results = []
+    for params_tuple in params_list:
+        res, err = conn.execute_ps(sql_cmd, *params_tuple)
+        assert_that(err, is_(None), "execute sql:'{}({})' failed for: {}".format(sql_cmd, ",".join(params_tuple), err))
+        logger.debug("the PrepStmts sql:'{}({})'".format(sql_cmd, ",".join(params_tuple)))
+        results.append(res) # 将返回结果保存在结果列表中
+    return results
+
