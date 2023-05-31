@@ -179,7 +179,11 @@ Feature:  dble_db_instance table test
   #case change mysql username
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                                                    | expect   |
-      | conn_1 | False    | GRANT ALL ON *.* TO 't1'@'%' identified by '111111'    | success  |
+      # mysql8.0以前的版本可以使用grant在授权的时候隐式的创建用户，mysql8.0以后不支持
+#      | conn_1 | False    | GRANT ALL ON *.* TO 't1'@'%' identified by '111111'    | success  |
+      | conn_1 | False    | DROP USER IF EXISTS `t1`@`%`                           | success  |
+      | conn_1 | False    | CREATE USER `t1`@`%` IDENTIFIED BY '111111'            | success  |
+      | conn_1 | False    | GRANT ALL ON *.* TO `t1`@`%` WITH GRANT OPTION         | success  |
       | conn_1 | True     | FLUSH PRIVILEGES                                       | success  |
     Given delete the following xml segment
       | file           | parent         | child                  |
