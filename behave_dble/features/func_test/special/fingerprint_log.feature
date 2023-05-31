@@ -184,7 +184,7 @@ Feature: check fingerprint log
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5" times
     """
     from=instance-test reason=one time job\*/show databases to con
-    from=instance-test reason=one time job\*/select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version
+    from=instance-test reason=one time job\*/select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@.*_isolation,@@version
     from=instance-test reason=one time job\*/show variables to con
     """
     Given record current dble log line number in "log_linenu1"
