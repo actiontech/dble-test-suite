@@ -190,6 +190,8 @@ def step_impl(context, addr, port, hostname, retry=1):
             else:
                 sleep_by_time(context, sep_time)
 
+
+##只是mysqldb包装过的PrepStmts sql
 @Then('execute PrepStmts sql "{sql}" with conn "{conn}" and params "{params}"')
 def step_impl(context, conn, sql, params):
     conn = DbleObject.dble_long_live_conns.get(conn, None)
