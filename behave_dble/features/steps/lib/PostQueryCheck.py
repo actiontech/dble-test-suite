@@ -80,6 +80,15 @@ class PostQueryCheck(object):
                 self.length_balance(self._real_res, length_num, float(length_per))
                 break
 
+            rangeObj = re.search(r"range\{\((\d+)-(\d+)\)\}", self._expect, re.I)
+            if rangeObj:
+                assert_that(self._real_err is None, "sql: {0}, expect query success, but failed for '{1}'".format(self._sql, self._real_err))
+                expectRS = rangeObj.group(1)
+                left_num = int(rangeObj.group(1))
+                right_num = int(rangeObj.group(2))
+                logger.debug("sql: {0}, expect resultSet:{1}, real resultSet:{2}".format(self._sql, eval(expectRS), len(self._real_res)))
+                self.range(self._real_res, int(left_num),int(right_num))
+                break
 
             matchObj = re.search(r"match\{(.*?)\}", self._expect, re.I)
             if matchObj:
@@ -240,3 +249,7 @@ class PostQueryCheck(object):
         c = float(expectRS) - float(expectRS) * percent
         d = float(expectRS) + float(expectRS) * percent
         assert a <= b, "sql:'{}', expect length:' {} to {} ' ,but real length:'{}'.\nthe realresult is {}".format(self._sql, c, d, len(self._real_res), self._real_res)
+
+    def range(self,RS, left_num, right_num):
+        re_num = len(self._real_res)
+        assert left_num <= re_num <= right_num, "sql:'{}', expect range:' {} to {} ' ,but real length:'{}'.\nthe realresult is {}".format(self._sql, left_num, right_num, len(self._real_res), self._real_res)
