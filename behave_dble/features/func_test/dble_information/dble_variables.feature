@@ -48,7 +48,7 @@ Feature:  dble_variables test
       | sqlSlowTime                             | 100ms                                       | The threshold of Slow Query, the default is 100ms                                                                                                                                                                    | false       |
       | flushSlowLogPeriod                      | 1s                                          | The period for flushing log to disk, the default is 1 second                                                                                                                                                         | false       |
       | flushSlowLogSize                        | 1000                                        | The max size for flushing log to disk, the default is 1000                                                                                                                                                           | false       |
-      | slowQueueOverflowPolicy                 | 2                                           | Slow log queue overflow policy, the default is 2                                                                                                                                                                     | false       |
+      | slowQueueOverflowPolicy                 | 1                                           | Slow log queue overflow policy, the default is 1                                                                                                                                                                     | false       |
       | enableAlert                             | 1                                           | Enable or disable alert                                                                                                                                                                                              | false       |
       | capClientFoundRows                      | false                                       | Whether to turn on EOF_Packet to return found rows, the default value is false                                                                                                                                       | false       |
       | maxRowSizeToFile                        | 100000                                      | The maximum row size,if over this value,row data will be saved to file when load data.The default value is 100000                                                                                                    | false       |
@@ -213,7 +213,7 @@ Feature:  dble_variables test
       | tableByUserByEntryTableSize             | 1024                           | false       |
       | sqlSlowTime                             | 100ms                          | false       |
       | sqlLogTableSize                         | 1024                           | false       |
-      | slowQueueOverflowPolicy                 | 2                              | false       |
+      | slowQueueOverflowPolicy                 | 1                              | false       |
       | samplingRate                            | 0                              | false       |
       | maxRowSizeToFile                        | 100000                         | false       |
       | isOnline                                | true                           | false       |
