@@ -29,26 +29,32 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     connection = create_conn(args)
-    # print(args)
-def execute_prepared_query(connection, sql_query, params):
-    try:
+
+def execute_prepared_query(connection, sql_query, *params):
+
+     try:
         cursor = connection.cursor(prepared=True)
         result = []
-        cursor.execute(sql_query, params)
+        error = None
+        # 检查参数的类型，并将字符串类型的参数转换成相应的数据类型
+        params = tuple(int(p.strip()) if isinstance(p, str) and p.strip().isdigit() else p.strip() for p in params)
+        cursor.execute(sql_query, params if len(params) > 0 else ())
         while True:
             result.append(cursor.fetchall())
             if cursor.nextset() is None: break
-        # connection.commit()
         cursor.close()
-        logger.debug(("The sql using the prepared statement successfully,the query is:{}").format(sql_query))
 
-    except mysql.connector.Error as error:
+     except mysql.connector.Error as error:
         logger.info("query failed {}".format(error))
-    finally:
-        if connection.is_connected():
-            cursor.close()
-            connection.close()
-            logger.debug("connection is closed")
+     finally:
+          pass
+     if result != None and len(result) == 1:
+        res = result[0]
+     else:
+        res = result
+     return res, error
+
+
 
 
 ##可以通过修改文件来执行python文件达到需要的query类型
