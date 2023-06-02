@@ -1273,7 +1273,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       NullPointerException
       """
 
- 
+
 
   Scenario:  error sql test #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -1540,4 +1540,62 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      """
+
+
+  Scenario:  useServerPepStmts=true sql DBLE0REQ-2215  #7
+
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      """
+      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+      </dbGroup>
+      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+      <rwSplitUser name="split1" password="111111" dbGroup="ha_group3" />
+      """
+    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "enable @@statistic"
+    Then execute admin cmd "reload @@samplingRate=100"
+
+    Then execute sql in "dble-1" in "user" mode
+      | user   | passwd | conn   | toClose | sql                                                       | expect  | db  |
+      | split1 | 111111 | conn_3 | False   | drop table if exists test_table                           | success | db1 |
+      | split1 | 111111 | conn_3 | False   | create table test_table(id int,name varchar(20),age int)  | success | db1 |
+      | split1 | 111111 | conn_3 | False   | insert into test_table values (1,'1',1),(2,'2',2)         | success | db1 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                    | expect    | db      |
+      | conn_1 | False   | drop table if exists test                              | success   | schema1 |
+      | conn_1 | False   | create table test (id int,name varchar(20),age int)    | success   | schema1 |
+      | conn_1 | False   | insert into test values (1,'1',1),(2,'2',2)            | success   | schema1 |
+
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                  | expect           | db               | timeout |
+      | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user  | length{(5)}      | dble_information | 5       |
+      | conn_0 | False   | select sql_select_count from sql_statistic_by_table_by_user_by_entry | has{((0,),(0,))} | dble_information | 5       |
+      | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user     | length{(0)}      | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log                                                | length{(6)}      | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                         | length{(6)}      | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                     | length{(6)}      | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                  | length{(6)}      | dble_information | 5       |
+
+    #use server prepare
+    Then execute prepared sql "select %s from test where id =%s" with params "(name,1);(id,3)" on db "schema1" and user "test"
+    Then execute prepared sql "select %s from test_table where id =%s" with params "(name,1);(id,3)" on db "db1" and user "split1"
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                  | expect           | db               | timeout |
+      | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user  | length{(5)}      | dble_information | 5       |
+      | conn_0 | False   | select sql_select_count from sql_statistic_by_table_by_user_by_entry | has{((2,),(2,))} | dble_information | 5       |
+      | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user     | length{(0)}      | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log                                                | length{(18)}     | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                         | length{(16)}     | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                     | length{(16)}     | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                  | length{(16)}     | dble_information | 5       |
+
+    Then check "NullPointerException|caught err|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      use server prepare
       """
