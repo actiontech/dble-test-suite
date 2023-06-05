@@ -47,7 +47,7 @@ def execute_prepared_query(connection, sql_query, *params):
      except mysql.connector.Error as error:
         logger.info("query failed {}".format(error))
      finally:
-          pass
+        cursor.close()
      if result != None and len(result) == 1:
         res = result[0]
      else:
