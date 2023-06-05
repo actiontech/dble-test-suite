@@ -14,11 +14,10 @@ from hamcrest import *
 from steps.lib.QueryMeta import QueryMeta
 from steps.lib.generate_util import generate
 from steps.lib.utils import get_node
-
 from steps.mysql_steps import execute_sql_in_host
+from steps.prepared_query import *
 
 logger = logging.getLogger('root')
-
 
 @When('execute admin cmd "{adminsql}" success')
 @Given('execute admin cmd "{adminsql}" success')
@@ -210,3 +209,21 @@ def step_impl(context, conn, sql, params):
         results.append(res) # 将返回结果保存在结果列表中
     return results
 
+
+###用mysql.connector类库模拟jdbc的useServerPrepStmts
+@Then('execute prepared sql "{sql}" with params "{params}" on db "{database}" and user "{user}"')
+def step_impl(context, sql, params, user, database):
+    connection = mysql.connector.connect(host='172.100.9.1', database=database.format(database), user=user.format(user), port=8066, password='111111',autocommit=True)
+    sql_cmd = sql.strip()
+    assert params, "params cannot be empty"
+    params_regex = r'\((.*?)\)' # 匹配括号内的内容，以分号作为分隔符
+    params_match = re.findall(params_regex, params) # 找到所有匹配结果
+    logger.debug("the params_match:'{}'".format(params_match))
+    params_list = [p.split(',') for p in params_match] # 将每个匹配结果按逗号分隔成一个列表
+    results = []
+    for params_tuple in params_list:
+        result = execute_prepared_query(connection, sql_cmd, *params_tuple)
+        assert_that(result, is_(object), "execute sql:'{}({})' failed for: {}".format(sql_cmd, ",".join(params_tuple), result))
+        logger.debug("the PrepStmts sql:'{}({})' result:{}".format(sql_cmd, ",".join(params_tuple),result))
+        results.append(result) # 将返回结果保存在结果列表中
+    return results
