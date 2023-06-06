@@ -171,6 +171,7 @@ Feature: test online ddl
 
 
   @skip_restart
+  # MySQL中索引的存储类型有两种，即BTREE和HASH，和表的存储引擎有关；MyISAM和InnoDB储存引擎只支持BTREE索引；MEMORY/HEAP和NDB存储引擎可以支持HASH和BTREE索引。
   Scenario: ALTER TABLE tbl_name DROP INDEX i1, ADD INDEX i1(key_part,... ) USING BTREE, ALGORITHM=INSTANT    #3
     #nosharding table
     Given record current dble log line number in "log_linenu"
@@ -183,9 +184,8 @@ Feature: test online ddl
       | conn_2 | false   | show index from nosharding                             | hasNoStr{aks1}     | schema1 |
 #    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                              | expect              | db      | timeout |
-      | conn_1 | false   | show index from nosharding       | hasStr{aks1}        | schema1 | 41      |
-      | conn_1 | false   | show create table nosharding     | hasStr{USING HASH}  | schema1 | 41      |
+      | conn   | toClose | sql                              | expect                                                        | db      | timeout |
+      | conn_1 | false   | show index from nosharding       | hasStr{'aks1', 1, 'name', 'A', 2, None, None, 'YES', 'BTREE'} | schema1 | 41      |
 
     #sing table
     Given execute sqls in "dble-1" at background
