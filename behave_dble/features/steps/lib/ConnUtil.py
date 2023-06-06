@@ -57,6 +57,44 @@ class MysqlConnUtil:
             res = result
         return res, errMsg
 
+     ###预处理SQL语句请求
+    def execute_ps(self, sql, *params):
+        dest_info = "{}:{}".format(self._kwargs.get("host", None), self._kwargs.get("port", None))
+        try:
+            cursor = self._conn.cursor()
+            result = []
+            errMsg = None
+            logger.debug("try to execute PrepStmtss sql:{0}, in {1}".format(sql[0:500], dest_info))
+            # 检查参数的类型，并将字符串类型的参数转换成相应的数据类型
+            params = tuple(int(p.strip()) if isinstance(p, str) and p.strip().isdigit() else p.strip() for p in params)
+            cursor.execute(sql, params if len(params) > 0 else ())
+            while True:
+                result.append(cursor.fetchall())
+                if cursor.nextset() is None: break
+            cursor.close()
+        except MySQLdb.Error as e:
+            errMsg = e.args
+        except UnicodeEncodeError as codeErr:
+            errMsg = ((codeErr.args[1], codeErr.args[4]))
+        finally:
+            pass
+
+        if errMsg is not None:
+            showErr = "execute PrepStmts sql {}, in {} failed for: {}".format(sql[0:500], dest_info, errMsg)
+            logger.debug(showErr)
+        else:
+            logger.debug("execute PrepStmts sql {}, in {} success, resultset: ".format(sql[0:500], dest_info))
+            for row in result:
+                row_str = str(row)
+                logger.debug(row_str[0:10240])
+
+        if result != None and len(result) == 1:
+            res = result[0]
+        else:
+            res = result
+        return res, errMsg
+
+
     def autocommit(self, isautocommit):
         self._conn.autocommit(isautocommit)
 
