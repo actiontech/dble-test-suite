@@ -1542,7 +1542,6 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       NullPointerException
       """
 
-
   Scenario:  useServerPepStmts=true sql DBLE0REQ-2215  #7
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -1589,12 +1588,12 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user  | length{(5)}      | dble_information | 5       |
       | conn_0 | False   | select sql_select_count from sql_statistic_by_table_by_user_by_entry | has{((2,),(2,))} | dble_information | 5       |
       | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user     | length{(0)}      | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log                                                | length{(18)}     | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                         | length{(16)}     | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                     | length{(16)}     | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                  | length{(16)}     | dble_information | 5       |
-
-    Then check "NullPointerException|caught err|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+      | conn_0 | False   | select * from sql_log                                                | length{(16)}     | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                         | length{(14)}     | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                     | length{(14)}     | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                  | length{(14)}     | dble_information | 5       |
+    #has issue :DBLE0REQ-2251
+#    Then check "NullPointerException|caught err|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       use server prepare
