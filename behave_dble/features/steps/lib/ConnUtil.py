@@ -12,7 +12,7 @@ logger = logging.getLogger('root')
 
 class MysqlConnUtil:
     def __init__(self, *args, **kwargs):
-        logger.info('create query connection with args:{}, kwargs:{}'.format(args, kwargs))
+        logger.debug('create query connection with args:{}, kwargs:{}'.format(args, kwargs))
         try:
             self._conn = MySQLdb.connect(*args, **kwargs)
             self._kwargs = kwargs
