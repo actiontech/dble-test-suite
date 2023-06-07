@@ -79,7 +79,8 @@ def step_impl(context, num):
 
 @Then('connect "{hostname}" to insert "{num}" of data for "{tablename}"')
 @Then('connect "{hostname}" to insert "{num}" of data for "{dbname}"."{tablename}"')
-def step_impl(context, hostname, num, tablename, dbname="schema1"):
+@Then('connect "{hostname}" to insert "{num}" of data for "{tablename}" with user "{user}"')
+def step_impl(context, hostname, num, tablename, dbname="schema1",user="test"):
     sql = ("insert into {0} (id,name) values".format(tablename))
     end = int(num)
     for i in range(1, end + 1):
@@ -89,7 +90,7 @@ def step_impl(context, hostname, num, tablename, dbname="schema1"):
         else:
             sql = sql + ("({0},'{1}'),".format(i, inspection_num))
 
-    execute_sql_in_host(hostname, {"sql":sql,"db":dbname}, "user")
+    execute_sql_in_host(hostname, {"sql":sql,"db":dbname,"user":user}, "user")
 
 @Then('initialize mysql-off-step sequence table')
 def step_impl(context):
