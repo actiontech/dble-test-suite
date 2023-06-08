@@ -221,6 +221,16 @@ def check_dble_started(context, node):
     if "Wrapper Stopped" in sto:
         LOGGER.debug("dble restart failed coz config wrapper.log:\n{0}".format(sto))
         delattr(context, "retry_start_dble")
+
+        # dble启动失败之后收集一些信息用于分析失败具体原因,问题复现后去掉
+        if "Failed to resolve the version of Java" in sto:
+            cmd10 = 'cp -n /opt/dble/bin/wrapper.conf /opt/dble/logs && mv /opt/dble/logs/wrapper.conf /opt/dble/logs/wrapper.conf.log'
+            cmd11 = 'env >>/opt/dble/logs/env.log && java -version>>/opt/dble/logs/env.log 2>&1'
+            rc10, sto10, ste10 = node.ssh_conn.exec_command(cmd10)
+            assert_that(len(ste10) == 0, "exec command failed for: {0}".format(ste10))
+            rc11, sto11, ste11 = node.ssh_conn.exec_command(cmd11)
+            assert_that(len(ste11) == 0, "exec command failed for: {0}".format(ste10))
+
         return
 
     dble_conn = None
