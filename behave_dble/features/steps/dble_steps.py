@@ -3,6 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/4/4 下午12:58
 # @Author  : irene-coming
+
 import logging
 import os
 import time
@@ -14,7 +15,6 @@ from hamcrest import *
 from steps.lib.QueryMeta import QueryMeta
 from steps.lib.generate_util import generate
 from steps.lib.utils import get_node
-from steps.mysql_steps import execute_sql_in_host
 from steps.prepared_query import *
 
 logger = logging.getLogger('root')
