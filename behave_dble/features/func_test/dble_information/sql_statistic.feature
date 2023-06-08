@@ -1212,10 +1212,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_11" has lines with following column values
       | entry-0 | user-1 | backend_host-3 | backend_port-4 | sharding_node-5 | db_instance-6 | tx_count-7 | tx_rows-8 | sql_insert_count-10 | sql_insert_rows-11 | sql_update_count-13 | sql_update_rows-14 | sql_delete_count-16 | sql_delete_rows-17 | sql_select_count-19 | sql_select_rows-20 |
-      | 2       | test   | 172.100.9.6    | 3306           | dn2             | hostM2        | 5          | 5         | 2                   | 2                  | 0                   | 0                  | 1                   | 1                  | 2                   | 2                  |
-      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 5          | 5         | 2                   | 2                  | 1                   | 1                  | 0                   | 0                  | 2                   | 2                  |
-      | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 5          | 5         | 2                   | 2                  | 1                   | 1                  | 0                   | 0                  | 2                   | 2                  |
-      | 2       | test   | 172.100.9.5    | 3306           | dn3             | hostM1        | 5          | 5         | 2                   | 2                  | 0                   | 0                  | 1                   | 1                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn2             | hostM2        | 7          | 5         | 2                   | 2                  | 0                   | 0                  | 1                   | 1                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 7          | 5         | 2                   | 2                  | 1                   | 1                  | 0                   | 0                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 8          | 5         | 2                   | 2                  | 1                   | 1                  | 0                   | 0                  | 2                   | 2                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn3             | hostM1        | 7          | 5         | 2                   | 2                  | 0                   | 0                  | 1                   | 1                  | 2                   | 2                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_21"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -1542,6 +1542,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       NullPointerException
       """
 
+
   Scenario:  useServerPepStmts=true sql DBLE0REQ-2215  #7
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -1588,10 +1589,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user  | length{(5)}      | dble_information | 5       |
       | conn_0 | False   | select sql_select_count from sql_statistic_by_table_by_user_by_entry | has{((2,),(2,))} | dble_information | 5       |
       | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user     | length{(0)}      | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log                                                | length{(16)}     | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                         | length{(14)}     | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                     | length{(14)}     | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                  | length{(14)}     | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log                                                | length{(13)}     | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                         | length{(13)}     | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                     | length{(11)}     | dble_information | 5       |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                  | length{(11)}     | dble_information | 5       |
     #has issue :DBLE0REQ-2251
 #    Then check "NullPointerException|caught err|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
