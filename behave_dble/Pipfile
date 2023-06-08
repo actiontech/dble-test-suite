@@ -14,7 +14,7 @@ pyyaml = "*"
 allure-behave = "*"
 lxml = "*"
 pip = "*"
-mysql = {connector = "*"}
+mysql.connector = "*"
 
 [dev-packages]
 
