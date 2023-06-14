@@ -74,12 +74,20 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3307 -j DROP
       iptables -A OUTPUT -d 172.100.9.1 -p tcp --dport 3307 -j DROP
       """
+    Given execute oscmd in "mysql-slave1"
+    """
+    iptables -L
+    """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                                                                                                                     | timeout |
       | conn_0 | false    | show @@heartbeat | hasStr{'hostM1', '172.100.9.5', 3306, 'ok'}, hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostS1', '172.100.9.6', 3307, 'timeout'}, hasStr{'hostS2', '172.100.9.6', 3308, 'init'}, | 60      |
     Given execute oscmd in "mysql-slave1"
     """
     iptables -F
+    """
+    Given execute oscmd in "mysql-slave1"
+    """
+    iptables -L
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                                                                                                                | timeout |
@@ -188,12 +196,24 @@ Feature: #test show @@heartbeat DBLE0REQ-167
        iptables -A INPUT -s 172.100.9.1 -p tcp --dport 3306 -j DROP
        iptables -A OUTPUT -d 172.100.9.1 -p tcp --dport 3306 -j DROP
       """
+    Given execute oscmd in "mysql-master2"
+    """
+    iptables -L
+    """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                                                                      | timeout |
       | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'timeout'}, hasStr{'hostS1', '172.100.9.6', 3307, 'ok'}, hasStr{'hostS2', '172.100.9.6', 3308, 'ok'}, | 60      |
     Given execute oscmd in "mysql-master2"
     """
+    iptables -L
+    """
+    Given execute oscmd in "mysql-master2"
+    """
     iptables -F
+    """
+    Given execute oscmd in "mysql-master2"
+    """
+    iptables -L
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql              | expect                                                                                                                                 | timeout |
