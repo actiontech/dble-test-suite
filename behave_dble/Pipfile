@@ -6,15 +6,15 @@ name = "pypi"
 [packages]
 mysqlclient = "==1.4.2"
 behave = "==1.2.6"
-environs = "==9.5.0"
-paramiko = "==3.2.0"
-pyhamcrest = "==2.0.4"
-pymysql = "==1.0.3"
-pyyaml = "==6.0"
-allure-behave = "==2.13.2"
-lxml = "==4.9.2"
-pip = "==23.1.2"
-"mysql.connector" = "==2.2.9"
+environs = "*"
+paramiko = "*"
+pyhamcrest = "*"
+pymysql = "*"
+pyyaml = "*"
+allure-behave = "*"
+lxml = "*"
+pip = "*"
+mysql = {connector = "*"}
 
 [dev-packages]
 
