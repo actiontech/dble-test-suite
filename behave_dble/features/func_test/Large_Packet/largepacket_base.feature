@@ -190,11 +190,8 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
       python3 /opt/LargePacket.py
       """
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      NullPointerException
-#      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
 
 
 
@@ -241,11 +238,8 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       | conn_0 | false    | insert into test values (1,repeat("x",6*1024*1024))                                        | success | schema1 |
       | conn_0 | true     | insert into test values (1,repeat("x",16*1024*1024))                                       | Result of repeat() was larger than max_allowed_packet (8388608) - truncated | schema1 |
 
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      NullPointerException
-#      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
 
 
   @restore_mysql_config  @skip
@@ -284,12 +278,8 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
       10086
       """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      NullPointerException
-#      """
 
     #### 依赖case生成的test.sql验证maxPacketSize参数报错
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
