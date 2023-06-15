@@ -27,13 +27,13 @@ Feature: Keep slow log on, dble may occur oom
     Given delete file "/opt/dble/BtraceAboutslowlog.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutslowlog.java.log" on "dble-1"
     Given prepare a thread run btrace script "BtraceAboutslowlog.java" in "dble-1"
-    ###这个桩的方法是记录慢日志，hang的时间不建议调大，会产生较大的耗时
+#    Given sleep "5" seconds
     Given execute sql "1000" times in "dble-1" at concurrent
       | sql                                                   | db      |
       | /*!dble:shardingnode=dn1*/select * from sharding_2_t1 | schema1 |
     Then check btrace "BtraceAboutslowlog.java" output in "dble-1" with "1000" times
     """
-    get into putSlowQueryLog
+    enter setShardingNodes
     """
     Given stop btrace script "BtraceAboutslowlog.java" in "dble-1"
     Given destroy btrace threads list
@@ -59,7 +59,7 @@ Feature: Keep slow log on, dble may occur oom
     >/opt/dble/slowlogs/slow-query.log
     """
 
-    #######case : load data
+#######case : load data
     Given execute oscmd in "dble-1"
     """
     echo -e '1,1\n2,2\n3,3\n4,4\n5,5\n6,6\n7,7\n8,8\n9,9\n10,10\n11,11\n12,12\n13,13\n14,14\n15,15\n16,16\n17,17\n18,18\n19,19\n20,20' > /opt/dble/test.txt
@@ -67,13 +67,13 @@ Feature: Keep slow log on, dble may occur oom
     Given delete file "/opt/dble/BtraceAboutslowlog.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutslowlog.java.log" on "dble-1"
     Given prepare a thread run btrace script "BtraceAboutslowlog.java" in "dble-1"
-
+#    Given sleep "5" seconds
     Given execute sql "1000" times in "dble-1" at concurrent
       | sql                                                                                     | db      |
       | load data infile './test.txt' into table sharding_2_t1 fields terminated by ','         | schema1 |
-    Then check btrace "BtraceAboutslowlog.java" output in "dble-1" with "1000" times
+    Then check btrace "BtraceAboutslowlog.java" output in "dble-1" with "2000" times
     """
-    get into putSlowQueryLog
+    enter setShardingNodes
     """
     Given stop btrace script "BtraceAboutslowlog.java" in "dble-1"
     Given destroy btrace threads list
