@@ -59,11 +59,8 @@ Feature:Support MySQL's large package protocol
       """
       insert into sharding_4_t1
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
 
      ## case 2，tabletype is global table
@@ -76,11 +73,8 @@ Feature:Support MySQL's large package protocol
       """
       insert into global
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
 
      ## case 3，tabletype is sing table
@@ -93,11 +87,8 @@ Feature:Support MySQL's large package protocol
       """
       insert into sing
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
 
 
 #   @restore_mysql_config
@@ -119,11 +110,8 @@ Feature:Support MySQL's large package protocol
       update sharding_4_t1 set c =\"aaaaaaaaaaaaaa
       """
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
      ## case 2，tabletype is global table
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -135,11 +123,8 @@ Feature:Support MySQL's large package protocol
       """
       update global set c =\"aaaaaaaaaaaaaa
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
 
      ## case 3，tabletype is sing table
@@ -152,11 +137,8 @@ Feature:Support MySQL's large package protocol
       """
       update sing set c =\"aaaaaaaaaaaaaa
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
 
 
 #   @restore_mysql_config
@@ -178,11 +160,8 @@ Feature:Support MySQL's large package protocol
       """
       delete from sharding_4_t1 where c =\"aaaaaaaaaaaaaa
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
      ## case 2，tabletype is global table
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -194,11 +173,8 @@ Feature:Support MySQL's large package protocol
       """
       delete from global where c =\"aaaaaaaaaaaaaa
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
      ## case 3，tabletype is sing table
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -210,11 +186,8 @@ Feature:Support MySQL's large package protocol
       """
       delete from sing where c =\"aaaaaaaaaaaaaa
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
 
 
 #   @restore_mysql_config
@@ -237,11 +210,8 @@ Feature:Support MySQL's large package protocol
       """
       select id from sharding_4_t1 where id = 7 or c =\"aaaaaaaaaaaaaaaaaaaaaaaaaaa
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
      ## case 2，tabletype is global table
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -253,11 +223,8 @@ Feature:Support MySQL's large package protocol
       """
       select id from global where id = 7 or c =\"aaaaaaaaaaaaaa
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
      ## case 3，tabletype is sing table
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -269,11 +236,8 @@ Feature:Support MySQL's large package protocol
       """
       select id from sing where id = 7 or c =\"aaaaaaaaaaaaaa
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
 
 
 #   @restore_mysql_config
@@ -309,11 +273,8 @@ Feature:Support MySQL's large package protocol
       | conn_0 | false   | select c from sharding_4_t1 where id = 8                                                                                                                                | length{(1)}  | schema1 |         |
       | conn_0 | false   | select c from sharding_4_t1 where id = 9                                                                                                                                | length{(1)}  | schema1 |         |
       | conn_0 | true    | select c from sharding_4_t1 where id = 10                                                                                                                               | length{(1)}  | schema1 |         |
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                     | expect       | db      | timeout |
@@ -323,11 +284,8 @@ Feature:Support MySQL's large package protocol
       | conn_0 | false   | select c from sharding_4_t1 where id = 23                                                                                                                               | length{(1)}  | schema1 |         |
       | conn_0 | false   | select c from sharding_4_t1 where id = 24                                                                                                                               | length{(1)}  | schema1 |         |
       | conn_0 | true    | select c from sharding_4_t1 where id = 25                                                                                                                               | length{(1)}  | schema1 |         |
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      NullPointerException
-#      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                     | expect       | db      | timeout |
@@ -338,12 +296,8 @@ Feature:Support MySQL's large package protocol
       | conn_0 | false   | /*!dble:shardingNode=dn1*/select c,id from sharding_4_t1;select id from sharding_4_t1;select * from test                                                                | success      | schema1 |         |
 
       | conn_0 | true    | drop table if exists test;drop table if exists sharding_4_t1          | success      | schema1 | 5       |
-#####coz DBLE0REQ-2183
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      NullPointerException
-#      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
 
 
 #   @restore_mysql_config
@@ -364,11 +318,8 @@ Feature:Support MySQL's large package protocol
       shardingNode=dn1
       insert into sharding_4_t1
       """
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      NullPointerException
-#      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
     ##### /*!dble:sql=select c from tb1*/update test set c="aaaaaaaaaaaaaaaaaaaaaaaaa
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -388,11 +339,8 @@ Feature:Support MySQL's large package protocol
       select c from tb1
       update global set
       """
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      NullPointerException
-#      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
     ##### /*!dble:db_type=master*/update test set c="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
@@ -405,11 +353,8 @@ Feature:Support MySQL's large package protocol
       dble:db_type=master
       update global set
       """
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      NullPointerException
-#      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
     ##### /*!dble:db_type=master*/select 1;update test set c="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
@@ -422,11 +367,8 @@ Feature:Support MySQL's large package protocol
       select 1
       update global set
       """
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      NullPointerException
-#      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
     #####  /*!dble:db_type=master*/select 3;delete from test where c="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
@@ -443,11 +385,8 @@ Feature:Support MySQL's large package protocol
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                          | expect      | db      |
       | conn_0 | true    | drop table if exists global;drop table if exists sing;drop table if exists sharding_4_t1                     | success     | schema1 |
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      NullPointerException
-#      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
 
 
    @restore_mysql_config
@@ -477,11 +416,8 @@ Feature:Support MySQL's large package protocol
       PREPARE stmt1 FROM
       select c from sharding_4_t1 where id = ? and c =
       """
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      NullPointerException
-#      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
       ### PREPARE stmt1 FROM 'select a.id,b.id from table a join sharding_4_t1 b on a.id=b.id and a.id= ? or b.c = ';SET @1 = 7;EXECUTE stmt1 USING @1;DEALLOCATE PREPARE stmt1;
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
@@ -494,11 +430,8 @@ Feature:Support MySQL's large package protocol
       PREPARE stmt1 FROM
       select a.id,b.id from sharding_4_t1 a join sing b on a.id=b.id and a.id= ? or b.c
       """
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      NullPointerException
-#      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Given Restart dble in "dble-1" success
       ### PREPARE stmt1 FROM 'select id,c from sharding_4_t1 group by id,c having id >= ? or c ';SET @1 = 7;EXECUTE stmt1 USING @1;DEALLOCATE PREPARE stmt1;
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
@@ -511,11 +444,8 @@ Feature:Support MySQL's large package protocol
       PREPARE stmt1 FROM
       select id,c from sharding_4_t1 group by id,c having id
       """
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      unknown error:
-#      NullPointerException
-#      """
+    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                           | expect  | db      |
       | conn_0 | true    | drop table if exists sharding_4_t1;drop table if exists sing;drop table if exists global      | success | schema1 |
