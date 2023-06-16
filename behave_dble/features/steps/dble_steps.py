@@ -228,3 +228,27 @@ def step_impl(context, sql, params, user, database):
         logger.debug("the PrepStmts sql:'{}({})' result:{}".format(sql_cmd, ",".join(params_tuple),result))
         results.append(result) # 将返回结果保存在结果列表中
     return results
+
+###用字符拼接成大包下发sql
+@Then('connect "{hostname}" to "{sql_type}" large data "{num}" for table "{tablename}" in column "{col}" with user "{user}"')
+def step_impl(context, hostname, num, col, sql_type, tablename, dbname="schema1",user="test"):
+    num_expression = eval(num)
+    if sql_type == "insert":
+        sql_par = ("insert into {} ({}) values ".format(tablename, col))
+    elif sql_type == "select":
+        sql_par = ("select * from {} where {} = ".format(tablename, col))
+    elif sql_type == "update":
+        sql_par = ("update {} set id = 2 where {} = ".format(tablename, col))
+    elif sql_type == "delete":
+        sql_par = ("delete from {} where {} = ".format(tablename, col))
+    elif sql_type == "mulit_sql_xa":
+        sql_par = ("begin; select a.id,b.id from {} a join sharding_4_t1 b on a.id = b.id and a.id = 1 or b.{} = ".format(tablename, col))
+    elif sql_type == "mulit_sql":
+        sql_par = ("select {1} from {0}; delete from {0} where {1} = ".format(tablename, col))
+    else:
+        assert False, "The sql_tpye is error, check it!"
+
+    inspection_num = 'a' * int(num_expression)
+    sql = sql_par + ("('{}');".format(inspection_num))
+    logger.debug("the sql length:'{}',the sql_par length:'{}'".format(len(sql),len(sql_par)))
+    execute_sql_in_host(hostname, {"sql":sql,"db":dbname,"user":user}, "user")
