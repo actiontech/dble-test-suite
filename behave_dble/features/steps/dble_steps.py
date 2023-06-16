@@ -231,7 +231,7 @@ def step_impl(context, sql, params, user, database):
 
 ###用字符拼接成大包下发sql
 @Then('connect "{hostname}" to "{sql_type}" large data "{num}" for table "{tablename}" in column "{col}" with user "{user}"')
-def step_impl(context, hostname, num, col, sql_type, tablename, dbname="schema1",user="test"):
+def step_impl(context, hostname, num, col, sql_type, tablename,user="test"):
     num_expression = eval(num)
     if sql_type == "insert":
         sql_par = ("insert into {} ({}) values ".format(tablename, col))
@@ -251,4 +251,4 @@ def step_impl(context, hostname, num, col, sql_type, tablename, dbname="schema1"
     inspection_num = 'a' * int(num_expression)
     sql = sql_par + ("('{}');".format(inspection_num))
     logger.debug("the sql length:'{}',the sql_par length:'{}'".format(len(sql),len(sql_par)))
-    execute_sql_in_host(hostname, {"sql":sql,"db":dbname,"user":user}, "user")
+    execute_sql_in_host(hostname, {"sql":sql,"user":user}, "user")
