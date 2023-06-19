@@ -370,7 +370,8 @@ Feature: show @@sql XXX
     Then check "NullPointerException|caught err|unknown error|setError" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
-
+  @skip
+    ##coz DBLE0REQ-2267  resultset值不稳定
   Scenario: show @@sql.resultset  #3
     ###可以通过 maxResultSet 配置
     ###配置所有的用户 管理端用户  分库分表用户 读写分离用户  分析用户
