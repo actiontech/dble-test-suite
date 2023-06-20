@@ -178,21 +178,21 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       python3 /opt/LargePacket_rw.py
       """
 
-     ####case3 当dble小于大包值时，但mysql的值大于大包时
-     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+     ####case3 当dble小于大包值时，但mysql的值大于大包时,返回报错
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
       """
       /max_allowed_packet/d
       /server-id/a max_allowed_packet = 17M
       """
-     Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
       """
       /max_allowed_packet/d
       /server-id/a max_allowed_packet = 17M
       """
     Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                |timeout  |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
+      | sql                                                                                                               | expect        | db                |timeout  |
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
 
     Given execute linux command in "dble-1" and contains exception "Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf"
       """
@@ -203,12 +203,8 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 #      python3 /opt/LargePacket_rw.py
 #      """
 
-     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
-     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check "NullPointerException|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       Packet for query is too large \(12582915 > 4194304\).You can change maxPacketSize value in bootstrap.cnf.
       """
@@ -216,66 +212,7 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 
 
   @restore_mysql_config
-   Scenario: 大包下，执行相关管理命令（如show @@connection.sql；show @@sql; sql_log sqldump等） 结果收敛 展示1024    #3
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
-    Given upload file "./features/steps/LargePacket.py" to "dble-1" success
-    Given upload file "./features/steps/LargePacket_rw.py" to "dble-1" success
-    Given upload file "./features/steps/SQLContext.py" to "dble-1" success
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      s/-Xmx1G/-Xmx8G/g
-      /DmaxPacketSize/d
-      /# processor/a -DmaxPacketSize=167772160
-      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=8G/g
-      $a -DidleTimeout=180000
-      $a -DbufferPoolPageSize=33554432
-      """
-    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
-      """
-      s/debug/info/g
-      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-      """
-      <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
-      </dbGroup>
-      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-      """
-      <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
-      """
-    Given Restart dble in "dble-1" success
-    Then execute admin cmd "enable @@statistic"
-    Then execute admin cmd "reload @@samplingRate=100"
-
-    Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                                                            | expect  | db      |
-      | rw1  | 111111 | conn_0 | false   | drop table if exists tb1;create table tb1 (id int,c longblob)                                  | success | db1     |
-      | rw1  | 111111 | conn_0 | true    | drop table if exists test1;create table test1 (id int,c longblob);truncate table test1         | success | db1     |
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                         | expect  | db      |
-      | conn_1 | false   | drop table if exists tb1;create table tb1 (id int,c longblob)                               | success | schema1 |
-      | conn_1 | true    | drop table if exists sharding_4_t1;create table sharding_4_t1 (id int,c longblob);truncate table sharding_4_t1         | success | schema1 |
-
-    Given create folder content "/opt/dble/logs/insert" in "dble-1"
-    Given execute oscmd "python3 /opt/LargePacket.py >/opt/dble/logs/insert/sharding.txt" on "dble-1"
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                        | expect                    | db               | timeout |
-      | conn_2 | False    | show @@sql                                                                | hasStr{aaaaaaaaaa...}     | dble_information | 10,3    |
-      | conn_2 | False    | select * from sql_log where sql_stmt like "%insert into sharding_4_t1%"                  | hasStr{aaaaaaaaaa...}     | dble_information | 10,3    |
-      | conn_2 | False    | select length(sql_stmt) from sql_log where sql_stmt like "%insert into sharding_4_t1%"   | has{((1027,), (1027,), (1027,), (1027,), (1027,), (1027,), (1027,), (1027,))}     | dble_information | 10,3    |
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
-
-  @restore_mysql_config
-  Scenario:  repeat() 函数下发大包校验 --- repeat受后端mysql max_allowed_packet参数限制   #4
+  Scenario:  repeat() 函数下发大包校验 --- repeat受后端mysql max_allowed_packet参数限制   #3
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
@@ -303,9 +240,9 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
     Then execute admin cmd "reload @@config_all"
     #### 确定dble中mysql心跳恢复
     Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                |timeout  |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
+      | sql                                                                                                               | expect        | db                |timeout  |
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
     ### dble的配置下发mysql
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                         | expect  | db      |
@@ -327,10 +264,10 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       /server-id/a max_allowed_packet = 8M
       """
     Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                |timeout  |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
-     Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                                                               | expect        | db                |timeout  |
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
+    Then execute sql in "dble-1" in "admin" mode
       | conn  | toClose | sql                                                                              | expect                | db               |
       | new   | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('4194304B',),)} | dble_information |
     Then execute sql in "dble-1" in "user" mode
@@ -342,26 +279,18 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       | rw1  | 111111 | conn_1 | false   | insert into test1 values (1,repeat("x",6*1024*1024))                        | success | db1     |
       | rw1  | 111111 | conn_1 | true    | insert into test1 values (1,repeat("x",16*1024*1024))                       | Result of repeat() was larger than max_allowed_packet   | db1     |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
-  @restore_mysql_config
-  Scenario: source 大包校验    #5
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+  Scenario: source 大包校验    #4
+
     Given set log4j2 log level to "info" in "dble-1"
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
-      s/-Xmx1G/-Xmx8G/g
+      s/-Xmx1G/-Xmx4G/g
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
-      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=8G/g
-      $a -DidleTimeout=180000
+      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=4G/g
       $a -DbufferPoolPageSize=33554432
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -415,11 +344,8 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
       10000
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      unknown error:
-      NullPointerException
-      """
+    Then check "NullPointerException|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
 
     #### 依赖case生成的test.sql验证maxPacketSize参数报错
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -437,12 +363,58 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       10086
       """
 
-#    Given execute oscmd in "dble-1"
-#      """
-#      mysql -urw1 -P8066 -h172.100.9.1 -Ddb1 --max_allowed_packet=1G -e "source /opt/dble/logs/insert/test1.sql" >/opt/dble/logs/insert/test1.txt 2>&1 &
-#      """
-#    Then check following text exist "Y" in file "/opt/dble/logs/insert/test1.txt" in host "dble-1"
-#      """
-#      Packet for query is too large.*4194304.*You can change maxPacketSize value in bootstrap.cnf
-#      10000
-#      """
+
+   Scenario: 大包下，执行相关管理命令（如show @@connection.sql；show @@sql; sql_log sqldump等） 结果收敛 展示1024    #5
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      s/-Xmx1G/-Xmx4G/g
+      /DmaxPacketSize/d
+      /# processor/a -DmaxPacketSize=167772160
+      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=4G/g
+      $a -DbufferPoolPageSize=33554432
+      """
+    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
+      """
+      s/debug/info/g
+      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      """
+      <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
+      </dbGroup>
+      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+      <rwSplitUser name="rw1" password="111111" dbGroup="ha_group3" />
+      """
+    Given Restart dble in "dble-1" success
+
+    Then execute admin cmd "enable @@statistic"
+    Then execute admin cmd "reload @@samplingRate=100"
+
+
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                                                      | expect  | db      |
+      | rw1  | 111111 | conn_0 | true    | drop table if exists test1;create table test1 (id int,c longblob)        | success | db1     |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                    | expect  | db      |
+      | conn_1 | true    | drop table if exists sharding_4_t1;create table sharding_4_t1 (id int,c longblob)      | success | schema1 |
+
+    Then connect "dble-1" to execute "insert into sharding_4_t1 (id,c) values (1," large data "16*1024*1024" on db "schema1" with user "test"
+    Then connect "dble-1" to execute "insert into sharding_4_t1 (id,c) values (2," large data "32*1024*1024" on db "schema1" with user "test"
+
+    Then connect "dble-1" to execute "insert into test1 (id,c) values (1," large data "16*1024*1024" on db "db1" with user "rw1"
+    Then connect "dble-1" to execute "insert into test1 (id,c) values (2," large data "32*1024*1024" on db "db1" with user "rw1"
+
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                               | expect                    | db               | timeout |
+      | conn_2 | False    | show @@sql                                                                       | hasStr{aaaaaaaaaa...}     | dble_information | 10,3    |
+      | conn_2 | False    | show @@sql                                                                       | hasStr{aaaaaaaaaa...}     | dble_information | 10,3    |
+      | conn_2 | False    | select * from sql_log where sql_stmt like "%insert into sharding_4_t1 (id,c)%"   | hasStr{aaaaaaaaaa...}     | dble_information | 10,3    |
+      | conn_2 | False    | select * from sql_log where sql_stmt like "%insert into test1%"                  | hasStr{aaaaaaaaaa...}     | dble_information | 10,3    |
+      | conn_2 | False    | select length(sql_stmt) from sql_log where sql_stmt like "%insert into sharding_4_t1%"   | has{((1027,), (1027,))}     | dble_information | 10,3    |
+      | conn_2 | False    | select length(sql_stmt) from sql_log where sql_stmt like "%insert into test1%"           | has{((1027,), (1027,))}     | dble_information | 10,3    |
+
+    Then check "NullPointerException|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
