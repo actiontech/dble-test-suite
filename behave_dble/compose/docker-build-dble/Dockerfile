@@ -1,11 +1,17 @@
 FROM centos:centos7
 
 RUN sed -i.backup 's/^enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf && \
-    curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo && \
-    curl -o /etc/yum.repos.d/epel-7.repo http://mirrors.aliyun.com/repo/epel-7.repo && \
-    yum clean all
+    rm -rf /etc/yum.repos.d/* && \
+    curl -fSL http://mirrors.aliyun.com/repo/Centos-7.repo -o /etc/yum.repos.d/CentOS-7.repo && \
+    sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-7.repo && \
+    curl -fSL http://mirrors.aliyun.com/repo/epel-7.repo -o /etc/yum.repos.d/epel-7.repo && \
+    yum clean all && \
+    yum makecache && \
+    yum update -y && \
+    yum clean all && \
+    rm -rf /tmp/*
 
-RUN yum install -y openssh-server openssh-clients net-tools make iproute iptables wget numactl.x86_64 libaio bash-completion bash-completion-extras openssl gcc python3-devel.x86_64 mysql-devel && \
+RUN yum install -y openssh-server openssh-clients net-tools vim lrzsz locate make iproute iptables wget numactl.x86_64 libaio bash-completion bash-completion-extras openssl gcc python3-devel.x86_64 mysql-devel && \
     yum clean all && \
     echo 'root:sshpass' | chpasswd && \
     sed -i 's/session\s*required\s*pam_loginuid.so/session optional pam_loginuid.so/g' /etc/pam.d/sshd && \
@@ -33,11 +39,11 @@ RUN pip3 install six -i http://pypi.douban.com/simple --trusted-host pypi.douban
     ln -s /usr/local/mysql/lib/libmysqlclient.so.20.3.0 /usr/lib64/libmysqlclient.so.20
 
 # install jdk
-COPY jdk-8u121-linux-x64.tar.gz /tmp/jdk-8u121-linux-x64.tar.gz
+COPY jdk-8u261-linux-x64.tar.gz /tmp/jdk-8u261-linux-x64.tar.gz
 RUN mkdir /opt/jdk  && \
-    tar -zxf /tmp/jdk-8u121-linux-x64.tar.gz -C /opt/jdk --strip-components=1  && \
+    tar -zxf /tmp/jdk-8u261-linux-x64.tar.gz -C /opt/jdk --strip-components=1  && \
     echo "export JAVA_HOME=/opt/jdk">>/etc/bashrc && \
-    rm -rf /tmp/jdk-8u121-linux-x64.tar.gz
+    rm -rf /tmp/jdk-8u261-linux-x64.tar.gz
 
 #install btrace
 RUN wget -P /tmp https://github.com/btraceio/btrace/releases/download/v1.3.11/btrace-bin-1.3.11.tgz.tar.gz && \
