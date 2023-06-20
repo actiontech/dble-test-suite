@@ -180,21 +180,21 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       python3 /opt/LargePacket_rw.py
       """
 
-     ####case3 当dble小于大包值时，但mysql的值大于大包时
-     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+     ####case3 当dble小于大包值时，但mysql的值大于大包时,返回报错
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
       """
       /max_allowed_packet/d
       /server-id/a max_allowed_packet = 17M
       """
-     Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
       """
       /max_allowed_packet/d
       /server-id/a max_allowed_packet = 17M
       """
     Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                |timeout  |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
+      | sql                                                                                                               | expect        | db                |timeout  |
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
 
     Given execute linux command in "dble-1" and contains exception "Packet for query is too large (12582915 > 4194304).You can change maxPacketSize value in bootstrap.cnf"
       """
@@ -215,7 +215,7 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 
 
   @restore_mysql_config
-  Scenario:  repeat() 函数下发大包校验 --- repeat受后端mysql max_allowed_packet参数限制   #4
+  Scenario:  repeat() 函数下发大包校验 --- repeat受后端mysql max_allowed_packet参数限制   #3
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
     """
@@ -245,9 +245,9 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
     Then execute admin cmd "reload @@config_all"
     #### 确定dble中mysql心跳恢复
     Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                |timeout  |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
+      | sql                                                                                                               | expect        | db                |timeout  |
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
     ### dble的配置下发mysql
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                         | expect  | db      |
@@ -269,10 +269,10 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       /server-id/a max_allowed_packet = 8M
       """
     Then execute sql in "dble-1" in "admin" mode
-    | sql                                                                                                               | expect        | db                |timeout  |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
-    | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
-     Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                                                               | expect        | db                |timeout  |
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.5'   | length{(1)}   | dble_information  | 6,2     |
+      | select * from dble_db_instance where last_heartbeat_ack='ok' and heartbeat_status='idle' and addr='172.100.9.6'   | length{(2)}   | dble_information  | 6,2     |
+    Then execute sql in "dble-1" in "admin" mode
       | conn  | toClose | sql                                                                              | expect                | db               |
       | new   | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('4194304',),)} | dble_information |
     Then execute sql in "dble-1" in "user" mode
@@ -284,23 +284,18 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       | rw1  | 111111 | conn_1 | false   | insert into test1 values (1,repeat("x",6*1024*1024))                        | success | db1     |
       | rw1  | 111111 | conn_1 | true    | insert into test1 values (1,repeat("x",16*1024*1024))                       | Result of repeat() was larger than max_allowed_packet   | db1     |
 
-    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check "NullPointerException|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
+  Scenario: source 大包校验    #4
 
-  @restore_mysql_config
-  Scenario: source 大包校验    #5
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
     Given set log4j2 log level to "info" in "dble-1"
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
-      s/-Xmx1G/-Xmx8G/g
+      s/-Xmx1G/-Xmx4G/g
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
-      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=8G/g
-      $a -DidleTimeout=180000
+      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=4G/g
       $a -DbufferPoolPageSize=33554432
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -356,7 +351,7 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
       10000
       """
-    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check "NullPointerException|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
     #### 依赖case生成的test.sql验证maxPacketSize参数报错
