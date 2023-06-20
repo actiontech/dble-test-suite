@@ -230,25 +230,36 @@ def step_impl(context, sql, params, user, database):
     return results
 
 ###用字符拼接成大包下发sql
-@Then('connect "{hostname}" to "{sql_type}" large data "{num}" for table "{tablename}" in column "{col}" with user "{user}"')
-def step_impl(context, hostname, num, col, sql_type, tablename,user="test"):
+@Then('connect "{hostname}" to execute "{sql}" large data "{num}" on db "{dbname}" with user "{user}"')
+def step_impl(context, hostname, num, sql,user="test",dbname="schema1"):
     num_expression = eval(num)
-    if sql_type == "insert":
-        sql_par = ("insert into {} ({}) values ".format(tablename, col))
-    elif sql_type == "select":
-        sql_par = ("select * from {} where {} = ".format(tablename, col))
-    elif sql_type == "update":
-        sql_par = ("update {} set id = 2 where {} = ".format(tablename, col))
-    elif sql_type == "delete":
-        sql_par = ("delete from {} where {} = ".format(tablename, col))
-    elif sql_type == "mulit_sql_xa":
-        sql_par = ("begin; select a.id,b.id from {} a join sharding_4_t1 b on a.id = b.id and a.id = 1 or b.{} = ".format(tablename, col))
-    elif sql_type == "mulit_sql":
-        sql_par = ("select {1} from {0}; delete from {0} where {1} = ".format(tablename, col))
-    else:
-        assert False, "The sql_tpye is error, check it!"
-
+    sql_pre = sql.strip() #自主拼接需要的句式
     inspection_num = 'a' * int(num_expression)
-    sql = sql_par + ("('{}');".format(inspection_num))
-    logger.debug("the sql length:'{}',the sql_par length:'{}'".format(len(sql),len(sql_par)))
-    execute_sql_in_host(hostname, {"sql":sql,"user":user}, "user")
+    sql = sql_pre + ("'{}');".format(inspection_num))
+    logger.debug("the sql is : {} ,the sql length:'{}',the sql_pre length:'{}'".format(sql[0:512],len(sql),len(sql_pre)))
+    execute_sql_in_host(hostname, {"sql":sql,"db":dbname,"user":user}, "user")
+
+@Then('connect "{hostname}" to execute mulit "{sql_pre}" and "{sql_after}" large data "{num}" on db "{dbname}" with user "{user}"')
+def step_impl(context, hostname, num, sql_pre, sql_after, user="test", dbname="schema1"):
+    num_expression = eval(num)
+    sql_pre = sql_pre.strip() #自主拼接需要的句式
+    sql_after = sql_after.strip()
+    inspection_num = 'c' * int(num_expression)
+    sql_mid = sql_pre + ("'{}'".format(inspection_num))
+    sql = sql_mid + sql_after
+    logger.debug("the sql is : {} ".format(sql[0:512]))
+    execute_sql_in_host(hostname, {"sql":sql,"db":dbname,"user":user}, "user")
+
+@Then('execute large data prepared sql "{sql}" data "{num}" with params "{params}" on db "{database}" and user "{user}"')
+def step_imp(context, sql, params ,num, user, database):
+    connection = mysql.connector.connect(host='172.100.9.1', database=database.format(database), user=user.format(user), port=8066, password='111111',autocommit=True)
+    sql_pre= sql.strip()
+    results = []
+    data_exp = eval(num)
+    data =  'r' * int(data_exp)
+    sql_cmd = sql_pre + ("('{}');".format(data))
+    result = execute_prepared_query(connection, sql_cmd, params)
+    assert_that(result, is_(object), "execute sql:'{}' failed for: {}".format(sql_cmd, result))
+    logger.debug("the PrepStmts sql:'{}' result:{}  the sql_cmd length :{},the sql_pre length :{}".format(sql_cmd[0:512] ,result,len(sql_cmd),len(sql_pre)))
+    results.append(result)
+    return results
