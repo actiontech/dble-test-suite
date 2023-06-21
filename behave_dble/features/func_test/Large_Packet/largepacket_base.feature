@@ -158,11 +158,7 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 
 
 
-  @restore_mysql_config
    Scenario: maxPacketSize 小于大包的值，会报错        #2
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
 
     Given upload file "./features/steps/LargePacket.py" to "dble-1" success
     Given upload file "./features/steps/SQLContext.py" to "dble-1" success
@@ -195,11 +191,8 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 
 
 
-  @restore_mysql_config
-  Scenario:  repeat() 函数下发大包校验 --- repeat受后端mysql max_allowed_packet参数限制   #4
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+  Scenario:  repeat() 函数下发大包校验 --- repeat受后端mysql max_allowed_packet参数限制   #3
+
      Given restart mysql in "mysql-master1" with sed cmds to update mysql config
       """
       /max_allowed_packet/d
@@ -240,21 +233,16 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 
     Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
-
-
-  @restore_mysql_config  @skip
-  Scenario: source 大包校验    #5
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
-    """
+ @skip
+   ##DBLE0REQ-2209
+  Scenario: source 大包校验    #4
     Given set log4j2 log level to "info" in "dble-1"
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
-      s/-Xmx1G/-Xmx8G/g
+      s/-Xmx1G/-Xmx4G/g
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
-      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=8G/g
-      $a -DidleTimeout=180000
+      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=4G/g
       $a -DbufferPoolPageSize=33554432
       """
     Given Restart dble in "dble-1" success
