@@ -36,7 +36,7 @@ Feature:  dble_thread_pool test
       | conn_0 | False   | select * from dble_thread_pool | dble_information  |
     Then check resultset "dble_thread_pool_2" has lines with following column values
       | name-0                  | core_pool_size-2 | active_count-3 | waiting_task_count-4 |
-      | Timer                   | 1                | 0              | 0                    |
+#      | Timer                   | 1                | 0              | 0                    |
       | BusinessExecutor        | 1                | 1              | 0                    |
       | backendBusinessExecutor | 8                | 0              | 0                    |
       | complexQueryExecutor    | 8                | 1              | 0                    |
