@@ -9,7 +9,7 @@ import re
 from steps.lib.ObjectFactory import ObjectFactory
 from hamcrest import *
 
-logger = logging.getLogger('steps.lib.MySQLObject')
+logger = logging.getLogger('root')
 
 class PostQueryCheck(object):
     def __init__(self, real_res, real_err=None, time_cost=0, query_meta=None):
@@ -98,9 +98,14 @@ class PostQueryCheck(object):
             executeTime = re.search(r"execute_time\{(.*?)\}", self._expect, re.I)
             if executeTime:
                 expectRS = executeTime.group(1)
-                duration = self._time_cost.seconds
-                logger.debug("expect duration is :{0},real duration is{1} ".format(eval(expectRS), duration))
-                assert_that(duration, equal_to(eval(expectRS)))
+
+                if "," in expectRS:
+                    exec_num = expectRS.split(",")[0]
+                    exec_per = expectRS.split(",")[1]
+                else:
+                    exec_num = expectRS
+                    exec_per = 1
+                self.executeTime(self._real_res, int(exec_num), float(exec_per))
                 break
 
             if self._expect.lower() == "error totally whack":
@@ -172,3 +177,15 @@ class PostQueryCheck(object):
         a = abs(re_num - expectRS)
         b = expectRS *0.2
         assert a<=b, "expect {0} in resultset {1}".format(expectRS, re_num)
+
+    def executeTime(self, RS, expectRS, percent):  # Float a value up and down
+        if percent < 0 or percent > 1:
+            logger.debug("wrong value of percent")
+            return False
+        duration = self._time_cost.seconds
+        a = abs(duration - expectRS)
+        b = expectRS * percent
+        c = float(expectRS) - float(expectRS) * percent
+        d = float(expectRS) + float(expectRS) * percent
+        assert a <= b, "sql: '{}', expect duration time: ' {} to {} ' , but real duration time is '{}'".format(
+            self._sql, c, d, duration)
