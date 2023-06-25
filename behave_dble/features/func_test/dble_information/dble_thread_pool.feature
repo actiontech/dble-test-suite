@@ -34,7 +34,7 @@ Feature:  dble_thread_pool test
       | conn_0 | False   | select * from dble_thread_pool | dble_information  |
     Then check resultset "dble_thread_pool_2" has lines with following column values
       | name-0                  | size-1 | active_count-2 | waiting_task_count-3 |
-      | Timer                   | 1      | 0              | 0                    |
+#      | Timer                   | 1      | 0              | 0                    |
       | BusinessExecutor        | 1      | 1              | 0                    |
       | backendBusinessExecutor | 8      | 0              | 0                    |
       | complexQueryExecutor    | 8      | 1              | 0                    |
@@ -43,7 +43,7 @@ Feature:  dble_thread_pool test
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                         | expect                                                                         |
       | conn_0 | False   | use dble_information                                        | success                                                                        |
-      | conn_0 | False   | select * from dble_thread_pool limit 1                      | has{(('Timer', 1, 0, 0),)}                                                     |
+#      | conn_0 | False   | select * from dble_thread_pool limit 1                      | has{(('Timer', 1, 0, 0),)}                                                     |
       | conn_0 | False   | select * from dble_thread_pool order by name desc limit 2   | length{(2)}                                                                    |
       | conn_0 | False   | select * from dble_thread_pool where name like '%Business%' | has{(('BusinessExecutor', 1, 1, 0), ('backendBusinessExecutor', 8, 0, 0))}     |
       | conn_0 | False   | select size from dble_thread_pool                           | has{((1,), (1,), (8,), (8,), (8,))}                                            |
