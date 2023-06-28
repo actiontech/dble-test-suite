@@ -63,6 +63,7 @@ RUN VERSION=1.58.2 && \
     mv dbdeployer-$VERSION.$OS /usr/local/bin/dbdeployer && \
     dbdeployer init --skip-tarball-download --skip-shell-completion && \
     dbdeployer defaults enable-bash-completion /dbdeployer_completion.sh && \
+    dbdeployer defaults update reserved-ports '1186' && \
     dbdeployer downloads get-unpack mysql-5.7.25-linux-glibc2.12-x86_64.tar.gz && \
     dbdeployer downloads get-unpack mysql-8.0.18-linux-glibc2.12-x86_64.tar.xz && \
     rm -f dbdeployer-$VERSION.$OS.tar.gz && \
