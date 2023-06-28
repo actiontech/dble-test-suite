@@ -11,29 +11,33 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     {'restore_network':'mysql-master2'}
     {'restore_network':'mysql-slave1'}
     """
-# set rwSplitMode=0 ,one slave disabled="true"
+# set balance=0 ,one slave disabled="true"
     Given delete the following xml segment
       | file           | parent         | child                  |
-      | db.xml         | {'tag':'root'} | {'tag':'dbGroup'}      |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      | schema.xml         | {'tag':'root'} | {'tag':'dataHost'}     |
+      Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select 1</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
-    </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+       <heartbeat>select 1</heartbeat>
+       <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+       </writeHost>
+    </dataHost>
 
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat errorRetryCount="0" timeout="5">show slave status</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        <property name="heartbeatPeriodMillis">5000</property>
-        </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" >
-        <property name="heartbeatPeriodMillis">5000</property>
-        </dbInstance>
-        <dbInstance name="hostS2" password="111111" url="172.100.9.6:3308" user="test" maxCon="1000" minCon="10" disabled="true"/>
-    </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+       <heartbeat errorRetryCount="0" timeout="5">select user()</heartbeat>
+       <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+          <readHost host="hostS1" url="172.100.9.6:3307" password="111111" user="test"/>
+          <readHost host="hostS2" url="172.100.9.6:3308" password="111111" user="test" disabled="true"/>
+       </writeHost>
+    </dataHost>
     """
-    Then execute admin cmd "reload @@config"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <system>
+        <property name="dataNodeHeartbeatPeriod">5000</property>
+    </system>
+    """
+    Given Restart dble in "dble-1" success
 #case one slave is disable then check RS_CODE is "init",one slave is enable then check RS_CODE is "ok"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "11"
       | conn   | toClose | sql               |
@@ -51,11 +55,11 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "12" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 5000      | false  |
-      | hostS1 | 172.100.9.6 | 3307   | error     | 0       | 5000      | false  |
-      | hostS2 | 172.100.9.6 | 3308   | init      | 0       | 5000      | true   |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6 | STOP-9 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0         | false  |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 5000      | false  |
+      | hostS1 | 172.100.9.6 | 3307   | error     | 5000      | false  |
+      | hostS2 | 172.100.9.6 | 3308   | init      | 5000      | true   |
     Given start mysql in host "mysql-slave1"
 #because heartbeat timeout is set to 5 seconds,so wait 5 seconds to check slave RS_CODE is "ok"
     Given sleep "5" seconds
@@ -63,11 +67,11 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "13" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10  |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None           |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 5000      | false  | None           |
-      | hostS1 | 172.100.9.6 | 3307   | ok        | 0       | 5000      | false  | None           |
-      | hostS2 | 172.100.9.6 | 3308   | init      | 0       | 5000      | true   | None           |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10  |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0         | false  | None           |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 5000      | false  | None           |
+      | hostS1 | 172.100.9.6 | 3307   | ok        | 5000      | false  | None           |
+      | hostS2 | 172.100.9.6 | 3308   | init      | 5000      | true   | None           |
     #case one slave set iptables to check slave RS_CODE is "timeout"
     Given execute oscmd in "mysql-slave1"
       """
@@ -97,21 +101,20 @@ Feature: #test show @@heartbeat DBLE0REQ-167
 # change heartbeat errorRetryCount and timeout to set connection retry and check slave RS_CODE is "ok"
     Given delete the following xml segment
       | file           | parent         | child                  |
-      | db.xml         | {'tag':'root'} | {'tag':'dbGroup'}      |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      | schema.xml         | {'tag':'root'} | {'tag':'dataHost'}     |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10">
         <heartbeat>select 1</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
-    </dbGroup>
+        <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test"/>
+    </dataHost>
 
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10">
         <heartbeat errorRetryCount="2" timeout="10">show slave status</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" >
-        <property name="heartbeatPeriodMillis">5000</property>
-        </dbInstance>
-    </dbGroup>
+        <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+          <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test" />
+        </writeHost>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config"
     Given stop mysql in host "mysql-slave1"
@@ -134,19 +137,15 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | hostS1 | 172.100.9.6 | 3307   | ok        | 0       | 10000      | false  | None             |
 
 # case 3:add new slave and down old slave,check salve RS_CODE
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat  errorRetryCount="0" timeout="10">show slave status</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-                <property name="heartbeatPeriodMillis">5000</property>
-        </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" >
-                <property name="heartbeatPeriodMillis">5000</property>
-        </dbInstance>
-        <dbInstance name="hostS2" password="111111" url="172.100.9.6:3308" user="test" maxCon="1000" minCon="10" >
-        </dbInstance>
-    </dbGroup>
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10">
+      <heartbeat errorRetryCount="0" timeout="10">show slave status</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test" />
+        <readHost host="hostS2" password="111111" url="172.100.9.6:3308" user="test" />
+      </writeHost>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config"
     Given stop mysql in host "mysql-slave1"
@@ -155,20 +154,20 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "31" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 10000     | false  |
-      | hostS1 | 172.100.9.6 | 3307   | error     | 0       | 10000     | false  |
-      | hostS2 | 172.100.9.6 | 3308   | ok        | 0       | 10000     | false  |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6 | STOP-9 |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 10000     | false  |
+      | hostS1 | 172.100.9.6 | 3307   | error     | 10000     | false  |
+      | hostS2 | 172.100.9.6 | 3308   | ok        | 10000     | false  |
     Given start mysql in host "mysql-slave1"
     Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "32"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "32" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6  | STOP-9 | RS_MESSAGE-10    |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 10000      | false  | None             |
-      | hostS1 | 172.100.9.6 | 3307   | ok        | 0       | 10000      | false  | None             |
-      | hostS2 | 172.100.9.6 | 3308   | ok        | 0       | 10000      | false  | None             |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6  | STOP-9 | RS_MESSAGE-10    |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 10000      | false  | None             |
+      | hostS1 | 172.100.9.6 | 3307   | ok        | 10000      | false  | None             |
+      | hostS2 | 172.100.9.6 | 3308   | ok        | 10000      | false  | None             |
 
 # case 4 :set master down to check RS_CODE
     Given stop mysql in host "mysql-master2"
@@ -176,20 +175,20 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "41" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 |
-      | hostM2 | 172.100.9.6 | 3306   | error     | 0       | 10000     | false  |
-      | hostS1 | 172.100.9.6 | 3307   | ok        | 0       | 10000     | false  |
-      | hostS2 | 172.100.9.6 | 3308   | ok        | 0       | 10000     | false  |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6 | STOP-9 |
+      | hostM2 | 172.100.9.6 | 3306   | error     | 10000     | false  |
+      | hostS1 | 172.100.9.6 | 3307   | ok        | 10000     | false  |
+      | hostS2 | 172.100.9.6 | 3308   | ok        | 10000     | false  |
     Given start mysql in host "mysql-master2"
     Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "42"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "42" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6  | STOP-9 | RS_MESSAGE-10    |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 10000      | false  | None             |
-      | hostS1 | 172.100.9.6 | 3307   | ok        | 0       | 10000      | false  | None             |
-      | hostS2 | 172.100.9.6 | 3308   | ok        | 0       | 10000      | false  | None             |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6  | STOP-9 | RS_MESSAGE-10    |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 10000      | false  | None             |
+      | hostS1 | 172.100.9.6 | 3307   | ok        | 10000      | false  | None             |
+      | hostS2 | 172.100.9.6 | 3308   | ok        | 10000      | false  | None             |
     #case set master iptables to check master RS_CODE is "timeout"
     Given execute oscmd in "mysql-master2"
       """

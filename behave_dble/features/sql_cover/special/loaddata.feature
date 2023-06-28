@@ -4,7 +4,7 @@
 # Modified by wujinling at 2019/8/29
 Feature: to verify issue https://github.com/actiontech/dble/issues/1000
 
-  Scenario: config parameter "maxCharsPerColumn " in bootstrap.cnf to limit characters per column #1
+  Scenario: config parameter "maxCharsPerColumn " in server.xml to limit characters per column #1
     #create file with 68888 characters for one column
      Given create local and server file "test68888.txt" and fill with text
      """
@@ -21,11 +21,13 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
       | conn_0 | True    | load data infile "./test68888.txt" into table global_4_t1 fields terminated by ',' lines terminated by '\n';  | error totally whack | schema2 |
 
      #load data with setting maxCharsPerColumn < max column length in test68888.ext
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
-     $a -Dprocessors=1
-     $a -DprocessorExecutor=1
-     $a -DmaxCharsPerColumn=68887
+     <system>
+          <property name="processors">1</property>
+          <property name="processorExecutor">1</property>
+          <property name="maxCharsPerColumn">68887</property>
+     </system>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -34,9 +36,13 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
       | conn_0 | True    | load data infile "./test68888.txt" into table global_4_t1 fields terminated by ',' lines terminated by '\n';   | error totally whack | schema2 |
 
     #load data with setting maxCharsPerColumn >= max column length in test68888.ext
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
-     s/-DmaxCharsPerColumn=68887/-DmaxCharsPerColumn=68888/
+     <system>
+          <property name="processors">1</property>
+          <property name="processorExecutor">1</property>
+          <property name="maxCharsPerColumn">68888</property>
+     </system>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -69,13 +75,13 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
       | conn_0 | True    | select name from sharding_4_t1 where id=4                                                                               | has{(('#4',),)}  | schema1 |
 
   Scenario: load data for table using global sequence from issue:1048    #3
-     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <shardingTable name="test_auto" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" incrementColumn="id" />
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" rule="hash-four" />
     """
-    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-     a sequenceHandlerType=2
+        <property name="sequenceHandlerType">2</property>
     """
     Given Restart dble in "dble-1" success
     Given create local and server file "ld.txt" and fill with text
@@ -92,13 +98,13 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
 
 
   Scenario: : Load data when the column content only has one '"' at the begining - issue:1182   #4
-     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <singleTable name="test_shard" shardingNode="dn1"/>
+        <table name="test_shard" dataNode="dn1"/>
     """
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-     a/-DmaxCharsPerColumn=10
+        <property name="maxCharsPerColumn">10</property>
     """
     Given Restart dble in "dble-1" success
     Given create local and server file "aa.txt" and fill with text

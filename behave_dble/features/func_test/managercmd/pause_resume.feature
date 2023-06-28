@@ -14,18 +14,18 @@ Feature: test "pause/resume" manager cmd
       #1.3 pause with correct timeout
       #1.4 pause with correct timeout,queue
       #1.5 pause with corect timeout,queue,wait_limit
-      #1.6 pause with  shardingNode not exists
+      #1.6 pause with  dataNode not exists
       Then execute sql in "dble-1" in "admin" mode
-        | conn   | toClose  | sql                                                                           | expect  |
-        | conn_0 | False    | pause @@shardingNode                                                          | The sql did not match pause @@shardingNode ='dn......' and timeout = ([0-9]+) |
-        | conn_0 | False    | pause @@shardingNode = 'dn1,dn3' and timeout = -1 ,queue = 10,wait_limit = 10 | The sql did not match pause @@shardingNode ='dn......' and timeout = ([0-9]+) |
-        | conn_0 | False    | pause @@shardingNode = 'dn1,dn3' and timeout = 10                             | success |
-        | conn_0 | False    | resume                                                                        | success |
-        | conn_0 | False    | pause @@shardingNode = 'dn1,dn3' and timeout = 10,queue=10                    | success |
-        | conn_0 | False    | resume                                                                        | success |
-        | conn_0 | False    | pause @@shardingNode = 'dn1,dn3' and timeout = 10,queue=10,wait_limit=10      | success |
-        | conn_0 | False    | resume                                                                        | success |
-        | conn_0 | True     | pause @@shardingNode = 'dn1,dn3,dn6' and timeout = 10,queue=10                |ShardingNode dn6 did not exists |
+        | conn   | toClose  | sql                                                                       | expect  |
+        | conn_0 | False    | pause @@DataNode                                                          | The sql did not match pause @@dataNode ='dn......' and timeout = ([0-9]+) |
+        | conn_0 | False    | pause @@DataNode = 'dn1,dn3' and timeout = -1 ,queue = 10,wait_limit = 10 | The sql did not match pause @@dataNode ='dn......' and timeout = ([0-9]+) |
+        | conn_0 | False    | pause @@DataNode = 'dn1,dn3' and timeout = 10                             | success |
+        | conn_0 | False    | resume                                                                    | success |
+        | conn_0 | False    | pause @@DataNode = 'dn1,dn3' and timeout = 10,queue=10                    | success |
+        | conn_0 | False    | resume                                                                    | success |
+        | conn_0 | False    | pause @@DataNode = 'dn1,dn3' and timeout = 10,queue=10,wait_limit=10      | success |
+        | conn_0 | False    | resume                                                                    | success |
+        | conn_0 | True     | pause @@DataNode = 'dn1,dn3,dn6' and timeout = 10,queue=10                |DataNode dn6 did not exists |
 
   @CRITICAL
   Scenario: verify pause "wait_limit" work  #2
@@ -34,13 +34,13 @@ Feature: test "pause/resume" manager cmd
         | conn_0 | False    | drop table if exists test                  | success  | schema1  |
         | conn_0 | True     | create table test(id int,name varchar(20)) | success  | schema1  |
       Then execute sql in "dble-1" in "admin" mode
-        | conn   | toClose | sql                                                                             | expect                                    |
-        | conn_0 | False   | pause @@shardingNode = 'dn1,dn2,dn3,dn4' and timeout = 10,queue=10,wait_limit=2 | success                                   |
-        | conn_0 | True    | show @@pause                                                                    | has{('dn1',), ('dn2',),('dn3',),('dn4',)} |
+        | conn   | toClose | sql                                                                         | expect                                    |
+        | conn_0 | False   | pause @@DataNode = 'dn1,dn2,dn3,dn4' and timeout = 10,queue=10,wait_limit=1 | success                                   |
+        | conn_0 | True    | show @@pause                                                                | has{('dn1',), ('dn2',),('dn3',),('dn4',)} |
       Then execute sql in "dble-1" in "user" mode
-        | conn   | toClose  | sql                | expect                                                   | db      |
-        | conn_0 | False    | select * from test | waiting time exceeded wait_limit from pause shardingNode | schema1 |
-#        | conn_0 | True     | select * from test | execute_time{2,0.5}                                      | schema1 |
+        | conn   | toClose  | sql                | expect                                               | db      |
+        | conn_0 | False    | select * from test | waiting time exceeded wait_limit from pause dataNode | schema1 |
+        | conn_0 | True     | select * from test | execute_time{1}                                      | schema1 |
       Then execute sql in "dble-1" in "admin" mode
         | sql   | expect  |
         |resume | success |
@@ -57,22 +57,22 @@ Feature: test "pause/resume" manager cmd
         | conn_0 | False    | begin                                                      | success | schema1 |
         | conn_0 | False    | insert into test values(1,'test1'),(2,'test2'),(3,'test3') | success | schema1 |
       Then execute sql in "dble-1" in "admin" mode
-        | conn   | toClose  | sql                                                                           | expect                                               |
-        | new    | False    | pause @@shardingNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=1 | The backend connection recycle failure, try it later |
+        | conn   | toClose  | sql                                                                       | expect                                              |
+        | new    | False    | pause @@DataNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=1 | The backend connection recycle failure,try it later |
       Then execute sql in "dble-1" in "user" mode
         | conn   | toClose | sql     | expect  | db       |
         | conn_0 | True    | commit  | success | schema1  |
       Then execute sql in "dble-1" in "admin" mode
-        | conn   | toClose  | sql                                                                           | expect                                    |
-        | conn_0 | False    | pause @@shardingNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=1 | success                                  |
-        | conn_0 | False    | show @@pause                                                              | has{('dn1',), ('dn2',),('dn3',),('dn4',)}  |
-        | conn_0 | True     | resume                                                                    | success                                    |
+        | conn   | toClose  | sql                                                                       | expect                                    |
+        | conn_0 | False    | pause @@DataNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=1 |success                                    |
+        | conn_0 | False    | show @@pause                                                              | has{('dn1',), ('dn2',),('dn3',),('dn4',)} |
+        | conn_0 | True     | resume                                                                    |success                                    |
       # verify "queue"
       Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                                                        |
-        | conn_0 | True    | pause @@shardingNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=10 |
+        | conn_0 | True    | pause @@DataNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=10 |
       Then execute sql in "dble-1" in "user" mode
-        | conn   | toClose | sql                | expect                 | db       |
+        | conn   | toClose | sql                | expect               | db       |
         | conn_0 | True    | select * from test | execute_time{10,0.5} |  schema1 |
       Given create "2" front connections executing "select * from test"
       """
@@ -83,17 +83,17 @@ Feature: test "pause/resume" manager cmd
       | new  | True    | resume | success |    |
 
   @CRITICAL
-  Scenario: resume shardingNode which not stop data flow #4
+  Scenario: resume datanodes which not stop data flow #4
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                  | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                   | success | schema1 |
       | conn_0 | True    | create table sharding_4_t1 (id int,name varchar(20)) | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | sql    | expect             |
-      | resume | No shardingNode paused |
+      | resume | No dataNode paused |
 
   @CRITICAL
-  Scenario: execute manager cmd "pause @@shardingNode" many times #5
+  Scenario: execute manager cmd "pause @@DataNode" many times #5
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                  | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                   | success | schema1 |
@@ -103,16 +103,16 @@ Feature: test "pause/resume" manager cmd
       | conn_0 | false   | begin                                                   | success | schema1 |
       | conn_0 | false   | insert into sharding_4_t1 values(1,1),(2,1),(3,1),(4,1) | success | schema1 |
     Then execute admin cmd  in "dble-1" at background
-      | sql                                                                            | db                 |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | dble_information   |
+      | sql                                                                        |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                            | expect                                            |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | Some shardingNodes is paused, please resume first |
+      | sql                                                                        | expect                                        |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | Some dataNodes is paused, please resume first |
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                            | expect                                               |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | The backend connection recycle failure, try it later |
+      | sql                                                                        | expect                                              |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | The backend connection recycle failure,try it later |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                          | expect      | db      |
       | conn_0 | false   | select *  from sharding_4_t1 | length{(4)} | schema1 |
@@ -127,15 +127,15 @@ Feature: test "pause/resume" manager cmd
       | conn_0 | false   | begin                                                   | success | schema1 |
       | conn_0 | false   | insert into sharding_4_t1 values(1,1),(2,1),(3,1),(4,1) | success | schema1 |
     Then execute admin cmd  in "dble-1" at background
-      | sql                                                                            | db               |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | dble_information |
+      | sql                                                                        |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 |
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql    | expect  |
       | resume | success |
     Then check log "/opt/dble/logs/dble_admin_query.log" output in "dble-1"
     """
-    Pause resume when recycle connection, pause revert
+    Pause resume when recycle connection ,pause revert
     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                        | expect      |
@@ -149,12 +149,12 @@ Feature: test "pause/resume" manager cmd
 
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                                              | expect                                            |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5   | success                                           |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5   | Some shardingNodes is paused, please resume first |
-      | pause @@shardingNode = 'dn1,dn2' and timeout =10 ,queue = 1,wait_limit = 5       | Some shardingNodes is paused, please resume first |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 11,wait_limit = 5  | Some shardingNodes is paused, please resume first |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | Some shardingNodes is paused, please resume first |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5   | success                                           |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5   | Some shardingNodes is paused, please resume first |
+      | pause @@DataNode = 'dn1,dn2' and timeout =10 ,queue = 1,wait_limit = 5       | Some shardingNodes is paused, please resume first |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 11,wait_limit = 5  | Some shardingNodes is paused, please resume first |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | Some shardingNodes is paused, please resume first |
       | resume                                                                           | success                                           |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | success                                           |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =100 ,queue = 1,wait_limit = 15 | Some shardingNodes is paused, please resume first |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | success                                           |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =100 ,queue = 1,wait_limit = 15 | Some shardingNodes is paused, please resume first |
       | resume                                                                           | success                                           |

@@ -7,9 +7,9 @@ Feature: # dryrun test
   @skip
     ##这个版本的结果是不稳定的
   Scenario: check cmd "dryrun"  #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
        """
-       <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+       <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
        </schema>
        """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
@@ -20,16 +20,16 @@ Feature: # dryrun test
       | Xml     | NOTICE  | There is No RWSplit User                                                  |
       | Cluster | NOTICE  | Dble is in single mod                                                     |
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
        """
-       <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-          <globalTable name="global" shardingNode="dn1,dn2,dn3,dn4" />
-          <singleTable name="sing" shardingNode="dn5" />
-          <shardingTable name="sharding_4" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+       <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+          <table name="global" dataNode="dn1,dn2,dn3,dn4" type="global" />
+          <table name="sing" dataNode="dn5" />
+          <table name="sharding_4" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
        </schema>
 
        <schema name="schema2" >
-           <shardingTable name="sharding_2" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+           <table name="sharding_2" dataNode="dn1,dn3" rule="hash-two" />
        </schema>
        """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"

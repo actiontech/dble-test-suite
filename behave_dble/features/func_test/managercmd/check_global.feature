@@ -1,6 +1,7 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2020/9/14
+@skip # 3.20.07新增
 Feature: test " check @@global schema = '' [and table = '']"
 
 
@@ -16,25 +17,25 @@ Feature: test " check @@global schema = '' [and table = '']"
       | conn_0 | true    | check @@global schema='schema1' and table = 't1'   | tables must exist and must be global table with global check |
 
   #case the more global table
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <globalTable name="g1" shardingNode="dn1,dn2,dn3,dn4" cron="/5 * * * * ? *" checkClass="CHECKSUM" />
-        <globalTable name="g2" shardingNode="dn1,dn2" cron="0 /5 * * * ? *" checkClass="CHECKSUM" />
-        <globalTable name="g3" shardingNode="dn1,dn2" cron="0 0 /5 * * ? *" checkClass="CHECKSUM" />
-        <globalTable name="g4" shardingNode="dn1,dn2" cron="0 0 0 /1  * ? *" checkClass="CHECKSUM" />
-        <globalTable name="g5" shardingNode="dn1,dn3" />
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table type="global" name="g1" dataNode="dn1,dn2,dn3,dn4" cron="/5 * * * * ? *" checkClass="CHECKSUM" />
+        <table type="global" name="g2" dataNode="dn1,dn2" cron="0 /5 * * * ? *" checkClass="CHECKSUM" />
+        <table type="global" name="g3" dataNode="dn1,dn2" cron="0 0 /5 * * ? *" checkClass="CHECKSUM" />
+        <table type="global" name="g4" dataNode="dn1,dn2" cron="0 0 0 /1  * ? *" checkClass="CHECKSUM" />
+        <table type="global" name="g5" dataNode="dn1,dn3" />
     </schema>
 
-    <schema shardingNode="dn5" name="schema2" >
-        <globalTable name="g6" shardingNode="dn1,dn2" cron="/10 * * * * ? " checkClass="COUNT" />
-        <globalTable name="g7" shardingNode="dn1,dn2" cron="0 /2 * * * ? " checkClass="COUNT" />
-        <globalTable name="g8" shardingNode="dn1,dn2" cron="0 0 /3  * * ? " checkClass="COUNT" />
+    <schema dataNode="dn5" name="schema2" >
+        <table type="global" name="g6" dataNode="dn1,dn2" cron="/10 * * * * ? " checkClass="COUNT" />
+        <table type="global" name="g7" dataNode="dn1,dn2" cron="0 /2 * * * ? " checkClass="COUNT" />
+        <table type="global" name="g8" dataNode="dn1,dn2" cron="0 0 /3  * * ? " checkClass="COUNT" />
     </schema>
 
-    <schema shardingNode="dn5" name="schema3" >
-        <globalTable name="g9" shardingNode="dn1,dn2" cron="/10 * * * * ? " checkClass="COUNT" />
-        <globalTable name="g10" shardingNode="dn1,dn2" cron="0 /5 * * * ? *" checkClass="CHECKSUM" />
+    <schema dataNode="dn5" name="schema3" >
+        <table type="global" name="g9" dataNode="dn1,dn2" cron="/10 * * * * ? " checkClass="COUNT" />
+        <table type="global" name="g10" dataNode="dn1,dn2" cron="0 /5 * * * ? *" checkClass="CHECKSUM" />
     </schema>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -55,16 +56,16 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
-  #case change sharding.xml add global check and reload
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+  #case change schema.xml add global check and reload
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
-      <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <globalTable name="g1" shardingNode="dn1,dn2,dn3,dn4" cron="/5 * * * * ? *" checkClass="CHECKSUM" />
-        <globalTable name="g2" shardingNode="dn1,dn3" />
+      <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table type="global" name="g1" dataNode="dn1,dn2,dn3,dn4" cron="/5 * * * * ? *" checkClass="CHECKSUM" />
+        <table type="global" name="g2" dataNode="dn1,dn3" />
       </schema>
 
-      <schema shardingNode="dn1" name="schema2" >
-        <globalTable name="g3" shardingNode="dn1,dn2,dn3,dn4" cron="/10 * * * * ? " checkClass="COUNT" />
+      <schema dataNode="dn1" name="schema2" >
+        <table type="global" name="g3" dataNode="dn1,dn2,dn3,dn4" cron="/10 * * * * ? " checkClass="COUNT" />
       </schema>
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -182,21 +183,21 @@ Feature: test " check @@global schema = '' [and table = '']"
 
 
    #case the mysql server is down
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
             <property name="heartbeatPeriodMillis">5000</property>
         </dbInstance>
-    </dbGroup>
+    </dataHost>
 
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
             <property name="heartbeatPeriodMillis">5000</property>
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config"
     Given stop mysql in host "mysql-master1"

@@ -8,13 +8,13 @@ Feature: test show @@help
   @NORMAL
   Scenario: test "show @@help" #1
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(100)}  | dble_information |
+      | conn   | toClose | sql                     | expect        |
+      | conn_0 | False   | show @@help             | length{(99)}  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
     Then check resultset "rs_A" has lines with following column values
-      | STATEMENT-0                                                                                         | DESCRIPTION-1                                                                     |
+      | STATEMENT-0                                                                                      | DESCRIPTION-1                                                                     |
       | select @@VERSION_COMMENT;                                                                        | Show the version comment of dble                                                  |
       | show @@time.current                                                                              | Report current timestamp                                                          |
       | show @@time.startup                                                                              | Report startup timestamp                                                          |
@@ -22,10 +22,10 @@ Feature: test show @@help
       | show @@server                                                                                    | Report server status                                                              |
       | show @@threadpool                                                                                | Report threadPool status                                                          |
       | show @@database                                                                                  | Report databases                                                                  |
-      | show @@shardingNode [where schema = ?]                                                           | Report shardingNodes                                                              |
-      | show @@dbinstance [where shardingNode = ?]                                                       | Report dbinstance                                                                 |
-      | show @@dbinstance.synstatus                                                                      | Report dbinstance data synchronous                                                |
-      | show @@dbinstance.syndetail where name=?                                                         | Report dbinstance data synchronous detail                                         |
+      | show @@datanode [where schema = ?]                                                               | Report dataNodes                                                                  |
+      | show @@datasource [where dataNode = ?]                                                           | Report dataSources                                                                |
+      | show @@datasource.synstatus                                                                      | Report datasource data synchronous                                                |
+      | show @@datasource.syndetail where name=?                                                         | Report datasource data synchronous detail                                         |
       | show @@processor                                                                                 | Report processor status                                                           |
       | show @@command                                                                                   | Report commands status                                                            |
       | show @@connection where processor=? and front_id=? and host=? and user=?                         | Report connection status                                                          |
@@ -59,22 +59,21 @@ Feature: test show @@help
       | show @@processlist                                                                               | Report correspondence between front and backend session                           |
       | show @@cost_time                                                                                 | Report cost time of query , contains back End ,front End and over all             |
       | show @@thread_used                                                                               | Report all bussiness&reactor thread usage                                         |
-      | show @@shardingNodes where schema='?' and table='?'                                              | Report the sharding nodes info of a table                                         |
+      | show @@datanode [where schema = ?]                                                               | Report dataNodes                                                                  |
       | show @@algorithm where schema='?' and table='?'                                                  | Report the algorithm info of a table                                              |
       | show @@ddl                                                                                       | Report all ddl info in progress                                                   |
       | show @@reload_status                                                                             | Report latest reload status in this dble                                          |
       | show @@user                                                                                      | Report all user in this dble                                                      |
       | show @@user.privilege                                                                            | Report privilege of all business user in this dble                                |
       | show @@questions                                                                                 | Report the questions & transactions have been executed in server port             |
-      | show @@data_distribution where table ='schema.table'                                             | Report the data distribution in different sharding node                           |
-      | show @@connection_pool                                                                           | Report properties of connection pool                                              |
+      | show @@data_distribution where table ='schema.table'                                             | Report the data distribution in different data node                               |
       | kill @@connection id1,id2,...                                                                    | Kill the specified connections                                                    |
       | kill @@xa_session id1,id2,...                                                                    | Kill the specified sessions that commit/rollback xa transaction in the background |
       | kill @@ddl_lock where schema='?' and table='?'                                                   | Kill ddl lock held by the specified ddl                                           |
-      | stop @@heartbeat name:time                                                                       | Pause shardingNode heartbeat                                                      |
+      | stop @@heartbeat name:time                                                                       | Pause dataNode heartbeat                                                          |
       | reload @@config                                                                                  | Reload basic config from file                                                     |
       | reload @@config_all                                                                              | Reload all config from file                                                       |
-      | reload @@metadata [where schema=? [and table=?] \| where table in ('schema1.table1',...)]         | Reload metadata of tables or specified table                                      |
+      | reload @@metadata [where schema=? [and table=?] \| where table in ('schema1.table1',...)]         | Reload metadata of tables or specified table                                     |
       | reload @@sqlslow=                                                                                | Set Slow SQL Time(ms)                                                             |
       | reload @@user_stat                                                                               | Reset show @@sql  @@sql.sum @@sql.slow                                            |
       | reload @@query_cf[=table&column]                                                                 | Reset show @@sql.conditiont                                                       |
@@ -89,9 +88,9 @@ Feature: test show @@help
       | flow_control @@set [enableFlowControl = true/false] [flowControlStart = ?] [flowControlEnd = ?]  | Change the config of flow control                                                 |
       | log @@[file=? limit=? key=? regex=?]                                                             | Report logs by given regex                                                        |
       | dryrun                                                                                           | Dry run to check config before reload xml                                         |
-      | pause @@shardingNode = 'dn1,dn2,....' and timeout = ? [,queue = ?,wait_limit = ?]                | Block query requests witch specified shardingNodes involved                       |
-      | RESUME                                                                                           | Resume the query requests of the paused shardingNodes                             |
-      | show @@pause                                                                                     | Show which shardingNodes have bean pause                                          |
+      | pause @@DataNode = 'dn1,dn2,....' and timeout = ? [,queue = ?,wait_limit = ?]                    | Block query requests witch specified dataNodes involved                           |
+      | RESUME                                                                                           | Resume the query requests of the paused dataNodes                                 |
+      | show @@pause                                                                                     | Show which dataNodes have bean pause                                              |
       | show @@slow_query_log                                                                            | Show if the slow query log is enabled                                             |
       | enable @@slow_query_log                                                                          | Turn on the slow query log                                                        |
       | disable @@slow_query_log                                                                         | Turn off the slow query log                                                       |
@@ -101,22 +100,16 @@ Feature: test show @@help
       | reload @@slow_query.flushperiod                                                                  | Reset the flush period                                                            |
       | show @@slow_query.flushsize                                                                      | Show the min flush size for writing to disk                                       |
       | reload @@slow_query.flushsize                                                                    | Reset the flush size                                                              |
-      | create database @@shardingNode ='dn......'                                                       | create database for shardingNode in config                                        |
-      | drop database @@shardingNode ='dn......'                                                         | drop database for shardingNode set in config                                      |
+      | create database @@dataNode ='dn......'                                                           | create database for datanode setted in schema.xml                                 |
+      | drop database @@dataNode ='dn......'                                                             | drop database for datanode setted in schema.xml                                   |
       | check @@metadata                                                                                 | show last time of `reload @@metadata`/start dble                                  |
       | check @@global (schema = '?'( and table = '?'))                                                  | check global and get check result immediately                                     |
       | check full @@metadata                                                                            | show detail information of metadata                                               |
       | show @@alert                                                                                     | Show if the alert is enabled                                                      |
       | enable @@alert                                                                                   | Turn on the alert                                                                 |
       | disable @@alert                                                                                  | Turn off the alert                                                                |
-      | dbGroup @@disable name='?' (instance = '?')                                                      | disable some dbGroup/dbInstance                                                   |
-      | dbGroup @@enable name='?' (instance = '?')                                                       | enable some dbGroup/dbInstance                                                    |
-      | dbGroup @@switch name='?' master='?'                                                             | switch primary in one dbGroup                                                     |
-      | dbGroup @@events                                                                                 | show all the dbGroup ha event which not finished yet                              |
-      | split src dest -sschema -r500 -w500 -l10000                                                      | split dump file into multi dump files according to shardingNode                   |
-
-
-    Then check resultset "rs_A" has not lines with following column values
-      | STATEMENT-0                            |
-      | switch @@datasources                   |
-      | switch @@dbinstance                    |
+      | dataHost @@disable name='?' (node = '?')                                                         | disable some dataSources/dataHost                                                 |
+      | dataHost @@enable name='?' (node = '?')                                                          | enable some dataSources/dataHost                                                  |
+      | dataHost @@switch name='?' master='?'                                                            | switch writeHost and readHost in one dataHost                                     |
+      | dataHost @@events                                                                                | show all the dataHost ha event which not finished yet                             |
+      | split src dest -sschema -r500 -w500 -l10000                                                      | split dump file into multi dump files according to dataNode                       |

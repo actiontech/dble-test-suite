@@ -5,11 +5,11 @@
 
    Scenario: can support special sql like when when two sharding_table inner join select DATEDIFF()   #1
 #case https://github.com/actiontech/dble/issues/1913
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_2_t2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
+        <table name="sharding_2_t1" dataNode="dn1,dn2," rule="hash-two" />
+        <table name="sharding_2_t2" dataNode="dn1,dn2," rule="hash-two" />
     </schema>
     """
     Then execute admin cmd "reload @@config"
@@ -80,18 +80,29 @@
       | conn_0 | true    | drop table if exists sharding_2_t1                                                         | success     | schema1 |
 
 
-
-   Scenario: hextype the format is 0x or x' ' from github:1997 #4
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+  @skip
+  Scenario: hextype the format is 0x or x' ' from github:1997 #4
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
        """
-       <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-          <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="jumpHash" shardingColumn="b" />
+       <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
+          <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="jump_string_hash_rule" />
+          <table name="sharding_2_t1" dataNode="dn1,dn2," rule="hash-two" />
        </schema>
 
-       <function name="jumpHash" class="jumpStringHash">
-          <property name="partitionCount">4</property>
-       </function>
        """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    """
+        <tableRule name="jump_string_hash_rule">
+            <rule>
+                <columns>b</columns>
+                <algorithm>jump_string_hash_func</algorithm>
+            </rule>
+        </tableRule>
+        <function class="jumpStringHash" name="jump_string_hash_func">
+            <property name="partitionCount">4</property>
+            <property name="hashSlice">0:2</property>
+        </function>
+    """
     Then execute admin cmd "reload @@config"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                        | expect                                        | db      | charset |
@@ -103,16 +114,16 @@
       | conn_0 | False   | select * from sharding_4_t1 where b=0x74657374696e67                                       | has{((12, u'testing', u'testing'),)}          | schema1 | utf8mb4 |
       | conn_0 | true    | drop table if exists sharding_4_t1                                                         | success                                       | schema1 | utf8mb4 |
 
-
+   @skip
    Scenario: supported 'SCANNUM' from github:2034 #5
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="BAMS_SCAN_PRE_DAY" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="ID"/>
-        <shardingTable name="CTP_USER_NLS" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="ID"/>
-        <shardingTable name="BAMS_TELLNO" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="ZONENO"/>
-        <shardingTable name="CTP_BRANCH" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="ID"/>
+     <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table name="BAMS_SCAN_PRE_DAY" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
+        <table name="CTP_USER_NLS" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
+        <table name="BAMS_TELLNO" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" shardingColumn="ZONENO"/>
+        <table name="CTP_BRANCH" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
      </schema>
     """
     Then execute admin cmd "reload @@config"

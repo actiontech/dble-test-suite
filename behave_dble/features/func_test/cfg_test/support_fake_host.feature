@@ -3,7 +3,7 @@
 # Created by wangjuan at 2021/7/28
 
 # DBLE0REQ-225
-Feature: db.xml support fake host
+Feature: schema.xml support fake host
 
   @init_dble_meta
   Scenario: The managerPort/serverPort does not use the default value, fake host use the default managerPort/serverPort #1
@@ -13,35 +13,35 @@ Feature: db.xml support fake host
     $a -DserverPort=8011
     """
     Then restart dble in "dble-1" success use manager port "9011"
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="127.0.0.1:8066" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-    </dbGroup>
-    <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100">
+    </dataHost>
+    <dataHost balance="1" name="ha_group2" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="localhost:9066" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
     Reload config failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="127.0.0.1:8011" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-    </dbGroup>
-    <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100">
+    </dataHost>
+    <dataHost balance="1" name="ha_group2" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="localhost:9011" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
 
@@ -49,31 +49,31 @@ Feature: db.xml support fake host
   Scenario: The dbGroup use fake write dbInstance and fake read dbInstance #2
     Given delete the following xml segment
       |file          | parent          | child                   |
-      |db.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}        |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      |schema.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}        |
+      |schema.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="127.0.0.1:8066" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS2" password="111111" url="localhost:9066" user="test" maxCon="1000" minCon="10" primary="false">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
+        <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" />
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two" />
+        <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     </schema>
 
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
-    <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+    <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db4" name="dn4" />
     """
     Then restart dble in "dble-1" success
     Given execute linux command in "dble-1" and contains exception "Access denied for user 'test', because there are some empty dbGroup/fake dbInstance"
@@ -93,31 +93,31 @@ Feature: db.xml support fake host
   Scenario: The dbGroup use fake write dbInstance and fake read dbInstance, disabled=true #3
     Given delete the following xml segment
       |file          | parent          | child                   |
-      |db.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}        |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      |schema.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}        |
+      |schema.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="127.0.0.1:9066" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
         </dbInstance>
         <dbInstance name="hostS2" password="111111" url="localhost:8066" user="test" maxCon="1000" minCon="10" primary="false" disabled="true">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
+        <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" />
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two" />
+        <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     </schema>
 
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
-    <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+    <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db4" name="dn4" />
     """
     Then restart dble in "dble-1" success
     Given execute linux command in "dble-1" and contains exception "Access denied for user 'test', because there are some empty dbGroup/fake dbInstance"
@@ -125,15 +125,15 @@ Feature: db.xml support fake host
     mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema1 -e "select version()"
     """
     Then execute admin cmd "reload @@config_all"
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="127.0.0.1:8066" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS2" password="111111" url="localhost:9066" user="test" maxCon="1000" minCon="10" primary="false">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
     Given execute linux command in "dble-1" and contains exception "Access denied for user 'test', because there are some empty dbGroup/fake dbInstance"
@@ -145,31 +145,31 @@ Feature: db.xml support fake host
   Scenario: The dbInstance changed from right dbInstance to fake dbInstance #4
     Given delete the following xml segment
       |file          | parent          | child                   |
-      |db.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}        |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      |schema.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}        |
+      |schema.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+    <dbGroup rwSplitMode="0" name="ha_group2" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
+        <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" />
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two" />
+        <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     </schema>
 
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
-    <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+    <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db4" name="dn4" />
     """
     Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -184,15 +184,15 @@ Feature: db.xml support fake host
       | conn   | toClose | sql                          | expect                             |
       | conn_1 | false   | show @@session               | hasStr{INSERT INTO sharding_4_t1}  |
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+    <dbGroup rwSplitMode="0" name="ha_group2" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="127.0.0.1:9066" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS2" password="111111" url="localhost:8066" user="test" maxCon="1000" minCon="10" primary="false">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "admin" mode
@@ -202,13 +202,13 @@ Feature: db.xml support fake host
 
 
   Scenario: some shardingNode have null dbGroup #5
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="" database="db2" name="dn4" />
-    <shardingNode dbGroup="" database="db3" name="dn5" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="" database="db2" name="dn4" />
+    <dataNode dataHost="" database="db3" name="dn5" />
     """
     Then restart dble in "dble-1" failed for
     """
@@ -219,31 +219,31 @@ Feature: db.xml support fake host
   Scenario: The dbGroup have right write dbInstance and fake read dbInstance #6
     Given delete the following xml segment
       |file          | parent          | child                   |
-      |db.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}        |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      |schema.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}        |
+      |schema.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100">
+    <dbGroup rwSplitMode="2" name="ha_group2" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS2" password="111111" url="127.0.0.1:8066" user="test" maxCon="1000" minCon="10" primary="false">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
+        <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" />
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two" />
+        <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     </schema>
 
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
-    <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+    <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db4" name="dn4" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -260,31 +260,31 @@ Feature: db.xml support fake host
   Scenario: The dbGroup have fake write dbInstance and write read dbInstance #7
     Given delete the following xml segment
       |file          | parent          | child                   |
-      |db.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}        |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      |schema.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}        |
+      |schema.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100">
+    <dbGroup rwSplitMode="2" name="ha_group2" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+        <table type="global" name="test" shardingNode="dn1,dn2,dn3,dn4" />
+        <table name="sharding_2_t1" shardingNode="dn1,dn2" rule="hash-two" />
+        <table name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     </schema>
 
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
-    <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+    <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db4" name="dn4" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -292,15 +292,15 @@ Feature: db.xml support fake host
       | conn_0 | false   | drop table if exists sharding_4_t1                                  | success | schema1 |
       | conn_0 | false   | create table sharding_4_t1 (id int, name varchar(10))               | success | schema1 |
       | conn_0 | false   | insert into sharding_4_t1 values(1,'11'),(2,'22'),(3,'33'),(4,'44') | success | schema1 |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100">
+    <dbGroup rwSplitMode="2" name="ha_group2" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="127.0.0.1:8066" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
     ### rwSplitMode="2"  读操作在所有实例中均衡。 所以上文建好表了，这边select不一定能立马查询到
@@ -313,15 +313,15 @@ Feature: db.xml support fake host
 
 
   Scenario: tow dbGroups - one dbGroup have fake write dbInstance and fake read dbInstance #8
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100">
+    <dbGroup rwSplitMode="2" name="ha_group2" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="localhost:8066" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS2" password="111111" url="127.0.0.1:9066" user="test" maxCon="1000" minCon="10" primary="false">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then restart dble in "dble-1" success
 
@@ -329,19 +329,19 @@ Feature: db.xml support fake host
   Scenario: two dbGroups have fake write dbInstance #9
     Given delete the following xml segment
       |file          | parent          | child                   |
-      |db.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      |schema.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
+    <dbGroup rwSplitMode="0" name="ha_group1" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="localhost:9066" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-    </dbGroup>
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+    </dataHost>
+    <dbGroup rwSplitMode="0" name="ha_group2" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="127.0.0.1:9066" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then restart dble in "dble-1" success
     Given execute linux command in "dble-1" and contains exception "Access denied for user 'test', because there are some empty dbGroup/fake dbInstance"

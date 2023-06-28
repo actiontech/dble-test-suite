@@ -7,7 +7,7 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
 
   Scenario: Enum sharding with ruleFile way #1
     #test: Enum sharding with ruleFile way
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
       <function class="enum" name="enum_func">
           <property name="ruleFile">enum.txt</property>
@@ -15,9 +15,9 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
           <property name="type">0</property>
       </function>
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <shardingTable name="enum_table" shardingNode="dn1,dn2,dn3,dn4" function="enum_func" shardingColumn="id" />
+        <table name="enum_table" dataNode="dn1,dn2,dn3,dn4" function="enum_func" />
     """
     When Add some data in "enum.txt"
     """
@@ -45,7 +45,7 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
 
 
     #test: type:string default node
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <function class="Enum" name="enum_func">
             <property name="ruleFile">enum.txt</property>
@@ -92,16 +92,16 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
 
   Scenario: Numberrange sharding with ruleFile way (single dble Mode) #2
     #test: set defaultNode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <function class="numberrange" name="numberrange_func">
             <property name="ruleFile">partition.txt</property>
             <property name="defaultNode">3</property>
         </function>
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <shardingTable name="numberrange_table" shardingNode="dn1,dn2,dn3,dn4" function="numberrange_func" shardingColumn="id" />
+        <table name="numberrange_table" dataNode="dn1,dn2,dn3,dn4" function="numberrange_func" />
     """
     When Add some data in "partition.txt"
     """
@@ -133,7 +133,7 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
     {"table":"numberrange_table","key":"id"}
     """
     #test: not defaultNode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <function class="numberrange" name="numberrange_func">
             <property name="ruleFile">partition.txt</property>
@@ -165,7 +165,7 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
 
   Scenario: PatternRange sharding with ruleFile way (single dble Mode) #3
     #test: set defaultNode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <function class="PatternRange" name="patternrange_func">
             <property name="ruleFile">patternrange.txt</property>
@@ -173,9 +173,9 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
             <property name="defaultNode">3</property>
         </function>
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <shardingTable name="patternrange_table" shardingNode="dn1,dn2,dn3,dn4" function="patternrange_func" shardingColumn="id"/>
+        <table name="patternrange_table" dataNode="dn1,dn2,dn3,dn4" function="patternrange_func"/>
     """
     When Add some data in "patternrange.txt"
     """
@@ -207,7 +207,7 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
     {"table":"patternrange_table","key":"id"}
     """
     #test: not defaultNode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <function class="PatternRange" name="patternrange_func">
             <property name="ruleFile">patternrange.txt</property>

@@ -65,21 +65,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
     Given stop mysql in host "mysql-master1"
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-          <property name="heartbeatPeriodMillis">2000</property>
-        </dbInstance>
-    </dbGroup>
-
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-           <property name="heartbeatPeriodMillis">2000</property>
-        </dbInstance>
-    </dbGroup>
+    <system>
+        <property name="dataNodeHeartbeatPeriod">2000</property>
+    </system>
     """
     Given Restart dble in "dble-1" success
     Given start mysql in host "mysql-master1"
@@ -108,13 +98,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn_0 | False   | grant select on *.* to 'user1'@'%'             | success |
       | conn_0 | False   | set global tx_isolation='READ-COMMITTED'       | success |
       | conn_0 | True    | set global autocommit=0                        | success |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="user1" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="user1">
+    </writeHost>
     """
     Given turn on general log in "mysql-master1"
     Given Start dble in "dble-1"
@@ -131,13 +118,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | drop table if exists sharding_4_t1 | DROP command denied to user | schema1 |
     Then check general log in host "mysql-master1" has "SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ" occured "==2" times
     Then check general log in host "mysql-master1" has "SET autocommit=1" occured "==2" times
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+    </writeHost>
     """
     When execute admin cmd "reload @@config_all " success
     Given sleep "5" seconds
@@ -149,21 +133,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     {'restore_global_setting':{'mysql-master1':{'read_only':0,'general_log':0}}}
     """
     Given stop dble in "dble-1"
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-          <property name="heartbeatPeriodMillis">2000</property>
-        </dbInstance>
-    </dbGroup>
-
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-           <property name="heartbeatPeriodMillis">2000</property>
-        </dbInstance>
-    </dbGroup>
+    <system>
+        <property name="dataNodeHeartbeatPeriod">2000</property>
+    </system>
     """
     Given execute sql in "mysql-master1"
       | conn   | toClose | sql                                      |
@@ -183,10 +157,12 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    $a -Dautocommit=0
-    $a -DtxIsolation=2
+    <system>
+        <property name="autocommit">0</property>
+        <property name="txIsolation">2</property>
+    </system>
     """
     Given stop dble in "dble-1"
     Given execute sql in "mysql-master1"
@@ -209,21 +185,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-          <property name="heartbeatPeriodMillis">120000</property>
-        </dbInstance>
-    </dbGroup>
-
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-           <property name="heartbeatPeriodMillis">120000</property>
-        </dbInstance>
-    </dbGroup>
+    <system>
+        <property name="dataNodeHeartbeatPeriod">120000</property>
+    </system>
     """
     Given Restart dble in "dble-1" success
     Given execute sql in "dble-1" in "user" mode
@@ -272,27 +238,13 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    $a -Dautocommit=0
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-          <property name="heartbeatPeriodMillis">120000</property>
-          <property name="evictorShutdownTimeoutMillis">120000</property>
-        </dbInstance>
-    </dbGroup>
-
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-           <property name="heartbeatPeriodMillis">120000</property>
-           <property name="evictorShutdownTimeoutMillis">120000</property>
-        </dbInstance>
-    </dbGroup>
+    <system>
+        <property name="dataNodeHeartbeatPeriod">120000</property>
+        <property name="dataNodeIdleCheckPeriod">120000</property>
+        <property name="autocommit">0</property>
+    </system>
     """
     Given Restart dble in "dble-1" success
     Given execute sql in "dble-1" in "user" mode
@@ -341,13 +293,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
-        </dbInstance>
-    </dbGroup>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
+    </writeHost>
     """
     Given stop dble in "dble-1"
     Given execute sql in "mysql-master1"
@@ -366,13 +315,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
-        </dbInstance>
-    </dbGroup>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
+    </writeHost>
     """
     Given stop dble in "dble-1"
     Given execute sql in "mysql-master1"
@@ -382,13 +328,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="false">
-        </dbInstance>
-    </dbGroup>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="false">
+    </writeHost>
     """
     When execute admin cmd "reload @@config" success
     Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
@@ -398,13 +341,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
-        </dbInstance>
-    </dbGroup>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
+    </writeHost>
     """
     Given stop dble in "dble-1"
     Given turn on general log in "mysql-master1"
@@ -418,25 +358,19 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
-        </dbInstance>
-    </dbGroup>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
+    </writeHost>
     """
     Given stop dble in "dble-1"
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='READ-COMMITTED'"
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="false">
-        </dbInstance>
-    </dbGroup>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="false">
+    </writeHost>
     """
     When execute admin cmd "reload @@config" success
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
@@ -447,13 +381,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
     Given turn on general log in "mysql-master1"
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
-        </dbInstance>
-    </dbGroup>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
+    </writeHost>
     """
     Given execute sql in "mysql-master1"
       | conn   | toClose | sql                                       |

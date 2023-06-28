@@ -3,7 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/9
 #2.19.11.0#dble-7876
-Feature: following complex queries are not able to send one shardingnode
+Feature: following complex queries are not able to send one datanode
       #1. explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where a.id =1 or b.id=1
       #2. explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where (a.id =1 and b.id=1) or (a.id =513 and b.id=513)
       #3. explain select * from sharding_two_node a join sharding_two_node2 b where (a.id = b.id and a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 )
@@ -12,16 +12,16 @@ Feature: following complex queries are not able to send one shardingnode
       #6. explain select * from sharding_two_node where c_flag = (select c_flag from sharding_two_node2 where id =1 )
       #7. explain select * from sharding_two_node where id =1 union select * from sharding_two_node2
 
-   Scenario: execute "explain sql" and check result
-    Given add xml segment to node with attribute "{'tag':'function','kv_map':{'name':'hash-two'}}" in "sharding.xml"
+  Scenario: execute "explain sql" and check result
+    Given add xml segment to node with attribute "{'tag':'function','kv_map':{'name':'two-long'}}" in "rule.xml"
     """
     <property name="partitionLength">512</property>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-    <shardingTable name="sharding_two_node" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-    <shardingTable name="sharding_two_node2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
+    <table name="sharding_two_node" dataNode="dn1,dn2" rule="hash-two"/>
+    <table name="sharding_two_node2" dataNode="dn1,dn2" rule="hash-two"/>
     </schema>
     """
     Then execute admin cmd "reload @@config"
@@ -35,7 +35,7 @@ Feature: following complex queries are not able to send one shardingnode
       | conn   | toClose | sql                                                                                                             |
       | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where a.id =1 or b.id=1|
     Then check resultset "rs_A" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
+      | DATA_NODE-0       | TYPE-1          | SQL/REF-2                                                                                             |
       | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` ORDER BY `a`.`c_flag` ASC  |
       | dn2_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` ORDER BY `a`.`c_flag` ASC  |
       | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0                                                                                          |
@@ -83,7 +83,7 @@ Feature: following complex queries are not able to send one shardingnode
       | conn   | toClose | sql                                                                                                     |
       | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b where a.c_flag=b.c_flag and a.id =2 |
     Then check resultset "rs_D" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                               |
+      | DATA_NODE-0       | TYPE-1          | SQL/REF-2                                                                                                               |
       | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where `a`.`id` = 2 ORDER BY `a`.`c_flag` ASC |
       | merge_1           | MERGE           | dn1_0                                                                                                                   |
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_1                                                                                                                 |
@@ -120,7 +120,7 @@ Feature: following complex queries are not able to send one shardingnode
       | conn   | toClose | sql                                                                                        |
       | conn_0 | False   | explain select * from sharding_two_node where id =1 union select * from sharding_two_node2 |
     Then check resultset "rs_G" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                                                                                                                                     |
+      | DATA_NODE-0     | TYPE-1        | SQL/REF-2                                                                                                                                                     |
       | dn1_0           | BASE SQL      | select `sharding_two_node`.`id`,`sharding_two_node`.`c_flag`,`sharding_two_node`.`c_decimal` from  `sharding_two_node` where `sharding_two_node`.`id` = 1     |
       | merge_1         | MERGE         | dn1_0                                                                                                                                                         |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                                                                       |
@@ -137,7 +137,7 @@ Feature: following complex queries are not able to send one shardingnode
       | conn   | toClose | sql                                                                                                                                                               |
       | conn_0 | False   | explain select * from ( select a.id aid,b.id bid,3 mark from sharding_two_node2 a left join sharding_two_node b on a.id= b.id where a.id >3) t where t.mark IN(3) |
     Then check resultset "rs_H" has lines with following column values
-      | SHARDING_NODE-0            | TYPE-1                   | SQL/REF-2                                                                                                                                                                |
+      | DATA_NODE-0                | TYPE-1                   | SQL/REF-2                                                                                                                                                                |
       | dn1_0                      | BASE SQL                 | select `a`.`id` as `aid`,`b`.`id` as `bid` from  `sharding_two_node2` `a` left join  `sharding_two_node` `b` on `a`.`id` = `b`.`id` where  ( `a`.`id` > 3 AND 3 in (3))  |
       | dn2_0                      | BASE SQL                 | select `a`.`id` as `aid`,`b`.`id` as `bid` from  `sharding_two_node2` `a` left join  `sharding_two_node` `b` on `a`.`id` = `b`.`id` where  ( `a`.`id` > 3 AND 3 in (3))  |
       | merge_1                    | MERGE                    | dn1_0; dn2_0                                                                                                                                                             |
@@ -161,7 +161,7 @@ Feature: following complex queries are not able to send one shardingnode
 #      | conn   | toClose | sql                                                                                                                         |
 #      | conn_0 | False   | explain select a.* from sharding_two_node2 a where a.id =2 or a.id in (select b.id from sharding_two_node b ) order by a.id |
 #    Then check resultset "rs_1" has lines with following column values
-#      | SHARDING_NODE-0   | TYPE-1                | SQL/REF-2                                                                                                                                                      |
+#      | DATA_NODE-0   | TYPE-1                | SQL/REF-2                                                                                                                                                      |
 #      | dn1_0             | BASE SQL              | select DISTINCT `b`.`id` as `autoalias_scalar` from  `sharding_two_node` `b`                                                                                   |
 #      | dn2_0             | BASE SQL              | select DISTINCT `b`.`id` as `autoalias_scalar` from  `sharding_two_node` `b`                                                                                   |
 #      | merge_1           | MERGE                 | dn1_0; dn2_0                                                                                                                                                   |

@@ -6,20 +6,22 @@
 #2.19.11.0#dble-7889
 Feature: when global sequence with timestamp mode, if system time exceeds 69 years after startup time ,it will error #1
 
-  Scenario: when "insert time" greater than "sequenceStartTime" and less than "sequenceStartTime + 69years", check the correctness of the self-increment sequence #1
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+
+  Scenario: when "insert time" greater than "start time" and less than "start time + 69years", check the correctness of the self-increment sequence #1
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <shardingTable name="mytest_auto_test" shardingNode="dn1,dn2,dn3,dn4" incrementColumn="id" shardingColumn="id" function="hash-four" />
+        <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" incrementColumn="id" />
     """
     Given execute single sql in "dble-1" in "user" mode and save resultset in "sysTime"
       | sql              |
       | select sysdate() |
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    When Add some data in "sequence_time_conf.properties"
     """
-        s/instanceId=.*/instanceId=33/
+    WORKID=01
+    DATAACENTERID=01
+    #START_TIME=2010-10-01 09:42:54
     """
-    Then add sequenceStartTime to current time "sysTime" in "cluster.cnf" in dble "dble-1"
-#    Then change sequenceStartTime to current time "sysTime" in "cluster.cnf" in dble "dble-1"
+    Then change START_TIME to current time "sysTime" in "sequence_time_conf.properties" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | db      |
@@ -50,18 +52,19 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     Then execute sql in "dble-1" in "user" mode
       | sql                                   | expect  | db      |
       | drop table if exists mytest_auto_test | success | schema1 |
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    When Add some data in "sequence_time_conf.properties"
     """
-        s/instanceId=.*/instanceId=33/
+    WORKID=01
+    DATAACENTERID=01
+    #START_TIME=2010-10-01 09:42:54
     """
 
-    #skip reason: http://10.186.18.11/confluence/pages/viewpage.action?pageId=34784054
-   @skip @restore_sys_time
-  Scenario: when "system time" less than "sequenceStartTime + 69years", execute insert sql will error
+  @skip @restore_sys_time
+  Scenario: when "system time" less than "start time + 69years", execute insert sql will error
     note: this scenerio has issue: https://github.com/actiontech/dble/issues/1665  #2
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <shardingTable name="mytest_auto_test" shardingNode="dn1,dn2,dn3,dn4" incrementColumn="id" shardingColumn="id" function="hash-four" />
+        <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" incrementColumn="id" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -77,18 +80,20 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
       | drop table if exists mytest_auto_test   | success | schema1 |
 
   Scenario: change configuration file, check the correctness of the self-increment sequence #3
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <shardingTable name="mytest_auto_test" shardingNode="dn1,dn2,dn3,dn4" incrementColumn="id" shardingColumn="id" function="hash-four" />
+        <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" incrementColumn="id" />
     """
     Given execute single sql in "dble-1" in "user" mode and save resultset in "sysTime"
       | sql              |
       | select sysdate() |
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    When Add some data in "sequence_time_conf.properties"
     """
-        s/instanceId=.*/instanceId=994/
+    WORKID=02
+    DATAACENTERID=31
+    #START_TIME=2010-11-04 09:42:54
     """
-    Then add sequenceStartTime to current time "sysTime" in "cluster.cnf" in dble "dble-1"
+    Then change START_TIME to current time "sysTime" in "sequence_time_conf.properties" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |
@@ -101,9 +106,6 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs"
       | sql                                        | db      |
       | select conv(id,10,2) from mytest_auto_test | schema1 |
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "id_value"
-      | sql                                        | db      |
-      | select id from mytest_auto_test | schema1 |
     Then get id binary named "binary_a" from "rs" and add 0 if binary length less than 64 bits
     Then get binary range start "30" end "34" from "binary_a" named "binary_sub1"
     Then get binary range start "35" end "39" from "binary_a" named "binary_sub2"
@@ -121,7 +123,9 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     Then execute sql in "dble-1" in "user" mode
       | sql                                   | expect  | db      |
       | drop table if exists mytest_auto_test | success | schema1 |
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    When Add some data in "sequence_time_conf.properties"
     """
-        s/instanceId=.*/instanceId=33/
+    WORKID=01
+    DATAACENTERID=01
+    #START_TIME=2010-10-01 09:42:54
     """

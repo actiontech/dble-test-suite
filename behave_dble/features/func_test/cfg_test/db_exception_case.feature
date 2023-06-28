@@ -4,17 +4,17 @@
 
 Feature: db basic config test
 
-  Scenario: config rwSplitMode with illegal value, reload fail #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+  Scenario: config balance with illegal value, reload fail #1
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-      <dbGroup rwSplitMode="4" name="ha_group1" delayThreshold="100" >
+      <dataHost balance="4" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-          </dbInstance>
-      </dbGroup>
+          <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+          </writeHost>
+      </dataHost>
     """
 
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    dbGroup ha_group1 rwSplitMode should be between 0 and 2
+    dbGroup ha_group1 balance should be between 0 and 2
     """

@@ -7,16 +7,19 @@ Feature: check complex query has not npe in dble.log   ##DBLE0REQ-1288
 
 
   Scenario: check complex query has not npe in dble.log   # 1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-      """
-      <schema shardingNode="dn5" name="schema2">
-        <singleTable name="sing1" shardingNode="dn1" />
-      </schema>
-      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-      """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2,"/>
-      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <schema dataNode="dn5" name="schema2">
+      <table name="sing1" dataNode="dn1" />
+    </schema>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <user name="test">
+      <property name="password">111111</property>
+      <property name="schemas">schema1,schema2</property>
+    </user>
+    """
     Then execute admin cmd "reload @@config"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                  | expect  | db      |

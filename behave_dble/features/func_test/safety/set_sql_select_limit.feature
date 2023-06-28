@@ -10,25 +10,28 @@ Feature: check mysql is stop,but set xxx route to the first alive shardingNode t
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
     Given delete the following xml segment
-      | file         | parent           | child                   |
-      | sharding.xml | {'tag':'root'}   | {'tag':'schema'}        |
-      | sharding.xml | {'tag':'root'}   | {'tag':'shardingNode'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | file       | parent           | child               |
+      | schema.xml | {'tag':'root'}   | {'tag':'schema'}    |
+      | schema.xml | {'tag':'root'}   | {'tag':'dataNode'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="-1">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two" />
     </schema>
     <schema name="schema2" sqlMaxLimit="-1">
-        <singleTable name="sharding_1_t1" shardingNode="dn2" />
+        <table name="sharding_1_t1" dataNode="dn2" />
     </schema>
 
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-     """
-     <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
-     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+      <user name="test">
+         <property name="password">111111</property>
+         <property name="schemas">schema1,schema2</property>
+      </user>
+    """
     Then execute admin cmd "reload @@config"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                    | expect  | db      |

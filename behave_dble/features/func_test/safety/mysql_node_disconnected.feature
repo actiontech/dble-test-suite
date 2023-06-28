@@ -11,37 +11,37 @@ Feature: #mysql node disconnected,check the change of dble
     """
     Given delete the following xml segment
       |file          | parent          | child                   |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-      |db.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
+      |schema.xml    |{'tag':'root'}   | {'tag':'dataNode'}      |
+      |schema.xml    |{'tag':'root'}   | {'tag':'dataHost'}      |
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                                |
       | conn_0 | False   | create database if not exists da1  |
       | conn_0 | True    | create database if not exists da2  |
-    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
     """
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="da1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group1" database="da2" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="da1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group1" database="da2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root','prev':'dataNode'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+        <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+        </writeHost>
+    </dataHost>
     """
     Then execute admin cmd "Reload @@config_all"
     Given stop mysql in host "mysql-master1"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                   | expect                                                                                                                                |
-      | conn_0 | False   | dryrun                | hasStr{Get Vars from backend failed,Maybe all backend MySQL can't connected}                                                          |
-      | conn_0 | True    | reload @@config_all   | Reload config failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly  |
+      | conn   | toClose | sql                 | expect                                                                                                                                |
+      | conn_0 | False   | dryrun              | hasStr{Get Vars from backend failed,Maybe all backend MySQL can't connected}                                                          |
+      | conn_0 | True    | reload @@config_all | Reload config failure.The reason is Can't get variables from any data host, because all of data host can't connect to MySQL correctly |
     Then restart dble in "dble-1" failed for
     """
-    Can't get variables from shardingNode
+    Can't get variables from data node
     """
     Given start mysql in host "mysql-master1"
     Given Restart dble in "dble-1" success
@@ -55,13 +55,13 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | True    | create table test(id int)  | schema1 |
 
   @restore_mysql_service
-  Scenario:some of the backend nodes was disconnected   #2
+  Scenario: some of the backend nodes was disconnected   #2
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <shardingTable name="test_table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
     """
     Then execute admin cmd "Reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -71,9 +71,9 @@ Feature: #mysql node disconnected,check the change of dble
     Given stop mysql in host "mysql-master1"
     #3.22.07 stop mysql后执行reload成功，因为配置未变更不会测试连接有效性
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                 | expect                                                            |
-      | conn_0 | False   | dryrun              | hasStr{Can't connect to [ha_group1,hostM1]}           |
-      | conn_0 | True    | reload @@config_all | there are some dbInstance connection failed                       |
+      | conn   | toClose | sql                 | expect                                                                                               |
+      | conn_0 | False   | dryrun              | hasStr{Can't connect to [ha_group1,hostM1]}                                                          |
+      | conn_0 | True    | reload @@config_all | there are some datasource connection failed, pls check these datasource:{DataHost[ha_group1.hostM1]} |
    ## DBLE0REQ-2003 只是停一个mysql不影响reload
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect               | db      |
@@ -87,28 +87,19 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | False   | insert into test_table values(1,3) | schema1 |         |
       | conn_0 | True    | insert into test_table values(2,4) | schema1 | 9       |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                   | expect                                                                                                         |
-      | conn_0 | False   | dryrun                | hasNoStr{shardingNode[dn3] has no available primary dbinstance,The table in this shardingNode has not checked} |
-      | conn_0 | True    | reload @@config_all   | success                                                                                                        |
+      | conn   | toClose | sql                   | expect                                        |
+      | conn_0 | False   | dryrun                | hasNoStr{Can't connect to [ha_group1,hostM1]} |
+      | conn_0 | True    | reload @@config_all   | success                                       |
 
   @restore_mysql_service
   Scenario:  some of the backend nodes was disconnected in the course of a transaction    #3
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <shardingTable name="test_table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-      """
-      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-            <property name="heartbeatPeriodMillis">5000</property>
-        </dbInstance>
-      </dbGroup>
-      """
     Then execute admin cmd "Reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                  | db      |

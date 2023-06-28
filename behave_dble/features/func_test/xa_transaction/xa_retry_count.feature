@@ -6,17 +6,17 @@
 #2.20.04.0#dble-8176
 Feature: change xaRetryCount value and check result
   Scenario: Setting xaRetryCount to an illegal value, dble report warning #1
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-    $a -DxaRetryCount=-1
+    <property name="xaRetryCount">-1</property>
     """
-   Then restart dble in "dble-1" failed for
-    """
-    Property \[ xaRetryCount \] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
-    """
+    Then execute sql in "dble-1" in "admin" mode
+      | sql    | expect                                                                          |
+      | dryrun | hasStr{Property [ xaRetryCount ] '-1' in server.xml is illegal, use 0 replaced} |
+    Given Restart dble in "dble-1" success
     Then check "dble.log" in "dble-1" has the warnings
-      | TYPE-0 | LEVEL-1 | DETAIL-2                                                                                                  |
-      | Xml    | WARNING | Property [ xaRetryCount ] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced |
+      | TYPE-0 | LEVEL-1 | DETAIL-2                                                                |
+      | Xml    | WARNING | Property [ xaRetryCount ] '-1' in server.xml is illegal, use 0 replaced |
 
   @btrace @restore_mysql_service
   Scenario: Setting xaRetryCount to 3 , dble report 3 warnings, recovery node by manual, check data not lost #2
@@ -25,27 +25,10 @@ Feature: change xaRetryCount value and check result
     """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-          <property name="heartbeatPeriodMillis">2000</property>
-          <property name="connectionTimeout">1000</property>
-          </dbInstance>
-      </dbGroup>
-
-      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-          <property name="heartbeatPeriodMillis">2000</property>
-          <property name="connectionTimeout">1000</property>
-          </dbInstance>
-      </dbGroup>
-    """
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    $a -DxaRetryCount=3
+    <property name="xaRetryCount">3</property>
+    <property name="dataNodeHeartbeatPeriod">2000</property>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -96,21 +79,11 @@ Feature: change xaRetryCount value and check result
     """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-          <property name="heartbeatPeriodMillis">2000</property>
-          </dbInstance>
-      </dbGroup>
-
-      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-          <property name="heartbeatPeriodMillis">2000</property>
-          </dbInstance>
-      </dbGroup>
+    <system>
+        <property name="dataNodeHeartbeatPeriod">2000 </property>
+    </system>
     """
     Given Restart dble in "dble-1" success
     #delayBeforeXaCommit sleep time must long enough for stopping dble

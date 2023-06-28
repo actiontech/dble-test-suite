@@ -5,34 +5,37 @@
 Feature: config multi implicit ERtable
 
   Scenario: config multi implicit ERtable in one schema #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-      <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-          <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-          <shardingTable name="table1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-          <shardingTable name="table2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-          <shardingTable name="table3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+      <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+          <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" />
+          <table name="table1" dataNode="dn1,dn2" rule="hash-two"/>
+          <table name="table2" dataNode="dn1,dn2" rule="hash-two"/>
+          <table name="table3" dataNode="dn1,dn2" rule="hash-two"/>
       </schema>
     """
     Then execute admin cmd "reload @@config_all"
 
   Scenario: config multi implicit ERtable in different schema #2
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-            <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-            <shardingTable name="table1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-            <shardingTable name="table2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+            <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" />
+            <table name="table1" dataNode="dn1,dn2" rule="hash-two"/>
+            <table name="table2" dataNode="dn1,dn2" rule="hash-two"/>
         </schema>
-        <schema shardingNode="dn5" name="schema2" sqlMaxLimit="100">
-            <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-            <shardingTable name="table3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-            <shardingTable name="table4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <schema dataNode="dn5" name="schema2" sqlMaxLimit="100">
+            <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" />
+            <table name="table3" shardingNode="dn1,dn2" rule="hash-two"/>
+            <table name="table4" shardingNode="dn1,dn2" rule="hash-two"/>
         </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    <shardingUser name="test" password="111111" schemas="schema1,schema2" readOnly="false"/>
+       <user name="test">
+         <property name="password">111111</property>
+         <property name="schemas">schema1,schema2</property>
+       </user>
     """
     Then execute admin cmd "reload @@config_all"
 

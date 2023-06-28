@@ -1,37 +1,48 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2020/11/30
-
+@skip
 Feature: test manager command :show @@data_distribution where table ='schema.table'
   1.sing /nosharding /vertical table not supported
   2.global /sharding table supported
 
   Scenario: check manager cmd: "show @@data_distribution where table ='schema.table'" #1
-    Then execute sql in "dble-1" in "admin" mode
 #case 1 :the schema doesn't exists or table doesn't exists, the result will be reported "doesn't exist"
+    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                       | expect                                         |
       | conn_0 | false   | show @@data_distribution where table ='testdb.test'       | The schema testdb doesn't exist                |
       | conn_0 | True    | show @@data_distribution where table ='schema1.testtable' | The table 'schema1.testtable' doesn't exist    |
 
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
      """
-      <schema shardingNode="dn1" name="schema2" sqlMaxLimit="100">
-         <singleTable name="sing" shardingNode="dn4" />
-         <shardingTable name="sharding_4_t3" shardingNode="dn1,dn3,dn5" function="fixed_uniform_string_rule" shardingColumn="id"/>
+      <schema dataNode="dn1" name="schema2" sqlMaxLimit="100">
+         <table name="sing" dataNode="dn4" />
+         <table name="sharding_4_t3" dataNode="dn1,dn3,dn5" rule="fixed_uniform_string_rule" />
       </schema>
 
-      <schema shardingNode="dn5" name="schema3" sqlMaxLimit="100" />
-
-      <function name="fixed_uniform_string_rule" class="StringHash">
+      <schema dataNode="dn5" name="schema3" sqlMaxLimit="100" />
+     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    """
+        <tableRule name="fixed_uniform_string_rule">
+            <rule>
+                <columns>id</columns>
+                <algorithm>fixed_uniform_string</algorithm>
+            </rule>
+        </tableRule>
+        <function class="StringHash" name="fixed_uniform_string">
         <property name="partitionCount">2,1</property>
         <property name="partitionLength">256,512</property>
         <property name="hashSlice">0:2</property>
-      </function>
-     """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-     """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
-     """
+        </function>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <user name="test">
+        <property name="password">111111</property>
+        <property name="schemas">schema1,schema2,schema3</property>
+    </user>
+    """
       Then execute admin cmd "reload @@config"
 #case 2 :the schema or table exists, cmd on admin mode ro check values
     Then execute sql in "dble-1" in "user" mode

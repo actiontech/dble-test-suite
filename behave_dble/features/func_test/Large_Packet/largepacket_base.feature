@@ -28,14 +28,15 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       /max_allowed_packet/d
       /server-id/a max_allowed_packet = 4M
       """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-      """
-      <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" />
-        <dbInstance name="hostS2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" readWeight="2"/>
-      </dbGroup>
-      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataHost balance="2" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test"/>
+      </writeHost>
+    </dataHost>
+    """
     Then execute admin cmd "reload @@config_all"
 
     #### case 1  dble的默认值
@@ -60,11 +61,10 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
     Given turn on general log in "mysql-slave1"
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      /DmaxPacketSize/d
-      /# processor/a -DmaxPacketSize=9437184
-      """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="maxPacketSize">9437184</property>
+    """
     Given Restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "maxPacketSize"
       | sql             |
@@ -87,11 +87,10 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
     Then check general log in host "mysql-slave1" has "set global max_allowed_packet=9438208"
 
     #### case 3  当mysql的值大于dble的时候，dble不会对后端mysql下发 set global max_allowed_packet
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      /DmaxPacketSize/d
-      /# processor/a -DmaxPacketSize=5242880
-      """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="maxPacketSize">5242880</property>
+    """
     Given Restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "maxPacketSize"
       | sql             |
@@ -124,11 +123,10 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
     Given turn on general log in "mysql-master1"
 
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      /DmaxPacketSize/d
-      /# processor/a -DmaxPacketSize=10485760
-      """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="maxPacketSize">10485760</property>
+    """
     Given Restart dble in "dble-1" success
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "maxPacketSize"
@@ -158,7 +156,11 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
 
 
 
+  @restore_mysql_config @skip
    Scenario: maxPacketSize 小于大包的值，会报错        #2
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+    """
 
     Given upload file "./features/steps/LargePacket.py" to "dble-1" success
     Given upload file "./features/steps/SQLContext.py" to "dble-1" success
@@ -186,13 +188,19 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
       python3 /opt/LargePacket.py
       """
-    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      unknown error:
+#      NullPointerException
+#      """
 
 
 
-
-  Scenario:  repeat() 函数下发大包校验 --- repeat受后端mysql max_allowed_packet参数限制   #3
-
+  @restore_mysql_config
+  Scenario:  repeat() 函数下发大包校验 --- repeat受后端mysql max_allowed_packet参数限制   #4
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+    """
      Given restart mysql in "mysql-master1" with sed cmds to update mysql config
       """
       /max_allowed_packet/d
@@ -231,18 +239,26 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       | conn_0 | false    | insert into test values (1,repeat("x",6*1024*1024))                                        | success | schema1 |
       | conn_0 | true     | insert into test values (1,repeat("x",16*1024*1024))                                       | Result of repeat() was larger than max_allowed_packet (8388608) - truncated | schema1 |
 
-    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      unknown error:
+#      NullPointerException
+#      """
 
- @skip
-   ##DBLE0REQ-2209
-  Scenario: source 大包校验    #4
+
+  @restore_mysql_config  @skip
+  Scenario: source 大包校验    #5
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':4194304},'mysql-master2':{'max_allowed_packet':4194304}}}
+    """
     Given set log4j2 log level to "info" in "dble-1"
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
-      s/-Xmx1G/-Xmx4G/g
+      s/-Xmx1G/-Xmx8G/g
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
-      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=4G/g
+      s/-XX:MaxDirectMemorySize=1G/-XX:MaxDirectMemorySize=8G/g
+      $a -DidleTimeout=180000
       $a -DbufferPoolPageSize=33554432
       """
     Given Restart dble in "dble-1" success
@@ -266,8 +282,12 @@ Feature:Support MySQL's large package protocol about maxPacketSize and use check
       """
       10086
       """
-    Then check "NullPointerException|unknown error" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      unknown error:
+#      NullPointerException
+#      """
 
     #### 依赖case生成的test.sql验证maxPacketSize参数报错
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds

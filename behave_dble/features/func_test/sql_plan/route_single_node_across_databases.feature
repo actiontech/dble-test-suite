@@ -7,25 +7,26 @@ Feature: two logical databases: declare the database of all tables when querying
 
 
   Scenario: create two logical databases by configuration, declare the database of all tables when querying or declare the database of partial tables when querying #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'user','kv_map':{'name':'test'}}" in "server.xml"
     """
-    <shardingUser name="test" password="111111" schemas="schema1,schema2" readOnly="false"/>
+    <property name="schemas">schema1,schema2</property>
     """
-
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-        <singleTable name="o_dept" shardingNode="dn1" />
-        <singleTable name="p_sys_user" shardingNode="dn1" />
-        <globalTable name="o_org" shardingNode="dn1,dn2" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="two-long" shardingColumn="id"/>
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-        <shardingTable name="sharding_4_t2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
+    <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two"/>
+    <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+    <table name="sharding_4_t2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+    <table name="o_dept" dataNode="dn1" />
+    <table name="p_sys_user" dataNode="dn1"/>
+    <table name="o_org" dataNode="dn1,dn2" type="global"/>
     </schema>
     <schema name="schema2" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t2" shardingNode="dn1,dn2" function="two-long" shardingColumn="id"/>
+    <table name="sharding_2_t2" dataNode="dn1,dn2" rule="hash-two"/>
     </schema>
-
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    """
     <function name="two-long" class="Hash">
     <property name="partitionCount">2</property>
     <property name="partitionLength">512</property>
@@ -63,9 +64,9 @@ Feature: two logical databases: declare the database of all tables when querying
       | conn_0 | False   | explain  SELECT a.sys_user_name AS sysUserName, d.org_no AS orgNo, d.org_name AS orgName, c.dept_no AS deptNo, c. NAME AS deptName, a.user_name AS userName, a.cur_status_code AS curStatusCode, a.admin_flag AS adminFlag FROM p_sys_user a LEFT JOIN o_dept c ON a.dept_no = c.dept_no,  o_org d WHERE a.org_no = d.org_no AND a.org_no IN (SELECT org_no FROM o_org) AND ( a.cur_status_code IS NULL OR a.cur_status_code <> '03' )       |
 
     Then check resultset "2" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-      | dn1_0           | BASE SQL   | select `a`.`sys_user_name` as `sysUserName`,`d`.`org_no` as `orgNo`,`d`.`org_name` as `orgName`,`c`.`dept_no` as `deptNo`,`c`.`NAME` as `deptName`,`a`.`user_name` as `userName`,`a`.`cur_status_code` as `curStatusCode`,`a`.`admin_flag` as `adminFlag` from  (  (  `p_sys_user` `a` left join  `o_dept` `c` on `a`.`dept_no` = `c`.`dept_no` )  join  `o_org` `d` )  join (select  distinct `o_org`.`org_no` as `autoalias_scalar` from  `o_org`) autoalias_o_org where `a`.`org_no` = `d`.`org_no` and `a`.`org_no` = `autoalias_o_org`.`autoalias_scalar` and  ( a.cur_status_code IS NULL OR `a`.`cur_status_code` <> '03') |
-      | merge_1         | MERGE      | dn1_0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+      | DATA_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+      | dn1_0       | BASE SQL   | select `a`.`sys_user_name` as `sysUserName`,`d`.`org_no` as `orgNo`,`d`.`org_name` as `orgName`,`c`.`dept_no` as `deptNo`,`c`.`NAME` as `deptName`,`a`.`user_name` as `userName`,`a`.`cur_status_code` as `curStatusCode`,`a`.`admin_flag` as `adminFlag` from  (  (  `p_sys_user` `a` left join  `o_dept` `c` on `a`.`dept_no` = `c`.`dept_no` )  join  `o_org` `d` )  join (select  distinct `o_org`.`org_no` as `autoalias_scalar` from  `o_org`) autoalias_o_org where `a`.`org_no` = `d`.`org_no` and `a`.`org_no` = `autoalias_o_org`.`autoalias_scalar` and  ( a.cur_status_code IS NULL OR `a`.`cur_status_code` <> '03') |
+      | merge_1     | MERGE      | dn1_0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                      | expect          | db      |
       | conn_0 | False   | drop table if exists o_dept                              | success         | schema1 |
@@ -86,7 +87,7 @@ Feature: two logical databases: declare the database of all tables when querying
       | conn   | toClose | sql                                                                                   |
       | conn_0 | False   | explain select * from sharding_4_t1 a join sharding_4_t2 b using(id) where a.id=1     |
     Then check resultset "3" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                 |
+      | DATA_NODE-0 | TYPE-1     | SQL/REF-2                                                                 |
       | dn2             | BASE SQL   | select * from sharding_4_t1 a join sharding_4_t2 b using(id) where a.id=1 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                         | expect  | db      |

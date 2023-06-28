@@ -19,35 +19,40 @@ Feature: following complex queries are able to send one datanode
       #11.explain select * from sharding_two_node a where a.id =1 and exists(select * from sharding_two_node2 b where a.c_flag=b.c_flag and b.id =1);
       #12.explain select * from sharding_two_node where id =1 union select * from sharding_two_node2 where id =1 ;
 
-   Scenario: execute "explain sql" and check result #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+  Scenario: execute "explain sql" and check result #1
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-     <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
+    <user name="test">
+      <property name="password">111111</property>
+      <property name="schemas">schema1,schema2</property>
+    </user>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-        <shardingTable name="a_three" shardingColumn="id" shardingNode="dn1,dn2,dn3" function="hash-three" />
-        <singleTable name="test_global_1" shardingNode="dn1" />
-        <globalTable name="test_global" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="aly_test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-        <shardingTable name="aly_order" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-        <shardingTable name="a_manager" shardingNode="dn2,dn1,dn4,dn3" function="hash-four" shardingColumn="id"/>
-        <shardingTable name="sharding_two_node" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="sharding_two_node2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-    </schema>
-    <schema name="schema2" sqlMaxLimit="100">
-       <shardingTable name="tb_test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-    </schema>
-
-     <function class="Hash" name="hash-two">
+      <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
+        <table name="a_three" dataNode="dn1,dn2,dn3" rule="hash-three" />
+        <table name="test_global_1" dataNode="dn1" />
+        <table name="test_global" dataNode="dn1,dn2,dn3,dn4" type="global" />
+        <table name="aly_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
+        <table name="aly_order" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
+        <table name="a_manager" dataNode="dn2,dn1,dn4,dn3" rule="hash-four"/>
+        <table name="sharding_two_node" dataNode="dn1,dn2" rule="hash-two"/>
+        <table name="sharding_two_node2" dataNode="dn1,dn2" rule="hash-two"/>
+      </schema>
+      <schema name="schema2" sqlMaxLimit="100">
+        <table name="tb_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
+      </schema>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    """
+      <function class="Hash" name="two-long">
         <property name="partitionCount">2</property>
         <property name="partitionLength">512</property>
-     </function>
-     <function class="Hash" name="hash-three">
+      </function>
+      <function class="Hash" name="three-long">
         <property name="partitionCount">3</property>
         <property name="partitionLength">10</property>
-     </function>
+      </function>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -106,8 +111,8 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                         |
       | conn_0 | False   | explain select count(*) from aly_test a where a.id =1       |
     Then check resultset "rs_1" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                     |
-      | dn2             | BASE SQL | select count(*) from aly_test a where a.id =1 |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                                |
+      | dn2         | BASE SQL | SELECT COUNT(*) FROM aly_test a WHERE a.id = 1 LIMIT 100 |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                 | db      |
       | conn_0 | False   | select count(*) from aly_test a where a.id =1       | schema1 |
@@ -116,8 +121,8 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                              |
       | conn_0 | False   | explain select id a from sharding_two_node b where b.id=1        |
     Then check resultset "rs_2" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                               |
-      | dn1             | BASE SQL | select id a from sharding_two_node b where b.id=1       |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                                        |
+      | dn1         | BASE SQL | SELECT id AS a FROM sharding_two_node b WHERE b.id = 1 LIMIT 100 |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                     | db      |
       | conn_0 | False   | select id a from sharding_two_node b where b.id=1       | schema1 |
@@ -127,7 +132,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                          |
       | conn_0 | False   | explain select count(*) from aly_test a where a.c='a' or a.c='b' and a.id =1 |
     Then check resultset "rs_4" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                               |
+      | DATA_NODE-0     | TYPE-1        | SQL/REF-2                                               |
       | dn1_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR `a`.`c` in ('a')) LIMIT 100 |
       | dn2_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR `a`.`c` in ('a')) LIMIT 100 |
       | dn3_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR `a`.`c` in ('a')) LIMIT 100 |
@@ -144,8 +149,8 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                        |
       | conn_0 | False   | explain select count(*) from aly_test a where a.id =1 group by id          |
     Then check resultset "rs_5" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                 |
-      | dn2             | BASE SQL | select count(*) from aly_test a where a.id =1 group by id |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                                           |
+      | dn2         | BASE SQL | SELECT COUNT(*) FROM aly_test a WHERE a.id = 1 GROUP BY id LIMIT 100 |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                             | db      |
       | conn_0 | False   | select count(*) from aly_test a where a.id =1 group by id       | schema1 |
@@ -154,7 +159,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                            |
       | conn_0 | False   | explain select * from aly_order join test_global where aly_order.id in ( select id from aly_test where id=1)   |
     Then check resultset "rs_6" has lines with following column values
-      | SHARDING_NODE-0            | TYPE-1                   | SQL/REF-2                                                                                                                     |
+      | DATA_NODE-0                | TYPE-1                   | SQL/REF-2                                                                                                                     |
       | dn1_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
       | dn2_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
       | dn3_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
@@ -182,7 +187,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                        |
       | conn_0 | False   | explain select * from aly_order where id=(select 1)                        |
     Then check resultset "rs_7" has lines with following column values
-      | SHARDING_NODE-0      | TYPE-1                | SQL/REF-2                                               |
+      | DATA_NODE-0      | TYPE-1                | SQL/REF-2                                               |
       | /*AllowDiff*/dn1_0   | BASE SQL              | select 1 as `autoalias_scalar`                                                                                             |
       | merge_1              | MERGE                 | /*AllowDiff*/dn1_0                                                                                                         |
       | scalar_sub_query_1   | SCALAR_SUB_QUERY      | merge_1                                                                                                                    |
@@ -200,7 +205,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                       |
       | conn_0 | False   | explain select * from aly_test a join aly_order b on a.id = b.id where a.id =1 and b.id=1 |
     Then check resultset "rs_8" has lines with following column values
-      | SHARDING_NODE-0      | TYPE-1         | SQL/REF-2                                               |
+      | DATA_NODE-0      | TYPE-1         | SQL/REF-2                                               |
       | dn2                  | BASE SQL       | select * from aly_test a join aly_order b on a.id = b.id where a.id =1 and b.id=1 |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                     | db      |
@@ -210,7 +215,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                       |
       | conn_0 | False   | explain select * from aly_test a join a_manager b on a.id = b.id where a.id =1 and b.id=1 |
     Then check resultset "rs_9" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn2_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` where  ( `a`.`id` = 1 AND `a`.`id` = 1) ORDER BY `a`.`id` ASC  |
       | merge_1         | MERGE         | dn2_0                                                                                                       |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                     |
@@ -227,7 +232,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                   |
       | conn_0 | False   | explain select * from aly_test a join a_three b on a.c = b.c where a.id =4 and b.id=2 |
     Then check resultset "rs_10" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn1             | BASE SQL      | select * from aly_test a join a_three b on a.c = b.c where a.id =4 and b.id=2 |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                 | db      |
@@ -237,7 +242,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                    |
       | conn_0 | False   | explain select * from aly_test a join a_three b on a.c = b.c where a.id =4 and b.id=10 |
     Then check resultset "rs_11" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn1_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` where `a`.`id` = 4 ORDER BY `a`.`c` ASC |
       | merge_1         | MERGE         | dn1_0                                                                                |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                              |
@@ -254,7 +259,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                |
       | conn_0 | False   | explain select * from aly_test a join a_three b on a.c = b.c where a.id = 4 and b.id=2 and b.c='a' |
     Then check resultset "rs_12" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                                                                  |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                                                                  |
       | dn1             | BASE SQL      | select * from aly_test a join a_three b on a.c = b.c where a.id = 4 and b.id=2 and b.c='a' |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                              | db      |
@@ -264,7 +269,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                     |
       | conn_0 | False   | explain select * from aly_test a, test_global where a.c=test_global.cc and a.id =3 and test_global.id=1 |
     Then check resultset "rs_13" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn4             | BASE SQL      | select * from aly_test a, test_global where a.c=test_global.cc and a.id =3 and test_global.id=1    |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                                   | db      |
@@ -274,7 +279,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                         |
       | conn_0 | False   | explain select * from aly_test a join schema2.tb_test b on a.c=b.c where a.id =1 and b.id=1 |
     Then check resultset "rs_14" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn2             | BASE SQL      | select * from aly_test a join tb_test b on a.c=b.c where a.id =1 and b.id=1 |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                       | db      |
@@ -284,7 +289,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                         |
       | conn_0 | False   | explain select * from aly_test a join schema2.tb_test b on a.c=b.c where a.id =1 and b.id=2 |
     Then check resultset "rs_15" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn2_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` where `a`.`id` = 1 ORDER BY `a`.`c` ASC |
       | merge_1         | MERGE         | dn2_0                                                                                |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                              |
@@ -301,7 +306,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                            |
       | conn_0 | False   | explain select * from aly_test a join a_three b on a.c = b.c where (a.id =4 and b.id=1) or (a.id=4 and b.id=2) |
     Then check resultset "rs_16" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn1             | BASE SQL      | select * from aly_test a join a_three b on a.c = b.c where (a.id =4 and b.id=1) or (a.id=4 and b.id=2) |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                                          | db      |
@@ -311,7 +316,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                              |
       | conn_0 | False   | explain select * from aly_test a join aly_order b on a.c = b.c where (a.id =1 and b.id=1) or (a.id=2 and b.id=2) |
     Then check resultset "rs_17" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                               |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                               |
       | dn2_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` where  ( `a`.`id` = 1 OR `a`.`id` = 2) ORDER BY `a`.`c` ASC  |
       | dn3_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` where  ( `a`.`id` = 1 OR `a`.`id` = 2) ORDER BY `a`.`c` ASC  |
       | merge_and_order_1 | MERGE_AND_ORDER | dn2_0; dn3_0                                                                                              |
@@ -331,7 +336,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                 |
       | conn_0 | False   | explain select * from aly_test a join a_three b on a.c = b.c where (a.id =4 and b.id=1) or (a.id=3) |
     Then check resultset "rs_18" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                               |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                               |
       | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` where  ( `a`.`id` = 4 OR `a`.`id` in (3)) ORDER BY `a`.`c` ASC |
       | dn4_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` where  ( `a`.`id` = 4 OR `a`.`id` in (3)) ORDER BY `a`.`c` ASC |
       | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn4_0                                                                                                |
@@ -352,7 +357,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                            |
       | conn_0 | False   | explain select * from aly_test a join aly_order b on a.id = b.id where a.id =1 |
     Then check resultset "rs_19" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn2             | BASE SQL      | select * from aly_test a join aly_order b on a.id = b.id where a.id =1 |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                          | db      |
@@ -362,7 +367,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                   |
       | conn_0 | False   | explain select * from aly_test a join aly_order b using(id,c)  where a.id=2 or b.id=1 |
     Then check resultset "rs_20" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn2_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and (a.c = b.c) where  ( `b`.`id` in (1) OR `a`.`id` in (2)) |
       | dn3_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and (a.c = b.c) where  ( `b`.`id` in (1) OR `a`.`id` in (2)) |
       | merge_1         | MERGE         | dn2_0; dn3_0                                                                                                                                           |
@@ -375,7 +380,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                   |
       | conn_0 | False   | explain select * from aly_test a join a_manager b using(id,c)  where a.id=2 or b.id=1 |
     Then check resultset "rs_21" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                               |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                               |
       | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` ORDER BY `a`.`id` ASC,`a`.`c` ASC  |
       | dn2_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` ORDER BY `a`.`id` ASC,`a`.`c` ASC  |
       | dn3_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` ORDER BY `a`.`id` ASC,`a`.`c` ASC  |
@@ -399,7 +404,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                             |
       | conn_0 | False   | explain select * from aly_test a join aly_order b where a.id = b.id and a.id =1 |
     Then check resultset "rs_22" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn2             | BASE SQL      | select * from aly_test a join aly_order b where a.id = b.id and a.id =1 |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                            | db      |
@@ -409,7 +414,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                        |
       | conn_0 | False   | explain select * from aly_test a join aly_order b using(id)  where a.id =1 |
     Then check resultset "rs_23" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn2             | BASE SQL      | select * from aly_test a join aly_order b using(id)  where a.id =1 |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                       | db      |
@@ -419,7 +424,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                            |
       | conn_0 | False   | explain select * from aly_test a join aly_order b on a.id = b.id where a.id =1 |
     Then check resultset "rs_24" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn2             | BASE SQL      | select * from aly_test a join aly_order b on a.id = b.id where a.id =1 |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                            | db      |
@@ -429,7 +434,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                                                                    |
       | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b where a.id =b.id and (( a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 ))  |
     Then check resultset "rs_25" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn1             | BASE SQL      | select * from sharding_two_node a join sharding_two_node2 b where a.id =b.id and (( a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 )) |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                                                                                 | db      |
@@ -439,7 +444,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                                                                                     |
       | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b where a.id =b.id and a.c_decimal=1 and (( a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 )) |
     Then check resultset "rs_26" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn1             | BASE SQL      | select * from sharding_two_node a join sharding_two_node2 b where a.id =b.id and a.c_decimal=1 and (( a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 )) |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                                                                                                   | db      |
@@ -449,7 +454,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                                                                                       |
       | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b where a.id =b.id and (a.c_decimal=1 and (( a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 ))) |
     Then check resultset "rs_27" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn1             | BASE SQL      | select * from sharding_two_node a join sharding_two_node2 b where a.id =b.id and (a.c_decimal=1 and (( a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 ))) |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                                                                                                   | db      |
@@ -459,7 +464,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                                   |
       | conn_0 | False   | explain select * from sharding_two_node where id =1 and c_flag = (select c_flag from sharding_two_node2 where id =1 ) |
     Then check resultset "rs_28" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn1             | BASE SQL      | select * from sharding_two_node where id =1 and c_flag = (select c_flag from sharding_two_node2 where id =1 ) |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                                                 | db      |
@@ -469,7 +474,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                                     |
       | conn_0 | False   | explain select * from sharding_two_node where id =1 and c_flag = (select c_flag from sharding_two_node2 where id =512 ) |
     Then check resultset "rs_29" has lines with following column values
-      | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2                                               |
+      | DATA_NODE-0    | TYPE-1                | SQL/REF-2                                               |
       | dn2_0              | BASE SQL              | select `sharding_two_node2`.`c_flag` as `autoalias_scalar` from  `sharding_two_node2` where `sharding_two_node2`.`id` = 512 LIMIT 2                                                                                                      |
       | merge_1            | MERGE                 | dn2_0                                                                                                                                                                                                                                    |
       | limit_1            | LIMIT                 | merge_1                                                                                                                                                                                                                                  |
@@ -486,7 +491,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                     |
       | conn_0 | False    | explain select * from sharding_two_node where id =1 union select * from sharding_two_node2 where id =1 |
     Then check resultset "rs_30" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn1             | BASE SQL      | select * from sharding_two_node where id =1 union select * from sharding_two_node2 where id =1 |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                                  | db      |
@@ -496,7 +501,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                            |
       | conn_0 | False   | explain select * from aly_order join test_global_1 where aly_order.id in ( select id from aly_test where id=1) |
     Then check resultset "rs_31" has lines with following column values
-      | SHARDING_NODE-0            | TYPE-1                   | SQL/REF-2                                                                                                                     |
+      | DATA_NODE-0            | TYPE-1                   | SQL/REF-2                                                                                                                     |
       | dn1_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
       | dn2_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
       | dn3_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
@@ -524,7 +529,7 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                            |
       | conn_0 | True    | explain select * from aly_test a,  test_global_1 where a.c=test_global_1.cc and a.id =3 and test_global_1.id=1 |
     Then check resultset "rs_32" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn4_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` where `a`.`id` = 3 ORDER BY `a`.`c` ASC                                                    |
       | merge_1         | MERGE         | dn4_0                                                                                                                                   |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                                                 |

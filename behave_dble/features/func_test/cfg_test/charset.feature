@@ -10,21 +10,21 @@ Feature: set charset in server.xml,check backend charsets are as set
   @BLOCKER
   Scenario: set dble config charset same or different to session charset, session charset priorier to config charset #1
     #   1.1 set backend charset utf8mb4, front charset utf8mb4;
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+     """
+     <system>
+         <property name="charset">utf8mb4</property>
+     </system>
+     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    $a\-Dcharset=utf8mb4
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="100" minCon="10" primary="true">
-        </dbInstance>
-        <dbInstance name="hosts1" password="111111" url="172.100.9.6:3307" user="test" maxCon="100" minCon="10" primary="false">
-        </dbInstance>
-        <dbInstance name="hosts2" password="111111" url="172.100.9.6:3308" user="test" maxCon="100" minCon="10" primary="false">
-        </dbInstance>
-    </dbGroup>
+        <dataHost maxCon="100" minCon="10" name="ha_group2" balance="1" >
+            <heartbeat>select user()</heartbeat>
+            <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+                <readHost host="hosts1" url="172.100.9.6:3307" user="test" password="111111"/>
+                <readHost host="hosts2" url="172.100.9.6:3308" user="test" password="111111"/>
+            </writeHost>
+        </dataHost>
     """
     Given Restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_A"
@@ -49,10 +49,13 @@ Feature: set charset in server.xml,check backend charsets are as set
       | CHARACTER_SET_CLIENT-7 | COLLATION_CONNECTION-8 | CHARACTER_SET_RESULTS-9 |
       |    utf8mb4                | utf8mb4_general_ci        | utf8mb4                    |
     #   1.2 set backend charset latin1, front charset default latin1;
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    $a\-Dcharset=latin1
-    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+     """
+     <system>
+     <property name="charset">latin1</property>
+     </system>
+     """
+
     Given Restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_B"
       | sql            |
@@ -87,17 +90,19 @@ Feature: set charset in server.xml,check backend charsets are as set
 
   @current
   Scenario: dble should map MySQL's utfmb4 character to utf8.
-             In other words,non-ASCII sharding column should be routed to the same shardingNode whether client character-set is utfmb4 or utf8 #2
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+             In other words,non-ASCII sharding column should be routed to the same datanode whether client character-set is utfmb4 or utf8 #2
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
      """
-       <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-            <shardingTable name="sharding_table" shardingNode="dn1,dn2" function="hash-string-into-two" shardingColumn="id" />
+       <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
+            <table name="sharding_table" dataNode="dn1,dn2" rule="hash-string" />
        </schema>
     """
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    $a\-Dcharset=utf8mb4
-    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+     """
+     <system>
+         <property name="charset">utf8mb4</property>
+     </system>
+     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                               | expect  | db      |charset|

@@ -265,9 +265,9 @@ Feature: config all dble config files correct and restart dble
     Then execute admin cmd "show @@version" with user "root_test" passwd "111111"
 
   Scenario: config db property, start dble success #4
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" disableHA="false">
+      <dataHost balance="0" name="ha_group3" slaveThreshold="100" disableHA="false">
         <heartbeat timeout="0" errorRetryCount="0">select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" usingDecrypt="false" maxCon="1000" minCon="10" readWeight="0" primary="true" disabled="false">
           <property name="evictorShutdownTimeoutMillis">1000</property>
@@ -282,15 +282,15 @@ Feature: config all dble config files correct and restart dble
           <property name="idleTimeout">10</property>
           <property name="heartbeatPeriodMillis">10</property>
         </dbInstance>
-      </dbGroup>
+      </dataHost>
     """
   Then execute admin cmd "reload @@config_all"
 
   Scenario: config sharding property, start dble success #5
-    Given add xml segment to node with attribute "{'tag':'schema'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema'}" in "schema.xml"
     """
-      <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" sqlMaxLimit="100" checkClass="CHECKSUM" cron="0 0 0 * * ?"/>
-      <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" sqlMaxLimit="105" sqlRequiredSharding="false">
+      <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" sqlMaxLimit="100" checkClass="CHECKSUM" cron="0 0 0 * * ?"/>
+      <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" sqlMaxLimit="105" sqlRequiredSharding="false">
         <childTable name="tb_child1" joinColumn="child1_id" parentColumn="id" sqlMaxLimit="201">
           <childTable name="tb_grandson1" joinColumn="grandson1_id" parentColumn="child1_id"/>
           <childTable name="tb_grandson2" joinColumn="grandson2_id" parentColumn="child1_id2"/>
@@ -298,7 +298,7 @@ Feature: config all dble config files correct and restart dble
         <childTable name="tb_child2" joinColumn="child2_id" parentColumn="id"/>
         <childTable name="tb_child3" joinColumn="child3_id" parentColumn="id2"/>
       </shardingTable>
-      <singleTable name="tb_single" shardingNode="dn5" sqlMaxLimit="105"/>
+      <table name="tb_single" dataNode="dn5" sqlMaxLimit="105"/>
     """
     Then execute admin cmd "reload @@config_all"
 

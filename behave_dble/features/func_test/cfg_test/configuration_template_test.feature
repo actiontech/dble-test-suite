@@ -12,42 +12,36 @@ Feature: use template to generate configuration file, check function is normal
       #4.table type is displayed correctly
     Given execute oscmd in "dble-1"
     """
-    \cp -f /opt/dble/conf/bootstrap_template.cnf /opt/dble/conf/bootstrap.cnf
+    \cp -f /opt/dble/conf/schema_template.xml /opt/dble/conf/schema.xml
     """
     Given execute oscmd in "dble-1"
     """
-    \cp -f /opt/dble/conf/cluster_template.cnf /opt/dble/conf/cluster.cnf
+    \cp -f /opt/dble/conf/rule_template.xml /opt/dble/conf/rule.xml
     """
     Given execute oscmd in "dble-1"
     """
-    \cp -f /opt/dble/conf/user_template.xml /opt/dble/conf/user.xml
+    \cp -f /opt/dble/conf/server_template.xml /opt/dble/conf/server.xml
     """
-    Given execute oscmd in "dble-1"
-    """
-    \cp -f /opt/dble/conf/sharding_template.xml /opt/dble/conf/sharding.xml
-    """
-    Given execute oscmd in "dble-1"
-    """
-    \cp -f /opt/dble/conf/db_template.xml /opt/dble/conf/db.xml
-    """
-    Given update file content "{install_dir}/dble/conf/db.xml" in "dble-1" with sed cmds
+    Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/ip1:3306/172.100.9.5:3306/
-    s/ip2:3306/172.100.9.6:3306/
-    s/your_user/test/g
-    s/your_psw/111111/g
+    s/ip2:3306/172.100.9.6:3307/
+    s/ip4:3306/172.100.9.6:3306/
+    s/ip5:3306/172.100.9.6:3308/
+    s/your_user/test/
+    s/your_psw/111111/
     """
-    Given update file content "{install_dir}/dble/conf/user.xml" in "dble-1" with sed cmds
+    Given update file content "{install_dir}/dble/conf/server.xml" in "dble-1" with sed cmds
     """
-    s/shardingUser name="root"/shardingUser name="test"/
-    s/managerUser name="man1"/managerUser name="root"/
-    s/\<password="[0-9]\{6\}"/password="111111"/g
+    s/user name="root"/user name="test"/
+    s/user name="man1"/user name="root"/
+    s/password">[0-9]\{6\}/password">111111/g
     """
     Then Restart dble in "dble-1" success
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                          | expect  |
-      | conn_0 | True    | create database @@shardingNode='dn$1-6' | success |
+      | conn_0 | True    | create database @@dataNode='dn$1-6' | success |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect                                                                         | db     |
 #      | conn_0 | True    | source /opt/dble/template_table.sql | success                                                                        | testdb |

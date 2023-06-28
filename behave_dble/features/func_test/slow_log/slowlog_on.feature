@@ -8,11 +8,10 @@ Feature: Keep slow log on, dble may occur oom
   @btrace
   Scenario: Keep slow log on, dble may occur oom , issues/2638     #1
 
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      /enableSlowLog/d
-      $a -DenableSlowLog=1
-      """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="enableSlowLog">1</property>
+    """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                   | expect        |
@@ -26,13 +25,13 @@ Feature: Keep slow log on, dble may occur oom
 
 
     Given execute sql "1000" times in "dble-1" at concurrent
-      | sql                                                   | db      |
-      | /*!dble:shardingnode=dn1*/select * from sharding_2_t1 | schema1 |
+      | sql                                               | db      |
+      | /*!dble:datanode=dn1*/select * from sharding_2_t1 | schema1 |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect      | db      |
       | conn_0 | False   | set @@trace=1                                             | success     | schema1 |
-      | conn_0 | False   | /*!dble:shardingnode=dn1*/select * from sharding_2_t1     | success     | schema1 |
+      | conn_0 | False   | /*!dble:datanode=dn1*/select * from sharding_2_t1         | success     | schema1 |
       | conn_0 | true    | show trace                                                | length{(8)} | schema1 |
 
     Then check following text exist "Y" in file "/opt/dble/slowlogs/slow-query.log" in host "dble-1"
@@ -40,7 +39,7 @@ Feature: Keep slow log on, dble may occur oom
       drop table if exists sharding_2_t1
       create table sharding_2_t1\(id int , name varchar\(12\)\)
       insert into sharding_2_t1 value \(1,1\)
-      dble:shardingnode=dn1
+      dble:datanode=dn1
       select \* from sharding_2_t1
       dn1_First_Result_Fetch
       dn1_Last_Result_Fetch

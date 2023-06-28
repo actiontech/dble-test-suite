@@ -6,16 +6,16 @@
 Feature: reload @@config_all -fr
 
   Scenario: open transaction, execute "reload @@config_all -fr" or "reload @@config_all -f -r" causing transaction closed
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <shardingNode name="dn1" dbGroup="ha_group1" database="db1"/>
-    <shardingNode name="dn2" dbGroup="ha_group1" database="db2"/>
-    <shardingNode name="dn3" dbGroup="ha_group1" database="db3"/>
-    <shardingNode name="dn4" dbGroup="ha_group1" database="db4"/>
-    <shardingNode name="dn5" dbGroup="ha_group1" database="db5"/>
+    <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
+    <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+    <dataNode name="dn3" dataHost="ha_group1" database="db3"/>
+    <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
+    <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
     """
     Given Restart dble in "dble-1" success
-    Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4'"
+    Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4'"
 
     # 1 execute "reload @@config_all -rf" will rebuild backend conn, not used dbInstances will only reflect heartbeat connection
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
@@ -32,14 +32,14 @@ Feature: reload @@config_all -fr
       | BACKEND_ID | 1            |
       | MYSQLID    | 2            |
 
-    #2 add shardingNode, then execute "reload @@config_all -fr" will rebuild backend conn and add new backend conn
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    #2 add dataNode, then execute "reload @@config_all -fr" will rebuild backend conn and add new backend conn
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all -fr"
     #sleep 2s，等待所有连接回收及新建成功
@@ -52,7 +52,7 @@ Feature: reload @@config_all -fr
       | BACKEND_ID | 1            |
       | MYSQLID    | 2            |
     Then check resultset "rs_B" has not lines with following column values
-      | HOST-3      |USED_FOR_HEARTBEAT-22|
+      | HOST-3      | USED_FOR_HEARTBEAT-22 |
       | 172.100.9.6 | false                 |
     Then check resultset "rs_C" has lines with following column values
       | HOST-3      |
@@ -60,20 +60,19 @@ Feature: reload @@config_all -fr
       | 172.100.9.6 |
 
     #3 Start the transaction and add readHost with err password causing execute "reload @@config_all -fr" fail
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup name="ha_group1" rwSplitMode="0" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" url="172.100.9.5:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true" readWeight="1">
-        </dbInstance>
-        <dbInstance name="hostS1" url="172.100.9.6:3306" user="test" password="errpwd" maxCon="1000" minCon="10" readWeight="2">
-        </dbInstance>
-    </dbGroup>
-    <dbGroup name="ha_group2" rwSplitMode="0" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" url="172.100.9.4:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+      <readHost host="hostS1" url="172.100.9.6:3306" password="errpwd" user="test"/>
+      </writeHost>
+    </dataHost>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.4:3306" user="test">
+      </writeHost>
+    </dataHost>
     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  | db      |
@@ -84,17 +83,16 @@ Feature: reload @@config_all -fr
 
     Then execute admin cmd "reload @@config_all -fr" get the following output
     """
-    there are some dbInstance connection failed
+    there are some datasource connection failed
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup name="ha_group1" rwSplitMode="0" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" url="172.100.9.5:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true" readWeight="1" id="xx1">
-        </dbInstance>
-        <dbInstance name="hostS1" url="172.100.9.6:3306" user="test" password="111111" maxCon="1000" minCon="10" readWeight="2" disabled="true">
-        </dbInstance>
-    </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+      <readHost host="hostS1" url="172.100.9.6:3306" password="111111" user="test"/>
+      </writeHost>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all -fr"
     #sleep 2s，等待所有连接回收及新建成功
@@ -117,14 +115,14 @@ Feature: reload @@config_all -fr
       | sql                                    | expect      | db      |
       | select * from sharding_4_t1 where id=2 | length{(0)} | schema1 |
 
-    #4 Start the transaction and change shardingNode, then execute "reload @@config_all -f -r"  causing transaction closed
+    #4 Start the transaction and change dataNode, then execute "reload @@config_all -f -r"  causing transaction closed
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | db      |
       | conn_1 | False   | drop table if exists sharding_4_t1               | schema1 |
       | conn_1 | False   | create table sharding_4_t1 (id int)              | schema1 |
       | conn_1 | False   | begin                                            | schema1 |
       | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4) | schema1 |
-    Given update file content "{install_dir}/dble/conf/db.xml" in "dble-1" with sed cmds
+    Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/172.100.9.4/172.100.9.6/g
     """

@@ -5,8 +5,14 @@ Feature: stringhash sharding function test suits
   @BLOCKER
   Scenario: stringhash function #1
     #test: <= 2880
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
+        <tableRule name="string_hash_rule">
+            <rule>
+                <columns>id</columns>
+                <algorithm>string_hash_func</algorithm>
+            </rule>
+        </tableRule>
         <function class="stringhash" name="string_hash_func">
             <property name="partitionCount">4</property>
             <property name="partitionLength">721</property>
@@ -18,7 +24,7 @@ Feature: stringhash sharding function test suits
     Sum(count[i]*length[i]) must be less than 2880
     """
     #test: uniform
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
         <function class="stringhash" name="string_hash_func">
             <property name="partitionCount">4</property>
@@ -26,9 +32,9 @@ Feature: stringhash sharding function test suits
             <property name="hashSlice">0:2</property>
         </function>
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <shardingTable name="string_hash_table" shardingNode="dn1,dn2,dn3,dn4" function="string_hash_func" shardingColumn="id"/>
+        <table name="string_hash_table" dataNode="dn1,dn2,dn3,dn4" rule="string_hash_rule" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -50,7 +56,7 @@ Feature: stringhash sharding function test suits
     #test: data types in sharding_key
     #Then Test the data types supported by the sharding column in "hashString.sql"
     #test: non-uniform
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
         <function class="stringhash" name="string_hash_func">
             <property name="partitionCount">2,1</property>
@@ -58,9 +64,9 @@ Feature: stringhash sharding function test suits
             <property name="hashSlice">0:2</property>
         </function>
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <shardingTable name="string_hash_table" shardingNode="dn1,dn2,dn3" function="string_hash_func" shardingColumn="id" />
+        <table name="string_hash_table" dataNode="dn1,dn2,dn3" rule="string_hash_rule" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -75,6 +81,7 @@ Feature: stringhash sharding function test suits
     #clearn all conf
     Given delete the following xml segment
       |file        | parent                                        | child                                                    |
-      |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'string_hash_func'}}  |
-      |sharding.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'string_hash_table'}}    |
+      |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'string_hash_rule'}} |
+      |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'string_hash_func'}}  |
+      |schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'table','kv_map':{'name':'string_hash_table'}}    |
     Then execute admin cmd "reload @@config_all"

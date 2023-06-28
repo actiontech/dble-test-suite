@@ -5,28 +5,28 @@
 Feature: test sqlMaxLimit for all types of table
   @NORMAL
   Scenario: test the sqlMaxLimit of table is prior to the sqlMaxLimit of schema #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="-1">
-        <singleTable name="sharding_1_t1" shardingNode="dn5" sqlMaxLimit="2"/>
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" sqlMaxLimit="3"/>
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" sqlMaxLimit="4">
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="-1">
+        <table name="sharding_1_t1" dataNode="dn5" sqlMaxLimit="2"/>
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two" sqlMaxLimit="3"/>
+        <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" sqlMaxLimit="4">
            <childTable name="tb_child1" joinColumn="id" parentColumn="id" sqlMaxLimit="3">
                 <childTable name="tb_grandson1" joinColumn="id" parentColumn="id" sqlMaxLimit="2" />
                 <childTable name="tb_grandson2" joinColumn="id" parentColumn="id" sqlMaxLimit="4"/>
             </childTable>
         </shardingTable>
-        <globalTable name="global_4_t1" shardingNode="dn1,dn2,dn3,dn4" sqlMaxLimit="6" />
+        <table type="global" name="global_4_t1" dataNode="dn1,dn2,dn3,dn4" sqlMaxLimit="6" />
     </schema>
 
-    <schema name="schema2" shardingNode="dn5" sqlMaxLimit="4">
-        <shardingTable name="sharding_4_t2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" sqlMaxLimit="-1"/>
-        <shardingTable name="sharding_4_t3" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" sqlMaxLimit="3"/>
-        <globalTable name="global_4_t1" shardingNode="dn1,dn2,dn3,dn4" sqlMaxLimit="5" />
-        <globalTable name="global_4_t2" shardingNode="dn1,dn2,dn3,dn4" />
+    <schema name="schema2" dataNode="dn5" sqlMaxLimit="4">
+        <table name="sharding_4_t2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" sqlMaxLimit="-1"/>
+        <table name="sharding_4_t3" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" sqlMaxLimit="3"/>
+        <table type="global" name="global_4_t1" dataNode="dn1,dn2,dn3,dn4" sqlMaxLimit="5" />
+        <table type="global" name="global_4_t2" dataNode="dn1,dn2,dn3,dn4" />
     </schema>
 
-    <schema name="schema3" shardingNode="dn5" sqlMaxLimit="3">
+    <schema name="schema3" dataNode="dn5" sqlMaxLimit="3">
     </schema>
     """
    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"

@@ -16,22 +16,22 @@ Feature: test fakeMySQLVersion support mysql8.0
 
     Given delete the following xml segment
       | file         | parent         | child                  |
-      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      | schema.xml   | {'tag':'root'} | {'tag':'dbGroup'}      |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn3" />
-    <shardingNode dbGroup="ha_group1" database="db4" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db5" name="dn5" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn3" />
+    <dataNode dataHost="ha_group1" database="db4" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db5" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all"
 
@@ -58,14 +58,14 @@ Feature: test fakeMySQLVersion support mysql8.0
 # fakeMySQLVersion is 5.7.13, backend mysql version is 8.0.21, mysql client version is 5.7.13
     Given delete the following xml segment
       | file         | parent         | child                  |
-      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      | schema.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
 
@@ -103,13 +103,13 @@ Feature: test fakeMySQLVersion support mysql8.0
     """
 
 # fakeMySQLVersion is 8.0.21, backend mysql version is 5.7.13 and 8.0.21
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then restart dble in "dble-1" failed for
     """
@@ -119,20 +119,20 @@ Feature: test fakeMySQLVersion support mysql8.0
 # fakeMySQLVersion is 8.0.21, backend mysql version is 8.0.21, mysql client version is 5.7.13
     Given delete the following xml segment
       | file         | parent         | child                  |
-      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      | schema.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
 
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then restart dble in "dble-1" success
 
@@ -184,13 +184,13 @@ Feature: test fakeMySQLVersion support mysql8.0
     """
 
 # fakeMySQLVersion is 8.0.15, backend mysql version is 5.7.13 and 8.0.21
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                 | expect                                                                                                                                                              |

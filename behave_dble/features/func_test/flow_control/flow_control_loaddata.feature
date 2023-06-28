@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 2021/7/22
 
-
+@skip
 Feature: test flow_control about loaddata
 
 

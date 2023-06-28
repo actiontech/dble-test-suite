@@ -31,28 +31,26 @@ Feature: check mysql 8.0 authentication plugin
 
 # connect dble use caching_sha2_password user
     Given delete the following xml segment
-      | file         | parent         | child                  |
-      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      | file         | parent         | child                   |
+      | schema.xml   | {'tag':'root'} | {'tag':'dataNode'}      |
+      | schema.xml   | {'tag':'root'} | {'tag':'dataHost'}      |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test1" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
-    """
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn3" />
+    <dataNode dataHost="ha_group1" database="db4" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db5" name="dn5" />
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test1">
+      </writeHost>
+    </dataHost>
     """
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn3" />
-    <shardingNode dbGroup="ha_group1" database="db4" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db5" name="dn5" />
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    $a\-DfakeMySQLVersion=8.0.21
+    <property name="fakeMySQLVersion">8.0.21</property>
     """
     Then restart dble in "dble-1" success
 
@@ -100,25 +98,23 @@ Feature: check mysql 8.0 authentication plugin
     | test | 111111 | conn_0 | True    | SELECT user,host,plugin from user where user='test2'  | has{(('test2', '%', 'mysql_native_password'),)}                    | mysql |
 
     Given delete the following xml segment
-    | file         | parent         | child                  |
-    | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      | file         | parent         | child                   |
+      | schema.xml   | {'tag':'root'} | {'tag':'dataNode'}      |
+      | schema.xml   | {'tag':'root'} | {'tag':'dataHost'}      |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test2" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-    """
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn3" />
-    <shardingNode dbGroup="ha_group1" database="db4" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db5" name="dn5" />
-    """
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn3" />
+    <dataNode dataHost="ha_group1" database="db4" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db5" name="dn5" />
 
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test2">
+      </writeHost>
+    </dataHost>
+    """
     Then restart dble in "dble-1" success
     Given execute sql in "dble-1" in "user" mode
     | conn   | toClose | sql                       | expect  | db      |
@@ -126,13 +122,13 @@ Feature: check mysql 8.0 authentication plugin
     | conn_1 | False   | create table test(id int) | success | schema1 |
     | conn_1 | True    | drop table if exists test | success | schema1 |
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test1" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test1">
+      </writeHost>
+    </dataHost>
     """
     Then restart dble in "dble-1" success
     Given execute sql in "dble-1" in "user" mode
@@ -177,23 +173,22 @@ Feature: check mysql 8.0 authentication plugin
     | test | 111111 | conn_0 | False   | SELECT user,host,plugin from user where user='test3'  | has{(('test3', '%', 'sha256_password'),)}                    | mysql |
 
     Given delete the following xml segment
-      | file         | parent         | child                  |
-      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      | file         | parent         | child                   |
+      | schema.xml   | {'tag':'root'} | {'tag':'dataNode'}      |
+      | schema.xml   | {'tag':'root'} | {'tag':'dataHost'}      |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test3" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-    """
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn3" />
-    <shardingNode dbGroup="ha_group1" database="db4" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db5" name="dn5" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn3" />
+    <dataNode dataHost="ha_group1" database="db4" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db5" name="dn5" />
+
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test3">
+      </writeHost>
+    </dataHost>
     """
     Then restart dble in "dble-1" failed for
     """

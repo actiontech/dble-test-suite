@@ -15,19 +15,19 @@ Feature: #view test except sql cover
        | conn_0 | False    | create table test(id int)                     | success | schema1 |
        | conn_0 | False    | drop view if exists schema1.view_test         | success | schema1 |
        | conn_0 | True     | create view view_test as select * from test   | success | schema1 |
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
      <schema name="schema1" sqlMaxLimit="100">
-        <globalTable name="test1" shardingNode="dn1,dn3" />
+        <table name="test1" dataNode="dn1,dn3" type="global" />
     </schema>
     """
      Then execute admin cmd "reload @@config_all"
      Then execute sql in "dble-1" in "user" mode
        | sql                       | expect                                  | db      |
        | select * from view_test   | Table 'schema1.view_test' doesn't exist | schema1 |
-     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+        <table name="test" dataNode="dn1,dn2,dn3,dn4" type="global" />
     """
      Then execute admin cmd "reload @@config_all"
      Then execute sql in "dble-1" in "user" mode
@@ -35,17 +35,20 @@ Feature: #view test except sql cover
        | conn_0 | False    | select * from schema1.view_test   | success   | schema1 |
        | conn_0 | True     | drop view view_test               | success   | schema1 |
       #github :2063
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
        """
-       <schema name="schema2" sqlMaxLimit="100" shardingNode="dn1">
-          <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-          <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+       <schema name="schema2" sqlMaxLimit="100" dataNode="dn1">
+          <table name="test1" dataNode="dn1,dn2" rule="hash-two"/>
+          <table name="test2" dataNode="dn1,dn2" rule="hash-two"/>
        </schema>
        """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-       """
-       <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
-       """
+     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+     """
+       <user name="test">
+         <property name="password">111111</property>
+         <property name="schemas">schema1,schema2</property>
+       </user>
+     """
      Then execute admin cmd "reload @@config"
      Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                             | expect  | db      |
@@ -61,19 +64,22 @@ Feature: #view test except sql cover
 
 
   Scenario: for vertical node view: create view in mysql, then after execute reload @@metadata command the view is available in dble #2
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-         <singleTable name="sharding_1_t1" shardingNode="dn2" sqlMaxLimit="100"/>
-         <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
+         <table name="sharding_1_t1" dataNode="dn2" sqlMaxLimit="100"/>
+         <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
       </schema>
-      <schema name="schema2" sqlMaxLimit="100" shardingNode="dn1">
+      <schema name="schema2" sqlMaxLimit="100" dataNode="dn1">
       </schema>
 
     """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
+       <user name="test">
+         <property name="password">111111</property>
+         <property name="schemas">schema1,schema2</property>
+       </user>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "mysql-master1"
@@ -140,16 +146,19 @@ Feature: #view test except sql cover
     #3.21.06修复，不确定是否往前合
   Scenario: create some view ,drop view in dble from DBLE0REQ-1163  #3
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
-      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn1" />
-      <schema name="schema2" sqlMaxLimit="100" shardingNode="dn2" />
-      <schema name="schema3" sqlMaxLimit="100" shardingNode="dn3" />
+      <schema name="schema1" sqlMaxLimit="100" dataNode="dn1" />
+      <schema name="schema2" sqlMaxLimit="100" dataNode="dn2" />
+      <schema name="schema3" sqlMaxLimit="100" dataNode="dn3" />
       """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-      """
-      <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
-      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+       <user name="test">
+         <property name="password">111111</property>
+         <property name="schemas">schema1,schema2,schema3</property>
+       </user>
+    """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                 | expect  | db      |

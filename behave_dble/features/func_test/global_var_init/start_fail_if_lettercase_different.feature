@@ -28,15 +28,14 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     {'restore_mysql_config':{'mysql-master2':{'lower_case_table_names':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true" readWeight="1">
-        </dbInstance>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" readWeight="2">
-        </dbInstance>
-    </dbGroup>
+    <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
+       <heartbeat>select user()</heartbeat>
+       <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+          <readHost host="hostM2" url="172.100.9.6:3307" password="111111" user="test"/>
+       </writeHost>
+    </dataHost>
     """
     Given restart mysql in "mysql-master2" with sed cmds to update mysql config
     """
@@ -53,24 +52,22 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     {'restore_mysql_config':{'mysql-master2':{'lower_case_table_names':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <globalTable shardingNode="dn1,dn2,dn3,dn4" name="test" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
+        <table name="sharding_2_t1" dataNode="dn1,dn3" rule="hash-two" />
     </schema>
 
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+        <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+        </writeHost>
+    </dataHost>
     """
 
     Given restart dble in "dble-1" success
@@ -79,33 +76,31 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     /lower_case_table_names/d
     /server-id/a lower_case_table_names = 1
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <globalTable shardingNode="dn1,dn2,dn3,dn4" name="test" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two" />
+        <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
     </schema>
 
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" >
-        </dbInstance>
-    </dbGroup>
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
 
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" >
-        </dbInstance>
-    </dbGroup>
+        <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+        </writeHost>
+    </dataHost>
+
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+        </writeHost>
+    </dataHost>
     """
     # 3.22.07开始，执行reload不会报错，因为这时配置的变更项，不会校验大小写的参数
     #reload @@config_all returns failed,and failed info includes the output
@@ -124,21 +119,11 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}}}
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-          <property name="heartbeatPeriodMillis">2000</property>
-        </dbInstance>
-    </dbGroup>
-
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-           <property name="heartbeatPeriodMillis">2000</property>
-        </dbInstance>
-    </dbGroup>
+    <system>
+        <property name="dataNodeHeartbeatPeriod">2000</property>
+    </system>
     """
     Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master1"

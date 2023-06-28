@@ -4,41 +4,57 @@ Feature: multi-tenancy, user-Permission
 
   @NORMAL
   Scenario: multi-tenancy, authority for certain tenant is right #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="mytestA">
-        <shardingTable shardingNode="dn1,dn2,dn3,dn4" name="test1" function="hash-four" shardingColumn="id" />
-        <shardingTable shardingNode="dn1,dn2,dn3,dn4" name="test2" function="hash-four" shardingColumn="id" />
+        <table dataNode="dn1,dn2,dn3,dn4" name="test1" rule="hash-four"/>
+        <table dataNode="dn1,dn2,dn3,dn4" name="test2" rule="hash-four"/>
     </schema>
     <schema name="mytestB">
-        <shardingTable shardingNode="dn5,dn6,dn7,dn8" name="test1" function="hash-four" shardingColumn="id" />
+        <table dataNode="dn5,dn6,dn7,dn8" name="test1" rule="hash-four"/>
     </schema>
     <schema name="mytestC">
-        <shardingTable shardingNode="dn1,dn2,dn3,dn4,dn5,dn6,dn7,dn8" name="sbtestC1" function="eight-long" shardingColumn="id" />
+        <table dataNode="dn1,dn2,dn3,dn4,dn5,dn6,dn7,dn8" name="sbtestC1" rule="eight-long"/>
     </schema>
     <schema name="mytestD">
-        <shardingTable shardingNode="dn1,dn2,dn3,dn4,dn5,dn6,dn7,dn8" name="sbtestD1" function="eight-long" shardingColumn="id" />
+        <table dataNode="dn1,dn2,dn3,dn4,dn5,dn6,dn7,dn8" name="sbtestD1" rule="eight-long"/>
     </schema>
-    <shardingNode dbGroup="ha_group2" database="db3" name="dn6"/>
-    <shardingNode dbGroup="ha_group1" database="db4" name="dn7"/>
-    <shardingNode dbGroup="ha_group2" database="db4" name="dn8"/>
-    <function class="Hash" name="eight-long">
-        <property name="partitionCount">8</property>
-        <property name="partitionLength">1</property>
-    </function>
-    <function class="Hash" name="hash-four">
-                <property name="partitionCount">4</property>
-                <property name="partitionLength">1</property>
-    </function>
+    <dataNode dataHost="ha_group2" database="db3" name="dn6"/>
+    <dataNode dataHost="ha_group1" database="db4" name="dn7"/>
+    <dataNode dataHost="ha_group2" database="db4" name="dn8"/>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-     """
-     <shardingUser name="testA" password="testA" schemas="mytestA" readOnly="false"/>
-     <shardingUser name="testB" password="testB" schemas="mytestB" readOnly="false"/>
-     <shardingUser name="testC" password="testC" schemas="mytestC" readOnly="false"/>
-     <shardingUser name="testD" password="testD" schemas="mytestD" readOnly="false"/>
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-
+        <tableRule name="eight-long">
+            <rule>
+                <columns>id</columns>
+                <algorithm>eight</algorithm>
+            </rule>
+        </tableRule>
+        <function class="Hash" name="eight">
+            <property name="partitionCount">8</property>
+            <property name="partitionLength">1</property>
+        </function>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <user name="testA">
+        <property name="password">testA</property>
+        <property name="schemas">mytestA</property>
+    </user>
+    <user name="testB">
+        <property name="password">testB</property>
+        <property name="schemas">mytestB</property>
+    </user>
+    <user name="testC">
+        <property name="password">testC</property>
+        <property name="schemas">mytestC</property>
+    </user>
+    <user name="testD">
+        <property name="password">testD</property>
+        <property name="schemas">mytestD</property>
+    </user>
+    """
     Then execute admin cmd "reload @@config_all"
 
     #Standalone database: A tenant a database
@@ -63,10 +79,10 @@ Feature: multi-tenancy, user-Permission
 
   @NORMAL
   Scenario: # Query statements with 2 subqueries can cause thread insecurities  from issue:917  author:maofei #2
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-     <shardingTable shardingNode="dn1,dn2,dn3,dn4" name="test_shard" function="hash-four" shardingColumn="id" />
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+     <table dataNode="dn1,dn2,dn3,dn4" name="test_shard" rule="hash-four" />
     </schema>
     """
     Then execute admin cmd "Reload @@config_all"

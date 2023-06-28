@@ -358,13 +358,13 @@ Feature: support rownum sql
   Scenario: check rownum sql - one table #2
     Given delete the following xml segment
       | file          | parent           | child               |
-      | sharding.xml  | {'tag':'root'}   | {'tag':'schema'}    |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | schema.xml  | {'tag':'root'}   | {'tag':'schema'}    |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
-      <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-          <singleTable name="single_t1" shardingNode="dn1" />
-          <globalTable name="global_2_t1" shardingNode="dn1,dn2" />
-          <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+      <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+          <table name="single_t1" dataNode="dn1" />
+          <table type="global" name="global_2_t1" dataNode="dn1,dn2" />
+          <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two"/>
       </schema>
       """
     Then execute admin cmd "reload @@config_all"
@@ -472,12 +472,12 @@ Feature: support rownum sql
   Scenario: check rownum sql - shardingTable + shardingTable - same shardingNode and same function #3
     Given delete the following xml segment
       | file          | parent           | child               |
-      | sharding.xml  | {'tag':'root'}   | {'tag':'schema'}    |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | schema.xml  | {'tag':'root'}   | {'tag':'schema'}    |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
-      <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-          <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-          <shardingTable name="sharding_2_t2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+      <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+          <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two"/>
+          <table name="sharding_2_t2" dataNode="dn1,dn2" rule="hash-two"/>
       </schema>
       """
     Then execute admin cmd "reload @@config_all"
@@ -619,9 +619,9 @@ Feature: support rownum sql
   Scenario: check rownum sql - shardingTable + shardingTable - same shardingNode and different function #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="sharding_2_t2" shardingNode="dn1,dn2" function="hash-string-into-two" shardingColumn="id"/>
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two"/>
+        <table name="sharding_2_t2" dataNode="dn1,dn2" function="hash-string-into-two"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -742,9 +742,9 @@ Feature: support rownum sql
   Scenario: check rownum sql - shardingTable + shardingTable - different shardingNode and same function #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="sharding_2_t2" shardingNode="dn3,dn4" function="hash-two" shardingColumn="id"/>
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two"/>
+        <table name="sharding_2_t2" dataNode="dn3,dn4" rule="hash-two"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -866,8 +866,8 @@ Feature: support rownum sql
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="sharding_2_t2" shardingNode="dn3,dn4" function="hash-string-into-two" shardingColumn="id"/>
+        <table name="sharding_2_t1" shardingNode="dn1,dn2" rule="hash-two"/>
+        <table name="sharding_2_t2" shardingNode="dn3,dn4" function="hash-string-into-two"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -941,8 +941,8 @@ Feature: support rownum sql
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <globalTable name="global_2_t1" shardingNode="dn1,dn2" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" rule="hash-two"/>
+        <table type="global" name="global_2_t1" shardingNode="dn1,dn2" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -1081,8 +1081,8 @@ Feature: support rownum sql
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <globalTable name="global_2_t1" shardingNode="dn3,dn4" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" rule="hash-two"/>
+        <table type="global" name="global_2_t1" shardingNode="dn3,dn4" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -1218,8 +1218,8 @@ Feature: support rownum sql
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <singleTable name="single_t1" shardingNode="dn1" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" rule="hash-two"/>
+        <table name="single_t1" shardingNode="dn1" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -1396,8 +1396,8 @@ Feature: support rownum sql
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <singleTable name="single_t1" shardingNode="dn3" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two"/>
+        <table name="single_t1" shardingNode="dn3" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -1510,8 +1510,8 @@ Feature: support rownum sql
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <globalTable name="global_t1" shardingNode="dn1,dn2" />
-        <singleTable name="single_t1" shardingNode="dn1" />
+        <table type="global" name="global_t1" shardingNode="dn1,dn2" />
+        <table name="single_t1" shardingNode="dn1" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -1650,8 +1650,8 @@ Feature: support rownum sql
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <globalTable name="global_t1" shardingNode="dn1,dn2" />
-        <singleTable name="single_t1" shardingNode="dn3" />
+        <table type="global" name="global_t1" shardingNode="dn1,dn2" />
+        <table name="single_t1" shardingNode="dn3" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"

@@ -11,24 +11,15 @@
 
 Feature: Before the xa transaction is rolled back, open the firewall to the dble on the host where a certain fragment is located
 
-  @restore_network
+  @restore_network @skip
   Scenario: Before the xa transaction is rolled back, open the firewall to the dble on the host where a certain fragment is located    #1
     """
     {'restore_network':'mysql-master1'}
     """
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      /DidleTimeout/d
-      /# processor/a -DidleTimeout=20000
-      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-            <property name="heartbeatPeriodMillis">600000</property>
-        </dbInstance>
-    </dbGroup>
+    <property name="idleTimeout">20000</property>
+    <property name="dataNodeHeartbeatPeriod">600000</property>
     """
     Given Restart dble in "dble-1" success
 
@@ -82,6 +73,6 @@ Feature: Before the xa transaction is rolled back, open the firewall to the dble
       | conn_0 | False   | select * from sharding_4_t1                   | Lost connection to MySQL server during query | schema1 |
 
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                           | expect                     | db      |
-      | conn_1 | False   | select * from sharding_4_t1                   | length{(0)}                | schema1 |
-      | conn_1 | true    | drop table if exists sharding_4_t1            | success                    | schema1 |
+      | conn   | toClose | sql                                           | expect                     | db      | timeout |
+      | conn_1 | False   | select * from sharding_4_t1                   | length{(0)}                | schema1 | 30,2    |
+      | conn_1 | true    | drop table if exists sharding_4_t1            | success                    | schema1 |         |

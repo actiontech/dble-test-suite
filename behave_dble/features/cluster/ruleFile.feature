@@ -10,7 +10,7 @@ DBLE0REQ-38
 
   Scenario: Enum sharding with ruleFile way which is different from mapFile #1
     #test: type:integer not default node
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
       <function class="enum" name="enum_func">
           <property name="ruleFile">enum.txt</property>
@@ -18,9 +18,9 @@ DBLE0REQ-38
           <property name="type">0</property>
       </function>
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-    <shardingTable name="enum_table" shardingNode="dn1,dn2,dn3,dn4" function="enum_func" shardingColumn="id" />
+    <table name="enum_table" shardingNode="dn1,dn2,dn3,dn4" function="enum_func" />
     """
     When replace new conf file "enum.txt" on "dble-1"
     """
@@ -84,7 +84,7 @@ DBLE0REQ-38
       """
 
     #test: type:string default node
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <function class="Enum" name="enum_func">
             <property name="ruleFile">enum.txt</property>
@@ -170,24 +170,24 @@ DBLE0REQ-38
     Given delete file "/opt/dble/conf/enum.txt" on "dble-3"
     Given delete the following xml segment
       | file            | parent                                        | child                                                     |
-      | sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'enum_func'}}          |
-      | sharding.xml    | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'enum_table'}}    |
+      | schema.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'enum_func'}}          |
+      | schema.xml    | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'enum_table'}}    |
     Then execute admin cmd "reload @@config_all"
 
 
 
   Scenario: Numberrange sharding with ruleFile way (ZK cluster mode) #2
     #test: set defaultNode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <function class="numberrange" name="numberrange_func">
             <property name="ruleFile">partition.txt</property>
             <property name="defaultNode">3</property>
         </function>
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <shardingTable name="numberrange_table" shardingNode="dn1,dn2,dn3,dn4" function="numberrange_func" shardingColumn="id" />
+        <table name="numberrange_table" shardingNode="dn1,dn2,dn3,dn4" function="numberrange_func" />
     """
     When replace new conf file "partition.txt" on "dble-1"
     """
@@ -252,7 +252,7 @@ DBLE0REQ-38
       """
 
     #test: not defaultNode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <function class="numberrange" name="numberrange_func">
             <property name="ruleFile">partition.txt</property>
@@ -304,15 +304,15 @@ DBLE0REQ-38
     Given delete file "/opt/dble/conf/partition.txt" on "dble-3"
     Given delete the following xml segment
       |file           | parent                                        | child                                                            |
-      |sharding.xml   | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'numberrange_func'}}          |
-      |sharding.xml   | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'numberrange_table'}}    |
+      |schema.xml   | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'numberrange_func'}}          |
+      |schema.xml   | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'numberrange_table'}}    |
     Then execute admin cmd "reload @@config_all"
 
 
 
   Scenario: PatternRange sharding with ruleFile way (ZK cluster mode) #3
     #test: set defaultNode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <function class="PatternRange" name="patternrange_func">
             <property name="ruleFile">patternrange.txt</property>
@@ -320,9 +320,9 @@ DBLE0REQ-38
             <property name="defaultNode">3</property>
         </function>
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <shardingTable name="patternrange_table" shardingNode="dn1,dn2,dn3,dn4" function="patternrange_func" shardingColumn="id"/>
+        <table name="patternrange_table" shardingNode="dn1,dn2,dn3,dn4" function="patternrange_func"/>
     """
     When replace new conf file "patternrange.txt" on "dble-1"
     """

@@ -45,13 +45,17 @@ used_in_local: create_venv up
 	pipenv run behave features/setup.feature
 
 
+run_large_packet: up
+	pipenv run behave -D dble_conf=template features/setup.feature \
+	features/func_test/Large_Packet/
+
+
 run_cluster_case: up
 	pipenv run behave features/setup.feature \
 	features/cluster/
 
 run_func_stable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/Large_Packet/ \
 	features/func_test/global_var_init/ \
 	features/func_test/load_data/  \
 	features/func_test/safety/  \

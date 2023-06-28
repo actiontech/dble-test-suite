@@ -5,14 +5,14 @@
 Feature: test group by
   @use.with_mysql_version=5.7
   Scenario: the version of all backend mysql nodes are 5.7.* #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
           """
-           <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+           <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
               <heartbeat>select user()</heartbeat>
               <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
               </dbInstance>
               <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false"/>
-           </dbGroup>
+           </dataHost>
           """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -28,20 +28,20 @@ Feature: test group by
       | conn   | toClose | sql                                                         |
       | conn_0 | False   | explain select name from sharding_4_t1 group by name |
     Then check resultset "rs_A" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
+      | DATA_NODE-0        | TYPE-1           | SQL/REF-2                                                                                             |
       | dn1_0              | BASE SQL         | select `sharding_4_t1`.`name` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name` ORDER BY `sharding_4_t1`.`name` ASC |
       | dn2_0              | BASE SQL         | select `sharding_4_t1`.`name` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name` ORDER BY `sharding_4_t1`.`name` ASC |
       | dn3_0              | BASE SQL         | select `sharding_4_t1`.`name` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name` ORDER BY `sharding_4_t1`.`name` ASC |
       | dn4_0              | BASE SQL         | select `sharding_4_t1`.`name` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name` ORDER BY `sharding_4_t1`.`name` ASC |
-      | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0; dn3_0; dn4_0 |
+      | merge_and_order_1  | MERGE_AND_ORDER  | dn1_0; dn2_0; dn3_0; dn4_0 |
       | aggregate_1        | AGGREGATE        | merge_and_order_1 |
       | limit_1            | LIMIT            | aggregate_1 |
-      | shuffle_field_1   | SHUFFLE_FIELD | limit_1 |
+      | shuffle_field_1    | SHUFFLE_FIELD    | limit_1 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_B"
       | conn   | toClose | sql                                                                  |
       | conn_0 | True    | explain select name,age from sharding_4_t1 group by name,age |
     Then check resultset "rs_B" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
+      | DATA_NODE-0       | TYPE-1          | SQL/REF-2                                                                                             |
       | dn1_0             | BASE SQL        | select `sharding_4_t1`.`name`,`sharding_4_t1`.`age` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name`,`sharding_4_t1`.`age` ORDER BY `sharding_4_t1`.`name` ASC,`sharding_4_t1`.`age` ASC |
       | dn2_0             | BASE SQL        | select `sharding_4_t1`.`name`,`sharding_4_t1`.`age` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name`,`sharding_4_t1`.`age` ORDER BY `sharding_4_t1`.`name` ASC,`sharding_4_t1`.`age` ASC |
       | dn3_0             | BASE SQL        | select `sharding_4_t1`.`name`,`sharding_4_t1`.`age` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name`,`sharding_4_t1`.`age` ORDER BY `sharding_4_t1`.`name` ASC,`sharding_4_t1`.`age` ASC |
@@ -61,7 +61,7 @@ Feature: test group by
       | conn   | toClose | sql                                                                  |
       | conn_0 | True    | explain select id from sharding_4_t1 group by id order by id  |
     Then check resultset "rs_C" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
+      | DATA_NODE-0      | TYPE-1          | SQL/REF-2                                                                                             |
       | dn1_0 | BASE SQL | select `sharding_4_t1`.`id` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`id` ORDER BY `sharding_4_t1`.`id` ASC |
       | dn2_0 | BASE SQL | select `sharding_4_t1`.`id` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`id` ORDER BY `sharding_4_t1`.`id` ASC |
       | dn3_0 | BASE SQL | select `sharding_4_t1`.`id` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`id` ORDER BY `sharding_4_t1`.`id` ASC |
@@ -91,19 +91,19 @@ Feature: test group by
       | conn   | toClose | sql                                                                  |
       | conn_0 | False   | explain select name from no_sharding group by name            |
     Then check resultset "rs_D" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
       | dn5 | BASE SQL | SELECT name FROM no_sharding GROUP BY name LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_E"
       | conn   | toClose | sql                                                                  |
       | conn_0 | False   | explain select name from test group by name                     |
     Then check resultset "rs_E" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                    |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                    |
       | /*AllowDiff*/dn3  | BASE SQL | SELECT name FROM test GROUP BY name LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_F"
       | conn   | toClose | sql                                                                                                                    |
       | conn_0 | True    | explain /*!dble:sql=select id from sharding_2_t1 where id=1*/select name from sharding_2_t1 group by name|
     Then check resultset "rs_F" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                    |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                    |
       | dn2 | BASE SQL | select name from sharding_2_t1 group by name |
 
   @use.with_mysql_version=8.0
@@ -121,20 +121,20 @@ Feature: test group by
       | conn   | toClose | sql                                                         |
       | conn_0 | False   | explain select name from sharding_4_t1 group by name |
     Then check resultset "rs_A" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
+      | DATA_NODE-0        | TYPE-1          | SQL/REF-2                                                                                             |
       | dn1_0              | BASE SQL         | select `sharding_4_t1`.`name` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name` ORDER BY `sharding_4_t1`.`name` ASC |
       | dn2_0              | BASE SQL         | select `sharding_4_t1`.`name` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name` ORDER BY `sharding_4_t1`.`name` ASC |
       | dn3_0              | BASE SQL         | select `sharding_4_t1`.`name` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name` ORDER BY `sharding_4_t1`.`name` ASC |
       | dn4_0              | BASE SQL         | select `sharding_4_t1`.`name` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name` ORDER BY `sharding_4_t1`.`name` ASC |
-      | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0; dn3_0; dn4_0 |
+      | merge_and_order_1  | MERGE_AND_ORDER | dn1_0; dn2_0; dn3_0; dn4_0 |
       | aggregate_1        | AGGREGATE        | merge_and_order_1 |
       | limit_1            | LIMIT            | aggregate_1 |
-      | shuffle_field_1   | SHUFFLE_FIELD | limit_1 |
+      | shuffle_field_1    | SHUFFLE_FIELD | limit_1 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_B"
       | conn   | toClose | sql                                                                  |
       | conn_0 | True    | explain select name,age from sharding_4_t1 group by name,age |
     Then check resultset "rs_B" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
+      | DATA_NODE-0       | TYPE-1          | SQL/REF-2                                                                                             |
       | dn1_0             | BASE SQL        | select `sharding_4_t1`.`name`,`sharding_4_t1`.`age` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name`,`sharding_4_t1`.`age` ORDER BY `sharding_4_t1`.`name` ASC,`sharding_4_t1`.`age` ASC |
       | dn2_0             | BASE SQL        | select `sharding_4_t1`.`name`,`sharding_4_t1`.`age` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name`,`sharding_4_t1`.`age` ORDER BY `sharding_4_t1`.`name` ASC,`sharding_4_t1`.`age` ASC |
       | dn3_0             | BASE SQL        | select `sharding_4_t1`.`name`,`sharding_4_t1`.`age` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name`,`sharding_4_t1`.`age` ORDER BY `sharding_4_t1`.`name` ASC,`sharding_4_t1`.`age` ASC |
@@ -154,7 +154,7 @@ Feature: test group by
       | conn   | toClose | sql                                                                  |
       | conn_0 | True    | explain select id from sharding_4_t1 group by id order by id  |
     Then check resultset "rs_C" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
       | dn1_0 | BASE SQL | select `sharding_4_t1`.`id` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`id` ORDER BY `sharding_4_t1`.`id` ASC |
       | dn2_0 | BASE SQL | select `sharding_4_t1`.`id` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`id` ORDER BY `sharding_4_t1`.`id` ASC |
       | dn3_0 | BASE SQL | select `sharding_4_t1`.`id` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`id` ORDER BY `sharding_4_t1`.`id` ASC |
@@ -184,36 +184,36 @@ Feature: test group by
       | conn   | toClose | sql                                                                  |
       | conn_0 | False   | explain select name from no_sharding group by name            |
     Then check resultset "rs_D" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
       | dn5 | BASE SQL    | SELECT name FROM no_sharding GROUP BY name LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_E"
       | conn   | toClose | sql                                                                  |
       | conn_0 | False   | explain select name from test group by name                     |
     Then check resultset "rs_E" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                    |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                    |
       | /*AllowDiff*/dn3  | BASE SQL | SELECT name FROM test GROUP BY name LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_F"
       | conn   | toClose | sql                                                                                                                    |
       | conn_0 | True    | explain /*!dble:sql=select id from sharding_2_t1 where id=1*/select name from sharding_2_t1 group by name|
     Then check resultset "rs_F" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                    |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                    |
       | dn2 | BASE SQL | select name from sharding_2_t1 group by name |
 
   @skip
   Scenario: the version of all backend mysql nodes are mixed with 5.7.* and 8.0.* #3
-        Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+        Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
       <heartbeat>select user()</heartbeat>
       <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
       </dbInstance>
-      </dbGroup>
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+      </dataHost>
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
       <heartbeat>select user()</heartbeat>
       <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
       </dbInstance>
       <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false"/>
-    </dbGroup>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -229,7 +229,7 @@ Feature: test group by
       | conn   | toClose | sql                                                         |
       | conn_0 | False   | explain select name from sharding_4_t1 group by name |
     Then check resultset "rs_A" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
       | dn1_0              | BASE SQL         | select `sharding_4_t1`.`name` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name` ORDER BY `sharding_4_t1`.`name` ASC |
       | dn2_0              | BASE SQL         | select `sharding_4_t1`.`name` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name` ORDER BY `sharding_4_t1`.`name` ASC |
       | dn3_0              | BASE SQL         | select `sharding_4_t1`.`name` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name` ORDER BY `sharding_4_t1`.`name` ASC |
@@ -242,7 +242,7 @@ Feature: test group by
       | conn   | toClose | sql                                                                  |
       | conn_0 | True    | explain select name,age from sharding_4_t1 group by name,age |
     Then check resultset "rs_B" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
       | dn1_0             | BASE SQL        | select `sharding_4_t1`.`name`,`sharding_4_t1`.`age` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name`,`sharding_4_t1`.`age` ORDER BY `sharding_4_t1`.`name` ASC,`sharding_4_t1`.`age` ASC |
       | dn2_0             | BASE SQL        | select `sharding_4_t1`.`name`,`sharding_4_t1`.`age` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name`,`sharding_4_t1`.`age` ORDER BY `sharding_4_t1`.`name` ASC,`sharding_4_t1`.`age` ASC |
       | dn3_0             | BASE SQL        | select `sharding_4_t1`.`name`,`sharding_4_t1`.`age` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`name`,`sharding_4_t1`.`age` ORDER BY `sharding_4_t1`.`name` ASC,`sharding_4_t1`.`age` ASC |
@@ -262,7 +262,7 @@ Feature: test group by
       | conn   | toClose | sql                                                                  |
       | conn_0 | True    | explain select id from sharding_4_t1 group by id order by id  |
     Then check resultset "rs_C" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
       | dn1_0 | BASE SQL | select `sharding_4_t1`.`id` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`id` ORDER BY `sharding_4_t1`.`id` ASC |
       | dn2_0 | BASE SQL | select `sharding_4_t1`.`id` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`id` ORDER BY `sharding_4_t1`.`id` ASC |
       | dn3_0 | BASE SQL | select `sharding_4_t1`.`id` from  `sharding_4_t1` GROUP BY `sharding_4_t1`.`id` ORDER BY `sharding_4_t1`.`id` ASC |
@@ -293,17 +293,17 @@ Feature: test group by
       | conn   | toClose | sql                                                                  |
       | conn_0 | False   | explain select name from no_sharding group by name            |
     Then check resultset "rs_D" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
       | dn5 | BASE SQL    | SELECT name FROM no_sharding GROUP BY name LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_E"
       | conn   | toClose | sql                                                                  |
       | conn_0 | False   | explain select name from test group by name                     |
     Then check resultset "rs_E" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                    |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                    |
       | /*AllowDiff*/dn3  | BASE SQL | SELECT name FROM test GROUP BY name LIMIT 100 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_F"
       | conn   | toClose | sql                                                                                                                    |
       | conn_0 | True    | explain /*!dble:sql=select id from sharding_4_t1 where id=1*/select name from sharding_4_t1 group by name|
     Then check resultset "rs_F" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                    |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                    |
       | dn2 | BASE SQL | select name from sharding_4_t1 group by name |

@@ -16,20 +16,20 @@ Feature:  unexpected packet should not in dble log
       """
     Given delete the following xml segment
       |file          | parent          | child                   |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}        |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}        |
+      |schema.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="aly_test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
-        <shardingTable name="aly_order" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
-        <shardingTable name="a_manager" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
+        <table name="aly_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+        <table name="aly_order" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+        <table name="a_manager" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     </schema>
 
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """

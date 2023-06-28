@@ -20,40 +20,42 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
     dble-3
     """
     Given delete the following xml segment
-      | file              | parent         | child              |
-      | sharding.xml     | {'tag':'root'} | {'tag':'shardingNode'} |
-      | db.xml     | {'tag':'root'} | {'tag':'dbGroup'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | file       | parent         | child              |
+      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="schema2" sqlMaxLimit="100" shardingNode="dn1">
-        <globalTable name="test" shardingNode="dn1,dn2"/>
+    <schema name="schema2" sqlMaxLimit="100" dataNode="dn1">
+        <table name="test" dataNode="dn1,dn2" type="global"/>
     </schema>
-    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn4">
-        <globalTable name="test" shardingNode="dn3,dn4"/>
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn4">
+        <table name="test" dataNode="dn3,dn4" type="global"/>
     </schema>
-    <shardingNode name="dn1" dbGroup="ha_group1" database="db1"/>
-    <shardingNode name="dn2" dbGroup="ha_group1" database="db2"/>
-    <shardingNode name="dn3" dbGroup="ha_group1" database="db3"/>
-    <shardingNode name="dn4" dbGroup="ha_group1" database="db4"/>
+    <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
+    <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+    <dataNode name="dn3" dataHost="ha_group1" database="db3"/>
+    <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
+        <dataHost balance="0" maxCon="5" minCon="4" name="ha_group1" slaveThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test"/>
+    </dataHost>
 
     """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
-     <heartbeat>select user()</heartbeat>
-     <dbInstance name="hostM1" url="172.100.9.5:3306" password="111111" user="test" maxCon="5" minCon="4" primary="true"/>
-     </dbGroup>
+   Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-    <managerUser name="root" password="111111"  readOnly="false"/>
-    <shardingUser name="test" password="111111" schemas="schema1,schema2" readOnly="false"/>
+      <user name="test">
+         <property name="password">111111</property>
+         <property name="schemas">schema1,schema2</property>
+      </user>
+      <user name="root">
+         <property name="password">111111</property>
+         <property name="manager">true</property>
+      </user>
     """
     Then execute admin cmd "reload @@config_all"
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                     | expect                               |
-      | conn_0 | False   | create database @@shardingNode='dn$1-4'                     | success                              |
+      | conn_0 | False   | create database @@dataNode='dn$1-4'                     | success                              |
       | conn_0 | False   | show @@help                                             | hasStr{show @@ddl}                   |
       | conn_0 | False   | show @@help                                             | hasStr{kill @@ddl_lock where schema} |
       | conn_0 | False   | kill @@ddl_lock where schema='schema1' and table='test' | success                              |
@@ -88,7 +90,7 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
       | conn_1 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                             |
       | conn_1 | false   | show @@ddl                                          | hasNoStr{drop table if exists test} |
       | conn_1 | true    | reload @@metadata                                   | success                             |
-    Given execute single sql in "dble-2" in "admin" mode and save resultset in "rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql                       |
       | show @@backend.statistics |
     #show @@backend.statistics中的total字段值是指所有后端nio管理的连接（包括心跳）

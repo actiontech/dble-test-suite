@@ -7,12 +7,11 @@ Feature: about ddl metalock test
   # issue: http://10.186.18.11/jira/browse/DBLE0REQ-1615
   Scenario: When one session obtain ddl metalock and execute ddl, other session can not execute ddl  #1
 
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-        """
-        s/-Dprocessors=1/-Dprocessors=10/
-        s/-DprocessorExecutor=1/-DprocessorExecutor=10/
-        """
-    
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+    <property name="processors">10</property>
+    <property name="processorExecutor">10</property>
+    """
     Given Restart dble in "dble-1" success
 
     Then execute sql in "dble-1" in "user" mode

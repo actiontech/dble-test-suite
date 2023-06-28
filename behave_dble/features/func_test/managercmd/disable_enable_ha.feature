@@ -3,15 +3,15 @@
 # Created by zhaohongjie at 2019/12/11
 Feature: test high-availability related commands
   ha related commands to test:
-  dbGroup @@disable name='xxx' [instance='xxx']
-  dbGroup @@enable name='xxx' [instance='xxx']
-  dbGroup @@switch name='xxx' master='xxx'
-  show @@dbinstance
+  dataHost @@disable name='xxx' [node='xxx']
+  dataHost @@enable name='xxx' [node='xxx']
+  dataHost @@switch name='xxx' master='xxx'
+  show @@datasource
 
   Scenario: end to end ha switch test
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
      """
-     $a -DuseOuterHa=true
+     <property name="useOuterHa">true</property>
     """
     Given Restart dble in "dble-1" success
 #   a transaction in processing
@@ -21,13 +21,12 @@ Feature: test high-availability related commands
       | conn_0 | False    | create table sharding_4_t1(id int)         | success  |  schema1 |
       | conn_0 | False    | begin                                      | success  |  schema1 |
       | conn_0 | False    | insert into sharding_4_t1 values(1),(2)    | success  |  schema1 |
-    Then execute admin cmd "dbGroup @@disable name='ha_group2'"
+    Then execute admin cmd "dataHost @@disable name='ha_group2'"
 #    check transaction is killed forcely
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                         | expect     | db       |
-      | conn_0 | true     | select * from sharding_4_t1 | is disable | schema1  |
-
-    Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM2'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
+      | conn   | toClose  | sql                         | expect                       | db       |
+      | conn_0 | true     | select * from sharding_4_t1 | ha command disable datasource|  schema1 |
+    Then check exist xml node "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM2','disabled':'true'}}" in "/opt/dble/conf/schema.xml" in host "dble-1"
 #    The expect fail msg is tmp,for github issue:#1528
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                        | expect              | db        |
@@ -37,54 +36,48 @@ Feature: test high-availability related commands
       | show @@backend |
     Then check resultset "show_be_rs" has not lines with following column values
     | HOST-3      | PORT-4 |
-    | 172.100.9.6 | 3307   |
+    | 172.100.9.6 | 3306   |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
       | sql               |
-      | show @@dbinstance |
+      | show @@datasource |
     Then check resultset "show_ds_rs" has lines with following column values
-    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-10 |
+    | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-11 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W    |      0   | true        |
-    | ha_group1  | hostM1   | 172.100.9.5   | 3306   | W    |      0   | false       |
-    #Given update "bootstrap.cnf" from "dble-1"
-
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    | ha_group1  | hostM1   | 172.100.9.5   | 3306   | W    |      1   | false       |
+    Given update "schema.xml" from "dble-1"
+    Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM2'}}" in "schema.xml"
     """
-     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-       <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
-        </dbInstance>
-        <dbInstance name="slave1" url="172.100.9.6:3307" user="test" password="111111" maxCon="1000" minCon="10" disabled="true">
-        </dbInstance>
-     </dbGroup>
+    <readHost host="slave1" user="test" password="111111" url="172.100.9.6:3307" disabled="true"/>
     """
     Then execute admin cmd "reload @@config_all"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
       | sql               |
-      | show @@dbinstance |
+      | show @@datasource |
     Then check resultset "show_ds_rs" has lines with following column values
-    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-10 |
-    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W    |      0   |  true      |
+    | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-11 |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W    |      0   |  true       |
     | ha_group2  | slave1   | 172.100.9.6   | 3307   | R    |      0   |  true       |
-    | ha_group1  | hostM1   | 172.100.9.5   | 3306   | W    |      0   |  false      |
-    Then execute admin cmd "dbGroup @@switch name='ha_group2' master='slave1'"
-    Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM2','disabled':'true'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
-    Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'slave1','disabled':'true'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
+    | ha_group1  | hostM1   | 172.100.9.5   | 3306   | W    |      1   |  false      |
+    Then execute admin cmd "dataHost @@switch name='ha_group2' master='slave1'"
+    Then check exist xml node "{'tag':'dataHost/writeHost/readHost','kv_map':{'host':'hostM2','disabled':'true'}}" in "/opt/dble/conf/schema.xml" in host "dble-1"
+    Then check exist xml node "{'tag':'dataHost/writeHost','kv_map':{'host':'slave1','disabled':'true'}}" in "/opt/dble/conf/schema.xml" in host "dble-1"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
       | sql               |
-      | show @@dbinstance |
+      | show @@datasource |
     Then check resultset "show_ds_rs" has lines with following column values
-    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-10 |
+    | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      0   | true        |
     | ha_group2  | slave1   | 172.100.9.6   | 3307   | W      |      0   | true        |
-    Then execute admin cmd "dbGroup @@enable name='ha_group2'"
+    Then execute admin cmd "dataHost @@enable name='ha_group2'"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
       | sql               |
-      | show @@dbinstance |
+      | show @@datasource |
     Then check resultset "show_ds_rs" has lines with following column values
-    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5| DISABLED-10 |
-    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |     0   | false       |
-    | ha_group2  | slave1   | 172.100.9.6   | 3307   | W      |     0   | false       |
-
+    | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5   | DISABLED-11 |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      1+1   | false       |
+    | ha_group2  | slave1   | 172.100.9.6   | 3307   | W      |      1+1   | false       |
+    Then check exist xml node "{'tag':'dataHost/writeHost/readHost','kv_map':{'host':'hostM2','disabled':'false'}}" in "/opt/dble/conf/schema.xml" in host "dble-1"
+    Then check exist xml node "{'tag':'dataHost/writeHost','kv_map':{'host':'slave1','disabled':'false'}}" in "/opt/dble/conf/schema.xml" in host "dble-1"
 #    dble-2 is slave1's server
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                             | expect  |
@@ -98,21 +91,21 @@ Feature: test high-availability related commands
     Then execute sql in "mysql-slave1"
       | sql                                                                                           | expect      | db  |
       | select count(*) from mysql.general_log where argument like'insert into sharding_4_t1 values%' | length{(1)} | db1 |
-    Then execute admin cmd "dbGroup @@disable name='ha_group2' instance='slave1'"
+    Then execute admin cmd "dataHost @@disable name='ha_group2' node='slave1'"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
       | sql               |
-      | show @@dbinstance |
+      | show @@datasource |
     Then check resultset "show_ds_rs" has lines with following column values
-    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-10 |
-    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      0   | false       |
+    | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      1   | false       |
     | ha_group2  | slave1   | 172.100.9.6   | 3307   | W      |      0   | true        |
-    Then execute admin cmd "dbGroup @@switch name='ha_group2' master='hostM2'"
+    Then execute admin cmd "dataHost @@switch name='ha_group2' master='hostM2'"
     Given Restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
       | sql               |
-      | show @@dbinstance |
+      | show @@datasource |
     Then check resultset "show_ds_rs" has lines with following column values
-    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-10 |
+    | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W      |      0   | false       |
     | ha_group2  | slave1   | 172.100.9.6   | 3307   | R      |      0   | true        |
 
@@ -121,36 +114,31 @@ Feature: test high-availability related commands
   @btrace
   Scenario: 主从切换后，业务端开启事务，进行rollback，数据应该全部回滚  DBLE0REQ-2213  #2
     Given delete file "/opt/dble/BtracetryExistsCon*" on "dble-1"
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-       """
-       $a -DuseOuterHa=true
-       /-Dprocessors=/d
-       /-DprocessorExecutor=/d
-       $a -Dprocessors=8
-       $a -DprocessorExecutor=8
-       """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-      """
-      <schema shardingNode="dn2" name="schema1" sqlMaxLimit="100">
-          <shardingTable name="sharding2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+    <property name="processors">8</property>
+    <property name="processorExecutor">8</property>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+      <schema dataNode="dn2" name="schema1" sqlMaxLimit="100">
+          <table name="sharding2" dataNode="dn1,dn2" rule="hash-two" />
       </schema>
-      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-      """
-      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+      <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
-        <dbInstance name="slave1" url="172.100.9.6:3307" user="test" password="111111" maxCon="1000" minCon="10" />
-      </dbGroup>
-      """
+        <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+          <readHost host="slave1" password="111111" url="172.100.9.6:3307" user="test"/>
+        </writeHost>
+      </dataHost>
+    """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                        | expect   | db      |
       | conn_1 | False    | drop table if exists test_table;create table test_table(id int)            | success  | schema1 |
 
-    Then execute admin cmd "dbGroup @@disable name = 'ha_group2'"
-    Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master='slave1'"
-    Then execute admin cmd "dbGroup @@enable name = 'ha_group2'"
+    Then execute admin cmd "dataHost @@disable name = 'ha_group2'"
+    Then execute admin cmd "dataHost @@switch name = 'ha_group2' master='slave1'"
+    Then execute admin cmd "dataHost @@enable name = 'ha_group2'"
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                      | expect   | db       | timeout |
@@ -223,4 +211,4 @@ Feature: test high-availability related commands
 
   Scenario: 恢复主从
     Given change the primary instance of mysql group named "group2" to "mysql-master2"
-    Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostM2'"
+    Then execute admin cmd "dataHost @@switch name = 'ha_group2' master = 'hostM2'"

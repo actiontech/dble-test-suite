@@ -7,11 +7,11 @@ Feature: check thread leak
   @btrace
   Scenario: check MultiNodeMergeAndOrderHandler.ownThread #1
     # DBLE0REQ-1274
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-      <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <singleTable name="single_t1" shardingNode="dn1" />
+      <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two" />
+        <table name="single_t1" dataNode="dn1" />
       </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -65,10 +65,10 @@ Feature: check thread leak
   @btrace
   Scenario: check group by thread #2
     # DBLE0REQ-1239
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-      <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+      <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two" />
       </schema>
     """
     Then execute admin cmd "reload @@config_all"

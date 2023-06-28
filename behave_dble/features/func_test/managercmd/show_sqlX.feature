@@ -3,17 +3,19 @@
 Feature: show @@sql, show @@sql.resultset
     ###这个case加retry是因为机器的时间震荡问题，到时sql记录的开始时间和结束时间会出现偏差。导致记录sql的id和sql对应不上，下次失败，先查看时间。
 
-  @NORMAL @auto_retry
+  @NORMAL
   Scenario: show @@sql support queries of CRUD, show @@sql.resultset filters sql larger than maxResultSet setting #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-        <shardingTable shardingNode="dn1,dn2,dn3" name="ta" function="hash-three" shardingColumn="id"/>
+    <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
+        <table dataNode="dn1,dn2,dn3" name="ta" rule="hash-three" />
     </schema>
     """
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    $a -DmaxResultSet=1024
+    <system>
+        <property name="maxResultSet">1024</property>
+    </system>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -35,7 +37,7 @@ Feature: show @@sql, show @@sql.resultset
     Then check resultset "sql_rs_A" has lines with following column values
         | ID-0 | USER-1 | SQL-4                                      |
         |    1 | test   | delete from ta where id=1                  |
-        |    2 | test   | select * from ta where id=2             |
+        |    2 | test   | SELECT * FROM ta WHERE id = 2 LIMIT 100    |
         |    3 | test   | select * from ta order by id limit 1       |
         |    4 | test   | SELECT * FROM ta LIMIT 100                 |
         |    5 | test   | update ta set k="c" where id=3             |
@@ -48,4 +50,7 @@ Feature: show @@sql, show @@sql.resultset
     Then check resultset "sql_rs_B" has lines with following column values
         | USER-1 | FREQUENCY-2 | SQL-3                                 | RESULTSET_SIZE-4 |
         | test   |         1   | SELECT * FROM ta ORDER BY id LIMIT ?  | 1185             |
-        | test   |         1   | SELECT * FROM ta WHERE id = ?         | 1604             |
+        | test   |         1   | SELECT * FROM ta WHERE id = ? LIMIT ? | 1604             |
+    Given delete the following xml segment
+      |file        | parent           | child             |
+      |server.xml  |{'tag':'root'}    | {'tag':'system'}  |

@@ -333,8 +333,8 @@ Feature:Support MySQL's large package protocol
       | conn_0 | false   | select * from sharding_4_t1 where id in (select a.id from test a right join sharding_4_t1 b on a.id = b.id and a.id > 22)                                               | success      | schema1 | 6,2     |
       | conn_0 | false   | select 2                                                                                                                                                                | success      | schema1 |         |
       | conn_0 | false   | select * from sharding_4_t1 a join test b using(id,c) where a.id=16 or b.id=32;select 1                                                                                 | success      | schema1 |         |
-      | conn_0 | false   | /*!dble:shardingNode=dn1*/select * from sharding_4_t1 a join test b using(id,c) where a.id=16 or b.id=32                                                                | success      | schema1 |         |
-      | conn_0 | false   | /*!dble:shardingNode=dn1*/select c,id from sharding_4_t1;select id from sharding_4_t1;select * from test                                                                | success      | schema1 |         |
+      | conn_0 | false   | /*!dble:dataNode=dn1*/select * from sharding_4_t1 a join test b using(id,c) where a.id=16 or b.id=32                                                                | success      | schema1 |         |
+      | conn_0 | false   | /*!dble:dataNode=dn1*/select c,id from sharding_4_t1;select id from sharding_4_t1;select * from test                                                                | success      | schema1 |         |
 
       | conn_0 | true    | drop table if exists test;drop table if exists sharding_4_t1          | success      | schema1 | 5       |
 
@@ -345,7 +345,7 @@ Feature:Support MySQL's large package protocol
     Then connect "dble-1" to execute mulit "begin;update test set c = 24 where c = (" and ");commit" large data "16*1024*1024" on db "schema1" with user "test"
     ###coz issue:DBLE0REQ-2271
 #    Then connect "dble-1" to execute mulit "set trace = 1;select * from sing where c <> (select c from test where c = (" and ") or id = 1);show trace" large data "16*1024*1024" on db "schema1" with user "test"
-    Then connect "dble-1" to execute mulit "begin;/*!dble:shardingNode=dn4*/ delete from sharding_4_t1 where c = (" and ") or id = 1;select 1" large data "16*1024*1024" on db "schema1" with user "test"
+    Then connect "dble-1" to execute mulit "begin;/*!dble:dataNode=dn4*/ delete from sharding_4_t1 where c = (" and ") or id = 1;select 1" large data "16*1024*1024" on db "schema1" with user "test"
     Then connect "dble-1" to execute mulit "select 1; select a.id,b.id from test a join sharding_4_t1 b on a.id=b.id and b.c = " and " or a.id = 1; begin" large data "16*1024*1024" on db "schema1" with user "test"
 
     Then check "NullPointerException|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"

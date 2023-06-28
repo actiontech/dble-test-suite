@@ -12,15 +12,15 @@ Feature: check txIsolation supports tx_/transaction_ variables
     {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}, 'mysql8-slave1':{'start_mysql':1}}}
   """
 # check isolation、autocommit
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -110,15 +110,15 @@ Feature: check txIsolation supports tx_/transaction_ variables
     {'restore_mysql_service':{'mysql8-master2':{'start_mysql':1}, 'mysql-slave1':{'start_mysql':1}}}
   """
 # check isolation、autocommit
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -209,21 +209,21 @@ Feature: check txIsolation supports tx_/transaction_ variables
     {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}, 'mysql-slave1':{'start_mysql':1}}}
   """
 # check isolation、autocommit
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
 
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -314,15 +314,15 @@ Feature: check txIsolation supports tx_/transaction_ variables
     {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}, 'mysql-slave1':{'start_mysql':1}}}
   """
 # check isolation、autocommit
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+    <dataHost rwSplitMode="0" name="ha_group2" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """

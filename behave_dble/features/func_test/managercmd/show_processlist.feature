@@ -4,25 +4,22 @@
 Feature: #test show @@processlist
 
   Scenario: use `show @@processlist` to view the correspondence between front and backend session #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <shardingTable name="test_shard" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-        <singleTable  name="test1" shardingNode="dn1"/>
+      <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
+      <table name="test1" dataNode="dn1"/>
     </schema>
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0"  name="ha_group1" delayThreshold="100" >
-    <heartbeat>select user()</heartbeat>
-    <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" primary="true" maxCon="4" minCon="4">
-    </dbInstance>
-    </dbGroup>
-    <dbGroup rwSplitMode="0"  name="ha_group2" delayThreshold="100" >
-    <heartbeat>select user()</heartbeat>
-    <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" primary="true" maxCon="4" minCon="4">
-    </dbInstance>
-    </dbGroup>
+    <dataHost balance="0" maxCon="5" minCon="5" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+      </writeHost>
+    </dataHost>
+    <dataHost balance="0" maxCon="5" minCon="5" name="ha_group2" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+      </writeHost>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config"
 
@@ -38,7 +35,7 @@ Feature: #test show @@processlist
       | sql                |
       | show @@processlist |
     Then check resultset "pro_rs_B" has lines with following column values
-      | shardingNode-1 | User-3 | db-5 | Command-6 | Info-9 |
+      | Datanode-1 | User-3 | db-5 | Command-6 | Info-9 |
       | dn1        | test   | db1  | Sleep     | None   |
       | dn2        | test   | db1  | Sleep     | None   |
       | dn3        | test   | db2  | Sleep     | None   |
@@ -51,7 +48,7 @@ Feature: #test show @@processlist
       | sql                |
       | show @@processlist |
     Then check resultset "pro_rs_C" has lines with following column values
-      | shardingNode-1 | User-3 | db-5 | Command-6 | Info-9 |
+      | Datanode-1 | User-3 | db-5 | Command-6 | Info-9 |
       | dn1        | test   | db1  | Sleep     | None   |
       | dn2        | test   | db1  | Sleep     | None   |
       | dn3        | test   | db2  | Sleep     | None   |

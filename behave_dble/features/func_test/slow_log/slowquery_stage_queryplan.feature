@@ -8,13 +8,11 @@ Feature: check sql execute stage and connection query plan
 
   @btrace
   Scenario: check "show @@connection.sql" result add stage column #1
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      /-Dprocessors=/d
-      /-DprocessorExecutor=/d
-      $a -Dprocessors=4
-      $a -DprocessorExecutor=4
-      """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+    <property name="processors">4</property>
+    <property name="processorExecutor">4</property>
+    """
     Then Restart dble in "dble-1" success
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect  | db      |
@@ -24,7 +22,7 @@ Feature: check sql execute stage and connection query plan
       | conn_1 | False   | show @@connection.sql |
     Then check resultset "connection_sql_0" has lines with following column values
       | user-2  | schema-3  | sql-6                                  | stage-7            |
-      | root    |           | show @@connection.sql                  | Manager connection |
+      | root    | None      | show @@connection.sql                  | Manager connection |
       | test    | schema1   | drop table if exists sharding_4_t1     | Finished           |
 
 # endParse(Route_Calculation)：sql解析结束，准备计算路由
@@ -47,7 +45,7 @@ Feature: check sql execute stage and connection query plan
        | conn_1 | False   | show @@connection.sql |
      Then check resultset "connection_sql_1" has lines with following column values
        | user-2  | schema-3  | sql-6                                  | stage-7                   |
-       | root    |           | show @@connection.sql                  | Manager connection        |
+       | root    | None      | show @@connection.sql                  | Manager connection        |
        | test    | schema1   | create table sharding_4_t1(id int)     | Route_Calculation         |
      Given stop btrace script "BtraceSessionStage.java" in "dble-1"
      Given destroy btrace threads list
@@ -74,7 +72,7 @@ Feature: check sql execute stage and connection query plan
       | conn_1 | False   | show @@connection.sql |
     Then check resultset "connection_sql_1" has lines with following column values
       | user-2  | schema-3  | sql-6                                            | stage-7                   |
-      | root    |           | show @@connection.sql                            | Manager connection        |
+      | root    | None      | show @@connection.sql                            | Manager connection        |
       | test    | schema1   | insert into sharding_4_t1 values (1),(2),(3),(4) | Route_Calculation         |
     Given stop btrace script "BtraceSessionStage.java" in "dble-1"
     Given destroy btrace threads list
@@ -102,7 +100,7 @@ Feature: check sql execute stage and connection query plan
       | conn_1 | False   | show @@connection.sql |
     Then check resultset "connection_sql_2" has lines with following column values
       | user-2  | schema-3  | sql-6                                  | stage-7            |
-      | root    |           | show @@connection.sql                  | Manager connection |
+      | root    | None      | show @@connection.sql                  | Manager connection |
       | test    | schema1   | select * from sharding_4_t1            | Fetching_Result    |
     Given stop btrace script "BtraceSessionStage1.java" in "dble-1"
     Given destroy btrace threads list
@@ -129,7 +127,7 @@ Feature: check sql execute stage and connection query plan
       | conn_1 | False   | show @@connection.sql |
     Then check resultset "connection_sql_2" has lines with following column values
       | user-2  | schema-3  | sql-6                                  | stage-7            |
-      | root    |           | show @@connection.sql                  | Manager connection |
+      | root    | None      | show @@connection.sql                  | Manager connection |
       | test    | schema1   | drop table if exists sharding_4_t1     | Fetching_Result    |
     Given stop btrace script "BtraceSessionStage1.java" in "dble-1"
     Given destroy btrace threads list

@@ -4,10 +4,10 @@
 Feature: Do not reload all metadata when reload config/config_all if no need
 
   Scenario: Do not reload all metadata when reload config if no need #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <shardingTable name="test_shard" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -28,11 +28,11 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     Then execute sql in "dble-1" in "admin" mode
       | sql                                             | expect                       |
       | check full @@metadata where schema='schema1'    | hasNoStr{test_shard_column}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <shardingTable name="test_shard" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-    <shardingTable name="test1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+    <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
+    <table name="test1" dataNode="dn1,dn3" rule="hash-two"/>
     </schema>
     """
     Then execute admin cmd "reload @@config"
@@ -41,10 +41,10 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | conn_0 | False   | check full @@metadata where schema='schema1'    | hasStr{test1}                |
       | conn_0 | True    | check full @@metadata where schema='schema1'    | hasNoStr{test_shard_column}  |
     #删除表+表的type属性发生变更
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <globalTable name="test_shard" shardingNode="dn1,dn2,dn3,dn4"/>
+    <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" type="global"/>
     </schema>
     """
     Then execute admin cmd "reload @@config"
@@ -52,11 +52,11 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | conn   | toClose | sql                                             | expect                     |
       | conn_0 | False   | check full @@metadata where schema='schema1'    | hasStr{test_shard_column}  |
       | conn_0 | True    | check full @@metadata where schema='schema1'    | hasNoStr{test1}            |
-    #表的shardingNode发生变更
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    #表的datanode发生变更
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <globalTable name="test_shard" shardingNode="dn2,dn4"/>
+    <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
     """
     Then execute admin cmd "reload @@config"
@@ -64,18 +64,21 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | sql                                          | expect                       |
       | check full @@metadata where schema='schema1' | hasNoStr{test_shard_column}  |
     #新增schema
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <globalTable name="test_shard" shardingNode="dn2,dn4"/>
+    <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
     <schema name="schema2" sqlMaxLimit="100">
-    <shardingTable name="test2" shardingNode="dn2,dn4" function="hash-two" shardingColumn="id"/>
+    <table name="test2" dataNode="dn2,dn4" rule="hash-two"/>
     </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
+    <user name="test">
+    <property name="password">111111</property>
+    <property name="schemas">schema1,schema2</property>
+    </user>
     """
     Then execute admin cmd "reload @@config"
     Then execute sql in "dble-1" in "admin" mode
@@ -84,16 +87,19 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     #删除schema
      Given delete the following xml segment
       |file         | parent         | child             |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <globalTable name="test_shard" shardingNode="dn2,dn4"/>
+    <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    <shardingUser name="test" password="111111" schemas="schema1"/>
+    <user name="test">
+    <property name="password">111111</property>
+    <property name="schemas">schema1</property>
+    </user>
     """
     Then execute admin cmd "reload @@config"
     Then execute sql in "dble-1" in "admin" mode
@@ -103,11 +109,11 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | conn   | toClose | sql                        | expect   | db  |
       | conn_0 | False   | drop table if exists test3 | success  | db1 |
       | conn_0 | True    | create table test3(id int) | success  | db1 |
-    #schema的默认shardingNode发生变更
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    #schema的默认datanode发生变更
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn2">
-    <globalTable name="test_shard" shardingNode="dn2,dn4"/>
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn2">
+    <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
     """
     Then execute admin cmd "reload @@config"
@@ -124,10 +130,10 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | drop table if exists test3 | success  | db1 |
 
   Scenario: Do not reload all metadata when reload config_all if no need #2
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <shardingTable name="test_shard" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+    <table name="test_shard" dataNode="dn1,dn3" rule="hash-two"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -141,11 +147,11 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | conn_1 | False   | drop table if exists test_shard                            | success  | db2 |
       | conn_1 | True    | create table test_shard(id int,test_shard_column char(20)) | success  | db2 |
     #新增表
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <shardingTable name="test_shard" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
-    <shardingTable name="test1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+    <table name="test_shard" dataNode="dn1,dn3" rule="hash-two"/>
+    <table name="test1" dataNode="dn1,dn3" rule="hash-two"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -154,10 +160,10 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | conn_0 | False   | check full @@metadata where schema='schema1'| hasStr{test1}                |
       | conn_0 | True    | check full @@metadata where schema='schema1'| hasNoStr{test_shard_column}  |
     #删除表+表的type属性变更
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <globalTable name="test_shard" shardingNode="dn1,dn3"/>
+    <table name="test_shard" dataNode="dn1,dn3" type="global"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -172,100 +178,97 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | conn_0 | False   | create database da1         | success  | db1 |
       | conn_0 | False   | drop database if exists da2 | success  | db1 |
       | conn_0 | True    | create database da2         | success  | db1 |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <globalTable name="test_shard" shardingNode="dn1,dn3"/>
+    <table name="test_shard" dataNode="dn1,dn3" type="global"/>
     </schema>
-    <shardingNode dbGroup="ha_group1" database="da1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="da2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
+    <dataNode dataHost="ha_group1" database="da1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="da2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "admin" mode
       | sql                                          | expect                       |
       | check full @@metadata where schema='schema1' | hasNoStr{test_shard_column}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <globalTable name="test_shard" shardingNode="dn1,dn3"/>
+    <table name="test_shard" dataNode="dn1,dn3" type="global"/>
     </schema>
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all"
-    #表的dbInstance发生变更
+    #表的datasource发生变更
     Then execute sql in "mysql-master3"
       | conn   | toClose | sql                          |
       | conn_0 | False   | drop database if exists db1  |
       | conn_0 | False   | create database db1          |
       | conn_0 | False   | drop database if exists db2  |
       | conn_0 | True    | create database db2          |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <globalTable name="test_shard" shardingNode="dn1,dn3"/>
+    <table name="test_shard" dataNode="dn1,dn3" type="global"/>
     </schema>
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-      <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
+    </writeHost>
+    </dataHost>
     """
 
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "admin" mode
       | sql                                             | expect                       |
       | check full @@metadata where schema='schema1'    | hasNoStr{test_shard_column}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <globalTable name="test_shard" shardingNode="dn2,dn4"/>
+    <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-      <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+    </writeHost>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "admin" mode
       | sql                                             | expect                       |
       | check full @@metadata where schema='schema1'    | hasNoStr{test_shard_column}  |
     #新增schema
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <globalTable name="test_shard" shardingNode="dn2,dn4"/>
+    <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
     <schema name="schema2" sqlMaxLimit="100">
-    <shardingTable name="test2" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+    <table name="test2" dataNode="dn1,dn3" rule="hash-two"/>
     </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
+    <user name="test">
+    <property name="password">111111</property>
+    <property name="schemas">schema1,schema2</property>
+    </user>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "admin" mode
@@ -274,16 +277,19 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     #删除schema
     Given delete the following xml segment
       |file        | parent          | child               |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <globalTable name="test_shard" shardingNode="dn2,dn4"/>
+    <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    <shardingUser name="test" password="111111" schemas="schema1"/>
+    <user name="test">
+    <property name="password">111111</property>
+    <property name="schemas">schema1</property>
+    </user>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "admin" mode
@@ -294,11 +300,11 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | conn_0 | False   | drop database if exists db3 | success  |     |
       | conn_0 | True    | create database db3         | success  |     |
       | conn_1 | True    | create table test3(id int)  | success  | db3 |
-    #schema 的默认shardingNode属性发生变更
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    #schema 的默认datanode属性发生变更
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-    <globalTable name="test_shard" shardingNode="dn2,dn4"/>
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
+    <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
     """
 
@@ -307,79 +313,70 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | sql                        | expect           |
       | check full @@metadata      | hasStr{test3}    |
 
-    #sharding的shardingNode对应的物理节点发生变更
+    #schema的datanode对应的物理节点发生变更
      Then execute sql in "mysql-master1"
       | conn   | toClose | sql                         |
       | conn_0 | False   | drop database if exists da3 |
       | conn_0 | True    | create database da3         |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-    <globalTable name="test_shard" shardingNode="dn2,dn4"/>
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
+    <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="da3" name="dn5" />
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-      <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="da3" name="dn5" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+    </writeHost>
+    </dataHost>
     """
 
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "admin" mode
       | sql                   | expect           |
       | check full @@metadata | hasNoStr{test3}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-    <globalTable name="test_shard" shardingNode="dn2,dn4"/>
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
+    <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-      <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+    </writeHost>
+    </dataHost>
     """
 
     Then execute admin cmd "reload @@config_all"
-    #sharding对应的shardingNode对应的dbInstance发生变更
+    #schema对应的Datanode对应的DataSource发生变更
     Then execute sql in "mysql-master3"
       | conn   | toClose | sql                         | expect   |
       | conn_0 | False   | drop database if exists db3 | success  |
       | conn_0 | True    | create database db3         | success  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-    <globalTable name="test_shard" shardingNode="dn2,dn4"/>
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
+    <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-      <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
+    </writeHost>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "admin" mode
@@ -393,10 +390,10 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | drop table if exists test3       | success  | db3 |
 
   Scenario: "reload @@config_all " contains parameter -r (reload @@config_all -r),reload config will reload all tables metadata #3
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <shardingTable name="test_shard" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+    <table name="test_shard" dataNode="dn1,dn3" rule="hash-two"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -427,24 +424,21 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | conn_0 | False   | create database db1         | success  |
       | conn_0 | False   | drop database if exists db2 | success  |
       | conn_0 | True    | create database db2         | success  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <globalTable name="test_shard" shardingNode="dn1,dn3"/>
+    <table name="test_shard" dataNode="dn1,dn3" type="global"/>
     </schema>
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-      <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
+    </writeHost>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all -rs"
     Then execute sql in "dble-1" in "admin" mode
@@ -456,36 +450,36 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | drop table if exists test_shard | success  | db1 |
       | drop table if exists test_shard | success  | db2 |
 
-  Scenario:  "reload @@config_all " contains parameter -s and not contains -r ,the dbGroup changes will not treat as table/schema changes #4
+  Scenario:  "reload @@config_all " contains parameter -s and not contains -r ,the datahost changes will not treat as table/schema changes #4
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                                                        | expect   | db  |
       | conn_0 | False   | drop table if exists test_shard                            | success  | db1 |
       | conn_0 | True    | create table test_shard(id int,test_shard_column char(20)) | success  | db1 |
       | conn_1 | False   | drop table if exists test_shard                            | success  | db2 |
       | conn_1 | True    | create table test_shard(id int,test_shard_column char(20)) | success  | db2 |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-    <shardingTable name="test_shard" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+    <table name="test_shard" dataNode="dn1,dn3" rule="hash-two"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all -s"
     Then execute sql in "dble-1" in "admin" mode
       | sql                                          | expect                     |
-      | check full @@metadata where schema='schema1' | hasStr{test_shard_column} |
+      | check full @@metadata where schema='schema1' | hasStr{test_shard_column}  |
     Then execute sql in "mysql-master3"
       | conn   | toClose | sql                         |
       | conn_0 | False   | drop database if exists db1 |
       | conn_0 | False   | create database db1         |
       | conn_0 | False   | drop database if exists db2 |
       | conn_0 | True    | create database db2         |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-      <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
+    </writeHost>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all -s"
     Then execute sql in "dble-1" in "admin" mode

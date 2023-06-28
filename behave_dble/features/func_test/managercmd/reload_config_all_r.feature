@@ -5,14 +5,14 @@
 #2.19.11.0#dble-7849
 Feature: reload @@config_all -r
 
-  Scenario: execute manager cmd "reload @@config_all -r" after add or change shardingNode/dbGroup #1
-    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
+  Scenario: execute manager cmd "reload @@config_all -r" after add or change dataNode/dataHost #1
+    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
       """
-      <shardingNode name="dn1" dbGroup="ha_group1" database="db1"/>
-      <shardingNode name="dn2" dbGroup="ha_group1" database="db2"/>
-      <shardingNode name="dn3" dbGroup="ha_group1" database="db3"/>
-      <shardingNode name="dn4" dbGroup="ha_group1" database="db4"/>
-      <shardingNode name="dn5" dbGroup="ha_group1" database="db5"/>
+      <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
+      <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+      <dataNode name="dn3" dataHost="ha_group1" database="db3"/>
+      <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
+      <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
       """
     Given Restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
@@ -32,13 +32,13 @@ Feature: reload @@config_all -r
       | BACKEND_ID | 1            |
       | MYSQLID    | 2            |
 
-    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
       """
-      <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-      <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-      <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-      <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-      <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
+      <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+      <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+      <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+      <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+      <dataNode dataHost="ha_group1" database="db3" name="dn5" />
       """
     Then execute admin cmd "reload @@config_all -r"
     #sleep 2s，等待所有连接回收及新建成功
@@ -54,13 +54,12 @@ Feature: reload @@config_all -r
       | 172.100.9.5 |
       | 172.100.9.6 |
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup name="ha_group2" rwSplitMode="0" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostW1" url="172.100.9.4:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100">
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostW1" url="172.100.9.4:3306" password="111111" user="test"/>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all -r"
     #sleep 2s，等待所有连接回收及新建成功
@@ -82,13 +81,13 @@ Feature: reload @@config_all -r
       | conn_0 | false   | begin                               | schema1 |
       | conn_0 | false   | insert into sharding_4_t1 values(1) | schema1 |
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
-      <shardingNode name="dn1" dbGroup="ha_group1" database="db1"/>
-      <shardingNode name="dn2" dbGroup="ha_group1" database="db2"/>
-      <shardingNode name="dn3" dbGroup="ha_group1" database="db3"/>
-      <shardingNode name="dn4" dbGroup="ha_group1" database="db4"/>
-      <shardingNode name="dn5" dbGroup="ha_group1" database="db5"/>
+      <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
+      <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+      <dataNode name="dn3" dataHost="ha_group1" database="db3"/>
+      <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
+      <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
       """
     Then execute admin cmd "reload @@config_all -r"
     # reload will rebuild the heartbeat, and when the heartbeat is sent for the first time,
@@ -103,7 +102,7 @@ Feature: reload @@config_all -r
     Then check resultset "E" has lines with following column values
       | HOST-3      |
       | 172.100.9.4 |
-#      | 172.100.9.5 |
+      | 172.100.9.5 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect      | db      |
       | conn_0 | false   | commit                                 | success     | schema1 |
@@ -111,6 +110,10 @@ Feature: reload @@config_all -r
 #    # dble recycle transaction conn at 5 seconds
 #    # private static final long DEFAULT_OLD_CONNECTION_CLEAR_PERIOD = 5 * 1000L;
 #    #处于未使用状态的连接才会放入连接回收队列中，事务提交后，后端连接可能未立即释放还处于使用状态，所以最长可能需要2个周期连接才会被关闭
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                                              | expect      | db               | timeout |
-#      | conn_1 | true    | select * from backend_connections where remote_addr='172.100.9.4' and used_for_heartbeat='false' | length{(0)} | dble_information | 3,5     |
+    Given sleep "11" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "F"
+      | sql            |
+      | show @@backend |
+    Then check resultset "F" has not lines with following column values
+      | HOST-3      |
+      | 172.100.9.4 |

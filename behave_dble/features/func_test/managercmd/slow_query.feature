@@ -1,11 +1,7 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-
-
-
 Feature: test slow query log related manager command
    ### 这个case修改路劲日志到dble/logs下是为了方便ci上日志的后续查看
-
 
   @NORMAL
   Scenario:test "enable @@slow_query_log"，"disable @@slow_query_log"，"show @@slow_query_log" #1
@@ -19,12 +15,15 @@ Feature: test slow query log related manager command
 
   @NORMAL
   Scenario: test "show @@slow_query.time", "reload @@slow_query.time", "show @@slow_query.flushperid", "reload @@slow_query.flushperid", "show @@slow_query.flushsize", "reload @@slow_query.flushsize" #2
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    $a -DsqlSlowTime=30
-    $a -DflushSlowLogPeriod=1000
-    $a -DflushSlowLogSize=5
-    """
+      Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+      """
+      <system>
+           <property name="enableSlowLog">1 </property>
+            <property name="sqlSlowTime">30 </property>
+            <property name="flushSlowLogPeriod">1000 </property>
+           <property name="flushSlowLogSize">5 </property>
+      </system>
+      """
        Given Restart dble in "dble-1" success
        Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                   | expect        |
@@ -49,18 +48,20 @@ Feature: test slow query log related manager command
 
   @NORMAL
   Scenario: check slow query log written in assigned file #3
-      Given delete file "/opt/dble/logs/slowQuery" on "dble-1"
-      Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    $a -DenableSlowLog=1
-    $a -DslowLogBaseName=query
-    $a -DslowLogBaseDir=./logs/slowQuery
-    $a -DsqlSlowTime=1
-    """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      Given delete file "/opt/dble//logs/slowQuery" on "dble-1"
+      Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+      """
+       <system>
+            <property name="enableSlowLog">1</property>
+            <property name="slowLogBaseDir">./logs/slowQuery</property>
+            <property name="slowLogBaseName">query</property>
+            <property name="sqlSlowTime">1</property>
+       </system>
      """
-        <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-            <shardingTable shardingNode="dn1,dn2,dn3,dn4" name="a_test" function="hash-four" shardingColumn="id" />
+     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+     """
+        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
+            <table dataNode="dn1,dn2,dn3,dn4" name="a_test" rule="hash-four" />
         </schema>
      """
       Given Restart dble in "dble-1" success
@@ -167,13 +168,15 @@ Feature: test slow query log related manager command
 
   Scenario: enable slow log function and execute sql, failed sql will not be logged to slow log; successful SQL will be logged to slow log #5
     Given delete file "/opt/dble/logs/slowQuery" on "dble-1"
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    $a -DenableSlowLog=1
-    $a -DslowLogBaseName=query
-    $a -DslowLogBaseDir=./logs/slowQuery
-    $a -DsqlSlowTime=1
-    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+      """
+       <system>
+            <property name="enableSlowLog">1</property>
+            <property name="slowLogBaseDir">./logs/slowQuery</property>
+            <property name="slowLogBaseName">query</property>
+            <property name="sqlSlowTime">1</property>
+       </system>
+     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                                       | expect                                   | db      |

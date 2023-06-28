@@ -156,6 +156,12 @@ def add_child_in_xml(file, pos_kv_map, childNode):
         doctype = '<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">'
     elif file.find('user.xml') > -1:
         doctype = '<!DOCTYPE dble:user SYSTEM "user.dtd">'
+    elif file.find('rule.xml') > -1:
+        doctype = '<!DOCTYPE dble:rule SYSTEM "rule.dtd">'
+    elif file.find('schema.xml') > -1:
+        doctype = '<!DOCTYPE dble:schema SYSTEM "schema.dtd">'
+    elif file.find('server.xml') > -1:
+        doctype = '<!DOCTYPE dble:server SYSTEM "server.dtd">'
 
     xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
     with open(file, 'wb') as f:
@@ -219,6 +225,12 @@ def add_child_in_xml_with_duplicate_name(file, pos_kv_map, childNode):
         doctype = '<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">'
     elif file.find('user.xml') > -1:
         doctype = '<!DOCTYPE dble:user SYSTEM "user.dtd">'
+    elif file.find('rule.xml') > -1:
+        doctype = '<!DOCTYPE dble:rule SYSTEM "rule.dtd">'
+    elif file.find('schema.xml') > -1:
+        doctype = '<!DOCTYPE dble:schema SYSTEM "schema.dtd">'
+    elif file.find('server.xml') > -1:
+        doctype = '<!DOCTYPE dble:server SYSTEM "server.dtd">'
 
     xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
     with open(file, 'wb') as f:
@@ -264,6 +276,12 @@ def delete_child_node(file, kv_child, kv_parent):
         doctype = '<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">'
     elif file.find('user.xml') > -1:
         doctype = '<!DOCTYPE dble:user SYSTEM "user.dtd">'
+    elif file.find('rule.xml') > -1:
+        doctype = '<!DOCTYPE dble:rule SYSTEM "rule.dtd">'
+    elif file.find('schema.xml') > -1:
+        doctype = '<!DOCTYPE dble:schema SYSTEM "schema.dtd">'
+    elif file.find('server.xml') > -1:
+        doctype = '<!DOCTYPE dble:server SYSTEM "server.dtd">'
 
     xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
     with open(file, 'wb') as f:
@@ -328,6 +346,12 @@ def change_root_node_properties(file, kv_map, is_delete=False):
         doctype = '<!DOCTYPE dble:db SYSTEM "db.dtd">'
     elif file.find('user.xml') > -1:
         doctype = '<!DOCTYPE dble:user SYSTEM "user.dtd">'
+    elif file.find('rule.xml') > -1:
+        doctype = '<!DOCTYPE dble:rule SYSTEM "rule.dtd">'
+    elif file.find('schema.xml') > -1:
+        doctype = '<!DOCTYPE dble:schema SYSTEM "schema.dtd">'
+    elif file.find('server.xml') > -1:
+        doctype = '<!DOCTYPE dble:server SYSTEM "server.dtd">'
 
     xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
     with open(file, 'wb') as f:

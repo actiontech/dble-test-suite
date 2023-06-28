@@ -34,23 +34,33 @@ Feature: check collation/lower_case_table_names works right for dble
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <schema name="DBTEST">
-             <shardingTable name="Test_Table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
-             <singleTable name="Uos_Page_ret_inst" shardingNode="dn4" sqlMaxLimit="105"/>
-             <singleTable name="UOS_Tache_def" shardingNode="dn3" sqlMaxLimit="105"/>
+             <table name="Test_Table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+             <table name="Uos_Page_ret_inst" dataNode="dn4" sqlMaxLimit="105"/>
+             <table name="UOS_Tache_def" dataNode="dn3" sqlMaxLimit="105"/>
         </schema>
 
-        <shardingNode dbGroup="ha_group1" database="DB1" name="dn1" />
-        <shardingNode dbGroup="ha_group2" database="DB1" name="dn2" />
-        <shardingNode dbGroup="ha_group1" database="DB2" name="dn3" />
-        <shardingNode dbGroup="ha_group2" database="DB2" name="dn4" />
-        <shardingNode dbGroup="ha_group1" database="DB3" name="dn5" />
+        <dataNode dataHost="ha_group1" database="DB1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="DB1" name="dn2" />
+        <dataNode dataHost="ha_group1" database="DB2" name="dn3" />
+        <dataNode dataHost="ha_group2" database="DB2" name="dn4" />
+        <dataNode dataHost="ha_group1" database="DB3" name="dn5" />
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    Given delete the following xml segment
+      |file        | parent           | child          |
+      |server.xml  | {'tag':'root'}   | {'tag':'root'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
-      <shardingUser name="test" password="111111" schemas="schema1, DbTest" readOnly="false"/>
+      <user name="root">
+        <property name="password">111111</property>
+        <property name="manager">true</property>
+      </user>
+      <user name="test">
+        <property name="password">111111</property>
+        <property name="schemas">schema1, DbTest</property>
+      </user>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -109,25 +119,32 @@ Feature: check collation/lower_case_table_names works right for dble
 
   @BLOCKER @current
   Scenario: set backend mysql lower_case_table_names=0, dble will deal with queries case insensitive  #2
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
      <schema name="DBTEST">
-         <shardingTable name="Test_Table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
+         <table name="Test_Table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
      </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
-      <shardingUser name="test" password="111111" schemas="schema1, DbTest" readOnly="false"/>
+      <user name="root">
+        <property name="password">111111</property>
+        <property name="manager">true</property>
+      </user>
+      <user name="test">
+        <property name="password">111111</property>
+        <property name="schemas">schema1, DbTest</property>
+      </user>
     """
     Then restart dble in "dble-1" failed for
     """
     User\[name:test\]'s schema \[DbTest\] is not exist!
     """
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="DbTest">
-         <shardingTable name="Test_Table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
+         <table name="Test_Table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
     </schema>
     """
     Given Restart dble in "dble-1" success
@@ -181,12 +198,12 @@ Feature: check collation/lower_case_table_names works right for dble
     Given delete the following xml segment
       | file     | parent         | child                  |
       | user.xml | {'tag':'root'} | {'tag':'shardingUser'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-      <schema name="schema1" shardingNode="dn5" sqlMaxLimit="100">
-          <shardingTable name="aly_test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-          <shardingTable name="aly_order" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-          <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+      <schema name="schema1" dataNode="dn5" sqlMaxLimit="100">
+          <table name="aly_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
+          <table name="aly_order" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
+          <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" />
       </schema>
     """
     Given add xml segment to node with attribute "{'tag':'root','prev':'managerUser'}" in "user.xml"
@@ -228,11 +245,11 @@ Feature: check collation/lower_case_table_names works right for dble
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-            <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-            <shardingTable name="tb_parent" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id">
+        <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+            <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" />
+            <table name="tb_parent" dataNode="dn1,dn2" rule="hash-two">
             <childTable name="Tb_Child1" joinColumn="child1_id" parentColumn="id" sqlMaxLimit="201">
                 <childTable name="Tb_Grandson1" joinColumn="grandson1_id" parentColumn="child1_id"/>
                      <childTable name="Tb_Great_grandson1" joinColumn="great_grandson1_id" parentColumn="grandson1_id"/>

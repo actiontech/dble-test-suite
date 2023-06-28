@@ -10,20 +10,20 @@ Feature: fault tolerance detection
   Scenario: disconnected at the beginning of "show create table", does not affect other functions, can be restored by "reload @@metaData" #1
     Given delete the following xml segment
       | file       | parent         | child              |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="test3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <table name="test1" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test2" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test3" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test4" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
     </schema>
 
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn2" />
 
     """
     Given Restart dble in "dble-1" success
@@ -42,10 +42,9 @@ Feature: fault tolerance detection
       | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
       | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute admin cmd "reload @@config_all -r"
-    # 3.21.06  remove manage cmd "log @@file"  DBLE0REQ-314
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                 | expect                                                                                                                                                                 |
-#      | conn_1 | True    | log @@file=dble.log | hasStr{show create table `test4`;show create table `test5`;show create table `test2`;show create table `test3`;show create table `test6`;show create table `test1`;}   |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                 | expect                                                                                                                                                                   | db      |
+      | conn_0 | True    | log @@file=dble.log | hasStr{sql=show create table `test4`;show create table `test5`;show create table `test2`;show create table `test3`;show create table `test6`;show create table `test1`;} | schema1 |
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
@@ -53,8 +52,8 @@ Feature: fault tolerance detection
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | user | passwd | conn   | toClose | sql               | db               |
-      | root | 111111 | conn_0 | True    | reload @@metadata | dble_information |
+      | user | passwd | conn   | toClose | sql               |
+      | root | 111111 | conn_0 | True    | reload @@metadata |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
     get into getSpecialNodeTablesHandlerFinished
@@ -134,20 +133,20 @@ Feature: fault tolerance detection
   Scenario: disconnected at the middle of "show create table", does not affect other functions, can be restored by "reload @@metaData" #2
     Given delete the following xml segment
       | file       | parent         | child              |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="test3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <table name="test1" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test2" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test3" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test4" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
     </schema>
 
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn2" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -172,8 +171,8 @@ Feature: fault tolerance detection
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | user | passwd | conn   | toClose | sql               | db               |
-      | root | 111111 | conn_0 | True    | reload @@metadata | dble_information |
+      | user | passwd | conn   | toClose | sql               |
+      | root | 111111 | conn_0 | True    | reload @@metadata |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
     get into getSpecialNodeTablesHandlerFinished
@@ -263,20 +262,20 @@ Feature: fault tolerance detection
   Scenario: disconnected at the end of "show create table", does not affect other functions, can be restored by "reload @@metaData" #3
     Given delete the following xml segment
       | file       | parent         | child              |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="test3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <table name="test1" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test2" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test3" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test4" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
     </schema>
 
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn2" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -301,8 +300,8 @@ Feature: fault tolerance detection
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | user | passwd | conn   | toClose | sql               | db               |
-      | root | 111111 | conn_0 | True    | reload @@metadata | dble_information |
+      | user | passwd | conn   | toClose | sql               |
+      | root | 111111 | conn_0 | True    | reload @@metadata |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
     get into getSpecialNodeTablesHandlerFinished
@@ -370,20 +369,20 @@ Feature: fault tolerance detection
   Scenario: table structure is not recognized and metadata is not generated #4
     Given delete the following xml segment
       | file       | parent         | child              |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="test3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
-        <shardingTable name="test6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <table name="test1" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test2" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test3" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test4" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
     </schema>
 
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn2" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode

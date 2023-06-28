@@ -7,15 +7,15 @@
 Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
   @skip
   Scenario: writeHost mysql < 8.0, readHost mysql >= 8.0 #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+    <dataHost balance="2" name="ha_group2" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -99,15 +99,15 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
 
   @skip
   Scenario: writeHost mysql >= 8.0, readHost mysql < 8.0 #2
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+    <dataHost balance="2" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -191,15 +191,15 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
 
   @use.with_mysql_version=8.0
   Scenario: writeHost and readHost mysql >= 8.0 #3
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+    <dataHost balance="2" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -283,15 +283,15 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
 
   @use.with_mysql_version=5.7
   Scenario: writeHost and readHost mysql < 8.0 #4
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+    <dataHost rwSplitMode="2" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
         <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
-    </dbGroup>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds

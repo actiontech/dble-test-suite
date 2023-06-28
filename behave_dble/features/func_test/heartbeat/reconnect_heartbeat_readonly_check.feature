@@ -15,161 +15,154 @@ Feature: We will check readonly status on both master and slave even if the hear
 1. heartbeat SQL -- select @@read_only
   1.1 reload @@config_all -r；
   1.2 disabled=true → false
-    1.2.1 db.xml add disabled=true & reload @@config_all;
+    1.2.1 schema.xml add disabled=true & reload @@config_all;
     1.2.2 manager cmd pause→resume(X)
     1.2.3 manager cmd disable→enable
-    1.2.4 changing db.xml add new dbinstance & reload @@config_all;
+    1.2.4 changing schema.xml add new dbinstance & reload @@config_all;
   1.3 restart dble --code_coverage should be considered
   1.4 heartbeat fail and recover
   1.5 master mysql(the dbinstance that primary="true") global variable read_only changing between 0 & 1
 2. heartbeat SQL -- show slave status()
   2.1 reload @@config_all -r；
   2.2 disabled=true → false
-    2.2.1 db.xml add disabled=true & reload @@config_all;
+    2.2.1 schema.xml add disabled=true & reload @@config_all;
     2.2.2 manager cmd pause→resume(X)
     2.2.3 manager cmd disable→enable
-    2.2.4 changing db.xml add new dbinstance & reload @@config_all;
+    2.2.4 changing schema.xml add new dbinstance & reload @@config_all;
   2.3 restart dble --code_coverage should be considered
   2.4 heartbeat fail and recover
 3. heartbeat SQL -- select user()
   3.1 reload @@config_all -r；
   3.2 disabled=true → false
-    3.2.1 db.xml add disabled=true & reload @@config_all;
+    3.2.1 schema.xml add disabled=true & reload @@config_all;
     3.2.2 manager cmd pause→resume(X)
     3.2.3 manager cmd disable→enable
-    3.2.4 changing db.xml add new dbinstance & reload @@config_all;
+    3.2.4 changing schema.xml add new dbinstance & reload @@config_all;
   3.3 restart dble --code_coverage should be considered
   3.4 heartbeat fail and recover
 """
 
    @restore_global_setting
   Scenario: all heartbeat SQL -- select user() & show slave status & select @@read_only check after reload @@config_all -r (1.1 & 2.1 & 3.1). #1
-     """
-     {'restore_global_setting':{'mysql-master1':{'general_log':0},'mysql-master2':{'general_log':0},'mysql-master3':{'general_log':0}}}
-     """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-         <heartbeat>show slave status</heartbeat>
-         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    """
+    {'restore_global_setting':{'mysql-master1':{'general_log':0},'mysql-master2':{'general_log':0},'mysql-master3':{'general_log':0}}}
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group3" database="db3" name="dn5" />
 
-     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-         <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>show slave status</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+      </writeHost>
+    </dataHost>
 
-     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-         <heartbeat>select @@read_only</heartbeat>
-         <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+      </writeHost>
+    </dataHost>
 
-     """
-     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
-     """
-        <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-        <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-        <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-        <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-        <shardingNode dbGroup="ha_group3" database="db3" name="dn5" />
-     """
-     Then execute admin cmd "reload @@config_all"
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group3" slaveThreshold="100" >
+      <heartbeat>select @@read_only</heartbeat>
+      <writeHost host="hostM3" password="111111" url="172.100.9.1:3306" user="test">
+      </writeHost>
+    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all"
 
-     Given turn on general log in "mysql-master1"
-     Given turn on general log in "mysql-master2"
-     Given turn on general log in "mysql-master3"
-     Given record current dble log line number in "log_linenu"
-     # if conn pool is not recreated, global var will not be redetected, so reload must has -r option
-     When execute admin cmd "reload @@config_all -r" success
-     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-     """
-     select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
-     """
-     Then check general log in host "mysql-master1" has "@@read_only" occured ">0" times
-     Then check general log in host "mysql-master2" has "@@read_only" occured ">0" times
-     Then check general log in host "mysql-master3" has "@@read_only" occured ">0" times
-     Given turn off general log in "mysql-master1"
-     Given turn off general log in "mysql-master2"
-     Given turn off general log in "mysql-master3"
+    Given turn on general log in "mysql-master1"
+    Given turn on general log in "mysql-master2"
+    Given turn on general log in "mysql-master3"
+    Given record current dble log line number in "log_linenu"
+    # if conn pool is not recreated, global var will not be redetected, so reload must has -r option
+    When execute admin cmd "reload @@config_all -r" success
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
+    """
+    Then check general log in host "mysql-master1" has "@@read_only" occured ">0" times
+    Then check general log in host "mysql-master2" has "@@read_only" occured ">0" times
+    Then check general log in host "mysql-master3" has "@@read_only" occured ">0" times
+    Given turn off general log in "mysql-master1"
+    Given turn off general log in "mysql-master2"
+    Given turn off general log in "mysql-master3"
 
 
    @restore_global_setting
-  Scenario: all heartbeat SQL -- select 1 & show slave status & select @@read_only;db.xml add disabled=true & reload @@config_all; (1.2.1 & 2.2.1 & 3.2.1). #2
+  Scenario: all heartbeat SQL -- select 1 & show slave status & select @@read_only;schema.xml add disabled=true & reload @@config_all; (1.2.1 & 2.2.1 & 3.2.1). #2
      """
      {'restore_global_setting':{'mysql-master1':{'general_log':0},'mysql-master2':{'general_log':0},'mysql-master3':{'general_log':0}}}
      """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-         <heartbeat>show slave status</heartbeat>
-         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" disabled="true" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group3" database="db3" name="dn5" />
 
-     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-         <heartbeat>select 1</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" disabled="true" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>show slave status</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+      </writeHost>
+    </dataHost>
 
-     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-         <heartbeat>select @@read_only</heartbeat>
-         <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" disabled="true" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+      </writeHost>
+    </dataHost>
 
-     """
-     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
-     """
-        <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-        <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-        <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-        <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-        <shardingNode dbGroup="ha_group3" database="db3" name="dn5" />
-     """
-     Then execute admin cmd "reload @@config_all"
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group3" slaveThreshold="100" >
+      <heartbeat>select @@read_only</heartbeat>
+      <writeHost host="hostM3" password="111111" url="172.100.9.1:3306" user="test">
+      </writeHost>
+    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all"
 
-     Given turn on general log in "mysql-master1"
-     Given turn on general log in "mysql-master2"
-     Given turn on general log in "mysql-master3"
-     Given record current dble log line number in "log_linenu"
+    Given turn on general log in "mysql-master1"
+    Given turn on general log in "mysql-master2"
+    Given turn on general log in "mysql-master3"
+    Given record current dble log line number in "log_linenu"
 
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-         <heartbeat>select @@read_only</heartbeat>
-         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" disabled="false" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>select @@read_only</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+      </writeHost>
+    </dataHost>
 
-     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-         <heartbeat>show slave status</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" disabled="false" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+      <heartbeat>show slave status</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+      </writeHost>
+    </dataHost>
 
-     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-         <heartbeat>select 1</heartbeat>
-         <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" disabled="false" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group3" slaveThreshold="100" >
+      <heartbeat>select 1</heartbeat>
+      <writeHost host="hostM3" password="111111" url="172.100.9.1:3306" user="test">
+      </writeHost>
+    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all"
 
-     """
-     Then execute admin cmd "reload @@config_all"
-
-     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-     """
-     select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
-     """
-     Then check general log in host "mysql-master1" has "@@read_only" occured ">0" times
-     Then check general log in host "mysql-master2" has "@@read_only" occured ">0" times
-     Then check general log in host "mysql-master3" has "@@read_only" occured ">0" times
-     Given turn off general log in "mysql-master1"
-     Given turn off general log in "mysql-master2"
-     Given turn off general log in "mysql-master3"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
+    """
+    Then check general log in host "mysql-master1" has "@@read_only" occured ">0" times
+    Then check general log in host "mysql-master2" has "@@read_only" occured ">0" times
+    Then check general log in host "mysql-master3" has "@@read_only" occured ">0" times
+    Given turn off general log in "mysql-master1"
+    Given turn off general log in "mysql-master2"
+    Given turn off general log in "mysql-master3"
 
 
    @restore_global_setting @skip
@@ -178,36 +171,33 @@ Feature: We will check readonly status on both master and slave even if the hear
      """
      {'restore_global_setting':{'mysql-master1':{'general_log':0},'mysql-master2':{'general_log':0},'mysql-master3':{'general_log':0}}}
      """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-         <heartbeat>show slave status</heartbeat>
-         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group3" database="db3" name="dn5" />
 
-     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-         <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>show slave status</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+      </writeHost>
+    </dataHost>
 
-     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-         <heartbeat>select @@read_only</heartbeat>
-         <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+      </writeHost>
+    </dataHost>
 
-     """
-     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
-     """
-        <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-        <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-        <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-        <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-        <shardingNode dbGroup="ha_group3" database="db3" name="dn5" />
-     """
-     Then execute admin cmd "reload @@config_all"
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group3" slaveThreshold="100" >
+      <heartbeat>select @@read_only</heartbeat>
+      <writeHost host="hostM3" password="111111" url="172.100.9.1:3306" user="test">
+      </writeHost>
+    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all"
 
       # begin exec dbGroup @@disable name='ha_group1,2,3';
      Then execute sql in "dble-1" in "admin" mode
@@ -217,9 +207,9 @@ Feature: We will check readonly status on both master and slave even if the hear
         | conn_0 | True     | dbGroup @@disable name='ha_group3' | success |
 
       #Then check disable status
-     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM1','disabled':'true'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
-     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM2','disabled':'true'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
-     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM3','disabled':'true'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
+     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM1','disabled':'true'}}" in " /opt/dble/conf/schema.xml" in host "dble-1"
+     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM2','disabled':'true'}}" in " /opt/dble/conf/schema.xml" in host "dble-1"
+     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM3','disabled':'true'}}" in " /opt/dble/conf/schema.xml" in host "dble-1"
 
      Given turn on general log in "mysql-master1"
      Given turn on general log in "mysql-master2"
@@ -257,93 +247,86 @@ Feature: We will check readonly status on both master and slave even if the hear
 
 
    @restore_global_setting
-  Scenario: all heartbeat SQL -- select user() & show slave status & select @@read_only;add slave mysql on db.xml & reload @@config_all; (1.2.4 & 2.2.4 & 3.2.4). #4
+  Scenario: all heartbeat SQL -- select user() & show slave status & select @@read_only;add slave mysql on schema.xml & reload @@config_all; (1.2.4 & 2.2.4 & 3.2.4). #4
      """
      {'restore_global_setting':{'mysql-master1':{'general_log':0},'mysql-master2':{'general_log':0},'mysql-master3':{'general_log':0},'mysql-slave1':{'general_log':0},'mysql-slave2':{'general_log':0},'mysql':{'general_log':0}}}
      """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-         <heartbeat>show slave status</heartbeat>
-         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group3" database="db3" name="dn5" />
 
-     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-         <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>show slave status</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+      </writeHost>
+    </dataHost>
 
-     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-         <heartbeat>select @@read_only</heartbeat>
-         <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+      </writeHost>
+    </dataHost>
 
-     """
-     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
-     """
-        <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-        <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-        <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-        <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-        <shardingNode dbGroup="ha_group3" database="db3" name="dn5" />
-     """
-     Then execute admin cmd "reload @@config_all"
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group3" slaveThreshold="100" >
+      <heartbeat>select @@read_only</heartbeat>
+      <writeHost host="hostM3" password="111111" url="172.100.9.1:3306" user="test">
+      </writeHost>
+    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all"
 
-     Given turn on general log in "mysql-master1"
-     Given turn on general log in "mysql-master2"
-     Given turn on general log in "mysql-master3"
-     Given turn on general log in "mysql-slave1"
-     Given turn on general log in "mysql-slave2"
-     Given turn on general log in "mysql"
-     Given record current dble log line number in "log_linenu"
-      # then add slave mysql in db.xml and then reload @@config_all;
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-         <heartbeat>show slave status</heartbeat>
-         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-         </dbInstance>
-         <dbInstance name="hosts1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false">
-         </dbInstance>
-     </dbGroup>
+    Given turn on general log in "mysql-master1"
+    Given turn on general log in "mysql-master2"
+    Given turn on general log in "mysql-master3"
+    Given turn on general log in "mysql-slave1"
+    Given turn on general log in "mysql-slave2"
+    Given turn on general log in "mysql"
+    Given record current dble log line number in "log_linenu"
+      # then add slave mysql in schema.xml and then reload @@config_all;
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>show slave status</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test"/>
+      </writeHost>
+    </dataHost>
 
-     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-         <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-         </dbInstance>
-         <dbInstance name="hosts2" password="111111" url="172.100.9.6:3308" user="test" maxCon="1000" minCon="10" primary="false">
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.6:3308" user="test"/>
+      </writeHost>
+    </dataHost>
 
-     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-         <heartbeat>select @@read_only</heartbeat>
-         <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
-         </dbInstance>
-         <dbInstance name="hosts3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="false">
-         </dbInstance>
-     </dbGroup>
-
-     """
-     When execute admin cmd "reload @@config_all -r" success
-     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-     """
-     select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
-     """
-     Then check general log in host "mysql-master1" has "@@read_only" occured ">0" times
-     Then check general log in host "mysql-master2" has "@@read_only" occured ">0" times
-     Then check general log in host "mysql-master3" has "@@read_only" occured ">0" times
-     Then check general log in host "mysql-slave1" has "@@read_only" occured ">0" times
-     Then check general log in host "mysql-slave2" has "@@read_only" occured ">0" times
-     Then check general log in host "mysql" has "@@read_only" occured ">0" times
-     Given turn off general log in "mysql-master1"
-     Given turn off general log in "mysql-master2"
-     Given turn off general log in "mysql-master3"
-     Given turn off general log in "mysql-slave1"
-     Given turn off general log in "mysql-slave2"
-     Given turn off general log in "mysql"
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group3" slaveThreshold="100" >
+      <heartbeat>select @@read_only</heartbeat>
+      <writeHost host="hostM3" password="111111" url="172.100.9.1:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.4:3306" user="test"/>
+      </writeHost>
+    </dataHost>
+    """
+    When execute admin cmd "reload @@config_all -r" success
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
+    """
+    Then check general log in host "mysql-master1" has "@@read_only" occured ">0" times
+    Then check general log in host "mysql-master2" has "@@read_only" occured ">0" times
+    Then check general log in host "mysql-master3" has "@@read_only" occured ">0" times
+    Then check general log in host "mysql-slave1" has "@@read_only" occured ">0" times
+    Then check general log in host "mysql-slave2" has "@@read_only" occured ">0" times
+    Then check general log in host "mysql" has "@@read_only" occured ">0" times
+    Given turn off general log in "mysql-master1"
+    Given turn off general log in "mysql-master2"
+    Given turn off general log in "mysql-master3"
+    Given turn off general log in "mysql-slave1"
+    Given turn off general log in "mysql-slave2"
+    Given turn off general log in "mysql"
 
 
    @restore_global_setting @restore_network
@@ -361,48 +344,40 @@ Feature: We will check readonly status on both master and slave even if the hear
         # select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log
            # to con:BackendConnection[id = 75 host = 172.100.9.6 port = 3308 localPort = 35474 mysqlId = 22
               # db config = dbInstance[name=hosts2,disabled=false,maxCon=1000,minCon=10]]
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-         <heartbeat>show slave status</heartbeat>
-         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-             <property name="heartbeatPeriodMillis">2000</property>
-         </dbInstance>
-         <dbInstance name="hosts1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false">
-             <property name="heartbeatPeriodMillis">2000</property>
-         </dbInstance>
-     </dbGroup>
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group3" database="db3" name="dn5" />
 
-     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-         <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-             <property name="heartbeatPeriodMillis">2000</property>
-         </dbInstance>
-         <dbInstance name="hosts2" password="111111" url="172.100.9.6:3308" user="test" maxCon="1000" minCon="10" primary="false">
-             <property name="heartbeatPeriodMillis">200</property>
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>show slave status</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test"/>
+      </writeHost>
+    </dataHost>
 
-     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-         <heartbeat>select @@read_only</heartbeat>
-         <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
-             <property name="heartbeatPeriodMillis">2000</property>
-         </dbInstance>
-         <dbInstance name="hosts3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="false">
-             <property name="heartbeatPeriodMillis">2000</property>
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.6:3308" user="test"/>
+      </writeHost>
+    </dataHost>
 
-     """
-     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
-     """
-        <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-        <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-        <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-        <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-        <shardingNode dbGroup="ha_group3" database="db3" name="dn5" />
-     """
-     Then execute admin cmd "reload @@config_all"
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group3" slaveThreshold="100" >
+      <heartbeat>select @@read_only</heartbeat>
+      <writeHost host="hostM3" password="111111" url="172.100.9.1:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.4:3306" user="test"/>
+      </writeHost>
+    </dataHost>
+    """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+    <property name="dataNodeHeartbeatPeriod">2000</property>
+    """
+    Given restart dble in "dble-1" success
      ### 等待reload后 heartbeatPeriodMillis=2  心跳的建立和恢复
      Given sleep "4" seconds
 
@@ -494,48 +469,40 @@ Feature: We will check readonly status on both master and slave even if the hear
      """
      {'restore_global_setting':{'mysql-master1':{'general_log':0},'mysql-master2':{'general_log':0},'mysql-master3':{'general_log':0},'mysql-slave1':{'general_log':0},'mysql-slave2':{'general_log':0},'mysql':{'general_log':0}}}
      """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-         <heartbeat>show slave status</heartbeat>
-         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-             <property name="heartbeatPeriodMillis">1000</property>
-         </dbInstance>
-         <dbInstance name="hosts1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false">
-             <property name="heartbeatPeriodMillis">1000</property>
-         </dbInstance>
-     </dbGroup>
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group3" database="db3" name="dn5" />
 
-     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-         <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-             <property name="heartbeatPeriodMillis">1000</property>
-         </dbInstance>
-         <dbInstance name="hosts2" password="111111" url="172.100.9.6:3308" user="test" maxCon="1000" minCon="10" primary="false">
-             <property name="heartbeatPeriodMillis">100</property>
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+      <heartbeat>show slave status</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test"/>
+      </writeHost>
+    </dataHost>
 
-     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-         <heartbeat>select @@read_only</heartbeat>
-         <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
-             <property name="heartbeatPeriodMillis">1000</property>
-         </dbInstance>
-         <dbInstance name="hosts3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="false">
-             <property name="heartbeatPeriodMillis">1000</property>
-         </dbInstance>
-     </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.6:3308" user="test"/>
+      </writeHost>
+    </dataHost>
 
-     """
-     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
-     """
-        <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-        <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-        <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-        <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-        <shardingNode dbGroup="ha_group3" database="db3" name="dn5" />
-     """
-     Then execute admin cmd "reload @@config_all"
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group3" slaveThreshold="100" >
+      <heartbeat>select @@read_only</heartbeat>
+      <writeHost host="hostM3" password="111111" url="172.100.9.1:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.4:3306" user="test"/>
+      </writeHost>
+    </dataHost>
+    """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+    <property name="dataNodeHeartbeatPeriod">1000</property>
+    """
+    Given restart dble in "dble-1" success
 
      Given turn on general log in "mysql-master1"
      Given turn on general log in "mysql-master2"

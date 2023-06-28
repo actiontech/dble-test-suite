@@ -5,53 +5,53 @@
 Feature: test dml sql which can penetrate to mysql
   @regression
   Scenario: check insert/replace into ... select syntax #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-         <singleTable name="nos_1_t1"  shardingNode="dn5"/>
-         <singleTable name="nos_1_t2"  shardingNode="dn5"/>
-          <singleTable name="nos_1_t3"  shardingNode="dn2"/>
-          <shardingTable name="s_2_t1"  shardingNode="dn3,dn4" function="hash-two" shardingColumn="id"/>
-          <shardingTable name="s_3_t1"  shardingNode="dn1,dn2,dn3" function="hash-three" shardingColumn="id"/>
-          <shardingTable name="s_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-          <shardingTable name="s_4_t2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id">
+      <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
+         <table name="nos_1_t1"  dataNode="dn5"/>
+         <table name="nos_1_t2"  dataNode="dn5"/>
+          <table name="nos_1_t3"  dataNode="dn2"/>
+          <table name="s_2_t1"  dataNode="dn3,dn4" rule="hash-two"/>
+          <table name="s_3_t1"  dataNode="dn1,dn2,dn3" function="hash-three"/>
+          <table name="s_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
+          <table name="s_4_t2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four">
              <childTable name="s_4_t2c1" joinColumn="id" parentColumn="id" sqlMaxLimit="100">
                   <childTable name="s_4_t2g" joinColumn="id" parentColumn="id"/>
              </childTable>
              <childTable name="s_4_t2c2" joinColumn="name" parentColumn="name"/>
           </shardingTable>
-          <globalTable name="g_3_t1" shardingNode="dn1,dn2,dn3" />
-          <globalTable name="g_4_t1" shardingNode="dn1,dn2,dn3,dn4"  />
-          <globalTable name="g_4_t2" shardingNode="dn1,dn2,dn3,dn4"  />
+          <table type="global" name="g_3_t1" dataNode="dn1,dn2,dn3" />
+          <table type="global" name="g_4_t1" dataNode="dn1,dn2,dn3,dn4"  />
+          <table type="global" name="g_4_t2" dataNode="dn1,dn2,dn3,dn4"  />
       </schema>
 
       <schema name="schema2" sqlMaxLimit="100">
-          <singleTable name="nos_1_t4"  shardingNode="dn2" />
-          <shardingTable name="s_4_t3" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-          <shardingTable name="s_4_t4" shardingNode="dn1,dn2,dn3,dn4" function="fixed_uniform" shardingColumn="id" />
-          <globalTable name="g_4_t3" shardingNode="dn1,dn2,dn3,dn4"  />
-          <globalTable name="g_4_t4" shardingNode="dn1,dn2,dn3,dn4"  />
+          <table name="nos_1_t4"  dataNode="dn2" />
+          <table name="s_4_t3" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
+          <table name="s_4_t4" dataNode="dn1,dn2,dn3,dn4" function="fixed_uniform" />
+          <table type="global" name="g_4_t3" dataNode="dn1,dn2,dn3,dn4"  />
+          <table type="global" name="g_4_t4" dataNode="dn1,dn2,dn3,dn4"  />
       </schema>
 
       <schema name="schema3">
-          <singleTable name="nos_1_t5"  shardingNode="dn5" />
-          <shardingTable name="s_4_t5" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
-          <shardingTable name="s_4_t6" shardingNode="dn1,dn2,dn3,dn5" function="hash-four" shardingColumn="id"/>
-          <shardingTable name="s_4_t7" shardingNode="dn1,dn2,dn3,dn6" function="hash-four" shardingColumn="id"/>
-          <shardingTable name="s_4_t8" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
-          <shardingTable name="s_4_t9" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
-          <globalTable name="g_4_t5" shardingNode="dn1,dn2,dn3,dn4"  />
-          <globalTable name="g_5_t1" shardingNode="dn1,dn2,dn3,dn4,dn5"  />
-          <globalTable name="g_6_t1" shardingNode="dn1,dn2,dn3,dn4,dn5,dn6"  />
+          <table name="nos_1_t5"  dataNode="dn5" />
+          <table name="s_4_t5" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+          <table name="s_4_t6" dataNode="dn1,dn2,dn3,dn5" rule="hash-four"/>
+          <table name="s_4_t7" dataNode="dn1,dn2,dn3,dn6" rule="hash-four"/>
+          <table name="s_4_t8" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+          <table name="s_4_t9" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+          <table type="global" name="g_4_t5" dataNode="dn1,dn2,dn3,dn4"  />
+          <table type="global" name="g_5_t1" dataNode="dn1,dn2,dn3,dn4,dn5"  />
+          <table type="global" name="g_6_t1" dataNode="dn1,dn2,dn3,dn4,dn5,dn6"  />
       </schema>
 
-      <schema name="schema4" sqlMaxLimit="100" shardingNode="dn5" >
+      <schema name="schema4" sqlMaxLimit="100" dataNode="dn5" >
       </schema>
 
-      <schema name="schema5" sqlMaxLimit="100" shardingNode="dn6" >
+      <schema name="schema5" sqlMaxLimit="100" dataNode="dn6" >
       </schema>
 
-      <shardingNode dbGroup="ha_group2" database="db3" name="dn6" />
+      <dataNode dataHost="ha_group2" database="db3" name="dn6" />
 
       <function name="hash-string-into-two" class="StringHash">
           <property name="partitionCount">2</property>
@@ -276,34 +276,34 @@ Feature: test dml sql which can penetrate to mysql
 #      | conn_0 | False   | select * from tb_a                                                                                                                                                                                     | length{(21)}                                                         | schema4 |
 
   Scenario: check update/delete  from .... syntax and one table #2
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <singleTable name="single_t1" shardingNode="dn6" />
-        <globalTable name="global_t1" shardingNode="dn1,dn2" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_3_t1" shardingNode="dn1,dn2,dn3" function="hash-three" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+        <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table name="single_t1" dataNode="dn6" />
+        <table type="global" name="global_t1" dataNode="dn1,dn2" />
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two" />
+        <table name="sharding_3_t1" dataNode="dn1,dn2,dn3" function="hash-three" />
+        <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     </schema>
 
     <schema name="schema2" sqlMaxLimit="100">
-        <singleTable name="single_t2" shardingNode="dn1" />
-        <singleTable name="single_t3" shardingNode="dn6" />
-        <globalTable name="global_t2" shardingNode="dn1,dn2" />
-        <globalTable name="global_t3" shardingNode="dn5,dn6" />
-        <globalTable name="global_t4" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="sharding_4_t2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+        <table name="single_t2" dataNode="dn1" />
+        <table name="single_t3" dataNode="dn6" />
+        <table type="global" name="global_t2" dataNode="dn1,dn2" />
+        <table type="global" name="global_t3" dataNode="dn5,dn6" />
+        <table type="global" name="global_t4" dataNode="dn1,dn2,dn3,dn4" />
+        <table name="sharding_4_t2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     </schema>
 
-    <schema shardingNode="dn1" name="schema3"/>
-    <schema shardingNode="dn2" name="schema4"/>
+    <schema dataNode="dn1" name="schema3"/>
+    <schema dataNode="dn2" name="schema4"/>
 
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
-    <shardingNode dbGroup="ha_group2" database="db3" name="dn6" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+    <dataNode dataHost="ha_group2" database="db3" name="dn6" />
 
      """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -489,46 +489,47 @@ Feature: test dml sql which can penetrate to mysql
       | conn_0 | False   | delete from schema3.t3 where name in (select a.name from schema3.t4 a join schema3.t5 b on a.id =b.id where a.age in (select age from schema3.t6 where id in ((select id from (select id,age from schema4.t1 where id =1) as tmp))));                               | This `Complex Delete Syntax` is not supported!  | schema3 |
 
   Scenario: check update/delete  from .... syntax and some tables #3
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <singleTable name="single_t1" shardingNode="dn6" />
-        <globalTable name="global_t1" shardingNode="dn1,dn2" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_3_t1" shardingNode="dn1,dn2,dn3" function="hash-three" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+        <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table name="single_t1" dataNode="dn6" />
+        <table name="global_t1" dataNode="dn1,dn2" type="global" />
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two" />
+        <table name="sharding_3_t1" dataNode="dn1,dn2,dn3" rule="hash-three" />
+        <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
     </schema>
 
     <schema name="schema2" sqlMaxLimit="100">
-        <singleTable name="single_t2" shardingNode="dn1" />
-        <singleTable name="single_t3" shardingNode="dn6" />
-        <globalTable name="global_t2" shardingNode="dn1,dn2" />
-        <globalTable name="global_t3" shardingNode="dn5,dn6" />
-        <globalTable name="global_t4" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="sharding_4_t2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+        <table name="single_t2" dataNode="dn1" type="global" />
+        <table name="single_t3" dataNode="dn6" type="global" />
+        <table name="global_t2" dataNode="dn1,dn2" type="global" />
+        <table name="global_t3" dataNode="dn5,dn6" type="global" />
+        <table name="global_t4" dataNode="dn1,dn2,dn3,dn4" type="global" />
+        <table name="sharding_4_t2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
     </schema>
 
-    <schema shardingNode="dn1" name="schema3"/>
-    <schema shardingNode="dn2" name="schema4"/>
+    <schema dataNode="dn1" name="schema3"/>
+    <schema dataNode="dn2" name="schema4"/>
 
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
-    <shardingNode dbGroup="ha_group2" database="db3" name="dn6" />
-
+    <dataNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <dataNode dbGroup="ha_group2" database="db1" name="dn2" />
+    <dataNode dbGroup="ha_group1" database="db2" name="dn3" />
+    <dataNode dbGroup="ha_group2" database="db2" name="dn4" />
+    <dataNode dbGroup="ha_group1" database="db3" name="dn5" />
+    <dataNode dbGroup="ha_group2" database="db3" name="dn6" />
      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
-     <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3,schema4">
-          <privileges check="true">
+     <user name="test">
+        <property name="password">111111</property>
+		<property name="schemas">schema1,schema2,schema3,schema4</property>
+		  <privileges check="true">
             <schema name="schema3" dml="1111">
               <table name="t1" dml="1101"/>
               <table name="t2" dml="1010"/>
             </schema>
           </privileges>
-        </shardingUser>
+	</user>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode

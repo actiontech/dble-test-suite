@@ -6,13 +6,13 @@
 Feature: druid upgrade from 1.2.3 to 1.2.6
 
   Scenario: check getEngine #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-        <shardingTable name="sharding_4_t2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-        <singleTable name="single_t1"  shardingNode="dn1" />
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table name="test" dataNode="dn1,dn2,dn3,dn4" type="global" />
+        <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+        <table name="sharding_4_t2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+        <table name="single_t1"  dataNode="dn1" />
     </schema>
     """
     Then execute admin cmd "reload @@config"
@@ -68,12 +68,12 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
 
   @use.with_mysql_version=8.0
   Scenario: check select FOR SHARE/SKIP LOCKED - mysql8.0 #3
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-        <singleTable name="single_t1"  shardingNode="dn1" />
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table name="test" shardingNode="dn1,dn2,dn3,dn4" type="global" />
+        <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+        <table name="single_t1" dataNode="dn1" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -158,11 +158,11 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
 
   @use.with_mysql_version=8.0
   Scenario: complex query  - mysql8.0 #4
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-        <shardingTable name="sharding_4_t2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+        <table name="sharding_4_t2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -220,12 +220,21 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
       | conn_1 | False   | select t1.* from sharding_4_t1 t1 join test t2 on t1.id=t2.id order by t1.name limit 1,2         | has{((2,'2',12),(3,'3',35))} | schema1 |
       | conn_1 | False   | select t2.* from sharding_4_t1 t1,test t2 where t1.id=t2.id and t2.age>40 order by t1.id limit 1 | has{((4,44),)} | schema1 |
       | conn_1 | True    | select * from sharding_4_t1 limit 0                                                              | success | schema1 |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-     <shardingUser name="test" password="111111" schemas="schema1" blacklist="blacklist1"/>
-      <blacklist name="blacklist1">
+    <user name="test">
+      <property name="password">111111</property>
+      <property name="schemas">schema1</property>
+    </user>
+    """
+    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
+    """
+    <firewall>
+        <blacklist check="true">
         <property name="limitZeroAllow">false</property>
-      </blacklist>
+        </blacklist>
+    </firewall>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -233,12 +242,13 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
       | conn_2 | False   | select t1.* from sharding_4_t1 t1 join test t2 on t1.id=t2.id order by t1.name limit 0           | The statement is unsafe SQL, reject for user 'test | schema1 |
       | conn_2 | False   | select t2.* from sharding_4_t1 t1,test t2 where t1.id=t2.id and t2.age>40 order by t1.id limit 0 | The statement is unsafe SQL, reject for user 'test | schema1 |
       | conn_2 | True    | select * from sharding_4_t1 limit 0                                                              | The statement is unsafe SQL, reject for user 'test | schema1 |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
-     <shardingUser name="test" password="111111" schemas="schema1" blacklist="blacklist1"/>
-      <blacklist name="blacklist1">
+    <firewall>
+        <blacklist check="true">
         <property name="limitZeroAllow">true</property>
-      </blacklist>
+        </blacklist>
+    </firewall>
     """
     Then execute admin cmd "reload @@config_all"
 

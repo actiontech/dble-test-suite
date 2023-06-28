@@ -17,91 +17,91 @@ Feature: check sql plan
       | conn   | toClose | sql                                            | expect      | db      |
       | conn_1 | False   | explain select * from sharding_4_t1 where id=1 | length{(1)} | schema1 |
     Then check resultset "rs1" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                              |
-      | dn2             | BASE SQL | select * from sharding_4_t1 where id=1 |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                              |
+      | dn2         | BASE SQL | SELECT * FROM sharding_4_t1 WHERE id = 1 LIMIT 100 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs2"
       | conn   | toClose | sql                                              | expect      | db      |
       | conn_1 | False   | explain select * from sharding_4_t1 where `id`=1 | length{(1)} | schema1 |
     Then check resultset "rs2" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                |
-      | dn2             | BASE SQL | select * from sharding_4_t1 where `id`=1 |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                            |
+      | dn2         | BASE SQL | SELECT * FROM sharding_4_t1 WHERE `id` = 1 LIMIT 100 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs3"
       | conn   | toClose | sql                                               | expect      | db      |
       | conn_1 | False   | explain select * from sharding_4_t1 t1 where id=1 | length{(1)} | schema1 |
     Then check resultset "rs3" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                 |
-      | dn2             | BASE SQL | select * from sharding_4_t1 t1 where id=1 |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                             |
+      | dn2         | BASE SQL | SELECT * FROM sharding_4_t1 t1 WHERE id = 1 LIMIT 100 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs4"
       | conn   | toClose | sql                                                 | expect      | db      |
       | conn_1 | False   | explain select * from sharding_4_t1 t1 where `id`=1 | length{(1)} | schema1 |
     Then check resultset "rs4" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                   |
-      | dn2             | BASE SQL | select * from sharding_4_t1 t1 where `id`=1 |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                               |
+      | dn2         | BASE SQL | SELECT * FROM sharding_4_t1 t1 WHERE `id` = 1 LIMIT 100 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs5"
       | conn   | toClose | sql                                                            | expect      | db      |
       | conn_1 | False   | explain select * from schema1.sharding_4_t1 t1 where t1.`id`=1 | length{(1)} | schema1 |
     Then check resultset "rs5" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                      |
-      | dn2             | BASE SQL | select * from sharding_4_t1 t1 where t1.`id`=1 |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                               |
+      | dn2         | BASE SQL | SELECT * FROM sharding_4_t1 t1 WHERE t1.`id` = 1 LIMIT 100 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs6"
       | conn   | toClose | sql                                                      | expect      | db      |
       | conn_1 | False   | explain select * from schema1.sharding_4_t1 where `id`=1 | length{(1)} | schema1 |
     Then check resultset "rs6" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                |
-      | dn2             | BASE SQL | select * from sharding_4_t1 where `id`=1 |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                            |
+      | dn2         | BASE SQL | SELECT * FROM sharding_4_t1 WHERE `id` = 1 LIMIT 100 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs7"
       | conn   | toClose | sql                                                         | expect      | db      |
       | conn_1 | False   | explain select * from schema1.sharding_4_t1 t1 where `id`=1 | length{(1)} | schema1 |
     Then check resultset "rs7" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                   |
-      | dn2             | BASE SQL | select * from sharding_4_t1 t1 where `id`=1 |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                               |
+      | dn2         | BASE SQL | SELECT * FROM sharding_4_t1 t1 WHERE `id` = 1 LIMIT 100 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs8"
       | conn   | toClose | sql                                                       | expect      | db      |
       | conn_1 | False   | explain select * from schema1.sharding_4_t1 t1 where id=1 | length{(1)} | schema1 |
     Then check resultset "rs8" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                 |
-      | dn2             | BASE SQL | select * from sharding_4_t1 t1 where id=1 |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                             |
+      | dn2         | BASE SQL | SELECT * FROM sharding_4_t1 t1 WHERE id = 1 LIMIT 100 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs9"
       | conn   | toClose | sql                                                               | expect      | db      |
       | conn_1 | False   | explain update schema1.sharding_4_t1 set name='test' where `id`=1 | length{(1)} | schema1 |
     Then check resultset "rs9" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                         |
-      | dn2             | BASE SQL | update sharding_4_t1 set name='test' where `id`=1 |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                         |
+      | dn2         | BASE SQL | update sharding_4_t1 set name='test' where `id`=1 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs10"
       | conn   | toClose | sql                                                                  | expect      | db      |
       | conn_1 | False   | explain update schema1.sharding_4_t1 t1 set name='test' where `id`=1 | length{(1)} | schema1 |
     Then check resultset "rs10" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                            |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                            |
       | dn2             | BASE SQL | update sharding_4_t1 t1 set name='test' where `id`=1 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs11"
       | conn   | toClose | sql                                                     | expect      | db      |
       | conn_1 | False   | explain update sharding_4_t1 set name='test' where id=1 | length{(1)} | schema1 |
     Then check resultset "rs11" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                       |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                       |
       | dn2             | BASE SQL | update sharding_4_t1 set name='test' where id=1 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs12"
       | conn   | toClose | sql                                                       | expect      | db      |
       | conn_1 | False   | explain update sharding_4_t1 set name='test' where `id`=1 | length{(1)} | schema1 |
     Then check resultset "rs12" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                         |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                         |
       | dn2             | BASE SQL | update sharding_4_t1 set name='test' where `id`=1 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs13"
       | conn   | toClose | sql                                                          | expect      | db      |
       | conn_1 | False   | explain update sharding_4_t1 t1 set name='test' where `id`=1 | length{(1)} | schema1 |
     Then check resultset "rs13" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                            |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                            |
       | dn2             | BASE SQL | update sharding_4_t1 t1 set name='test' where `id`=1 |
 
     Given execute sql in "dble-1" in "user" mode
@@ -110,10 +110,10 @@ Feature: check sql plan
 
   # DBLE0REQ-1613
   Scenario: check single table sql plan #2
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <singleTable name="single_t1" shardingNode="dn1"/>
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table name="single_t1" dataNode="dn1"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -127,21 +127,21 @@ Feature: check sql plan
       | conn   | toClose | sql                             | expect      | db      |
       | conn_1 | False   | explain select * from single_t1 | length{(1)} | schema1 |
     Then check resultset "rs1" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                         |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                         |
       | dn1             | BASE SQL | SELECT * FROM single_t1 LIMIT 100 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs2"
       | conn   | toClose | sql                                                  | expect      | db      |
       | conn_1 | False   | explain select a.* from single_t1 a, (select 1) as b | length{(1)} | schema1 |
     Then check resultset "rs2" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                                |
       | dn1             | BASE SQL | SELECT a.* FROM single_t1 a, (   SELECT 1  ) b LIMIT 100 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs3"
       | conn   | toClose | sql                                                      | expect      | db      |
       | conn_1 | False   | explain select a.* from single_t1 a join (select 1) as b | length{(1)} | schema1 |
     Then check resultset "rs3" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                     |
+      | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                                     |
       | dn1             | BASE SQL | SELECT a.* FROM single_t1 a  JOIN (   SELECT 1  ) b LIMIT 100 |
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect  | db      |
@@ -155,14 +155,14 @@ Feature: check sql plan
   """
     Given delete the following xml segment
       | file         | parent         | child            |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | schema.xml | {'tag':'root'} | {'tag':'schema'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
-        <schema name="schema1"  sqlMaxLimit="100">
-          <shardingTable name="test_shard" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-          <shardingTable name="tabler" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-          <shardingTable name="tabler2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-          <shardingTable name="tabler3" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+        <schema name="schema1" sqlMaxLimit="100">
+          <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+          <table name="tabler" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+          <table name="tabler2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+          <table name="tabler3" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
         </schema>
       """
     Given execute admin cmd "reload @@config_all" success
@@ -227,31 +227,45 @@ Feature: check sql plan
     {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3'], 'mysql':['schema1']}}
   """
     Given delete the following xml segment
-      | file         | parent         | child                  |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | file       | parent         | child              |
+      | schema.xml | {'tag':'root'} | {'tag':'schema'}   |
+      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
         <schema name="schema1" sqlMaxLimit="100">
-            <shardingTable name="Employee" shardingNode="dn3,dn4" function="func_hashString" shardingColumn="deptname" />
-            <shardingTable name="Dept" shardingNode="dn3,dn4" function="func_hashString" shardingColumn="deptname"/>
-            <shardingTable name="Info" shardingNode="dn3,dn4" function="func_hashString" shardingColumn="deptname"/>
-            <shardingTable name="Level" shardingNode="dn1,dn2,dn3" function="hash-three" shardingColumn="levelid"/>
+            <table name="Employee" dataNode="dn3,dn4" rule="hash-deptname" />
+            <table name="Dept" dataNode="dn3,dn4" rule="hash-deptname" />
+            <table name="Info" dataNode="dn3,dn4" rule="hash-deptname" />
+            <table name="Level" dataNode="dn1,dn2,dn3" rule="hash-three" />
         </schema>
 
-        <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-        <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-        <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-        <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-        <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
-        <shardingNode dbGroup="ha_group2" database="db3" name="dn6" />
-
-        <function name="func_hashString" class="StringHash">
-            <property name="partitionCount">2</property>
-            <property name="partitionLength">1</property>
-            <property name="hashSlice">0:2</property>
-        </function>
+        <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+        <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+        <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+        <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+        <dataNode dataHost="ha_group2" database="db3" name="dn6" />
       """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    """
+      <tableRule name="hash-deptname">
+        <rule>
+            <columns>deptname</columns>
+            <algorithm>func_hashString</algorithm>
+        </rule>
+      </tableRule>
+      <tableRule name="hash-three">
+      <rule>
+          <columns>levelid</columns>
+          <algorithm>three-long</algorithm>
+      </rule>
+      </tableRule>
+      <function name="func_hashString" class="StringHash">
+          <property name="partitionCount">2</property>
+          <property name="partitionLength">1</property>
+          <property name="hashSlice">0:2</property>
+      </function>
+    """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                                               | db      | expect  |
@@ -284,7 +298,7 @@ Feature: check sql plan
       | conn   | toClose | sql                                                                                                                                                              | db      |
       | conn_0 | false   | explain SELECT * FROM Employee a left join Dept b on a.deptname=b.deptname inner join Info c on a.deptname=c.deptname and b.DeptName=c.DeptName order by a.Name; | schema1 |
     Then check resultset "rs_1" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                                                                                                                                                                                                           |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                                                                                                                                                                                                           |
       | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  (  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` )  join  `Info` `c` on `a`.`deptname` = `c`.`deptname` and `b`.`DeptName` = `c`.`DeptName` where 1=1  ORDER BY `a`.`name` ASC |
       | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  (  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` )  join  `Info` `c` on `a`.`deptname` = `c`.`deptname` and `b`.`DeptName` = `c`.`DeptName` where 1=1  ORDER BY `a`.`name` ASC |
       | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                                                                                                                                                                                                                                                                                        |
@@ -297,7 +311,7 @@ Feature: check sql plan
       | conn   | toClose | sql                                                                                                                                                              | db      |
       | conn_0 | false   | explain SELECT * FROM Employee a left join Dept b on a.deptname=b.deptname inner join Info c on b.deptName=c.deptName and a.deptname=c.deptname order by a.Name; | schema1 |
     Then check resultset "rs_1" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                                                                                                                                                                                                           |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                                                                                                                                                                                                           |
       | dn3_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  (  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` )  join  `Info` `c` on `b`.`deptName` = `c`.`deptName` and `a`.`deptname` = `c`.`deptname` where 1=1  ORDER BY `a`.`name` ASC |
       | dn4_0             | BASE SQL        | select `a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level`,`b`.`deptname`,`b`.`deptid`,`b`.`manager`,`c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname` from  (  `Employee` `a` left join  `Dept` `b` on `a`.`deptname` = `b`.`deptname` )  join  `Info` `c` on `b`.`deptName` = `c`.`deptName` and `a`.`deptname` = `c`.`deptname` where 1=1  ORDER BY `a`.`name` ASC |
       | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                                                                                                                                                                                                                                                                                        |
@@ -335,7 +349,7 @@ Feature: check sql plan
       | conn   | toClose | sql                                                                                                                                                                                                   | db      |
       | conn_0 | false   | explain SELECT a.Name,a.DeptName,c.levelname,c.salary FROM test a inner JOIN sharding_2_t1 c on c.levelname=a.level and (c.levelname='P7' or (c.salary >=10000 and 22000>=c.salary)) order by a.name; | schema1 |
     Then check resultset "rs_1" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                                                                                           |
+      | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                                                                                           |
       | dn1_0             | BASE SQL        | select `a`.`Name`,`a`.`DeptName`,`c`.`levelname`,`c`.`salary` from  `test` `a` join  `sharding_2_t1` `c` on `a`.`level` = `c`.`levelname` and (c.salary >= 10000 AND c.salary <= 22000 OR c.levelname IN ('P7')) where 1=1  ORDER BY `a`.`Name` ASC |
       | dn2_0             | BASE SQL        | select `a`.`Name`,`a`.`DeptName`,`c`.`levelname`,`c`.`salary` from  `test` `a` join  `sharding_2_t1` `c` on `a`.`level` = `c`.`levelname` and (c.salary >= 10000 AND c.salary <= 22000 OR c.levelname IN ('P7')) where 1=1  ORDER BY `a`.`Name` ASC |
       | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0                                                                                                                                                                                                                                        |
@@ -350,30 +364,38 @@ Feature: check sql plan
     {'delete_mysql_tables': {'mysql-master1': ['db1'], 'mysql-master2': ['db1'], 'mysql':['schema1']}}
   """
     Given delete the following xml segment
-      | file         | parent         | child                  |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | file       | parent         | child              |
+      | schema.xml | {'tag':'root'} | {'tag':'schema'}   |
+      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
         <schema name="schema1" sqlMaxLimit="100">
-            <shardingTable name="vs_store_company" shardingNode="dn1,dn2" function="func_hashString" shardingColumn="id" />
-            <shardingTable name="vs_store" shardingNode="dn1,dn2" function="func_hashString" shardingColumn="id"/>
-            <shardingTable name="vs_fin_cash_accinfo" shardingNode="dn1,dn2" function="func_hashString" shardingColumn="id"/>
+            <table name="vs_store_company" dataNode="dn1,dn2" rule="hash-string"  />
+            <table name="vs_store" dataNode="dn1,dn2" rule="hash-string" />
+            <table name="vs_fin_cash_accinfo" dataNode="dn1,dn2" rule="hash-string" />
         </schema>
 
-        <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-        <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-        <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-        <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-        <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
-        <shardingNode dbGroup="ha_group2" database="db3" name="dn6" />
-
-        <function name="func_hashString" class="StringHash">
-            <property name="partitionCount">2</property>
-            <property name="partitionLength">1</property>
-            <property name="hashSlice">0:2</property>
-        </function>
+        <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+        <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+        <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+        <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+        <dataNode dataHost="ha_group2" database="db3" name="dn6" />
       """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    """
+      <tableRule name="hash-string">
+        <rule>
+            <columns>id</columns>
+            <algorithm>func_hashString</algorithm>
+        </rule>
+      </tableRule>
+      <function name="func_hashString" class="StringHash">
+          <property name="partitionCount">2</property>
+          <property name="partitionLength">1</property>
+          <property name="hashSlice">0:2</property>
+      </function>
+    """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                | db      | expect  |
@@ -404,7 +426,7 @@ Feature: check sql plan
       | conn   | toClose | sql                                                                                                                                                                                                                                                        | db      |
       | conn_0 | false   | explain SELECT NULL AS ACCOUNTS_ID,t.remakr FROM vs_store_company t WHERE TO_DAYS(NOW())-TO_DAYS(t.pk_id)=1 limit 2 UNION ALL SELECT NULL AS ACCOUNTS_ID,t1.fk_store_comp_id from vs_store t1 where TO_DAYS(NOW())-TO_DAYS(t1.fk_store_comp_id)=1 limit 2; | schema1 |
     Then check resultset "rs_1" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                                                                                                        |
+      | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                                                                                                        |
       | dn1_0           | BASE SQL      | select `t`.`remakr` from  `vs_store_company` `t` where TO_DAYS(NOW()) - TO_DAYS(t.pk_id) = 1 LIMIT 2                             |
       | dn2_0           | BASE SQL      | select `t`.`remakr` from  `vs_store_company` `t` where TO_DAYS(NOW()) - TO_DAYS(t.pk_id) = 1 LIMIT 2                             |
       | merge_1         | MERGE         | dn1_0; dn2_0                                                                                                                     |
@@ -426,7 +448,7 @@ Feature: check sql plan
       | conn   | toClose | sql                                                                                                                                                                                                                                                                               | db      |
       | conn_0 | false   | explain SELECT count(0) FROM (SELECT c.pk_id, c.remakr FROM vs_store_company c LEFT JOIN vs_store s ON c.pk_id = s.fk_store_comp_id INNER JOIN vs_fin_cash_accinfo ca ON ca.fk_store_comp_id = c.pk_id WHERE c.`status` = 1 AND ( c.audit_status = 2 OR ca.audit_status = 2 ) )t; | schema1 |
     Then check resultset "rs_2" has lines with following column values
-      | SHARDING_NODE-0            | TYPE-1                   | SQL/REF-2                                                                                                                       |
+      | DATA_NODE-0            | TYPE-1                   | SQL/REF-2                                                                                                                       |
       | dn1_0                      | BASE SQL                 | select `c`.`pk_id`,`c`.`remakr`,`c`.`audit_status` from  `vs_store_company` `c` where `c`.`status` = 1 ORDER BY `c`.`pk_id` ASC |
       | dn2_0                      | BASE SQL                 | select `c`.`pk_id`,`c`.`remakr`,`c`.`audit_status` from  `vs_store_company` `c` where `c`.`status` = 1 ORDER BY `c`.`pk_id` ASC |
       | merge_and_order_1          | MERGE_AND_ORDER          | dn1_0; dn2_0                                                                                                                    |

@@ -9,39 +9,36 @@ Feature: reload @@config_all base test, not including all cases in testlink
 
   Background: prepare for reload @@config_all -?
     Given delete the following xml segment
-      | file          | parent           | child                   |
-      | sharding.xml  | {'tag':'root'}   | {'tag':'schema'}        |
-      | sharding.xml  | {'tag':'root'}   | {'tag':'shardingNode'}  |
-      | db.xml        | {'tag':'root'}   | {'tag':'dbGroup'}       |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn1">
-    <shardingTable name="test_shard" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
+    <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     </schema>
-    <shardingNode name="dn1" dbGroup="ha_group1" database="db1"/>
-    <shardingNode name="dn2" dbGroup="ha_group1" database="db2"/>
-    <shardingNode name="dn3" dbGroup="ha_group1" database="db3"/>
-    <shardingNode name="dn4" dbGroup="ha_group1" database="db4"/>
+    <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
+    <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+    <dataNode name="dn3" dataHost="ha_group1" database="db3"/>
+    <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
+    <dataHost balance="0" maxCon="1000" minCon="5" name="ha_group1" slaveThreshold="100">
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test">
+    </writeHost>
+    </dataHost>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-            <property name="connectionTimeout">2000</property>
-        </dbInstance>
-    </dbGroup>
-    """
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    a/-DbackendProcessorExecutor=4
-    a/-DprocessorCheckPeriod=1
+    <system>
+    <property name="backendProcessorExecutor">4</property>
+    <property name="processorCheckPeriod">1</property>
+    </system>
     """
     Given Restart dble in "dble-1" success
 
   @CRITICAL
-  Scenario: reload @@config_all, eg:no dbInstance change, reload @@config_all does not rebuild backend connection pool #1
-
+  Scenario: reload @@config_all, eg:no writehost change, reload @@config_all does not rebuild backend connection pool #1
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_A"
       | sql            |
       | show @@backend |
@@ -62,18 +59,16 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | USER_VARIABLES       | 19           |
 
   @BLOCKER @restore_mysql_service
-  Scenario: reload @@config_all, eg:remove old dbInstance and add new, drop backend connection pool for old dbInstance, create new connection pool, backend conn in use will not be dropped even the dbInstance was removed, reload @@config_all -f, reload @@config_all -r, reload @@config_all -s #2
+  Scenario: reload @@config_all, eg:remove old writeHost and add new, drop backend connection pool for old dbInstance, create new connection pool, backend conn in use will not be dropped even the dbInstance was removed, reload @@config_all -f, reload @@config_all -r, reload @@config_all -s #2
      """
     {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataHost balance="0" maxCon="1000" minCon="5" name="ha_group1" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-            <property name="connectionTimeout">2000</property>
-        </dbInstance>
-    </dbGroup>
+        <writeHost host="hostW1" url="172.100.9.6:3306" password="111111" user="test"/>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
     #confirm the heartbeat connection is found
@@ -87,21 +82,20 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | PORT-4    | HOST-3      |
       | 3306      | 172.100.9.6 |
 
-    #reload @@config_all, eg: backend conn in use will not be dropped even the dbInstance was removed, reload @@config_all -f, reload @@config_all -r, reload @@config_all -s
+    #reload @@config_all, eg: backend conn in use will not be dropped even the writehost was removed, reload @@config_all -f, reload @@config_all -r, reload @@config_all -s
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                           | db      |
       | conn_0 | False    | drop table if exists test_shard               | schema1 |
       | conn_0 | False    | create table test_shard(id int)               | schema1 |
       | conn_0 | False    | begin                                         | schema1 |
       | conn_0 | False    | insert into test_shard values(1),(2),(3),(4)  | schema1 |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>show slave status</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-            <property name="connectionTimeout">2000</property>
-        </dbInstance>
-    </dbGroup>
+    <dataHost balance="0" maxCon="1000" minCon="5" name="ha_group1" slaveThreshold="100">
+    <heartbeat>show slave status</heartbeat>
+    <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test">
+    </writeHost>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
 
@@ -145,27 +139,22 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | PORT              | 4     |
 
     #4 reload @@config_all -s,  skip test new connections
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+    </writeHost>
+    </dataHost>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-            <property name="connectionTimeout">2000</property>
-        </dbInstance>
-    </dbGroup>
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-            <property name="connectionTimeout">2000</property>
-        </dbInstance>
-    </dbGroup>
+        <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+        </writeHost>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all -f -r"
 

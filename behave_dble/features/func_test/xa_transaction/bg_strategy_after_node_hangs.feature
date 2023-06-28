@@ -7,7 +7,7 @@
 Feature: retry policy after xa transaction commit failed for mysql service stopped
 
   @btrace @restore_mysql_service
-  Scenario: mysql node hangs causing xa transaction fail to commit,restart mysql node before the front end attempts to commit 5 times , #1
+  Scenario: mysql node hangs causing xa transaction fail to commit,restart mysql node before the front end attempts to commit 5 times #1
     """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
@@ -57,7 +57,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
 
 
   @btrace @restore_mysql_service
-  Scenario: mysql node hangs causing xa transaction fail to commit, automatic recovery in background attempts#2
+  Scenario: mysql node hangs causing xa transaction fail to commit, automatic recovery in background attempts #2
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
@@ -283,9 +283,9 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-    $a\-DxaSessionCheckPeriod=20000
+    <property name="xaSessionCheckPeriod">20000</property>
     """
     Then Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -322,9 +322,9 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given start mysql in host "mysql-master1"
     #warit Heartbeat successed
     Given sleep "15" seconds
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-    $a\-DxaSessionCheckPeriod=10000
+    <property name="xaSessionCheckPeriod">10000</property>
     """
     Then Restart dble in "dble-1" success
 

@@ -13,20 +13,6 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     {'restore_network':'mysql-master1'}
     {'stop_tcpdump':'dble-1'}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat keepAlive="5">select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
-
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat keepAlive="5">select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-    </dbGroup>
-    """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "user" mode
@@ -76,24 +62,6 @@ Feature: retry policy after xa transaction commit failed for network anomaly
   Scenario: mysql node network shock causing xa transaction fail to commit, automatic recovery in background attempts #2F
     """
     {'restore_network':'mysql-master1'}
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-            <property name="connectionTimeout">1000</property>
-            <property name="heartbeatPeriodMillis">5000</property>
-        </dbInstance>
-    </dbGroup>
-
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-            <property name="connectionTimeout">1000</property>
-            <property name="heartbeatPeriodMillis">5000</property>
-        </dbInstance>
-    </dbGroup>
     """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
@@ -223,12 +191,10 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      /-DxaRetryCount=/d
-      $a -DxaRetryCount=2
-      """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+    <property name="xaRetryCount">2</property>
+    """
     Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |

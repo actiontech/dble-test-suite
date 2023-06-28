@@ -5,7 +5,7 @@
 #2.19.11.0#dble-7853
 Feature: reload @@config_all and recycl pool
 
-  Scenario: modify dbGroup url and execute reload @@config_all #1
+  Scenario: modifiy datahost url and execute reload @@config_all #1
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1              | schema1 |
@@ -17,15 +17,15 @@ Feature: reload @@config_all and recycl pool
       | sql            |
       | show @@backend |
     Then check resultset "rs_A" has lines with following column values
-      | HOST-3      | STATE-10 |
-      | 172.100.9.5 | IDLE       |
-      | 172.100.9.5 | IN USE        |
-      | 172.100.9.6 | IDLE       |
-      | 172.100.9.6 | IN USE        |
+      | HOST-3      | BORROWED-10 |
+      | 172.100.9.5 | false       |
+      | 172.100.9.5 | true        |
+      | 172.100.9.6 | false       |
+      | 172.100.9.6 | true        |
     Then check resultset "rs_A" has not lines with following column values
       | HOST-3      |
       | 172.100.9.4 |
-    Given update file content "{install_dir}/dble/conf/db.xml" in "dble-1" with sed cmds
+    Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/172.100.9.6/172.100.9.4/g
     """
@@ -34,18 +34,18 @@ Feature: reload @@config_all and recycl pool
       | sql            |
       | show @@backend |
     Then check resultset "rs_B" has lines with following column values
-      | HOST-3      | STATE-10 |
-      | 172.100.9.4 | IDLE       |
-      | 172.100.9.4 | IDLE        |
-      | 172.100.9.5 | IDLE       |
-      | 172.100.9.5 | IN USE        |
-      | 172.100.9.6 | IN USE        |
+      | HOST-3      | BORROWED-10 |
+      | 172.100.9.4 | false       |
+      | 172.100.9.4 | true        |
+      | 172.100.9.5 | false       |
+      | 172.100.9.5 | true        |
+      | 172.100.9.6 | true        |
     Then check resultset "rs_B" has not lines with following column values
-      | HOST-3      | STATE-10 |
-      | 172.100.9.6 | IDLE       |
+      | HOST-3      | BORROWED-10 |
+      | 172.100.9.6 | false       |
     Then check "rs_B" only has "2" connection of "172.100.9.6"
 
-    Given update file content "{install_dir}/dble/conf/db.xml" in "dble-1" with sed cmds
+    Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/172.100.9.4/172.100.9.1/g
     """
@@ -54,18 +54,18 @@ Feature: reload @@config_all and recycl pool
       | sql            |
       | show @@backend |
     Then check resultset "rs_C" has lines with following column values
-      | HOST-3      | STATE-10 |
-      | 172.100.9.1 | IDLE       |
-      | 172.100.9.1 | IDLE       |
-      | 172.100.9.5 | IDLE       |
-      | 172.100.9.5 | IN USE        |
-      | 172.100.9.6 | IN USE        |
+      | HOST-3      | BORROWED-10 |
+      | 172.100.9.1 | false       |
+      | 172.100.9.1 | true        |
+      | 172.100.9.5 | false       |
+      | 172.100.9.5 | true        |
+      | 172.100.9.6 | true        |
     Then check resultset "rs_C" has not lines with following column values
       | HOST-3      |
       | 172.100.9.4 |
     Then check "rs_C" only has "2" connection of "172.100.9.6"
 
-    Given update file content "{install_dir}/dble/conf/db.xml" in "dble-1" with sed cmds
+    Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/172.100.9.5/172.100.9.6/g
     """
@@ -74,11 +74,11 @@ Feature: reload @@config_all and recycl pool
       | sql            |
       | show @@backend |
     Then check resultset "rs_D" has lines with following column values
-      | HOST-3      | STATE-10 |
-      | 172.100.9.6 | IDLE       |
-      | 172.100.9.6 | IDLE        |
-      | 172.100.9.1 | IDLE       |
-      | 172.100.9.1 | IDLE        |
+      | HOST-3      | BORROWED-10 |
+      | 172.100.9.6 | false       |
+      | 172.100.9.6 | true        |
+      | 172.100.9.1 | false       |
+      | 172.100.9.1 | true        |
     Then check resultset "rs_D" has not lines with following column values
       | HOST-3      |
       | 172.100.9.5 |

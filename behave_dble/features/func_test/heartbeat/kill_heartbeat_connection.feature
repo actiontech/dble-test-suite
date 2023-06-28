@@ -7,33 +7,28 @@ Feature: heartbeat basic test
   Scenario:  heartbeat is not limited by maxCon #1
     #when connections exceeded the maxCon, the heartbeat connection still can be created
     Given delete the following xml segment
-      | file         | parent         | child                  |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-      | sharding.xml | {'tag':'root'} | {'tag':'function'}     |
-      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | file       | parent         | child                  |
+      | schema.xml | {'tag':'root'} | {'tag':'schema'}       |
+      | schema.xml | {'tag':'root'} | {'tag':'dataNode'}     |
+      | schema.xml | {'tag':'root'} | {'tag':'dataHost'}     |
+     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+        <table name="sharding_2_t1" dataNode="dn1,dn3" rule="hash-two" />
     </schema>
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <function class="Hash" name="hash-two">
-        <property name="partitionCount">2</property>
-        <property name="partitionLength">1</property>
-    </function>
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+     <dataHost balance="0" maxCon="4" minCon="3" name="ha_group1" slaveThreshold="100" >
+       <heartbeat>select user()</heartbeat>
+       <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
+       </writeHost>
+    </dataHost>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.1:3306" user="test" maxCon="4" minCon="3" primary="true">
-           <property name="heartbeatPeriodMillis">2000</property>
-        </dbInstance>
-     </dbGroup>
+    <property name="dataNodeHeartbeatPeriod">2000</property>
     """
-    Then execute admin cmd "reload @@config_all"
+    Given restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                                                    | expect  | db     |
      | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1                     | success | schema1 |
@@ -67,33 +62,22 @@ Feature: heartbeat basic test
   @btrace
   Scenario: heartbeat timeout test #2
     Given delete the following xml segment
-      | file         | parent         | child                  |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-      | sharding.xml | {'tag':'root'} | {'tag':'function'}     |
-      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | file       | parent         | child                  |
+      | schema.xml | {'tag':'root'} | {'tag':'schema'}       |
+      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
+     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+        <table name="sharding_2_t1" dataNode="dn1,dn3" rule="hash-two" />
     </schema>
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <function class="Hash" name="hash-two">
-        <property name="partitionCount">2</property>
-        <property name="partitionLength">1</property>
-    </function>
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
-        <heartbeat timeout="4">select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-           <property name="heartbeatPeriodMillis">7000</property>
-        </dbInstance>
-     </dbGroup>
+    <property name="dataNodeHeartbeatPeriod">7000</property>
     """
-    Then execute admin cmd "reload @@config_all"
+    Given restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                                                    | expect  | db      |
      | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1                     | success | schema1 |
@@ -131,33 +115,22 @@ Feature: heartbeat basic test
   Scenario: set errorRetryCount=0, kill the heartbeat connection, then check the heartbeat status #3
     #1 the killed heartbeat connection, heartbeat will set error at once, and then it will recover at next heartbeat period
     Given delete the following xml segment
-      | file         | parent         | child                  |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-      | sharding.xml | {'tag':'root'} | {'tag':'function'}     |
-      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | file       | parent         | child                  |
+      | schema.xml | {'tag':'root'} | {'tag':'schema'}       |
+      | schema.xml | {'tag':'root'} | {'tag':'dataNode'}     |
+     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+        <table name="sharding_2_t1" dataNode="dn1,dn3" rule="hash-two" />
     </schema>
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <function class="Hash" name="hash-two">
-        <property name="partitionCount">2</property>
-        <property name="partitionLength">1</property>
-    </function>
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
-        <heartbeat errorRetryCount="0">select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-           <property name="heartbeatPeriodMillis">3000</property>
-        </dbInstance>
-     </dbGroup>
+    <property name="dataNodeHeartbeatPeriod">7000</property>
     """
-    Then execute admin cmd "reload @@config_all"
+    Given restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                                  | expect  | db      |
      | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1   | success | schema1 |
@@ -187,34 +160,22 @@ Feature: heartbeat basic test
     #coz case中的方法 3.20.10才适用，后续更改方法优化
   Scenario: heartbeat connection is recover failed in retry 'errorRetryCount' times, the heartbeat will set as error,and the connection pool is available in retry period #4
     Given delete the following xml segment
-      | file         | parent         | child                  |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-      | sharding.xml | {'tag':'root'} | {'tag':'function'}     |
-      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
-     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | file       | parent         | child                  |
+      | schema.xml | {'tag':'root'} | {'tag':'schema'}       |
+      | schema.xml | {'tag':'root'} | {'tag':'dataNode'}     |
+     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+        <table name="sharding_2_t1" dataNode="dn1,dn3" rule="hash-two" />
     </schema>
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <function class="Hash" name="hash-two">
-        <property name="partitionCount">2</property>
-        <property name="partitionLength">1</property>
-    </function>
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
-        <heartbeat errorRetryCount="3" timeout="1">select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-           <property name="heartbeatPeriodMillis">180000</property>
-        </dbInstance>
-     </dbGroup>
-
+    <property name="dataNodeHeartbeatPeriod">180000</property>
     """
-    Then execute admin cmd "reload @@config_all"
+    Given restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                                                    | expect  | db      |
      | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1                     | success | schema1 |
@@ -297,28 +258,22 @@ Feature: heartbeat basic test
         #coz case中的方法 3.20.10才适用，后续更改方法优化
   Scenario: heartbeat connection recover success in retry 'errorRetryCount' times, the heartbeat will set as Ok,and the connection pool is available in retry period #5
     Given delete the following xml segment
-      | file         | parent         | child                  |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      | file       | parent         | child                  |
+      | schema.xml | {'tag':'root'} | {'tag':'schema'}       |
+      | schema.xml | {'tag':'root'} | {'tag':'dataNode'}     |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+        <table name="sharding_2_t1" dataNode="dn1,dn3" rule="hash-two" />
     </schema>
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
-        <heartbeat errorRetryCount="3" timeout="300">select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-           <property name="heartbeatPeriodMillis">120000</property>
-        </dbInstance>
-     </dbGroup>
+    <property name="dataNodeHeartbeatPeriod">120000</property>
     """
-    Then execute admin cmd "reload @@config_all"
+    Given restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                                                    | expect  | db      |
      | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1                     | success | schema1 |
