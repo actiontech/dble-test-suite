@@ -27,11 +27,11 @@ Feature: test config in user.xml  ---  analysisUser
     """
     Then execute admin cmd "reload @@config_all"
     """
-    Invalid content was found starting with element 'analysisuser'. One of '{managerUser, shardingUser, rwSplitUser, analysisUser, blacklist}' is expected
+    Invalid content was found starting with element 'analysisuser'. One of '{managerUser, shardingUser, rwSplitUser, analysisUser, hybridTAUser, blacklist}' is expected.
     """
     Then Restart dble in "dble-1" failed for
      """
-     Invalid content was found starting with element 'analysisuser'. One of '{managerUser, shardingUser, rwSplitUser, analysisUser, blacklist}' is expected
+     Invalid content was found starting with element 'analysisuser'. One of '{managerUser, shardingUser, rwSplitUser, analysisUser, hybridTAUser, blacklist}' is expected.
      """
 
 
