@@ -79,12 +79,12 @@ Feature: test some import nodes attr in schema.xml
       | conn   | toClose  | sql                               | expect              | db     |
       | conn_0 | False    | drop table if exists test_table   | success             | schema1 |
       | conn_0 | False    | create table test_table(id int)   | success             | schema1 |
-      | conn_0 | False    | show all tables                   | has{('test_table','GLOBAL TABLE')}   | schema1 |
+      | conn_0 | False    | show all tables                   | has{(('test_table','GLOBAL TABLE'),)}   | schema1 |
       | conn_0 | False    | drop table if exists test2_table  | success             | schema1 |
       | conn_0 | False    | create table test2_table(id int)  | success             | schema1 |
-      | conn_0 | True     | show all tables                   | has{('test_table','GLOBAL TABLE')}   | schema1 |
+      | conn_0 | True     | show all tables                   | has{(('test_table','GLOBAL TABLE'),)}   | schema1 |
 
-  @BLOCKER
+  @BLOCKER @auto_retry
   Scenario: test "dataHost" node attr "maxCon" #4
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -112,9 +112,9 @@ Feature: test some import nodes attr in schema.xml
     Then create "14" conn while maxCon="15" finally close all conn
     Then create "15" conn while maxCon="15" finally close all conn
     """
-    the max active Connections size can not be max than maxCon for data host\[dh1.hostM1\]
+    the max active Connections size can not be max than maxCon for data host[dh1.hostM1]
     """
-  @NORMAL
+  @NORMAL @auto_retry
   Scenario: if "dataHost" node attr "maxCon" less than or equal the count of related datanodes, maxCon will be count(related dataNodes)+1; A DDL will take 1 more than we can see, the invisible one is used to take ddl metadata #5
     Given delete the following xml segment
       |file        | parent          | child                |
@@ -152,7 +152,7 @@ Feature: test some import nodes attr in schema.xml
     Then create "3" conn while maxCon="3" finally close all conn
     Then create "4" conn while maxCon="3" finally close all conn
     """
-    the max active Connections size can not be max than maxCon for data host\[dh1.hostM1\]
+    the max active Connections size can not be max than maxCon for data host[dh1.hostM1]
     """
 
   @CRITICAL
@@ -235,7 +235,7 @@ Feature: test some import nodes attr in schema.xml
     s/ehcache/rocksdb/
     s/10000,1800/10000,0/
     """
-    Given create filder content "/opt/dble/rocksdb" in "dble-1"
+    Given create folder content "/opt/dble/rocksdb" in "dble-1"
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
     """
     s/debug/info/
@@ -393,7 +393,7 @@ Feature: test some import nodes attr in schema.xml
     Given Restart dble in "dble-1" success
     Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master1"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill all backend conns in "mysql-master1" except ones in "heartbeat_Ids_master1"
 #   wait 6s for minConRecover is a duration

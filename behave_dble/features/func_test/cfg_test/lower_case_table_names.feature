@@ -36,10 +36,10 @@ Feature: check collation/lower_case_table_names works right for dble
      """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema name="DBTEST">
+        <schema name="DBTEST" sqlMaxLimit="105">
              <table name="Test_Table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
-             <table name="Uos_Page_ret_inst" dataNode="dn4" sqlMaxLimit="105"/>
-             <table name="UOS_Tache_def" dataNode="dn3" sqlMaxLimit="105"/>
+             <table name="Uos_Page_ret_inst" dataNode="dn4" />
+             <table name="UOS_Tache_def" dataNode="dn3" />
         </schema>
 
         <dataNode dataHost="ha_group1" database="DB1" name="dn1" />
@@ -114,9 +114,6 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_3 | False   | drop table if exists uos_tache_def        | success | DBTEST  |
       | conn_3 | True    | drop table if exists Test                 | success | schema1 |
 
-
-
-
   @BLOCKER @current
   Scenario: set backend mysql lower_case_table_names=0, dble will deal with queries case insensitive  #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
@@ -138,7 +135,7 @@ Feature: check collation/lower_case_table_names works right for dble
     """
     Then restart dble in "dble-1" failed for
     """
-    User\[name:test\]'s schema \[DbTest\] is not exist!
+    schema DbTest referred by user test is not exist!
     """
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
@@ -195,9 +192,6 @@ Feature: check collation/lower_case_table_names works right for dble
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
      """
-    Given delete the following xml segment
-      | file     | parent         | child                  |
-      | user.xml | {'tag':'root'} | {'tag':'shardingUser'} |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
       <schema name="schema1" dataNode="dn5" sqlMaxLimit="100">
@@ -206,16 +200,18 @@ Feature: check collation/lower_case_table_names works right for dble
           <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" />
       </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root','prev':'managerUser'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    <shardingUser name="test_user" password="111111" schemas="SCHEMA1">
+      <user name="test_user">
+        <property name="password">111111</property>
+        <property name="schemas">SCHEMA1</property>
         <privileges check="true">
-            <schema name="SCHEMA1" dml="0000" >
-                <table name="Aly_Test" dml="1111"></table>
-                <table name="Aly_Order" dml="0010"></table>
-            </schema>
+          <schema name="SCHEMA1" dml="0000" >
+            <table name="Aly_Test" dml="1111"></table>
+            <table name="Aly_Order" dml="0010"></table>
+          </schema>
         </privileges>
-    </shardingUser>
+      </user>
     """
     Then execute admin cmd "reload @@config_all"
     Then restart dble in "dble-1" success
@@ -234,7 +230,7 @@ Feature: check collation/lower_case_table_names works right for dble
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive #4
   """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0},'mysql-slave1':{'lower_case_table_names':0},'mysql-slave2':{'lower_case_table_names':0}}}
-   """
+  """
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
      /lower_case_table_names/d
@@ -244,21 +240,21 @@ Feature: check collation/lower_case_table_names works right for dble
     """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
-     """
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
-            <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" />
-            <table name="tb_parent" dataNode="dn1,dn2" rule="hash-two">
-            <childTable name="Tb_Child1" joinColumn="child1_id" parentColumn="id" sqlMaxLimit="201">
-                <childTable name="Tb_Grandson1" joinColumn="grandson1_id" parentColumn="child1_id"/>
-                     <childTable name="Tb_Great_grandson1" joinColumn="great_grandson1_id" parentColumn="grandson1_id"/>
-                <childTable name="tb_grandson2" joinColumn="grandson2_id" parentColumn="child1_id2"/>
+      <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" />
+        <table name="tb_parent" dataNode="dn1,dn2" rule="hash-two">
+          <childTable name="Tb_Child1" joinKey="child1_id" parentKey="id">
+            <childTable name="Tb_Grandson1" joinKey="grandson1_id" parentKey="child1_id"/>
+              <childTable name="Tb_Great_grandson1" joinKey="great_grandson1_id" parentKey="grandson1_id"/>
+              <childTable name="tb_grandson2" joinKey="grandson2_id" parentKey="child1_id2"/>
             </childTable>
-            <childTable name="tb_child2" joinColumn="child2_id" parentColumn="id"/>
-            <childTable name="tb_child3" joinColumn="child3_id" parentColumn="id2"/>
-        </shardingTable>
-        </schema>
+            <childTable name="tb_child2" joinKey="child2_id" parentKey="id"/>
+          <childTable name="tb_child3" joinKey="child3_id" parentKey="id2"/>
+        </table>
+      </schema>
     """
     Then execute admin cmd "reload @@config_all"
     Then restart dble in "dble-1" success

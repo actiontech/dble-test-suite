@@ -8,21 +8,23 @@ Feature: test fakeMySQLVersion support mysql8.0
   @skip
   Scenario: check fakeMySQLVersion is 5.7 #1
 # fakeMySQLVersion is 5.7.13, backend mysql version is 5.7.13, mysql client version is 5.7.13
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    $a\-DfakeMySQLVersion=5.7.13
+    <system>
+        <property name="fakeMySQLVersion">5.7.13</property>
+    </system>
     """
     Then restart dble in "dble-1" success
 
     Given delete the following xml segment
       | file         | parent         | child                  |
-      | schema.xml   | {'tag':'root'} | {'tag':'dbGroup'}      |
+      | schema.xml   | {'tag':'root'} | {'tag':'dataHost'}     |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
+        <writeHost name="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+        </writeHost>
     </dataHost>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
@@ -58,13 +60,13 @@ Feature: test fakeMySQLVersion support mysql8.0
 # fakeMySQLVersion is 5.7.13, backend mysql version is 8.0.21, mysql client version is 5.7.13
     Given delete the following xml segment
       | file         | parent         | child                  |
-      | schema.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
+      | schema.xml   | {'tag':'root'} | {'tag':'dataHost'}     |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
+        <writeHost name="hostM1" password="111111" url="172.100.9.9:3307" user="test">
+        </writeHost>
     </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
@@ -93,9 +95,11 @@ Feature: test fakeMySQLVersion support mysql8.0
   @skip
   Scenario: check fakeMySQLVersion is 8.0 #2
 # fakeMySQLVersion is 8.0.21, backend mysql version is 5.7.13
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    $a\-DfakeMySQLVersion=8.0.21
+    <system>
+        <property name="fakeMySQLVersion">8.0.21</property>
+    </system>
     """
     Then restart dble in "dble-1" failed for
     """
@@ -105,10 +109,10 @@ Feature: test fakeMySQLVersion support mysql8.0
 # fakeMySQLVersion is 8.0.21, backend mysql version is 5.7.13 and 8.0.21
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
+        <writeHost name="hostM1" password="111111" url="172.100.9.9:3307" user="test">
+        </writeHost>
     </dataHost>
     """
     Then restart dble in "dble-1" failed for
@@ -118,20 +122,20 @@ Feature: test fakeMySQLVersion support mysql8.0
 
 # fakeMySQLVersion is 8.0.21, backend mysql version is 8.0.21, mysql client version is 5.7.13
     Given delete the following xml segment
-      | file         | parent         | child                  |
-      | schema.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
+      | file         | parent         | child              |
+      | schema.xml   | {'tag':'root'} | {'tag':'dataHost'} |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
+        <writeHost name="hostM1" password="111111" url="172.100.9.9:3307" user="test">
+        </writeHost>
     </dataHost>
 
-    <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
+        <writeHost name="hostM2" password="111111" url="172.100.9.10:3307" user="test">
+        </writeHost>
     </dataHost>
     """
     Then restart dble in "dble-1" success
@@ -157,9 +161,11 @@ Feature: test fakeMySQLVersion support mysql8.0
     """
 
 # fakeMySQLVersion is 8.0.15, backend mysql version is 8.0.21, mysql client version is 5.7.13
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    $a\-DfakeMySQLVersion=8.0.15
+    <system>
+        <property name="fakeMySQLVersion">8.0.15</property>
+    </system>
     """
     Then restart dble in "dble-1" success
 
@@ -186,19 +192,17 @@ Feature: test fakeMySQLVersion support mysql8.0
 # fakeMySQLVersion is 8.0.15, backend mysql version is 5.7.13 and 8.0.21
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
+        <writeHost name="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+        </writeHost>
     </dataHost>
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                 | expect                                                                                                                                                              |
       | conn_2 | True    | reload @@config_all | Reload Failure.The reason is the dble version[=8.0.15] cannot be higher than the minimum version of the backend mysql node,pls check the backend mysql node. |
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    /fakeMySQLVersion/d
-    """
+    Given delete the following xml segment
+      | file        | parent         | child                                                 |
+      | server.xm   | {'tag':'root'} | {'tag':'system','kv_map':{'name':'fakeMySQLVersion'}} |
     Then restart dble in "dble-1" success
 

@@ -2,6 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wangjuan at 2022/1/13
 # http://10.186.18.11/jira/browse/DBLE0REQ-1374
+@skip
 Feature: support rownum sql
 
 

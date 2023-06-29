@@ -6,14 +6,16 @@ Feature: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostT
 
   @NORMAL @skip
   Scenario: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostTimeStat & useCompression on, and then execute query success #1
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    $a\-DusePerformanceMode=1
-    $a\-DusingAIO=1
-    $a\-DuseThreadUsageStat=1
-    $a\-DuseCostTimeStat=1
-    $a\-DuseCompression=1
-    $a\-DbackendProcessors=16
+    <system>
+      <property name="usePerformanceMode">1</property>
+      <property name="usingAIO">1</property>
+      <property name="useThreadUsageStat">1</property>
+      <property name="useCostTimeStat">1</property>
+      <property name="useCompression">1</property>
+      <property name="backendProcessors">16</property>
+    </system>
     """
     Then Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -29,9 +31,11 @@ Feature: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostT
       | conn_0 | True    | drop table sharding_4_t1                        | success                       | schema1 |
       
   Scenario: test with useSerializableMode on, and then execute DDL fail #2
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    $a\-DuseSerializableMode=1
+    <system>
+      <property name="useSerializableMode">1</property>
+    </system>
     """
     Then Restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "user" mode and save resultset in "A"

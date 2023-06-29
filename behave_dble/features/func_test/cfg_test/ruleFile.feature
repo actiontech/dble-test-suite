@@ -7,8 +7,14 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
 
   Scenario: Enum sharding with ruleFile way #1
     #test: Enum sharding with ruleFile way
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
+      <tableRule name="enum_rule">
+        <rule>
+          <columns>id</columns>
+          <algorithm>enum_func</algorithm>
+        </rule>
+      </tableRule>
       <function class="enum" name="enum_func">
           <property name="ruleFile">enum.txt</property>
           <property name="defaultNode">-1</property>
@@ -17,7 +23,7 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
     """
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="enum_table" dataNode="dn1,dn2,dn3,dn4" function="enum_func" />
+        <table name="enum_table" dataNode="dn1,dn2,dn3,dn4" rule="enum_rule" />
     """
     When Add some data in "enum.txt"
     """
@@ -33,19 +39,19 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
       | conn   | toClose  | sql                                   | expect                               | db      |
       | conn_0 | False    | drop table if exists enum_table       | success                              | schema1 |
       | conn_0 | False    | create table enum_table(id int)       | success                              | schema1 |
-      | conn_0 | False    | insert into enum_table values (null)  | can't find any valid shardingNode       | schema1 |
+      | conn_0 | False    | insert into enum_table values (null)  | can't find any valid data node       | schema1 |
       | conn_0 | False    | insert into enum_table values (0)     | dest_node:mysql-master1              | schema1 |
       | conn_0 | False    | insert into enum_table values (1)     | dest_node:mysql-master2              | schema1 |
       | conn_0 | False    | insert into enum_table values (2)     | dest_node:mysql-master1              | schema1 |
       | conn_0 | False    | insert into enum_table values (3)     | dest_node:mysql-master2              | schema1 |
-      | conn_0 | False    | insert into enum_table values (-1)    | can't find any valid shardingNode       | schema1 |
-      | conn_0 | False    | insert into enum_table values (4)     | can't find any valid shardingNode       | schema1 |
-      | conn_0 | False    | insert into enum_table values (5)     | can't find any valid shardingNode       | schema1 |
+      | conn_0 | False    | insert into enum_table values (-1)    | can't find any valid data node       | schema1 |
+      | conn_0 | False    | insert into enum_table values (4)     | can't find any valid data node       | schema1 |
+      | conn_0 | False    | insert into enum_table values (5)     | can't find any valid data node       | schema1 |
       | conn_0 | True     | insert into enum_table values ('aaa') | Please check if the format satisfied | schema1 |
 
 
     #test: type:string default node
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
         <function class="Enum" name="enum_func">
             <property name="ruleFile">enum.txt</property>
@@ -92,16 +98,22 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
 
   Scenario: Numberrange sharding with ruleFile way (single dble Mode) #2
     #test: set defaultNode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-        <function class="numberrange" name="numberrange_func">
-            <property name="ruleFile">partition.txt</property>
-            <property name="defaultNode">3</property>
-        </function>
+      <tableRule name="numberrange_rule">
+        <rule>
+          <columns>id</columns>
+          <algorithm>numberrange_func</algorithm>
+        </rule>
+      </tableRule>
+      <function class="numberrange" name="numberrange_func">
+          <property name="ruleFile">partition.txt</property>
+          <property name="defaultNode">3</property>
+      </function>
     """
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="numberrange_table" dataNode="dn1,dn2,dn3,dn4" function="numberrange_func" />
+        <table name="numberrange_table" dataNode="dn1,dn2,dn3,dn4" rule="numberrange_rule" />
     """
     When Add some data in "partition.txt"
     """
@@ -133,7 +145,7 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
     {"table":"numberrange_table","key":"id"}
     """
     #test: not defaultNode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
         <function class="numberrange" name="numberrange_func">
             <property name="ruleFile">partition.txt</property>
@@ -152,10 +164,10 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
       | conn_0 | False    | insert into numberrange_table values(755)  | dest_node:mysql-master1        | schema1 |
       | conn_0 | False    | insert into numberrange_table values(756)  | dest_node:mysql-master2        | schema1 |
       | conn_0 | False    | insert into numberrange_table values(1000) | dest_node:mysql-master2        | schema1 |
-      | conn_0 | True     | insert into numberrange_table values(1001) | can't find any valid shardingNode | schema1 |
-      | conn_0 | False    | insert into numberrange_table values(null) | can't find any valid shardingNode | schema1 |
-      | conn_0 | True     | insert into numberrange_table values(-1)   | can't find any valid shardingNode | schema1 |
-      | conn_0 | True     | insert into numberrange_table values(-2)   | can't find any valid shardingNode | schema1 |
+      | conn_0 | True     | insert into numberrange_table values(1001) | can't find any valid data node | schema1 |
+      | conn_0 | False    | insert into numberrange_table values(null) | can't find any valid data node | schema1 |
+      | conn_0 | True     | insert into numberrange_table values(-1)   | can't find any valid data node | schema1 |
+      | conn_0 | True     | insert into numberrange_table values(-2)   | can't find any valid data node | schema1 |
 
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "range.sql"
@@ -165,17 +177,23 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
 
   Scenario: PatternRange sharding with ruleFile way (single dble Mode) #3
     #test: set defaultNode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-        <function class="PatternRange" name="patternrange_func">
-            <property name="ruleFile">patternrange.txt</property>
-            <property name="patternValue">1000</property>
-            <property name="defaultNode">3</property>
-        </function>
+      <tableRule name="patternrange_rule">
+        <rule>
+          <columns>id</columns>
+          <algorithm>patternrange_func</algorithm>
+        </rule>
+      </tableRule>
+      <function class="PatternRange" name="patternrange_func">
+        <property name="ruleFile">patternrange.txt</property>
+        <property name="patternValue">1000</property>
+        <property name="defaultNode">3</property>
+      </function>
     """
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="patternrange_table" dataNode="dn1,dn2,dn3,dn4" function="patternrange_func"/>
+        <table name="patternrange_table" dataNode="dn1,dn2,dn3,dn4" rule="patternrange_rule"/>
     """
     When Add some data in "patternrange.txt"
     """
@@ -207,7 +225,7 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
     {"table":"patternrange_table","key":"id"}
     """
     #test: not defaultNode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
         <function class="PatternRange" name="patternrange_func">
             <property name="ruleFile">patternrange.txt</property>
@@ -228,9 +246,9 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
       | conn_0 | False    | insert into patternrange_table values(756)   | dest_node:mysql-master2           | schema1 |
       | conn_0 | False    | insert into patternrange_table values(1000)  | dest_node:mysql-master1           | schema1 |
       | conn_0 | True     | insert into patternrange_table values(1001)  | dest_node:mysql-master1           | schema1 |
-      | conn_0 | False    | insert into patternrange_table values(null)  | can't find any valid shardingNode | schema1 |
-      | conn_0 | True     | insert into patternrange_table values(-1)    | can't find any valid shardingNode | schema1 |
-      | conn_0 | True     | insert into patternrange_table values(-2)    | can't find any valid shardingNode | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(null)  | can't find any valid data node    | schema1 |
+      | conn_0 | True     | insert into patternrange_table values(-1)    | can't find any valid data node    | schema1 |
+      | conn_0 | True     | insert into patternrange_table values(-2)    | can't find any valid data node    | schema1 |
 
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "range.sql"

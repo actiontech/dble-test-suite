@@ -15,9 +15,9 @@ Feature:  unexpected packet should not in dble log
       /rowResponse/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(200L)/;/\}/!ba}
       """
     Given delete the following xml segment
-      |file          | parent          | child                   |
-      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}        |
-      |schema.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+      |file        | parent           | child                   |
+      |schema.xml  | {'tag':'root'}   | {'tag':'schema'}        |
+      |schema.xml  | {'tag':'root'}   | {'tag':'dataNode'}      |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
@@ -31,19 +31,18 @@ Feature:  unexpected packet should not in dble log
     <dataNode dataHost="ha_group1" database="db2" name="dn3" />
     <dataNode dataHost="ha_group2" database="db2" name="dn4" />
     """
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    $a\-DsqlExecuteTimeout=1000
-    $a\-DrecordTxn=1
-    $a\-DxaRecoveryLogBaseDir=/opt/dble/xalogs
-    $a\-DxaRecoveryLogBaseName=xalog
-    $a\-DxaSessionCheckPeriod=2000
-    $a\-DxaLogCleanPeriod=100000
-    /-DprocessorExecutor=1/c -DprocessorExecutor=4
-    """
-    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
-    """
-    $a\sequenceHandlerType=2
+    <system>
+      <property name="sqlExecuteTimeout">1000</property>
+      <property name="recordTxn">1</property>
+      <property name="xaRecoveryLogBaseDir">/opt/dble/xalogs</property>
+      <property name="xaRecoveryLogBaseName">xalog</property>
+      <property name="xaSessionCheckPeriod">2000</property>
+      <property name="xaLogCleanPeriod">100000</property>
+      <property name="processorExecutor">4</property>
+      <property name="sequenceHandlerType">2</property>
+    </system>
     """
     Then Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode

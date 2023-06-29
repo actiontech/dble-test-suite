@@ -26,8 +26,8 @@ Feature: config multi implicit ERtable
         </schema>
         <schema dataNode="dn5" name="schema2" sqlMaxLimit="100">
             <table type="global" name="test" dataNode="dn1,dn2,dn3,dn4" />
-            <table name="table3" shardingNode="dn1,dn2" rule="hash-two"/>
-            <table name="table4" shardingNode="dn1,dn2" rule="hash-two"/>
+            <table name="table3" dataNode="dn1,dn2" rule="hash-two"/>
+            <table name="table4" dataNode="dn1,dn2" rule="hash-two"/>
         </schema>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"

@@ -49,11 +49,11 @@ Feature: test read load balance
       | sql                                | db      |
       | select name from test where id ={} | schema1 |
     Then execute sql in "mysql-master2"
-      | sql                                                                                | expect         |
-      | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | has{(1000L,),} |
+      | sql                                                                                | expect          |
+      | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | has{((1000,),)} |
     Then execute sql in "mysql-slave1"
-      | sql                                                                                | expect       |
-      | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' |  has{(0L,),} |
+      | sql                                                                                | expect        |
+      | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' |  has{((0,),)} |
 
   @CRITICAL
   Scenario: dataHost balance="1", do balance on read host or standby write host #2
@@ -196,8 +196,11 @@ Feature: test read load balance
       | sql                                                                                 | expect        |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'  | balance{5000} |
 
-  @NORMAL
+  @NORMAL @restore_mysql_service
   Scenario: dataHost balance="1" and tempReadHostAvailable="1", do balance bewteen read host even writehost down #6
+    """
+    {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
+    """
      Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -234,12 +237,15 @@ Feature: test read load balance
       | sql                                 | db      |
       | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-slave1"
-      | sql                                                                                | expect         |
-      | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | has{(1000L,),} |
+      | sql                                                                                | expect          |
+      | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | has{((1000,),)} |
     Given start mysql in host "mysql-master2"
 
-  @NORMAL
+  @NORMAL @restore_mysql_service
   Scenario: dataHost balance="1" and tempReadHostAvailable="0", don't balance bewteen read host if writehost down #7
+    """
+    {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
+    """
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -337,7 +343,7 @@ Feature: test read load balance
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{5000} |
     Then execute sql in "mysql-slave2"
       | sql                                                                                | expect        |
-      | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' |  has{(0L,),}  |
+      | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' |  has{((0,),)}  |
     Then execute sql in "mysql-master2"
       | sql                          |
       | set global general_log=off   |
@@ -398,7 +404,7 @@ Feature: test read load balance
       | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-master2"
       | sql                                                                                | expect        |
-      | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | has{(0L,),}   |
+      | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | has{((0,),)}  |
     Then execute sql in "mysql-slave1"
       | sql                                                                                | expect        |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{5000} |

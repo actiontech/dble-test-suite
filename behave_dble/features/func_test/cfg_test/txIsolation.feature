@@ -14,20 +14,20 @@ Feature: check txIsolation supports tx_/transaction_ variables
 # check isolation、autocommit
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10">
-        </dbInstance>
+        <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.11:3307" user="test">
+        </readHost>
+        </writeHost>
     </dataHost>
     """
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    /-DtxIsolation/d
-    /-Dautocommit/d
-    $a -Dautocommit=0
-    $a -DtxIsolation=1
+    <system>
+        <property name="autocommit">0</property>
+        <property name="txIsolation">1</property>
+    </system>
     """
     Then restart dble in "dble-1" success
     Then execute sql in "mysql-master2"
@@ -112,20 +112,20 @@ Feature: check txIsolation supports tx_/transaction_ variables
 # check isolation、autocommit
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10">
-        </dbInstance>
+        <writeHost host="hostM2" password="111111" url="172.100.9.10:3307" user="test">
+          <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test">
+          </readHOst>
+        </writeHost>
     </dataHost>
     """
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    /-DtxIsolation/d
-    /-Dautocommit/d
-    $a -Dautocommit=0
-    $a -DtxIsolation=1
+    <system>
+        <property name="autocommit">0</property>
+        <property name="txIsolation">1</property>
+    </system>
     """
     Then restart dble in "dble-1" success
     Then execute sql in "mysql8-master2"
@@ -211,26 +211,26 @@ Feature: check txIsolation supports tx_/transaction_ variables
 # check isolation、autocommit
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
+        <writeHost host="hostM2" password="111111" url="172.100.9.5:3306" user="test">
+        </writeHost>
     </dataHost>
 
-    <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10">
-        </dbInstance>
+        <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+          <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test">
+          </readHost>
+        </writeHost>
     </dataHost>
     """
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    /-DtxIsolation/d
-    /-Dautocommit/d
-    $a -Dautocommit=0
-    $a -DtxIsolation=1
+    <system>
+        <property name="autocommit">0</property>
+        <property name="txIsolation">1</property>
+    </system>
     """
     Then restart dble in "dble-1" success
     Then execute sql in "mysql-master2"
@@ -316,20 +316,19 @@ Feature: check txIsolation supports tx_/transaction_ variables
 # check isolation、autocommit
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost rwSplitMode="0" name="ha_group2" slaveThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-        </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10">
-        </dbInstance>
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10" >
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test"/>
+      </writeHost>
     </dataHost>
     """
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    /-DtxIsolation/d
-    /-Dautocommit/d
-    $a -Dautocommit=0
-    $a -DtxIsolation=1
+    <system>
+        <property name="autocommit">0</property>
+        <property name="txIsolation">1</property>
+    </system>
     """
     Then restart dble in "dble-1" success
     Then execute sql in "mysql-master2"

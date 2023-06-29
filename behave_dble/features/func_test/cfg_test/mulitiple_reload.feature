@@ -20,9 +20,8 @@ Feature: multiple reload
         <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
         <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
     </schema>
-
-    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
-    <dataNode dataHost="ha_group1" database="db2" name="dn2" />
+        <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
+        <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -66,9 +65,8 @@ Feature: multiple reload
         <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
         <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
     </schema>
-
-    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
-    <dataNode dataHost="ha_group1" database="db2" name="dn2" />
+        <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
+        <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -185,9 +183,8 @@ Feature: multiple reload
         <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
         <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
     </schema>
-
-    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
-    <dataNode dataHost="ha_group1" database="db2" name="dn2" />
+        <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
+        <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -208,7 +205,7 @@ Feature: multiple reload
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
+    /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
@@ -295,9 +292,8 @@ Feature: multiple reload
         <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
         <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
     </schema>
-
-    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
-    <dataNode dataHost="ha_group1" database="db2" name="dn2" />
+        <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
+        <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -318,7 +314,7 @@ Feature: multiple reload
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(12000L)/;/\}/!ba}
+    /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background

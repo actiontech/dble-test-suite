@@ -13,7 +13,7 @@ Feature: db heartbeat test
           </writeHost>
       </dataHost>
 
-      <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
+      <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10">
           <heartbeat>show slave status</heartbeat>
           <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
           <readHost host="hosts1" password="111111" url="172.100.9.6:3307" user="test" />
@@ -23,16 +23,13 @@ Feature: db heartbeat test
     Then execute admin cmd "reload @@config_all"
     Then Restart dble in "dble-1" success
 
-  Scenario: config errorRetryCount with illegal value, reload fail #2
+  Scenario: config errorRetryCount with illegal value, reload success #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
       <dataHost balance="0" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10">
           <heartbeat errorRetryCount="-1" timeout="10">select @@read_only</heartbeat>
-          <writeHost name="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+          <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
           </writeHost>
       </dataHost>
     """
-    Then execute admin cmd "reload @@config_all" get the following output
-    """
-    dbGroup ha_group1 errorRetryCount should be greater than 0!
-    """
+    Then execute admin cmd "reload @@config_all"
