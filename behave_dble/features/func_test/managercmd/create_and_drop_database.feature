@@ -325,8 +325,8 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
        | dn4    | 3          | 172.100.9.6   | 3306   | db2               | test   | 111111     |
      #CASE show @@dataNode where schema=?
      Given execute single sql in "dble-1" in "admin" mode and save resultset in "D"
-       | conn   | toClose  | sql                                               | db               |
-       | conn_0 | False    | show @@dataNode  where schema = schema1       | dble_information |
+       | conn   | toClose  | sql                                           |
+       | conn_0 | False    | show @@dataNode  where schema = schema1       |
      Then check resultset "D" has lines with following column values
        | NAME-0 | DB_GROUP-1      | SCHEMA_EXISTS-2 |ACTIVE-3 | SIZE-5 | RECOVERY_TIME-7 |
        | dn1  | ha_group1/db1     | true            |      0  | 1000   |            -1   |

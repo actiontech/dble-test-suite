@@ -7,11 +7,11 @@ Feature: test group by
   Scenario: the version of all backend mysql nodes are 5.7.* #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
           """
-           <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
+           <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10" >
               <heartbeat>select user()</heartbeat>
-              <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-              </dbInstance>
-              <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false"/>
+              <writeHost name="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+                <readHost name="hostS1" password="111111" url="172.100.9.6:3307" user="test" />
+              </writeHost>
            </dataHost>
           """
     Then execute admin cmd "reload @@config_all"
@@ -203,16 +203,16 @@ Feature: test group by
   Scenario: the version of all backend mysql nodes are mixed with 5.7.* and 8.0.* #3
         Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10" >
       <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
-      </dbInstance>
+      <writeHost name="hostM1" password="111111" url="172.100.9.9:3307" user="test">
+      </writeHost>
       </dataHost>
-    <dataHost balance="0" name="ha_group2" slaveThreshold="100" >
+    <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10" >
       <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
-      </dbInstance>
-      <dbInstance name="hostS1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <writeHost name="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+        <readHost name="hostS1" password="111111" url="172.100.9.6:3307" user="test" />
+      </writeHost>
     </dataHost>
     """
     Then execute admin cmd "reload @@config_all"

@@ -199,12 +199,12 @@ Feature: We will check readonly status on both master and slave even if the hear
     """
     Then execute admin cmd "reload @@config_all"
 
-      # begin exec dbGroup @@disable name='ha_group1,2,3';
+      # begin exec dataHost @@disable name='ha_group1,2,3';
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose  | sql                                | expect  |
-        | conn_0 | False    | dbGroup @@disable name='ha_group1' | success |
-        | conn_0 | False    | dbGroup @@disable name='ha_group2' | success |
-        | conn_0 | True     | dbGroup @@disable name='ha_group3' | success |
+        | conn_0 | False    | dataHost @@disable name='ha_group1' | success |
+        | conn_0 | False    | dataHost @@disable name='ha_group2' | success |
+        | conn_0 | True     | dataHost @@disable name='ha_group3' | success |
 
       #Then check disable status
      Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM1','disabled':'true'}}" in " /opt/dble/conf/schema.xml" in host "dble-1"
@@ -220,9 +220,9 @@ Feature: We will check readonly status on both master and slave even if the hear
       # enable the dbGroups:
      Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose  | sql                               | expect  |
-        | conn_0 | False    | dbGroup @@enable name='ha_group1' | success |
-        | conn_0 | False    | dbGroup @@enable name='ha_group2' | success |
-        | conn_0 | True     | dbGroup @@enable name='ha_group3' | success |
+        | conn_0 | False    | dataHost @@enable name='ha_group1' | success |
+        | conn_0 | False    | dataHost @@enable name='ha_group2' | success |
+        | conn_0 | True     | dataHost @@enable name='ha_group3' | success |
 
        #Then check enable status
      Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"

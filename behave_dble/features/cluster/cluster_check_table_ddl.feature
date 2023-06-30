@@ -50,17 +50,17 @@ Feature: test "ddl" in zk cluster
       | Extra   | 5            |
     #case check full @@metadata on admin mode
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_A"
-      | conn    | toClose | sql                                                                     | db               |
-      | conn_11 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  | dble_information |
+      | conn    | toClose | sql                                                                     |
+      | conn_11 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  |
     Then check resultset "Res_A" has lines with following column values
       | schema-0 | table-1       | consistent_in_sharding_nodes-4 | consistent_in_memory-5 |
       | schema1  | sharding_4_t1 | 1                              | 1                      |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_B"
-      | conn    | toClose | sql                                                                     | db               |
-      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  | dble_information |
+      | conn    | toClose | sql                                                                     |
+      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  |
     Given execute single sql in "dble-3" in "admin" mode and save resultset in "Res_C"
-      | conn    | toClose | sql                                                                     | db               |
-      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  | dble_information |
+      | conn    | toClose | sql                                                                     |
+      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  |
     Then check resultsets "Res_A" and "Res_B" are same in following columns
       | column                       | column_index |
       | schema                       | 0            |
@@ -121,17 +121,17 @@ Feature: test "ddl" in zk cluster
       | Extra   | 5            |
     #case check full @@metadata on admin mode
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_A"
-      | conn    | toClose | sql                                                                     | db               |
-      | conn_11 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  | dble_information |
+      | conn    | toClose | sql                                                                     |
+      | conn_11 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  |
     Then check resultset "Res_A" has lines with following column values
       | schema-0 | table-1       | consistent_in_sharding_nodes-4 | consistent_in_memory-5 |
       | schema1  | sharding_4_t1 | 1                              | 1                      |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_B"
-      | conn    | toClose | sql                                                                     | db               |
-      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  | dble_information |
+      | conn    | toClose | sql                                                                     |
+      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  |
     Given execute single sql in "dble-3" in "admin" mode and save resultset in "Res_C"
-      | conn    | toClose | sql                                                                     | db               |
-      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  | dble_information |
+      | conn    | toClose | sql                                                                     |
+      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  |
     Then check resultsets "Res_A" and "Res_B" are same in following columns
       | column                       | column_index |
       | schema                       | 0            |
@@ -155,8 +155,8 @@ Feature: test "ddl" in zk cluster
       | conn   | toClose | sql            | expect                  | db      |
       | conn_1 | true    | show tables    | hasNoStr{sharding_4_t1} | schema1 |
     Then execute sql in "dble-3" in "admin" mode
-      | conn    | toClose | sql                                                                     | expect                                                       | db               |
-      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  | has{(('schema1', 'sharding_4_t1', 'null', 'null', 0, 0),)}   | dble_information |
+      | conn    | toClose | sql                                                                     | expect                                                       |
+      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  | has{(('schema1', 'sharding_4_t1', 'null', 'null', 0, 0),)}   |
     #case check lock on zookeeper values is 0
     Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
       """
@@ -221,17 +221,17 @@ Feature: test "ddl" in zk cluster
       | conn_3 | true     | insert into sharding_4_t1 values (2,2,2,2)             | success  | schema1 |
       #case check full @@metadata on admin mode
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_A"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_11 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_11 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Then check resultset "Res_A" has lines with following column values
       | schema-0 | table-1        | consistent_in_sharding_nodes-4 | consistent_in_memory-5 |
       | schema1  | sharding_4_t1  | 1                              | 1                      |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_B"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Given execute single sql in "dble-3" in "admin" mode and save resultset in "Res_C"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Then check resultsets "Res_A" and "Res_B" are same in following columns
       | column                       | column_index |
       | schema                       | 0            |
@@ -304,11 +304,11 @@ Feature: test "ddl" in zk cluster
       """
     #case check full @@metadata on admin mode
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_B"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Given execute single sql in "dble-3" in "admin" mode and save resultset in "Res_C"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Then check resultsets "Res_C" and "Res_B" are same in following columns
       | column                       | column_index |
       | schema                       | 0            |
@@ -409,17 +409,17 @@ Feature: test "ddl" in zk cluster
       | Extra   | 5            |
     #case check full @@metadata on admin mode
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_A"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_11 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_11 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Then check resultset "Res_A" has lines with following column values
       | schema-0 | table-1       | consistent_in_sharding_nodes-4 | consistent_in_memory-5 |
       | schema1  | sharding_4_t1 | 1                              | 1                      |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_B"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Given execute single sql in "dble-3" in "admin" mode and save resultset in "Res_C"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Then check resultsets "Res_A" and "Res_B" are same in following columns
       | column                       | column_index |
       | schema                       | 0            |
@@ -460,17 +460,17 @@ Feature: test "ddl" in zk cluster
       """
     #case check full @@metadata on admin mode
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_A"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_11 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_11 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Then check resultset "Res_A" has lines with following column values
       | schema-0 | table-1       | consistent_in_sharding_nodes-4 | consistent_in_memory-5 |
       | schema1  | sharding_4_t1 | 1                              | 1                      |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_B"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Given execute single sql in "dble-3" in "admin" mode and save resultset in "Res_C"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Then check resultsets "Res_A" and "Res_B" are same in following columns
       | column                       | column_index |
       | schema                       | 0            |
@@ -593,17 +593,17 @@ Feature: test "ddl" in zk cluster
 
     #case check full @@metadata on admin mode
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_A"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_11 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_11 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Then check resultset "Res_A" has lines with following column values
       | schema-0 | table-1       | consistent_in_sharding_nodes-4 | consistent_in_memory-5 |
       | schema1  | sharding_4_t1 | 1                              | 1                      |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_B"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_21 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Given execute single sql in "dble-3" in "admin" mode and save resultset in "Res_C"
-      | conn    | toClose | sql                                                                              | db               |
-      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           | dble_information |
+      | conn    | toClose | sql                                                                              |
+      | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'           |
     Then check resultsets "Res_A" and "Res_B" are same in following columns
       | column                       | column_index |
       | schema                       | 0            |

@@ -4,7 +4,7 @@
  # 3.20.07新增
 Feature: test python script "custom_mysql_ha.py" to change mysql master
 
-  todo: add check dble.log has disable @@/dbgroup @@switch/enable @@
+  todo: add check dble.log has disable @@/dataHost @@switch/enable @@
 
   @restore_mysql_service
   Scenario: when useOuterHa is true, python script does not start #1

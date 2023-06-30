@@ -306,7 +306,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
-    When execute admin cmd "dbGroup @@enable name='ha_group1'" success
+    When execute admin cmd "dataHost @@enable name='ha_group1'" success
     Given sleep "5" seconds
     Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
@@ -350,7 +350,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
-    When execute admin cmd "dbGroup @@enable name='ha_group1'" success
+    When execute admin cmd "dataHost @@enable name='ha_group1'" success
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
   @restore_global_setting
@@ -390,7 +390,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn   | toClose | sql                                       |
       | conn_0 | False   | set global autocommit=0                   |
       | conn_0 | True    | set global tx_isolation='READ-COMMITTED'  |
-    Given execute admin cmd "dbGroup @@enable name='ha_group1'" success
+    Given execute admin cmd "dataHost @@enable name='ha_group1'" success
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
   @restore_mysql_service
