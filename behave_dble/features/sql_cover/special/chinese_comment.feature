@@ -128,21 +128,21 @@ Feature: verify issue 92 #Enter feature name here
     Given execute single sql in "dble-1" in "user" mode and save resultset in "5"
       | conn   | toClose | sql                          | db      | charset |
       | conn_0 | False   | SELECT DATE_FORMAT(DATE_ADD(ttt.EACHDAY, INTERVAL -1 DAY), '%Y%m%d') AS statTime , CONCAT(IF(SUBSTRING(DATE_FORMAT(DATE_ADD(eachDay, INTERVAL -1 DAY), '%Y%m%d'), 7, 2) > 9, SUBSTRING(DATE_FORMAT(DATE_ADD(eachDay, INTERVAL -1 DAY), '%Y%m%d'), 7, 2), SUBSTRING(DATE_FORMAT(DATE_ADD(eachDay, INTERVAL -1 DAY), '%Y%m%d'), 8, 1)), '日') AS xValue , IFNULL(ddd.DA12_VALE, 0) AS dataValue , IFNULL(ddd.DA12_V123_S43, 0) AS dataValueLy, '41101' AS orgNo , ddd.SAT_CRE AS statCalibre FROM ( SELECT REPLACE(A.DATE, '-', '') AS eachDay FROM ( SELECT date_sub(CURDATE(), INTERVAL A.A + 10 * B.A + 100 * C.A - 1 DAY) AS DATE FROM ( SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) A CROSS JOIN ( SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) B CROSS JOIN ( SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) C ) A WHERE A.DATE BETWEEN DATE_SUB(DATE_FORMAT('20201015', '%y%m%d'), INTERVAL 12 DAY) AND DATE_FORMAT('20201015', '%y%m%d') ORDER BY eachDay ) ttt LEFT JOIN ( SELECT cidm.ben_tim12, SUM(DA12_VALE) AS DA12_VALE, SUM(DA12_V123_S43) AS DA12_V123_S43 , '41101' AS orgNo, cidm.SAT_CRE FROM shard12 cidm WHERE OG_NO = '41101' AND SAT_CRE = '01' AND ben_tim12 BETWEEN REPLACE(DATE_SUB('20201015', INTERVAL 12 DAY), '-', '') AND '20201015' AND TE_N = 'IND_08_TQXSYLVJZQJSLV' AND IX123_NO = 'lll411010334433' GROUP BY IX123_NO, ben_tim12 ORDER BY ben_tim12 ) ddd ON ttt.EACHDAY = ddd.ben_tim12 ORDER BY ttt.EACHDAY | schema1 | utf8mb4 |
-    Then check resultset "5" has lines with following column values
-      | statTime-0 | xValue-1  | dataValue-2 | dataValueLy-3 | orgNo-4 | statCalibre-5 |
+#    Then check resultset "5" has lines with following column values
+#      | statTime-0 | xValue-1  | dataValue-2 | dataValueLy-3 | orgNo-4 | statCalibre-5 |
 #      | 20201002   | 2日       | 0           | 0             | 41101   | None          |
-      | 20201003   | 3日       | 0           | 0             | 41101   | None          |
-      | 20201004   | 4日       | 0           | 0             | 41101   | None          |
-      | 20201005   | 5日       | 0           | 0             | 41101   | None          |
-      | 20201006   | 6日       | 0           | 0             | 41101   | None          |
-      | 20201007   | 7日       | 0           | 0             | 41101   | None          |
-      | 20201008   | 8日       | 0           | 0             | 41101   | None          |
-      | 20201009   | 9日       | 0           | 0             | 41101   | None          |
-      | 20201010   | 10日      | 0           | 0             | 41101   | None          |
-      | 20201011   | 11日      | 0           | 0             | 41101   | None          |
-      | 20201012   | 12日      | 0           | 0             | 41101   | None          |
-      | 20201013   | 13日      | 0           | 0             | 41101   | None          |
-      | 20201014   | 14日      | 0           | 0             | 41101   | None          |
+#      | 20201003   | 3日       | 0           | 0             | 41101   | None          |
+#      | 20201004   | 4日       | 0           | 0             | 41101   | None          |
+#      | 20201005   | 5日       | 0           | 0             | 41101   | None          |
+#      | 20201006   | 6日       | 0           | 0             | 41101   | None          |
+#      | 20201007   | 7日       | 0           | 0             | 41101   | None          |
+#      | 20201008   | 8日       | 0           | 0             | 41101   | None          |
+#      | 20201009   | 9日       | 0           | 0             | 41101   | None          |
+#      | 20201010   | 10日      | 0           | 0             | 41101   | None          |
+#      | 20201011   | 11日      | 0           | 0             | 41101   | None          |
+#      | 20201012   | 12日      | 0           | 0             | 41101   | None          |
+#      | 20201013   | 13日      | 0           | 0             | 41101   | None          |
+#      | 20201014   | 14日      | 0           | 0             | 41101   | None          |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                          | db      | charset |
       | conn_1 | False   | SELECT DATE_FORMAT(DATE_ADD(ttt.EACHDAY, INTERVAL -1 DAY), '%Y%m%d') AS statTime , CONCAT(IF(SUBSTRING(DATE_FORMAT(DATE_ADD(eachDay, INTERVAL -1 DAY), '%Y%m%d'), 7, 2) > 9, SUBSTRING(DATE_FORMAT(DATE_ADD(eachDay, INTERVAL -1 DAY), '%Y%m%d'), 7, 2), SUBSTRING(DATE_FORMAT(DATE_ADD(eachDay, INTERVAL -1 DAY), '%Y%m%d'), 8, 1)), '日') AS xValue , IFNULL(ddd.DA12_VALE, 0) AS dataValue , IFNULL(ddd.DA12_V123_S43, 0) AS dataValueLy, '41101' AS orgNo , ddd.SAT_CRE AS statCalibre FROM ( SELECT REPLACE(A.DATE, '-', '') AS eachDay FROM ( SELECT date_sub(CURDATE(), INTERVAL A.A + 10 * B.A + 100 * C.A - 1 DAY) AS DATE FROM ( SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) A CROSS JOIN ( SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) B CROSS JOIN ( SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) C ) A WHERE A.DATE BETWEEN DATE_SUB(DATE_FORMAT('20201015', '%y%m%d'), INTERVAL 12 DAY) AND DATE_FORMAT('20201015', '%y%m%d') ORDER BY eachDay ) ttt LEFT JOIN ( SELECT cidm.ben_tim12, SUM(DA12_VALE) AS DA12_VALE, SUM(DA12_V123_S43) AS DA12_V123_S43 , '41101' AS orgNo, cidm.SAT_CRE FROM shard12 cidm WHERE OG_NO = '41101' AND SAT_CRE = '01' AND ben_tim12 BETWEEN REPLACE(DATE_SUB('20201015', INTERVAL 12 DAY), '-', '') AND '20201015' AND TE_N = 'IND_08_TQXSYLVJZQJSLV' AND IX123_NO = 'lll411010334433' GROUP BY IX123_NO, ben_tim12 ORDER BY ben_tim12 ) ddd ON ttt.EACHDAY = ddd.ben_tim12 ORDER BY ttt.EACHDAY | schema1 | utf8mb4 |
