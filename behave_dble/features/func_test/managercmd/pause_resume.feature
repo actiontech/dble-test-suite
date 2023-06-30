@@ -145,16 +145,16 @@ Feature: test "pause/resume" manager cmd
     Given delete file "/opt/dble/logs/dble_admin_query.log" on "dble-1"
 
   @CRITICAL
-  Scenario: execute manager cmd "pause @@shardingNode" different  #7
+  Scenario: execute manager cmd "pause @@dataNode" different  #7
 
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                                              | expect                                            |
       | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5   | success                                           |
-      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5   | Some shardingNodes is paused, please resume first |
-      | pause @@DataNode = 'dn1,dn2' and timeout =10 ,queue = 1,wait_limit = 5       | Some shardingNodes is paused, please resume first |
-      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 11,wait_limit = 5  | Some shardingNodes is paused, please resume first |
-      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | Some shardingNodes is paused, please resume first |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5   | Some dataNodes is paused, please resume first |
+      | pause @@DataNode = 'dn1,dn2' and timeout =10 ,queue = 1,wait_limit = 5       | Some dataNodes is paused, please resume first |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 11,wait_limit = 5  | Some dataNodes is paused, please resume first |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | Some dataNodes is paused, please resume first |
       | resume                                                                           | success                                           |
       | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | success                                           |
-      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =100 ,queue = 1,wait_limit = 15 | Some shardingNodes is paused, please resume first |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =100 ,queue = 1,wait_limit = 15 | Some dataNodes is paused, please resume first |
       | resume                                                                           | success                                           |

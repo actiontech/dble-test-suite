@@ -139,7 +139,7 @@ Feature: test " check @@global schema = '' [and table = '']"
       | conn   | toClose | sql             | expect                                                      |
       | conn_0 | true    | check @@global  | has{(('schema1', 'g1', 2, 0),('schema2', 'g3', 2, 0),)}     |
 
-   #case the global table one shardingNode is not created, others shardingNode are created and the same
+   #case the global table one dataNode is not created, others dataNode are created and the same
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                           | expect   |
       | conn_2 | False    | drop table if exists db1.g1   | success  |
@@ -159,7 +159,7 @@ Feature: test " check @@global schema = '' [and table = '']"
       | conn   | toClose | sql              | expect                                                      |
       | conn_0 | true    | check @@global   | has{(('schema1', 'g1', 2, 0),('schema2', 'g3', 1, 1),)}     |
 
-   #case the global table one shardingNode is not created, others shardingNode are created and not the same
+   #case the global table one dataNode is not created, others dataNode are created and not the same
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                               | expect   |
       | conn_2 | False    | insert into db2.g1 values (5,5)   | success  |

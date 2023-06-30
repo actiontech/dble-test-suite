@@ -101,7 +101,7 @@ pipenv run behave -D dble_conf=template features/func_test/safety/safety.feature
 pipenv run behave -D dble_conf=template features/func_test/managercmd/
 
 ### zk 使用说明
-#### 1.更新dble/conf/cluster.cnf配置：
+#### 1.更新dble/conf/myid.properties配置：
 ```
 #set false if not use cluster ucore/zk
 cluster=zk

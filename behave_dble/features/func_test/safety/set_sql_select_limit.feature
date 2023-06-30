@@ -2,10 +2,10 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2020/11/30
 
-Feature: check mysql is stop,but set xxx route to the first alive shardingNode to check grammer success
+Feature: check mysql is stop,but set xxx route to the first alive dataNode to check grammer success
 
   @restore_mysql_service
-  Scenario: set xxx route to the first alive shardingNode to check grammer success #case from github:1434 #1
+  Scenario: set xxx route to the first alive dataNode to check grammer success #case from github:1434 #1
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
@@ -38,7 +38,7 @@ Feature: check mysql is stop,but set xxx route to the first alive shardingNode t
       | conn_0 | False   | set sql_select_limit=3 | success | schema1 |
       | conn_1 | False   | set sql_select_limit=3 | success | schema2 |
     Given stop mysql in host "mysql-master1"
-#case mysql stop,but has alive shardingnode
+#case mysql stop,but has alive dataNode
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                    | expect  | db      |
       | conn_0 | False   | set sql_select_limit=3 | success | schema1 |

@@ -470,7 +470,7 @@ Feature: support rownum sql
 
 
 
-  Scenario: check rownum sql - shardingTable + shardingTable - same shardingNode and same function #3
+  Scenario: check rownum sql - shardingTable + shardingTable - same dataNode and same function #3
     Given delete the following xml segment
       | file          | parent           | child               |
       | schema.xml  | {'tag':'root'}   | {'tag':'schema'}    |
@@ -617,7 +617,7 @@ Feature: support rownum sql
 
 
 
-  Scenario: check rownum sql - shardingTable + shardingTable - same shardingNode and different function #4
+  Scenario: check rownum sql - shardingTable + shardingTable - same dataNode and different function #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
@@ -740,7 +740,7 @@ Feature: support rownum sql
 
 
 
-  Scenario: check rownum sql - shardingTable + shardingTable - different shardingNode and same function #5
+  Scenario: check rownum sql - shardingTable + shardingTable - different dataNode and same function #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
@@ -863,12 +863,12 @@ Feature: support rownum sql
 
 
 
-  Scenario: check rownum sql - shardingTable + shardingTable - different shardingNode and different function #6
+  Scenario: check rownum sql - shardingTable + shardingTable - different dataNode and different function #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <table name="sharding_2_t1" shardingNode="dn1,dn2" rule="hash-two"/>
-        <table name="sharding_2_t2" shardingNode="dn3,dn4" function="hash-string-into-two"/>
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two"/>
+        <table name="sharding_2_t2" dataNode="dn3,dn4" function="hash-string-into-two"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -938,12 +938,12 @@ Feature: support rownum sql
 
 
 
-  Scenario: check rownum sql - shardingTable + globalTable - same shardingNode #7
+  Scenario: check rownum sql - shardingTable + globalTable - same dataNode #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" rule="hash-two"/>
-        <table type="global" name="global_2_t1" shardingNode="dn1,dn2" />
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <shardingTable name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two"/>
+        <table type="global" name="global_2_t1" dataNode="dn1,dn2" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -1078,12 +1078,12 @@ Feature: support rownum sql
 
 
 
-  Scenario: check rownum sql - shardingTable + globalTable - different shardingNode #8
+  Scenario: check rownum sql - shardingTable + globalTable - different dataNode #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" rule="hash-two"/>
-        <table type="global" name="global_2_t1" shardingNode="dn3,dn4" />
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <shardingTable name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two"/>
+        <table type="global" name="global_2_t1" dataNode="dn3,dn4" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -1215,12 +1215,12 @@ Feature: support rownum sql
 
 
 
-  Scenario: check rownum sql - shardingTable + singleTable - same shardingNode #9
+  Scenario: check rownum sql - shardingTable + singleTable - same dataNode #9
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" rule="hash-two"/>
-        <table name="single_t1" shardingNode="dn1" />
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <shardingTable name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two"/>
+        <table name="single_t1" dataNode="dn1" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -1393,12 +1393,12 @@ Feature: support rownum sql
 
 
 
-  Scenario: check rownum sql - shardingTable + singleTable - different shardingNode #10
+  Scenario: check rownum sql - shardingTable + singleTable - different dataNode #10
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two"/>
-        <table name="single_t1" shardingNode="dn3" />
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <shardingTable name="sharding_2_t1" dataNode="dn1,dn2" function="hash-two"/>
+        <table name="single_t1" dataNode="dn3" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -1507,12 +1507,12 @@ Feature: support rownum sql
 
 
 
-  Scenario: check rownum sql - shardingTable + singleTable - same shardingNode #11
+  Scenario: check rownum sql - shardingTable + singleTable - same dataNode #11
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <table type="global" name="global_t1" shardingNode="dn1,dn2" />
-        <table name="single_t1" shardingNode="dn1" />
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table type="global" name="global_t1" dataNode="dn1,dn2" />
+        <table name="single_t1" dataNode="dn1" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -1647,12 +1647,12 @@ Feature: support rownum sql
 
 
 
-  Scenario: check rownum sql - shardingTable + singleTable - different shardingNode #12
+  Scenario: check rownum sql - shardingTable + singleTable - different dataNode #12
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <table type="global" name="global_t1" shardingNode="dn1,dn2" />
-        <table name="single_t1" shardingNode="dn3" />
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table type="global" name="global_t1" dataNode="dn1,dn2" />
+        <table name="single_t1" dataNode="dn3" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"

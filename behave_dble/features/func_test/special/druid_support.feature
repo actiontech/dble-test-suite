@@ -71,7 +71,7 @@ Feature: druid upgrade from 1.2.3 to 1.2.6
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
-        <table name="test" shardingNode="dn1,dn2,dn3,dn4" type="global" />
+        <table name="test" dataNode="dn1,dn2,dn3,dn4" type="global" />
         <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
         <table name="single_t1" dataNode="dn1" />
     </schema>

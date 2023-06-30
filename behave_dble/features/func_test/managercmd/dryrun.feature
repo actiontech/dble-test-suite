@@ -37,10 +37,10 @@ Feature: # dryrun test
       | dryrun      |
     Then check resultset "B" has lines with following column values
       | TYPE-0  | LEVEL-1 | DETAIL-2                                                                    |
-      | Meta    | WARNING | Table schema1.global doesn't exists in shardingNode(s)[dn1,dn2,dn3,dn4]     |
-      | Meta    | WARNING | Table schema1.sing doesn't exists in shardingNode(s)[dn5]                   |
-      | Meta    | WARNING | Table schema1.sharding_4 doesn't exists in shardingNode(s)[dn1,dn2,dn3,dn4] |
-      | Meta    | WARNING | Table schema2.sharding_2 doesn't exists in shardingNode(s)[dn1,dn3]         |
+      | Meta    | WARNING | Table schema1.global doesn't exists in dataNode(s)[dn1,dn2,dn3,dn4]     |
+      | Meta    | WARNING | Table schema1.sing doesn't exists in dataNode(s)[dn5]                   |
+      | Meta    | WARNING | Table schema1.sharding_4 doesn't exists in dataNode(s)[dn1,dn2,dn3,dn4] |
+      | Meta    | WARNING | Table schema2.sharding_2 doesn't exists in dataNode(s)[dn1,dn3]         |
       | Xml     | WARNING | Schema:schema2 has no user                                                  |
       | Xml     | NOTICE  | There is No RWSplit User                                                    |
       | Cluster | NOTICE  | Dble is in single mod                                                       |
@@ -61,9 +61,9 @@ Feature: # dryrun test
       | Cluster | NOTICE  | Dble is in single mod                                                     |
     Then check resultset "C" has not lines with following column values
       | TYPE-0  | LEVEL-1 | DETAIL-2                                                                    |
-      | Meta    | WARNING | Table schema1.global doesn't exists in shardingNode(s)[dn1,dn2,dn3,dn4]     |
-      | Meta    | WARNING | Table schema1.sing doesn't exists in shardingNode(s)[dn5]                   |
-      | Meta    | WARNING | Table schema1.sharding_4 doesn't exists in shardingNode(s)[dn1,dn2,dn3,dn4] |
-      | Meta    | WARNING | Table schema2.sharding_2 doesn't exists in shardingNode(s)[dn1,dn3]         |
+      | Meta    | WARNING | Table schema1.global doesn't exists in dataNode(s)[dn1,dn2,dn3,dn4]     |
+      | Meta    | WARNING | Table schema1.sing doesn't exists in dataNode(s)[dn5]                   |
+      | Meta    | WARNING | Table schema1.sharding_4 doesn't exists in dataNode(s)[dn1,dn2,dn3,dn4] |
+      | Meta    | WARNING | Table schema2.sharding_2 doesn't exists in dataNode(s)[dn1,dn3]         |
       | Xml     | WARNING | Schema:schema2 has no user                                                  |
       | Xml     | NOTICE  | There is No RWSplit User                                                    |
