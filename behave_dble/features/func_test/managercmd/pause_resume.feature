@@ -103,15 +103,17 @@ Feature: test "pause/resume" manager cmd
       | conn_0 | false   | begin                                                   | success | schema1 |
       | conn_0 | false   | insert into sharding_4_t1 values(1,1),(2,1),(3,1),(4,1) | success | schema1 |
     Then execute admin cmd  in "dble-1" at background
-      | sql                                                                        |
-      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 |
+      | sql                                                                        | db      |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                        | expect                                        |
-      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | Some dataNodes is paused, please resume first |
-    Given sleep "10" seconds
+      | conn   | toClose | sql          | expect                             | timeout |
+      | conn_1 | false   | show @@pause | has{(('dn1',),('dn2',),('dn3',),)} | 10      |
     Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                        | expect                                              |
-      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | The backend connection recycle failure,try it later |
+      | sql                                                                        | expect                                        | timeout |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | Some dataNodes is paused, please resume first | 5       |
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                        | expect                                              | timeout |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | The backend connection recycle failure,try it later | 15      |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                          | expect      | db      |
       | conn_0 | false   | select *  from sharding_4_t1 | length{(4)} | schema1 |
@@ -126,11 +128,12 @@ Feature: test "pause/resume" manager cmd
       | conn_0 | false   | begin                                                   | success | schema1 |
       | conn_0 | false   | insert into sharding_4_t1 values(1,1),(2,1),(3,1),(4,1) | success | schema1 |
     Then execute admin cmd  in "dble-1" at background
-      | sql                                                                        |
-      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 |
+      | sql                                                                        | db      |
+      | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-      | sql    | expect  |
-      | resume | success |
+      | conn   | toClose | sql          | expect                             | timeout |
+      | conn_1 | false   | show @@pause | has{(('dn1',),('dn2',),('dn3',),)} | 10      |
+      | conn_1 | true    | resume       | success                            |         |
     Then check log "/opt/dble/logs/dble_admin_query.log" output in "dble-1"
     """
     Pause resume when recycle connection ,pause revert

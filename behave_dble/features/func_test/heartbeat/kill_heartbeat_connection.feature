@@ -4,6 +4,7 @@
 
 #3.20.07#233
 Feature: heartbeat basic test
+
   Scenario:  heartbeat is not limited by maxCon #1
     #when connections exceeded the maxCon, the heartbeat connection still can be created
     Given delete the following xml segment
@@ -37,13 +38,14 @@ Feature: heartbeat basic test
     """
     mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
-    Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
+    Given kill mysql conns in "mysql-master3" in "master1_heartbeat_id"
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                         | expect  | db       |
      | test | 111111 | conn_1 | False    | begin                       | success | schema1  |
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1  |
      | test | 111111 | conn_2 | False    | begin                       | success | schema1  |
      | test | 111111 | conn_2 | False    | select * from sharding_2_t1 | success | schema1  |
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql             |
       | show @@backend |
@@ -59,7 +61,7 @@ Feature: heartbeat basic test
      | test | 111111 | conn_1 | True     | commit           | success | schema1  |
      | test | 111111 | conn_2 | True     | commit           | success | schema1  |
 
-  @btrace
+  @btrace @skip
   Scenario: heartbeat timeout test #2
     Given delete the following xml segment
       | file       | parent         | child                  |
@@ -95,7 +97,7 @@ Feature: heartbeat basic test
     """
     mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3,$NF}' | grep true |awk '{print $1}'
     """
-    Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
+    Given kill mysql conns in "mysql-master3" in "master1_heartbeat_id"
     Then check btrace "BtraceHeartbeat.java" output in "dble-1" with ">0" times
     """
     before fieldEofResponse

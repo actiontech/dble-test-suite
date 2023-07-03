@@ -4,7 +4,7 @@
 # Created by yangxiaoliang at 2019/12/18
 #2.19.11.0#dble-7855
 Feature: reload @@config_all -fr
-
+  @skip_restart
   Scenario: open transaction, execute "reload @@config_all -fr" or "reload @@config_all -f -r" causing transaction closed
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
@@ -55,9 +55,9 @@ Feature: reload @@config_all -fr
       | HOST-3      | USED_FOR_HEARTBEAT-22 |
       | 172.100.9.6 | false                 |
     Then check resultset "rs_C" has lines with following column values
-      | HOST-3      |
-      | 172.100.9.5 |
-      | 172.100.9.6 |
+      | HOST-3      | USED_FOR_HEARTBEAT-22 |
+      | 172.100.9.5 | false                 |
+      | 172.100.9.6 | false                 |
 
     #3 Start the transaction and add readHost with err password causing execute "reload @@config_all -fr" fail
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
@@ -65,7 +65,7 @@ Feature: reload @@config_all -fr
     <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
       <heartbeat>select user()</heartbeat>
       <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
-      <readHost host="hostS1" url="172.100.9.6:3306" password="errpwd" user="test"/>
+      <readHost host="hostS1" url="172.100.9.1:3306" password="errpwd" user="test"/>
       </writeHost>
     </dataHost>
     <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
@@ -90,7 +90,7 @@ Feature: reload @@config_all -fr
     <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
       <heartbeat>select user()</heartbeat>
       <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
-      <readHost host="hostS1" url="172.100.9.6:3306" password="111111" user="test"/>
+      <readHost host="hostS1" url="172.100.9.1:3306" password="111111" user="test"/>
       </writeHost>
     </dataHost>
     """

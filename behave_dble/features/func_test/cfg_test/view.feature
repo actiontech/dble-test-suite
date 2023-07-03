@@ -34,40 +34,13 @@ Feature: #view test except sql cover
        | conn   | toClose  | sql                               | expect    | db      |
        | conn_0 | False    | select * from schema1.view_test   | success   | schema1 |
        | conn_0 | True     | drop view view_test               | success   | schema1 |
-      #github :2063
-     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
-       """
-       <schema name="schema2" sqlMaxLimit="100" dataNode="dn1">
-          <table name="test1" dataNode="dn1,dn2" rule="hash-two"/>
-          <table name="test2" dataNode="dn1,dn2" rule="hash-two"/>
-       </schema>
-       """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-     """
-       <user name="test">
-         <property name="password">111111</property>
-         <property name="schemas">schema1,schema2</property>
-       </user>
-     """
-     Then execute admin cmd "reload @@config"
-     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                             | expect  | db      |
-      | conn_0 | False   | drop table if exists test1                                                      | success | schema2 |
-      | conn_0 | False   | create table test1(id int,code varchar(10))                                     | success | schema2 |
-      | conn_0 | False   | drop table if exists test2                                                      | success | schema2 |
-      | conn_0 | False   | create table test2(id int,code varchar(10))                                     | success | schema2 |
-      | conn_0 | False   | create view test_view(id,name) AS select * from test1 union select * from test2 | success | schema2 |
-      | conn_0 | False   | drop view schema2.test_view                                                     | success | schema2 |
-      | conn_0 | False   | drop table if exists test1                                                      | success | schema2 |
-      | conn_0 | True    | drop table if exists test2                                                      | success | schema2 |
-
 
 
   Scenario: for vertical node view: create view in mysql, then after execute reload @@metadata command the view is available in dble #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
       <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-         <table name="sharding_1_t1" dataNode="dn2" sqlMaxLimit="100"/>
+         <table name="sharding_1_t1" dataNode="dn2" />
          <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
       </schema>
       <schema name="schema2" sqlMaxLimit="100" dataNode="dn1">

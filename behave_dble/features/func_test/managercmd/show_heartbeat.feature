@@ -12,10 +12,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     {'restore_network':'mysql-slave1'}
     """
 # set balance=0 ,one slave disabled="true"
-    Given delete the following xml segment
-      | file           | parent         | child                  |
-      | schema.xml         | {'tag':'root'} | {'tag':'dataHost'}     |
-      Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
        <heartbeat>select 1</heartbeat>
@@ -99,9 +96,6 @@ Feature: #test show @@heartbeat DBLE0REQ-167
 
 
 # change heartbeat errorRetryCount and timeout to set connection retry and check slave RS_CODE is "ok"
-    Given delete the following xml segment
-      | file           | parent         | child                  |
-      | schema.xml         | {'tag':'root'} | {'tag':'dataHost'}     |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <dataHost balance="0" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10">

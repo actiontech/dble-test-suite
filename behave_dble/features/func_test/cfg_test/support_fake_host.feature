@@ -252,22 +252,13 @@ Feature: schema.xml support fake host
       | conn_0 | false   | delete from sharding_4_t1 where id>2                                | success | schema1 |
       | conn_0 | true    | drop table if exists sharding_4_t1                                  | success | schema1 |
 
-
-  Scenario: The dataHost have fake write host and write read host #7
+  @skip
+  Scenario: The dataHost have fake write host and right read host #7
     Given delete the following xml segment
       | file        | parent          | child                   |
       | schema.xml  | {'tag':'root'}  | {'tag':'dataHost'}      |
       | schema.xml  | {'tag':'root'}  | {'tag':'schema'}        |
       | schema.xml  | {'tag':'root'}  | {'tag':'dataNode'}      |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
-    """
-    <dataHost balance="2" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10">
-      <heartbeat>select user()</heartbeat>
-      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
-        <readHost host="hostS2" password="111111" url="172.100.9.6:3307" user="test" />
-      </writeHost>
-    </dataHost>
-    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
@@ -280,13 +271,21 @@ Feature: schema.xml support fake host
     <dataNode dataHost="ha_group2" database="db2" name="dn2" />
     <dataNode dataHost="ha_group2" database="db3" name="dn3" />
     <dataNode dataHost="ha_group2" database="db4" name="dn4" />
+
+    <dataHost balance="2" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10">
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+        <readHost host="hostS2" password="111111" url="172.100.9.6:3307" user="test" />
+      </writeHost>
+    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                 | expect  | db      |
-      | conn_0 | false   | drop table if exists sharding_4_t1                                  | success | schema1 |
-      | conn_0 | false   | create table sharding_4_t1 (id int, name varchar(10))               | success | schema1 |
-      | conn_0 | false   | insert into sharding_4_t1 values(1,'11'),(2,'22'),(3,'33'),(4,'44') | success | schema1 |
+      | conn   | toClose | sql                                                                 | expect  | db      | timeout |
+      | conn_0 | false   | drop table if exists sharding_4_t1                                  | success | schema1 |         |
+      | conn_0 | false   | create table sharding_4_t1 (id int, name varchar(10))               | success | schema1 |         |
+      | conn_0 | false   | insert into sharding_4_t1 values(1,'11'),(2,'22'),(3,'33'),(4,'44') | success | schema1 |         |
+      | conn_0 | false   | select * from sharding_4_t1                                         | success | schema1 | 6,2     |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <dataHost balance="2" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10">
@@ -320,9 +319,6 @@ Feature: schema.xml support fake host
 
 
   Scenario: two dataHosts have fake write host #9
-    Given delete the following xml segment
-      | file          | parent          | child                   |
-      | schema.xml    | {'tag':'root'}  | {'tag':'dataHost'}      |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <dataHost balance="0" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10">

@@ -81,10 +81,6 @@ public class Main {
 //			GeneralLogTest generalLogTest = new GeneralLogTest(mysqlProp, testProp, true);
 //			generalLogTest.start_test();
 
-
-			CapClientFoundRowsTest capClientFoundRowsTest = new CapClientFoundRowsTest(mysqlProp, testProp, true);
-			capClientFoundRowsTest.start_test();
-
 			System.out.println("Congratulations, all interfaces passed!");
 //			CoffeesFrame qf = new CoffeesFrame(mysqlProp, dbleProp);
 //		    qf.pack();

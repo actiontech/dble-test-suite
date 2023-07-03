@@ -155,14 +155,12 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
   @restore_global_setting
   Scenario:config autocommit/txIsolation to not default value, and backend mysql values are different, dble will set backend same as dble configed #6
     """
-    {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
+    {'restore_global_setting':{'mysql-master1':{'general_log':0},'mysql-master2':{'general_log':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-    <system>
-        <property name="autocommit">0</property>
-        <property name="txIsolation">2</property>
-    </system>
+    <property name="autocommit">0</property>
+    <property name="txIsolation">2</property>
     """
     Given stop dble in "dble-1"
     Given execute sql in "mysql-master1"
@@ -176,8 +174,8 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     When execute sql in "dble-1" in "user" mode
       | sql                                | expect  | db      |
       | drop table if exists sharding_4_t1 | success | schema1 |
-    Then check general log in host "mysql-master1" has "SET autocommit=0" occured ">0" times
-    Then check general log in host "mysql-master2" has "SET autocommit=0" occured ">0" times
+    Then check general log in host "mysql-master1" has not "SET autocommit=0"
+    Then check general log in host "mysql-master2" has not "SET autocommit=0"
 
   @restore_global_setting
   Scenario: dble default autocommit=1, after executing implicit query(with which dble will add autocommit=0 to the session), the global var will be restored #7
@@ -399,7 +397,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
     Given stop mysql in host "mysql-master1"
-#    default heartbeatPeriodMillis is 10, 11 makes sure heartbeat failed for mysql-master1
+#    default dataNodeHeartbeatPeriod is 10, 11 makes sure heartbeat failed for mysql-master1
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """

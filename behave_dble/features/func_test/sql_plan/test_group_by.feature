@@ -9,8 +9,8 @@ Feature: test group by
           """
            <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10" >
               <heartbeat>select user()</heartbeat>
-              <writeHost name="hostM2" password="111111" url="172.100.9.6:3306" user="test">
-                <readHost name="hostS1" password="111111" url="172.100.9.6:3307" user="test" />
+              <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+                <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test" />
               </writeHost>
            </dataHost>
           """
@@ -205,13 +205,13 @@ Feature: test group by
     """
     <dataHost balance="0" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10" >
       <heartbeat>select user()</heartbeat>
-      <writeHost name="hostM1" password="111111" url="172.100.9.9:3307" user="test">
+      <writeHost host="hostM1" password="111111" url="172.100.9.9:3307" user="test">
       </writeHost>
       </dataHost>
     <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10" >
       <heartbeat>select user()</heartbeat>
-      <writeHost name="hostM2" password="111111" url="172.100.9.6:3306" user="test">
-        <readHost name="hostS1" password="111111" url="172.100.9.6:3307" user="test" />
+      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+        <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test" />
       </writeHost>
     </dataHost>
     """

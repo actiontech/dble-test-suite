@@ -335,9 +335,9 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
        | dn4  | ha_group2/db2     | true            |      0  | 1000   |            -1   |
        | dn5  | ha_group1/db3     | true            |      0  | 1000   |            -1   |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql                                                      | expect                        |
-      | conn_0 | False    | drop database @@dataNode ='dn1,dn2,dn3,dn4,dn5,dn6'      | DataNode dn6 does not exists  |
-      | conn_0 | true     | drop database @@dataNode ='dn1,dn2,dn3,dn4,dn5'          | success                       |
+      | conn   | toClose  | sql                                                      | expect                        | timeout |
+      | conn_0 | False    | drop database @@dataNode ='dn1,dn2,dn3,dn4,dn5,dn6'      | DataNode dn6 does not exists  |         |
+      | conn_0 | true     | drop database @@dataNode ='dn1,dn2,dn3,dn4,dn5'          | success                       | 5       |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "E"
       | sql             |
       | show @@dataNode |
