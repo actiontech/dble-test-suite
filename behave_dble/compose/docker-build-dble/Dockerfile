@@ -11,7 +11,7 @@ RUN sed -i.backup 's/^enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.
     yum clean all && \
     rm -rf /tmp/*
 
-RUN yum install -y openssh-server openssh-clients net-tools vim lrzsz locate make iproute iptables wget numactl.x86_64 libaio bash-completion bash-completion-extras openssl gcc python3-devel.x86_64 mysql-devel && \
+RUN yum install -y openssh-server openssh-clients net-tools vim lrzsz mlocate tcpdump make iproute iptables wget numactl.x86_64 libaio bash-completion bash-completion-extras openssl gcc python3-devel.x86_64 mysql-devel && \
     yum clean all && \
     echo 'root:sshpass' | chpasswd && \
     sed -i 's/session\s*required\s*pam_loginuid.so/session optional pam_loginuid.so/g' /etc/pam.d/sshd && \
