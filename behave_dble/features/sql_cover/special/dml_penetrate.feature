@@ -519,17 +519,17 @@ Feature: test dml sql which can penetrate to mysql
     <dataNode dbGroup="ha_group2" database="db3" name="dn6" />
      """
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-     """
-     <user name="test">
+    """
+      <user name="test">
         <property name="password">111111</property>
 		<property name="schemas">schema1,schema2,schema3,schema4</property>
-		  <privileges check="true">
-            <schema name="schema3" dml="1111">
-              <table name="t1" dml="1101"/>
-              <table name="t2" dml="1010"/>
-            </schema>
-          </privileges>
-	</user>
+		<privileges check="true">
+          <schema name="schema3" dml="1111">
+            <table name="t1" dml="1101"/>
+            <table name="t2" dml="1010"/>
+          </schema>
+        </privileges>
+	  </user>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode

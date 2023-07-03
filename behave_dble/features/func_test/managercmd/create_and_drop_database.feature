@@ -269,16 +269,16 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
      Then execute admin cmd "reload @@config_all -r"
      Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4,dn5,dn6'"
      Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
-      | sql                        |
+      | sql                    |
       | show @@dataNode        |
      Then check resultset "A" has lines with following column values
-       | NAME-0 | DB_GROUP-1        | SCHEMA_EXISTS-2 | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-       | dn1    | ha_group1/db1     | true            | 0        | 1000   | 0         | -1              |
-       | dn2    | ha_group2/db1     | true            | 0        | 1000   | 1         | -1              |
-       | dn3    | ha_group1/db2     | true            | 0        | 1000   | 0         | -1              |
-       | dn4    | ha_group2/db2     | true            | 0        | 1000   | 0         | -1              |
-       | dn5    | ha_group1/db3     | true            | 0        | 1000   | 1         | -1              |
-       | dn6    | ha_group3/db4     | true            | 0        | 1000   | 1         | -1              |
+       | NAME-0 | DB_GROUP-1        | SCHEMA_EXISTS-2 | ACTIVE-3 | SIZE-5 | RECOVERY_TIME-7 |
+       | dn1    | ha_group1/db1     | true            | 0        | 1000   | -1              |
+       | dn2    | ha_group2/db1     | true            | 0        | 1000   | -1              |
+       | dn3    | ha_group1/db2     | true            | 0        | 1000   | -1              |
+       | dn4    | ha_group2/db2     | true            | 0        | 1000   | -1              |
+       | dn5    | ha_group1/db3     | true            | 0        | 1000   | -1              |
+       | dn6    | ha_group3/db4     | true            | 0        | 1000   | -1              |
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                       | expect          |
       | conn_0 | False    | show databases like 'db1' | has{('db1',),}  |
@@ -304,7 +304,7 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
     """
     Then execute admin cmd "reload @@config_all -r"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
-      | sql                        |
+      | sql                    |
       | show @@dataNode        |
      Then check resultset "B" has lines with following column values
        | NAME-0 | DB_GROUP-1        | SCHEMA_EXISTS-2 | ACTIVE-3 |SIZE-5 | RECOVERY_TIME-7 |
@@ -313,9 +313,9 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
        | dn3    | ha_group1/db2     | true            | 0        |1000   | -1              |
        | dn4    | ha_group2/db2     | true            | 0        |1000   | -1              |
        | dn5    | ha_group1/db3     | true            | 0        |1000   | -1              |
-     #CASE show @@dataNodes where schema=? and table=?;
+     #CASE show @@shardingNodes where schema=? and table=?;
      Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
-      | sql                                                                 |
+      | sql                                                             |
       | show @@dataNodes where schema = schema1 and table = test        |
      Then check resultset "C" has lines with following column values
        | NAME-0 | SEQUENCE-1 | HOST-2        | PORT-3 | PHYSICAL_SCHEMA-4 | USER-5 | PASSWORD-6 |
@@ -335,11 +335,11 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
        | dn4  | ha_group2/db2     | true            |      0  | 1000   |            -1   |
        | dn5  | ha_group1/db3     | true            |      0  | 1000   |            -1   |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql                                                      | expect                            |
-      | conn_0 | False    | drop database @@dataNode ='dn1,dn2,dn3,dn4,dn5,dn6'      | dataNode dn6 does not exists  |
-      | conn_0 | true     | drop database @@dataNode ='dn1,dn2,dn3,dn4,dn5'          | success                           |
+      | conn   | toClose  | sql                                                      | expect                        |
+      | conn_0 | False    | drop database @@dataNode ='dn1,dn2,dn3,dn4,dn5,dn6'      | DataNode dn6 does not exists  |
+      | conn_0 | true     | drop database @@dataNode ='dn1,dn2,dn3,dn4,dn5'          | success                       |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "E"
-      | sql                 |
+      | sql             |
       | show @@dataNode |
     Then check resultset "E" has lines with following column values
       | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2  | ACTIVE-3 | SIZE-5 | RECOVERY_TIME-7 |

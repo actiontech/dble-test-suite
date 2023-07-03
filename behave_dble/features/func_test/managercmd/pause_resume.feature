@@ -105,7 +105,6 @@ Feature: test "pause/resume" manager cmd
     Then execute admin cmd  in "dble-1" at background
       | sql                                                                        |
       | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 |
-    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                                        | expect                                        |
       | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | Some dataNodes is paused, please resume first |
@@ -129,7 +128,6 @@ Feature: test "pause/resume" manager cmd
     Then execute admin cmd  in "dble-1" at background
       | sql                                                                        |
       | pause @@DataNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 |
-    Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql    | expect  |
       | resume | success |
