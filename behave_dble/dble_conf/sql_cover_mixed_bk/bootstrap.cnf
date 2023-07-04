@@ -11,6 +11,11 @@
 -Xmx4G
 -Xms1G
 -XX:MaxDirectMemorySize=2G
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:HeapDumpPath=/opt/dble/logs/java_error_in_idea.hprof
+-XX:+PrintGCDetails
+-XX:+PrintGCTimeStamps
+-Xloggc:./logs/gc_%WRAPPER_TIME_YYYYMMDDHHIISS%_%p.log
 #  base config
 -DhomePath=.
 -DinstanceName=1
