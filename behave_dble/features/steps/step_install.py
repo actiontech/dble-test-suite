@@ -95,6 +95,14 @@ def set_wrapper_log_level(context, node, log_level):
         assert_that(len(ste) == 0, "execute cmd: {0} failed for: {1}".format(cmd, ste))
         return True
 
+def change_wrapper_java_path(context, node):
+    ssh_client = node.ssh_conn
+    wrapper_log = '{0}/dble/bin/wrapper.conf'.format(node.install_dir)
+    # 修改wrapper中的wrapper.java.command参数值为绝对路径
+    cmd = "sed -i 's/=java/=\/opt\/jdk\/bin\/java/g' {0}".format(wrapper_log)
+    _, sto, ste = ssh_client.exec_command(cmd)
+    assert_that(len(ste) == 0, "execute cmd: {0} failed for: {1}".format(cmd, ste))
+
 def install_dble_in_node(context, node):
     if context.need_download:
         dble_packet = download_dble_package(context)
@@ -113,7 +121,8 @@ def install_dble_in_node(context, node):
     assert_that(rc, equal_to(0), f"install dble failed, got err:{ste}")
     # set wrapper log level to debug
     set_wrapper_log_level(context, node, 'debug')
-
+    # change wrapper.java.command to absolute path
+    change_wrapper_java_path(context, node)
 
 @Given('install dble in "{hostname}"')
 def install_dble_in_host(context, hostname):
