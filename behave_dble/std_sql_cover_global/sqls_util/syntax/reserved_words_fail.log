@@ -1,11 +1,11 @@
 ===file:sqls_util/syntax/reserved_words.sql, id:73, sql:[select id,`OUTFILE` from test1 order by `OUTFILE` limit 10]===
 dble:[None]
 mysql:[((1, 1), (2, 3), (3, 4), (4, 5))]
-dble err:(1064, 'druid not support sql syntax, the reason is sql syntax error, no terminated. LITERAL_INT')
+dble err:(1064, 'sql syntax error, no terminated. LITERAL_INT')
 ===file:sqls_util/syntax/reserved_words.sql, id:977, sql:[create table `select`(id int,`key` int)]===
 dble:[None]
 mysql:[()]
-dble err:(1146, "Table 'schema1.select' doesn't exist in the config of sharding")
+dble err:(1146, "Table 'schema1.select' doesn't exist in the config of schema")
 ===file:sqls_util/syntax/reserved_words.sql, id:980, sql:[show columns from `select`]===
 dble:[None]
 mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('key', 'int(11)', 'YES', '', None, ''))]

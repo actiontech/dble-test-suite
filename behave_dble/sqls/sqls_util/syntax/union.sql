@@ -265,7 +265,7 @@ select id from  test1 union SELECT ENCRYPT('hello','abc')
 select id from  test1 union SELECT MD5('testing')
 select id from  test1 union SELECT PASSWORD('mypass')
 select id from  test1 union SELECT PASSWORD('mypass')
-/*!dble:shardingNode=dn1*/select id from  test1 union SELECT OLD_PASSWORD('mypass')
+/*!dble:datanode=dn1*/select id from  test1 union SELECT OLD_PASSWORD('mypass')
 select id from  test1 union SELECT SHA('abc')
 select id from  test1 union SELECT SHA1('abc')
 select id from  test1 union SELECT SHA2('abc', 224)
@@ -314,7 +314,7 @@ SELECT ENCRYPT('hello','abc') union select id from  test1
 SELECT MD5('testing') union select id from  test1
 SELECT PASSWORD('mypass') union select id from  test1
 SELECT PASSWORD('mypass') union select id from  test1
-/*!dble:shardingNode=dn1*/SELECT OLD_PASSWORD('mypass') union select id from  test1
+/*!dble:datanode=dn1*/SELECT OLD_PASSWORD('mypass') union select id from  test1
 SELECT SHA('abc') union select id from  test1
 SELECT SHA1('abc') union select id from  test1
 SELECT SHA2('abc', 224) union select id from  test1
@@ -351,7 +351,7 @@ SELECT RELEASE_ALL_LOCKS() union select id from  test1
 SELECT SLEEP(1) union select id from  test1
 SELECT UUid() union select id from  test1
 #!share_conn
-/*!dble:shardingNode=dn1*/select id from  test1 union SELECT OLD_PASSWORD('mypass')
+/*!dble:datanode=dn1*/select id from  test1 union SELECT OLD_PASSWORD('mypass')
 select id from  test1 union SELECT SHA('abc')
 #
 #clear tables

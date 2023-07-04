@@ -817,7 +817,7 @@ use schema1
 begin
 drop table test1
 commit
-/*!dble:shardingNode=dn1*/select * from test1 order by id
+/*!dble:datanode=dn1*/select * from test1 order by id
 CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`k`))
 select * from test1 order by id
 #************************************************
@@ -825,7 +825,7 @@ select * from test1 order by id
 begin
 drop table test1
 rollback
-/*!dble:shardingNode=dn1*/select * from test1 order by id
+/*!dble:datanode=dn1*/select * from test1 order by id
 CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`k`))
 select * from test1 order by id
 #

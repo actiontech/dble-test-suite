@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dble:rule SYSTEM "rule.dtd">
 <dble:rule xmlns:dble="http://dble.cloud/">
+	<tableRule name="fixed_uniform_rule">
+		<rule>
+			<columns>id</columns>
+			<algorithm>fixed_uniform</algorithm>
+		</rule>
+	</tableRule>
 	<tableRule name="fixed_uniform_string_rule">
 		<rule>
 			<columns>id</columns>

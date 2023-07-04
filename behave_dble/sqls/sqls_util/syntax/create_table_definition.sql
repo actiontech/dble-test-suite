@@ -553,8 +553,8 @@ DROP TABLE test1
 #not SUPPORTED
 CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ENCRYPTION = 'Y'
 INSERT INTO test1 VALUES (1)
-/*!dble:shardingNode=dn1*/SHOW CREATE TABLE  test1
-/*!dble:shardingNode=dn1*/DROP TABLE test1
+/*!dble:datanode=dn1*/SHOW CREATE TABLE  test1
+/*!dble:datanode=dn1*/DROP TABLE test1
 CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ENCRYPTION = 'N'
 INSERT INTO test1 VALUES (1)
 SHOW CREATE TABLE  test1
@@ -585,7 +585,7 @@ SHOW CREATE TABLE  test1
 DROP TABLE test1
 CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=FIXED
 INSERT INTO test1 VALUES (1)
-/*!dble:shardingNode=dn1*/SHOW CREATE TABLE  test1
+/*!dble:datanode=dn1*/SHOW CREATE TABLE  test1
 DROP TABLE if EXISTS test1
 CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=COMPRESSED
 INSERT INTO test1 VALUES (1)
