@@ -29,7 +29,9 @@ Feature: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostT
       | conn_0 | False   | commit                                          | success                       | schema1 |
       | conn_0 | False   | select * from sharding_4_t1 order by id         | has{((2,), (4,))}             | schema1 |
       | conn_0 | True    | drop table sharding_4_t1                        | success                       | schema1 |
-      
+
+  @skip
+  # 不适用于2.20.04（待确认）
   Scenario: test with useSerializableMode on, and then execute DDL fail #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """

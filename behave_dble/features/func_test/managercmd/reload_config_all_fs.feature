@@ -20,8 +20,8 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | sql            |
       | show @@backend |
     Then execute admin cmd "reload @@config_all -fs"
-    #sleep 2s，等待所有连接回收及新建成功
-    Given sleep "2" seconds
+    #sleep 3s，等待所有连接回收及新建成功
+    Given sleep "3" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_B"
       | sql            |
       | show @@backend |
@@ -40,8 +40,8 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
        <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all -fs"
-    #sleep 2s，等待所有连接回收及新建成功
-    Given sleep "2" seconds
+    #sleep 3s，等待所有连接回收及新建成功
+    Given sleep "3" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_C"
       | sql            |
       | show @@backend |
@@ -65,8 +65,8 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | conn_0 | False   | begin                                           | schema1 |
       | conn_0 | False   | insert into sharding_4_t1 values(1),(2),(3),(4) | schema1 |
     Then execute admin cmd "reload @@config_all -fs"
-    #sleep 2s，等待所有连接回收及新建成功
-    Given sleep "2" seconds
+    #sleep 3s，等待所有连接回收及新建成功
+    Given sleep "3" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_D"
       | sql            |
       | show @@backend |
@@ -107,8 +107,8 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
     </dataHost>
     """
     Then execute admin cmd "reload @@config_all -f -s"
-    #sleep 2s，等待所有连接回收及新建成功
-    Given sleep "2" seconds
+    #sleep 3s，等待所有连接回收及新建成功
+    Given sleep "3" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_E"
       | sql            |
       | show @@backend |

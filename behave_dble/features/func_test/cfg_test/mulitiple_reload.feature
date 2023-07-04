@@ -209,8 +209,8 @@ Feature: multiple reload
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | sql                    |
-      | reload @@config_all -r |
+      | sql                    | db      |
+      | reload @@config_all -r | schema1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
     get into getSpecialNodeTablesHandlerFinished
@@ -318,8 +318,8 @@ Feature: multiple reload
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | sql               |
-      | reload @@metadata |
+      | sql               | db      |
+      | reload @@metadata | schema1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
     get into getSpecialNodeTablesHandlerFinished

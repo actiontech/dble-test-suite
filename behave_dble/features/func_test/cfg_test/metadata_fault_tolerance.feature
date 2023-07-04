@@ -50,8 +50,8 @@ Feature: fault tolerance detection
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | user | passwd | conn   | toClose | sql               |
-      | root | 111111 | conn_0 | True    | reload @@metadata |
+      | user | passwd | conn   | toClose | sql               | db      |
+      | root | 111111 | conn_0 | True    | reload @@metadata | schema1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
     get into getSpecialNodeTablesHandlerFinished
@@ -168,8 +168,8 @@ Feature: fault tolerance detection
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | user | passwd | conn   | toClose | sql               |
-      | root | 111111 | conn_0 | True    | reload @@metadata |
+      | user | passwd | conn   | toClose | sql               | db      |
+      | root | 111111 | conn_0 | True    | reload @@metadata | schema1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
     get into getSpecialNodeTablesHandlerFinished
@@ -296,8 +296,8 @@ Feature: fault tolerance detection
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | user | passwd | conn   | toClose | sql               |
-      | root | 111111 | conn_0 | True    | reload @@metadata |
+      | user | passwd | conn   | toClose | sql               | db      |
+      | root | 111111 | conn_0 | True    | reload @@metadata | schema1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
     get into getSpecialNodeTablesHandlerFinished
