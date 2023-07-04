@@ -4,7 +4,7 @@
 Feature:check if schema.xml in which writeHost contains "weight" push success in cluster after execute "reload @@config_all"
 #github issue #793
 
-  @CRITICAL @skip_restart
+  @CRITICAL
   Scenario: set parameter "weight" for writeHost in cluster, then reload #1
        Given delete the following xml segment
         |file         | parent         | child               |
@@ -32,9 +32,9 @@ Feature:check if schema.xml in which writeHost contains "weight" push success in
       Given sleep "2" seconds
       Then check following text exist "Y" in file "/opt/dble/conf/schema.xml" in host "dble-2"
       """
-      weight="3"
+      weight=\"3\"
      """
       Then check following text exist "Y" in file "/opt/dble/conf/schema.xml" in host "dble-3"
       """
-      weight="3"
+      weight=\"3\"
       """

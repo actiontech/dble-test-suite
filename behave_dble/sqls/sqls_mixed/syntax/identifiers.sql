@@ -1,6 +1,6 @@
 #!default_db:schema1
 #LOCK
-/*!dble:shardingNode=dn1*/lock tables sharding_4_t1 read
+/*!dble:datanode=dn1*/lock tables sharding_4_t1 read
 unlock tables
 #reserved words
 create table `select`(id int(20))

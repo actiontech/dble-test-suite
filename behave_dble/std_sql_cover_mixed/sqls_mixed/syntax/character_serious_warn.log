@@ -1,9 +1,9 @@
 ===file:sqls_mixed/syntax/character.sql, id:19, sql:[insert into sharding_4_t1 select user()]===
 mysql err:(1136, "Column count doesn't match value count at row 1")
-dble err:(1064, 'This `INSERT ... SELECT Syntax` is not supported!')
+dble err:(1064, '`INSERT ... SELECT Syntax` is not supported!')
 ===file:sqls_mixed/syntax/character.sql, id:26, sql:[select sleep(3) union select `c` int not null` from sharding_4_t1]===
 mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'int not null` from sharding_4_t1' at line 1")
-dble err:(1064, 'druid not support sql syntax, the reason is sql syntax error, no terminated. NOT')
+dble err:(1064, 'sql syntax error, no terminated. NOT')
 ===file:sqls_mixed/syntax/character.sql, id:58, sql:[insert into sharding_4_t1 values(1,'a你')]===
 mysql err:(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
 dble err:(1366, "Incorrect string value: '\\xE4\\xBD?' for column 'c' at row 1")
