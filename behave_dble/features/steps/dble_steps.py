@@ -223,8 +223,8 @@ def step_impl(context, sql, params, user, database):
     params_list = [p.split(',') for p in params_match] # 将每个匹配结果按逗号分隔成一个列表
     results = []
     for params_tuple in params_list:
-        result = execute_prepared_query(connection, sql_cmd, *params_tuple)
-        assert_that(result, is_(object), "execute sql:'{}({})' failed for: {}".format(sql_cmd, ",".join(params_tuple), result))
+        result, err = execute_prepared_query(connection, sql_cmd, *params_tuple)
+        assert_that(err, is_(None), "execute sql:'{}({})' failed for: {}".format(sql_cmd, ",".join(params_tuple), err))
         logger.debug("the PrepStmts sql:'{}({})' result:{}".format(sql_cmd, ",".join(params_tuple),result))
         results.append(result) # 将返回结果保存在结果列表中
     return results
@@ -258,8 +258,8 @@ def step_imp(context, sql, params ,num, user, database):
     data_exp = eval(num)
     data =  'r' * int(data_exp)
     sql_cmd = sql_pre + ("('{}');".format(data))
-    result = execute_prepared_query(connection, sql_cmd, params)
-    assert_that(result, is_(object), "execute sql:'{}' failed for: {}".format(sql_cmd, result))
+    result, err = execute_prepared_query(connection, sql_cmd, params)
+    assert_that(err, is_(None), "execute sql:'{}' failed for: {}".format(sql_cmd[0:512], err))
     logger.debug("the PrepStmts sql:'{}' result:{}  the sql_cmd length :{},the sql_pre length :{}".format(sql_cmd[0:512] ,result,len(sql_cmd),len(sql_pre)))
     results.append(result)
     return results
