@@ -73,10 +73,8 @@ public class yamlParser {
             ObjectMapper oMappersys = new ObjectMapper();
             Map<String, Object> csys = oMappersys.convertValue(cfg_sys, Map.class);
             Object default_db = csys.get("default_db");
-            Object managerDb = csys.get("default_manager_db");
             Object sql_source = csys.get("sql_source");
             cfg.db = default_db.toString();
-            cfg.managerDb = managerDb.toString();
             cfg.sqlpath = sql_source.toString();
         } catch (FileNotFoundException e) {
 //            log.error("file address error!");

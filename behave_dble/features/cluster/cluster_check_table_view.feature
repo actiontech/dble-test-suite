@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2020/12/11
 
-
+@skip #不适用于2.20.04
 Feature: test view in zk cluster
   ######case points:
   #  1.create view，alter view，drop view could success on shardingtable

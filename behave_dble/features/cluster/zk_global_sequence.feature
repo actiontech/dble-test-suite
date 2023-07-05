@@ -3,9 +3,10 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/11/6
 # 2.19.11.0#dble-7890
+
+
 Feature: when global sequence with zookeeper mode, if system time exceeds 17 years after startup time ,it will report an error
 
-  @skip_restart
   Scenario: when "insert time" greater than "start time" and less than "start time + 17years", check the correctness of the self-increment sequence #1
     Given reset dble registered nodes in zk
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
@@ -55,10 +56,8 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
       | sql                                         | db      |
       | select conv(id,10,2) from mytest_auto_test  | schema1 |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
-    Then get binary range start "15" end "18" from "a" named "result1"
-    Then get binary range start "10" end "14" from "a" named "result2"
-    Then convert binary "result1"  to decimal "dec_rs1" and check value is "1"
-    Then convert binary "result2"  to decimal "A"
+    Then get binary range start "10" end "18" from "a" named "result1"
+    Then convert binary "result1"  to decimal "dec_rs1" and check value is "0"
     Then get binary range start "25" end "63" from "a" named "b"
     Then convert binary "b"  to decimal "c"
     Then convert decimal "c" to datatime "t1"
@@ -77,10 +76,8 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
       | sql                                        | db      |
       | select conv(id,10,2) from mytest_auto_test | schema1 |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
-    Then get binary range start "15" end "18" from "a" named "result1"
-    Then get binary range start "10" end "14" from "a" named "result2"
-    Then convert binary "result1"  to decimal "dec_result1" and check value is "2"
-    Then convert binary "result2"  to decimal "B"
+    Then get binary range start "10" end "18" from "a" named "result1"
+    Then convert binary "result1"  to decimal "dec_result1" and check value is "1"
     Then get binary range start "25" end "63" from "a" named "b"
     Then convert binary "b"  to decimal "c"
     Then convert decimal "c" to datatime "t1"
@@ -110,7 +107,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     """
     Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
     Given Restart dble in "dble-1" success
-    Then execute sql in "dble-1" in "user" mode
+    Then execute sql in "dble-3" in "user" mode
       | conn   | toClose | sql                                            | expect  | db      |
       | conn_0 | False   | delete from mytest_auto_test                   | success | schema1 |
       | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
@@ -121,10 +118,8 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
       | sql                                        | db      |
       | select conv(id,10,2) from mytest_auto_test | schema1 |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
-    Then get binary range start "15" end "18" from "a" named "result1"
-    Then get binary range start "10" end "14" from "a" named "result2"
-    Then convert binary "result1"  to decimal "dec_rs1" and check value is "4"
-    Then convert binary "result2"  to decimal "A"
+    Then get binary range start "10" end "18" from "a" named "result1"
+    Then convert binary "result1"  to decimal "dec_rs1" and check value is "128"
     Then get binary range start "25" end "63" from "a" named "b"
     Then convert binary "b"  to decimal "c"
     Then convert decimal "c" to datatime "t1"
@@ -166,16 +161,8 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
       | sql                                        | db      |
       | select conv(id,10,2) from mytest_auto_test | schema1 |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
-    Then get binary range start "15" end "18" from "a" named "result1"
-    Then get binary range start "10" end "14" from "a" named "result2"
-    Then convert binary "result1"  to decimal "dec_rs1" and check value is "1"
-    Then convert binary "result2"  to decimal "A"
-    Then get binary range start "25" end "63" from "a" named "b"
-    Then convert binary "b"  to decimal "c"
-    Then convert decimal "c" to datatime "t1"
-    Then get datatime "t2" by "t1" minus "1970-01-01"
-    Then datatime "t2" plus start_time "sysTime" to get "t3"
-    Then check time "ts_time" equal to "t3"
+    Then get binary range start "10" end "18" from "a" named "result1"
+    Then convert binary "result1"  to decimal "dec_rs1" and check value is "0"
 
   @skip_restart
   Scenario: when values of key "INSTANCEID" is 511, check the correctness of the self-increment sequence #5
@@ -190,16 +177,8 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
       | sql                                        | db      |
       | select conv(id,10,2) from mytest_auto_test | schema1 |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
-    Then get binary range start "15" end "18" from "a" named "result1"
-    Then get binary range start "10" end "14" from "a" named "result2"
-    Then convert binary "result1"  to decimal "dec_result1" and check value is "1"
-    Then convert binary "result2"  to decimal "B"
-    Then get binary range start "25" end "63" from "a" named "b"
-    Then convert binary "b"  to decimal "c"
-    Then convert decimal "c" to datatime "t1"
-    Then get datatime "t2" by "t1" minus "1970-01-01"
-    Then datatime "t2" plus start_time "sysTime" to get "t3"
-    Then check time "ts_time" equal to "t3"
+    Then get binary range start "10" end "18" from "a" named "result1"
+    Then convert binary "result1"  to decimal "dec_rs1" and check value is "511"
 
   @skip_restart
   Scenario: when values of key "CLUSTERID" are same and values of key "INSTANCEID" are different, check the correctness of the self-increment sequence #5

@@ -34,15 +34,14 @@ public final class BtraceClusterDelay {
     }
 
     @OnMethod(
-            clazz = "com.actiontech.dble.services.manager.response.ShowBinlogStatus",
+            clazz = "com.actiontech.dble.manager.response.ShowBinlogStatus",
             method = "getQueryResult"
     )
-    public static void getQueryResult(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
-        BTraceUtils.println("get into ShowBinlogStatus,start sleep ");
-        BTraceUtils.println(" __________________________ ");
-        Thread.sleep(1L);
-        BTraceUtils.println("sleep end ");
-        BTraceUtils.println(" __________________________ ");
+    public static void showBinlogStatus(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.print("get into showBinlogStatus ");
+        BTraceUtils.print(" for order __________________________ ");
+        Thread.sleep(10L);
+
     }
 
     @OnMethod(

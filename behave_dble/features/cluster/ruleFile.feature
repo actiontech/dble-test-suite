@@ -5,9 +5,8 @@
 
 
 
-Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
-DBLE0REQ-38
-
+Feature: adding ruleFile way which is different from mapFile (ZK cluster mode) DBLE0REQ-38
+@skip_restart
   Scenario: Enum sharding with ruleFile way which is different from mapFile #1
     #test: type:integer not default node
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
@@ -26,7 +25,7 @@ DBLE0REQ-38
     """
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-    <table name="enum_table" dataNode="dn1,dn2,dn3,dn4" function="enum_rule" />
+    <table name="enum_table" dataNode="dn1,dn2,dn3,dn4" rule="enum_rule" />
     """
     When replace new conf file "enum.txt" on "dble-1"
     """
@@ -60,34 +59,15 @@ DBLE0REQ-38
       | conn   | toClose  | sql                                   | expect                               | db      |
       | conn_0 | False    | drop table if exists enum_table       | success                              | schema1 |
       | conn_0 | False    | create table enum_table(id int)       | success                              | schema1 |
-      | conn_0 | False    | insert into enum_table values (null)  | can't find any valid dataNode    | schema1 |
+      | conn_0 | False    | insert into enum_table values (null)  | can't find any valid data node    | schema1 |
       | conn_0 | False    | insert into enum_table values (0)     | dest_node:mysql-master1              | schema1 |
       | conn_0 | False    | insert into enum_table values (1)     | dest_node:mysql-master2              | schema1 |
       | conn_0 | False    | insert into enum_table values (2)     | dest_node:mysql-master1              | schema1 |
       | conn_0 | False    | insert into enum_table values (3)     | dest_node:mysql-master2              | schema1 |
-      | conn_0 | False    | insert into enum_table values (-1)    | can't find any valid dataNode    | schema1 |
-      | conn_0 | False    | insert into enum_table values (4)     | can't find any valid dataNode    | schema1 |
-      | conn_0 | False    | insert into enum_table values (5)     | can't find any valid dataNode    | schema1 |
+      | conn_0 | False    | insert into enum_table values (-1)    | can't find any valid data node    | schema1 |
+      | conn_0 | False    | insert into enum_table values (4)     | can't find any valid data node    | schema1 |
+      | conn_0 | False    | insert into enum_table values (5)     | can't find any valid data node    | schema1 |
       | conn_0 | True     | insert into enum_table values ('aaa') | Please check if the format satisfied | schema1 |
-
-    # check zk that the result is right
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
-      """
-      {\"name\":\"schema1\",\"sqlMaxLimit\":100,\"dataNode\":\"dn5\",
-      \"table\":\[
-      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}},{\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"dataNode\":\"dn1,dn2\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"enum_func\",\"shardingColumn\":\"id\",\"name\":\"enum_table\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
-      \"dataNode\":\[
-      {\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},
-      {\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},{\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
-      \"function\":\[
-      {\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-three\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"3\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"enum_func\",\"clazz\":\"enum\",\"property\":\[{\"value\":\"enum.txt\",\"name\":\"ruleFile\"},{\"value\":\"-1\",\"name\":\"defaultNode\"},{\"value\":\"0\",\"name\":\"type\"}\]}
-      """
 
     #test: type:string default node
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
@@ -152,32 +132,15 @@ DBLE0REQ-38
     {"table":"enum_table","key":"id"}
     """
 
-    # check zk that the result is right
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
-      """
-      {\"schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"dataNode\":\"dn5\",
-      \"table\":\[
-      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"dataNode\":\"dn1,dn2\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"enum_func\",\"shardingColumn\":\"id\",\"name\":\"enum_table\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
-      \"dataNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},
-      {\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},{\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
-      \"function\":\[{\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-three\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"3\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"enum_func\",\"clazz\":\"Enum\",\"property\":\[{\"value\":\"enum.txt\",\"name\":\"ruleFile\"},{\"value\":\"1\",\"name\":\"type\"},{\"value\":\"3\",\"name\":\"defaultNode\"
-      """
-
     #clearn all conf
     Given delete file "/opt/dble/conf/enum.txt" on "dble-1"
     Given delete file "/opt/dble/conf/enum.txt" on "dble-2"
     Given delete file "/opt/dble/conf/enum.txt" on "dble-3"
     Given delete the following xml segment
-      | file            | parent                                        | child                                                     |
-      | schema.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'enum_func'}}          |
-      | schema.xml    | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'enum_table'}}    |
+      | file        | parent                                        | child                                             |
+      | rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'enum_func'}}  |
+      | rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'enum_rule'}} |
+      | schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'table','kv_map':{'name':'enum_table'}}    |
     Then execute admin cmd "reload @@config_all"
 
 
@@ -199,7 +162,7 @@ DBLE0REQ-38
     """
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="numberrange_table" dataNode="dn1,dn2,dn3,dn4" function="numberrange_rule" />
+        <table name="numberrange_table" dataNode="dn1,dn2,dn3,dn4" rule="numberrange_rule" />
     """
     When replace new conf file "partition.txt" on "dble-1"
     """
@@ -244,24 +207,6 @@ DBLE0REQ-38
     """
     {"table":"numberrange_table","key":"id"}
     """
-     # check zk that the result is right
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
-      """
-      schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"dataNode\":\"dn5\",
-      \"table\":\[
-      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"dataNode\":\"dn1,dn2\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"numberrange_func\",\"shardingColumn\":\"id\",\"name\":\"numberrange_table\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
-      \"dataNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
-      {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
-      \"function\":\[
-      {\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-three\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"3\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"numberrange_func\",\"clazz\":\"numberrange\",\"property\":\[{\"value\":\"partition.txt\",\"name\":\"ruleFile\"},{\"value\":\"3\",\"name\":\"defaultNode\"}
-      """
 
     #test: not defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
@@ -283,41 +228,23 @@ DBLE0REQ-38
       | conn_0 | False    | insert into numberrange_table values(755)  | dest_node:mysql-master1        | schema1 |
       | conn_0 | False    | insert into numberrange_table values(756)  | dest_node:mysql-master2        | schema1 |
       | conn_0 | False    | insert into numberrange_table values(1000) | dest_node:mysql-master2        | schema1 |
-      | conn_0 | True     | insert into numberrange_table values(1001) | can't find any valid dataNode | schema1 |
-      | conn_0 | False    | insert into numberrange_table values(null) | can't find any valid dataNode | schema1 |
-      | conn_0 | True     | insert into numberrange_table values(-1)   | can't find any valid dataNode | schema1 |
-      | conn_0 | True     | insert into numberrange_table values(-2)   | can't find any valid dataNode | schema1 |
+      | conn_0 | True     | insert into numberrange_table values(1001) | can't find any valid data node | schema1 |
+      | conn_0 | False    | insert into numberrange_table values(null) | can't find any valid data node | schema1 |
+      | conn_0 | True     | insert into numberrange_table values(-1)   | can't find any valid data node | schema1 |
+      | conn_0 | True     | insert into numberrange_table values(-2)   | can't find any valid data node | schema1 |
 
        #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "range.sql"
-
-    # check zk that the result is right
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
-      """
-      schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"dataNode\":\"dn5\",
-      \"table\":\[
-      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"dataNode\":\"dn1,dn2\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"numberrange_func\",\"shardingColumn\":\"id\",\"name\":\"numberrange_table\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
-      \"dataNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
-      {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
-      \"function\":\[
-      {\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-three\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"3\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"numberrange_func\",\"clazz\":\"numberrange\",\"property\":\[{\"value\":\"partition.txt\",\"name\":\"ruleFile\"
-      """
 
     #clearn all conf
     Given delete file "/opt/dble/conf/partition.txt" on "dble-1"
     Given delete file "/opt/dble/conf/partition.txt" on "dble-2"
     Given delete file "/opt/dble/conf/partition.txt" on "dble-3"
     Given delete the following xml segment
-      |file           | parent                                        | child                                                            |
-      |schema.xml   | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'numberrange_func'}}          |
-      |schema.xml   | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'numberrange_table'}}    |
+      | file        | parent                                        | child                                             |
+      | rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'numberrange_func'}}  |
+      | rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'numberrange_rule'}} |
+      | schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'table','kv_map':{'name':'numberrange_table'}}    |
     Then execute admin cmd "reload @@config_all"
 
 
@@ -340,7 +267,7 @@ DBLE0REQ-38
     """
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="patternrange_table" dataNode="dn1,dn2,dn3,dn4" function="patternrange_rule"/>
+        <table name="patternrange_table" dataNode="dn1,dn2,dn3,dn4" rule="patternrange_rule"/>
     """
     When replace new conf file "patternrange.txt" on "dble-1"
     """
@@ -386,25 +313,6 @@ DBLE0REQ-38
     {"table":"patternrange_table","key":"id"}
     """
 
-    # check zk that the result is right
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
-      """
-      schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"dataNode\":\"dn5\",
-      \"table\":\[
-      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"dataNode\":\"dn1,dn2\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"patternrange_func\",\"shardingColumn\":\"id\",\"name\":\"patternrange_table\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
-      \"dataNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
-      {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
-      \"function\":\[
-      {\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-three\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"3\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"patternrange_func\",\"clazz\":\"PatternRange\",\"property\":\[{\"value\":\"patternrange.txt\",\"name\":\"ruleFile\"},{\"value\":\"1000\",\"name\":\"patternValue\"},{\"value\":\"3\",\"name\":\"defaultNode\"}
-      """
-
     #test: not defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
@@ -427,39 +335,22 @@ DBLE0REQ-38
       | conn_0 | False    | insert into patternrange_table values(756)   | dest_node:mysql-master2        | schema1 |
       | conn_0 | False    | insert into patternrange_table values(1000)  | dest_node:mysql-master1        | schema1 |
       | conn_0 | True     | insert into patternrange_table values(1001)  | dest_node:mysql-master1        | schema1 |
-      | conn_0 | False    | insert into patternrange_table values(null)  | can't find any valid dataNode | schema1 |
-      | conn_0 | True     | insert into patternrange_table values(-1)    | can't find any valid dataNode | schema1 |
-      | conn_0 | True     | insert into patternrange_table values(-2)    | can't find any valid dataNode | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(null)  | can't find any valid data node | schema1 |
+      | conn_0 | True     | insert into patternrange_table values(-1)    | can't find any valid data node | schema1 |
+      | conn_0 | True     | insert into patternrange_table values(-2)    | can't find any valid data node | schema1 |
 
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "range.sql"
 
-    # check zk that the result is right
-    Then check zk has "Y" the following values get "/dble/cluster-1/conf/sharding" with retry "10,3" times in "dble-1"
-      """
-      schema\":\[{\"name\":\"schema1\",\"sqlMaxLimit\":100,\"dataNode\":\"dn5\",
-      \"table\":\[
-      {\"type\":\"GlobalTable\",\"properties\":{\"name\":\"test\",\"dataNode\":\"dn1,dn2,dn3,dn4\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-two\",\"shardingColumn\":\"id\",\"name\":\"sharding_2_t1\",\"dataNode\":\"dn1,dn2\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"hash-four\",\"shardingColumn\":\"id\",\"name\":\"sharding_4_t1\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}},
-      {\"type\":\"ShardingTable\",\"properties\":{\"function\":\"patternrange_func\",\"shardingColumn\":\"id\",\"name\":\"patternrange_table\",\"shardingNode\":\"dn1,dn2,dn3,dn4\"}}\]}\],
-      \"shardingNode\":\[{\"name\":\"dn1\",\"dbGroup\":\"ha_group1\",\"database\":\"db1\"},{\"name\":\"dn2\",\"dbGroup\":\"ha_group2\",\"database\":\"db1\"},{\"name\":\"dn3\",\"dbGroup\":\"ha_group1\",\"database\":\"db2\"},
-      {\"name\":\"dn4\",\"dbGroup\":\"ha_group2\",\"database\":\"db2\"},{\"name\":\"dn5\",\"dbGroup\":\"ha_group1\",\"database\":\"db3\"}\],
-      \"function\":\[
-      {\"name\":\"hash-two\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-three\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"3\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-four\",\"clazz\":\"Hash\",\"property\":\[{\"value\":\"4\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"hash-string-into-two\",\"clazz\":\"StringHash\",\"property\":\[{\"value\":\"2\",\"name\":\"partitionCount\"},{\"value\":\"1\",\"name\":\"partitionLength\"}\]},
-      {\"name\":\"patternrange_func\",\"clazz\":\"PatternRange\",\"property\":\[{\"value\":\"patternrange.txt\",\"name\":\"ruleFile\"},{\"value\":\"1000\",\"name\":\"patternValue\"}
-      """
     #clearn all conf
     Given delete file "/opt/dble/conf/patternrange.txt" on "dble-1"
     Given delete file "/opt/dble/conf/patternrange.txt" on "dble-2"
     Given delete file "/opt/dble/conf/patternrange.txt" on "dble-3"
     Given delete the following xml segment
-      |file            | parent                                        | child                                                           |
-      |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'patternrange_func'}}        |
-      |sharding.xml    | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'patternrange_table'}}  |
+      | file        | parent                                        | child                                             |
+      | rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'patternrange_func'}}  |
+      | rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'patternrange_rule'}} |
+      | schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'table','kv_map':{'name':'patternrange_table'}}    |
     Then execute admin cmd "reload @@config_all"
 
     Given execute linux command in "dble-1"
