@@ -49,7 +49,7 @@ class SSHClient:
                     rc = stdout.channel.recv_exit_status()
                     sto = stdout.read().decode().strip('\n')
                     ste = stderr.read().decode().strip('\n')
-                    LOGGER.debug(f'<{self._host}>: Execute command: <{command}> Return code: <{rc}>, Stdout: <{sto}>, Stderr: <{ste}>')
+                    LOGGER.debug(f'<{self._host}>: Execute command: <{command}> Return code: <{rc}>, Stdout: <{sto[0:512]}>, Stderr: <{ste}>')
                     return rc, sto, ste
                 except paramiko.SSHException as e:
                     if str(e) == "Unable to open channel." or str(e) == "SSH session not active":
