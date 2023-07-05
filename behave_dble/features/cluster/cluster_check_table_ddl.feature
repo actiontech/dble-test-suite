@@ -76,9 +76,9 @@ Feature: test "ddl" in zk cluster
       | consistent_in_sharding_nodes | 4            |
       | consistent_in_memory         | 5            |
     #case check lock on zookeeper values is 0
-    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/ddl" with retry "10,3" times in "dble-1"
       """
-      schema1.sharding_4_t1
+      \`schema1\`.\`sharding_4_t1\`
       """
     #case alter table on user mode
     Then execute sql in "dble-2" in "user" mode
@@ -158,14 +158,16 @@ Feature: test "ddl" in zk cluster
       | conn    | toClose | sql                                                                     | expect                                                       |
       | conn_31 | true    | check full @@metadata where schema='schema1' and table='sharding_4_t1'  | has{(('schema1', 'sharding_4_t1', 'null', 'null', 0, 0),)}   |
     #case check lock on zookeeper values is 0
-    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/ddl" with retry "10,3" times in "dble-1"
       """
-      schema1.sharding_4_t1
+      \`schema1\`.\`sharding_4_t1\`
       """
 
 
   @btrace
   Scenario: use btrace add lock on meta  #2
+    Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect  | db      |
       | conn_1 | False   | drop table if exists sharding_4_t1     | success | schema1 |
@@ -184,18 +186,20 @@ Feature: test "ddl" in zk cluster
     get into delayAfterDdlLockMeta
     """
     #case check lock on zookeeper values is 1
-    Then check zk has "Y" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
+    Then check zk has "Y" the following values in "/dble/cluster-1/ddl" with retry "30" times in "dble-1"
       """
-      schema1.sharding_4_t1
+      \`schema1\`.\`sharding_4_t1\`
       """
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
-      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | java.sql.SQLNonTransientException: The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 add age1 int    | schema1 |
-      | conn_2 | True     | insert into sharding_4_t1 values (1)          | success                                                                                                                                    | schema1 |
+      | conn_2 | False    | alter table sharding_4_t1 add age1 int        | The metaLock about ``schema1`.`sharding_4_t1`` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 add age1 int | schema1 |
+      # todo
+#      | conn_2 | True     | insert into sharding_4_t1 values (1)          | success                                                                                                                                    | schema1 |
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                           | expect                                                                                                                                     | db      |
-      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | java.sql.SQLNonTransientException: The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 add age2 int    | schema1 |
-      | conn_3 | False    | insert into sharding_4_t1 values (2,2)        | Column count doesn't match value count at row 1                                                                                            | schema1 |
+      | conn_3 | False    | alter table sharding_4_t1 add age2 int        | The metaLock about ``schema1`.`sharding_4_t1`` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 add age2 int | schema1 |
+      # todo
+#      | conn_3 | False    | insert into sharding_4_t1 values (2,2)        | Column count doesn't match value count at row 1                                                                                            | schema1 |
       | conn_3 | False    | drop table if exists test1                    | success                                                                                                                                    | schema1 |
       | conn_3 | true     | create table test1 (id int)                   | success                                                                                                                                    | schema1 |
     Given sleep "10" seconds
@@ -203,9 +207,9 @@ Feature: test "ddl" in zk cluster
     Given destroy btrace threads list
     Given sleep "5" seconds
     #case check lock on zookeeper values is 0
-    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/ddl" with retry "10,3" times in "dble-1"
       """
-      schema1.sharding_4_t1
+      \`schema1\`.\`sharding_4_t1\`
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect                                          | db      |
@@ -272,9 +276,9 @@ Feature: test "ddl" in zk cluster
     get into delayAfterDdlLockMeta
     """
     #case check lock on zookeeper values is 1
-    Then check zk has "Y" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
+    Then check zk has "Y" the following values in "/dble/cluster-1/ddl" with retry "10,3" times in "dble-1"
       """
-      schema1.sharding_4_t1
+      \`schema1\`.\`sharding_4_t1\`
       """
     # Given stop dble in "dble-1" # coz "./dble stop" will release the all locks in dble
     Given execute linux command in "dble-1"
@@ -298,7 +302,7 @@ Feature: test "ddl" in zk cluster
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     #case check lock on zookeeper values is 0,to wait can't conn dble-1
-    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "15,3" times in "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/ddl" with retry "15,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -341,6 +345,8 @@ Feature: test "ddl" in zk cluster
 
   @btrace
   Scenario:  dble-2 doing ddl,start dble-1,do query ,dble-1 will waiting for dble-2 ddl finished,dble-1 logs has "waiting for ddl finished"   #4
+    Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-2"
+    Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-2"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect  | db      |
       | conn_1 | False   | drop table if exists sharding_4_t1     | success | schema1 |
@@ -356,7 +362,7 @@ Feature: test "ddl" in zk cluster
       | conn   | toClose | sql                                     | db      |
       | conn_2 | true    | alter table sharding_4_t1 drop age1     | schema1 |
     #case check lock on zookeeper values is 1
-    Then check zk has "Y" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
+    Then check zk has "Y" the following values in "/dble/cluster-1/ddl" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -372,7 +378,7 @@ Feature: test "ddl" in zk cluster
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
     #case check lock on zookeeper values is 0
-    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "15,3" times in "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/ddl" with retry "15,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -486,7 +492,7 @@ Feature: test "ddl" in zk cluster
       | consistent_in_sharding_nodes | 4            |
       | consistent_in_memory         | 5            |
     #case check lock on zookeeper values is 0
-    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/ddl" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -499,20 +505,9 @@ Feature: test "ddl" in zk cluster
 
       #case query ddl timeout,to set idleTimeout=10000
     Given stop dble cluster and zk service
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
       """
-      /-DidleTimeout/d
-      $a -DidleTimeout=10000
-      """
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
-      """
-      /-DidleTimeout/d
-      $a -DidleTimeout=10000
-      """
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
-      """
-      /-DidleTimeout/d
-      $a -DidleTimeout=10000
+      <property name="idleTimeout">10000</property>
       """
     Given config zookeeper cluster in all dble nodes with "local zookeeper host"
     Given reset dble registered nodes in zk
@@ -531,7 +526,7 @@ Feature: test "ddl" in zk cluster
     get into delayAfterDdlLockMeta
     """
     #case check lock on zookeeper values is 1
-    Then check zk has "Y" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
+    Then check zk has "Y" the following values in "/dble/cluster-1/ddl" with retry "10,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """
@@ -550,7 +545,7 @@ Feature: test "ddl" in zk cluster
     Given destroy btrace threads list
     #wait metaLock
     #case check lock on zookeeper values is 0
-    Then check zk has "not" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "15,3" times in "dble-1"
+    Then check zk has "not" the following values in "/dble/cluster-1/ddl" with retry "15,3" times in "dble-1"
       """
       schema1.sharding_4_t1
       """

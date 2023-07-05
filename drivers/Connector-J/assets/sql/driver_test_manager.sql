@@ -25,13 +25,13 @@ show @@connection.count
 show @@connection.sql
 show @@cost_time
 show @@database
-show @@shardingNode
-show @@shardingNode where schema=schema1;
-show @@shardingNodes where schema=schema1 and table=aly_test;
-show @@dbInstance
-#show @@dbInstance.cluster
-show @@dbInstance.synstatus
-show @@dbInstance.syndetail where name=172.100.9.1
+show @@datanode
+show @@datanode where schema=schema1;
+show @@datanodes where schema=schema1 and table=aly_test;
+show @@datasource
+#show @@datasource.cluster
+show @@datasource.synstatus
+show @@datasource.syndetail where name=172.100.9.1
 show @@directmemory
 show @@heartbeat
 show @@heartbeat.detail where name=hostM1
@@ -52,7 +52,7 @@ show @@sql.sum.user
 show @@sql.sum.user true
 show @@sql.sum.table
 show @@sql.sum.table true
-#show @@syslog limit=2
+show @@syslog limit=2
 show @@sysparam
 show @@threadpool
 show @@thread_used
@@ -66,7 +66,7 @@ SHOW VARIABLES WHERE Variable_name ='language' OR Variable_name = 'net_write_tim
 #switch @@dbInstance dbGroup$0-4
 #kill @@connection
 #kill @@connection id1,id2,...
-stop @@heartbeat dbGroup:5000
+stop @@heartbeat datahost:5000
 reload @@config
 reload @@config_all -s
 reload @@config_all -f
@@ -83,15 +83,15 @@ reload @@query_cf=NULL
 #rollback @@config
 offline
 online
-#file @@list
-#file @@show schema.xml
+file @@list
+file @@show schema.xml
 #file @@upload schema.xml <table name="test_global11" 整个文件
-#log @@limit=0,5000
-#log @@key='select *'
-#log @@regex=from\saly_test$
+log @@limit=0,5000
+log @@key='select *'
+log @@regex=from\saly_test$
 #log @@file=dble.log @@limit='0:5000' @@key='select *' @@regex='*from aly_test'
 dryrun
-pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10
+pause @@DataNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10
 RESUME
 show @@pause
 show @@slow_query.time
@@ -103,5 +103,5 @@ show @@slow_query.flushperiod
 show @@slow_query.flushsize
 reload @@slow_query.flushsize=1100
 show @@slow_query.flushsize
-create database @@shardingNode ='dn1'
-create database @@shardingNode ='dn$1-4'
+create database @@dataNode ='dn1'
+create database @@dataNode ='dn$1-4'

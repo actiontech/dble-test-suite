@@ -4,11 +4,10 @@
 Feature: verify issue 92 #Enter feature name here
 
   Scenario: #1 todo not complete yet #1
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    s/-Dfile.encoding=UTF-8/-Dfile.encoding=GBK/
-    a/charset=utf8mb4
-    """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+     """
+       <property name="charset">utf8mb4</property>
+     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                            | expect  | db      | charset |

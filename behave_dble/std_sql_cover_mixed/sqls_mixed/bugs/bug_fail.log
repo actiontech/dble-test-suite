@@ -1,0 +1,8 @@
+===file:sqls_mixed/bugs/bug.sql, id:303, sql:[select * from sharding_2_t1 a left join sharding_3_t1 c on a.id=c.id and a.id=@id_a]===
+dble:[None]
+mysql:[((1, 234.25, None, None), (2, 67.29, None, None), (3, 1.25, None, None), (12, 1.0, None, None), (1, 234.25, None, None))]
+dble err:(1003, 'field not found:@id_a')
+===file:sqls_mixed/bugs/bug.sql, id:383, sql:[SELECT * FROM sharding_2_t1 a left join schema2.sharding_4_t2 c  on a.id=c.id and a.id=@id_a]===
+dble:[None]
+mysql:[((1, 234.25, None, None), (2, 67.29, None, None), (3, 1.25, None, None), (12, 1.0, None, None), (1, 234.25, None, None))]
+dble err:(1003, 'field not found:@id_a')

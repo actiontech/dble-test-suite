@@ -17,7 +17,7 @@ void case_mysql_sqlstate(MYSQL* conn)
 		printf("    pass! query 'use schema1/*a*/', mysql_sqlstate: %s\n", errState);
 	}else{
         if(!IS_DEBUG){
-            printf("expect send select to master success, but get err\n");
+            printf("expect send select to master get err, but success\n");
         	exit(1);
         }
 	}
@@ -28,7 +28,7 @@ void case_mysql_sqlstate(MYSQL* conn)
     if (mysql_query(connErr, "show databases")) {
 		const char * errState=mysql_sqlstate(connErr);
         const char* err=mysql_error(connErr);
-        if(strcmp("Unsupported statement show databases", err)!=0){
+        if(strcmp("Unsupported statement", err)!=0){
             printf("expect 'Unsupported statement.', but %s\n", err);
             exit(1);
         }else{

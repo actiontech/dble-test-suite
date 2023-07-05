@@ -17,7 +17,7 @@ dble err:(1064, 'java.sql.SQLSyntaxErrorException: ERROR. pos 26, line 1, column
 ===file:sqls_mixed/syntax/set_user_var.sql, id:32, sql:[SELECT @abc123, @123abc, @row_format=1, @$ := @t1+@t2+@t3]===
 dble:[None]
 mysql:[((None, None, None, None),)]
-dble err:(1064, 'druid not support sql syntax, the reason is sql syntax error, no terminated. COLONEQ')
+dble err:(1064, 'sql syntax error, no terminated. COLONEQ')
 ===file:sqls_mixed/syntax/set_user_var.sql, id:34, sql:[set @cnt = (select 1);]===
 dble:[None]
 mysql:[()]

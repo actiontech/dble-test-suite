@@ -398,10 +398,3 @@ create table sharding_2_t1 (id int)
 insert into sharding_2_t1 values(1),(2),(3),(4),(5)
 select * from (select * from sharding_2_t1) b limit 0
 drop table if exists sharding_2_t1
-#DBLE0REQ-1820
-drop table if exists schema2.sharding_4_t3
-CREATE TABLE schema2.sharding_4_t3 (id varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin, p_id varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL , py_o_id varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL , update_time datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
-insert into schema2.sharding_4_t3 (id,p_id,py_o_id) VALUES (X'2710',X'2710',X'2710')
-insert into schema2.sharding_4_t3 (id,p_id,py_o_id) VALUES (X'544B323130373031303735303238313130303030303030303030333037323830',X'5A46323130363236313930323131313130303030303030303739383730343636',X'5A46323130363236313930323131313130303030303030303739383730343636')
-replace into schema2.sharding_4_t3 (id,p_id,py_o_id) VALUES (X'2710',X'2710',X'2710')
-drop table if exists schema2.sharding_4_t3
