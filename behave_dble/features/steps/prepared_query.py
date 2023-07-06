@@ -56,8 +56,8 @@ def execute_prepared_query(connection, sql_query, *params):
      else:
         res = result
 
-     if errMsg is not None:
-         logger.info("query failed {}".format(errMsg))
+     # if errMsg is not None:
+     #     logger.info("query failed {}".format(errMsg))
      return res, errMsg
 
 
