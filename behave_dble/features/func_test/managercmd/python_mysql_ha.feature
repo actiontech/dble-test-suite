@@ -78,7 +78,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       """
 
 
-  @restore_mysql_service @skip_restart
+  @restore_mysql_service
   Scenario: when useOuterHa is false, mysql has one slave, python script can change mysql master #3
      """
      {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
@@ -102,8 +102,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     Given stop mysql in host "mysql-master2"
 #    Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql                      | expect            |timeout｜
-      | show @@custom_mysql_ha   | has{(('1',),)}    |10,1   ｜
+      | sql                      | expect            | timeout |
+      | show @@custom_mysql_ha   | has{(('1',),)}    | 10,1    |
     ##python脚本判断 Write-dbInstance 和 DbInstance的时间误差问题
     Then check following text exist "Y" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
@@ -112,8 +112,8 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       """
     Then check following text exist "Y" in file "/opt/dble/conf/schema.xml" in host "dble-1"
       """
-      <readHost host=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\"
-      <writeHost host=\"slave1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\"
+      <readHost host=\"hostM2\" url=\"172.100.9.6:3306\" password=\"111111\" user=\"test\" disabled=\"false\" id=\"hostM2\" weight=\"0\"/>
+      <writeHost host=\"slave1\" url=\"172.100.9.6:3307\" password=\"111111\" user=\"test\" disabled=\"false\" id=\"slave1\" weight=\"0\">
       """
 
 #     Then execute sql in "dble-1" in "user" mode
@@ -122,14 +122,14 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
 #      | conn_1 | True    | create table sharding_4_t1 (id int)   | success     | schema1 | 6,2     |
 
     Given start mysql in host "mysql-master2"
-    Given sleep "5" seconds
+
     # mysql user usingDecrypt values true
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
      <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10">
        <heartbeat>select user()</heartbeat>
-       <writeHost host="hostM2" usingDecrypt="true" password="NxbH9imEoi3INzkFiiSvGbfXOCzN4COTL0vJdyUZyiEW4+lGFgRagpXDeg/7yzVhRkv4jfxuRTRiux7I3iRDOg==" url="172.100.9.6:3306" user="test">
-       <readHost host="slave1" usingDecrypt="true" url="172.100.9.6:3307" user="test" password="cDswIroIVCCGE376ivg0JtCq22RAqdiMkVzHmiJRtP3S1gb8OsSbA58MjqzGR3cvt4oCBv1B2Z/PpnKAU5wQlQ==" />
+       <writeHost host="hostM2" usingDecrypt="1" password="NxbH9imEoi3INzkFiiSvGbfXOCzN4COTL0vJdyUZyiEW4+lGFgRagpXDeg/7yzVhRkv4jfxuRTRiux7I3iRDOg==" url="172.100.9.6:3306" user="test">
+       <readHost host="slave1" usingDecrypt="1" url="172.100.9.6:3307" user="test" password="cDswIroIVCCGE376ivg0JtCq22RAqdiMkVzHmiJRtP3S1gb8OsSbA58MjqzGR3cvt4oCBv1B2Z/PpnKAU5wQlQ==" />
        </writeHost>
      </dataHost>
     """
@@ -137,10 +137,10 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     Given stop mysql in host "mysql-master2"
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/conf/schema.xml" in host "dble-1"
-      """
-      <readHost host=\"hostM2\" url=\"172.100.9.6:3306\" password=\"NxbH9imEoi3INzkFiiSvGbfXOCzN4COTL0vJdyUZyiEW4\+lGFgRagpXDeg\/7yzVhRkv4jfxuRTRiux7I3iRDOg==\" user=\"test\" usingDecrypt=\"true\"
-      <writeHost host=\"slave1\" url=\"172.100.9.6:3307\" password=\"cDswIroIVCCGE376ivg0JtCq22RAqdiMkVzHmiJRtP3S1gb8OsSbA58MjqzGR3cvt4oCBv1B2Z\/PpnKAU5wQlQ==\" user=\"test\" usingDecrypt=\"true\"
-      """
+    """
+    <readHost host=\"hostM2\" url=\"172.100.9.6:3306\" password=\"NxbH9imEoi3INzkFiiSvGbfXOCzN4COTL0vJdyUZyiEW4\+lGFgRagpXDeg/7yzVhRkv4jfxuRTRiux7I3iRDOg==\" user=\"test\" usingDecrypt=\"1\" disabled=\"false\" id=\"hostM2\" weight=\"0\"/>
+    <writeHost host=\"slave1\" url=\"172.100.9.6:3307\" password=\"cDswIroIVCCGE376ivg0JtCq22RAqdiMkVzHmiJRtP3S1gb8OsSbA58MjqzGR3cvt4oCBv1B2Z/PpnKAU5wQlQ==\" user=\"test\" usingDecrypt=\"1\" disabled=\"false\" id=\"slave1\" weight=\"0\">
+    """
     Given start mysql in host "mysql-master2"
 
     # check stop and start python script
@@ -150,17 +150,18 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | show @@custom_mysql_ha      | has{(('0',),)}    |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" name="ha_group1" slaveThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
-        <readHost host="slave1" url="172.100.9.6:3308" user="test" password="111111" maxCon="1000" minCon="10"/>
+    <dataHost balance="0" name="ha_group1" slaveThreshold="100" maxCon="1000" minCon="10">
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+        <readHost host="slave1" url="172.100.9.6:3308" user="test" password="111111" />
+      </writeHost>
     </dataHost>
 
      <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10" >
        <heartbeat>select user()</heartbeat>
-        <writeHost host="slave2" url="172.100.9.6:3307" user="test" password="111111">
-        <readHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test" />
-        </writeHost>
+       <writeHost host="slave2" url="172.100.9.6:3307" user="test" password="111111">
+         <readHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test" />
+       </writeHost>
      </dataHost>
     """
     Then execute admin cmd "reload @@config"
