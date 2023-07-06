@@ -35,7 +35,7 @@ def execute_prepared_query(connection, sql_query, *params):
      try:
         cursor = connection.cursor(prepared=True)
         result = []
-        error = None
+        errMsg = None
         # 检查参数的类型，并将字符串类型的参数转换成相应的数据类型
         params = tuple(int(p.strip()) if isinstance(p, str) and p.strip().isdigit() else p.strip() for p in params)
         cursor.execute(sql_query, params if len(params) > 0 else ())
@@ -44,15 +44,21 @@ def execute_prepared_query(connection, sql_query, *params):
             if cursor.nextset() is None: break
         cursor.close()
 
-     except mysql.connector.Error as error:
-        logger.info("query failed {}".format(error))
+     except mysql.connector.Error as e:
+        errMsg = e.args
+     except UnicodeEncodeError as codeErr:
+         errMsg = ((codeErr.args[1], codeErr.args[4]))
      finally:
         cursor.close()
+
      if result != None and len(result) == 1:
         res = result[0]
      else:
         res = result
-     return res, error
+
+     # if errMsg is not None:
+     #     logger.info("query failed {}".format(errMsg))
+     return res, errMsg
 
 
 
