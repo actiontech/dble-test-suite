@@ -1,9 +1,9 @@
 ===file:sqls_util/syntax/union.sql, id:268, sql:[/*!dble:datanode=dn1*/select id from  test1 union SELECT OLD_PASSWORD('mypass')]===
-mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dble:shardingNode=dn1*/select id from  test1 union SELECT OLD_PASSWORD('mypass')' at line 1")
-dble err:(1064, "can't find hint datanode:dn1")
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dble:datanode=dn1*/select id from  test1 union SELECT OLD_PASSWORD('mypass')' at line 1")
+dble err:(1064, "can't find hint dataNode:dn1")
 ===file:sqls_util/syntax/union.sql, id:317, sql:[/*!dble:datanode=dn1*/SELECT OLD_PASSWORD('mypass') union select id from  test1]===
-mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dble:shardingNode=dn1*/SELECT OLD_PASSWORD('mypass') union select id from  test1' at line 1")
-dble err:(1064, "can't find hint datanode:dn1")
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dble:datanode=dn1*/SELECT OLD_PASSWORD('mypass') union select id from  test1' at line 1")
+dble err:(1064, "can't find hint dataNode:dn1")
 ===file:sqls_util/syntax/union.sql, id:354, sql:[/*!dble:datanode=dn1*/select id from  test1 union SELECT OLD_PASSWORD('mypass')]===
-mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dble:shardingNode=dn1*/select id from  test1 union SELECT OLD_PASSWORD('mypass')' at line 1")
-dble err:(1064, "can't find hint datanode:dn1")
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dble:datanode=dn1*/select id from  test1 union SELECT OLD_PASSWORD('mypass')' at line 1")
+dble err:(1064, "can't find hint dataNode:dn1")

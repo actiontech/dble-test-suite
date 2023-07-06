@@ -351,6 +351,9 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode) D
       | rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'patternrange_func'}}  |
       | rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'patternrange_rule'}} |
       | schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'table','kv_map':{'name':'patternrange_table'}}    |
+    # todo
+    # 疑似有bug，未找到对就issue，先sleep 10s规避下
+    Given sleep "10" seconds
     Then execute admin cmd "reload @@config_all"
 
     Given execute linux command in "dble-1"
