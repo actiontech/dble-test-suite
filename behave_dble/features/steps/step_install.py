@@ -75,6 +75,25 @@ def download_dble_package(context: Context) -> str:
 
     return local_path
 
+def set_wrapper_log_level(context, node, log_level):
+    ssh_client = node.ssh_conn
+    wrapper_log = '{0}/dble/bin/wrapper.conf'.format(node.install_dir)
+    # 判断wrapper.console.loglevel，wrapper.logfile.loglevel两个参数的值
+    cmd1 = "cat {0} | grep -i 'wrapper.console.loglevel' |cut -d= -f2 ".format(wrapper_log)
+    _, sto1, ste1 = ssh_client.exec_command(cmd1)
+    assert_that(len(ste1) == 0, "execute cmd: {0} failed for: {1}".format(cmd1,ste1))
+    cmd2 = "cat {0} | grep -i 'wrapper.logfile.loglevel' |cut -d= -f2 ".format(wrapper_log)
+    _, sto2, ste2 = ssh_client.exec_command(cmd2)
+    assert_that(len(ste2) == 0, "execute cmd: {0} failed for: {1}".format(cmd2,ste2))
+    # 调整为debug
+    if (log_level in sto1.lower()) and (log_level in sto2.lower()):
+        LOGGER.debug("wrapper log level is already: {0}, do nothing!".format(log_level))
+        return False
+    else:
+        cmd = "sed -i 's/INFO/DEBUG/g' {0}".format(wrapper_log)
+        _, sto, ste = ssh_client.exec_command(cmd)
+        assert_that(len(ste) == 0, "execute cmd: {0} failed for: {1}".format(cmd, ste))
+        return True
 
 def install_dble_in_node(context, node):
     if context.need_download:
@@ -91,7 +110,9 @@ def install_dble_in_node(context, node):
 
     cmd = "tar xf {0} -C {1}".format(dble_packet, node.install_dir)
     rc, _, ste = ssh_client.exec_command(cmd)
-    assert_that(rc, equal_to(0), f"install dble failed, got err:{ste}"),
+    assert_that(rc, equal_to(0), f"install dble failed, got err:{ste}")
+    # set wrapper log level to debug
+    set_wrapper_log_level(context, node, 'debug')
 
 
 @Given('install dble in "{hostname}"')
@@ -126,26 +147,6 @@ def set_dble_log_level(context, node, log_level):
         ssh_client.exec_command(cmd)
         return True
 
-def set_wrapper_log_level(context, node, log_level):
-    ssh_client = node.ssh_conn
-    wrapper_log = '{0}/dble/bin/wrapper.conf'.format(node.install_dir)
-    if os.path.exists(wrapper_log):
-        # 判断wrapper.console.loglevel，wrapper.logfile.loglevel两个参数的值
-        cmd1 = "cat {0} | grep -i 'wrapper.console.loglevel' |cut -d= -f2 ".format(wrapper_log)
-        _, sto1, ste1 = ssh_client.exec_command(cmd1)
-        assert_that(len(ste1) == 0, "execute cmd: {0} failed for: {1}".format(cmd1,ste1))
-        cmd2 = "cat {0} | grep -i 'wrapper.logfile.loglevel' |cut -d= -f2 ".format(wrapper_log)
-        _, sto2, ste2 = ssh_client.exec_command(cmd2)
-        assert_that(len(ste2) == 0, "execute cmd: {0} failed for: {1}".format(cmd2,ste2))
-
-        if (log_level in sto1.lower()) and (log_level in sto2.lower()):
-            LOGGER.debug("wrapper log level is already: {0}, do nothing!".format(log_level))
-            return False
-        else:
-            cmd = "sed -i 's/INFO/DEBUG/g' {0}".format(wrapper_log)
-            _, sto, ste = ssh_client.exec_command(cmd)
-            assert_that(len(ste) == 0, "execute cmd: {0} failed for: {1}".format(cmd, ste))
-            return True
 
 @Given('set log4j2 log level to "{log_level}" in "{hostname}"')
 def set_dble_log_level_in_host(context, log_level, hostname):
@@ -484,8 +485,6 @@ def replace_config(context):
         replace_config_in_node(context, node)
         # set dble log level to debug
         set_dble_log_level(context, node, 'debug')
-        # set wrapper log level to debug
-        set_wrapper_log_level(context, node, 'debug')
 
 
 @Given('replace config files in "{nodeName}" with command line config')

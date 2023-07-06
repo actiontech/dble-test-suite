@@ -1,4 +1,4 @@
 ===file:sqls_util/syntax/reserved_words.sql, id:73, sql:[select id,`OUTFILE` from test1 order by `OUTFILE` limit 10]===
 dble:[None]
 mysql:[((1, 1), (2, 3), (3, 4), (4, 5))]
-dble err:(1064, 'druid not support sql syntax, the reason is sql syntax error, no terminated. LITERAL_INT')
+dble err:(1064, 'sql syntax error, no terminated. LITERAL_INT')

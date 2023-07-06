@@ -1,6 +1,6 @@
 ===file:sqls_util/transaction/trx_ddl_dml.sql, id:820, sql:[/*!dble:datanode=dn1*/select * from test1 order by id]===
-mysql err:(1146, "Table 'schema1.test1' doesn't exist")
-dble err:(1146, "Table 'db3.test1' doesn't exist")
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dble:datanode=dn1*/select * from test1 order by id' at line 1")
+dble err:(1064, "can't find hint dataNode:dn1")
 ===file:sqls_util/transaction/trx_ddl_dml.sql, id:828, sql:[/*!dble:datanode=dn1*/select * from test1 order by id]===
-mysql err:(1146, "Table 'schema1.test1' doesn't exist")
-dble err:(1146, "Table 'db3.test1' doesn't exist")
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dble:datanode=dn1*/select * from test1 order by id' at line 1")
+dble err:(1064, "can't find hint dataNode:dn1")

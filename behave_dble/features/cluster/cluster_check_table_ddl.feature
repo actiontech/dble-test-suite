@@ -186,7 +186,7 @@ Feature: test "ddl" in zk cluster
     get into delayAfterDdlLockMeta
     """
     #case check lock on zookeeper values is 1
-    Then check zk has "Y" the following values in "/dble/cluster-1/lock/ddl_lock" with retry "10,3" times in "dble-1"
+    Then check zk has "Y" the following values in "/dble/cluster-1/ddl" with retry "10,3" times in "dble-1"
       """
       \`schema1\`.\`sharding_4_t1\`
       """

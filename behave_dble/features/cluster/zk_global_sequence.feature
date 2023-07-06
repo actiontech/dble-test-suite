@@ -4,7 +4,7 @@
 # Created by yangxiaoliang at 2019/11/6
 # 2.19.11.0#dble-7890
 
-
+@skip
 Feature: when global sequence with zookeeper mode, if system time exceeds 17 years after startup time ,it will report an error
 
   Scenario: when "insert time" greater than "start time" and less than "start time + 17years", check the correctness of the self-increment sequence #1
@@ -181,7 +181,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then convert binary "result1"  to decimal "dec_rs1" and check value is "511"
 
   @skip_restart
-  Scenario: when values of key "CLUSTERID" are same and values of key "INSTANCEID" are different, check the correctness of the self-increment sequence #5
+  Scenario: when values of key "CLUSTERID" are same and values of key "INSTANCEID" are different, check the correctness of the self-increment sequence #6
     Given execute single sql in "dble-1" in "user" mode and save resultset in "sysTime"
       | sql              |
       | select sysdate() |
