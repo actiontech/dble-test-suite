@@ -10,7 +10,7 @@ from steps.lib import utils
 from steps.lib.ObjectFactory import ObjectFactory
 from steps.mysql_steps import execute_sql_in_host
 # from steps.lib.utils import get_ssh
-from steps.lib.utils import get_sftp, get_ssh, get_node
+from steps.lib.utils import get_sftp, get_ssh, get_node, update_file_with_sed
 
 import re
 
@@ -140,6 +140,10 @@ class RestoreEnvObject(object):
 
                 mysql = ObjectFactory.create_mysql_object(host_name)
                 mysql.restart(sed_str)
+
+                if "local-infile" in mysql_vars.keys():
+                    local_sed_str = "/{0}/d\n/socket/a {0}={1}\n".format(k, v)
+                    update_file_with_sed(local_sed_str, "/etc/my.cnf", get_node(host_name))
 
         if "restore_xa_recover" in self._scenario.tags:
             params_dic = self.get_tag_params("{'restore_xa_recover'")
