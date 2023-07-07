@@ -86,6 +86,21 @@ class RestoreEnvObject(object):
                         mysql = ObjectFactory.create_mysql_object(host_name)
                         mysql.start()
 
+        if "restart_mysql" in self._scenario.tags:
+            params_dic = self.get_tag_params("{'restart_mysql'")
+            logger.debug("params_dic is: {0}".format(params_dic))
+            if params_dic:
+                paras = params_dic["restart_mysql"].split(",")
+                # paras = paras.split(",")
+            else:
+                paras = ""
+
+            logger.debug("try to restart_mysql: {0}".format(paras))
+            for host_name in paras:
+                logger.debug("the value of host_name is: {0}".format(host_name))
+                mysql = ObjectFactory.create_mysql_object(host_name)
+                mysql.restart()
+
         if "restore_global_setting" in self._scenario.tags:
             params_dic = self.get_tag_params("{'restore_global_setting'")
 
