@@ -54,9 +54,14 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | 172.100.9.6 | false                 |
 
     # 3 reload @@config_all -fs : open transaction, add bad readHost, execute 'reload @@config_all -fs', transaction closed successfully
-    Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <readHost host="hostS1" url="172.100.9.6:3307" password="111111" user="testx"/>
+    <dataHost balance="2" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+       <heartbeat>select user()</heartbeat>
+       <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+          <readHost host="hostS1" url="172.100.9.6:3307" password="111111" user="testx"/>
+       </writeHost>
+    </dataHost>
     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | db      |
@@ -82,9 +87,9 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | conn_3 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        |
-      | hostS1 | 172.100.9.6 | 3307   | error     |
-      | hostM2 | 172.100.9.6 | 3306   | ok        |
+      | hostM1 | 172.100.9.5 | 3306   | 1         |
+      | hostS1 | 172.100.9.6 | 3307   | -1        |
+      | hostM2 | 172.100.9.6 | 3306   | 1         |
     # 增加从节点，3.22.07开始事务连接不会被关闭，3.22.07以前事务连接会被关闭
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                      | expect                                       | db      |
@@ -100,7 +105,7 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | conn_1 | false   | insert into sharding_4_t1 values(1),(2),(3),(4) | schema1 |
     Given add xml segment to node with attribute "{'tag':'root','prev':'dataNode'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+    <dataHost balance="2" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM2" password="111111" url="172.100.9.4:3306" user="test">
     </writeHost>
@@ -125,9 +130,8 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | conn_3 | false   | show @@heartbeat  |
     Then check resultset "heartbeat_rs" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        |
-      | hostS1 | 172.100.9.6 | 3307   | error     |
-      | hostM2 | 172.100.9.4 | 3306   | ok        |
+      | hostM1 | 172.100.9.5 | 3306   | 1         |
+      | hostM2 | 172.100.9.4 | 3306   | 1         |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                      | expect                                       | db      |
       | conn_1 | True    | select * from sharding_4_t1 where id = 2 | Lost connection to MySQL server during query | schema1 |

@@ -41,7 +41,7 @@ Feature:  unexpected packet should not in dble log
       <property name="xaSessionCheckPeriod">2000</property>
       <property name="xaLogCleanPeriod">100000</property>
       <property name="processorExecutor">4</property>
-      <property name="sequenceHandlerType">2</property>
+      <property name="sequnceHandlerType">2</property>
     </system>
     """
     Then Restart dble in "dble-1" success

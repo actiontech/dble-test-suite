@@ -9,7 +9,7 @@ Feature: test show @@help
   Scenario: test "show @@help" #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                     | expect        |
-      | conn_0 | False   | show @@help             | length{(99)}  |
+      | conn_0 | False   | show @@help             | length{(97)}  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
@@ -26,6 +26,7 @@ Feature: test show @@help
       | show @@datasource [where dataNode = ?]                                                           | Report dataSources                                                                |
       | show @@datasource.synstatus                                                                      | Report datasource data synchronous                                                |
       | show @@datasource.syndetail where name=?                                                         | Report datasource data synchronous detail                                         |
+      | show @@datasource.cluster                                                                        | Report datasource galary cluster variables                                        |
       | show @@processor                                                                                 | Report processor status                                                           |
       | show @@command                                                                                   | Report commands status                                                            |
       | show @@connection where processor=? and front_id=? and host=? and user=?                         | Report connection status                                                          |
@@ -59,7 +60,6 @@ Feature: test show @@help
       | show @@processlist                                                                               | Report correspondence between front and backend session                           |
       | show @@cost_time                                                                                 | Report cost time of query , contains back End ,front End and over all             |
       | show @@thread_used                                                                               | Report all bussiness&reactor thread usage                                         |
-      | show @@datanode [where schema = ?]                                                               | Report dataNodes                                                                  |
       | show @@algorithm where schema='?' and table='?'                                                  | Report the algorithm info of a table                                              |
       | show @@ddl                                                                                       | Report all ddl info in progress                                                   |
       | show @@reload_status                                                                             | Report latest reload status in this dble                                          |
@@ -67,6 +67,7 @@ Feature: test show @@help
       | show @@user.privilege                                                                            | Report privilege of all business user in this dble                                |
       | show @@questions                                                                                 | Report the questions & transactions have been executed in server port             |
       | show @@data_distribution where table ='schema.table'                                             | Report the data distribution in different data node                               |
+      | switch @@datasource name:index                                                                   | Switch dataSource                                                                 |
       | kill @@connection id1,id2,...                                                                    | Kill the specified connections                                                    |
       | kill @@xa_session id1,id2,...                                                                    | Kill the specified sessions that commit/rollback xa transaction in the background |
       | kill @@ddl_lock where schema='?' and table='?'                                                   | Kill ddl lock held by the specified ddl                                           |
@@ -78,17 +79,15 @@ Feature: test show @@help
       | reload @@user_stat                                                                               | Reset show @@sql  @@sql.sum @@sql.slow                                            |
       | reload @@query_cf[=table&column]                                                                 | Reset show @@sql.conditiont                                                       |
       | release @@reload_metadata                                                                        | Release reload process , unlock the config meta lock                              |
+      | rollback @@config                                                                                | Rollback all config from memory                                                   |
       | offline                                                                                          | Change Server status to OFF                                                       |
       | online                                                                                           | Change Server status to ON                                                        |
       | file @@list                                                                                      | List all the file in conf directory                                               |
       | file @@show filename                                                                             | Show the file data of specific file                                               |
       | file @@upload filename content                                                                   | Write content to file                                                             |
-      | flow_control @@show                                                                              | Show the current config of the flow control                                       |
-      | flow_control @@list                                                                              | List all the connection be flow-control now                                       |
-      | flow_control @@set [enableFlowControl = true/false] [flowControlStart = ?] [flowControlEnd = ?]  | Change the config of flow control                                                 |
       | log @@[file=? limit=? key=? regex=?]                                                             | Report logs by given regex                                                        |
       | dryrun                                                                                           | Dry run to check config before reload xml                                         |
-      | pause @@DataNode = 'dn1,dn2,....' and timeout = ? [,queue = ?,wait_limit = ?]                    | Block query requests witch specified dataNodes involved                           |
+      | pause @@DataNode                                                                                 | Block query requests witch specified dataNodes involved                           |
       | RESUME                                                                                           | Resume the query requests of the paused dataNodes                                 |
       | show @@pause                                                                                     | Show which dataNodes have bean pause                                              |
       | show @@slow_query_log                                                                            | Show if the slow query log is enabled                                             |
@@ -101,7 +100,6 @@ Feature: test show @@help
       | show @@slow_query.flushsize                                                                      | Show the min flush size for writing to disk                                       |
       | reload @@slow_query.flushsize                                                                    | Reset the flush size                                                              |
       | create database @@dataNode ='dn......'                                                           | create database for datanode setted in schema.xml                                 |
-      | drop database @@dataNode ='dn......'                                                             | drop database for datanode setted in schema.xml                                   |
       | check @@metadata                                                                                 | show last time of `reload @@metadata`/start dble                                  |
       | check @@global (schema = '?'( and table = '?'))                                                  | check global and get check result immediately                                     |
       | check full @@metadata                                                                            | show detail information of metadata                                               |

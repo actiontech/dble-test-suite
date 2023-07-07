@@ -101,7 +101,12 @@ Feature: reload @@config_all -f
       | drop table if exists sharding_4_t1       | success     | schema1 |
 
 
-   Scenario:  case from github issue:1526#2
+  Scenario:  case from github issue:1526#2
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+      """
+      <property name="useOuterHa">true</property>
+      """
+    Given Restart dble in "dble-1" success
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
       <schema dataNode="dn2" name="schema1" sqlMaxLimit="100">

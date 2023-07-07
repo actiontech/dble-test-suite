@@ -20,7 +20,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
        </writeHost>
     </dataHost>
 
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+    <dataHost balance="2" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
        <heartbeat errorRetryCount="0" timeout="5">select user()</heartbeat>
        <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
           <readHost host="hostS1" url="172.100.9.6:3307" password="111111" user="test"/>
@@ -40,11 +40,11 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "11" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 5000      | false  | None          |
-      | hostS1 | 172.100.9.6 | 3307   | ok        | 0       | 5000      | false  | None          |
-      | hostS2 | 172.100.9.6 | 3308   | init      | 0       | 5000      | true   | None          |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6 | STOP-9 |
+      | hostM1 | 172.100.9.5 | 3306   | 1         | 0         | false  |
+      | hostM2 | 172.100.9.6 | 3306   | 1         | 5000      | false  |
+      | hostS1 | 172.100.9.6 | 3307   | 1         | 5000      | false  |
+      | hostS2 | 172.100.9.6 | 3308   | 0         | 5000      | true   |
 #case one slave is down ,check master RS_CODE is "ok" and slave RS_CODE is "error"
     Given stop mysql in host "mysql-slave1"
     Given sleep "5" seconds
@@ -53,10 +53,10 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "12" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6 | STOP-9 |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0         | false  |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 5000      | false  |
-      | hostS1 | 172.100.9.6 | 3307   | error     | 5000      | false  |
-      | hostS2 | 172.100.9.6 | 3308   | init      | 5000      | true   |
+      | hostM1 | 172.100.9.5 | 3306   | 1         | 0         | false  |
+      | hostM2 | 172.100.9.6 | 3306   | 1         | 5000      | false  |
+      | hostS1 | 172.100.9.6 | 3307   | -1        | 5000      | false  |
+      | hostS2 | 172.100.9.6 | 3308   | 0         | 5000      | true   |
     Given start mysql in host "mysql-slave1"
 #because heartbeat timeout is set to 5 seconds,so wait 5 seconds to check slave RS_CODE is "ok"
     Given sleep "5" seconds
@@ -64,11 +64,11 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "13" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10  |
-      | hostM1 | 172.100.9.5 | 3306   | ok        | 0         | false  | None           |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 5000      | false  | None           |
-      | hostS1 | 172.100.9.6 | 3307   | ok        | 5000      | false  | None           |
-      | hostS2 | 172.100.9.6 | 3308   | init      | 5000      | true   | None           |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6 | STOP-9 |
+      | hostM1 | 172.100.9.5 | 3306   | 1         | 0         | false  |
+      | hostM2 | 172.100.9.6 | 3306   | 1         | 5000      | false  |
+      | hostS1 | 172.100.9.6 | 3307   | 1         | 5000      | false  |
+      | hostS2 | 172.100.9.6 | 3308   | 0         | 5000      | true   |
     #case one slave set iptables to check slave RS_CODE is "timeout"
     Given execute oscmd in "mysql-slave1"
       """
@@ -80,8 +80,8 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     iptables -L
     """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql              | expect                                                                                                                                                                                     | timeout |
-      | conn_0 | false    | show @@heartbeat | hasStr{'hostM1', '172.100.9.5', 3306, 'ok'}, hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostS1', '172.100.9.6', 3307, 'timeout'}, hasStr{'hostS2', '172.100.9.6', 3308, 'init'}, | 60      |
+      | conn   | toClose  | sql              | expect                                                                                                                                                                   | timeout |
+      | conn_0 | false    | show @@heartbeat | hasStr{'hostM1', '172.100.9.5', 3306, 1}, hasStr{'hostM2', '172.100.9.6', 3306, 1}, hasStr{'hostS1', '172.100.9.6', 3307, -2}, hasStr{'hostS2', '172.100.9.6', 3308, 0}, | 60      |
     Given execute oscmd in "mysql-slave1"
     """
     iptables -F
@@ -91,8 +91,8 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     iptables -L
     """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql              | expect                                                                                                                                                                                | timeout |
-      | conn_0 | false    | show @@heartbeat | hasStr{'hostM1', '172.100.9.5', 3306, 'ok'}, hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostS1', '172.100.9.6', 3307, 'ok'}, hasStr{'hostS2', '172.100.9.6', 3308, 'init'}, | 60      |
+      | conn   | toClose  | sql              | expect                                                                                                                                                                  | timeout |
+      | conn_0 | false    | show @@heartbeat | hasStr{'hostM1', '172.100.9.5', 3306, 1}, hasStr{'hostM2', '172.100.9.6', 3306, 1}, hasStr{'hostS1', '172.100.9.6', 3307, 1}, hasStr{'hostS2', '172.100.9.6', 3308, 0}, | 60      |
 
 
 # change heartbeat errorRetryCount and timeout to set connection retry and check slave RS_CODE is "ok"
@@ -103,7 +103,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
         <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test"/>
     </dataHost>
 
-    <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10">
+    <dataHost balance="2" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10">
         <heartbeat errorRetryCount="2" timeout="10">show slave status</heartbeat>
         <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
           <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test" />
@@ -117,23 +117,24 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn_0 | false   | show @@heartbeat  |
 #check slave is "error" and RETRY is equal errorRetryCount=2 DBLE0REQ-633
     Then check resultset "21" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6  | STOP-9 |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 10000      | false  |
-      | hostS1 | 172.100.9.6 | 3307   | error     | 4       | 10000      | false  |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6  | STOP-9 |
+      | hostM1 | 172.100.9.5 | 3306   | 1         | 0          | false  |
+      | hostM2 | 172.100.9.6 | 3306   | 1         | 10000      | false  |
+      | hostS1 | 172.100.9.6 | 3307   | -1        | 10000      | false  |
     Given start mysql in host "mysql-slave1"
     Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "22"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "22" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6  | STOP-9 | RS_MESSAGE-10    |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 10000      | false  | None             |
-      | hostS1 | 172.100.9.6 | 3307   | ok        | 0       | 10000      | false  | None             |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6  | STOP-9 |
+      | hostM2 | 172.100.9.6 | 3306   | 1         | 10000      | false  |
+      | hostS1 | 172.100.9.6 | 3307   | 1         | 10000      | false  |
 
 # case 3:add new slave and down old slave,check salve RS_CODE
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10">
+    <dataHost balance="2" name="ha_group2" slaveThreshold="100" maxCon="1000" minCon="10">
       <heartbeat errorRetryCount="0" timeout="10">show slave status</heartbeat>
       <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
         <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test" />
@@ -149,19 +150,19 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "31" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6 | STOP-9 |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 10000     | false  |
-      | hostS1 | 172.100.9.6 | 3307   | error     | 10000     | false  |
-      | hostS2 | 172.100.9.6 | 3308   | ok        | 10000     | false  |
+      | hostM2 | 172.100.9.6 | 3306   | 1         | 10000     | false  |
+      | hostS1 | 172.100.9.6 | 3307   | -1        | 10000     | false  |
+      | hostS2 | 172.100.9.6 | 3308   | 1         | 10000     | false  |
     Given start mysql in host "mysql-slave1"
     Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "32"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "32" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6  | STOP-9 | RS_MESSAGE-10    |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 10000      | false  | None             |
-      | hostS1 | 172.100.9.6 | 3307   | ok        | 10000      | false  | None             |
-      | hostS2 | 172.100.9.6 | 3308   | ok        | 10000      | false  | None             |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6  | STOP-9 |
+      | hostM2 | 172.100.9.6 | 3306   | 1         | 10000      | false  |
+      | hostS1 | 172.100.9.6 | 3307   | 1         | 10000      | false  |
+      | hostS2 | 172.100.9.6 | 3308   | 1         | 10000      | false  |
 
 # case 4 :set master down to check RS_CODE
     Given stop mysql in host "mysql-master2"
@@ -170,19 +171,19 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "41" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6 | STOP-9 |
-      | hostM2 | 172.100.9.6 | 3306   | error     | 10000     | false  |
-      | hostS1 | 172.100.9.6 | 3307   | ok        | 10000     | false  |
-      | hostS2 | 172.100.9.6 | 3308   | ok        | 10000     | false  |
+      | hostM2 | 172.100.9.6 | 3306   | -1        | 10000     | false  |
+      | hostS1 | 172.100.9.6 | 3307   | 1         | 10000     | false  |
+      | hostS2 | 172.100.9.6 | 3308   | 1         | 10000     | false  |
     Given start mysql in host "mysql-master2"
     Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "42"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "42" has lines with following column values
-      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6  | STOP-9 | RS_MESSAGE-10    |
-      | hostM2 | 172.100.9.6 | 3306   | ok        | 10000      | false  | None             |
-      | hostS1 | 172.100.9.6 | 3307   | ok        | 10000      | false  | None             |
-      | hostS2 | 172.100.9.6 | 3308   | ok        | 10000      | false  | None             |
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | TIMEOUT-6  | STOP-9 |
+      | hostM2 | 172.100.9.6 | 3306   | 1         | 10000      | false  |
+      | hostS1 | 172.100.9.6 | 3307   | 1         | 10000      | false  |
+      | hostS2 | 172.100.9.6 | 3308   | 1         | 10000      | false  |
     #case set master iptables to check master RS_CODE is "timeout"
     Given execute oscmd in "mysql-master2"
       """
@@ -194,8 +195,8 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     iptables -L
     """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql              | expect                                                                                                                                      | timeout |
-      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'time_out'}, hasStr{'hostS1', '172.100.9.6', 3307, 'ok'}, hasStr{'hostS2', '172.100.9.6', 3308, 'ok'}, | 60      |
+      | conn   | toClose  | sql              | expect                                                                                                                        | timeout |
+      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, -2}, hasStr{'hostS1', '172.100.9.6', 3307, 1}, hasStr{'hostS2', '172.100.9.6', 3308, 1} | 60      |
     Given execute oscmd in "mysql-master2"
     """
     iptables -L
@@ -209,6 +210,6 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     iptables -L
     """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql              | expect                                                                                                                                 | timeout |
-      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 'ok'}, hasStr{'hostS1', '172.100.9.6', 3307, 'ok'}, hasStr{'hostS2', '172.100.9.6', 3308, 'ok'}, | 60      |
+      | conn   | toClose  | sql              | expect                                                                                                                      | timeout |
+      | conn_0 | false    | show @@heartbeat | hasStr{'hostM2', '172.100.9.6', 3306, 1}, hasStr{'hostS1', '172.100.9.6', 3307, 1}, hasStr{'hostS2', '172.100.9.6', 3308, 1 | 60      |
     Then execute admin cmd "reload @@config"

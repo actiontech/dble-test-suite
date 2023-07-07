@@ -9,7 +9,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <system>
-        <property name="sequenceHandlerType">20</property>
+        <property name="sequnceHandlerType">20</property>
         <property name="useSqlStat">false        </property>
         <property name="useCompression">true    </property>
         <property name="charset">utf-8</property>
@@ -58,7 +58,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
         <property name="bufferPoolChunkSize">4096     </property>
         <property name="bufferPoolPageNumber">512      </property>
         <property name="bufferPoolPageSize">2097152  </property>
-        <property name="clearBigSQLResultSetMapMs">600000   </property>
+        <property name="clearBigSqLResultSetMapMs">600000   </property>
         <property name="sqlRecordCount">10            </property>
         <property name="maxResultSet">524288          </property>
         <property name="backSocketSoRcvbuf">4194304   </property>
@@ -71,9 +71,6 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
       | sql             |
       | show @@sysparam |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
-      | sql              |
-      | show @@sysparam  |
     Then check resultset "sysparam_rs" has lines with following column values
       | PARAM_NAME-0                | PARAM_VALUE-1                   |
       | bindIp                      | 0.0.0.0                         |
@@ -86,7 +83,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | complexExecutor             | 4                               |
       | writeToBackendExecutor      | 4                               |
       | fakeMySQLVersion            | 5.6.24                          |
-      | sequenceHandlerType         | Local TimeStamp(like Snowflake) |
+      | sequnceHandlerType          | Local TimeStamp(like Snowflake) |
       | serverBacklog               | 2048                            |
       | serverNodeId                | 1                               |
       | showBinlogStatusTimeout     | 300ms                           |
@@ -100,7 +97,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | maxCostStatSize             | 100                             |
       | costSamplePercent           | 1                               |
       | charset                     | utf8mb4                         |
-      | maxPacketSize               | 16777216                        |
+      | maxPacketSize               | 16M                             |
       | txIsolation                 | REPEATABLE_READ                 |
       | checkTableConsistency       | 0                               |
       | checkTableConsistencyPeriod | 60000ms                         |
@@ -112,7 +109,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | recordTxn                   | 0                               |
       | transactionLogBaseDir       | /txlogs                         |
       | transactionLogBaseName      | server-tx                       |
-      | transactionRotateSize       | 16M                             |
+      | transactionRatateSize       | 16M                             |
       | xaRecoveryLogBaseDir        | /tmlogs                         |
       | xaRecoveryLogBaseName       | tmlog                           |
       | xaSessionCheckPeriod        | 1000ms                          |
@@ -132,13 +129,15 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | sqlRecordCount              | 10                              |
       | maxResultSet                | 524288B                         |
       | bufferUsagePercent          | 80%                             |
-      | clearBigSQLResultSetMapMs   | 600000ms                        |
+      | clearBigSqLResultSetMapMs   | 600000ms                        |
       | frontSocketSoRcvbuf         | 1048576B                        |
       | frontSocketSoSndbuf         | 4194304B                        |
       | frontSocketNoDelay          | 1                               |
       | backSocketSoRcvbuf          | 4194304B                        |
       | backSocketSoSndbuf          | 1048576B                        |
       | backSocketNoDelay           | 1                               |
+      | clusterHeartbeatUser        | _HEARTBEAT_USER_                |
+      | clusterHeartbeatPass        | _HEARTBEAT_PASS_                |
       | viewPersistenceConfBaseDir  | ./viewConf/                     |
       | viewPersistenceConfBaseName | viewJson                        |
       | joinQueueSize               | 1024                            |
@@ -152,7 +151,6 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | sqlSlowTime                 | 100ms                           |
       | maxCharsPerColumn           | 65535                           |
       | maxRowSizeToFile            | 10000                           |
-      | useOuterHa                  | true                            |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dryrun_rs"
       | sql             |
       | dryrun          |
@@ -165,7 +163,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | Xml     | WARNING | property [ enableSlowLog ] 'false' data type should be int, skip               |
       | Xml     | WARNING | property [ frontSocketNoDelay ] 'true' data type should be int, skip           |
       | Xml     | WARNING | property [ recordTxn ] 'false' data type should be int, skip                   |
-      | Xml     | WARNING | Property [ sequenceHandlerType ] '20' in server.xml is illegal, use 2 replaced  |
+      | Xml     | WARNING | Property [ sequnceHandlerType ] '20' in server.xml is illegal, use 2 replaced  |
       | Xml     | WARNING | Property [ txIsolation ] '30' in server.xml is illegal, use 3 replaced         |
       | Xml     | WARNING | property [ useCompression ] 'true' data type should be int, skip               |
       | Xml     | WARNING | property [ useCostTimeStat ] 'false' data type should be int, skip             |
@@ -182,7 +180,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | Xml     | WARNING | property [ enableSlowLog ] 'false' data type should be int, skip               |
       | Xml     | WARNING | property [ frontSocketNoDelay ] 'true' data type should be int, skip           |
       | Xml     | WARNING | property [ recordTxn ] 'false' data type should be int, skip                   |
-      | Xml     | WARNING | Property [ sequenceHandlerType ] '20' in server.xml is illegal, use 2 replaced  |
+      | Xml     | WARNING | Property [ sequnceHandlerType ] '20' in server.xml is illegal, use 2 replaced  |
       | Xml     | WARNING | Property [ txIsolation ] '30' in server.xml is illegal, use 3 replaced         |
       | Xml     | WARNING | property [ useCompression ] 'true' data type should be int, skip               |
       | Xml     | WARNING | property [ useCostTimeStat ] 'false' data type should be int, skip             |

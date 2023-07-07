@@ -2,11 +2,11 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhaohongjie at 2018/12/7
 # Created by quexiuping at 2020/9/23
-
-Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@dataNode='dn1,dn2,...'"
+# 2.19.11 不支持drop database @@
+Feature: test "create database @@dataNode='dn1,dn2,...'"
 
   @NORMAL
-  Scenario: "create/drop database @@..." for all used datanode #1
+  Scenario: "create database @@..." for all used datanode #1
      Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
      """
         <dataNode dataHost="ha_group1" database="da1" name="dn1" />
@@ -31,46 +31,21 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
       | show @@dataNode |
     #TODO EXECUTE的值待确认
     Then check resultset "A" has lines with following column values
-      | NAME-0 | DB_GROUP-1    | SCHEMA_EXISTS-2 | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn1    | ha_group1/da1 | true            | 0        | 1000   | 0         | -1              |
-      | dn2    | ha_group2/da1 | true            | 0        | 1000   | 1         | -1              |
-      | dn3    | ha_group1/da2 | true            | 0        | 1000   | 0         | -1              |
-      | dn4    | ha_group2/da2 | true            | 0        | 1000   | 0         | -1              |
-      | dn5    | ha_group1/da3 | true            | 0        | 1000   | 1         | -1              |
+      | NAME-0 | DB_GROUP-1    | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+      | dn1    | ha_group1/da1 | 0        | 1000   | 0         | -1              |
+      | dn2    | ha_group2/da1 | 0        | 1000   | 1         | -1              |
+      | dn3    | ha_group1/da2 | 0        | 1000   | 0         | -1              |
+      | dn4    | ha_group2/da2 | 0        | 1000   | 0         | -1              |
+      | dn5    | ha_group1/da3 | 0        | 1000   | 1         | -1              |
     Then execute sql in "mysql-master1"
-      | conn   | toClose  | sql                       | expect          |
+      | conn   | toClose  | sql                       | expect            |
       | conn_0 | False    | show databases like 'da1' | has{(('da1',),)}  |
       | conn_0 | False    | show databases like 'da2' | has{(('da2',),)}  |
       | conn_0 | True     | show databases like 'da3' | has{(('da3',),)}  |
     Then execute sql in "mysql-master2"
-      | conn   | toClose  | sql                        | expect          |
+      | conn   | toClose  | sql                        | expect            |
       | conn_0 | False    | show databases like 'da1'  | has{(('da1',),)}  |
       | conn_0 | True     | show databases like 'da2'  | has{(('da2',),)}  |
-    Then execute admin cmd "drop database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
-    Then execute sql in "mysql-master1"
-      | conn   | toClose  | sql                       | expect       |
-      | conn_0 | False    | show databases like 'da1' | length{(0)}  |
-      | conn_0 | False    | show databases like 'da2' | length{(0)}  |
-      | conn_0 | True     | show databases like 'da3' | length{(0)}  |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose  | sql                        | expect      |
-      | conn_0 | False    | show databases like 'da1'  | length{(0)} |
-      | conn_0 | True     | show databases like 'da2'  | length{(0)} |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "A1"
-      | sql             |
-      | show @@dataNode |
-    #TODO EXECUTE的值待确认
-    Then check resultset "A1" has lines with following column values
-      | NAME-0 | DB_GROUP-1    | SCHEMA_EXISTS-2  | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn1    | ha_group1/da1 | false            | 0        | 1000   | 0         | -1              |
-      | dn2    | ha_group2/da1 | false            | 0        | 1000   | 1         | -1              |
-      | dn3    | ha_group1/da2 | false            | 0        | 1000   | 0         | -1              |
-      | dn4    | ha_group2/da2 | false            | 0        | 1000   | 0         | -1              |
-      | dn5    | ha_group1/da3 | false            | 0        | 1000   | 1         | -1              |
-    Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
-    Then execute admin cmd "drop database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
-
-
 
   @NORMAL
   Scenario: "create database @@..." for part of used datanode #2
@@ -97,12 +72,12 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
       | sql             |
       | show @@dataNode |
     Then check resultset "B" has lines with following column values
-      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2 | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn1    | ha_group1/da11 | true            | 0        | 1000   | 0         | -1              |
-      | dn2    | ha_group2/da11 | true            | 0        | 1000   | 1         | -1              |
-      | dn3    | ha_group1/da21 | false           | 0        | 1000   | 0         | -1              |
-      | dn4    | ha_group2/da21 | false           | 0        | 1000   | 0         | -1              |
-      | dn5    | ha_group1/da31 | false           | 0        | 1000   | 1         | -1              |
+      | NAME-0 | DB_GROUP-1     | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+      | dn1    | ha_group1/da11 | 0        | 1000   | 0         | -1              |
+      | dn2    | ha_group2/da11 | 0        | 1000   | 1         | -1              |
+      | dn3    | ha_group1/da21 | 0        | 1000   | 0         | -1              |
+      | dn4    | ha_group2/da21 | 0        | 1000   | 0         | -1              |
+      | dn5    | ha_group1/da31 | 0        | 1000   | 1         | -1              |
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                        | expect          |
       | conn_0 | False    | show databases like 'da11' | has{('da11',),} |
@@ -114,15 +89,15 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
       | conn_0 | True     | show databases like 'da21'  | length{(0)}     |
     Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "B1"
-      | sql                 |
+      | sql             |
       | show @@dataNode |
     Then check resultset "B1" has lines with following column values
-      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2 | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn1    | ha_group1/da11 | true            | 0        | 1000   | 0         | -1              |
-      | dn2    | ha_group2/da11 | true            | 0        | 1000   | 1         | -1              |
-      | dn3    | ha_group1/da21 | true            | 0        | 1000   | 0         | -1              |
-      | dn4    | ha_group2/da21 | true            | 0        | 1000   | 0         | -1              |
-      | dn5    | ha_group1/da31 | true            | 0        | 1000   | 1         | -1              |
+      | NAME-0 | DB_GROUP-1     | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+      | dn1    | ha_group1/da11 | 0        | 1000   | 0         | -1              |
+      | dn2    | ha_group2/da11 | 0        | 1000   | 1         | -1              |
+      | dn3    | ha_group1/da21 | 0        | 1000   | 0         | -1              |
+      | dn4    | ha_group2/da21 | 0        | 1000   | 0         | -1              |
+      | dn5    | ha_group1/da31 | 0        | 1000   | 1         | -1              |
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                        | expect           |
       | conn_0 | False    | show databases like 'da11' | has{('da11',),}  |
@@ -132,39 +107,6 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
       | conn   | toClose  | sql                         | expect           |
       | conn_0 | False    | show databases like 'da11'  | has{('da11',),}  |
       | conn_0 | True     | show databases like 'da21'  | has{('da21',),}  |
-    Then execute admin cmd "drop database @@dataNode ='dn1,dn2'"
-    Then execute sql in "mysql-master1"
-      | conn   | toClose  | sql                        | expect           |
-      | conn_0 | False    | show databases like 'da11' | length{(0)}      |
-      | conn_0 | False    | show databases like 'da21' | has{('da21',),}  |
-      | conn_0 | True     | show databases like 'da31' | has{('da31',),}  |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose  | sql                         | expect           |
-      | conn_0 | False    | show databases like 'da11'  | length{(0)}      |
-      | conn_0 | True     | show databases like 'da21'  | has{('da21',),}  |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "B2"
-      | sql                 |
-      | show @@dataNode |
-    Then check resultset "B2" has lines with following column values
-      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2 | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn1    | ha_group1/da11 | false           | 0        | 1000   | 0         | -1              |
-      | dn2    | ha_group2/da11 | false           | 0        | 1000   | 1         | -1              |
-      | dn3    | ha_group1/da21 | true            | 0        | 1000   | 0         | -1              |
-      | dn4    | ha_group2/da21 | true            | 0        | 1000   | 0         | -1              |
-      | dn5    | ha_group1/da31 | true            | 0        | 1000   | 1         | -1              |
-
-    Then execute admin cmd "drop database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
-    Then execute sql in "mysql-master1"
-      | conn   | toClose  | sql                        | expect          |
-      | conn_0 | False    | show databases like 'da11' | length{(0)}     |
-      | conn_0 | False    | show databases like 'da21' | length{(0)}     |
-      | conn_0 | True     | show databases like 'da31' | length{(0)}     |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose  | sql                         | expect         |
-      | conn_0 | False    | show databases like 'da11'  | length{(0)}    |
-      | conn_0 | True     | show databases like 'da21'  | length{(0)}    |
-
-
 
   @NORMAL
   Scenario: "create database @@..." for datanode of style 'dn$x-y' #3
@@ -198,12 +140,12 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
       | show @@dataNode |
     #TODO EXECUTE的值待确认
     Then check resultset "C" has lines with following column values
-      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2 | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn10   | ha_group1/da00 | true            | 0        | 1000   | 0         | -1              |
-      | dn11   | ha_group1/da01 | true            | 0        | 1000   | 0         | -1              |
-      | dn20   | ha_group2/da00 | true            | 0        | 1000   | 0         | -1              |
-      | dn21   | ha_group2/da01 | true            | 0        | 1000   | 1         | -1              |
-      | dn5    | ha_group1/da31 | false           | 0        | 1000   | 1         | -1              |
+      | NAME-0 | DB_GROUP-1     | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+      | dn10   | ha_group1/da00 | 0        | 1000   | 0         | -1              |
+      | dn11   | ha_group1/da01 | 0        | 1000   | 0         | -1              |
+      | dn20   | ha_group2/da00 | 0        | 1000   | 0         | -1              |
+      | dn21   | ha_group2/da01 | 0        | 1000   | 1         | -1              |
+      | dn5    | ha_group1/da31 | 0        | 1000   | 1         | -1              |
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                        | expect          |
       | conn_0 | False    | show databases like 'da00' | has{('da00',),} |
@@ -213,27 +155,6 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
       | conn   | toClose  | sql                           | expect          |
       | conn_0 | False    | show databases like 'da00'    | has{('da00',),} |
       | conn_0 | True     | show databases like 'da01'    | has{('da01',),} |
-    Then execute admin cmd "drop database @@dataNode ='dn10,dn11,dn20,dn21'"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
-      | sql                 |
-      | show @@dataNode |
-    Then check resultset "C" has lines with following column values
-      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2  | ACTIVE-3 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
-      | dn10   | ha_group1/da00 | false            | 0        | 1000   | 0         | -1              |
-      | dn11   | ha_group1/da01 | false            | 0        | 1000   | 0         | -1              |
-      | dn20   | ha_group2/da00 | false            | 0        | 1000   | 0         | -1              |
-      | dn21   | ha_group2/da01 | false            | 0        | 1000   | 1         | -1              |
-      | dn5    | ha_group1/da31 | false            | 0        | 1000   | 1         | -1              |
-    Then execute sql in "mysql-master1"
-      | conn   | toClose  | sql                        | expect          |
-      | conn_0 | False    | show databases like 'da00' | length{(0)}     |
-      | conn_0 | False    | show databases like 'da01' | length{(0)}     |
-      | conn_0 | True     | show databases like 'da31' | length{(0)}     |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose  | sql                           | expect        |
-      | conn_0 | False    | show databases like 'da00'    | length{(0)}   |
-      | conn_0 | True     | show databases like 'da01'    | length{(0)}   |
-      
       
   @NORMAL
   Scenario: add new dataHost & "create database @@..." & "show @@datanode" when sharding  #4
@@ -272,13 +193,13 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
       | sql                    |
       | show @@dataNode        |
      Then check resultset "A" has lines with following column values
-       | NAME-0 | DB_GROUP-1        | SCHEMA_EXISTS-2 | ACTIVE-3 | SIZE-5 | RECOVERY_TIME-7 |
-       | dn1    | ha_group1/db1     | true            | 0        | 1000   | -1              |
-       | dn2    | ha_group2/db1     | true            | 0        | 1000   | -1              |
-       | dn3    | ha_group1/db2     | true            | 0        | 1000   | -1              |
-       | dn4    | ha_group2/db2     | true            | 0        | 1000   | -1              |
-       | dn5    | ha_group1/db3     | true            | 0        | 1000   | -1              |
-       | dn6    | ha_group3/db4     | true            | 0        | 1000   | -1              |
+       | NAME-0 | DB_GROUP-1        | ACTIVE-3 | SIZE-5 | RECOVERY_TIME-7 |
+       | dn1    | ha_group1/db1     | 0        | 1000   | -1              |
+       | dn2    | ha_group2/db1     | 0        | 1000   | -1              |
+       | dn3    | ha_group1/db2     | 0        | 1000   | -1              |
+       | dn4    | ha_group2/db2     | 0        | 1000   | -1              |
+       | dn5    | ha_group1/db3     | 0        | 1000   | -1              |
+       | dn6    | ha_group3/db4     | 0        | 1000   | -1              |
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                       | expect          |
       | conn_0 | False    | show databases like 'db1' | has{('db1',),}  |
@@ -292,8 +213,8 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
       | conn   | toClose  | sql                        | expect          |
       | conn_0 | True     | show databases like 'db4'  | has{('db4',),}  |
     Given delete the following xml segment
-       |file          | parent          | child                   |
-       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}        |
+       | file        | parent           | child                   |
+       | schema.xml  | {'tag':'root'}   | {'tag':'schema'}        |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
@@ -306,58 +227,31 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
       | sql                    |
       | show @@dataNode        |
-     Then check resultset "B" has lines with following column values
-       | NAME-0 | DB_GROUP-1        | SCHEMA_EXISTS-2 | ACTIVE-3 |SIZE-5 | RECOVERY_TIME-7 |
-       | dn1    | ha_group1/db1     | true            | 0        |1000   | -1              |
-       | dn2    | ha_group2/db1     | true            | 0        |1000   | -1              |
-       | dn3    | ha_group1/db2     | true            | 0        |1000   | -1              |
-       | dn4    | ha_group2/db2     | true            | 0        |1000   | -1              |
-       | dn5    | ha_group1/db3     | true            | 0        |1000   | -1              |
-     #CASE show @@shardingNodes where schema=? and table=?;
-     Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
+    Then check resultset "B" has lines with following column values
+      | NAME-0 | DB_GROUP-1        | ACTIVE-3 |SIZE-5 | RECOVERY_TIME-7 |
+      | dn1    | ha_group1/db1     | 0        |1000   | -1              |
+      | dn2    | ha_group2/db1     | 0        |1000   | -1              |
+      | dn3    | ha_group1/db2     | 0        |1000   | -1              |
+      | dn4    | ha_group2/db2     | 0        |1000   | -1              |
+      | dn5    | ha_group1/db3     | 0        |1000   | -1              |
+    #CASE show @@shardingNodes where schema=? and table=?;
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
       | sql                                                             |
       | show @@dataNodes where schema = schema1 and table = test        |
-     Then check resultset "C" has lines with following column values
-       | NAME-0 | SEQUENCE-1 | HOST-2        | PORT-3 | PHYSICAL_SCHEMA-4 | USER-5 | PASSWORD-6 |
-       | dn1    | 0          | 172.100.9.5   | 3306   | db1               | test   | 111111     |
-       | dn2    | 1          | 172.100.9.6   | 3306   | db1               | test   | 111111     |
-       | dn3    | 2          | 172.100.9.5   | 3306   | db2               | test   | 111111     |
-       | dn4    | 3          | 172.100.9.6   | 3306   | db2               | test   | 111111     |
-     #CASE show @@dataNode where schema=?
-     Given execute single sql in "dble-1" in "admin" mode and save resultset in "D"
-       | conn   | toClose  | sql                                           |
-       | conn_0 | False    | show @@dataNode  where schema = schema1       |
-     Then check resultset "D" has lines with following column values
-       | NAME-0 | DB_GROUP-1      | SCHEMA_EXISTS-2 |ACTIVE-3 | SIZE-5 | RECOVERY_TIME-7 |
-       | dn1  | ha_group1/db1     | true            |      0  | 1000   |            -1   |
-       | dn2  | ha_group2/db1     | true            |      0  | 1000   |            -1   |
-       | dn3  | ha_group1/db2     | true            |      0  | 1000   |            -1   |
-       | dn4  | ha_group2/db2     | true            |      0  | 1000   |            -1   |
-       | dn5  | ha_group1/db3     | true            |      0  | 1000   |            -1   |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql                                                      | expect                        | timeout |
-      | conn_0 | False    | drop database @@dataNode ='dn1,dn2,dn3,dn4,dn5,dn6'      | DataNode dn6 does not exists  |         |
-      | conn_0 | true     | drop database @@dataNode ='dn1,dn2,dn3,dn4,dn5'          | success                       | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "E"
-      | sql             |
-      | show @@dataNode |
-    Then check resultset "E" has lines with following column values
-      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2  | ACTIVE-3 | SIZE-5 | RECOVERY_TIME-7 |
-      | dn1    | ha_group1/db1  | false            | 0        | 1000   | -1              |
-      | dn2    | ha_group2/db1  | false            | 0        | 1000   | -1              |
-      | dn3    | ha_group1/db2  | false            | 0        | 1000   | -1              |
-      | dn4    | ha_group2/db2  | false            | 0        | 1000   | -1              |
-      | dn5    | ha_group1/db3  | false            | 0        | 1000   | -1              |
-    Then execute sql in "mysql-master1"
-      | conn   | toClose  | sql                        | expect          |
-      | conn_0 | False    | show databases like 'db1'  | length{(0)}     |
-      | conn_0 | False    | show databases like 'db2'  | length{(0)}     |
-      | conn_0 | True     | show databases like 'db3'  | length{(0)}     |
-    Then execute sql in "mysql-master2"
-      | conn   | toClose  | sql                           | expect        |
-      | conn_0 | False    | show databases like 'db1'     | length{(0)}   |
-      | conn_0 | True     | show databases like 'db2'     | length{(0)}   |
-    Then execute sql in "mysql"
-      | conn   | toClose  | sql                           | expect           |
-      | conn_0 | true     | show databases like 'db4'     | has{('db4',),}   |
-    Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
+    Then check resultset "C" has lines with following column values
+      | NAME-0 | SEQUENCE-1 | HOST-2        | PORT-3 | PHYSICAL_SCHEMA-4 | USER-5 | PASSWORD-6 |
+      | dn1    | 0          | 172.100.9.5   | 3306   | db1               | test   | 111111     |
+      | dn2    | 1          | 172.100.9.6   | 3306   | db1               | test   | 111111     |
+      | dn3    | 2          | 172.100.9.5   | 3306   | db2               | test   | 111111     |
+      | dn4    | 3          | 172.100.9.6   | 3306   | db2               | test   | 111111     |
+    #CASE show @@dataNode where schema=?
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "D"
+      | conn   | toClose  | sql                                           |
+      | conn_0 | False    | show @@dataNode  where schema = schema1       |
+    Then check resultset "D" has lines with following column values
+      | NAME-0 | DB_GROUP-1      |ACTIVE-3 | SIZE-5 | RECOVERY_TIME-7 |
+      | dn1  | ha_group1/db1     |      0  | 1000   |            -1   |
+      | dn2  | ha_group2/db1     |      0  | 1000   |            -1   |
+      | dn3  | ha_group1/db2     |      0  | 1000   |            -1   |
+      | dn4  | ha_group2/db2     |      0  | 1000   |            -1   |
+      | dn5  | ha_group1/db3     |      0  | 1000   |            -1   |

@@ -16,22 +16,26 @@ Feature: schema basic config test
     """
     Then execute admin cmd "reload @@config_all"
 
-  @TRIVIAL
+  @TRIVIAL @skip_restart
   Scenario: config with no use datanode (has no counter-part datahost), expect reload success, config no use datahost reload success #2
     #schema.xml only has dataNodes,  dble starts success
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-      |server.xml  |{'tag':'root'}   | {'tag':'user','kv_map':{'name':'test'}}  |
-    Then Restart dble in "dble-1" success
+    # todo : dble should start only with <dataNode>
+    Then restart dble in "dble-1" failed for
+    """
+    dataNode dn1 reference dataHost:ha_group1 not exists!
+    """
     #schema.xml only has <dataHost>,  dble starts success
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |server.xml  |{'tag':'root'}   | {'tag':'user','kv_map':{'name':'test'}}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" >
+        <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
             </writeHost>

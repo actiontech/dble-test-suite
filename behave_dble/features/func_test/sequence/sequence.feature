@@ -4,9 +4,9 @@ Feature: Functional testing of global sequences
   common test for global sequences column:
   insert or insert...set explicitly to global sequence column get error
   insert without value of global sequence column success
-
+# 2.19.11及之前sequnceHandlerType单词拼写有误
   @BLOCKER
-  Scenario: test global sequenceHandlerType: 1(MySQL-offset-step) #1
+  Scenario: test global sequnceHandlerType: 1(MySQL-offset-step) #1
 #    case points:
 #  1.sequence column can't be inserted by client, and other limits to query
 #  2.sequence column value should be unique
@@ -18,7 +18,7 @@ Feature: Functional testing of global sequences
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-        <property name="sequenceHandlerType">1</property>
+        <property name="sequnceHandlerType">1</property>
     """
     When Add some data in "sequence_db_conf.properties"
     """
@@ -66,7 +66,7 @@ Feature: Functional testing of global sequences
 
   @BLOCKER  @current @auto_retry
     #### 这个case加上retry是因为偶尔机器上时间回溯，导致这个case失败
-  Scenario: test global sequenceHandlerType: 2(snowflake) #2
+  Scenario: test global sequnceHandlerType: 2(snowflake) #2
 #    case points:
 #  1.sequence column can't be inserted by client
 #  2.sequence column value should be unique
@@ -79,7 +79,7 @@ Feature: Functional testing of global sequences
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-        <property name="sequenceHandlerType">2</property>
+        <property name="sequnceHandlerType">2</property>
     """
     Given Restart dble in "dble-1" success
     #case 1: can not assign value to sequenceColumn, and can assgin value to columns without sequenceColumn
@@ -137,7 +137,7 @@ Feature: Functional testing of global sequences
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-        <property name="sequenceHandlerType">2</property>
+        <property name="sequnceHandlerType">2</property>
     """
     #case 1: Verify the illegal value of the WORKID
      Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds

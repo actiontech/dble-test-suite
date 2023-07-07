@@ -118,6 +118,7 @@ Feature: test high-availability related commands
     """
     <property name="processors">8</property>
     <property name="processorExecutor">8</property>
+    <property name="useOuterHa">true</property>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
@@ -210,5 +211,10 @@ Feature: test high-availability related commands
 
 
   Scenario: 恢复主从
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+      """
+      <property name="useOuterHa">true</property>
+      """
+    Given Restart dble in "dble-1" success
     Given change the primary instance of mysql group named "group2" to "mysql-master2"
     Then execute admin cmd "dataHost @@switch name = 'ha_group2' master = 'hostM2'"

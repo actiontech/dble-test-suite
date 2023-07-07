@@ -376,31 +376,34 @@ Feature: check txIsolation supports tx_/transaction_ variables
     Given sleep "40" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.6:3306[]] setError
+    heartbeat setError
     """
     Given start mysql in host "mysql-master2"
+    Given record current dble log line number in "log_linenu"
     Given sleep "40" seconds
     Then execute sql in "mysql-master2"
     | conn   | toClose | sql                                                                       | expect                                |
     | conn_5 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.6:3306[]] setOK
+    heartbeat setError
     """
 
 # stop, start readHost
     Given stop mysql in host "mysql-slave1"
+    Given record current dble log line number in "log_linenu"
     Given sleep "40" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.6:3307[]] setError
+    heartbeat setError
     """
     Given start mysql in host "mysql-slave1"
+    Given record current dble log line number in "log_linenu"
     Given sleep "40" seconds
     Then execute sql in "mysql-slave1"
     | conn   | toClose | sql                                                                       | expect                                |
     | conn_6 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.6:3307[]] setOK
+    heartbeat setError
     """
