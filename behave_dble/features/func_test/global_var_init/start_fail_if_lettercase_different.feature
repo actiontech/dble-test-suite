@@ -103,8 +103,10 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     </dataHost>
     """
     # 3.22.07开始，执行reload不会报错，因为这时配置的变更项，不会校验大小写的参数
-    #reload @@config_all returns failed,and failed info includes the output
-    Then execute admin cmd "reload @@config_all" get the following output
+    # -r 不做智能判断，将所有后端连接池全部重新加载一遍
+    When execute admin cmd "reload @@config_all" success
+    #reload @@config_all -r returns failed,and failed info includes the output
+    Then execute admin cmd "reload @@config_all -r" get the following output
     """
     these MySQL's value is not 0 :ha_group2:hostM2
     """

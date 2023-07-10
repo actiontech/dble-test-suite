@@ -83,7 +83,7 @@ Feature: We will check readonly status on both master and slave even if the hear
     When execute admin cmd "reload @@config_all -r" success
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
+    select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation
     """
     Then check general log in host "mysql-master1" has "@@read_only" occured ">0" times
     Then check general log in host "mysql-master2" has "@@read_only" occured ">0" times
@@ -155,7 +155,7 @@ Feature: We will check readonly status on both master and slave even if the hear
 
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
+    select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation
     """
     Then check general log in host "mysql-master1" has "@@read_only" occured ">0" times
     Then check general log in host "mysql-master2" has "@@read_only" occured ">0" times
@@ -236,7 +236,7 @@ Feature: We will check readonly status on both master and slave even if the hear
 
      Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
      """
-     select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
+     select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation
      """
      Then check general log in host "mysql-master1" has "@@read_only" occured ">0" times
      Then check general log in host "mysql-master2" has "@@read_only" occured ">0" times
@@ -313,7 +313,7 @@ Feature: We will check readonly status on both master and slave even if the hear
     When execute admin cmd "reload @@config_all -r" success
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
+    select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation
     """
     Then check general log in host "mysql-master1" has "@@read_only" occured ">0" times
     Then check general log in host "mysql-master2" has "@@read_only" occured ">0" times
@@ -341,7 +341,7 @@ Feature: We will check readonly status on both master and slave even if the hear
      {'restore_network':'mysql'}
      """
      ###con query sql:/*#timestamp=1678166093774 from=1 reason=one time job*/
-        # select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log
+        # select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation,@@version,@@back_log
            # to con:BackendConnection[id = 75 host = 172.100.9.6 port = 3308 localPort = 35474 mysqlId = 22
               # db config = dbInstance[name=hosts2,disabled=false,maxCon=1000,minCon=10]]
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"

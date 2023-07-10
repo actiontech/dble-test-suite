@@ -24,7 +24,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     When execute admin cmd "reload @@config_all -r" success
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
+    select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation
     """
     Then check general log in host "mysql-master1" has not "set global autocommit=1"
     Then check general log in host "mysql-master2" has not "set global autocommit=1"
@@ -150,7 +150,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
 #    a heartbeat period is 2, 5 means wait more than 2 heartbeat period
     Given sleep "5" seconds
     # optimize by DBLE0REQ-1868 since 3.22.07.0
-    Then check general log in host "mysql-master1" has "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" occured "1" times
+    Then check general log in host "mysql-master1" has "select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation" occured "1" times
 
   @restore_global_setting
   Scenario:config autocommit/txIsolation to not default value, and backend mysql values are different, dble will set backend same as dble configed #6
@@ -291,6 +291,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+    <property name="useOuterHa">true</property>
+    """
     Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
@@ -339,6 +343,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+    <property name="useOuterHa">true</property>
+    """
     Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
@@ -378,6 +386,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+    <property name="useOuterHa">true</property>
+    """
+    Given Restart dble in "dble-1" success
     Given turn on general log in "mysql-master1"
     Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
@@ -401,7 +414,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to \[172.100.9.5:3306\] setError
+    heartbeat setError
     """
     Given prepare a thread run btrace script "BtraceSelectGlobalVars1.java" in "dble-1"
     Given prepare a thread run btrace script "BtraceSelectGlobalVars2.java" in "dble-1"
@@ -420,11 +433,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     # find backend conns of query "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" used in dble.log
     Given execute linux command in "dble-1" and save result in "backendIds"
     """
-    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -i "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" |grep "host=172.100.9.5"| grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
+    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -i "select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation" |grep "host=172.100.9.5"| grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
     """
     Given kill mysql conns in "mysql-master1" in "backendIds"
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to \[172.100.9.5:3306\] setError
+    heartbeat setError
     """
