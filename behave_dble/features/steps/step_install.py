@@ -120,9 +120,9 @@ def install_dble_in_node(context, node):
     rc, _, ste = ssh_client.exec_command(cmd)
     assert_that(rc, equal_to(0), f"install dble failed, got err:{ste}")
     # set wrapper log level to debug
-    set_wrapper_log_level(context, node, 'debug')
+    # set_wrapper_log_level(context, node, 'debug')
     # change wrapper.java.command to absolute path
-    change_wrapper_java_path(context, node)
+    # change_wrapper_java_path(context, node)
 
 @Given('install dble in "{hostname}"')
 def install_dble_in_host(context, hostname):
