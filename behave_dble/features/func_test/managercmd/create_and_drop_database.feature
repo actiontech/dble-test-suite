@@ -235,8 +235,11 @@ Feature: test "create database @@dataNode='dn1,dn2,...' and drop database @@data
       | conn_0 | True     | show databases like 'da01'    | length{(0)}   |
       
       
-  @NORMAL
+  @NORMAL  @restore_database
   Scenario: add new dataHost & "create database @@..." & "show @@datanode" when sharding  #4
+    """
+    {'restore_database':'dble-1'}
+    """
     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
     """
     <schema dataNode="dn6" name="schema2" sqlMaxLimit="100"/>
