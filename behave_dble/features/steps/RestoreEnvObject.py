@@ -197,6 +197,24 @@ class RestoreEnvObject(object):
 
             logger.info("all required tables has been delete success")
 
+        if "restore_database" in self._scenario.tags:
+            params_dic = self.get_tag_params("{'restore_database'")
+            if params_dic:
+                paras = params_dic["restore_database"].split(",")
+            else:
+                paras = ""
+
+            logger.debug("try to restore_database: {0}".format(paras))
+
+            for host_name in paras:
+                if host_name.find('dble') != -1:
+                    mode = "admin"
+                else:
+                    mode = "mysql"
+                sql = "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
+
+                execute_sql_in_host(host_name, {"sql": sql}, mode)
+
     def get_tag_params(self, tagKey):
         description = self._scenario.description
         logger.debug("scenario description:{0}".format(type(description)))
