@@ -232,8 +232,11 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | conn_0 | True     | show databases like 'da01'    | length{(0)}   |
       
       
-  @NORMAL
+  @NORMAL @restore_database
   Scenario: add new dbGroup & "create database @@..." & "show @@shardingnode" when sharding  #4
+    """
+    {'restore_database':'dble-1'}
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
@@ -359,4 +362,5 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
     Then execute sql in "mysql"
       | conn   | toClose  | sql                           | expect           |
       | conn_0 | true     | show databases like 'db4'     | has{('db4',),}   |
+
     Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
