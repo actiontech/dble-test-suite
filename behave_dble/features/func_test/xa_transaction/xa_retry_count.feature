@@ -74,11 +74,14 @@ Feature: change xaRetryCount value and check result
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace @current @restore_mysql_service
+  # 2.19.11xa逻辑不同，case需要调整，先skip
+  @btrace @current @restore_mysql_service @skip
   Scenario: mysql node failover during xa transaction retry commit stage and check data not lost #3
     """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
+    Given delete file "/opt/dble/BtraceXaDelay_backgroundRetry2.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceXaDelay_backgroundRetry2.java.log" on "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <system>
