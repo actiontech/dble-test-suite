@@ -147,7 +147,7 @@
       | conn_0 | false   | insert into DBLE_db_group set name='0B01',heartbeat_stmt='select 5',rw_split_mode=1,delay_period_millis='null'                     | Not Supported of Value EXPR :'null'                                                            | dble_information |
       | conn_0 | false   | insert into DBLE_db_group set name='0B03',heartbeat_stmt='select 5',rw_split_mode=1,delay_period_millis=0B01                       | Not Supported of Value EXPR :0B01                                                              | dble_information |
       | conn_0 | false   | insert into DBLE_db_group set name='0B04',heartbeat_stmt='select 5',rw_split_mode=1,delay_period_millis='0B01'                     | Insert failure.The reason is incorrect integer value: '0B01'                                   | dble_information |
-      | conn_0 | false   | insert into DBLE_db_group set name='1B05',heartbeat_stmt='select 5',rw_split_mode=1,delay_period_millis=-2                         | Insert failure.The reason is Column 'delay_threshold' should be an integer greater than -1     | dble_information |
+      | conn_0 | false   | insert into DBLE_db_group set name='1B05',heartbeat_stmt='select 5',rw_split_mode=1,delay_period_millis=-2                         | Insert failure.The reason is Column 'delay_period_millis' should be an integer greater than or equal to -1!     | dble_information |
       | conn_0 | false   | insert into DBLE_db_group set name='0B06',heartbeat_stmt='select 5',rw_split_mode=1,delay_period_millis=1.5                        | Not Supported of Value EXPR :1.5                                                               | dble_information |
    ###### delay_database-8
     Given execute sql in "dble-1" in "admin" mode
@@ -197,10 +197,7 @@
       | conn_5 | true    | select disable_ha from DBLE_db_group where name ='0B05'                                                    | has{(('false',),)} | dble_information |
 
 ### coz  DBLE0REQ-2129
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      NullPointerException
-#      """
+#    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
   @skip_restart
@@ -451,62 +448,62 @@
       | conn   | toClose  | sql                      | expect      | db               |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_timeout='null'                 | Not Supported of Value EXPR :'null'             | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_timeout=' '                    | Not Supported of Value EXPR :' '                | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_timeout='0B01'                 | property [ connectionTimeout ] '0B01' data type should be long               | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_timeout='0B01'                 | Insert failure.The reason is incorrect integer value: '0B01'              | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_timeout=0B01                   | Not Supported of Value EXPR :0B01                                            | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_timeout=-1                     | property [ connectionTimeout ] '-1' should be an integer greater than 0!     | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_timeout=0                      | property [ connectionTimeout ] '0' should be an integer greater than 0!      | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_timeout=-1                     | Insert failure.The reason is Column 'connection_timeout' should be an integer greater than 0!     | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_timeout=0                      | Insert failure.The reason is Column 'connection_timeout' should be an integer greater than 0!      | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_timeout=1.3                    | Not Supported of Value EXPR :1.3                                     | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_timeout='abcd'                 | property [ connectionTimeout ] 'abcd' data type should be long       | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_timeout='abcd'                 | Insert failure.The reason is incorrect integer value: 'abcd'       | dble_information |
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                      | expect      | db               |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_heartbeat_timeout='null'                 | Not Supported of Value EXPR :'null'          | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_heartbeat_timeout=' '                    | Not Supported of Value EXPR :' '             | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_heartbeat_timeout='0B01'                 | property [ connectionHeartbeatTimeout ] '0B01' data type should be long               | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_heartbeat_timeout='0B01'                 | Insert failure.The reason is incorrect integer value: '0B01'                | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_heartbeat_timeout=0B01                   | Not Supported of Value EXPR :0B01                                                     | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_heartbeat_timeout=-1                     | property [ connectionHeartbeatTimeout ] '-1' should be an integer greater than 0      | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_heartbeat_timeout=0                      | property [ connectionHeartbeatTimeout ] '0' should be an integer greater than 0       | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_heartbeat_timeout=-1                     | Insert failure.The reason is Column 'connection_heartbeat_timeout' should be an integer greater than 0!      | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_heartbeat_timeout=0                      | Insert failure.The reason is Column 'connection_heartbeat_timeout' should be an integer greater than 0!      | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_heartbeat_timeout=1.3                    | Not Supported of Value EXPR :1.3                                              | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_heartbeat_timeout='abcd'                 | property [ connectionHeartbeatTimeout ] 'abcd' data type should be long       | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,connection_heartbeat_timeout='abcd'                 | Insert failure.The reason is incorrect integer value: 'abcd'       | dble_information |
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                      | expect      | db               |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,time_between_eviction_runs_millis='null'                  | Not Supported of Value EXPR :'null'            | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,time_between_eviction_runs_millis=' '                     | Not Supported of Value EXPR :' '               | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,time_between_eviction_runs_millis='0B01'                  | property [ timeBetweenEvictionRunsMillis ] '0B01' data type should be long                | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,time_between_eviction_runs_millis='0B01'                  | Insert failure.The reason is incorrect integer value: '0B01'                 | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,time_between_eviction_runs_millis=0B01                    | Not Supported of Value EXPR :0B01                                                         | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,time_between_eviction_runs_millis=-1                      | property [ timeBetweenEvictionRunsMillis ] '-1' should be an integer greater than 0       | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,time_between_eviction_runs_millis=0                       | property [ timeBetweenEvictionRunsMillis ] '0' should be an integer greater than 0        | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,time_between_eviction_runs_millis=-1                      | Insert failure.The reason is Column 'time_between_eviction_runs_millis' should be an integer greater than 0!       | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,time_between_eviction_runs_millis=0                       | Insert failure.The reason is Column 'time_between_eviction_runs_millis' should be an integer greater than 0!       | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,time_between_eviction_runs_millis=1.3                     | Not Supported of Value EXPR :1.3                                                 | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,time_between_eviction_runs_millis='abvd'                  | property [ timeBetweenEvictionRunsMillis ] 'abvd' data type should be long       | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,time_between_eviction_runs_millis='abcd'                  | Insert failure.The reason is incorrect integer value: 'abcd'       | dble_information |
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                      | expect      | db               |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,evictor_shutdown_timeout_millis='null'                 | Not Supported of Value EXPR :'null'            | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,evictor_shutdown_timeout_millis=' '                    | Not Supported of Value EXPR :' '               | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,evictor_shutdown_timeout_millis='0B01'                 | property [ evictorShutdownTimeoutMillis ] '0B01' data type should be long                | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,evictor_shutdown_timeout_millis='0B01'                 | Insert failure.The reason is incorrect integer value: '0B01'                 | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,evictor_shutdown_timeout_millis=0B01                   | Not Supported of Value EXPR :0B01                                                        | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,evictor_shutdown_timeout_millis=-1                     | property [ evictorShutdownTimeoutMillis ] '-1' should be an integer greater than 0       | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,evictor_shutdown_timeout_millis=0                      | property [ evictorShutdownTimeoutMillis ] '0' should be an integer greater than 0        | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,evictor_shutdown_timeout_millis=-1                     | Insert failure.The reason is Column 'evictor_shutdown_timeout_millis' should be an integer greater than 0!      | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,evictor_shutdown_timeout_millis=0                      | Insert failure.The reason is Column 'evictor_shutdown_timeout_millis' should be an integer greater than 0!       | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,evictor_shutdown_timeout_millis=1.3                    | Not Supported of Value EXPR :1.3                                                | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,evictor_shutdown_timeout_millis='abcd'                 | property [ evictorShutdownTimeoutMillis ] 'abcd' data type should be long               | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,evictor_shutdown_timeout_millis='abcd'                 | Insert failure.The reason is incorrect integer value: 'abcd'               | dble_information |
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                      | expect      | db               |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,idle_timeout='null'                 | Not Supported of Value EXPR :'null'             | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,idle_timeout=' '                    | Not Supported of Value EXPR :' '                | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,idle_timeout='0B01'                 | property [ idleTimeout ] '0B01' data type should be long             | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,idle_timeout='0B01'                 | Insert failure.The reason is incorrect integer value: '0B01'              | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,idle_timeout=0B01                   | Not Supported of Value EXPR :0B01                                    | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,idle_timeout=-1                     | property [ idleTimeout ] '-1' should be an integer greater than 0           | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,idle_timeout=0                      | property [ idleTimeout ] '0' should be an integer greater than 0            | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,idle_timeout=-1                     | Insert failure.The reason is Column 'idle_timeout' should be an integer greater than 0!             | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,idle_timeout=0                      | Insert failure.The reason is Column 'idle_timeout' should be an integer greater than 0!            | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,idle_timeout=1.3                    | Not Supported of Value EXPR :1.3                                     | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,idle_timeout='abcd'                 | property [ idleTimeout ] 'abcd' data type should be long             | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,idle_timeout='abcd'                 | Insert failure.The reason is incorrect integer value: 'abcd'            | dble_information |
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                      | expect      | db               |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,heartbeat_period_millis='null'                 | Not Supported of Value EXPR :'null'             | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,heartbeat_period_millis=' '                    | Not Supported of Value EXPR :' '                | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,heartbeat_period_millis='0B01'                 | property [ heartbeatPeriodMillis ] '0B01' data type should be long    | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,heartbeat_period_millis='0B01'                 | Insert failure.The reason is incorrect integer value: '0B01'     | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,heartbeat_period_millis=0B01                   | Not Supported of Value EXPR :0B01                                     | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,heartbeat_period_millis=-1                     | property [ heartbeatPeriodMillis ] '-1' should be an integer greater than 0   | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,heartbeat_period_millis=0                      | property [ heartbeatPeriodMillis ] '0' should be an integer greater than 0    | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,heartbeat_period_millis=-1                     | Insert failure.The reason is Column 'heartbeat_period_millis' should be an integer greater than 0!    | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,heartbeat_period_millis=0                      | Insert failure.The reason is Column 'heartbeat_period_millis' should be an integer greater than 0!     | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,heartbeat_period_millis=1.3                    | Not Supported of Value EXPR :1.3                                      | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,heartbeat_period_millis='abcd'                 | property [ heartbeatPeriodMillis ] 'abcd' data type should be long    | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,heartbeat_period_millis='abcd'                 |Insert failure.The reason is incorrect integer value: 'abcd'   | dble_information |
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                      | expect      | db               |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,test_on_create='null'                 | Not Supported of Value EXPR :'null'                                                                     | dble_information |
@@ -541,10 +538,7 @@
       | conn_0 | true     | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,test_while_idle=1.3                   | Not Supported of Value EXPR :1.3                                                                         | dble_information |
 
 ### coz  DBLE0REQ-2129
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      NullPointerException
-#      """
+#    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                                           | expect             | db               |
@@ -568,13 +562,8 @@
       | conn_0 | false   | select test_on_return from dble_db_instance where name ='0B05'                             | has{(('false',),)} | dble_information |
       | conn_0 | true    | select test_while_idle from dble_db_instance where name ='0B051'                           | has{(('false',),)} | dble_information |
 
-    Then execute admin cmd "reload @@config_all"
 ### coz  DBLE0REQ-2129
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      NullPointerException
-#      """
-
+#    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
   @skip_restart
@@ -738,12 +727,7 @@
       | conn_0 | true    | insert into dble_rw_split_entry set username='unique6',password_encrypt='111111',encrypt_configured='false',max_conn_count=11,db_group='ha_group6',conn_attr_value=null,conn_attr_key=null              | success     | dble_information |
 
 ### coz  DBLE0REQ-2129
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      NullPointerException
-#      """
-    Then execute admin cmd "reload @@config_all"
-
+#    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
   @skip_restart
@@ -882,7 +866,7 @@
       | conn_0 | false   | update dble_db_group set delay_period_millis=' ' where rw_split_mode = 1                           | Not Supported of Value EXPR :' '                                   | dble_information |
       | conn_0 | false   | update dble_db_group set delay_period_millis=delay_period_millis*10  where rw_split_mode = 1       | Not Supported of Value EXPR :delay_period_millis * 10              | dble_information |
       | conn_0 | false   | update dble_db_group set delay_period_millis=SYSDATE()  where rw_split_mode = 1                    | Not Supported of Value EXPR :SYSDATE()                             | dble_information |
-      | conn_0 | false   | update dble_db_group set delay_period_millis=-2 where rw_split_mode = 1                            | Update failure.The reason is Column 'delay_threshold' should be an integer greater than -1! | dble_information |
+      | conn_0 | false   | update dble_db_group set delay_period_millis=-2 where rw_split_mode = 1                            | Update failure.The reason is Column 'delay_period_millis' should be an integer greater than or equal to -1! | dble_information |
     #####delay_database
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                   | expect               | db               |
@@ -896,17 +880,33 @@
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                          | expect   | db               |
-#      | conn_0 | false   | update dble_db_group set heartbeat_timeout=null where rw_split_mode = 1      | success  | dble_information |
-#      | conn_0 | false   | update dble_db_group set heartbeat_retry=null where rw_split_mode = 1        | success  | dble_information |
-#      | conn_0 | false   | update dble_db_group set delay_threshold=null where rw_split_mode = 1        | success  | dble_information |
-#      | conn_0 | false   | update dble_db_group set disable_ha=null where rw_split_mode = 1             | success  | dble_information |
+      | conn_0 | false   | update dble_db_group set heartbeat_timeout=null where rw_split_mode = 1      | Update failure.The reason is Column 'heartbeat_timeout' should be an integer greater than or equal to 0!  | dble_information |
+      | conn_0 | false   | update dble_db_group set heartbeat_retry=null where rw_split_mode = 1        | Update failure.The reason is Column 'heartbeat_retry' should be an integer greater than or equal to 0!    | dble_information |
+      | conn_0 | false   | update dble_db_group set delay_threshold=null where rw_split_mode = 1        | Update failure.The reason is Column 'delay_threshold' should be an integer greater than or equal to -1!   | dble_information |
+      | conn_0 | false   | update dble_db_group set disable_ha=null where rw_split_mode = 1             | success  | dble_information |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
-    Then execute admin cmd "reload @@config_all"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_group_2"
+      | conn   | toClose | sql                                                  | db               |
+      | conn_0 | true    | select * from dble_db_group where rw_split_mode = 1  | dble_information |
+    Then check resultset "dble_db_group_2" has lines with following column values
+      | name-0     | heartbeat_stmt-1  | heartbeat_timeout-2 | heartbeat_retry-3 | heartbeat_keep_alive-4 | rw_split_mode-5 | delay_threshold-6 | delay_period_millis-7 | delay_database-8 | disable_ha-9 | active-10 |
+      | ha_group1  | select 55         | 888                 | 1                 | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | ha_group2  | select user()     | 888                 | 1                 | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | ha_group3  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | ha_group4  | select 2          | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | ha_group6  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | ha_group7  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | ha_group12 | select 7          | 888                 | 1                 | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | ha_group8  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | ha_group9  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | ha_group10 | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | ha_group11 | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | 0B02       | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | 0B03       | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | 0B04       | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
+      | 0B05       | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
 
+#    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
   @skip_restart
@@ -1178,72 +1178,72 @@
       | conn_0 | false   | update dble_db_instance set connection_timeout=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set connection_timeout='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
       | conn_0 | false   | update dble_db_instance set connection_timeout=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
-      | conn_0 | false   | update dble_db_instance set connection_timeout='0B01' where db_group='ha_group1'            | property [ connectionTimeout ] '0B01' data type should be long                                                    | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_timeout='0B01' where db_group='ha_group1'            | Update failure.The reason is incorrect integer value: '0B01'                                                   | dble_information |
       | conn_0 | false   | update dble_db_instance set connection_timeout=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set connection_timeout=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set connection_timeout=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
-      | conn_0 | false   | update dble_db_instance set connection_timeout=-2 where db_group='ha_group1'                | property [ connectionTimeout ] '-2' should be an integer greater than 0                                           | dble_information |
-      | conn_0 | false   | update dble_db_instance set connection_timeout=0 where db_group='ha_group1'                 | property [ connectionTimeout ] '0' should be an integer greater than 0                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_timeout=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'connection_timeout' should be an integer greater than 0!                                          | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_timeout=0 where db_group='ha_group1'                 | Update failure.The reason is Column 'connection_timeout' should be an integer greater than 0!                                           | dble_information |
        ####   connection_heartbeat_timeout
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                   | expect               | db               |
       | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
       | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
-      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout='0B01' where db_group='ha_group1'            | property [ connectionHeartbeatTimeout ] '0B01' data type should be long                                           | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout='0B01' where db_group='ha_group1'            | Update failure.The reason is incorrect integer value: '0B01'                                           | dble_information |
       | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
-      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=-2 where db_group='ha_group1'                | property [ connectionHeartbeatTimeout ] '-2' should be an integer greater than 0                                  | dble_information |
-      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=0 where db_group='ha_group1'                 | property [ connectionHeartbeatTimeout ] '0' should be an integer greater than 0                                   | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'connection_heartbeat_timeout' should be an integer greater than 0!                                 | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=0 where db_group='ha_group1'                 | Update failure.The reason is Column 'connection_heartbeat_timeout' should be an integer greater than 0!                                  | dble_information |
        ####   time_between_eviction_runs_millis
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                   | expect               | db               |
       | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
       | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
-      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis='0B01' where db_group='ha_group1'            | property [ timeBetweenEvictionRunsMillis ] '0B01' data type should be long                                        | dble_information |
+      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis='0B01' where db_group='ha_group1'            | Update failure.The reason is incorrect integer value: '0B01'                                      | dble_information |
       | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
-      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=-2 where db_group='ha_group1'                | property [ timeBetweenEvictionRunsMillis ] '-2' should be an integer greater than 0                               | dble_information |
-      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=0 where db_group='ha_group1'                 | property [ timeBetweenEvictionRunsMillis ] '0' should be an integer greater than 0                                | dble_information |
+      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'time_between_eviction_runs_millis' should be an integer greater than 0!                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=0 where db_group='ha_group1'                 | Update failure.The reason is Column 'time_between_eviction_runs_millis' should be an integer greater than 0!                                | dble_information |
        ####   evictor_shutdown_timeout_millis
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                   | expect               | db               |
       | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
       | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
-      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis='0B01' where db_group='ha_group1'            | property [ evictorShutdownTimeoutMillis ] '0B01' data type should be long                                         | dble_information |
+      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis='0B01' where db_group='ha_group1'            | Update failure.The reason is incorrect integer value: '0B01'                                         | dble_information |
       | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
-      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=-2 where db_group='ha_group1'                | property [ evictorShutdownTimeoutMillis ] '-2' should be an integer greater than 0                                | dble_information |
-      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=0 where db_group='ha_group1'                 | property [ evictorShutdownTimeoutMillis ] '0' should be an integer greater than 0                                 | dble_information |
+      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'evictor_shutdown_timeout_millis' should be an integer greater than 0!                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=0 where db_group='ha_group1'                 | Update failure.The reason is Column 'evictor_shutdown_timeout_millis' should be an integer greater than 0!                                | dble_information |
        ####   idle_timeout
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                   | expect               | db               |
       | conn_0 | false   | update dble_db_instance set idle_timeout=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set idle_timeout='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
       | conn_0 | false   | update dble_db_instance set idle_timeout=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
-      | conn_0 | false   | update dble_db_instance set idle_timeout='0B01' where db_group='ha_group1'            | property [ idleTimeout ] '0B01' data type should be long                                                          | dble_information |
+      | conn_0 | false   | update dble_db_instance set idle_timeout='0B01' where db_group='ha_group1'            | Update failure.The reason is incorrect integer value: '0B01'                                                          | dble_information |
       | conn_0 | false   | update dble_db_instance set idle_timeout=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set idle_timeout=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set idle_timeout=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
-      | conn_0 | false   | update dble_db_instance set idle_timeout=-2 where db_group='ha_group1'                | property [ idleTimeout ] '-2' should be an integer greater than 0                                                 | dble_information |
-      | conn_0 | false   | update dble_db_instance set idle_timeout=0 where db_group='ha_group1'                 | property [ idleTimeout ] '0' should be an integer greater than 0                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set idle_timeout=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'idle_timeout' should be an integer greater than 0!                                                | dble_information |
+      | conn_0 | false   | update dble_db_instance set idle_timeout=0 where db_group='ha_group1'                 | Update failure.The reason is Column 'idle_timeout' should be an integer greater than 0!                                                 | dble_information |
        ####   heartbeat_period_millis
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                   | expect               | db               |
       | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set heartbeat_period_millis='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
       | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
-      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis='0B01' where db_group='ha_group1'            | property [ heartbeatPeriodMillis ] '0B01' data type should be long                                                | dble_information |
+      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis='0B01' where db_group='ha_group1'            | Update failure.The reason is incorrect integer value: '0B01'                                                | dble_information |
       | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
-      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=-2 where db_group='ha_group1'                | property [ heartbeatPeriodMillis ] '-2' should be an integer greater than 0                                       | dble_information |
-      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=0 where db_group='ha_group1'                 | property [ heartbeatPeriodMillis ] '0' should be an integer greater than 0                                        | dble_information |
+      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'heartbeat_period_millis' should be an integer greater than 0!                                     | dble_information |
+      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=0 where db_group='ha_group1'                 | Update failure.The reason is Column 'heartbeat_period_millis' should be an integer greater than 0!                                        | dble_information |
        ####   test_on_create
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                   | expect               | db               |
@@ -1296,22 +1296,25 @@
       | conn_0 | false   | update dble_db_instance set disabled='true' where db_group='ha_group1'                           | success      | dble_information |
       | conn_0 | false   | update dble_db_instance set read_weight=null where db_group='ha_group1'                          | success      | dble_information |
       | conn_0 | false   | update dble_db_instance set id=null where db_group='ha_group1'                                   | success      | dble_information |
-#      | conn_0 | false   | update dble_db_instance set connection_timeout=null where db_group='ha_group1'                   |  success     | dble_information |
-#      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=null where db_group='ha_group1'         |  success     | dble_information |
-#      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=null where db_group='ha_group1'    |  success     | dble_information |
-#      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=null where db_group='ha_group1'      |  success     | dble_information |
-#      | conn_0 | false   | update dble_db_instance set idle_timeout=null where db_group='ha_group1'                         |  success     | dble_information |
-#      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=null where db_group='ha_group1'              |  success     | dble_information |
-#      | conn_0 | false   | update dble_db_instance set test_while_idle=null where db_group='ha_group1'                      |  success     | dble_information |
-#      | conn_0 | false   | update dble_db_instance set test_on_return=null where db_group='ha_group1'                       |  success     | dble_information |
-#      | conn_0 | false   | update dble_db_instance set test_on_borrow=null where db_group='ha_group1'                       |  success     | dble_information |
-#      | conn_0 | false   | update dble_db_instance set test_on_create=null where db_group='ha_group1'                       |  success     | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_timeout=null where db_group='ha_group1'                   | Update failure.The reason is Column 'connection_timeout' should be an integer greater than 0!     | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=null where db_group='ha_group1'         | Update failure.The reason is Column 'connection_heartbeat_timeout' should be an integer greater than 0!     | dble_information |
+      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=null where db_group='ha_group1'    | Update failure.The reason is Column 'time_between_eviction_runs_millis' should be an integer greater than 0!| dble_information |
+      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=null where db_group='ha_group1'      | Update failure.The reason is Column 'evictor_shutdown_timeout_millis' should be an integer greater than 0!     | dble_information |
+      | conn_0 | false   | update dble_db_instance set idle_timeout=null where db_group='ha_group1'                         | Update failure.The reason is Column 'idle_timeout' should be an integer greater than 0!    | dble_information |
+      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=null where db_group='ha_group1'              | Update failure.The reason is Column 'heartbeat_period_millis' should be an integer greater than 0!     | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle=null where db_group='ha_group1'                      | Update failure.The reason is Column 'test_while_idle' values only support 'false' or 'true'     | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_return=null where db_group='ha_group1'                       | Update failure.The reason is Column 'test_on_return' values only support 'false' or 'true'     | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_borrow=null where db_group='ha_group1'                       | Update failure.The reason is Column 'test_on_borrow' values only support 'false' or 'true'     | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_create=null where db_group='ha_group1'                       | Update failure.The reason is Column 'test_on_create' values only support 'false' or 'true'     | dble_information |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
-    Then execute admin cmd "reload @@config_all"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_2"
+      | conn   | toClose | sql                            | db               |
+      | conn_0 | true    | select name,db_group,addr,port,user,encrypt_configured,primary,disabled,min_conn_count,max_conn_count,read_weight,id from dble_db_instance where db_group='ha_group1'            | dble_information |
+    Then check resultset "dble_db_instance_2" has lines with following column values
+      | name-0  | db_group-1 | addr-2      | port-3 | user-4 | encrypt_configured-5 | primary-6 | disabled-7 | min_conn_count-8 | max_conn_count-9 | read_weight-10 | id-11  |
+      | hostM1  | ha_group1  | 172.100.9.5 | 3306   | test   | false                | true      | true       | 10               | 100              | 0              | hostM1 |
+
+#    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
 
@@ -1426,13 +1429,8 @@
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                            | expect       | db               |
       | conn_0 | false   | update dble_rw_split_entry set encrypt_configured=null where db_group='ha_group6'              | success      | dble_information |
-      | conn_0 | false   | update dble_rw_split_entry set white_ips=null where db_group='ha_group3'                       | success      | dble_information |
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
-    Then execute admin cmd "reload @@config_all"
 
+#    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
   Scenario: test the langreage of delete in dble manager   ---- dble_db_group dble_db_instance  dble_rw_split_entry #7
@@ -1465,7 +1463,7 @@
       | ha_group3  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
       | ha_group4  | select 2          | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
       | ha_group5  | show slave status | 888                 | 100               | 60                     | 2               | 88                | -1                    | null             | true         | true      |
-      | ha_group6  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | true         | true      |
+      | ha_group6  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
       | ha_group7  | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
       | ha_group12 | select 7          | 888                 | 1                 | 60                     | 1               | 88                | -1                    | null             | false        | true      |
       | ha_group11 | select @a         | 888                 | 100               | 60                     | 1               | 88                | -1                    | null             | false        | true      |
@@ -1555,8 +1553,6 @@
       | conn_0 | false   | delete from dble_db_group where active ='true'                                 | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_db_instance`(`db_group`) REFERENCES `dble_db_group`(`name`)    | dble_information |
       | conn_0 | false   | delete from dble_db_group where name ='ha_group2'                              | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_db_instance`(`db_group`) REFERENCES `dble_db_group`(`name`)    | dble_information |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      """
+#    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
     Then execute admin cmd "reload @@config_all"
