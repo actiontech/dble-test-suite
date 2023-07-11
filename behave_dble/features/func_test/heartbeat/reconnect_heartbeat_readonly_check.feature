@@ -344,6 +344,7 @@ Feature: We will check readonly status on both master and slave even if the hear
         # select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation,@@version,@@back_log
            # to con:BackendConnection[id = 75 host = 172.100.9.6 port = 3308 localPort = 35474 mysqlId = 22
               # db config = dbInstance[name=hosts2,disabled=false,maxCon=1000,minCon=10]]
+     # 2.19.11 balance=0，不做均衡，直接分发到当前激活的writeHost，readhost将被忽略,不会尝试建立连接，也无心跳连接
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <dataNode dataHost="ha_group1" database="db1" name="dn1" />
@@ -352,21 +353,21 @@ Feature: We will check readonly status on both master and slave even if the hear
     <dataNode dataHost="ha_group2" database="db2" name="dn4" />
     <dataNode dataHost="ha_group3" database="db3" name="dn5" />
 
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
+    <dataHost balance="2" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
       <heartbeat>show slave status</heartbeat>
       <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
         <readHost host="hostS1" password="111111" url="172.100.9.6:3307" user="test"/>
       </writeHost>
     </dataHost>
 
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
+    <dataHost balance="2" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
       <heartbeat>select user()</heartbeat>
       <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
         <readHost host="hostS1" password="111111" url="172.100.9.6:3308" user="test"/>
       </writeHost>
     </dataHost>
 
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group3" slaveThreshold="100" >
+    <dataHost balance="2" maxCon="1000" minCon="10" name="ha_group3" slaveThreshold="100" >
       <heartbeat>select @@read_only</heartbeat>
       <writeHost host="hostM3" password="111111" url="172.100.9.1:3306" user="test">
         <readHost host="hostS1" password="111111" url="172.100.9.4:3306" user="test"/>

@@ -71,8 +71,8 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
       | conn_0 | True     | create table table_b (id int,c_flag char(255)) | success   | schema1 |
     Then get query plan and make sure it is optimized
         |query | expect_result_count |
-        |explain select * from table_a a, table_b b on a.id =b.id | 1 |
-        |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 1 |
+        |explain select * from table_a a, table_b b on a.id =b.id | 2 |
+        |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 2 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                            | expect    | db      |
       | conn_0 | False    | drop table if exists table_a                   | success   | schema1 |

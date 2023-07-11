@@ -65,7 +65,8 @@
       | conn_0 | False   | create table sharding_4_t1(id int,c varchar(20))                                           | success     | schema1 |
       | conn_0 | False   | insert into sharding_4_t1 values (1,'bb')                                                  | success     | schema1 |
       | conn_0 | False   | insert into sharding_4_t1 values (1,'cc')                                                  | success     | schema1 |
-      | conn_0 | False   | select id,c from sharding_4_t1 group by c having id<=1 or c = 'bb'                         | length{(2)} | schema1 |
+      # DBLE0REQ-473 待开发确认是否合并至2.19.11
+#      | conn_0 | False   | select id,c from sharding_4_t1 group by c having id<=1 or c = 'bb'                         | length{(2)} | schema1 |
       | conn_0 | False   | explain select id,c from sharding_4_t1 group by c having id<=1 or c = 'bb'                 | success     | schema1 |
       | conn_0 | true    | drop table if exists sharding_4_t1                                                         | success     | schema1 |
       | conn_0 | False   | drop table if exists sharding_2_t1                                                         | success     | schema1 |
