@@ -141,12 +141,14 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     """
     Given stop mysql in host "mysql-master1"
     Given destroy sql threads list
-    Given stop btrace script "BtraceXaDelay.java" in "dble-1"
-    Given destroy btrace threads list
+
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql               |
       | show @@session.xa |
     Then execute admin cmd "kill @@xa_session" with "rs_A" result
+
+    Given stop btrace script "BtraceXaDelay.java" in "dble-1"
+    Given destroy btrace threads list
     Then execute oscmd many times in "dble-1" and result is same
     """
     cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
