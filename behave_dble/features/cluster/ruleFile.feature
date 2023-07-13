@@ -6,8 +6,13 @@
 
 
 Feature: adding ruleFile way which is different from mapFile (ZK cluster mode) DBLE0REQ-38
-@skip_restart
+
   Scenario: Enum sharding with ruleFile way which is different from mapFile #1
+    # 开启线程每隔一秒打印一次jstack
+    Given prepare a thread to run jstack in "dble-1"
+    Given prepare a thread to run jstack in "dble-2"
+    Given prepare a thread to run jstack in "dble-3"
+
     #test: type:integer not default node
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
@@ -142,10 +147,15 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode) D
       | rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'enum_rule'}} |
       | schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'table','kv_map':{'name':'enum_table'}}    |
     Then execute admin cmd "reload @@config_all"
-
+    Given destroy jstack threads list
 
 
   Scenario: Numberrange sharding with ruleFile way (ZK cluster mode) #2
+    # 开启线程每隔一秒打印一次jstack
+    Given prepare a thread to run jstack in "dble-1"
+    Given prepare a thread to run jstack in "dble-2"
+    Given prepare a thread to run jstack in "dble-3"
+
     #test: set defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
@@ -246,7 +256,7 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode) D
       | rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'numberrange_rule'}} |
       | schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'table','kv_map':{'name':'numberrange_table'}}    |
     Then execute admin cmd "reload @@config_all"
-
+    Given destroy jstack threads list
 
 
   Scenario: PatternRange sharding with ruleFile way (ZK cluster mode) #3
