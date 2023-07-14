@@ -8,10 +8,6 @@
 Feature: adding ruleFile way which is different from mapFile (ZK cluster mode) DBLE0REQ-38
 
   Scenario: Enum sharding with ruleFile way which is different from mapFile #1
-    # 开启线程每隔一秒打印一次jstack
-    Given prepare a thread to run jstack in "dble-1"
-    Given prepare a thread to run jstack in "dble-2"
-    Given prepare a thread to run jstack in "dble-3"
 
     #test: type:integer not default node
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
@@ -129,6 +125,11 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode) D
       | conn_0 | False    | insert into enum_table values('ddd')     | dest_node:mysql-master2 | schema1 |
       | conn_0 | True     | insert into enum_table values('eee')     | dest_node:mysql-master2 | schema1 |
 
+    # 开启线程每隔一秒打印一次jstack
+    Given prepare a thread to run jstack in "dble-1"
+    Given prepare a thread to run jstack in "dble-2"
+    Given prepare a thread to run jstack in "dble-3"
+
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "enum.sql"
     #test: use of limit in sharding_key
@@ -136,6 +137,7 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode) D
     """
     {"table":"enum_table","key":"id"}
     """
+    Given destroy jstack threads list
 
     #clearn all conf
     Given delete file "/opt/dble/conf/enum.txt" on "dble-1"
@@ -147,14 +149,9 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode) D
       | rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'enum_rule'}} |
       | schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'table','kv_map':{'name':'enum_table'}}    |
     Then execute admin cmd "reload @@config_all"
-    Given destroy jstack threads list
 
 
   Scenario: Numberrange sharding with ruleFile way (ZK cluster mode) #2
-    # 开启线程每隔一秒打印一次jstack
-    Given prepare a thread to run jstack in "dble-1"
-    Given prepare a thread to run jstack in "dble-2"
-    Given prepare a thread to run jstack in "dble-3"
 
     #test: set defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
@@ -212,6 +209,11 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode) D
       | conn_0 | False    | insert into numberrange_table values(1000)  | dest_node:mysql-master2 | schema1 |
       | conn_0 | True     | insert into numberrange_table values(1001)  | dest_node:mysql-master2 | schema1 |
 
+    # 开启线程每隔一秒打印一次jstack
+    Given prepare a thread to run jstack in "dble-1"
+    Given prepare a thread to run jstack in "dble-2"
+    Given prepare a thread to run jstack in "dble-3"
+
     #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
     """
@@ -226,6 +228,8 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode) D
       </function>
     """
     Then execute admin cmd "reload @@config_all"
+    Given destroy jstack threads list
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                        | expect                         | db      |
       | conn_0 | False    | drop table if exists numberrange_table     | success                        | schema1 |
@@ -256,7 +260,6 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode) D
       | rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'numberrange_rule'}} |
       | schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'table','kv_map':{'name':'numberrange_table'}}    |
     Then execute admin cmd "reload @@config_all"
-    Given destroy jstack threads list
 
 
   Scenario: PatternRange sharding with ruleFile way (ZK cluster mode) #3
