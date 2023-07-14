@@ -17,6 +17,7 @@ from steps.lib.ObjectFactory import ObjectFactory
 from behave import *
 import time
 from datetime import datetime
+from steps.lib.DbleMeta import DbleMeta
 
 global sql_threads
 sql_threads = []
@@ -217,9 +218,9 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
         except Exception as e:
             logger.info(f"result is not out yet,retry {i+1} times")
             if i == timeout-1:
-                node = get_node(host_name)
                 if mode in ["admin", "user"]:  #print dble jstack
-                    print_jstack(node)
+                    for node in DbleMeta.dbles:
+                        print_jstack(node)
                     logger.debug(f"print dble jstack end")
                 raise e
             else:
