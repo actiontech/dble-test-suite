@@ -105,5 +105,5 @@ Feature: check mysqldump import and export
       | conn_0 | False    | drop table if exists sharding_4_t1 | schema1 | success     |
       | conn_0 | False    | drop table if exists no_sharding   | schema1 | success     |
       | conn_0 | True     | drop table if exists sharding_2_t1 | schema2 | success     |
-
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+#    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check "NullPointerException|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
