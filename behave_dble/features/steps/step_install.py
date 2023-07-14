@@ -505,7 +505,7 @@ def replace_config(context):
     for node in DbleMeta.dbles:
         replace_config_in_node(context, node)
         # set dble log level to debug
-        set_dble_log_level(context, node, 'debug')
+        # set_dble_log_level(context, node, 'debug')
 
 
 @Given('replace config files in "{nodeName}" with command line config')
