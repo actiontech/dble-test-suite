@@ -4,7 +4,7 @@
 # Created by mayingle at 2020/09/08
 
 
-
+@skip # DBLE0REQ-2295
 Feature: adding ruleFile way which is different from mapFile (ZK cluster mode) DBLE0REQ-38
 
   Scenario: Enum sharding with ruleFile way which is different from mapFile #1

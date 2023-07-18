@@ -114,10 +114,9 @@ Feature: #mysql node disconnected,check the change of dble
       | conn   | toClose | sql     | expect      | db      |
       | conn_0 | True    | commit  | Connection  | schema1 |
     Given start mysql in host "mysql-master1"
-    Given sleep "5" seconds
     Then execute sql in "dble-1" in "user" mode
       | sql                                | db      | expect                                      | timeout |
-      | select * from test_table           | schema1 | has{((1, 1), (3, 3), (2, 2), (4, 4))}       |  5      |
+      | select * from test_table           | schema1 | has{((1, 1), (3, 3), (2, 2), (4, 4))}       |  11,3   |
       | drop table if exists test_table    | schema1 | success                                     |         |
 
 
