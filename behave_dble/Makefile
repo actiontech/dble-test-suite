@@ -45,11 +45,6 @@ used_in_local: create_venv up
 	pipenv run behave features/setup.feature
 
 
-run_large_packet: up
-	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/Large_Packet/
-
-
 run_cluster_case: up
 	pipenv run behave features/setup.feature \
 	features/cluster/
@@ -68,9 +63,6 @@ run_func_stable_case: up
 	features/func_test/heartbeat/ \
 	features/func_test/metalock/
 
-run_cfg_case: up
-	pipenv run behave -D dble_conf=template features/setup.feature \
-	features/func_test/cfg_test/
 
 run_func_unstable_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
@@ -81,12 +73,17 @@ run_func_unstable_case: up
 #	features/func_test/flow_control/ \
 
 
+run_cfg_case: up
+	pipenv run behave -D dble_conf=template features/setup.feature \
+	features/func_test/cfg_test/
 
 
 run_managercmd_case: up
 	pipenv run behave -Dreset=false -D dble_conf=template features/setup.feature \
+	features/func_test/Large_Packet/ \
 	features/func_test/dble_information/ \
 	features/func_test/managercmd/
+
 
 run_sql_support_special: up
 	pipenv run behave -Dreset=false -D dble_conf=sql_cover_mixed features/setup.feature \
