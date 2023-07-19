@@ -69,6 +69,7 @@ Feature:  show databases/use dble_information/show tables [like]
       | backend_connections_associate_thread                  |
       | backend_variables                                     |
       | dble_algorithm                                        |
+      | dble_ap_node                                          |
       | dble_blacklist                                        |
       | dble_child_table                                      |
       | dble_cluster_renew_thread                             |
@@ -120,7 +121,7 @@ Feature:  show databases/use dble_information/show tables [like]
       | demotest2                    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect       | db               |
-      | conn_0 | False   | show tables                          | length{(48)} | dble_information |
+      | conn_0 | False   | show tables                          | length{(49)} | dble_information |
  #case The query needs to be printed in the log，when management commands not supported by druid github:issues/1977
     Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql          | expect                |
@@ -279,7 +280,7 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn   | toClose | sql                                                                                                                                  | db               |
       | conn_0 | True    | SELECT * FROM dble_table a LEFT JOIN dble_schema b ON a.schema = b.NAME where a.id NOT IN (SELECT id FROM dble_table_sharding_node)  | dble_information |
     Then check resultset "4" has lines with following column values
-      | id-0 | name-1   | schema-2 | max_limit-3 | type-4      | name-5  | sharding_node-6 | function-7 | sql_max_limit-8  |
+      | id-0 | name-1   | schema-2 | max_limit-3 | type-4      | name-5  | sharding_node-6 | function-7 | sql_max_limit-9  |
       | M1   | no_s1    | schema1  | 100         | NO_SHARDING | schema1 | dn1             | -          |  100             |
       | M2   | no_s2    | schema2  | 1000        | NO_SHARDING | schema2 | dn2             | -          |  1000            |
       | M3   | no_s3    | schema3  | 100         | NO_SHARDING | schema3 | dn4             | -          |  100             |

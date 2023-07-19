@@ -118,9 +118,9 @@ Feature: schema support add function
       | conn   | toClose | sql                                                      | db              |
       | conn_0 | False   | select * from dble_schema                                | dble_information|
     Then check resultset "B" has lines with following column values
-      | name-0 | sharding_node-1 | function-2 | sql_max_limit-3 |
-      | schema1 | dn5           | -        |           100      |
-      | schema2 | dn1,dn2       | hash-two |           100      |
+      | name-0  | sharding_node-1 | function-2 | sql_max_limit-4    |
+      | schema1 | dn5             | -          |           100      |
+      | schema2 | dn1,dn2         | hash-two   |           100      |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
       | conn   | toClose | sql                                                      | db              |
       | conn_0 | False   | select * from dble_table                                 | dble_information|
@@ -234,9 +234,9 @@ Feature: schema support add function
       | conn   | toClose | sql                                                      | db              |
       | conn_0 | False   | select * from dble_schema                                | dble_information|
     Then check resultset "E" has lines with following column values
-      | name-0 | sharding_node-1 | function-2 | sql_max_limit-3 |
-      | schema1 | dn5           | -        |           100      |
-      | schema2 | dn1,dn2       | hash-two |           100      |
+      | name-0  | sharding_node-1 | function-2 | sql_max_limit-4 |
+      | schema1 | dn5             | -          | 100             |
+      | schema2 | dn1,dn2         | hash-two   | 100             |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "F"
       | conn   | toClose | sql                                                      | db              |
       | conn_0 | False   | select * from dble_table                                 | dble_information|

@@ -56,7 +56,7 @@ Feature: # dryrun test
       | dryrun      |
     Then check resultset "C" has lines with following column values
       | TYPE-0  | LEVEL-1 | DETAIL-2                                                                  |
-      | Xml     | NOTICE  | There is No Sharding User                                                 |
+      | Xml     | NOTICE  | There is No Sharding/HybridTA User                                        |
       | Cluster | NOTICE  | Dble is in single mod                                                     |
     Then check resultset "C" has not lines with following column values
       | TYPE-0  | LEVEL-1 | DETAIL-2                                                                    |
