@@ -13,7 +13,7 @@ from steps.lib.DbleObject import DbleObject
 from steps.lib.utils import setup_logging, load_yaml_config, init_meta, restore_sys_time, reset_repl, get_sftp, get_ssh, \
     create_ssh_client, init_log_directory, handle_env_variables
 from steps.mysql_steps import restart_mysql
-from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
+from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node,check_dble_started_in_all_nodes, \
     install_dble_in_all_nodes
 from behave.contrib.scenario_autoretry import patch_scenario_with_autoretry
 from behave.tag_matcher import ActiveTagMatcher, setup_active_tag_values
@@ -146,6 +146,12 @@ def before_scenario(context, scenario):
     logger.info('Scenario start: <{0}>'.format(scenario.name))
     if active_tag_matcher.should_exclude_with(scenario.effective_tags):
         scenario.skip("DISABLED ACTIVE-TAG")
+
+    # case开始前先判断dble是否存活，不存活就启动dble
+    if not check_dble_started_in_all_nodes(context):
+        logger.info('maybe the last after_scenario start dble failed!>')
+        reset_dble(context)
+
     logger.info('Exit hook <before_scenario>')
 
 

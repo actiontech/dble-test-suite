@@ -258,6 +258,12 @@ def check_dble_started(context, node):
     else:
         delattr(context, "retry_start_dble")
 
+@Given("check dble started in all nodes")
+def check_dble_started_in_all_nodes(context):
+    for node in DbleMeta.dbles:
+        check_dble_started(context, node)
+    return True
+
 
 @Given("stop all dbles")
 def stop_dbles(context):
@@ -505,7 +511,7 @@ def replace_config(context):
     for node in DbleMeta.dbles:
         replace_config_in_node(context, node)
         # set dble log level to debug
-        # set_dble_log_level(context, node, 'debug')
+        set_dble_log_level(context, node, 'debug')
 
 
 @Given('replace config files in "{nodeName}" with command line config')
