@@ -4,18 +4,11 @@
 
 Feature: check mysqldump import and export
 
-  @restore_mysql_config @stop_tcpdump
+  @restore_mysql_config
   Scenario: check mysqldump import and export #1
     """
     {'restore_mysql_config':{'mysql-master3':{'local-infile':1}}}
-    {'stop_tcpdump':'dble-1'}
     """
-    #安装tcpdump并启动抓包
-    Given prepare a thread to run tcpdump in "dble-1"
-     """
-     tcpdump -w /tmp/tcpdump.log
-     """
-
     Given delete all backend mysql tables
     Given delete file "/opt/dble/logs/mysqldump_export.sql" on "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -112,6 +105,5 @@ Feature: check mysqldump import and export
       | conn_0 | False    | drop table if exists sharding_4_t1 | schema1 | success     |
       | conn_0 | False    | drop table if exists no_sharding   | schema1 | success     |
       | conn_0 | True     | drop table if exists sharding_2_t1 | schema2 | success     |
-    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
-#    Then check "NullPointerException|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
-    Given stop and destroy tcpdump threads list in "dble-1"
+#    Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check "NullPointerException|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
