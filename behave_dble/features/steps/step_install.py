@@ -259,6 +259,28 @@ def check_dble_started(context, node):
         delattr(context, "retry_start_dble")
 
 
+def check_dble_alived(context, node):
+    dble_conn = None
+    try:
+        dble_conn = DBUtil(node.ip, node.manager_user, node.manager_password, "",node.manager_port, context)
+        res, err = dble_conn.query("show @@version")
+    except MySQLdb.Error as e:
+        err = e.args
+    finally:
+        if dble_conn: dble_conn.close()
+        if err is not None:
+            LOGGER.debug("{} is lost connection, the err is :{}".format(node.host_name, err))
+            return False
+        else:
+            return True
+
+@Given("check dble alived in all nodes")
+def check_dble_alived_in_all_nodes(context):
+    for node in DbleMeta.dbles:
+        if not check_dble_alived(context, node):
+            return False
+    return True
+
 @Given("stop all dbles")
 def stop_dbles(context):
     for node in DbleMeta.dbles:
