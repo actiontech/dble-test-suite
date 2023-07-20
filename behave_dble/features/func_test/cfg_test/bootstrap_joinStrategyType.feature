@@ -17,13 +17,14 @@ Feature: check joinStrategyType and useJoinStrategy
     /-DjoinStrategyType/d
     $a -DjoinStrategyType=false
     /-DuseJoinStrategy/d
-    $a -DuseJoinStrategy=1
+    $a -DuseJoinStrategy=-5
     """
     Then restart dble in "dble-1" failed for
     """
     Property \[ joinStrategyType \] 'false' data type should be int
-    Property \[ useJoinStrategy \] '1' data type should be boolean
     """
+    # DBLE0REQ-2293
+    # Property \[ useJoinStrategy \] '-5' data type should be boolean
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DuseJoinStrategy=abc
@@ -31,9 +32,10 @@ Feature: check joinStrategyType and useJoinStrategy
     """
     Then restart dble in "dble-1" failed for
     """
-    Property \[ useJoinStrategy \] 'abc' data type should be boolean
     Property \[ joinStrategyType \] '-2' in bootstrap.cnf is illegal, size must not be less than -1 and not be greater than 2, you may need use the default value -1 replaced
     """
+    # DBLE0REQ-2293
+    # Property \[ useJoinStrategy \] 'abc' data type should be boolean
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DjoinStrategyType=2

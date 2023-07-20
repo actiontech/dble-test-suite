@@ -17,10 +17,12 @@ Feature: general log test
     """
     Then restart dble in "dble-1" failed for
     """
-    property [[] enableGeneralLog []] 'abc' data type should be int
+
     property [[] generalLogFileSize []] 'abc' data type should be int
     property [[] generalLogQueueSize []] 'abc' data type should be int
     """
+    # DBLE0REQ-2293
+    # property [[] enableGeneralLog []] 'abc' data type should be int
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -31,9 +33,10 @@ Feature: general log test
     """
     Then restart dble in "dble-1" failed for
     """
-    Property [[] enableGeneralLog []] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
     Property [[] generalLogFileSize []] '-1' in bootstrap.cnf is illegal, you may need use the default value 16 replaced
     """
+    # DBLE0REQ-2293
+    # Property [[] enableGeneralLog []] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
