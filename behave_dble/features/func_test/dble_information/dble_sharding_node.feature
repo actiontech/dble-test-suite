@@ -109,7 +109,7 @@ Feature:  dble_sharding_node table test
       | conn_0 | False   | select * from dble_sharding_node where name < any (select sharding_node from dble_schema)        | length{(5)}                                                                             | dble_information |
       | conn_0 | False   | select * from dble_sharding_node where name = any (select sharding_node from dble_schema)        | has{(('dn5', 'ha_group1', 'db3','false'), ('dn6', 'ha_group2', 'db3','false'))}         | dble_information |
   #case supported select field
-      | conn_0 | False   | select a.*,b.* from dble_sharding_node a inner join dble_schema b on a.name=b.sharding_node where a.db_schema ='db3'      | has{(('dn5', 'ha_group1', 'db3', 'false', 'schema1', 'dn5', '-', 100,'true'), ('dn6', 'ha_group2', 'db3', 'false', 'schema2', 'dn6', '-', 100,'true'))}    | dble_information |
+      | conn_0 | False   | select a.*,b.* from dble_sharding_node a inner join dble_schema b on a.name=b.sharding_node where a.db_schema ='db3'      | has{(('dn5', 'ha_group1', 'db3', 'false', 'schema1', 'dn5', '-', None, 100,'true'), ('dn6', 'ha_group2', 'db3', 'false', 'schema2', 'dn6', '-', None, 100,'true'))}    | dble_information |
       | conn_0 | False   | select * from dble_sharding_node where name in (select sharding_node from dble_schema where name ='schema1')              | has{(('dn5', 'ha_group1', 'db3','false'), )}                                                                                       | dble_information |
 
   #case unsupported update/delete/insert
