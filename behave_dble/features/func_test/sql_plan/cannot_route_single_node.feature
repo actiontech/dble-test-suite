@@ -12,7 +12,6 @@ Feature: following complex queries are not able to send one datanode
       #6. explain select * from sharding_two_node where c_flag = (select c_flag from sharding_two_node2 where id =1 )
       #7. explain select * from sharding_two_node where id =1 union select * from sharding_two_node2
 
-  @skip #DBLE0REQ-2292
   Scenario: execute "explain sql" and check result
     Given add xml segment to node with attribute "{'tag':'function','kv_map':{'name':'two-long'}}" in "rule.xml"
     """
