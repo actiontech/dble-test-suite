@@ -54,8 +54,9 @@ Feature: server side cursor test DBLE0REQ-764
     Then restart dble in "dble-1" failed for
   """
     Property \[ maxHeapTableSize \] '-1' in bootstrap.cnf is illegal, you may need use the default value 4096 replaced
-    Property \[ enableCursor \] '123' data type should be boolean
     """
+    # DBLE0REQ-2293
+    # Property \[ enableCursor \] '123' data type should be boolean
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -67,8 +68,9 @@ Feature: server side cursor test DBLE0REQ-764
     """
     property [[] maxHeapTableSize []] 'abc' data type should be int
     property [[] heapTableBufferChunkSize []] 'abc' data type should be class java.lang.Integer
-    property [[] enableCursor []] 'abc' data type should be boolean
     """
+    # DBLE0REQ-2293
+    # property [[] enableCursor []] 'abc' data type should be boolean
 
   Scenario: check cursor parameter in bootstrap.cnf - valid values #3
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds

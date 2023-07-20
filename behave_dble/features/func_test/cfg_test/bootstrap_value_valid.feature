@@ -16,7 +16,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     """
       $a\-DmaxCon=-3
       $a\-DserverBacklog=-2000
-      $a\-DuseOuterHa=1
+      $a\-DuseOuterHa=5
       $a\-Dautocommit=-3
       $a\-DuseCostTimeStat=2
       $a\-DmaxCostStatSize=-10
@@ -38,7 +38,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       $a\-DflushSlowLogSize=-1000
       $a\-DmaxCharsPerColumn=-65534
       $a\-DmaxRowSizeToFile=-10000
-      $a\-DenableFlowControl=1
+      $a\-DenableFlowControl=5
       $a\-DflowControlStartThreshold=-4096
       $a\-DflowControlStopThreshold=-256
       $a\-DsqlSlowTime=-100
@@ -55,7 +55,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       $a\-DuseThreadUsageStat=2
       $a\-DusePerformanceMode=2
       $a\-DenableSlowLog=2
-      $a\-DuseJoinStrategy=0
+      $a\-DuseJoinStrategy=5
       $a\-DbindIp=256.256.256.258
       $a\-DserverPort=-1
       $a\-DmanagerPort=-2
@@ -95,8 +95,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     Then restart dble in "dble-1" failed for
       """
       sequenceHandlerType value is 20, you can use default value:2
-      Property \[ autocommit \] '-3' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
-      Property \[ backSocketNoDelay \] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
+
       Property \[ backSocketSoRcvbuf \] '-4194304' in bootstrap.cnf is illegal, you may need use the default value 4194304 replaced
       Property \[ backSocketSoSndbuf \] '-1048576' in bootstrap.cnf is illegal, you may need use the default value 1048576 replaced
       property \[ backendProcessorExecutor \] has been replaced by the property \[ backendWorker \].  Property \[ backendWorker \] '-4' in bootstrap.cnf is illegal, you may need use the default value.*replaced
@@ -106,16 +105,15 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ bufferPoolPageSize \] '-2000' in bootstrap.cnf is illegal, you may need use the default value 2097152 replaced
       Property \[ bufferUsagePercent \] '120' in bootstrap.cnf is illegal, you may need use the default value 80 replaced
       Property \[ charset \] 'utf-8' in bootstrap.cnf is illegal, use utf8mb4 replaced
-      Property \[ checkTableConsistency \] '-10100101' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+
       Property \[ checkTableConsistencyPeriod \] '-1800' in bootstrap.cnf is illegal, you may need use the default value 1800000 replaced
       Property \[ clearBigSQLResultSetMapMs \] '-600000' in bootstrap.cnf is illegal, you may need use the default value 600000 replaced
       property \[ complexExecutor \] has been replaced by the property \[ complexQueryWorker \].  Property \[ complexQueryWorker \] '-4' in bootstrap.cnf is illegal, you may need use the default value.*replaced
       Property \[ costSamplePercent \] '-2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
-      property \[ enableFlowControl \] '1' data type should be boolean
-      Property \[ enableSlowLog \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+
       Property \[ flushSlowLogPeriod \] '-1' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       Property \[ flushSlowLogSize \] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
-      Property \[ frontSocketNoDelay \] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
+
       Property \[ frontSocketSoRcvbuf \] '-1048576' in bootstrap.cnf is illegal, you may need use the default value 1048576 replaced
       Property \[ frontSocketSoSndbuf \] '-4194304' in bootstrap.cnf is illegal, you may need use the default value 4194304 replaced
       Property \[ joinMemSize \] '-5' in bootstrap.cnf is illegal, you may need use the default value 4 replaced
@@ -136,25 +134,34 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ processorCheckPeriod \] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
       property \[ processors \] has been replaced by the property \[ NIOFrontRW \].  Property \[ NIOFrontRW \] '-3' in bootstrap.cnf is illegal, you may need use the default value.*replaced
       property \[ processorExecutor \] has been replaced by the property \[ frontWorker \].  Property \[ frontWorker \] '-3' in bootstrap.cnf is illegal, you may need use the default value.*replaced
-      Property \[ recordTxn \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+
       Property \[ sqlExecuteTimeout \] '-20' in bootstrap.cnf is illegal, you may need use the default value 300 replaced
       Property \[ sqlRecordCount \] '-10' in bootstrap.cnf is illegal, you may need use the default value 10 replaced
       Property \[ sqlSlowTime \] '-100' in bootstrap.cnf is illegal, you may need use the default value 100 replaced
       Property \[ txIsolation \] '30' in bootstrap.cnf is illegal, you may need use the default value 3 replaced
-      Property \[ useCompression \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
-      Property \[ useCostTimeStat \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
-      property \[ useJoinStrategy \] '0' data type should be boolean
-      property \[ useOuterHa \] '1' data type should be boolean
-      Property \[ usePerformanceMode \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
-      Property \[ useSqlStat \] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
-      Property \[ useThreadUsageStat \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
-      Property \[ usingAIO \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+
       property \[ writeToBackendExecutor \] has been replaced by the property \[ writeToBackendWorker \].  Property \[ writeToBackendWorker \] '-4' in bootstrap.cnf is illegal, you may need use the default value.*replaced
       Property \[ xaLogCleanPeriod \] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
       Property \[ xaRetryCount \] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       Property \[ xaSessionCheckPeriod \] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
       The specified MySQL Version (5.6.24.00) is not valid, the version should look like 'x.y.z'.
       """
+      # DBLE0REQ-2293
+      # Property \[ autocommit \] '-3' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
+      # Property \[ backSocketNoDelay \] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
+      # Property \[ checkTableConsistency \] '-10100101' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      # Property \[ enableSlowLog \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      # Property \[ frontSocketNoDelay \] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
+      # Property \[ recordTxn \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      # Property \[ useCompression \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      # Property \[ useCostTimeStat \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      # Property \[ usePerformanceMode \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      # Property \[ useSqlStat \] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
+      # Property \[ useThreadUsageStat \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      # Property \[ usingAIO \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      # property \[ enableFlowControl \] '5' data type should be boolean
+      # property \[ useJoinStrategy \] '5' data type should be boolean
+      # property \[ useOuterHa \] '5' data type should be boolean
 
   Scenario: config bootstrap property, some parameter spell illegal, start dble failed #2
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds

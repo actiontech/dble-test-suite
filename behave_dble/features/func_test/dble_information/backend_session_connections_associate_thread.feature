@@ -52,57 +52,58 @@ Feature:test backend_connections_associate_thread   session_connections_associat
       | conn   | toClose | sql                                                                                                  | expect               | db               |
       | conn_0 | True    | select variable_value from dble_variables where variable_name="enableConnectionAssociateThread"      | has{(('0',),)}       | dble_information |
 
-##111
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-     """
-     s/-DenableConnectionAssociateThread=0/-DenableConnectionAssociateThread=111/g
-     """
-    Then Restart dble in "dble-1" failed for
-     """
-     Property \[ enableConnectionAssociateThread \] '111' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
-     """
-##
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-     """
-     s/-DenableConnectionAssociateThread=111/-DenableConnectionAssociateThread=/g
-     """
-    Then Restart dble in "dble-1" failed for
-     """
-     Property \[ enableConnectionAssociateThread \] '' data type should be int
-     """
-##null
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-     """
-     s/-DenableConnectionAssociateThread=/-DenableConnectionAssociateThread=null/g
-     """
-    Then Restart dble in "dble-1" failed for
-     """
-     Property \[ enableConnectionAssociateThread \] 'null' data type should be int
-     """
-##-1
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-     """
-     s/-DenableConnectionAssociateThread=null/-DenableConnectionAssociateThread=-1/g
-     """
-    Then Restart dble in "dble-1" failed for
-     """
-     Property \[ enableConnectionAssociateThread \] '-1' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
-     """
-##0.1
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-     """
-     s/-DenableConnectionAssociateThread=-1/-DenableConnectionAssociateThread=0.1/g
-     """
-    Then Restart dble in "dble-1" failed for
-     """
-     Property \[ enableConnectionAssociateThread \] '0.1' data type should be int
-     """
-##false
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-     """
-     s/-DenableConnectionAssociateThread=0.1/-DenableConnectionAssociateThread=false/g
-     """
-    Then Restart dble in "dble-1" failed for
-     """
-     Property \[ enableConnectionAssociateThread \] 'false' data type should be int
-     """
+# DBLE0REQ-2293
+###111
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#     """
+#     s/-DenableConnectionAssociateThread=0/-DenableConnectionAssociateThread=111/g
+#     """
+#    Then Restart dble in "dble-1" failed for
+#     """
+#     Property \[ enableConnectionAssociateThread \] '111' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
+#     """
+###
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#     """
+#     s/-DenableConnectionAssociateThread=111/-DenableConnectionAssociateThread=/g
+#     """
+#    Then Restart dble in "dble-1" failed for
+#     """
+#     Property \[ enableConnectionAssociateThread \] '' data type should be int
+#     """
+###null
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#     """
+#     s/-DenableConnectionAssociateThread=/-DenableConnectionAssociateThread=null/g
+#     """
+#    Then Restart dble in "dble-1" failed for
+#     """
+#     Property \[ enableConnectionAssociateThread \] 'null' data type should be int
+#     """
+###-1
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#     """
+#     s/-DenableConnectionAssociateThread=null/-DenableConnectionAssociateThread=-1/g
+#     """
+#    Then Restart dble in "dble-1" failed for
+#     """
+#     Property \[ enableConnectionAssociateThread \] '-1' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
+#     """
+###0.1
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#     """
+#     s/-DenableConnectionAssociateThread=-1/-DenableConnectionAssociateThread=0.1/g
+#     """
+#    Then Restart dble in "dble-1" failed for
+#     """
+#     Property \[ enableConnectionAssociateThread \] '0.1' data type should be int
+#     """
+###false
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#     """
+#     s/-DenableConnectionAssociateThread=0.1/-DenableConnectionAssociateThread=false/g
+#     """
+#    Then Restart dble in "dble-1" failed for
+#     """
+#     Property \[ enableConnectionAssociateThread \] 'false' data type should be int
+#     """

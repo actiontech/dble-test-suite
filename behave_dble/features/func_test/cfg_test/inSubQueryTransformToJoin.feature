@@ -12,21 +12,25 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DinSubQueryTransformToJoin/d
-    $a -DinSubQueryTransformToJoin=1
+    $a -DinSubQueryTransformToJoin=5
     """
     Then restart dble in "dble-1" failed for
     """
-    Property \[ inSubQueryTransformToJoin \] '1' data type should be boolean
+    check the property \[ inSubQueryTransformToJoin \] '5' data type or value
     """
+    # DBLE0REQ-2293
+    # Property \[ inSubQueryTransformToJoin \] '5' data type should be boolean
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    /-DinSubQueryTransformToJoin=1/c -DinSubQueryTransformToJoin=False123
+    /-DinSubQueryTransformToJoin=5/c -DinSubQueryTransformToJoin=False123
     """
     Then restart dble in "dble-1" failed for
     """
-    Property \[ inSubQueryTransformToJoin \] 'False123' data type should be boolean
+    check the property \[ inSubQueryTransformToJoin \] 'False123' data type or value
     """
+    # DBLE0REQ-2293
+    # Property \[ inSubQueryTransformToJoin \] 'False123' data type should be boolean
 
   Scenario: check inSubQueryTransformToJoin in bootstrap.cnf - default values : false #2
     # check default values

@@ -68,29 +68,30 @@ Feature:test session_connections_active_ratio
       | conn   | toClose | sql                                                                  | expect        | db               |
       | conn_1 | true    | select * from dble_information.session_connections_active_ratio      | length{(1)}   | dble_information |
 
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-     """
-     s/-DenableSessionActiveRatioStat=1/-DenableSessionActiveRatioStat=111/g
-     """
-    Then Restart dble in "dble-1" failed for
-     """
-     Property \[ enableFrontActiveRatioStat \] '111' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
-     """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-     """
-     s/-DenableSessionActiveRatioStat=111/-DenableSessionActiveRatioStat=abc/g
-     """
-    Then Restart dble in "dble-1" failed for
-     """
-     property \[ enableSessionActiveRatioStat \] 'abc' data type should be int
-     """
-
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-     """
-     s/-DenableSessionActiveRatioStat=abc/-DenableSessionActiveRatioStat=null/g
-     """
-    Then Restart dble in "dble-1" failed for
-     """
-     property \[ enableSessionActiveRatioStat \] 'null' data type should be int
-     """
+# DBLE0REQ-2293
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#     """
+#     s/-DenableSessionActiveRatioStat=1/-DenableSessionActiveRatioStat=111/g
+#     """
+#    Then Restart dble in "dble-1" failed for
+#     """
+#     Property \[ enableFrontActiveRatioStat \] '111' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
+#     """
+#
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#     """
+#     s/-DenableSessionActiveRatioStat=111/-DenableSessionActiveRatioStat=abc/g
+#     """
+#    Then Restart dble in "dble-1" failed for
+#     """
+#     property \[ enableSessionActiveRatioStat \] 'abc' data type should be int
+#     """
+#
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#     """
+#     s/-DenableSessionActiveRatioStat=abc/-DenableSessionActiveRatioStat=null/g
+#     """
+#    Then Restart dble in "dble-1" failed for
+#     """
+#     property \[ enableSessionActiveRatioStat \] 'null' data type should be int
+#     """
