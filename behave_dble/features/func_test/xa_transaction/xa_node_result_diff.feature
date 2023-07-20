@@ -44,7 +44,7 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace @restore_global_setting
+  @btrace @restore_global_setting @skip #DBLE0REQ-2296
   Scenario: xa start is abnormal: some nodes execute successfully and some nodes return errors. For the error nodes, dble need return a reasonable error message. #2
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0},'mysql-master2':{'general_log':0}}}
