@@ -28,11 +28,15 @@ Feature: backend node disconnect,causing xa abnormal
     before xa end
     """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
-       | sql               |
+       | sql             |
        | show @@session  |
     Then get first mysqlId of "mysql-master1" from "rs_A" named "mysqlID1"
     Then kill mysql connection by "mysqlID1" in "mysql-master1"
     Given destroy sql threads list
+    Then check sql thread output in "err"
+    """
+    was closed ,reason is [stream closed]
+    """
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Then execute sql in "dble-1" in "user" mode
@@ -56,10 +60,10 @@ Feature: backend node disconnect,causing xa abnormal
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |
-      | conn_1 | False   | drop table if exists sharding_4_t1                  | success | schema1 |
-      | conn_1 | False   | create table sharding_4_t1(id int,name char)       | success | schema1 |
+      | conn_1 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
+      | conn_1 | False   | create table sharding_4_t1(id int,name char)            | success | schema1 |
       | conn_1 | False   | set xa = on                                             | success | schema1 |
-      | conn_1 | False   | begin                                                    | success | schema1 |
+      | conn_1 | False   | begin                                                   | success | schema1 |
       | conn_1 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
@@ -75,6 +79,10 @@ Feature: backend node disconnect,causing xa abnormal
     Then get first mysqlId of "mysql-master1" from "rs_B" named "mysqlID2"
     Then kill mysql connection by "mysqlID2" in "mysql-master1"
     Given destroy sql threads list
+    Then check sql thread output in "err"
+    """
+    was closed ,reason is [stream closed]
+    """
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Then execute sql in "dble-1" in "user" mode
