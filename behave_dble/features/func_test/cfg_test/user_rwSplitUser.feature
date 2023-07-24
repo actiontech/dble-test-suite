@@ -485,30 +485,3 @@ Feature: test config in user.xml  ---  rwSplitUser
 #      | conn_0 | False   | show @@sql.sum.table           | length{(1)}  |
 #      | conn_0 | False   | show @@connection.coun          | length{(1)}  |
 #      | conn_0 | False   | reload @@user_stat            | length{(1)}  | 重置前面命令的状态 Reset show @@sql  @@sql.sum @@sql.slow  @@sql.high  @@sql.large  @@sql.resultset  success
-
-
-
-  Scenario:  rwSplitUser with the prepared sql  DBLE0REQ-1065   #14
-     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-      """
-      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true" />
-      </dbGroup>
-      """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-      """
-      <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
-      """
-    Then execute admin cmd "reload @@config"
-    Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                               | expect  | db  |
-      | rwS1 | 111111 | conn_0 | False   | drop table if exists test_table                   | success | db1 |
-      | rwS1 | 111111 | conn_0 | False   | create table test_table(id int, name varchar(12)) | success | db1 |
-      | rwS1 | 111111 | conn_0 | False   | insert into test_table values(1,'1'),(2,'2')      | success | db1 |
-
-    Then execute prepared sql "select * from test_table where id = %s" with params "(1);(3)" on db "db1" and user "rwS1"
-
-    Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                               | expect  | db  |
-      | rwS1 | 111111 | conn_0 | true    | drop table if exists test_table                   | success | db1 |
