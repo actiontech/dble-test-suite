@@ -87,6 +87,9 @@ public class Main {
 			RwSplitUserPsTest rwSplitUserTest = new RwSplitUserPsTest(mysqlProp, testProp, true);
 			rwSplitUserTest.start_test();
 
+			RwSplitChangeUserTest rwSplitTest = new RwSplitChangeUserTest(mysqlProp, testProp, true);
+			rwSplitTest.start_test();
+
 			CapClientFoundRowsTest capClientFoundRowsTest = new CapClientFoundRowsTest(mysqlProp, testProp, true);
 			capClientFoundRowsTest.start_test();
 
