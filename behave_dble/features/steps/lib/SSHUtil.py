@@ -1,6 +1,9 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import logging
+import subprocess
+from hamcrest import *
+
 from . Logging import Logging
 from typing import List, Optional, Tuple
 import os
@@ -33,6 +36,13 @@ class SSHClient:
                 retry -= 1
                 time.sleep(2)
                 LOGGER.debug(f'create connect: <{default}> failed { 10- retry} times \n {e}')
+                if retry <= 0:
+                    # DBLE0REQ-2291: 查看容器是否创建成功，本地执行docker ps -a
+                    res = subprocess.Popen('docker ps -a', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                    out, err = res.communicate()
+                    LOGGER.debug(f'containers is as bellow: \n {out}')
+                    assert_that(err is None, "expect no err, but err is: {0}".format(err))
+
                 continue
             else:
                 LOGGER.debug(f'connect success <{default}>')
