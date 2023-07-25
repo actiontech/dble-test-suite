@@ -35,7 +35,7 @@ Feature: backend node disconnect,causing xa abnormal
     Given destroy sql threads list
     Then check sql thread output in "err"
     """
-    was closed ,reason is [stream closed]
+    was closed ,reason is [stream closed by peer]
     """
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
@@ -81,7 +81,7 @@ Feature: backend node disconnect,causing xa abnormal
     Given destroy sql threads list
     Then check sql thread output in "err"
     """
-    was closed ,reason is [stream closed]
+    was closed ,reason is [stream closed by peer]
     """
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
