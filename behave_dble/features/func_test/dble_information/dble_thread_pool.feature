@@ -12,6 +12,7 @@ Feature:  dble_thread_pool test
      $a  -DcomplexExecutor=8
      $a  -DwriteToBackendExecutor=8
      $a  -DbackendProcessors=8
+     $a  -DmanagerFrontWorker=2
     """
     Then restart dble in "dble-1" success
   #case desc dble_thread_pool
@@ -43,21 +44,22 @@ Feature:  dble_thread_pool test
       | writeToBackendWorker | 8                | 8              | 0                    |
       | NIOFrontRW           | 1                | 1              | 0                    |
       | NIOBackendRW         | 8                | 8              | 0                    |
+      | managerFrontWorker   | 2                | 2              | 0                    |
    #case supported select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                         | expect                                                                               |
       | conn_0 | False   | use dble_information                                        | success                                                                              |
       | conn_0 | False   | select name,core_pool_size from dble_thread_pool limit 1                      | has{(('Timer', 1),)}                                                |
       | conn_0 | False   | select * from dble_thread_pool order by name desc limit 2   | length{(2)}                                                                          |
-      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name like '%Worker%' | has{(('frontWorker', 1), ('backendWorker', 8))}     |
-      | conn_0 | False   | select core_pool_size from dble_thread_pool                      | has{((1,), (1,), (8,), (8,), (8,), (1,), (8,))}                                      |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name like '%Worker%' | has{(('frontWorker', 1), ('backendWorker', 8), ('managerFrontWorker',2))} |
+      | conn_0 | False   | select core_pool_size from dble_thread_pool                      | has{((1,), (1,), (8,), (8,), (8,), (1,), (8,), (2,))}                                |
   #case supported select max/min from table
       | conn_0 | False   | select max(core_pool_size) from dble_thread_pool                 | has{((8,),)}   |
       | conn_0 | False   | select min(core_pool_size) from dble_thread_pool                 | has{((1,),)}   |
   #case supported where [sub-query]
-      | conn_0 | False   | select core_pool_size from dble_thread_pool where name in (select name from dble_thread_pool where active_count>0)  | has{((1,), (8,), (8,), (1,), (8,))}                      |
+      | conn_0 | False   | select core_pool_size from dble_thread_pool where name in (select name from dble_thread_pool where active_count>0)  | has{((1,), (8,), (8,), (1,), (8,), (2,))} |
   #case supported select field from
-      | conn_0 | True    | select name from dble_thread_pool where active_count > 0    | has{(('frontWorker',), ('complexQueryWorker',), ('writeToBackendWorker',), ('NIOFrontRW',), ('NIOBackendRW',))} |
+      | conn_0 | True    | select name from dble_thread_pool where active_count > 0    | has{(('frontWorker',), ('complexQueryWorker',), ('writeToBackendWorker',), ('NIOFrontRW',), ('NIOBackendRW',), ('managerFrontWorker',))} |
 
 
   #case unsupported update/delete/insert
@@ -73,6 +75,7 @@ Feature:  dble_thread_pool test
      s/-DcomplexExecutor=8/-DcomplexExecutor=12/
      s/-DwriteToBackendExecutor=8/-DwriteToBackendExecutor=12/
      s/-DbackendProcessors=8/-DbackendProcessors=16/
+     s/-DmanagerFrontWorker=2/-DmanagerFrontWorker=4/
     """
     Then restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_pool_3"
@@ -87,9 +90,11 @@ Feature:  dble_thread_pool test
       | writeToBackendWorker | 12          |
       | NIOFrontRW           | 1           |
       | NIOBackendRW         | 16          |
+      | managerFrontWorker   | 4          |
     Then check resultset "dble_thread_pool_3" has not lines with following column values
       | name-0               | core_pool_size-2 |
       | frontWorker          | 1           |
       | backendWorker        | 8           |
       | complexQueryWorker   | 8           |
       | writeToBackendWorker | 8           |
+      | managerFrontWorker   | 2           |
