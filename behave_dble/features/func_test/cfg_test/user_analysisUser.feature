@@ -373,6 +373,11 @@ Feature: test config in user.xml  ---  analysisUser
     """
     Given Restart dble in "dble-1" success
 
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                           | expect        | db               |
+      | conn_0 | False   | select * from dble_db_group where name = 'ha_group3'          | has{(('ha_group3', 'select 1', 0, 1, 60, 2, 100, -1, 'null', 'false', 'true'),)}   | dble_information |
+      | conn_0 | False   | select name,db_group,addr,port,database_type from dble_db_instance where db_group = 'ha_group3'   | has{(('hostM1', 'ha_group3', '172.100.9.10', 9004, 'clickhouse'),('hostS1', 'ha_group3', '172.100.9.11', 9004, 'clickhouse'))}   | dble_information |
+
     Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql         | expect   |
      | ana1  | 111111 | conn_1 | False   | use default | success  |
