@@ -313,8 +313,8 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@time.startup                                               | length{(1)}   |
       | conn_0 | False   | show @@version                                                    | length{(1)}   |
       | conn_0 | False   | show @@server                                                     | length{(1)}   |
-      | conn_0 | False   | show @@threadpool                                                 | length{(5)}   |
-      | conn_0 | False   | show @@threadpool.task                                            | length{(5)}   |
+      | conn_0 | False   | show @@threadpool                                                 | length{(6)}   |
+      | conn_0 | False   | show @@threadpool.task                                            | length{(6)}   |
       | conn_0 | False   | show @@database                                                   | length{(1)}   |
       | conn_0 | False   | show @@shardingNode                                               | length{(5)}   |
       | conn_0 | False   | show @@shardingNode where schema = "schema2"                      | length{(0)}   |
@@ -328,7 +328,7 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@sql.condition                                              | length{(2)}   |
       | conn_0 | False   | show @@heartbeat                                                  | length{(4)}   |
       | conn_0 | False   | show @@heartbeat.detail  where name='hostM1'                      | success       |
-      | conn_0 | False   | show @@sysparam                                                   | length{(142)} |
+      | conn_0 | False   | show @@sysparam                                                   | length{(143)} |
       | conn_0 | False   | show @@white                                                      | length{(3)}   |
       | conn_0 | False   | show @@directmemory                                               | length{(1)}   |
       | conn_0 | False   | show @@command.count                                              | length{(1)}   |

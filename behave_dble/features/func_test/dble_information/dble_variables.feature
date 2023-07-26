@@ -11,10 +11,12 @@ Feature:  dble_variables test
      /DcomplexExecutor/d
      /DwriteToBackendExecutor/d
      /DbackendProcessors/d
+     /DmanagerFrontWorker/d
      $a  -DbackendProcessorExecutor=8
      $a  -DcomplexExecutor=8
      $a  -DwriteToBackendExecutor=8
      $a  -DbackendProcessors=8
+     $a  -DmanagerFrontWorker=2
      """
     Then restart dble in "dble-1" success
   #case desc dble_variables
@@ -30,7 +32,7 @@ Feature:  dble_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(146)}     | dble_information |
+      | conn_0 | False   | select * from dble_variables    | length{(147)}     | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
@@ -183,6 +185,7 @@ Feature:  dble_variables test
       | tcpKeepIdle                             | 30                                          | TCP probes a connection that has been idle for some amount of time,unit is s, default value is 30s                                                                                                                   | true        |
       | tcpKeepInterval                         | 10                                          | Keep-Alive retransmission interval time,unit is s,  default value is 10s                                                                                                                                             | true        |
       | tcpKeepCount                            | 3                                           | Keep-Alive retransmission maximum limit, default value is 3                                                                                                                                                          | true        |
+      | managerFrontWorker                      | 2                                           | The size of fixed thread pool named of managerFrontWorker, the default value is 2                                                                                                                                    | true        |
 
   #case supported select limit /order by/ where like
       Then execute sql in "dble-1" in "admin" mode
@@ -191,7 +194,7 @@ Feature:  dble_variables test
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(24)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(24)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(146)}| dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(147)}| dble_information |
   #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                              | db               |
@@ -237,7 +240,7 @@ Feature:  dble_variables test
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
       | false       | 24      |
-      | true        | 122     |
+      | true        | 123     |
 
   #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
@@ -261,8 +264,8 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('xalog',),)}   | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('',),)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(128)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(127)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(129)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(128)}        | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(18)}         | dble_information |
   #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |

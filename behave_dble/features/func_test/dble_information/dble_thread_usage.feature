@@ -30,10 +30,12 @@ Feature:  dble_thread_usage table test
      /DcomplexExecutor/d
      /DwriteToBackendExecutor/d
      /DbackendProcessors/d
+     /DmanagerFrontWorker/d
      $a  -DbackendProcessorExecutor=8
      $a  -DcomplexExecutor=8
      $a  -DwriteToBackendExecutor=8
      $a  -DbackendProcessors=8
+     $a  -DmanagerFrontWorker=4
      """
     Then restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_usage_2"
@@ -67,6 +69,10 @@ Feature:  dble_thread_usage table test
       | 5-writeToBackendWorker     |
       | 6-writeToBackendWorker     |
       | 7-writeToBackendWorker     |
+      | 0-managerFrontWorker       |
+      | 1-managerFrontWorker       |
+      | 2-managerFrontWorker       |
+      | 3-managerFrontWorker       |
   #case change bootstrap.cnf to check result
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
      """
@@ -74,6 +80,7 @@ Feature:  dble_thread_usage table test
      s/-DbackendProcessors=8/-DbackendProcessors=4/
      s/-DbackendProcessorExecutor=8/-DbackendProcessorExecutor=4/
      s/-DwriteToBackendExecutor=8/-DwriteToBackendExecutor=4/
+     s/-DmanagerFrontWorker=4/-DmanagerFrontWorker=2/
      """
     Then restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_usage_4"
@@ -96,6 +103,8 @@ Feature:  dble_thread_usage table test
       | 1-writeToBackendWorker     |
       | 2-writeToBackendWorker     |
       | 3-writeToBackendWorker     |
+      | 0-managerFrontWorker       |
+      | 1-managerFrontWorker       |
     Then check resultset "dble_thread_usage_4" has not lines with following column values
       | thread_name-0              |
       | 4-NIOBackendRW             |
@@ -110,6 +119,8 @@ Feature:  dble_thread_usage table test
       | 5-writeToBackendWorker     |
       | 6-writeToBackendWorker     |
       | 7-writeToBackendWorker     |
+      | 2-managerFrontWorker       |
+      | 3-managerFrontWorker       |
 
    #case supported select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
