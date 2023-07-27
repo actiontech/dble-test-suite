@@ -139,3 +139,88 @@ Feature: db config stable test
       </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
+
+
+  # DBLE0REQ-2301
+  Scenario: all mysql dbGroup disabled=true, add a clickhouse disabled=false, then execute reload/dryrun and restart dble success #5
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+      </dbInstance>
+    </dbGroup>
+
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+      </dbInstance>
+    </dbGroup>
+    """
+    Then restart dble in "dble-1" success
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <analysisUser name="ana1" password="111111" dbGroup="ha_group4"  />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <dbInstance name="hostM4" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse" disabled="false"/>
+    </dbGroup>
+    """
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dryrun_rs"
+      | sql    |
+      | dryrun |
+    Then check resultset "dryrun_rs" has lines with following column values
+      | TYPE-0  | LEVEL-1 | DETAIL-2                                          |
+      | Backend | WARNING | dbGroup[ha_group1,hostM1] is disabled             |
+      | Backend | WARNING | dbGroup[ha_group2,hostM2] is disabled             |
+      | Meta    | WARNING | Database db2 doesn't exists in dbGroup[ha_group1] |
+      | Meta    | WARNING | Database db1 doesn't exists in dbGroup[ha_group2] |
+      | Meta    | WARNING | Database db3 doesn't exists in dbGroup[ha_group1] |
+      | Meta    | WARNING | Database db2 doesn't exists in dbGroup[ha_group2] |
+      | Meta    | WARNING | Database db1 doesn't exists in dbGroup[ha_group1] |
+      | Cluster | NOTICE  | Dble is in single mod                             |
+    Then check resultset "dryrun_rs" has not lines with following column values
+      | TYPE-0  | LEVEL-1 | DETAIL-2                                                              |
+      | Backend | ERROR   | Get Vars from backend failed, Maybe all backend MySQL can't connected |
+    Then execute admin cmd "reload @@config_all"
+    Then restart dble in "dble-1" success
+
+
+  # DBLE0REQ-2302
+  Scenario: mysql dbGroup from disabled=true to disabled=false, then execute reload/dryrun, should test database connection #6
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+      </dbInstance>
+    </dbGroup>
+    """
+    Then restart dble in "dble-1" success
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="false">
+      </dbInstance>
+    </dbGroup>
+    """
+    Given record current dble log line number in "log_line_num1"
+    Then execute admin cmd "dryrun"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_line_num1" in host "dble-1"
+    """
+    SelfCheck### test dbGroup\[ha_group1.hostM1\],shardingNode\[dn1\],schema\[db1\] database connection success
+    SelfCheck### test dbGroup\[ha_group1.hostM1\],shardingNode\[dn3\],schema\[db2\] database connection success
+    SelfCheck### test dbGroup\[ha_group1.hostM1\],shardingNode\[dn5\],schema\[db3\] database connection success
+    """
+    Given record current dble log line number in "log_line_num2"
+    Then execute admin cmd "reload @@config_all"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_line_num2" in host "dble-1"
+    """
+    SelfCheck### test dbGroup\[ha_group1.hostM1\],shardingNode\[dn1\],schema\[db1\] database connection success
+    SelfCheck### test dbGroup\[ha_group1.hostM1\],shardingNode\[dn3\],schema\[db2\] database connection success
+    SelfCheck### test dbGroup\[ha_group1.hostM1\],shardingNode\[dn5\],schema\[db3\] database connection success
+    """
