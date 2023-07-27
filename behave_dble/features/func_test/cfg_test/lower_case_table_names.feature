@@ -262,3 +262,116 @@ Feature: check collation/lower_case_table_names works right for dble
       | test | 111111 | conn_0 | False   | select * from tb_grandson1                                                | success |
       | test | 111111 | conn_0 | False   | delete from tb_grandson1                                                  | success |
       | test | 111111 | conn_0 | true    | show create table tb_grandson1                                            | success |
+
+  # DBLE0REQ-2281
+  @BLOCKER @restore_mysql_config
+  Scenario:set two backend mysql lower_case_table_names=1 , add a backend mysql lower_case_table_names=0, then dryrun/reload/restart dble #5
+  """
+   {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}
+   """
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 1
+     """
+    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 1
+     """
+    Then restart dble in "dble-1" success
+
+    # case1: two mysql lower_case_table_names=1 add a mysql lower_case_table_names=0, dryrun/reload/restart failed
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100">
+     <heartbeat>select user()</heartbeat>
+     <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="10" primary="true" />
+     </dbGroup>
+    """
+    Then execute admin cmd "dryrun" get the following output
+    """
+    hasStr{The values of lower_case_table_names for dbInstances are different. These dbInstances's [ha_group3:hostM3] value is 0. And these dbInstances's [ha_group1:hostM1,ha_group2:hostM2] value is not 0.}
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    Reload Failure, The reason is The values of lower_case_table_names for dbInstances are different. These previous dbInstances's value is not 0.but these dbInstances's [ha_group3:hostM3] value is 0.
+    """
+    Then restart dble in "dble-1" failed for
+    """
+    The values of lower_case_table_names for dbInstances are different. These dbInstances's \[ha_group3:hostM3\] value is 0. And these dbInstances's \[ha_group1:hostM1,ha_group2:hostM2\] value is not 0.
+    """
+
+    Given delete the following xml segment
+      | file      | parent                 | child                                           |
+      | db.xml    | {'tag':'root'}         | {'tag':'dbGroup','kv_map':{'name':'ha_group3'}} |
+    Then restart dble in "dble-1" success
+
+    # case2: two mysql lower_case_table_names=1 add clickhouse disabled=false, dryrun/reload/restart failed
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <dbInstance name="hostM4" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse" disabled="false"/>
+    </dbGroup>
+    """
+    Then execute admin cmd "dryrun" get the following output
+    """
+    hasStr{The configuration add Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for previous dbInstances must be 0.}
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    Reload Failure, The reason is The configuration add Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for previous dbInstances must be 0.
+    """
+    Then restart dble in "dble-1" failed for
+    """
+    The configuration contains Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for all dbInstances must be 0. Current all dbInstances are 1.
+    """
+
+    # case3: two mysql lower_case_table_names=1, clickhouse disabled=true, dryrun/reload/restart success
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <dbInstance name="hostM4" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse" disabled="true"/>
+    </dbGroup>
+    """
+    Then restart dble in "dble-1" success
+    Then execute admin cmd "dryrun"
+    Then execute admin cmd "reload @@config_all"
+
+    # case4: mysql-1 lower_case_table_names=0, mysql-2 lower_case_table_names=1, clickhouse disabled=false, dryrun/reload/restart failed
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 0
+     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <dbInstance name="hostM4" password="111111" url="172.100.9.10:9004" user="test" maxCon="1000" minCon="10" primary="true" databaseType="clickhouse" disabled="false"/>
+    </dbGroup>
+    """
+    Then execute admin cmd "dryrun" get the following output
+    """
+    hasStr{The configuration add Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for previous dbInstances must be 0.}
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    Reload Failure, The reason is The configuration add Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for previous dbInstances must be 0.
+    """
+    Then restart dble in "dble-1" failed for
+    """
+    The configuration contains Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for dbInstances must be 0. These dbInstances's \[ha_group2:hostM2\] value is not 0. And these dbInstances's \[ha_group1:hostM1\] value is 0
+    """
+
+    # case5: two mysql lower_case_table_names=0, clickhouse disabled=false, dryrun/reload/restart success
+    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 0
+     """
+    Then restart dble in "dble-1" success
+    Then execute admin cmd "dryrun"
+    Then execute admin cmd "reload @@config_all -r"
