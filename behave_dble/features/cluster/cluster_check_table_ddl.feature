@@ -445,7 +445,7 @@ Feature: test "ddl" in zk cluster
 
 
 
-  @btrace
+  @btrace @auto_retry #DBLE0REQ-2295
   Scenario: case let ddl query error,to check metadata and lock   #5
     # 开启线程每隔一秒打印一次jstack
     Given prepare a thread to run jstack in "dble-1"
