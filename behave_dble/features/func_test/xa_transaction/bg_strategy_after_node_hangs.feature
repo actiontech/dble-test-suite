@@ -6,7 +6,7 @@
 #2.20.04.0#dble-8174
 Feature: retry policy after xa transaction commit failed for mysql service stopped
 
-  @btrace @restore_mysql_service
+  @btrace @restore_mysql_service @auto_retry #DBLE0REQ-2305
   Scenario: mysql node hangs causing xa transaction fail to commit,restart mysql node before the front end attempts to commit 5 times #1
     """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
