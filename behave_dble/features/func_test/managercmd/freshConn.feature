@@ -48,6 +48,7 @@ Feature: test fresh backend connection pool
     """
     /-Dprocessors=1/c -Dprocessors=2
     /-DprocessorExecutor=1/c -DprocessorExecutor=2
+    /-DmanagerFrontWorker=1/c -DmanagerFrontWorker=2
     """
     Given restart dble in "dble-1" success
     Given execute sql in "mysql-master1"
@@ -95,6 +96,7 @@ Feature: test fresh backend connection pool
     """
     /-Dprocessors=1/c -Dprocessors=2
     /-DprocessorExecutor=1/c -DprocessorExecutor=2
+    /-DmanagerFrontWorker=1/c -DmanagerFrontWorker=2
     """
     Given restart dble in "dble-1" success
     Given execute sql in "mysql-master1"

@@ -289,16 +289,19 @@ Feature: check single dble detach or attach from cluster
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Then restart dble in "dble-1" success
     Then restart dble in "dble-2" success
@@ -360,16 +363,19 @@ Feature: check single dble detach or attach from cluster
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Then restart dble in "dble-1" success
     Then restart dble in "dble-2" success
@@ -439,16 +445,19 @@ Feature: check single dble detach or attach from cluster
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
@@ -538,16 +547,19 @@ Feature: check single dble detach or attach from cluster
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Then restart dble in "dble-1" success
     Then restart dble in "dble-2" success
@@ -608,16 +620,19 @@ Feature: check single dble detach or attach from cluster
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
     """
     s/-Dprocessors=1/-Dprocessors=4/
     s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
     """
     Then restart dble in "dble-1" success
     Then restart dble in "dble-2" success
