@@ -18,6 +18,7 @@ Feature: when reload hang,emergency means to deal with it
      """
       /-Dprocessors=1/c -Dprocessors=4
       /-DprocessorExecutor=1/c -DprocessorExecutor=4
+      /-DmanagerFrontWorker=1/c -DmanagerFrontWorker=4
      """
      Then Restart dble in "dble-1" success
      Then execute sql in "dble-1" in "admin" mode
