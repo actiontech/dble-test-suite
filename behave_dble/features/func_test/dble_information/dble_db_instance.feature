@@ -18,14 +18,12 @@ Feature:  dble_db_instance and dble_db_group table test
       | heartbeat_keep_alive | int(11)      | YES    |       | 60        |         |
       | rw_split_mode        | int(11)      | NO     |       | None      |         |
       | delay_threshold      | int(11)      | YES    |       | -1        |         |
-      | delay_period_millis  | int(11)      | YES    |       | -1        |         |
-      | delay_database       | varchar(255) | YES    |       | None      |         |
       | disable_ha           | varchar(5)   | YES    |       | false     |         |
       | active               | varchar(5)   | YES    |       | false     |         |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                               | expect        | db               |
-      | conn_0 | False   | desc dble_db_group                | length{(11)}  | dble_information |
-      | conn_0 | False   | select * from dble_db_group       | has{(('ha_group1', 'select user()', 0, 1, 60, 0, 100, -1, 'null', 'false', 'true'), ('ha_group2', 'select user()', 0, 1, 60, 0, 100, -1, 'null', 'false', 'true'))}   | dble_information |
+      | conn_0 | False   | desc dble_db_group                | length{(9)}   | dble_information |
+      | conn_0 | False   | select * from dble_db_group       | has{(('ha_group1', 'select user()', 0, 1, 60, 0, 100, 'false', 'true'), ('ha_group2', 'select user()', 0, 1, 60, 0, 100, 'false', 'true'))}   | dble_information |
 
 
   Scenario:  dble_db_instance table #2
@@ -135,7 +133,7 @@ Feature:  dble_db_instance and dble_db_group table test
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                               | expect        | db               |
-      | conn_0 | False   | select * from dble_db_group       | has{(('ha_group1', 'select user()', 0, 1, 60, 0, 100, -1, 'null', 'false', 'true'), ('ha_group2', 'select user()', 0, 1, 60, 0, 100, -1, 'null', 'false', 'true'))}   | dble_information |
+      | conn_0 | False   | select * from dble_db_group       | has{(('ha_group1', 'select user()', 0, 1, 60, 0, 100, 'false', 'true'), ('ha_group2', 'select user()', 0, 1, 60, 0, 100, 'false', 'true'))}   | dble_information |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_2"
       | conn   | toClose | sql                                                    | db               |
