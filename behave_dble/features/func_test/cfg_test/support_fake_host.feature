@@ -368,7 +368,8 @@ Feature: db.xml support fake host
       | conn_0 | true    | select * from backend_connections              | length{(0)} | dble_information |
 
 
-  Scenario: fake host doesn't support ipv6 and local ip address #10
+  Scenario: fake host doesn't support ipv6 and dble ip address #10
+    # case1: db.xml not support ipv6 #DBLE0REQ-1290
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
@@ -385,6 +386,13 @@ Feature: db.xml support fake host
     """
     com.actiontech.dble.config.util.ConfigException: db json to map occurred  parse errors, The detailed results are as follows . java.lang.NumberFormatException: For input string: \"0:0:0:0:0:0:1:9066\"
     """
+
+    # case2: set one dbInstance url = dble ip + server port
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    /-Dprocessors=1/c -Dprocessors=2
+    /-DprocessorExecutor=1/c -DprocessorExecutor=2
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
@@ -394,13 +402,15 @@ Feature: db.xml support fake host
     </dbGroup>
     """
     Then restart dble in "dble-1" success
-    # 3.22.07开始，执行reload不会报错，因为这时配置未变更，不会测试连接有效性
-    # -r 不做智能判断，将所有后端连接池全部重新加载一遍
-    Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "reload @@config_all -r" get the following output
-    """
-    Reload Failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
-    """
+    Then execute admin cmd "reload @@config_all -r"
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql              | expect                                      | db               |
+      | conn_0 | true     | show @@heartbeat | hasStr{'hostM2', '172.100.9.1', 8066, 'ok'} | dble_information |
+    Given execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                | expect                 | db      |
+      | conn_1 | true     | drop table if exists sharding_4_t1 | Unknown database 'db2' | schema1 |
+
+    # case3: set one dbInstance url = dble ip + manager port
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
@@ -409,19 +419,17 @@ Feature: db.xml support fake host
         </dbInstance>
     </dbGroup>
     """
-    Then restart dble in "dble-1" success
-    # 3.22.07开始，执行reload不会报错，因为这时配置未变更，不会测试连接有效性
-    # -r 不做智能判断，将所有后端连接池全部重新加载一遍
-    Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "reload @@config_all -r" get the following output
+    Then execute admin cmd "reload @@config_all" get the following output
     """
     Reload Failure.The reason is com.actiontech.dble.config.util.ConfigException: SelfCheck### there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group2.hostM2]},
     """
+
+    # case4: set dbInstance url = dble ip + manager port and dble ip + server port
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.1:9066" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.1:9066" user="root" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
