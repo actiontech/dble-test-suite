@@ -20,7 +20,7 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
 #    in template config, there has 2 dbGroups, dbGroups's default lower_case_table_names is 0
     Then execute admin cmd "reload @@config_all -r" get the following output
     """
-    Reload Failure, The reason is The values of lower_case_table_names for dbInstances are different. These dbInstances's [ha_group2:hostM2] value is 0. And these dbInstances's [ha_group1:hostM1] value is not 0.
+    Reload Failure.The reason is The values of lower_case_table_names for dbInstances are different. These dbInstances's [ha_group2:hostM2] value is 0. And these dbInstances's [ha_group1:hostM1] value is not 0.
     """
     Then execute admin cmd "dryrun" get the following output
     """
@@ -28,7 +28,7 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     Then restart dble in "dble-1" failed for
     """
-    The values of lower_case_table_names for backend MySQLs are different
+    The values of lower_case_table_names for dbInstances are different. These dbInstances's \[ha_group2:hostM2\] value is 0. And these dbInstances's \[ha_group1:hostM1\] value is not 0.
     """
 
   @restore_mysql_config
@@ -53,7 +53,7 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure, The reason is The values of lower_case_table_names for dbInstances are different. These previous dbInstances's value is 0.but these dbInstances's [ha_group2:hostM1] value is not 0.
+    Reload Failure.The reason is The values of lower_case_table_names for dbInstances are different. These previous dbInstances's value is 0.but these dbInstances's [ha_group2:hostM1] value is not 0.
     """
     Then execute admin cmd "dryrun" get the following output
     """
@@ -61,7 +61,7 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     Then restart dble in "dble-1" failed for
     """
-    The values of lower_case_table_names for backend MySQLs are different
+     The values of lower_case_table_names for dbInstances are different. These dbInstances's \[ha_group1:hostM1,ha_group2:hostM2\] value is 0. And these dbInstances's \[ha_group2:hostM1\] value is not 0.
     """
 
   @restore_mysql_config
@@ -129,12 +129,12 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     #reload @@config_all -r returns failed,and failed info includes the output
     Then execute admin cmd "reload @@config_all -r" get the following output
     """
-    these MySQL's value is not 0 :ha_group2:hostM2
+    Reload Failure.The reason is The values of lower_case_table_names for dbInstances are different. These dbInstances's [ha_group2:hostM2] value is not 0. And these dbInstances's [ha_group1:hostM1] value is 0.
     """
     #dryrun returns success,and success info includes the output
     Then execute admin cmd "dryrun" get the following output
     """
-    hasStr{these MySQL's value is not 0 :ha_group2:hostM2}
+    hasStr{The values of lower_case_table_names for dbInstances are different. These dbInstances's [ha_group2:hostM2] value is not 0. And these dbInstances's [ha_group1:hostM1] value is 0.}
     """
     Then restart dble in "dble-1" failed for
     """
