@@ -295,7 +295,7 @@ Feature: check collation/lower_case_table_names works right for dble
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure, The reason is The values of lower_case_table_names for dbInstances are different. These previous dbInstances's value is not 0.but these dbInstances's [ha_group3:hostM3] value is 0.
+    Reload Failure.The reason is The values of lower_case_table_names for dbInstances are different. These previous dbInstances's value is not 0.but these dbInstances's [ha_group3:hostM3] value is 0.
     """
     Then restart dble in "dble-1" failed for
     """
@@ -321,7 +321,7 @@ Feature: check collation/lower_case_table_names works right for dble
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure, The reason is The configuration add Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for previous dbInstances must be 0.
+    Reload Failure.The reason is The configuration add Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for previous dbInstances must be 0.
     """
     Then restart dble in "dble-1" failed for
     """
@@ -359,7 +359,7 @@ Feature: check collation/lower_case_table_names works right for dble
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure, The reason is The configuration add Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for previous dbInstances must be 0.
+    Reload Failure.The reason is The configuration add Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for previous dbInstances must be 0.
     """
     Then restart dble in "dble-1" failed for
     """
