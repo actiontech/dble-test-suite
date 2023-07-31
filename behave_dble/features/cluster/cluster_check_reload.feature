@@ -750,16 +750,19 @@ Feature: test "reload @@config" in zk cluster
         """
         s/-Dprocessors=1/-Dprocessors=4/
         s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+        s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
         """
       Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
         """
         s/-Dprocessors=1/-Dprocessors=4/
         s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+        s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
         """
       Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
         """
         s/-Dprocessors=1/-Dprocessors=4/
         s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+        s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
         """
       Then restart dble in "dble-1" success
       Then restart dble in "dble-2" success
