@@ -786,16 +786,19 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       """
       /-DprocessorExecutor=/d
       $a -DprocessorExecutor=4
+      s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
       """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
       """
       /-DprocessorExecutor=/d
       $a -DprocessorExecutor=4
+      s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
       """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
       """
       /-DprocessorExecutor=/d
       $a -DprocessorExecutor=4
+      s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
       """
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
@@ -1746,16 +1749,19 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       """
       /-DprocessorExecutor=/d
       $a -DprocessorExecutor=4
+      s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
       """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
       """
       /-DprocessorExecutor=/d
       $a -DprocessorExecutor=4
+      s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
       """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
       """
       /-DprocessorExecutor=/d
       $a -DprocessorExecutor=4
+      s/-DmanagerFrontWorker=1/-DmanagerFrontWorker=4/
       """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
       """
