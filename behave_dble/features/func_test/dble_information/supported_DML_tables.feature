@@ -381,7 +381,7 @@
       | conn_0 | false   | update dble_db_instance set read_weight=3,id='test' where port > 3308                           | success | dble_information |
       | conn_0 | false   | update dble_db_instance set read_weight=3,id='test' where encrypt_configured like 'aa'          | success | dble_information |
       | conn_0 | false   | update dble_db_instance set read_weight=3,id='test3' where port > -1                            | success | dble_information |
-
+    ##### 3.22.07版本之间reload重构，id可以被正确update，但是3.22.01  id这一列不更新，已知问题，并且不修复，去掉id列的校验
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_1"
       | conn   | toClose | sql                            | db               |
       | conn_0 | true    | select name,db_group,addr,port,user,encrypt_configured,primary,disabled,min_conn_count,max_conn_count,read_weight,id from dble_db_instance            | dble_information |
