@@ -2,7 +2,28 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 2020/8/26
 
-Feature:  dble_db_instance table test
+Feature:  dble_db_instance and dble_db_group table test
+
+  Scenario:  dble_db_group table #1
+    #case desc dble_db_group
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_group"
+      | conn   | toClose | sql                  | db               |
+      | conn_0 | False   | desc dble_db_group   | dble_information |
+    Then check resultset "dble_db_group" has lines with following column values
+      | Field-0              | Type-1       | Null-2 | Key-3 | Default-4 | Extra-5 |
+      | name                 | varchar(64)  | NO     | PRI   | None      |         |
+      | heartbeat_stmt       | varchar(64)  | NO     |       | None      |         |
+      | heartbeat_timeout    | int(11)      | YES    |       | 0         |         |
+      | heartbeat_retry      | int(11)      | YES    |       | 1         |         |
+      | rw_split_mode        | int(11)      | NO     |       | None      |         |
+      | delay_threshold      | int(11)      | YES    |       | -1        |         |
+      | disable_ha           | varchar(5)   | YES    |       | false     |         |
+      | active               | varchar(5)   | YES    |       | false     |         |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                               | expect        | db               |
+      | conn_0 | False   | desc dble_db_group                | length{(8)}   | dble_information |
+      | conn_0 | False   | select * from dble_db_group       | has{(('ha_group1', 'select user()', 0, 1, 0, 100, 'false', 'true'), ('ha_group2', 'select user()', 0, 1, 0, 100, 'false', 'true'))}   | dble_information |
+
 
   Scenario:  dble_db_instance table #2
   #case desc dble_db_instance
@@ -42,6 +63,8 @@ Feature:  dble_db_instance table test
       | evictor_shutdown_timeout_millis   | int(11)      | YES    |       | 10000     |         |
       | idle_timeout                      | int(11)      | YES    |       | 600000    |         |
       | heartbeat_period_millis           | int(11)      | YES    |       | 10000     |         |
+
+
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                               | expect        | db               |
       | conn_0 | False   | desc dble_db_instance             | length{(31)}  | dble_information |
@@ -102,6 +125,11 @@ Feature:  dble_db_instance table test
     </dbGroup>
     """
     Then execute admin cmd "reload @@config"
+
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                               | expect        | db               |
+      | conn_0 | False   | select * from dble_db_group       | has{(('ha_group1', 'select user()', 0, 1, 0, 100, 'false', 'true'), ('ha_group2', 'select user()', 0, 1, 0, 100, 'false', 'true'))}   | dble_information |
+
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_2"
       | conn   | toClose | sql                                                    | db               |
       | conn_0 | False   | select name,db_group,addr,port from dble_db_instance   | dble_information |
