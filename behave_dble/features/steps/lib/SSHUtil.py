@@ -28,6 +28,10 @@ class SSHClient:
         if kwargs and isinstance(kwargs, dict):
             default.update(kwargs)
         LOGGER.debug(f'Create ssh connect : <{default}>')
+        # 查看self._ssh的值是不是None
+        if self._ssh is None:
+           LOGGER.debug('Warning! self._ssh is None!')
+
         retry = 10
         while retry > 0:
             try:
@@ -36,13 +40,21 @@ class SSHClient:
                 retry -= 1
                 time.sleep(2)
                 LOGGER.debug(f'create connect: <{default}> failed { 10- retry} times \n {e}')
-                if retry <= 0:
-                    # DBLE0REQ-2291: 查看容器是否创建成功，本地执行docker ps -a
+                if retry == 9 or retry <= 0:
+                    # DBLE0REQ-2291
+                    ## 查看容器是否创建成功，本地执行docker ps -a
                     res = subprocess.Popen('docker ps -a', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                     out, err = res.communicate()
                     LOGGER.debug(f'containers is as bellow: \n {out}')
                     assert_that(err is None, "expect no err, but err is: {0}".format(err))
-
+                    ## 打印机器当前的资源使用情况
+                    res1 = subprocess.Popen('top -n 1 -b |head -n 30', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                    out1, err1 = res1.communicate()
+                    # output info get from console has many unicode escape character ,such as \x1b(B\x1b[m\x1b[39;49m\x1b[K\n\x1b(B\x1b[m
+                    # use decode('unicode-escape') to process
+                    out1 = out1.decode('unicode-escape')
+                    LOGGER.debug(f'top value is as bellow: \n {out1}')
+                    assert_that(err1 is None, "expect no err, but err is: {0}".format(err1))
                 continue
             else:
                 LOGGER.debug(f'connect success <{default}>')
