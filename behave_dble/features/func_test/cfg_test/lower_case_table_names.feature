@@ -291,15 +291,15 @@ Feature: check collation/lower_case_table_names works right for dble
     """
     Then execute admin cmd "dryrun" get the following output
     """
-    hasStr{The values of lower_case_table_names for dbInstances are different. These dbInstances's [ha_group3:hostM3] value is 0. And these dbInstances's [ha_group1:hostM1,ha_group2:hostM2] value is not 0.}
+    hasStr{The values of lower_case_table_names for dbInstances are different. These dbInstances's [ha_group1:hostM1,ha_group2:hostM2] value is not 0. And these dbInstances's [ha_group3:hostM3] value is 0.}
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure.The reason is The values of lower_case_table_names for dbInstances are different. These previous dbInstances's value is not 0.but these dbInstances's [ha_group3:hostM3] value is 0.
+    Reload Failure.The reason is The values of lower_case_table_names for dbInstances are different. These dbInstances's [ha_group1:hostM1,ha_group2:hostM2] value is not 0. And these dbInstances's [ha_group3:hostM3] value is 0.
     """
     Then restart dble in "dble-1" failed for
     """
-    The values of lower_case_table_names for dbInstances are different. These dbInstances's \[ha_group3:hostM3\] value is 0. And these dbInstances's \[ha_group1:hostM1,ha_group2:hostM2\] value is not 0.
+    The values of lower_case_table_names for dbInstances are different. These dbInstances's \[ha_group1:hostM1,ha_group2:hostM2\] value is not 0. And these dbInstances's \[ha_group3:hostM3\] value is 0.
     """
 
     Given delete the following xml segment
@@ -317,11 +317,11 @@ Feature: check collation/lower_case_table_names works right for dble
     """
     Then execute admin cmd "dryrun" get the following output
     """
-    hasStr{The configuration add Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for previous dbInstances must be 0.}
+    hasStr{The configuration contains Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for all dbInstances must be 0. Current all dbInstances are 1.}
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure.The reason is The configuration add Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for previous dbInstances must be 0.
+    Reload Failure.The reason is The configuration contains Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for all dbInstances must be 0. Current all dbInstances are 1.
     """
     Then restart dble in "dble-1" failed for
     """
@@ -355,15 +355,15 @@ Feature: check collation/lower_case_table_names works right for dble
     """
     Then execute admin cmd "dryrun" get the following output
     """
-    hasStr{The configuration add Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for previous dbInstances must be 0.}
+    hasStr{The configuration contains Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for dbInstances must be 0. These dbInstances's [ha_group1:hostM1] value is 0. And these dbInstances's [ha_group2:hostM2] value is not 0.}
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload Failure.The reason is The configuration add Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for previous dbInstances must be 0.
+    The configuration contains Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for dbInstances must be 0. These dbInstances's [ha_group1:hostM1] value is 0. And these dbInstances's [ha_group2:hostM2] value is not 0.
     """
     Then restart dble in "dble-1" failed for
     """
-    The configuration contains Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for dbInstances must be 0. These dbInstances's \[ha_group2:hostM2\] value is not 0. And these dbInstances's \[ha_group1:hostM1\] value is 0
+    The configuration contains Clickhouse. Since clickhouse is not case sensitive, so the values of lower_case_table_names for dbInstances must be 0. These dbInstances's \[ha_group1:hostM1\] value is 0. And these dbInstances's \[ha_group2:hostM2\] value is not 0.
     """
 
     # case5: two mysql lower_case_table_names=0, clickhouse disabled=false, dryrun/reload/restart success
