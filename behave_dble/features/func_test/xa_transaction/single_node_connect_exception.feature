@@ -7,8 +7,16 @@
 #2.20.04.0#dble-8177
 Feature: backend node disconnect,causing xa abnormal
 
-  @btrace
+  @btrace @stop_tcpdump
   Scenario: backend node connection is abnormal, causing xa prepare is abnormal, transaction automatic rollback #1
+    """
+    {'stop_tcpdump':'dble-1'}
+    """
+    # 启动抓包
+    Given prepare a thread to run tcpdump in "dble-1"
+     """
+     tcpdump -w /tmp/tcpdump.log
+     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
@@ -47,6 +55,7 @@ Feature: backend node disconnect,causing xa abnormal
       | conn_0 | true    | commit                                                  | success     | schema1 |
       | new    | true    | select * from sharding_4_t1                             | length{(4)} | schema1 |
       | new    | true    | drop table if exists sharding_4_t1                      | success     | schema1 |
+    Given stop and destroy tcpdump threads list in "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
