@@ -193,6 +193,10 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
     if mode in ["admin", "user"]:  # query to dble
         obj = ObjectFactory.create_dble_object(host_name)
         query_meta = QueryMeta(info_dic, mode, obj._dble_meta)
+    elif mode in ["clickhouse"]:  # query to clickhouse
+        obj = ObjectFactory.create_clickhouse_object(host_name)
+        logger.debug(f"create_clickhouse_object success")
+        query_meta = QueryMeta(info_dic, mode, obj._clickhouse_meta)
     else:
         obj = ObjectFactory.create_mysql_object(host_name)
         query_meta = QueryMeta(info_dic, mode, obj._mysql_meta)

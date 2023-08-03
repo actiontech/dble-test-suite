@@ -21,6 +21,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 from behave.runner import Context
 from steps.lib.DbleMeta import DbleMeta
 from steps.lib.MySQLMeta import MySQLMeta
+from steps.lib.ClickhouseMeta import ClickhouseMeta
 from steps.lib.SSHUtil import SSHClient
 
 logger = logging.getLogger('root')
@@ -106,9 +107,20 @@ def init_meta(context, flag):
                 node = MySQLMeta(cfg_dic)
                 nodes.append(node)
         MySQLMeta.mysqls = tuple(nodes)
+    elif flag == "clickhouses":
+        nodes = []
+        for k, _ in context.cfg_clickhouse.items():
+            for _, cv in context.cfg_clickhouse[k].items():
+                cfg_dic = {}
+                cfg_dic.update(cv)
+                cfg_dic.update(context.cfg_server)
+
+                node = ClickhouseMeta(cfg_dic)
+                nodes.append(node)
+        ClickhouseMeta.clickhouses = tuple(nodes)
 
     else:
-        assert False, "get_nodes expect parameter enum in 'dble', 'dble_cluser', 'mysqls'"
+        assert False, "get_nodes expect parameter enum in 'dble', 'dble_cluser', 'mysqls', 'clickhouse'"
 
 
 @Given('sleep "{num}" seconds')
@@ -203,7 +215,7 @@ def restore_sys_time():
 
 def get_node(host):
     logger.debug("try to get meta of '{}'".format(host))
-    for node in MySQLMeta.mysqls + DbleMeta.dbles:
+    for node in MySQLMeta.mysqls + DbleMeta.dbles + ClickhouseMeta.clickhouses:
         if node.host_name == host or node.ip == host:
             return node
     assert False, 'Can not find node {0}'.format(host)

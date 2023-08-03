@@ -8,6 +8,7 @@ import logging
 
 from steps.lib.DbleObject import DbleObject
 from steps.lib.MySQLObject import MySQLObject
+from steps.lib.ClickhouseObject import ClickhouseObject
 from steps.lib.utils import get_node
 
 logger = logging.getLogger('root')
@@ -24,3 +25,7 @@ class ObjectFactory(object):
         dble_meta = get_node(id)
         return DbleObject(dble_meta)
 
+    @classmethod
+    def create_clickhouse_object(self,id):
+        clickhouse_meta = get_node(id)
+        return ClickhouseObject(clickhouse_meta)

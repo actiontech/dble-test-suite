@@ -145,6 +145,24 @@ cfg_mysql:
       install_path: /root/sandboxes/sandbox/node1
       version: *mysql_version
 
+# for clickhouse
+cfg_clickhouse:
+  group1:
+    inst-1:
+      ip: 172.100.9.10
+      port: 9004
+      hostname: clickhouse-server_1
+      user: test
+      password: 111111
+
+  group2:
+    inst-1:
+      ip: 172.100.9.11
+      port: 9004
+      hostname: clickhouse-server_2
+      user: test
+      password: 111111
+
 cfg_zookeeper:
   home: /opt/zookeeper
   port: 2181
