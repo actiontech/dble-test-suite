@@ -71,6 +71,8 @@ def before_all(context):
             disable_cluster_config_in_node(context, node)
 
     init_meta(context, "mysqls")
+
+    init_meta(context, "clickhouses")
     # optimize later
     context.ssh_client = get_ssh(context.cfg_dble['single']['dble-1']['hostname'])
     context.ssh_sftp = get_sftp(context.cfg_dble['single']['dble-1']['hostname'])

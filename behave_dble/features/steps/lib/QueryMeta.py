@@ -12,8 +12,10 @@ class QueryMeta(object):
             self.init_dble_admin_query_meta(info_dict, meta)
         elif mode == "user":
             self.init_dble_client_query_meta(info_dict, meta)
+        elif mode == "clickhouse":
+            self.init_clickhouse_query_meta(info_dict, meta)
         else:
-            assert False, "execute queries mode can only be one of [mysql, admin, user], but mode is '{}'".format(mode)
+            assert False, "execute queries mode can only be one of [mysql, admin, user, clickhouse], but mode is '{}'".format(mode)
 
     def init_mysql_query_meta(self, info_dic, meta):
         if info_dic is None: info_dic = {}
@@ -59,6 +61,22 @@ class QueryMeta(object):
         self._expect = info_dic.get("expect", "success")
         self._db = info_dic.get("db", "")
         self._sql = info_dic.get("sql")
+
+    def init_clickhouse_query_meta(self, info_dic, meta):
+        if info_dic is None: info_dic = {}
+
+        self._user = info_dic.get("user", meta.clickhouse_user)
+        self._passwd = str(info_dic.get("passwd", meta.clickhouse_password))
+        self._port = info_dic.get("port", meta.clickhouse_port)
+        self._ip = info_dic.get("ip", meta.ip)
+
+        self._bClose = info_dic.get("toClose", "true")
+        self._charset = info_dic.get("charset", None)
+        self._conn_id = info_dic.get("conn", None)
+        self._expect = info_dic.get("expect", "success")
+        self._db = info_dic.get("db", "")
+        self._sql = info_dic.get("sql")
+
 
     @property
     def user(self):
