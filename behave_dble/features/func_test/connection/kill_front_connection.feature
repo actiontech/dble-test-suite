@@ -115,7 +115,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  |
       | conn_2 | False   | kill query {0} | success |
-    # Query was interrupted：还没有下发就被拦截了，其他2种是下发之后被拦截，一个是下发到后端，一个是下发到前段
+    # Query was interrupted：还没有下发就被拦截了，其他2种是下发之后被拦截，一个是下发到后端，一个是下发到前端
     Then check sql thread output in "err" by retry "10" times
     """
     Query was interrupted.//stream closed by peer//[stream closed]
@@ -177,9 +177,10 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn   | toClose | sql            | expect  |
       | conn_2 | True    | kill query {0} | success |
     Given sleep "5" seconds
-    Then check sql thread output in "err"
+    # Query was interrupted：还没有下发就被拦截了，其他2种是下发之后被拦截，一个是下发到后端，一个是下发到前端
+    Then check sql thread output in "err" by retry "10" times
     """
-    Query was interrupted.
+    Query was interrupted.//stream closed by peer//[stream closed]
     """
     Given stop btrace script "BtraceSessionStage.java" in "dble-1"
     Given destroy sql threads list
