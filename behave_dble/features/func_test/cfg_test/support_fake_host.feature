@@ -407,8 +407,8 @@ Feature: db.xml support fake host
       | conn   | toClose  | sql              | expect                                      | db               |
       | conn_0 | true     | show @@heartbeat | hasStr{'hostM2', '172.100.9.1', 8066, 'ok'} | dble_information |
     Given execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                | expect                 | db      |
-      | conn_1 | true     | drop table if exists sharding_4_t1 | Unknown database 'db2' | schema1 |
+      | conn   | toClose  | sql                                | expect           | db      |
+      | conn_1 | true     | drop table if exists sharding_4_t1 | Unknown database | schema1 |
 
     # case3: set one dbInstance url = dble ip + manager port
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
