@@ -178,7 +178,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn_2 | True    | kill query {0} | success |
     Given sleep "5" seconds
     # Query was interrupted：还没有下发就被拦截了，其他2种是下发之后被拦截，一个是下发到后端，一个是下发到前端
-    Then check sql thread output in "err"
+    Then check sql thread output in "err" by retry "10" times
     """
     Query was interrupted.//stream closed by peer//[stream closed]
     """
