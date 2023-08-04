@@ -329,10 +329,9 @@ Feature: test some import nodes attr in schema.xml
     mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep '172.100.9.6'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill all backend conns in "mysql-master2" except ones in "heartbeat_Ids_master2"
-    Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql            | expect        |
-      | show @@backend | length{(3)}   |
+      | sql            | expect        | timeout |
+      | show @@backend | length{(3)}   | 10       |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <dataHost balance="0" maxCon="1000" minCon="3" name="ha_group1" slaveThreshold="100" >
@@ -357,10 +356,9 @@ Feature: test some import nodes attr in schema.xml
     mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep '172.100.9.6'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill all backend conns in "mysql-master2" except ones in "heartbeat_Ids_master2"
-    Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql            | expect      |
-      | show @@backend | length{(3)} |
+      | sql            | expect      | timeout |
+      | show @@backend | length{(3)} | 10      |
 
   Scenario:  when minCon > the number of db,if mysql restart, verify the minCon restore logic #12
 #  minConRecover logic, take this case as example:
@@ -397,10 +395,9 @@ Feature: test some import nodes attr in schema.xml
     """
     Given kill all backend conns in "mysql-master1" except ones in "heartbeat_Ids_master1"
 #   wait 6s for minConRecover is a duration
-    Given sleep "6" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql             | expect      |
-      | show @@backend  | length{(9)} |
+      | sql             | expect      | timeout |
+      | show @@backend  | length{(9)} | 10      |
 
 
 
