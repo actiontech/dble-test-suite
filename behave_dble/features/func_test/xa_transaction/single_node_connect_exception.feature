@@ -7,10 +7,17 @@
 #2.20.04.0#dble-8177
 Feature: backend node disconnect,causing xa abnormal
 
-  @btrace @stop_tcpdump
+  @btrace @stop_tcpdump @restore_mysql_config
   Scenario: backend node connection is abnormal, causing xa prepare is abnormal, transaction automatic rollback #1
     """
     {'stop_tcpdump':'dble-1'}
+    {'restore_mysql_config':{'mysql-master1':{'log_timestamps':'UTC'}}}
+    """
+    # MySQL的错误日志时间使用本地时间
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+    """
+    /log_timestamps/d
+    /server-id/a log_timestamps=SYSTEM
     """
     # 启动抓包
     Given prepare a thread to run tcpdump in "dble-1"
