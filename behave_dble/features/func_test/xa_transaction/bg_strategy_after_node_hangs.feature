@@ -6,7 +6,7 @@
 #2.20.04.0#dble-8174
 Feature: retry policy after xa transaction commit failed for mysql service stopped
 
-  @btrace @restore_mysql_service @auto_retry #DBLE0REQ-2305
+  @btrace @restore_mysql_service
   Scenario: mysql node hangs causing xa transaction fail to commit,restart mysql node before the front end attempts to commit 5 times #1
     """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
@@ -36,6 +36,8 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     before xa prepare
     """
     Given stop mysql in host "mysql-master1"
+    # delayBeforeXaCommit桩可能还没结束，桩结束后才会进beforeInnerRetry桩
+    Given sleep "10" seconds
     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "1" times
     """
     before inner retry
@@ -48,7 +50,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect      | db      | timeout |
-      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 | 11,3    |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 | 15,3    |
       | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |         |
       | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |         |
 
@@ -86,11 +88,13 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     before xa commit
     """
     Given stop mysql in host "mysql-master1"
-     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
+        # delayBeforeXaCommit桩可能还没结束，桩结束后才会进beforeInnerRetry桩
+
+    Given sleep "10" seconds
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
     """
     before add xa
     """
-    Given sleep "10" seconds
     Given destroy sql threads list
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
@@ -107,7 +111,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect      | db      | timeout |
-      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 | 11,3    |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 | 15,3    |
       | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |         |
       | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |         |
 
@@ -160,7 +164,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect                     | db      | timeout |
-      | conn_1 | false   | select * from sharding_4_t1            | length{(2)}                | schema1 | 11,3    |
+      | conn_1 | false   | select * from sharding_4_t1            | length{(2)}                | schema1 | 15,3    |
       | conn_1 | false   | delete from sharding_4_t1 where id = 1 | success                    | schema1 |         |
       | conn_1 | false   | delete from sharding_4_t1 where id = 2 | Lock wait timeout exceeded | schema1 |         |
       | conn_1 | false   | delete from sharding_4_t1 where id = 3 | success                    | schema1 |         |
@@ -268,7 +272,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect      | db      | timeout |
-      | conn_1 | False   | select * from sharding_4_t1            | length{(0)} | schema1 | 11,3    |
+      | conn_1 | False   | select * from sharding_4_t1            | length{(0)} | schema1 | 15,3    |
       | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success     | schema1 |         |
       | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success     | schema1 |         |
       | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success     | schema1 |         |
@@ -356,7 +360,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     ###心跳恢复和xa的定时任务有时间差，还是要加上至少1秒的retry
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect      | db      | timeout |
-      | conn_1 | False   | select * from sharding_4_t1         | length{(8)} | schema1 | 11,3    |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(8)} | schema1 | 15,3    |
       | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |         |
       | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |         |
 
