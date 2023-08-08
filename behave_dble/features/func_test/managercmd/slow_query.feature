@@ -678,3 +678,31 @@ Feature: test slow query log related manager command
       exception occurred when the statistics were recorded
       Exception processing
       """
+
+
+  Scenario:test slowQueueOverflowPolicy  reload @@slow_query.queue_policy=    #9
+  ##3.22.11  DBLE0REQ-1763
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                       | expect         | db               |
+      | conn_0 | False   | select variable_value from dble_variables where variable_name = 'slowQueueOverflowPolicy' | has{(('1',),)} | dble_information |
+      | conn_0 | False   | reload @@slow_query.queue_policy= 2                                                       | success        | dble_information |
+      | conn_0 | False   | select variable_value from dble_variables where variable_name = 'slowQueueOverflowPolicy' | has{(('2',),)} | dble_information |
+      | conn_0 | False   | reload @@slow_query.queue_policy= 0                                                       | slow queue overflow policy is only supported as 1 or 2        | dble_information |
+      | conn_0 | False   | reload @@slow_query.queue_policy= 3                                                       | slow queue overflow policy is only supported as 1 or 2        | dble_information |
+      | conn_0 | False   | reload @@slow_query.queue_policy= -1                                                      | slow queue overflow policy is only supported as 1 or 2        | dble_information |
+      | conn_0 | False   | reload @@slow_query.queue_policy= 1.1                                                     | slow queue overflow policy is only supported as 1 or 2        | dble_information |
+      | conn_0 | False   | reload @@slow_query.queue_policy= null                                                    | slow queue overflow policy is only supported as 1 or 2        | dble_information |
+      | conn_0 | False   | reload @@slow_query.queue_policy=                                                         | slow queue overflow policy is only supported as 1 or 2        | dble_information |
+      | conn_0 | False   | reload @@slow_query.queue_policy=abc                                                      | slow queue overflow policy is only supported as 1 or 2        | dble_information |
+
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+       """
+       slowQueueOverflowPolicy=2
+       """
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                       | expect         | db               |
+      | conn_0 | False   | reload @@slow_query.queue_policy= 1                                                       | success        | dble_information |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+       """
+       slowQueueOverflowPolicy=1
+       """
