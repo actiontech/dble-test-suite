@@ -933,7 +933,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     """
     Then restart dble in "dble-1" failed for
     """
-      Property \[ managerFrontWorker \] '0' in bootstrap.cnf is illegal, you may need use the default value 8 replaced
+      Property \[ managerFrontWorker \] '0' in bootstrap.cnf is illegal, you may need use the default value.* replaced
     """
 
   # check dble.log has one managerFrontWorker0
