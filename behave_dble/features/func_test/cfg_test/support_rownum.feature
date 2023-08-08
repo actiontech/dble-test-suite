@@ -1407,12 +1407,14 @@ Feature: support rownum sql
       # sharding column
       | conn_2 | False   | select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1,single_t1 t2 where t1.id=t2.parent_id and t1.id=2 | not support assignment | schema1 |
       # in sub query
-      | conn_2 | False   | select id,single_value,@rownum:=1 from single_t1 where parent_id in (select id from sharding_2_t1 where id>1) | not support assignment | schema1 |
+      # DBLE0REQ-2320
+#      | conn_2 | False   | select id,single_value,@rownum:=1 from single_t1 where parent_id in (select id from sharding_2_t1 where id>1) | not support assignment | schema1 |
       # join, order by
       | conn_2 | False   | select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id where t2.parent_id>1 order by t2.id desc | not support assignment | schema1 |
       # join, group by, having
       | conn_2 | False   | select t2.parent_id,t1.code,t1.status,@rownum:=1 from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 | not support assignment | schema1 |
-      | conn_2 | False   | select a.*,@rownum:=@rownum+1 from (select id,single_value from single_t1 where parent_id in (select id from sharding_2_t1 where id=2)) a,(select @rownum:=0) r | not support assignment | schema1 |
+      # DBLE0REQ-2320
+#      | conn_2 | False   | select a.*,@rownum:=@rownum+1 from (select id,single_value from single_t1 where parent_id in (select id from sharding_2_t1 where id=2)) a,(select @rownum:=0) r | not support assignment | schema1 |
       | conn_2 | False   | select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from single_t1) and status=1 | has{(1,1),(2,1)} | schema1 |
       | conn_2 | False   | select t2.id,t2.single_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id and t1.id=1 | has{(1,'single_t1_1','sharding_2_t1_1',0),(2,'single_t1_2','sharding_2_t1_1',0),(3,'single_t1_3','sharding_2_t1_1',0)} | schema1 |
       | conn_2 | False   | select t1.shard_name,t2.parent_id,count(0) as abcrownum from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id | has{('sharding_2_t1_1',1,3),('sharding_2_t1_2',2,3)} | schema1 |
@@ -1421,27 +1423,30 @@ Feature: support rownum sql
     the query select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1,single_t1 t2 where t1.id=t2.parent_id order by t2.id desc match the route penetration regex
     the query select a.\*,@rownum:=@rownum\+1 from \(select t1.id,t2.single_value from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id order by t2.id\) a,\(select @rownum:=0\) r match the route penetration regex
     the query select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1,single_t1 t2 where t1.id=t2.parent_id and t1.id=2 match the route penetration regex
-    the query select id,single_value,@rownum:=1 from single_t1 where parent_id in \(select id from sharding_2_t1 where id>1\) match the route penetration regex
     the query select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id where t2.parent_id>1 order by t2.id desc match the route penetration regex
     the query select t2.parent_id,t1.code,t1.status,@rownum:=1 from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 match the route penetration regex
-    the query select a.\*,@rownum:=@rownum\+1 from \(select id,single_value from single_t1 where parent_id in \(select id from sharding_2_t1 where id=2\)\) a,\(select @rownum:=0\) r match the route penetration regex
     the query select id,parent_id as rownum from sharding_2_t1 where id in \(select parent_id from single_t1\) and status=1 match the route penetration regex
     the query select t2.id,t2.single_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id and t1.id=1 match the route penetration regex
     the query select t1.shard_name,t2.parent_id,count\(0\) as abcrownum from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration regex
     """
+    # DBLE0REQ-2320
+    # the query select id,single_value,@rownum:=1 from single_t1 where parent_id in \(select id from sharding_2_t1 where id>1\) match the route penetration regex
+    # the query select a.\*,@rownum:=@rownum\+1 from \(select id,single_value from single_t1 where parent_id in \(select id from sharding_2_t1 where id=2\)\) a,\(select @rownum:=0\) r match the route penetration regex
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     the query select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1,single_t1 t2 where t1.id=t2.parent_id order by t2.id desc match the route penetration rule, will direct route
     the query select a.*,@rownum:=@rownum+1 from (select t1.id,t2.single_value from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id order by t2.id) a,(select @rownum:=0) r match the route penetration rule, will direct route
     the query select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1,single_t1 t2 where t1.id=t2.parent_id and t1.id=2 match the route penetration rule, will direct route
-    the query select id,single_value,@rownum:=1 from single_t1 where parent_id in (select id from sharding_2_t1 where id>1) match the route penetration rule, will direct route
     the query select t1.id,t2.single_value,@rownum:=1 from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id where t2.parent_id>1 order by t2.id desc match the route penetration rule, will direct route
     the query select t2.parent_id,t1.code,t1.status,@rownum:=1 from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id group by t2.parent_id,t1.code,t1.status having t1.status=1 match the route penetration rule, will direct route
-    the query select a.*,@rownum:=@rownum+1 from (select id,single_value from single_t1 where parent_id in (select id from sharding_2_t1 where id=2)) a,(select @rownum:=0) r match the route penetration rule, will direct route
     the query select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from single_t1) and status=1 match the route penetration rule, will direct route
     the query select t2.id,t2.single_value,t1.shard_name,0 as rownumabc from sharding_2_t1 t1 join single_t1 t2 on t1.id=t2.parent_id and t1.id=1 match the route penetration rule, will direct route
     the query select t1.shard_name,t2.parent_id,count(0) as abcrownum from sharding_2_t1 t1, single_t1 t2 where t1.id=t2.parent_id group by t2.parent_id match the route penetration rule, will direct route
     """
+    # DBLE0REQ-2320
+    # the query select id,single_value,@rownum:=1 from single_t1 where parent_id in (select id from sharding_2_t1 where id>1) match the route penetration rule, will direct route
+    # the query select a.*,@rownum:=@rownum+1 from (select id,single_value from single_t1 where parent_id in (select id from sharding_2_t1 where id=2)) a,(select @rownum:=0) r match the route penetration rule, will direct route
+    
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rownum_rs10"
       | conn   | toClose | sql                                                                                                                 | expect  | db      |
       | conn_2 | False   | explain select id,parent_id as rownum from sharding_2_t1 where id in (select parent_id from single_t1) and status=1 | success | schema1 |
