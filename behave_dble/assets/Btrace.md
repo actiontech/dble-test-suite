@@ -231,6 +231,9 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.backend.datasource.PhysicalDbGroup#bindRwSplitSession||读写分离模式，标记dbGroup为使用中|
 |com.actiontech.dble.backend.datasource.PhysicalDbGroup#rwSelect||读写分离模式，标记dbGroup为使用中后，选择dbInstance之前|
 |com.actiontech.dble.backend.pool.ConnectionPool#line=400||后端连接在连接池中的状态保持evict状态|
+|com.actiontech.dble.server.ServerQueryHandler#query||分库分表用户执行sql的线程|
+|com.actiontech.dble.services.rwsplit.RWSplitQueryHandler#query||读写分离用户执行sql的线程|
+|com.actiontech.dble.services.manager.ManagerQueryHandler#query||管理端执行sql的线程|
 
 ### 小版本改动：
 * 版本号
