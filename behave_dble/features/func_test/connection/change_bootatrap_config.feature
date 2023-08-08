@@ -5,7 +5,7 @@
 
 Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool"
 
-  NIOFrontRW、NIOBackendRW、frontWorker、backendWorker、complexQueryWorker、writeToBackendWorker
+  NIOFrontRW、NIOBackendRW、frontWorker、backendWorker、complexQueryWorker、writeToBackendWorker、managerFrontWorker
 
 
   Scenario: basic test about 'update'  #1
@@ -15,6 +15,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       $a  -DwriteToBackendWorker=1
       $a  -DNIOBackendRW=1
       $a  -DcomplexQueryWorker=2
+      $a  -DmanagerFrontWorker=1
       """
     Then restart dble in "dble-1" success
     # keepAlivetime is 60s, 'complexExecutor' heartbeat and 9066 cmd would use it, but when the heartbeat frequently，it will effect recycle complexQueryWorker.so remove the pool_size column. from DBLE0REQ-2007
@@ -31,6 +32,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | writeToBackendWorker    | 1                | 1              | 0                    |
       | NIOFrontRW              | 1                | 1              | 0                    |
       | NIOBackendRW            | 1                | 1              | 0                    |
+      | managerFrontWorker      | 1                | 1              | 0                    |
     Then check "/opt/dble/conf/bootstrap.dynamic.cnf" in "dble-1" was empty
 
     # unsupported insert and delete
@@ -48,6 +50,8 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn_0 | False   | update dble_thread_pool set core_pool_size='null' where name ='backendWorker'       | Not Supported of Value EXPR :'null'                                 | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=null where name ='frontWorker'           | Column 'core_pool_size' cannot be null                              | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=-1 where name ='NIOFrontRW'              | Column 'core_pool_size' should be a positive integer greater than 0 | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size='abc' where name ='managerFrontWorker'   | Update failure.The reason is incorrect integer value: 'abc'         | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=0 where name ='managerFrontWorker'       | Column 'core_pool_size' should be a positive integer greater than 0 | dble_information |
 
     # unsupported update "name/active_count/waiting_task_count/pool_size"
       | conn_0 | False   | update dble_thread_pool set name='a' where name ='NIOFrontRW'             | Primary column 'name' can not be update, please use delete & insert     | dble_information |
@@ -55,7 +59,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn_0 | False   | update dble_thread_pool set waiting_task_count=3 where name ='NIOFrontRW' | Column 'name/active_count/waiting_task_count/pool_size' is not writable | dble_information |
       | conn_0 | False   | update dble_thread_pool set pool_size=3 where name ='NIOFrontRW'          | Column 'name/active_count/waiting_task_count/pool_size' is not writable | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=8 where name='Timer'           | the current line does not support modification                          | dble_information |
-      | conn_0 | False   | update dble_thread_pool set core_pool_size=8 where name not in ('frontWorker','backendWorker','complexQueryWorker','writeToBackendWorker') | the current line does not support modification | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=8 where name not in ('frontWorker','backendWorker','complexQueryWorker','writeToBackendWorker','managerFrontWorker') | the current line does not support modification | dble_information |
 
     Then check "/opt/dble/conf/bootstrap.dynamic.cnf" in "dble-1" was empty
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
@@ -68,7 +72,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn_0 | False   | update dble_thread_pool set core_pool_size=2 where name ='NIOFrontRW'                                                                                         | success | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='NIOFront' or name ='NIOBackendRW'                                                                   | success | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=6 where name like 'NIO%'                                                                                           | success | dble_information |
-      | conn_0 | False   | update dble_thread_pool set core_pool_size=8 where name in ('frontWorker','backendWorker','complexQueryWorker','writeToBackendWorker')                        | success | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=8 where name in ('frontWorker','backendWorker','complexQueryWorker','writeToBackendWorker','managerFrontWorker')   | success | dble_information |
       | conn_0 | true    | update dble_thread_pool set core_pool_size=10 where name not in ('Timer')                                                                                     | success | dble_information |
 
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
@@ -83,11 +87,12 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       backendWorker=10
       NIOBackendRW=10
       writeToBackendWorker=10
+      managerFrontWorker=10
       """
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect                                                | db               |
-      | conn_0 | true    | select core_pool_size from dble_thread_pool         | has{((1,), (10,), (10,), (10,), (10,), (10,), (10,))} | dble_information |
+      | conn_0 | true    | select name,core_pool_size from dble_thread_pool    | has{(('Timer',1), ('frontWorker',10), ('backendWorker',10), ('complexQueryWorker',10), ('writeToBackendWorker',10), ('NIOFrontRW',10), ('NIOBackendRW',10), ('managerFrontWorker',10))} | dble_information |
 
     Then Restart dble in "dble-1" success
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
@@ -98,10 +103,11 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       backendWorker=10
       NIOBackendRW=10
       writeToBackendWorker=10
+      managerFrontWorker=10
       """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                              | expect                                                | db               |
-      | conn_0 | False   | select core_pool_size from dble_thread_pool      | has{((1,), (10,), (10,), (10,), (10,), (10,), (10,))} | dble_information |
+      | conn_0 | true    | select name,core_pool_size from dble_thread_pool | has{(('Timer',1), ('frontWorker',10), ('backendWorker',10), ('complexQueryWorker',10), ('writeToBackendWorker',10), ('NIOFrontRW',10), ('NIOBackendRW',10), ('managerFrontWorker',10))} | dble_information |
 
 
   @skip_restart
@@ -909,3 +915,212 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceAboutBootstrap.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutBootstrap.java.log" on "dble-1"
+
+  # DBLE0REQ-2111
+  Scenario: test "managerFrontWorker"  #10
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+      /-DmanagerFrontWorker=/d
+      $a -DmanagerFrontWorker=abc
+    """
+    Then restart dble in "dble-1" failed for
+    """
+      property \[ managerFrontWorker \] 'abc' data type should be int
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+      s/-DmanagerFrontWorker=abc/-DmanagerFrontWorker=0/
+    """
+    Then restart dble in "dble-1" failed for
+    """
+      Property \[ managerFrontWorker \] '0' in bootstrap.cnf is illegal, you may need use the default value 8 replaced
+    """
+
+  # check dble.log has one managerFrontWorker0
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+     """
+     s/-DmanagerFrontWorker=0/-DmanagerFrontWorker=1/
+     $a  -DuseThreadUsageStat=1
+     """
+   Then restart dble in "dble-1" success
+    Given execute "admin" sql "100" times in "dble-1" together use 100 connection not close
+      | sql                   | db               |
+      | select * from version | dble_information |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      \[0-managerFrontWorker\]
+      """
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      \[1-managerFrontWorker\]
+      \[2-managerFrontWorker\]
+      \[3-managerFrontWorker\]
+      """
+
+    # change core_pool_size 1-4
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                   | expect                                 | db               |
+      | conn_0 | False   | select variable_value from dble_variables where variable_name='managerFrontWorker'    | has{(('1',),)}                         | dble_information |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like '%-managerFrontWorker'         | length{(1)}                            | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='managerFrontWorker'         | success                                | dble_information |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name ='managerFrontWorker'     | has{(('managerFrontWorker', 4),)}      | dble_information |
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep 'managerFrontWorker' | wc -l
+      """
+    Then check result "A" value is "4"
+    # use dble.log check
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                        | occur_times |
+      | will execute thread                        | 3           |
+      | Running, pool size = 1                     | 1           |
+      | Running, pool size = 2                     | 1           |
+      | Running, pool size = 3                     | 1           |
+      | set to file success:/bootstrap.dynamic.cnf | 1           |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      managerFrontWorker=4
+      """
+
+    Given execute "admin" sql "200" times in "dble-1" together use 100 connection not close
+      | sql                   | db               |
+      | select * from version | dble_information |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      \[0-managerFrontWorker\]
+      \[1-managerFrontWorker\]
+      \[2-managerFrontWorker\]
+      \[3-managerFrontWorker\]
+      """
+
+    # change core_pool_size 4-2
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                               | expect                            | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like '%-managerFrontWorker'     | length{(4)}                       | dble_information |
+      | conn_0 | true    | update dble_thread_pool set core_pool_size=2 where name ='managerFrontWorker'     | success                           | dble_information |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                               | expect                            | db               | timeout |
+      | conn_0 | true    | select name,core_pool_size from dble_thread_pool where name ='managerFrontWorker' | has{(('managerFrontWorker', 2),)} | dble_information | 3       |
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep 'managerFrontWorker' | wc -l
+      """
+    Then check result "A" value is "2"
+    # use dble.log check
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                        | occur_times |
+      | will interrupt thread                      | 2           |
+      | set to file success:/bootstrap.dynamic.cnf | 2           |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      managerFrontWorker=2
+      """
+    Given execute "admin" sql "100" times in "dble-1" together use 100 connection not close
+      | sql                   | db               |
+      | select * from version | dble_information |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                           | expect      | db               |
+      | conn_0 | true    | select * from dble_thread_usage where thread_name like '%-managerFrontWorker' | length{(2)} | dble_information |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      setError
+      unknown error:
+      caught err:
+      NullPointerException
+      """
+
+  # DBLE0REQ-2111
+  Scenario: test "managerFrontWorker" btrace  #11
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                              | expect     | db               |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=2 where name in ('NIOFrontRW','frontWorker','managerFrontWorker')     | success    | dble_information |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name in ('NIOFrontRW','frontWorker','managerFrontWorker') | has{(('NIOFrontRW', 2),('frontWorker', 2),('managerFrontWorker', 2))} | dble_information |
+    
+    Given delete file "/opt/dble/BtraceQueryHandler.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceQueryHandler.java.log" on "dble-1"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="3" name="ha_group3" delayThreshold="100">
+      <heartbeat>select user()</heartbeat>
+      <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="100" minCon="20" primary="true" />
+      <dbInstance name="hostS3" password="111111" url="172.100.9.4:3307" user="test" maxCon="100" minCon="20" primary="false" />
+    </dbGroup>
+    """
+
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                 | expect  | db      |
+      | conn_1 | False   | drop table if exists sharding_4_t1                  | success | schema1 |
+
+    Given prepare a thread run btrace script "BtraceQueryHandler.java" in "dble-1"
+    Given prepare a thread execute sql "create table sharding_4_t1(id int,name varchar(20))" with "conn_1"
+    # 分库分表用户执行sql进桩
+    Then check btrace "BtraceQueryHandler.java" output in "dble-1"
+      """
+      get into shardingQuery
+      """
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                | expect     | db               |
+      | conn_0 | False   | reload @@config_all                | success    | dble_information |     
+      | conn_0 | False   | select * from dble_thread_pool     | success    | dble_information |
+    #管理端执行sql不进桩，桩仍旧只输出一次  
+    Then check btrace "BtraceQueryHandler.java" output in "dble-1"
+      """
+      get into shardingQuery
+      """
+    Given stop btrace script "BtraceQueryHandler.java" in "dble-1"
+    Given destroy btrace threads list
+    Given delete file "/opt/dble/BtraceQueryHandler.java.log" on "dble-1"
+
+    Then execute sql in "dble-1" in "user" mode
+      | user  | passwd | conn   | toClose | sql                                              | expect  | db  |
+      | rwS1  | 111111 | conn_2 | False   | drop table if exists test_table                  | success | db1 |
+      | rwS1  | 111111 | conn_2 | False   | create table test_table(id int,name varchar(20)) | success | db1 |
+    Given prepare a thread run btrace script "BtraceQueryHandler.java" in "dble-1"
+    Given prepare a thread execute sql "insert into test_db values (1, 'name1')" with "conn_2"
+    # 读写分离用户执行sql进桩
+    Then check btrace "BtraceQueryHandler.java" output in "dble-1"
+      """
+      get into rwSplitQuery
+      """
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                | expect     | db               |
+      | conn_0 | False   | show @@heartbeat                   | success    | dble_information |
+      | conn_0 | False   | select * from dble_thread_pool     | success    | dble_information | 
+    #管理端执行sql不进桩，桩仍旧只输出一次
+    Then check btrace "BtraceQueryHandler.java" output in "dble-1"
+      """
+      get into rwSplitQuery
+      """ 
+    Given stop btrace script "BtraceQueryHandler.java" in "dble-1"
+    Given destroy btrace threads list
+    Given delete file "/opt/dble/BtraceQueryHandler.java.log" on "dble-1"
+
+    Given prepare a thread run btrace script "BtraceQueryHandler.java" in "dble-1"
+    Given prepare a thread execute sql "show @@heartbeat" with "conn_0"
+    # 管理用户执行sql进桩
+    Then check btrace "BtraceQueryHandler.java" output in "dble-1"
+      """
+      get into managerQuery
+      """
+    Then execute sql in "dble-1" in "user" mode
+      | user  | passwd | conn   | toClose | sql                                              | expect  | db      |
+      | test  | 111111 | conn_1 | False   | insert into sharding_4_t1 values (1,'x'),(2,'y') | success | schema1 |
+      | test  | 111111 | conn_1 | False   | select * from sharding_4_t1                      | success | schema1 |
+      | test  | 111111 | conn_1 | True    | drop table if exists sharding_4_t1               | success | schema1 |
+      | rwS1  | 111111 | conn_2 | False   | select * from test_table                         | success | db1     |
+      | rwS1  | 111111 | conn_2 | True    | drop table if exists test_table                  | success | db1     |
+    #分库分表、读写分离用户执行sql不进桩，桩仍旧只输出一次
+    Then check btrace "BtraceQueryHandler.java" output in "dble-1"
+      """
+      get into managerQuery
+      """ 
+    Given stop btrace script "BtraceQueryHandler.java" in "dble-1"
+    Given destroy btrace threads list
+    Given delete file "/opt/dble/BtraceQueryHandler.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceQueryHandler.java.log" on "dble-1"
