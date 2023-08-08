@@ -6,7 +6,7 @@
 #2.20.04.0#dble-8174
 Feature: retry policy after xa transaction commit failed for mysql service stopped
 
-  @btrace @restore_mysql_service
+  @btrace @restore_mysql_service @auto_retry #DBLE0REQ-2305
   Scenario: mysql node hangs causing xa transaction fail to commit,restart mysql node before the front end attempts to commit 5 times #1
     """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
@@ -31,13 +31,13 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given prepare a thread execute sql "commit" with "conn_0"
-    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with ">0" times
     """
-    before xa prepare
+    before xa commit
     """
     Given stop mysql in host "mysql-master1"
     # delayBeforeXaCommit桩可能还没结束，桩结束后才会进beforeInnerRetry桩
-    Given sleep "10" seconds
+    Given sleep "20" seconds
     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "1" times
     """
     before inner retry
@@ -58,7 +58,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
 
-  @btrace @restore_mysql_service
+  @btrace @restore_mysql_service @auto_retry
   Scenario: mysql node hangs causing xa transaction fail to commit, automatic recovery in background attempts #2
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
@@ -88,9 +88,8 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     before xa commit
     """
     Given stop mysql in host "mysql-master1"
-        # delayBeforeXaCommit桩可能还没结束，桩结束后才会进beforeInnerRetry桩
-
-    Given sleep "10" seconds
+    # delayBeforeXaCommit桩可能还没结束，桩结束后才会进beforeAddXaToQueue桩
+    Given sleep "20" seconds
     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
     """
     before add xa

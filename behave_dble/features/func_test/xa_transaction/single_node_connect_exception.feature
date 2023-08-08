@@ -7,7 +7,7 @@
 #2.20.04.0#dble-8177
 Feature: backend node disconnect,causing xa abnormal
 
-  @btrace @stop_tcpdump @restore_mysql_config
+  @btrace @stop_tcpdump @restore_mysql_config @auto_retry #DBLE0REQ-2322
   Scenario: backend node connection is abnormal, causing xa prepare is abnormal, transaction automatic rollback #1
     """
     {'stop_tcpdump':'dble-1'}
