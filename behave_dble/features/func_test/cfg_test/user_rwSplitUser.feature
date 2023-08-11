@@ -324,6 +324,8 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@processor                                                  | success       |
       | conn_0 | False   | show @@command                                                    | length{(1)}   |
       | conn_0 | False   | show @@connection                                                 | length{(2)}   |
+      # DBLE0REQ-1381
+      | conn_0 | False   | show @@connection.sql                                             | length{(2)}   |
       | conn_0 | False   | show @@cache                                                      | length{(2)}   |
       | conn_0 | False   | show @@sql.condition                                              | length{(2)}   |
       | conn_0 | False   | show @@heartbeat                                                  | length{(4)}   |
