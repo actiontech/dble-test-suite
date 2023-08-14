@@ -706,3 +706,7 @@ Feature: test slow query log related manager command
        """
        slowQueueOverflowPolicy=1
        """
+
+  @btrace
+  Scenario:test slowQueueOverflowPolicy on slowlog      #10
+
