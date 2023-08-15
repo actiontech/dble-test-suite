@@ -136,7 +136,7 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect         | timeout |
       | conn_1 | False   | show @@sql.sum       | length{(1)}    | 5       |
       | conn_1 | False   | show @@sql.sum.user  | hasStr{'test'} | 5       |
-      | conn_1 | False   | show @@sql.sum.table | hasStr{'test'} | 5       |
+      | conn_1 | False   | show @@sql.sum.table | hasStr{'schema1.test'} | 5       |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql1"
       | sql            |
@@ -150,7 +150,7 @@ Feature: show @@sql XXX
       | show @@sql.sum.table |
     Then check resultset "sql2" has lines with following column values
       | ID-0 | TABLE-1 | R-2 | W-3 | R%-4 | RELATABLE-5 | RELACOUNT-6 |
-      | 1    | test    | 3   | 5   | 0.38 | NULL        | NULL        |
+      | 1    | schema1.test    | 3   | 8   | 0.27 | NULL        | NULL        |
 
    ### case 2: 多语句
     Then execute sql in "dble-1" in "user" mode
@@ -162,7 +162,7 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect                                 | timeout |
       | conn_1 | False   | show @@sql.sum       | length{(1)}                            | 5       |
       | conn_1 | False   | show @@sql.sum.user  | hasStr{'test'}                         | 5       |
-      | conn_1 | False   | show @@sql.sum.table | hasStr{'test'},hasStr{'sharding_4_t1'} | 5       |
+      | conn_1 | False   | show @@sql.sum.table | hasStr{'schema1.test'},hasStr{'schema1.sharding_4_t1'} | 5       |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql3"
       | sql                  |
@@ -175,8 +175,8 @@ Feature: show @@sql XXX
       | show @@sql.sum.table |
     Then check resultset "sql4" has lines with following column values
       | ID-0 | TABLE-1          | R-2 | W-3 | R%-4 | RELATABLE-5 | RELACOUNT-6 |
-      | 1    | test             | 3   | 5   | 0.38 | NULL        | NULL        |
-      | 2    | sharding_4_t1    | 0   | 3   | 0.00 | NULL        | NULL        |
+      | 1    | schema1.test             | 3   | 8   | 0.27 | NULL        | NULL        |
+      | 2    | schema1.sharding_4_t1    | 0   | 6   | 0.00 | NULL        | NULL        |
 
     ### case 3:事务+复杂语句+其他shardinguser+hint
     Then execute sql in "dble-1" in "user" mode
@@ -194,7 +194,7 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect                                                                            | timeout  |
       | conn_1 | False   | show @@sql.sum       | length{(2)}                                                                       | 5        |
       | conn_1 | False   | show @@sql.sum.user  | length{(2)}                                                                       | 5        |
-      | conn_1 | False   | show @@sql.sum.table | hasStr{'test'},hasStr{'sharding_4_t1'},hasStr{'sharding_4_t1 a'},hasStr{'test b'} | 5        |
+      | conn_1 | False   | show @@sql.sum.table | hasStr{'schema1.test'},hasStr{'schema1.sharding_4_t1'},hasStr{'schema1.sharding_4_t1 a'},hasStr{'schema1.test b'} | 5        |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql5"
       | sql                  |
@@ -208,10 +208,9 @@ Feature: show @@sql XXX
       | sql                  |
       | show @@sql.sum.table |
     Then check resultset "sql6" has lines with following column values
-      | ID-0 | TABLE-1          | R-2 | W-3 | R%-4 | RELATABLE-5 | RELACOUNT-6 |
-      | 1    | test             | 4   | 9   | 0.31 | NULL        | NULL        |
-      | 2    | sharding_4_t1    | 0   | 4   | 0.00 | NULL        | NULL        |
-      | 3    | sharding_4_t1 a  | 1   | 0   | 1.00 | test b,     | 1,          |
+      | ID-0 | TABLE-1                  | R-2 | W-3 | R%-4 | RELATABLE-5 | RELACOUNT-6 |
+      | 1    | schema1.test             | 4   | 12   | 0.25 | NULL        | NULL        |
+      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.test,         | 2,         |
 
     ### case 4:错误的语句+select + show + set + view
     Then execute sql in "dble-1" in "user" mode
@@ -231,7 +230,7 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect                                                                            | timeout  |
       | conn_1 | False   | show @@sql.sum       | length{(2)}                                                                       | 5        |
       | conn_1 | False   | show @@sql.sum.user  | length{(2)}                                                                       | 5        |
-      | conn_1 | False   | show @@sql.sum.table | hasStr{'test'},hasStr{'sharding_4_t1'},hasStr{'sharding_4_t1 a'},hasStr{'test b'} | 5        |
+      | conn_1 | False   | show @@sql.sum.table | hasStr{'schema1.test'},hasStr{'schema1.sharding_4_t1'},hasStr{'schema1.sharding_4_t1 a'},hasStr{'schema1.test b'} | 5        |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql7"
       | sql                  |
       | show @@sql.sum.user  |
@@ -245,9 +244,9 @@ Feature: show @@sql XXX
       | show @@sql.sum.table |
     Then check resultset "sql8" has lines with following column values
       | ID-0 | TABLE-1          | R-2 | W-3 | R%-4 | RELATABLE-5 | RELACOUNT-6 |
-      | 1    | test             | 4   | 9   | 0.31 | NULL        | NULL        |
-      | 2    | sharding_4_t1    | 0   | 4   | 0.00 | NULL        | NULL        |
-      | 3    | sharding_4_t1 a  | 1   | 0   | 1.00 | test b,     | 1,          |
+      | 1    | schema1.test             | 4   | 13   | 0.24 | NULL        | NULL        |
+      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.test,         | 2,         |
+      | 3    | schema1.view_test        | 0   | 1    | 0.00 | NULL         | NULL        |
 
    ### case 5:load data语句不记录
     Given execute oscmd in "dble-1"
@@ -261,7 +260,7 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect                                                                            | timeout |
       | conn_1 | False   | show @@sql.sum       | length{(2)}                                                                       |         |
       | conn_1 | False   | show @@sql.sum.user  | length{(2)}                                                                       |         |
-      | conn_1 | False   | show @@sql.sum.table | hasStr{'test'},hasStr{'sharding_4_t1'},hasStr{'sharding_4_t1 a'},hasStr{'test b'} |         |
+      | conn_1 | False   | show @@sql.sum.table | hasStr{'schema1.test'},hasStr{'schema1.sharding_4_t1'},hasStr{'schema1.sharding_4_t1 a'},hasStr{'schema1.test b'} |         |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql9"
       | sql                  |
@@ -275,9 +274,9 @@ Feature: show @@sql XXX
       | show @@sql.sum.table |
     Then check resultset "sql10" has lines with following column values
       | ID-0 | TABLE-1          | R-2 | W-3 | R%-4 | RELATABLE-5 | RELACOUNT-6 |
-      | 1    | test             | 4   | 9   | 0.31 | NULL        | NULL        |
-      | 2    | sharding_4_t1    | 0   | 4   | 0.00 | NULL        | NULL        |
-      | 3    | sharding_4_t1 a  | 1   | 0   | 1.00 | test b,     | 1,          |
+      | 1    | schema1.test             | 4   | 13   | 0.24 | NULL        | NULL        |
+      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.test,         | 2,         |
+      | 3    | schema1.view_test        | 0   | 1    | 0.00 | NULL         | NULL        |
 
     ### case 6:记录除了管理端用户外的用户执行的sql
     Then execute sql in "dble-1" in "user" mode
@@ -289,7 +288,7 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect                                                                            | timeout  |
       | conn_1 | False   | show @@sql.sum       | length{(4)}                                                                       | 5        |
       | conn_1 | False   | show @@sql.sum.user  | length{(4)}                                                                       | 5        |
-      | conn_1 | False   | show @@sql.sum.table | hasStr{'test'},hasStr{'sharding_4_t1'},hasStr{'sharding_4_t1 a'},hasStr{'test b'} | 5        |
+      | conn_1 | False   | show @@sql.sum.table | hasStr{'schema1.test'},hasStr{'schema1.sharding_4_t1'},hasStr{'schema1.sharding_4_t1 a'},hasStr{'schema1.test b'} | 5        |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql11"
       | sql                  |
       | show @@sql.sum.user  |
@@ -304,10 +303,10 @@ Feature: show @@sql XXX
       | sql                  |
       | show @@sql.sum.table |
     Then check resultset "sql12" has lines with following column values
-      | ID-0 | TABLE-1          | R-2 | W-3 | R%-4 | RELATABLE-5 | RELACOUNT-6 |
-      | 1    | test             | 4   | 9   | 0.31 | NULL        | NULL        |
-      | 2    | sharding_4_t1    | 0   | 4   | 0.00 | NULL        | NULL        |
-      | 3    | sharding_4_t1 a  | 1   | 0   | 1.00 | test b,     | 1,          |
+      | ID-0 | TABLE-1                  | R-2 | W-3  | R%-4 | RELATABLE-5           | RELACOUNT-6 |
+      | 1    | schema1.test             | 4   | 13   | 0.24 | NULL                  | NULL        |
+      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.test,         | 2,          |
+      | 3    | schema1.view_test        | 0   | 1    | 0.00 | NULL                  | NULL        |
 
      ### case 7: show @@sql xxx true 会重置清空数据
     Then execute sql in "dble-1" in "admin" mode
@@ -360,30 +359,27 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect         | timeout  |
       | conn_1 | False   | show @@sql.sum       | length{(3)}    | 5        |
       | conn_1 | False   | show @@sql.sum.user  | length{(3)}    | 5        |
-      | conn_1 | False   | show @@sql.sum.table | length{(9)}    | 5        |
+      | conn_1 | False   | show @@sql.sum.table | length{(5)}    | 5        |
 
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql14"
-#      | sql              |
-#      | show @@sql.sum   |
-#    Then check resultset "sql13" has lines with following column values
-#      | USER-1       | R-2 | W-3  | R%-4 | MAX-5 |
-#      | test         | 6   | 23   | 0.21 | 1     |
-#      | test1        | 1   | 0    | 1.00 | 1     |
-#      | test2:ten1   | 1   | 0    | 1.00 | 1     |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql14"
+      | sql              |
+      | show @@sql.sum   |
+    Then check resultset "sql14" has lines with following column values
+      | USER-1       | R-2 | W-3  | R%-4 | MAX-5 |
+      | test         | 6   | 23   | 0.21 | 1     |
+      | test1        | 1   | 0    | 1.00 | 1     |
+      | test2:ten1   | 1   | 0    | 1.00 | 1     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql15"
       | sql                  |
       | show @@sql.sum.table |
     Then check resultset "sql15" has lines with following column values
-      | ID-0 | TABLE-1         | R-2 | W-3 | R%-4 | RELATABLE-5           | RELACOUNT-6 |
-      | 1    | sharding_2_t1   | 1   | 3   | 0.25 | sharding2,            | 1,          |
-      | 2    | test            | 0   | 4   | 0.00 | global2,              | 2,          |
-      | 3    | sharding_2_t1 a | 1   | 1   | 0.50 | sing1 b, sharding2 b, | 1, 1,       |
-      | 4    | sharding2       | 0   | 2   | 0.00 | NULL                  | NULL        |
-      | 5    | sing1           | 0   | 2   | 0.00 | NULL                  | NULL        |
-      | 6    | sing1 tmp       | 1   | 0   | 1.00 | NULL                  | NULL        |
-      | 7    | global2 a       | 1   | 0   | 1.00 | sharding_2_t1 b,      | 1,          |
-      | 8    | test a          | 1   | 0   | 1.00 | sharding_2_t1 b,      | 1,          |
-      | 9    | global2         | 0   | 1   | 0.00 | NULL                  | NULL        |
+      | ID-0 | TABLE-1               | R-2 | W-3 | R%-4 | RELATABLE-5                                                      | RELACOUNT-6 |
+      | 1    | schema1.sharding_2_t1 | 4   | 6   | 0.40 | schema2.sharding2, schema2.global2, schema2.sing1, schema1.test, | 4, 1, 1, 1, |
+      | 2    | schema1.test          | 0   | 6   | 0.00 | schema2.global2,                                                 | 3,          |
+      | 3    | schema2.sing1         | 1   | 4   | 0.20 | NULL                                                             | NULL        |
+      | 4    | schema2.sharding2     | 0   | 4   | 0.00 | NULL                                                             | NULL        |
+      | 5    | schema2.global2       | 0   | 3   | 0.00 | NULL                                                             | NULL        |
+
 
     Given execute sql "1050" times in "dble-1" at concurrent 1000
      | user  | sql                                                                                             | db      |
@@ -392,7 +388,7 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect         | timeout  |
       | conn_1 | False   | show @@sql.sum       | length{(3)}    | 5        |
       | conn_1 | False   | show @@sql.sum.user  | length{(3)}    | 5        |
-      | conn_1 | False   | show @@sql.sum.table | length{(9)}    | 5        |
+      | conn_1 | False   | show @@sql.sum.table | length{(5)}    | 5        |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql16"
       | sql              |
       | show @@sql.sum   |
@@ -405,8 +401,8 @@ Feature: show @@sql XXX
       | sql                  |
       | show @@sql.sum.table |
     Then check resultset "sql16" has lines with following column values
-      | TABLE-1  | R-2 | W-3    | R%-4 | RELATABLE-5         | RELACOUNT-6 |
-      | test     | 0   | 1054   | 0.00 | global2,            | 1052,       |
+      | TABLE-1          | R-2 | W-3    | R%-4 | RELATABLE-5                 | RELACOUNT-6 |
+      | schema1.test     | 0   | 1056   | 0.00 | schema2.global2,            | 1053,       |
 
     ### case 10: 读写分离用户的各种sql组合
     Then execute sql in "dble-1" in "user" mode
@@ -429,7 +425,7 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect         | timeout  |
       | conn_1 | False   | show @@sql.sum       | length{(4)}    | 5        |
       | conn_1 | False   | show @@sql.sum.user  | length{(4)}    | 5        |
-      | conn_1 | False   | show @@sql.sum.table | length{(13)}   | 5        |
+      | conn_1 | False   | show @@sql.sum.table | length{(7)}   | 5        |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql17"
       | sql              |
       | show @@sql.sum   |
@@ -443,11 +439,9 @@ Feature: show @@sql XXX
       | sql                  |
       | show @@sql.sum.table |
     Then check resultset "sql18" has lines with following column values
-      | TABLE-1      | R-2 | W-3 | R%-4 | RELATABLE-5    | RELACOUNT-6 |
-      | test_table   | 2   | 5   | 0.29 | test_table1,   | 2,          |
-      | test_table1  | 0   | 5   | 0.00 | NULL           | NULL        |
-      | test_table n | 1   | 0   | 1.00 | test_table1 s, | 1,          |
-      | test_table a | 0   | 1   | 0.00 | test_table1 b, | 1,          |
+      | TABLE-1          | R-2 | W-3 | R%-4 | RELATABLE-5                         | RELACOUNT-6 |
+      | db1.test_table   | 3   | 8   | 0.27 | db2.test_table1, db1.test_table,    | 5, 3,       |
+      | db2.test_table1  | 0   | 7   | 0.00 | db2.test_table1, db1.test_table,    | 2, 1,       |
 
     ### case 11: ps协议
     Then execute prepared sql "select %s from test where id =%s" with params "(name,1);(id,3)" on db "schema1" and user "test"
@@ -457,7 +451,7 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect         | timeout  |
       | conn_1 | False   | show @@sql.sum       | length{(4)}    | 5        |
       | conn_1 | False   | show @@sql.sum.user  | length{(4)}    | 5        |
-      | conn_1 | False   | show @@sql.sum.table | length{(13)}   | 5        |
+      | conn_1 | False   | show @@sql.sum.table | length{(7)}   | 5        |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql18"
       | sql              |
       | show @@sql.sum   |
@@ -471,9 +465,9 @@ Feature: show @@sql XXX
       | sql                  |
       | show @@sql.sum.table |
     Then check resultset "sql19" has lines with following column values
-      | TABLE-1      | R-2 | W-3    | R%-4 | RELATABLE-5    | RELACOUNT-6 |
-      | test_table   | 4   | 5      | 0.44 | test_table1,   | 2,          |
-      | test         | 2   | 1054   | 0.00 | global2,       | 1052,       |
+      | TABLE-1          | R-2 | W-3    | R%-4 | RELATABLE-5                        | RELACOUNT-6 |
+      | db1.test_table   | 5   | 8      | 0.38 | db2.test_table1, db1.test_table,   | 5, 3,          |
+      | schema1.test     | 2   | 1056   | 0.00 | schema2.global2,                   | 1053,       |
 
     Then check "NullPointerException|caught err|unknown error|setError" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
@@ -533,9 +527,9 @@ Feature: show @@sql XXX
     ### case 1: dml ddl 都被记录
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect          | timeout |
-      | conn_1 | False   | show @@sql           | length{(12)}    | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(10)}    |         |
-      | conn_1 | False   | show @@sql.slow      | length{(12)}    |         |
+      | conn_1 | False   | show @@sql           | length{(11)}    | 10      |
+      | conn_1 | False   | show @@sql.high      | length{(9)}     |         |
+      | conn_1 | False   | show @@sql.slow      | length{(11)}    |         |
       | conn_1 | False   | show @@sql.resultset | length{(1)}     |         |
       | conn_1 | False   | show @@sql.large     | length{(0)}     |         |
 
@@ -555,7 +549,6 @@ Feature: show @@sql XXX
       | test   | select * from test where id=2                 |
       | test   | delete from test where id=1                   |
       | test   | alter table test drop column k                |
-      | test   | exit                                          |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high1"
       | sql             |
       | show @@sql.high |
@@ -566,7 +559,6 @@ Feature: show @@sql XXX
       | test   | 1           | DELETE FROM test WHERE id = ?                   |
       | test   | 1           | DROP TABLE IF EXISTS test                       |
       | test   | 3           | INSERT INTO test VALUES (?, repeat(?, ?))       |
-      | test   | 1           | Other                                           |
       | test   | 1           | select * from test                              |
       | test   | 1           | SELECT * FROM test ORDER BY id LIMIT ?          |
       | test   | 1           | SELECT * FROM test WHERE id = ?                 |
@@ -587,7 +579,6 @@ Feature: show @@sql XXX
       | test   | select * from test where id=2                 |
       | test   | delete from test where id=1                   |
       | test   | alter table test drop column k                |
-      | test   | exit                                          |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_resultset1"
       | sql                  |
       | show @@sql.resultset |
@@ -603,9 +594,9 @@ Feature: show @@sql XXX
       | conn_2 | true    | update sharding_4_t1 set k="c" where id=3;alter table sharding_4_t1 drop column k                            | schema1 | success |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect            | timeout |
-      | conn_1 | False   | show @@sql           | length{(19)}      | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(15)}      |         |
-      | conn_1 | False   | show @@sql.slow      | length{(19)}      |         |
+      | conn_1 | False   | show @@sql           | length{(17)}      | 10      |
+      | conn_1 | False   | show @@sql.high      | length{(14)}      |         |
+      | conn_1 | False   | show @@sql.slow      | length{(17)}      |         |
       | conn_1 | False   | show @@sql.resultset | length{(1)}       |         |
       | conn_1 | False   | show @@sql.large     | length{(0)}       |         |
 
@@ -620,7 +611,6 @@ Feature: show @@sql XXX
       | test   | insert into sharding_4_t1 value (2, repeat('b',1100))  |
       | test   | update sharding_4_t1 set k="c" where id=3              |
       | test   | alter table sharding_4_t1 drop column k                |
-      | test   | exit                                                   |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high2"
       | sql             |
@@ -639,7 +629,6 @@ Feature: show @@sql XXX
       | test   | 1           | CREATE TABLE sharding_4_t1 (  id int,  k varchar(1500) ) |
       | test   | 1           | DROP TABLE IF EXISTS sharding_4_t1                       |
       | test   | 2           | INSERT INTO sharding_4_t1 VALUES (?, repeat(?, ?))       |
-      | test   | 2           | Other                                                    |
       | test   | 1           | UPDATE sharding_4_t1 SET k = ? WHERE id = ?              |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_slow2"
       | sql             |
@@ -652,7 +641,6 @@ Feature: show @@sql XXX
       | test   | insert into sharding_4_t1 value (2, repeat('b',1100))  |
       | test   | update sharding_4_t1 set k="c" where id=3              |
       | test   | alter table sharding_4_t1 drop column k                |
-      | test   | exit                                                   |
 
     ### case 3:事务+复杂语句+其他shardinguser+hint
     Then execute sql in "dble-1" in "user" mode
@@ -666,9 +654,9 @@ Feature: show @@sql XXX
       | test1 | 111111 | conn_3 | true    | select * from test                                                                                                                | schema1 | success |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                | timeout |
-      | conn_1 | False   | show @@sql           | length{(37)}          | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(26)}          |         |
-      | conn_1 | False   | show @@sql.slow      | length{(37)}          |         |
+      | conn_1 | False   | show @@sql           | length{(34)}          | 10      |
+      | conn_1 | False   | show @@sql.high      | length{(24)}          |         |
+      | conn_1 | False   | show @@sql.slow      | length{(34)}          |         |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql3"
       | sql        |
@@ -692,7 +680,6 @@ Feature: show @@sql XXX
       | test1  | insert into test values (7)                                                                            |
       | test1  | rollback                                                                                               |
       | test1  | select * from test                                                                                     |
-      | test1  | exit                                                                                                   |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high3"
       | sql             |
       | show @@sql.high |
@@ -702,7 +689,6 @@ Feature: show @@sql XXX
       | test1  | 1           | commit                                                                                                 |
       | test1  | 1           | delete from sharding_4_t1 where id in ((select id from (select id from test order by id desc) as tmp)) |
       | test1  | 4           | INSERT INTO test VALUES (?)                                                                            |
-      | test1  | 1           | Other                                                                                                  |
       | test1  | 2           | rollback                                                                                               |
       | test1  | 1           | SELECT * FROM sharding_4_t1                                                                            |
       | test1  | 1           | SELECT * FROM sharding_4_t1 a  INNER JOIN test b ON a.id = b.id WHERE a.id = ?                         |
@@ -731,7 +717,6 @@ Feature: show @@sql XXX
       | test1  | insert into test values (7)                                                                            |
       | test1  | rollback                                                                                               |
       | test1  | select * from test                                                                                     |
-      | test1  | exit                                                                                                   |
 
      ### case 4:错误的语句+select + show + set + view
     Then execute sql in "dble-1" in "user" mode
@@ -749,9 +734,9 @@ Feature: show @@sql XXX
     ###不记录错误语句  select + show + set + view select 1 记录
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect            | timeout |
-      | conn_1 | False   | show @@sql           | length{(44)}      | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(33)}      |         |
-      | conn_1 | False   | show @@sql.slow      | length{(44)}      |         |
+      | conn_1 | False   | show @@sql           | length{(41)}      | 10      |
+      | conn_1 | False   | show @@sql.high      | length{(31)}      |         |
+      | conn_1 | False   | show @@sql.slow      | length{(41)}      |         |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql4"
       | sql        |
@@ -801,9 +786,9 @@ Feature: show @@sql XXX
       | new    | False   | load data infile '/opt/dble/data.txt' into table sharding_4_t1 character SET 'utf8' fields terminated by ',' lines terminated by '\n'   | success      | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                    | timeout |
-      | conn_1 | False   | show @@sql           | length{(45)}              | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(34)}              |         |
-      | conn_1 | False   | show @@sql.slow      | length{(45)}              |         |
+      | conn_1 | False   | show @@sql           | length{(42)}              | 10      |
+      | conn_1 | False   | show @@sql.high      | length{(32)}              |         |
+      | conn_1 | False   | show @@sql.slow      | length{(42)}              |         |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql5"
       | sql        |
@@ -834,18 +819,18 @@ Feature: show @@sql XXX
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                  | timeout |
-      | conn_1 | False   | show @@sql           | length{(49)}            | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(38)}            |         |
-      | conn_1 | False   | show @@sql.slow      | length{(49)}            |         |
+      | conn_1 | False   | show @@sql           | length{(44)}            | 10      |
+      | conn_1 | False   | show @@sql.high      | length{(34)}            |         |
+      | conn_1 | False   | show @@sql.slow      | length{(44)}            |         |
 
      ### case 7: show @@sql xxx true 命令失效  清理数据是truncate sql_log
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                               | expect                | timeout |
-#      | conn_1 | False   | show @@sql true                   | Unsupported statement |         |
-#      | conn_1 | False   | show @@sql.high true              | Unsupported statement |         |
-#      | conn_1 | False   | show @@sql.slow true              | Unsupported statement |         |
-#      | conn_1 | False   | show @@sql.resultset true         | Unsupported statement |         |
-#      | conn_1 | False   | show @@sql.large true            | Unsupported statement |         |
+      | conn_1 | False   | show @@sql true                   | Unsupported statement |         |
+      | conn_1 | False   | show @@sql.high true              | Unsupported statement |         |
+      | conn_1 | False   | show @@sql.slow true              | Unsupported statement |         |
+      | conn_1 | False   | show @@sql.resultset true         | Unsupported statement |         |
+      | conn_1 | False   | show @@sql.large true            | Unsupported statement |         |
       | conn_1 | False   | truncate dble_information.sql_log | success               | 10      |
       | conn_1 | False   | show @@sql.high                   | length{(0)}           | 10      |
       | conn_1 | False   | show @@sql                        | length{(0)}           |         |
@@ -875,21 +860,18 @@ Feature: show @@sql XXX
       | test       | 111111 | conn_11 | true    | select 1  | success |
       | test1      | 111111 | conn_12 | true    | select 2  | success |
       | test2:ten1 | 111111 | conn_13 | true    | select 21 | success |
-    ### 这个1024是根据全局txd计算的，如果有exit是跟着上一个sql计算txid的
+    ### 这个1024是根据全局txd计算的，
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect         | timeout |
-      | conn_1 | False   | show @@sql           | length{(1027)} | 10      |
-      | conn_1 | true    | show @@sql.high      | length{(7)}    |         |
-      | conn_1 | False   | show @@sql.slow      | length{(1027)} |         |
+      | conn_1 | False   | show @@sql           | length{(1024)} | 10      |
+      | conn_1 | true    | show @@sql.high      | length{(4)}    |         |
+      | conn_1 | False   | show @@sql.slow      | length{(1024)} |         |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high9"
       | sql             |
       | show @@sql.high |
     Then check resultset "sql_high9" has lines with following column values
       | USER-1     | FREQUENCY-2 | SQL-8                           |
       | test2:ten1 | 1021        | SELECT * FROM test WHERE id = ? |
-      | test       | 1           | Other                           |
-      | test1      | 1           | Other                           |
-      | test2:ten1 | 1           | Other                           |
       | test       | 1           | SELECT ?                        |
       | test1      | 1           | SELECT ?                        |
       | test2:ten1 | 1           | SELECT ?                        |
@@ -927,8 +909,8 @@ Feature: show @@sql XXX
       | conn_21 | False   | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1                                                                                                                                 | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect          | timeout |
-      | conn_1 | False   | show @@sql           | length{(34)}    | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(32)}    |         |
+      | conn_1 | False   | show @@sql           | length{(33)}    | 10      |
+      | conn_1 | False   | show @@sql.high      | length{(31)}    |         |
       | conn_1 | False   | show @@sql.slow      | length{(0)}     |         |
       | conn_1 | False   | show @@sql.resultset | length{(28)}    |         |
 
@@ -937,20 +919,20 @@ Feature: show @@sql XXX
       | show @@sql |
     Then check resultset "sql10" has lines with following column values
       | ID-0 | USER-1 | SQL-4                                                                                                                  |
-      | 21   | test   | select * from test a inner join sharding_2_t1 b on a.name=b.name where a.id =1                                         |
-      | 22   | test   | select * from schema2.global2 a inner join sharding_2_t1 b on a.name=b.name where a.id =1                              |
-      | 23   | test   | select * from sharding_2_t1 a inner join schema2.sing1 b on a.name=b.name where a.id =1                                |
-      | 24   | test   | select * from sharding_2_t1 where name in (select name from schema2.sharding2 where id !=1)                            |
-      | 25   | test   | update test set name= '3' where name = (select name from schema2.global2 order by id desc limit 1)                     |
-      | 26   | test   | update test set name= '4' where name in (select name from schema2.global2 )                                            |
-      | 27   | test   | begin                                                                                                                  |
-      | 28   | test   | update sharding_2_t1 a,schema2.sharding2 b set a.name=b.name where a.id=2 and b.id=2                                   |
-      | 29   | test   | begin                                                                                                                  |
-      | 30   | test   | commit                                                                                                                 |
-      | 31   | test   | rollback                                                                                                               |
-      | 32   | test   | begin                                                                                                                  |
-      | 33   | test   | select * from schema2.sing1 as tmp                                                                                     |
-      | 34   | test   | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1 |
+      | 20   | test   | select * from test a inner join sharding_2_t1 b on a.name=b.name where a.id =1                                         |
+      | 21   | test   | select * from schema2.global2 a inner join sharding_2_t1 b on a.name=b.name where a.id =1                              |
+      | 22   | test   | select * from sharding_2_t1 a inner join schema2.sing1 b on a.name=b.name where a.id =1                                |
+      | 23   | test   | select * from sharding_2_t1 where name in (select name from schema2.sharding2 where id !=1)                            |
+      | 24   | test   | update test set name= '3' where name = (select name from schema2.global2 order by id desc limit 1)                     |
+      | 25   | test   | update test set name= '4' where name in (select name from schema2.global2 )                                            |
+      | 26   | test   | begin                                                                                                                  |
+      | 27   | test   | update sharding_2_t1 a,schema2.sharding2 b set a.name=b.name where a.id=2 and b.id=2                                   |
+      | 28   | test   | begin                                                                                                                  |
+      | 29   | test   | commit                                                                                                                 |
+      | 30   | test   | rollback                                                                                                               |
+      | 31   | test   | begin                                                                                                                  |
+      | 32   | test   | select * from schema2.sing1 as tmp                                                                                     |
+      | 33   | test   | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1 |
       | 1    | test   | drop table if exists test                                                                                              |
       | 2    | test   | drop table if exists sharding_2_t1                                                                                     |
       | 3    | test   | drop table if exists schema2.global2                                                                                   |
@@ -967,10 +949,9 @@ Feature: show @@sql XXX
       | 14   | test   | insert into schema2.sharding2 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')                                   |
       | 15   | test   | insert into schema2.sing1 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')                                       |
       | 16   | test   | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                              |
-      | 17   | test   | exit                                                                                                                   |
-      | 18   | test   | insert into test(id, name) select id,name from schema2.global2                                                         |
-      | 19   | test   | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                  |
-      | 20   | test   | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                          |
+      | 17   | test   | insert into test(id, name) select id,name from schema2.global2                                                         |
+      | 18   | test   | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                  |
+      | 19   | test   | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                          |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high10"
       | sql             |
       | show @@sql.high |
@@ -1007,40 +988,39 @@ Feature: show @@sql XXX
       | test   | 1           | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.name = b.name WHERE a.id = ?  AND b.id = ?                                |
       | test   | 1           | UPDATE test SET name = ? WHERE name = (   SELECT name   FROM schema2.global2   ORDER BY id DESC   LIMIT ?  )                |
       | test   | 1           | UPDATE test SET name = ? WHERE name IN (   SELECT name   FROM schema2.global2  )                                            |
-      | test   | 1           | Other                                                                                                                       |
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_resultset10"
-#      | sql                  |
-#      | show @@sql.resultset |
-#    Then check resultset "sql_resultset10" has lines with following column values
-#      | ID-0 | USER-1 | FREQUENCY-2 | SQL-3                                                                                                                  | RESULTSET_SIZE-4 |
-#      | 1    | test   | 1           | drop table if exists test                                                                                              | 44               |
-#      | 2    | test   | 1           | drop table if exists sharding_2_t1                                                                                     | 11               |
-#      | 3    | test   | 1           | drop table if exists schema2.global2                                                                                   | 44               |
-#      | 4    | test   | 1           | drop table if exists schema2.sharding2                                                                                 | 22               |
-#      | 5    | test   | 1           | drop table if exists schema2.sing1                                                                                     | 11               |
-#      | 6    | test   | 1           | create table test (id int,name char(20))                                                                               | 44               |
-#      | 7    | test   | 1           | create table sharding_2_t1 (id int,name char(20))                                                                      | 22               |
-#      | 8    | test   | 1           | create table schema2.global2 (id int,name char(20))                                                                    | 44               |
-#      | 9    | test   | 1           | create table schema2.sharding2 (id int,name char(20))                                                                  | 22               |
-#      | 10   | test   | 1           | create table schema2.sing1 (id int,name char(20))                                                                      | 11               |
-#      | 11   | test   | 1           | insert into test values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')                                                | 200              |
-#      | 12   | test   | 1           | insert into sharding_2_t1 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')                                       | 100              |
-#      | 13   | test   | 1           | insert into schema2.global2 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')                                     | 200              |
-#      | 14   | test   | 1           | insert into schema2.sharding2 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')                                   | 100              |
-#      | 15   | test   | 1           | insert into schema2.sing1 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')                                       | 50               |
-#      | 16   | test   | 1           | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                              | 100              |
-#      | 18   | test   | 1           | insert into test(id, name) select id,name from schema2.global2                                                         | 200              |
-#      | 19   | test   | 1           | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                  | 50               |
-#      | 20   | test   | 1           | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                          | 100              |
-#      | 21   | test   | 1           | select * from test a inner join sharding_2_t1 b on a.name=b.name where a.id =1                                         | 225              |
-#      | 22   | test   | 1           | select * from schema2.global2 a inner join sharding_2_t1 b on a.name=b.name where a.id =1                              | 199              |
-#      | 23   | test   | 1           | select * from sharding_2_t1 a inner join schema2.sing1 b on a.name=b.name where a.id =1                                | 235              |
-#      | 24   | test   | 1           | select * from sharding_2_t1 where name in (select name from schema2.sharding2 where id !=1)                            | 175              |
-#      | 25   | test   | 1           | update test set name= '3' where name = (select name from schema2.global2 order by id desc limit 1)                     | 208              |
-#      | 26   | test   | 1           | update test set name= '4' where name in (select name from schema2.global2 )                                            | 208              |
-#      | 28   | test   | 1           | update sharding_2_t1 a,schema2.sharding2 b set a.name=b.name where a.id=2 and b.id=2                                   | 52               |
-#      | 33   | test   | 1           | select * from schema2.sing1 as tmp                                                                                     | 205              |
-#      | 34   | test   | 1           | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1 | 11               |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_resultset10"
+      | sql                  |
+      | show @@sql.resultset |
+    Then check resultset "sql_resultset10" has lines with following column values
+      | ID-0 | USER-1 | FREQUENCY-2 | SQL-3                                                                                                                  | RESULTSET_SIZE-4 |
+      | 1    | test   | 1           | drop table if exists test                                                                                              | 44               |
+      | 2    | test   | 1           | drop table if exists sharding_2_t1                                                                                     | 22               |
+      | 3    | test   | 1           | drop table if exists schema2.global2                                                                                   | 44               |
+      | 4    | test   | 1           | drop table if exists schema2.sharding2                                                                                 | 22               |
+      | 5    | test   | 1           | drop table if exists schema2.sing1                                                                                     | 11               |
+      | 6    | test   | 1           | create table test (id int,name char(20))                                                                               | 44               |
+      | 7    | test   | 1           | create table sharding_2_t1 (id int,name char(20))                                                                      | 22               |
+      | 8    | test   | 1           | create table schema2.global2 (id int,name char(20))                                                                    | 44               |
+      | 9    | test   | 1           | create table schema2.sharding2 (id int,name char(20))                                                                  | 22               |
+      | 10   | test   | 1           | create table schema2.sing1 (id int,name char(20))                                                                      | 11               |
+      | 11   | test   | 1           | insert into test values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')                                                | 200              |
+      | 12   | test   | 1           | insert into sharding_2_t1 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')                                       | 100              |
+      | 13   | test   | 1           | insert into schema2.global2 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')                                     | 200              |
+      | 14   | test   | 1           | insert into schema2.sharding2 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')                                   | 100              |
+      | 15   | test   | 1           | insert into schema2.sing1 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')                                       | 50               |
+      | 16   | test   | 1           | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                              | 100              |
+      | 17   | test   | 1           | insert into test(id, name) select id,name from schema2.global2                                                         | 200              |
+      | 18   | test   | 1           | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                  | 50               |
+      | 19   | test   | 1           | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                          | 100              |
+      | 20   | test   | 1           | select * from test a inner join sharding_2_t1 b on a.name=b.name where a.id =1                                         | 225              |
+      | 21   | test   | 1           | select * from schema2.global2 a inner join sharding_2_t1 b on a.name=b.name where a.id =1                              | 199              |
+      | 22   | test   | 1           | select * from sharding_2_t1 a inner join schema2.sing1 b on a.name=b.name where a.id =1                                | 235              |
+      | 23   | test   | 1           | select * from sharding_2_t1 where name in (select name from schema2.sharding2 where id !=1)                            | 175              |
+      | 24   | test   | 1           | update test set name= '3' where name = (select name from schema2.global2 order by id desc limit 1)                     | 208              |
+      | 25   | test   | 1           | update test set name= '4' where name in (select name from schema2.global2 )                                            | 208              |
+      | 27   | test   | 1           | update sharding_2_t1 a,schema2.sharding2 b set a.name=b.name where a.id=2 and b.id=2                                   | 52               |
+      | 32   | test   | 1           | select * from schema2.sing1 as tmp                                                                                     | 205              |
+      | 33   | test   | 1           | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1 | 11               |
 
     Then execute admin cmd "reload @@slow_query.time=0"
     ### case 11: 读写分离用户的各种sql组合
@@ -1063,9 +1043,9 @@ Feature: show @@sql XXX
    ###这边show @@sql.slow逻辑性不强，数据会重新从sql_log过滤筛选得到
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect          | timeout |
-      | conn_1 | False   | show @@sql           | length{(60)}    | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(52)}    |         |
-      | conn_1 | true    | show @@sql.slow      | length{(60)}    |         |
+      | conn_1 | False   | show @@sql           | length{(58)}    | 10      |
+      | conn_1 | False   | show @@sql.high      | length{(50)}    |         |
+      | conn_1 | true    | show @@sql.slow      | length{(58)}    |         |
       | conn_1 | False   | show @@sql.resultset | length{(47)}    |         |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql11"
@@ -1076,7 +1056,6 @@ Feature: show @@sql XXX
       | rw1    | drop table if exists test_table                                                                                         |
       | rw1    | create table test_table(id int,name varchar(20),age int)                                                                |
       | rw1    | insert into test_table values (1,'1',1),(2, '2',2)                                                                      |
-      | rw1    | exit                                                                                                                    |
       | rw1    | begin                                                                                                                   |
       | rw1    | select * from test_table                                                                                                |
       | rw1    | insert into test_table values(5,'name5',5)                                                                              |
@@ -1124,7 +1103,6 @@ Feature: show @@sql XXX
       | rw1    | 1           | UPDATE test_table a, db2.test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               |
       | rw1    | 1           | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM db2.test_table1  )                                      |
       | rw1    | 2           | UPDATE test_table1 SET age = ? WHERE id = ?                                                                             |
-      | rw1    | 1           | Other                                                                                                                   |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_slow11"
       | sql             |
       | show @@sql.slow |
@@ -1133,7 +1111,6 @@ Feature: show @@sql XXX
       | rw1    | drop table if exists test_table                                                                                         |
       | rw1    | create table test_table(id int,name varchar(20),age int)                                                                |
       | rw1    | insert into test_table values (1,'1',1),(2, '2',2)                                                                      |
-      | rw1    | exit                                                                                                                    |
       | rw1    | begin                                                                                                                   |
       | rw1    | select * from test_table                                                                                                |
       | rw1    | insert into test_table values(5,'name5',5)                                                                              |
@@ -1162,9 +1139,9 @@ Feature: show @@sql XXX
     Then execute prepared sql "select %s from test_table where id =%s" with params "(name,1);(id,3)" on db "db1" and user "rw1"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect          | timeout |
-      | conn_1 | False   | show @@sql           | length{(70)}    | 10      |
-      | conn_1 | true    | show @@sql.high      | length{(58)}    |         |
-      | conn_1 | true    | show @@sql.slow      | length{(70)}    |         |
+      | conn_1 | False   | show @@sql           | length{(66)}    | 10      |
+      | conn_1 | true    | show @@sql.high      | length{(56)}    |         |
+      | conn_1 | true    | show @@sql.slow      | length{(66)}    |         |
       | conn_1 | False   | show @@sql.resultset | length{(49)}    |         |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql12"
       | sql        |
@@ -1600,7 +1577,6 @@ Feature: show @@sql XXX
     Then check "NullPointerException|caught err|unknown error|setError" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
-
   Scenario: dble重启数据会被清空恢复默认值   #6
     ###9066端口默认初始值 ，默认开启采样率和默认DenableStatisticAnalysis=0
      Then execute sql in "dble-1" in "admin" mode
@@ -1659,9 +1635,9 @@ Feature: show @@sql XXX
 
      Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                       | expect            | timeout |
-      | conn_1 | False   | show @@sql                | length{(13)}      | 10      |
-      | conn_1 | False   | show @@sql.high           | length{(12)}      | 10      |
-      | conn_1 | False   | show @@sql.slow           | length{(13)}      | 10      |
+      | conn_1 | False   | show @@sql                | length{(12)}      | 10      |
+      | conn_1 | False   | show @@sql.high           | length{(11)}      | 10      |
+      | conn_1 | False   | show @@sql.slow           | length{(12)}      | 10      |
       | conn_1 | False   | show @@sql.large          | length{(1)}       | 10      |
       | conn_1 | False   | show @@sql.resultset      | length{(11)}      | 10      |
       | conn_1 | False   | show @@sql.sum            | length{(2)}       | 10      |
