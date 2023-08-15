@@ -76,8 +76,6 @@ Feature: test show @@help
       | reload @@config                                                                                          | Reload basic config from file                                                     |
       | reload @@config_all                                                                                      | Reload all config from file                                                       |
       | reload @@metadata [where schema=? [and table=?] \| where table in ('schema1.table1',...)]                | Reload metadata of tables or specified table                                      |
-      | reload @@sqlslow=                                                                                        | Set Slow SQL Time(ms)                                                             |
-      | reload @@user_stat                                                                                       | Reset show @@sql  @@sql.sum @@sql.slow                                            |
       | reload @@query_cf[=table&column]                                                                         | Reset show @@sql.condition                                                        |
       | release @@reload_metadata                                                                                | Release reload process , unlock the config meta lock                              |
       | reload @@load_data.num=?                                                                                 | Set the value of maxRowSizeToFile                                                 |
@@ -147,6 +145,8 @@ Feature: test show @@help
       | file @@list                            |
       | file @@show filename                   |
       | file @@upload filename content         |
+      | reload @@sqlslow=                      |
+      | reload @@user_stat                     |
 
 
 
