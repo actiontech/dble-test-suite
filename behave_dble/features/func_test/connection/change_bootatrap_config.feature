@@ -1056,18 +1056,19 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                 | expect  | db      |
       | conn_1 | False   | drop table if exists sharding_4_t1                  | success | schema1 |
+      | conn_1 | False   | create table sharding_4_t1(id int,name varchar(20)) | success | schema1 |
 
     Given prepare a thread run btrace script "BtraceQueryHandler.java" in "dble-1"
-    Given prepare a thread execute sql "create table sharding_4_t1(id int,name varchar(20))" with "conn_1"
+    Given prepare a thread execute sql "insert into sharding_4_t1 values (1,1),(2,2)" with "conn_1"
     # 分库分表用户执行sql进桩
     Then check btrace "BtraceQueryHandler.java" output in "dble-1"
       """
       get into shardingQuery
       """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                | expect     | db               |
-      | conn_0 | False   | reload @@config_all                | success    | dble_information |     
-      | conn_0 | False   | select * from dble_thread_pool     | success    | dble_information |
+      | conn   | toClose | sql                                | expect     | db               | timeout |
+      | conn_0 | False   | reload @@config_all                | success    | dble_information |  5      |
+      | conn_0 | False   | select * from dble_thread_pool     | success    | dble_information |         |
     #管理端执行sql不进桩，桩仍旧只输出一次  
     Then check btrace "BtraceQueryHandler.java" output in "dble-1"
       """
