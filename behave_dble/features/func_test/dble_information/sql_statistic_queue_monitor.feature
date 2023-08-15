@@ -63,7 +63,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect                  | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length_balance{5,0.2}  | dble_information   |
-      | conn_0 | True     | show @@statistic;                      | has{(('statistic', 'ON'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '0'), ('queueMonitor', '-'),)}  | dble_information   |
+      | conn_0 | True     | show @@statistic;                      | has{(('statistic', 'ON'), ('associateTablesByEntryByUserTableSize', '1024'), ('frontendByBackendByEntryByUserTableSize', '1024'), ('tableByUserByEntryTableSize', '1024'), ('sqlLogTableSize', '1024'), ('samplingRate', '100'), ('queueMonitor', '-'),)}  | dble_information   |
 
   Scenario: test statistic_queue_monitor single observeTime or intervalTime; default unit for observeTime & intervalTime is seconds  #4
     # case 9306 http://10.186.18.20:888/testlink/linkto.php?tprojectPrefix=dble&item=testcase&id=dble-9306
