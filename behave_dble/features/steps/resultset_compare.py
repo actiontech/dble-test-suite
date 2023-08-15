@@ -127,6 +127,15 @@ def step_impl(context, rs_name):
                                 break
                             else:
                                 isFound = False
+                    # 忽略结果字母大小写的检验
+                    elif expect_col.rfind('/*IGNORECASE*/') != -1:
+                        expect = expect_col.replace('/*IGNORECASE*/', '')
+                        if real_col.lower() == expect.lower():
+                            isFound = True
+                            break
+                        else:
+                            isFound = False
+
                     elif expect_row[i].rfind('[0-9].[0-9]') != -1:
                         isFound = fnmatchcase(real_col, expect_col)
                         context.logger.debug("col index:{0}, expect col:{1}, real_col:{2}".format(i, expect_col, real_col))
