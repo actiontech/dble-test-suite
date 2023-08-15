@@ -19,7 +19,7 @@ public final class BtraceSessionStage1 {
     }
 
     @OnMethod(
-            clazz = "com.actiontech.dble.server.NonBlockingSession",
+            clazz = "com.actiontech.dble.statistic.trace.TrackProbe",
             method = "setBackendResponseTime",
             location = @Location(Kind.RETURN)
     )
