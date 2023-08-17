@@ -565,7 +565,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | select 5                                            | SELECT ?                                            | Select     | 8       | 2       | test   | 172.100.9.8   | 8066          | 1      | 56             |
       | show databases                                      | show databases                                      | Show       | 9       | 2       | test   | 172.100.9.8   | 8066          | 1      | 0              |
       | select * from global limit 10002                    | SELECT * FROM global LIMIT ?                        | Select     | 10      | 2       | test   | 172.100.9.8   | 8066          | 10002  | 179024         |
-#      | drop table if exists test_table                     | DROP TABLE IF EXISTS test_table                     | DDL        | 11      | 5       | rw1    | 172.100.9.8   | 8066          | 0      | 11             |
+      | drop table if exists test_table                     | DROP TABLE IF EXISTS test_table                     | DDL        | 11      | 5       | rw1    | 172.100.9.8   | 8066          | 0      | 11             |
       | create table test_table(id int,name char(20))       | CREATE TABLE test_table (  id int,  name char(20) ) | DDL        | 12      | 5       | rw1    | 172.100.9.8   | 8066          | 0      | 11             |
       | insert into test_table values (1,2)                 | INSERT INTO test_table VALUES (?, ?)                | Insert     | 13      | 5       | rw1    | 172.100.9.8   | 8066          | 1      | 11             |
       | select 2                                            | SELECT ?                                            | Select     | 14      | 5       | rw1    | 172.100.9.8   | 8066          | 1      | 56             |
@@ -1492,7 +1492,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
       | sql_id-0 | sql_stmt-1                                              | sql_digest-2                              | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-      | 1        | set autocommit=0                                        | set autocommit = ?                        | Set        | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 1        | set autocommit=0                                        | SET autocommit = ?                        | Set        | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 2        | update sharding_4_t1 set name='test_name'               | UPDATE sharding_4_t1 SET name = ?         | Update     | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
       | 3        | select * from sharding_4_t1                             | select * from sharding_4_t1               | Select     | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
       | 4        | commit                                                  | commit                                    | Commit     | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
