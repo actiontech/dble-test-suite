@@ -7,13 +7,10 @@ Feature: test show @@help
 
   @NORMAL
   Scenario: test "show @@help" #1
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(121)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
-    Then check resultset "rs_A" has lines with following column values
+    Then check resultset "rs_A" has lines with following column values and has "121" lines
       | STATEMENT-0                                                                                              | DESCRIPTION-1                                                                     |
       | select @@VERSION_COMMENT                                                                                 | Show the version comment of dble                                                  |
       | show @@time.current                                                                                      | Report current timestamp                                                          |

@@ -190,18 +190,18 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | 4       | split1 | 172.100.9.4    | 3306           | -               | hostM3        | 10         | 7         | 1                   | 2                  | 1                   | 1                  | 1                   | 1                  | 2                   | 3                  |
       | 5       | split2 | 172.100.9.4    | 3306           | -               | hostM3        | 10         | 7         | 1                   | 2                  | 1                   | 1                  | 1                   | 1                  | 2                   | 3                  |
 
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_22"
-#      | conn   | toClose | sql                                                                 | db               |
-#      | conn_0 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
-#    Then check resultset "resultset_22" has lines with following column values and has "7" lines
-#      | entry-0 | user-1 | table-2                | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_rows-10 |
-#      | 2       | test   | schema1.sharding_4_t1  | 2                  | 5                 | 3                  | 6                 | 3                  | 5                 | 3                  | 6                  |
-#      | 3       | test1  | schema1.sharding_2_t1  | 1                  | 2                 | 2                  | 2                 | 1                  | 0                 | 1                  | 2                  |
-#      | 3       | test1  | schema1.no_sharding_t1 | 1                  | 2                 | 1                  | 2                 | 1                  | 2                 | 1                  | 2                  |
-#      | 4       | split1 | null                   | 0                  | 0                 | 0                  | 0                 | 0                  | 0                 | 1                  | 1                  |
-#      | 4       | split1 | db1.test_table         | 1                  | 2                 | 1                  | 1                 | 1                  | 1                 | 1                  | 2                  |
-#      | 5       | split2 | null                   | 0                  | 0                 | 0                  | 0                 | 0                  | 0                 | 1                  | 1                  |
-#      | 5       | split2 | db2.test_table         | 1                  | 2                 | 1                  | 1                 | 1                  | 1                 | 1                  | 2                  |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_22"
+      | conn   | toClose | sql                                                                 | db               |
+      | conn_0 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
+    Then check resultset "resultset_22" has lines with following column values and has "7" lines
+      | entry-0 | user-1 | table-2                | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_rows-10 |
+      | 2       | test   | schema1.sharding_4_t1  | 2                  | 5                 | 3                  | 6                 | 3                  | 5                 | 3                  | 6                  |
+      | 3       | test1  | schema1.sharding_2_t1  | 1                  | 2                 | 2                  | 2                 | 1                  | 0                 | 1                  | 2                  |
+      | 3       | test1  | schema1.no_sharding_t1 | 1                  | 2                 | 1                  | 2                 | 1                  | 2                 | 1                  | 2                  |
+      | 4       | split1 | null                   | 0                  | 0                 | 0                  | 0                 | 0                  | 0                 | 1                  | 1                  |
+      | 4       | split1 | db1.test_table         | 1                  | 2                 | 1                  | 1                 | 1                  | 1                 | 1                  | 2                  |
+      | 5       | split2 | null                   | 0                  | 0                 | 0                  | 0                 | 0                  | 0                 | 1                  | 1                  |
+      | 5       | split2 | db2.test_table         | 1                  | 2                 | 1                  | 1                 | 1                  | 1                 | 1                  | 2                  |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               | timeout |
@@ -231,16 +231,17 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | 2       | test   | 172.100.9.6    | 3306           | dn2             | hostM2        | 2          | 0         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 0                  |
       | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 2          | 0         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 1                   | 0                  |
 
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_23"
-#      | conn   | toClose | sql                                                                 | db               |
-#      | conn_0 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
-#    Then check resultset "resultset_23" has lines with following column values and has "1" lines
-#      | entry-0 | user-1 | table-2           | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_rows-10 |
-#      | 2       | test   | schema1.view_test | 0                  | 0                 | 0                  | 0                 | 0                  | 0                 | 1                  | 0                  |
-#      (2, 'test', 'schema1.view_test', 0, 0, 0, 0, 0, 0, 1, 0)
-#      (2, 'test', 'schema1.sharding_4_t1', 0, 0, 0, 0, 0, 0, 1, 0)
-
-
+    #因为解析的过程中 会把view 对应的 原始sql再解析一遍  ，误认为 此时sql中有两个表了。issue：DBLE0REQ-2332
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                 | expect        | db               | timeout |
+      | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user    | length{(1)}   | dble_information | 5       |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_23"
+      | conn   | toClose | sql                                                                 | db               |
+      | conn_0 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
+    Then check resultset "resultset_23" has lines with following column values and has "2" lines
+      | entry-0 | user-1 | table-2               | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_rows-10 |
+      | 2       | test   | schema1.view_test     | 0                  | 0                 | 0                  | 0                 | 0                  | 0                 | 1                  | 0                  |
+      | 2       | test   | schema1.sharding_4_t1 | 0                  | 0                 | 0                  | 0                 | 0                  | 0                 | 1                  | 0                  |
 
      Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                              | expect  | db      |
@@ -352,35 +353,37 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False    | delete from sharding_4_t1                                                                 | success | schema1 |
       #dn1-delete/1/1-tx/1/1, dn2-delete/1/1-tx/1/1
       | conn_0 | False    | delete from sharding_2_t1                                                                 | success | schema1 |
+       ##增加跨库的操作
+      | conn_0 | False    | select * from schema2.test1 where id = (select id from sharding_4_t1 where name='name1')     | success | schema1 |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_11"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | True    | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_11" has lines with following column values and has "4" lines
       | entry-0 | user-1 | backend_host-3 | backend_port-4 | sharding_node-5 | db_instance-6 | tx_count-7 | tx_rows-8 | sql_insert_count-10 | sql_insert_rows-11 | sql_update_count-13 | sql_update_rows-14 | sql_delete_count-16 | sql_delete_rows-17 | sql_select_count-19 | sql_select_rows-20 |
-      | 2       | test   | 172.100.9.6    | 3306           | dn2             | hostM2        | 15         | 16        | 1                   | 1                  | 2                   | 2                  | 2                   | 3                  | 10                  | 10                 |
-      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 14         | 14        | 1                   | 1                  | 2                   | 2                  | 2                   | 3                  | 9                   | 8                  |
-      | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 11         | 11        | 1                   | 1                  | 2                   | 2                  | 1                   | 2                  | 7                   | 6                  |
-      | 2       | test   | 172.100.9.5    | 3306           | dn3             | hostM1        | 11         | 11        | 1                   | 1                  | 2                   | 2                  | 1                   | 2                  | 7                   | 6                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn2             | hostM2        | 17         | 16        | 1                   | 1                  | 2                   | 2                  | 2                   | 3                  | 12                  | 10                 |
+      | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 15         | 14        | 1                   | 1                  | 2                   | 2                  | 2                   | 3                  | 10                  | 8                  |
+      | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 12         | 11        | 1                   | 1                  | 2                   | 2                  | 1                   | 2                  | 8                   | 6                  |
+      | 2       | test   | 172.100.9.5    | 3306           | dn3             | hostM1        | 12         | 11        | 1                   | 1                  | 2                   | 2                  | 1                   | 2                  | 8                   | 6                  |
 
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_21"
-#      | conn   | toClose | sql                                                                 | db               |
-#      | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
-#    Then check resultset "resultset_21" has lines with following column values and has "4" lines
-#      | entry-0 | user-1 | table-2               | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_rows-10 |
-#      | 2       | test   | schema1.sharding_4_t1 | 1                  | 4                 | 0                  | 0                 | 1                  | 8                 | 5                  | 12                 |
-#      | 2       | test   | schema1.sharding_2_t1 | 0                  | 0                 | 0                  | 0                 | 1                  | 2                 | 3                  | 4                  |
-#      | 2       | test   | schema1.test          | 0                  | 0                 | 2                  | 2                 | 0                  | 0                 | 0                  | 0                  |
-#      | 2       | test   | schema2.test1         | 0                  | 0                 | 2                  | 2                 | 0                  | 0                 | 0                  | 0                  |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_21"
+      | conn   | toClose | sql                                                                 | db               |
+      | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
+    Then check resultset "resultset_21" has lines with following column values and has "4" lines
+      | entry-0 | user-1 | table-2               | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_rows-10 |
+      | 2       | test   | schema1.sharding_4_t1 | 1                  | 4                 | 0                  | 0                 | 1                  | 8                 | 6                  | 12                 |
+      | 2       | test   | schema1.sharding_2_t1 | 0                  | 0                 | 0                  | 0                 | 1                  | 2                 | 3                  | 4                  |
+      | 2       | test   | schema1.test          | 0                  | 0                 | 2                  | 2                 | 0                  | 0                 | 0                  | 0                  |
+      | 2       | test   | schema2.test1         | 0                  | 0                 | 0                  | 0                 | 0                  | 0                 | 1                  | 0                  |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_31"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,associate_tables,sql_select_count,sql_select_rows from sql_statistic_by_associate_tables_by_entry_by_user  | dble_information |
-    Then check resultset "resultset_31" has lines with following column values and has "2" lines
+    Then check resultset "resultset_31" has lines with following column values and has "3" lines
       | entry-0 | user-1 | associate_tables-2                          | sql_select_count-3 | sql_select_rows-4 |
       | 2       | test   | schema1.sharding_2_t1,schema1.sharding_4_t1 | 2                  | 3                 |
       | 2       | test   | schema1.sharding_4_t1,schema1.sharding_4_t1 | 2                  | 8                 |
-
+      | 2       | test   | schema1.sharding_4_t1,schema2.test1         | 1                  | 0                 |
 
     #case mysql 8.0 shrdinguser
     Then execute sql in "dble-1" in "user" mode
@@ -429,7 +432,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | 3       | test1  | 172.100.9.5    | 3306           | dn1             | hostM1        | 4          | 4         | 0                   | 0                  | 1                   | 1                  | 0                   | 0                  | 3                   | 3                  |
       | 3       | test1  | 172.100.9.6    | 3306           | dn2             | hostM2        | 4          | 3         | 0                   | 0                  | 0                   | 0                  | 1                   | 1                  | 3                   | 2                  |
       | 3       | test1  | 172.100.9.5    | 3306           | dn5             | hostM1        | 6          | 16        | 1                   | 2                  | 2                   | 8                  | 1                   | 0                  | 2                   | 6                  |
-
+    ##update多表的时候 不能区分多表 DBLE0REQ-2331
 #    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_22"
 #      | conn   | toClose | sql                                                                 | db               |
 #      | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -492,13 +495,15 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
 #      | entry-0 | user-1 | table-2         | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_rows-10 |
 #      | 4       | split1 | db1.test_table1 | 1                  | 2                 | 3                  | 6                 | 2                  | 2                 | 3                  | 12                 |
 #      | 4       | split1 | db1.test_table  | 1                  | 2                 | 3                  | 6                 | 2                  | 2                 | 3                  | 12                 |
+#      (4, 'split1', 'db1.test_table', 1, 2, 3, 6, 1, 2, 3, 12)
+#      (4, 'split1', 'db1.test_table1', 0, 0, 0, 0, 1, 0, 3, 12)
 
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_33"
-#      | conn   | toClose | sql                                                                 | db               |
-#      | conn_1 | False   | select entry,user,associate_tables,sql_select_count,sql_select_rows from sql_statistic_by_associate_tables_by_entry_by_user  | dble_information |
-#    Then check resultset "resultset_33" has lines with following column values and has "1" lines
-#      | entry-0 | user-1 | associate_tables-2             | sql_select_count-3 | sql_select_rows-4 |
-#      | 4       | split1 | db1.test_table,db1.test_table1 | 3                  | 12                |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_33"
+      | conn   | toClose | sql                                                                 | db               |
+      | conn_1 | False   | select entry,user,associate_tables,sql_select_count,sql_select_rows from sql_statistic_by_associate_tables_by_entry_by_user  | dble_information |
+    Then check resultset "resultset_33" has lines with following column values and has "1" lines
+      | entry-0 | user-1 | associate_tables-2             | sql_select_count-3 | sql_select_rows-4 |
+      | 4       | split1 | db1.test_table,db1.test_table1 | 3                  | 12                |
 
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode

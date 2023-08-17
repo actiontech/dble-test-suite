@@ -1094,8 +1094,6 @@ Feature:manager Cmd
       | frontendByBackendByEntryByUserTableSize | 1024             |
       | tableByUserByEntryTableSize             | 1024             |
 
-
-
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DstatisticQueueSize=10
@@ -1107,7 +1105,7 @@ Feature:manager Cmd
     Then restart dble in "dble-1" failed for
     """
     Property \[ statisticQueueSize \] '10' in bootstrap.cnf is illegal, size must not be less than 1 and must be a power of 2, you may need use the default value 4096 replaced
-    Property \[ enableStatistic \] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+    check the property \[ enableStatistic \] '-1' data type or value
     property \[ frontendByBackendByEntryByUserTableSize \] '44%' data type should be int
     Property \[ tableByUserByEntryTableSize \] '-1' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
     Property \[ associateTablesByEntryByUserTableSize \] '0' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
@@ -1317,7 +1315,6 @@ Feature:manager Cmd
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                        | expect       | db               | timeout |
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', '0'), ('associateTablesByEntryByUserTableSize', '111'), ('frontendByBackendByEntryByUserTableSize', '111'), ('tableByUserByEntryTableSize', '111'))}  | dble_information | 11 |
-
 
     #case reload @@statistic_table_size = 200 where table =
     Then execute admin cmd  in "dble-1" at background

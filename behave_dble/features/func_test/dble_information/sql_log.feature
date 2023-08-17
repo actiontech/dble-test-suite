@@ -340,7 +340,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(100)} | dble_information | 10      |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(1)}   | dble_information | 10      |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}   | dble_information | 10      |
-      | conn_0 | False   | truncate sql_log                                    | success       | dble_information |         |
+      | conn_0 | False   | reload @@samplingRate=0                             | success       | dble_information |         |
+      | conn_0 | False   | reload @@samplingRate=100                           | success       | dble_information |         |
       | conn_0 | False   | select * from sql_log                               | length{(0)}   | dble_information |         |
 
     Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
@@ -663,10 +664,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
       | sql_id-0 | sql_stmt-1                                    | sql_digest-2                                  | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
-      | 15       | drop view if exists view_test                 | DROP VIEW IF EXISTS view_test                 | Other      | 15      | 2       | test   | 172.100.9.8   | 8066          | 0      |
-      | 16       | create view view_test as select * from global | CREATE VIEW view_test AS SELECT * FROM global | Other      | 16      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 15       | drop view if exists view_test                 | DROP VIEW IF EXISTS view_test                 | DDL        | 15      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 16       | create view view_test as select * from global | CREATE VIEW view_test AS SELECT * FROM global | DDL        | 16      | 2       | test   | 172.100.9.8   | 8066          | 0      |
       | 17       | select * from view_test                       | select * from view_test                       | Select     | 17      | 2       | test   | 172.100.9.8   | 8066          | 10002  |
-      | 18       | drop view view_test                           | DROP VIEW view_test                           | Other      | 18      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 18       | drop view view_test                           | DROP VIEW view_test                           | DDL        | 18      | 2       | test   | 172.100.9.8   | 8066          | 0      |
       | 19       | truncate  global                              | truncate  global                              | DDL        | 19      | 2       | test   | 172.100.9.8   | 8066          | 0      |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
@@ -1081,10 +1082,10 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check resultset "resulte_1" has lines with following column values
       | sql_id-0 | sql_stmt-1                                                                               | sql_digest-2                                                                                    | sql_type-3 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
       | 50       | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                      | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                             | Other      | 2       | test   | 172.100.9.8   | 8066          | 2      |
-      | 51       | drop view if exists test_view                                                            | DROP VIEW IF EXISTS test_view                                                                   | Other      | 2       | test   | 172.100.9.8   | 8066          | 0      |
-      | 52       | create view test_view(id,name) AS select * from test union select * from schema2.global2 | CREATE VIEW test_view (  id,   name ) AS SELECT * FROM test UNION SELECT * FROM schema2.global2 | Other      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 51       | drop view if exists test_view                                                            | DROP VIEW IF EXISTS test_view                                                                   | DDL        | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 52       | create view test_view(id,name) AS select * from test union select * from schema2.global2 | CREATE VIEW test_view (  id,   name ) AS SELECT * FROM test UNION SELECT * FROM schema2.global2 | DDL        | 2       | test   | 172.100.9.8   | 8066          | 0      |
       | 53       | select * from test union select * from schema2.global2                                   | select * from test union select * from schema2.global2                                          | Select     | 2       | test   | 172.100.9.8   | 8066          | 8      |
-      | 54       | drop view test_view                                                                      | DROP VIEW test_view                                                                             | Other      | 2       | test   | 172.100.9.8   | 8066          | 0      |
+      | 54       | drop view test_view                                                                      | DROP VIEW test_view                                                                             | DDL        | 2       | test   | 172.100.9.8   | 8066          | 0      |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |

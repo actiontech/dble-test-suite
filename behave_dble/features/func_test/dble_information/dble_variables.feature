@@ -23,21 +23,17 @@ Feature:  dble_variables test
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_1"
       | conn   | toClose | sql                 | db               |
       | conn_0 | False   | desc dble_variables | dble_information |
-    Then check resultset "dble_variables_1" has lines with following column values
+    Then check resultset "dble_variables_1" has lines with following column values and has "4" lines
       | Field-0        | Type-1       | Null-2 | Key-3 | Default-4 | Extra-5 |
       | variable_name  | varchar(32)  | NO     | PRI   | None      |         |
       | variable_value | varchar(255) | NO     |       | None      |         |
       | comment        | varchar(255) | NO     |       | None      |         |
       | read_only      | varchar(7)   | NO     |       | None      |         |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                             | expect            | db               |
-      | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(147)}     | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
       | conn_0 | False   | select * from dble_variables | dble_information |
-    Then check resultset "dble_variables_2" has lines with following column values
+    Then check resultset "dble_variables_2" has lines with following column values and has "144" lines
       | variable_name-0                         | variable_value-1                            | comment-2                                                                                                                                                                                                            | read_only-3 |
       | version_comment                         | dble Server (ActionTech)                    | version_comment                                                                                                                                                                                                      | true        |
       | isOnline                                | true                                        | When it is set to offline, COM_PING/COM_HEARTBEAT/SELECT USER()/SELECT CURRENT_USER() will return error                                                                                                              | false       |
@@ -189,9 +185,9 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                               | expect       | db               |
       | conn_0 | False   | select * from dble_variables limit 10                             | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(24)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(24)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(147)}| dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(25)} | dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(25)} | dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(144)}| dble_information |
   #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                              | db               |
@@ -236,8 +232,8 @@ Feature:  dble_variables test
       | conn_0 | False   | select read_only,count(*) from dble_variables group by read_only | dble_information |
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
-      | false       | 24      |
-      | true        | 123     |
+      | false       | 25      |
+      | true        | 119     |
 
   #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
@@ -261,9 +257,9 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('xalog',),)}   | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('',),)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(129)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(128)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(18)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(127)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(127)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
   #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
       | conn_0 | False   | update dble_variables set comment='sqlSlowTime1' where variable_value='true' | Access denied for table 'dble_variables' | dble_information |
