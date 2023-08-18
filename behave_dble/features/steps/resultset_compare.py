@@ -72,8 +72,7 @@ def step_impl(context, rs_name):
 
 
 @Then('check resultset "{rs_name}" has lines with following column values')
-@Then('check resultset "{rs_name}" has lines with following column values and has "{exp_line}" lines')
-def step_impl(context, rs_name, exp_line=0):
+def step_impl(context, rs_name):
     col_idx_list = []
     check_line = False
 
@@ -88,10 +87,6 @@ def step_impl(context, rs_name, exp_line=0):
             col_idx_list.append(idx)
 
     rs = getattr(context, rs_name)
-    if exp_line != 0:
-        actual_lines = len(rs) #先记录结果集的行数
-        assert actual_lines != len(exp_line), "Actual lines: {}, Expected lines: {}, \nThe actual result is:\n{}".format(actual_lines, exp_line, "\n".join(map(str, rs)))
-
     not_found = []  # 记录没有找到的期望行
     for expect_row in context.table:
         isFound = False
