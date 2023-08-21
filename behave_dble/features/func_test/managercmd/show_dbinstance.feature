@@ -63,14 +63,14 @@ Feature: show_dbinstance
       | hostS3 | 172.100.9.4   | 3307   | 0           | 0            |
 
     Then execute sql in "dble-1" in "user" mode
-      | user  | passwd | conn   | toClose | sql                                      | expect                | db  |
-      | rw1   | 111111 | conn_1 | False   | drop table if exists test_tb             | success               | db1 |
-      | rw1   | 111111 | conn_1 | False   | create table test_tb (id int, age int)   | success               | db1 |
-      | rw1   | 111111 | conn_1 | False   | insert into test_tb values (1,20),(2,20) | success               | db1 |
-      | rw1   | 111111 | conn_1 | False   | update test_tb set age=25 where id=1     | success               | db1 |
-      | rw1   | 111111 | conn_1 | False   | delete from test_tb where id=2           | success               | db1 |
-      | rw1   | 111111 | conn_1 | False   | select * from test_tb                    | has{((1,25),)}        | db1 |
-      | rw1   | 111111 | conn_1 | False   | show tables                              | has{(('test_tb',),)}  | db1 |
+      | user  | passwd | conn   | toClose | sql                                      | expect                | db  | timeout |
+      | rw1   | 111111 | conn_1 | False   | drop table if exists test_tb             | success               | db1 |         |
+      | rw1   | 111111 | conn_1 | False   | create table test_tb (id int, age int)   | success               | db1 |         |
+      | rw1   | 111111 | conn_1 | False   | insert into test_tb values (1,20),(2,20) | success               | db1 |         |
+      | rw1   | 111111 | conn_1 | False   | update test_tb set age=25 where id=1     | success               | db1 |         |
+      | rw1   | 111111 | conn_1 | False   | delete from test_tb where id=2           | success               | db1 |         |
+      | rw1   | 111111 | conn_1 | False   | select * from test_tb                    | has{((1,25),)}        | db1 | 5       |
+      | rw1   | 111111 | conn_1 | False   | show tables                              | has{(('test_tb',),)}  | db1 |         |
      # DBLE0REQ-2324
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs2"
       | sql               |
@@ -188,21 +188,21 @@ Feature: show_dbinstance
       | hostS2 | 172.100.9.6   | 3307   | 0           | 0            |
 
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                            | expect                | db      |
+      | conn   | toClose | sql                                            | expect                      | db      | timeout |
       # hostM1 write+2, hostM2 write+2
-      | conn_1 | False   | drop table if exists sharding_4_t1             | success               | schema1 |
+      | conn_1 | False   | drop table if exists sharding_4_t1             | success                     | schema1 |         |
       # hostM1 write+2, hostM2 write+2
-      | conn_1 | False   | create table sharding_4_t1 (id int, age int)   | success               | schema1 |
+      | conn_1 | False   | create table sharding_4_t1 (id int, age int)   | success                     | schema1 |         |
       # hostM1 write+1, hostM2 write+1
-      | conn_1 | False   | insert into sharding_4_t1 values (1,20),(2,20) | success               | schema1 |
+      | conn_1 | False   | insert into sharding_4_t1 values (1,20),(2,20) | success                     | schema1 |         |
       # hostM2 write+1
-      | conn_1 | False   | update sharding_4_t1 set age=25 where id=1     | success               | schema1 |
+      | conn_1 | False   | update sharding_4_t1 set age=25 where id=1     | success                     | schema1 |         |
       # hostM2 write+1
-      | conn_1 | False   | delete from sharding_4_t1 where id=1           | success               | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1 where id=1           | success                     | schema1 |         |
       # hostM1 read+2, hostS2 read+2
-      | conn_1 | False   | select * from sharding_4_t1                    | length{(1)}           | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1                    | length{(1)}                 | schema1 | 5       |
       # hostM1 read+1
-      | conn_1 | True    | show tables                                    | has{(('sharding_4_t1',),)}  | schema1 |
+      | conn_1 | True    | show tables                                    | has{(('sharding_4_t1',),)}  | schema1 |         |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs2"
       | sql               |
       | show @@dbInstance |
