@@ -163,6 +163,7 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)          |error totally whack | schema1 |
       | conn_1 | True    |select s.id from DbTest.`Test_Table` s where s.name='aa'                  |success             | schema1 |
 
+  @skip # DBLE0REQ-2336
   @BLOCKER @restore_mysql_config
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive #3
   """

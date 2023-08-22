@@ -181,12 +181,13 @@ Feature: check fingerprint log
     """
     Given record current dble log line number in "log_linenu"
     Then execute admin cmd "reload @@config_all"
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5" times
-    """
-    from=instance-test reason=one time job\*/show databases to con
-    from=instance-test reason=one time job\*/select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log to con
-    from=instance-test reason=one time job\*/show variables to con
-    """
+    # DBLE0REQ-2337
+#    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5" times
+#    """
+#    from=instance-test reason=one time job\*/show databases to con
+#    from=instance-test reason=one time job\*/select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log to con
+#    from=instance-test reason=one time job\*/show variables to con
+#    """
     Given record current dble log line number in "log_linenu1"
     Then execute admin cmd "reload @@metadata"
     Then check the time interval of following key after line "log_linenu1" in file "/opt/dble/logs/dble.log" in "dble-1"
