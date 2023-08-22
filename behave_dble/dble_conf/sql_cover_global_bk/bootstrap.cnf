@@ -25,7 +25,7 @@
 #system config
 -DserverPort=8066
 
-#-DmanagerFrontWorker=1
+-DmanagerFrontWorker=1
 
 #for code coverage
 #-javaagent:lib/jacocoagent.jar=output=file,append=true,destfile=/opt/dble_jacoco.exec
