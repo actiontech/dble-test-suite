@@ -76,8 +76,8 @@ reload @@config_all -r
 reload @@config_all -rf
 reload @@config_all -sfr
 reload @@metadata
-reload @@sqlslow=5
-reload @@user_stat
+#reload @@sqlslow=5
+#reload @@user_stat
 reload @@query_cf=aly_test&id
 reload @@query_cf
 reload @@query_cf=aly_test&id
