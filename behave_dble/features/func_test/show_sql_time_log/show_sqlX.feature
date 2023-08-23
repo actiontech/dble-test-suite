@@ -90,7 +90,10 @@ Feature: show @@sql XXX
 #    Then execute sql in "dble-1" in "admin" mode
 #      | conn   | toClose | sql                                                                                                 | expect          | db               |
 #      | conn_0 | true    | select variable_value from dble_variables where variable_name = "enableStatisticAnalysis"           | has{(('1',),)}  | dble_information |
-
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+    """
+    enableStatisticAnalysis
+    """
 
 
   Scenario: show @@sql.sum  && show @@sql.sum.user && show @@sql.sum.table  #2
