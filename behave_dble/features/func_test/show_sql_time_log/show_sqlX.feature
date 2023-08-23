@@ -78,6 +78,19 @@ Feature: show @@sql XXX
       /-DenableStatisticAnalysis/d
       """
     Then restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                 | expect          | db               |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name = "enableStatisticAnalysis"           | has{(('0',),)}  | dble_information |
+
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#      """
+#      $a -DenableStatisticAnalysis=true
+#      """
+#    Then restart dble in "dble-1" success
+#    Then execute sql in "dble-1" in "admin" mode
+#      | conn   | toClose | sql                                                                                                 | expect          | db               |
+#      | conn_0 | true    | select variable_value from dble_variables where variable_name = "enableStatisticAnalysis"           | has{(('1',),)}  | dble_information |
+
 
 
   Scenario: show @@sql.sum  && show @@sql.sum.user && show @@sql.sum.table  #2
@@ -134,23 +147,21 @@ Feature: show @@sql XXX
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect         | timeout |
-      | conn_1 | False   | show @@sql.sum       | length{(1)}    | 5       |
       | conn_1 | False   | show @@sql.sum.user  | hasStr{'test'} | 5       |
-      | conn_1 | False   | show @@sql.sum.table | hasStr{'schema1.test'} | 5       |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql1"
       | sql            |
       | show @@sql.sum |
-    Then check resultset "sql1" has lines with following column values
+    Then check resultset "sql1" has lines with following column values and has "1" lines
       | ID-0 | USER-1 | R-2 | W-3 | R%-4 | MAX-5 |
       | 1    | test   | 3   | 8   | 0.27 | 1     |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql2"
       | sql                  |
       | show @@sql.sum.table |
-    Then check resultset "sql2" has lines with following column values
-      | ID-0 | TABLE-1 | R-2 | W-3 | R%-4 | RELATABLE-5 | RELACOUNT-6 |
-      | 1    | schema1.test    | 3   | 8   | 0.27 | NULL        | NULL        |
+    Then check resultset "sql2" has lines with following column values and has "1" lines
+      | ID-0 | TABLE-1         | R-2 | W-3 | R%-4 | RELATABLE-5           | RELACOUNT-6 |
+      | 1    | schema1.test    | 3   | 8   | 0.27 | schema1.test,         | 1,          |
 
    ### case 2: 多语句
     Then execute sql in "dble-1" in "user" mode
@@ -161,22 +172,20 @@ Feature: show @@sql XXX
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                 | timeout |
       | conn_1 | False   | show @@sql.sum       | length{(1)}                            | 5       |
-      | conn_1 | False   | show @@sql.sum.user  | hasStr{'test'}                         | 5       |
-      | conn_1 | False   | show @@sql.sum.table | hasStr{'schema1.test'},hasStr{'schema1.sharding_4_t1'} | 5       |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql3"
       | sql                  |
       | show @@sql.sum.user  |
-    Then check resultset "sql3" has lines with following column values
+    Then check resultset "sql3" has lines with following column values and has "1" lines
       | ID-0 | USER-1 | R-2 | W-3  | R%-4 | MAX-5 |
       | 1    | test   | 3   | 14   | 0.18 | 1     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql4"
       | sql                  |
       | show @@sql.sum.table |
-    Then check resultset "sql4" has lines with following column values
-      | ID-0 | TABLE-1          | R-2 | W-3 | R%-4 | RELATABLE-5 | RELACOUNT-6 |
-      | 1    | schema1.test             | 3   | 8   | 0.27 | NULL        | NULL        |
-      | 2    | schema1.sharding_4_t1    | 0   | 6   | 0.00 | NULL        | NULL        |
+    Then check resultset "sql4" has lines with following column values and has "2" lines
+      | ID-0 | TABLE-1                  | R-2 | W-3 | R%-4 | RELATABLE-5           | RELACOUNT-6 |
+      | 1    | schema1.test             | 3   | 8   | 0.27 | schema1.test,         | 1,          |
+      | 2    | schema1.sharding_4_t1    | 0   | 6   | 0.00 | NULL                  | NULL        |
 
     ### case 3:事务+复杂语句+其他shardinguser+hint
     Then execute sql in "dble-1" in "user" mode
@@ -191,15 +200,13 @@ Feature: show @@sql XXX
 
    #### begin rollback set autocommit 等不记录
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect                                                                            | timeout  |
-      | conn_1 | False   | show @@sql.sum       | length{(2)}                                                                       | 5        |
-      | conn_1 | False   | show @@sql.sum.user  | length{(2)}                                                                       | 5        |
-      | conn_1 | False   | show @@sql.sum.table | hasStr{'schema1.test'},hasStr{'schema1.sharding_4_t1'},hasStr{'schema1.sharding_4_t1 a'},hasStr{'schema1.test b'} | 5        |
+      | conn   | toClose | sql                  | expect                | timeout  |
+      | conn_1 | False   | show @@sql.sum.user  | length{(2)}           | 5        |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql5"
       | sql                  |
       | show @@sql.sum.user  |
-    Then check resultset "sql5" has lines with following column values
+    Then check resultset "sql5" has lines with following column values and has "2" lines
       | ID-0 | USER-1 | R-2 | W-3  | R%-4 | MAX-5 |
       | 1    | test   | 3   | 14   | 0.18 | 1     |
       | 2    | test1  | 3   | 5    | 0.38 | 1     |
@@ -207,10 +214,10 @@ Feature: show @@sql XXX
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql6"
       | sql                  |
       | show @@sql.sum.table |
-    Then check resultset "sql6" has lines with following column values
-      | ID-0 | TABLE-1                  | R-2 | W-3 | R%-4 | RELATABLE-5 | RELACOUNT-6 |
-      | 1    | schema1.test             | 4   | 12   | 0.25 | NULL        | NULL        |
-      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.test,         | 2,         |
+    Then check resultset "sql6" has lines with following column values and has "2" lines
+      | ID-0 | TABLE-1                  | R-2 | W-3  | R%-4 | RELATABLE-5           | RELACOUNT-6 |
+      | 1    | schema1.test             | 4   | 12   | 0.25 | schema1.test,         | 1,          |
+      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.sharding_4_t1, schema1.test,         | 1, 2,          |
 
     ### case 4:错误的语句+select + show + set + view
     Then execute sql in "dble-1" in "user" mode
@@ -229,12 +236,10 @@ Feature: show @@sql XXX
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                            | timeout  |
       | conn_1 | False   | show @@sql.sum       | length{(2)}                                                                       | 5        |
-      | conn_1 | False   | show @@sql.sum.user  | length{(2)}                                                                       | 5        |
-      | conn_1 | False   | show @@sql.sum.table | hasStr{'schema1.test'},hasStr{'schema1.sharding_4_t1'},hasStr{'schema1.sharding_4_t1 a'},hasStr{'schema1.test b'} | 5        |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql7"
       | sql                  |
       | show @@sql.sum.user  |
-    Then check resultset "sql7" has lines with following column values
+    Then check resultset "sql7" has lines with following column values and has "2" lines
       | ID-0 | USER-1 | R-2 | W-3  | R%-4 | MAX-5 |
       | 1    | test   | 3   | 14   | 0.18 | 1     |
       | 2    | test1  | 7   | 7    | 0.50 | 1     |
@@ -242,10 +247,10 @@ Feature: show @@sql XXX
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql8"
       | sql                  |
       | show @@sql.sum.table |
-    Then check resultset "sql8" has lines with following column values
-      | ID-0 | TABLE-1          | R-2 | W-3 | R%-4 | RELATABLE-5 | RELACOUNT-6 |
-      | 1    | schema1.test             | 4   | 13   | 0.24 | NULL        | NULL        |
-      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.test,         | 2,         |
+    Then check resultset "sql8" has lines with following column values and has "3" lines
+      | ID-0 | TABLE-1                  | R-2 | W-3  | R%-4 | RELATABLE-5           | RELACOUNT-6 |
+      | 1    | schema1.test             | 4   | 13   | 0.24 | schema1.test,         | 1,          |
+      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.sharding_4_t1, schema1.test,         | 1, 2,          |
       | 3    | schema1.view_test        | 0   | 1    | 0.00 | NULL         | NULL        |
 
    ### case 5:load data语句不记录
@@ -259,23 +264,21 @@ Feature: show @@sql XXX
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                            | timeout |
       | conn_1 | False   | show @@sql.sum       | length{(2)}                                                                       |         |
-      | conn_1 | False   | show @@sql.sum.user  | length{(2)}                                                                       |         |
-      | conn_1 | False   | show @@sql.sum.table | hasStr{'schema1.test'},hasStr{'schema1.sharding_4_t1'},hasStr{'schema1.sharding_4_t1 a'},hasStr{'schema1.test b'} |         |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql9"
       | sql                  |
       | show @@sql.sum.user  |
-    Then check resultset "sql9" has lines with following column values
+    Then check resultset "sql9" has lines with following column values and has "2" lines
       | ID-0 | USER-1 | R-2 | W-3  | R%-4 | MAX-5 |
       | 1    | test   | 3   | 14   | 0.18 | 1     |
       | 2    | test1  | 7   | 7    | 0.50 | 1     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql10"
       | sql                  |
       | show @@sql.sum.table |
-    Then check resultset "sql10" has lines with following column values
-      | ID-0 | TABLE-1          | R-2 | W-3 | R%-4 | RELATABLE-5 | RELACOUNT-6 |
-      | 1    | schema1.test             | 4   | 13   | 0.24 | NULL        | NULL        |
-      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.test,         | 2,         |
+    Then check resultset "sql10" has lines with following column values and has "3" lines
+      | ID-0 | TABLE-1                  | R-2 | W-3  | R%-4 | RELATABLE-5           | RELACOUNT-6 |
+      | 1    | schema1.test             | 4   | 13   | 0.24 | schema1.test,         | 1,          |
+      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.sharding_4_t1, schema1.test,         | 1, 2,          |
       | 3    | schema1.view_test        | 0   | 1    | 0.00 | NULL         | NULL        |
 
     ### case 6:记录除了管理端用户外的用户执行的sql
@@ -287,12 +290,10 @@ Feature: show @@sql XXX
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                            | timeout  |
       | conn_1 | False   | show @@sql.sum       | length{(4)}                                                                       | 5        |
-      | conn_1 | False   | show @@sql.sum.user  | length{(4)}                                                                       | 5        |
-      | conn_1 | False   | show @@sql.sum.table | hasStr{'schema1.test'},hasStr{'schema1.sharding_4_t1'},hasStr{'schema1.sharding_4_t1 a'},hasStr{'schema1.test b'} | 5        |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql11"
       | sql                  |
       | show @@sql.sum.user  |
-    Then check resultset "sql11" has lines with following column values
+    Then check resultset "sql11" has lines with following column values and has "4" lines
       | USER-1 | R-2 | W-3  | R%-4 | MAX-5 |
       | test   | 3   | 14   | 0.18 | 1     |
       | test1  | 7   | 7    | 0.50 | 1     |
@@ -302,10 +303,10 @@ Feature: show @@sql XXX
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql12"
       | sql                  |
       | show @@sql.sum.table |
-    Then check resultset "sql12" has lines with following column values
+    Then check resultset "sql12" has lines with following column values and has "3" lines
       | ID-0 | TABLE-1                  | R-2 | W-3  | R%-4 | RELATABLE-5           | RELACOUNT-6 |
-      | 1    | schema1.test             | 4   | 13   | 0.24 | NULL                  | NULL        |
-      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.test,         | 2,          |
+      | 1    | schema1.test             | 4   | 13   | 0.24 | schema1.test,         | 1,          |
+      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.sharding_4_t1, schema1.test,         | 1, 2,          |
       | 3    | schema1.view_test        | 0   | 1    | 0.00 | NULL                  | NULL        |
 
      ### case 7: show @@sql xxx true 会重置清空数据
@@ -328,12 +329,11 @@ Feature: show @@sql XXX
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect      | timeout  |
       | conn_1 | False   | show @@sql.sum       | length{(3)} | 5        |
-      | conn_1 | False   | show @@sql.sum.user  | length{(3)} | 5        |
       | conn_1 | False   | show @@sql.sum.table | length{(0)} | 5        |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql13"
       | sql                  |
       | show @@sql.sum.user  |
-    Then check resultset "sql13" has lines with following column values
+    Then check resultset "sql13" has lines with following column values and has "3" lines
       | USER-1       | R-2 | W-3  | R%-4 | MAX-5 |
       | test         | 1   | 0    | 1.00 | 1     |
       | test1        | 1   | 0    | 1.00 | 1     |
@@ -357,14 +357,12 @@ Feature: show @@sql XXX
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect         | timeout  |
-      | conn_1 | False   | show @@sql.sum       | length{(3)}    | 5        |
       | conn_1 | False   | show @@sql.sum.user  | length{(3)}    | 5        |
-      | conn_1 | False   | show @@sql.sum.table | length{(5)}    | 5        |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql14"
       | sql              |
       | show @@sql.sum   |
-    Then check resultset "sql14" has lines with following column values
+    Then check resultset "sql14" has lines with following column values and has "3" lines
       | USER-1       | R-2 | W-3  | R%-4 | MAX-5 |
       | test         | 6   | 23   | 0.21 | 1     |
       | test1        | 1   | 0    | 1.00 | 1     |
@@ -372,13 +370,13 @@ Feature: show @@sql XXX
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql15"
       | sql                  |
       | show @@sql.sum.table |
-    Then check resultset "sql15" has lines with following column values
-      | ID-0 | TABLE-1               | R-2 | W-3 | R%-4 | RELATABLE-5                                                      | RELACOUNT-6 |
-      | 1    | schema1.sharding_2_t1 | 4   | 6   | 0.40 | schema2.sharding2, schema2.global2, schema2.sing1, schema1.test, | 4, 1, 1, 1, |
-      | 2    | schema1.test          | 0   | 6   | 0.00 | schema2.global2,                                                 | 3,          |
-      | 3    | schema2.sing1         | 1   | 4   | 0.20 | NULL                                                             | NULL        |
-      | 4    | schema2.sharding2     | 0   | 4   | 0.00 | NULL                                                             | NULL        |
-      | 5    | schema2.global2       | 0   | 3   | 0.00 | NULL                                                             | NULL        |
+    Then check resultset "sql15" has lines with following column values and has "5" lines
+      | ID-0 | TABLE-1               | R-2 | W-3 | R%-4 | RELATABLE-5                                   | RELACOUNT-6 |
+      | 1    | schema1.sharding_2_t1 | 2   | 5   | 0.29 | schema2.sharding2, schema2.sing1,             | 3, 1,       |
+      | 2    | schema1.test          | 1   | 6   | 0.14 | schema1.sharding_2_t1, schema2.global2,       | 1, 3,       |
+      | 3    | schema2.sing1         | 1   | 4   | 0.20 | schema2.sing1,                                | 1,          |
+      | 4    | schema2.sharding2     | 0   | 5   | 0.00 | schema2.sharding2, schema1.sharding_2_t1,     | 1, 1,       |
+      | 5    | schema2.global2       | 1   | 3   | 0.25 | schema1.sharding_2_t1,                        | 1,          |
 
 
     Given execute sql "1050" times in "dble-1" at concurrent 1000
@@ -386,13 +384,11 @@ Feature: show @@sql XXX
      | test1 | begin;begin;update test set name= '4' where name in (select name from schema2.global2 )         | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect         | timeout  |
-      | conn_1 | False   | show @@sql.sum       | length{(3)}    | 5        |
       | conn_1 | False   | show @@sql.sum.user  | length{(3)}    | 5        |
-      | conn_1 | False   | show @@sql.sum.table | length{(5)}    | 5        |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql16"
       | sql              |
       | show @@sql.sum   |
-    Then check resultset "sql16" has lines with following column values
+    Then check resultset "sql16" has lines with following column values and has "3" lines
       | USER-1       | R-2 | W-3  | R%-4 | MAX-5 |
       | test         | 6   | 23   | 0.21 | 1     |
       | test1        | 1   | 1050 | 0.00 | 1     |
@@ -400,9 +396,9 @@ Feature: show @@sql XXX
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql16"
       | sql                  |
       | show @@sql.sum.table |
-    Then check resultset "sql16" has lines with following column values
-      | TABLE-1          | R-2 | W-3    | R%-4 | RELATABLE-5                 | RELACOUNT-6 |
-      | schema1.test     | 0   | 1056   | 0.00 | schema2.global2,            | 1053,       |
+    Then check resultset "sql16" has lines with following column values and has "5" lines
+      | TABLE-1               | R-2 | W-3    | R%-4 | RELATABLE-5                                   | RELACOUNT-6 |
+      | schema1.test          | 1   | 1056   | 0.00 | schema1.sharding_2_t1, schema2.global2,       | 1, 1053,    |
 
     ### case 10: 读写分离用户的各种sql组合
     Then execute sql in "dble-1" in "user" mode
@@ -423,13 +419,11 @@ Feature: show @@sql XXX
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect         | timeout  |
-      | conn_1 | False   | show @@sql.sum       | length{(4)}    | 5        |
       | conn_1 | False   | show @@sql.sum.user  | length{(4)}    | 5        |
-      | conn_1 | False   | show @@sql.sum.table | length{(7)}   | 5        |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql17"
       | sql              |
       | show @@sql.sum   |
-    Then check resultset "sql17" has lines with following column values
+    Then check resultset "sql17" has lines with following column values and has "4" lines
       | USER-1       | R-2 | W-3  | R%-4 | MAX-5 |
       | test         | 6   | 23   | 0.21 | 1     |
       | test1        | 1   | 1050 | 0.00 | 1     |
@@ -438,7 +432,7 @@ Feature: show @@sql XXX
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql18"
       | sql                  |
       | show @@sql.sum.table |
-    Then check resultset "sql18" has lines with following column values
+    Then check resultset "sql18" has lines with following column values and has "7" lines
       | TABLE-1          | R-2 | W-3 | R%-4 | RELATABLE-5                         | RELACOUNT-6 |
       | db1.test_table   | 3   | 8   | 0.27 | db2.test_table1, db1.test_table,    | 5, 3,       |
       | db2.test_table1  | 0   | 7   | 0.00 | db2.test_table1, db1.test_table,    | 2, 1,       |
@@ -449,13 +443,11 @@ Feature: show @@sql XXX
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect         | timeout  |
-      | conn_1 | False   | show @@sql.sum       | length{(4)}    | 5        |
       | conn_1 | False   | show @@sql.sum.user  | length{(4)}    | 5        |
-      | conn_1 | False   | show @@sql.sum.table | length{(7)}   | 5        |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql18"
       | sql              |
       | show @@sql.sum   |
-    Then check resultset "sql18" has lines with following column values
+    Then check resultset "sql18" has lines with following column values and has "4" lines
       | USER-1       | R-2 | W-3  | R%-4 | MAX-5 |
       | test         | 8   | 23   | 0.26 | 1     |
       | test1        | 1   | 1050 | 0.00 | 1     |
@@ -464,10 +456,10 @@ Feature: show @@sql XXX
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql19"
       | sql                  |
       | show @@sql.sum.table |
-    Then check resultset "sql19" has lines with following column values
+    Then check resultset "sql19" has lines with following column values and has "7" lines
       | TABLE-1          | R-2 | W-3    | R%-4 | RELATABLE-5                        | RELACOUNT-6 |
       | db1.test_table   | 5   | 8      | 0.38 | db2.test_table1, db1.test_table,   | 5, 3,          |
-      | schema1.test     | 2   | 1056   | 0.00 | schema2.global2,                   | 1053,       |
+      | schema1.test     | 3   | 1056   | 0.00 | schema1.sharding_2_t1, schema2.global2,   | 1, 1053,     |
 
     Then check "NullPointerException|caught err|unknown error|setError" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
