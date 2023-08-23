@@ -592,7 +592,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | 13      | 5       | rw1    | 172.100.9.8   | 8066          | 13        | 1          |
       | 14      | 5       | rw1    | 172.100.9.8   | 8066          | 14        | 1          |
 
-
     #DBLE0REQ-1112
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -705,7 +704,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | true    | drop table if exists global                | success | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
-      | rw1 | 111111 | conn_3 | true    | drop table if exists test_table                | success | db1 |
+      | rw1  | 111111 | conn_3 | true    | drop table if exists test_table               | success | db1 |
 
     Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
