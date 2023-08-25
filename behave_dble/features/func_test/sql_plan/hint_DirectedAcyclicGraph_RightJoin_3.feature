@@ -2,6 +2,7 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhangqian at 2022/03/10
+@skip #DBLE0REQ-2340
 Feature: test hint
 # DBLE0REQ-1641/DBLE0REQ-1648/DBLE0REQ-1664
 # Affected by the above issue, dble cannot recognize the post-er relationship, so hint does not support the post-er relationship
