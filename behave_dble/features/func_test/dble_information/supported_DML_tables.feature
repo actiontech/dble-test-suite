@@ -205,8 +205,9 @@
       | conn_0 | false   | select test_while_idle from dble_db_instance where name ='0B051'                           | has{(('false',),)} | dble_information |
 
       ##引入新增字段  database_type DBLE0REQ-1676 database_type 默认mysql  coz：DBLE0REQ-2306
-#      | conn_0 | false    | insert into dble_db_instance set name='hostM6',db_group='0B02',addr='172.100.9.4',port=3306,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=4,max_conn_count=9,database_type='clickhouse'      | success        | dble_information |
-      | conn_0 | false    | insert into dble_db_instance set name='0B021',db_group='0B02',addr='172.100.9.1',port=3306,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='false',min_conn_count=4,max_conn_count=9,database_type=null      | success        | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='0B020',db_group='ha_group20',addr='172.100.9.4',port=3306,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=4,max_conn_count=9,database_type='clickhouse'      | success        | dble_information |
+      | conn_0 | false   | select database_type from dble_db_instance where name ='0B020'                          | has{(('clickhouse',),)} | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='0B021',db_group='ha_group21',addr='172.100.9.6',port=3306,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=4,max_conn_count=9,database_type=null      | success        | dble_information |
       | conn_0 | false   | select database_type from dble_db_instance where name ='0B021'                           | has{(('mysql',),)} | dble_information |
 
       ##引入新增字段  db_district/db_data_center/ DBLE0REQ-1752
@@ -216,9 +217,9 @@
       | conn_0 | false   | select db_district,db_data_center from dble_db_instance where name ='0B053'                           | has{(('abc','efg'),)} | dble_information |
 
       ##引入新增字段  flow_high_level/flow_low_level  DBLE0REQ-1752
-      | conn_0 | false   | insert into dble_db_instance set name='0B041',db_group='ha_group21',addr='172.100.9.4',port=3306,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,flow_high_level=null,flow_low_level=null                          | success            | dble_information |
+      | conn_0 | false   | insert into dble_db_instance set name='0B041',db_group='ha_group21',addr='172.100.9.4',port=3306,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='false',min_conn_count=1,max_conn_count=9,flow_high_level=null,flow_low_level=null                          | success            | dble_information |
       | conn_0 | false   | select flow_high_level,flow_low_level from dble_db_instance where name ='0B041'                           | has{((4194304,262144),)} | dble_information |
-      | conn_0 | false   | insert into dble_db_instance set name='0B042',db_group='ha_group20',addr='172.100.9.1',port=3306,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,flow_high_level=4567,flow_low_level=1234                          | success            | dble_information |
+      | conn_0 | false   | insert into dble_db_instance set name='0B042',db_group='ha_group21',addr='172.100.9.1',port=3306,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='false',min_conn_count=1,max_conn_count=9,flow_high_level=4567,flow_low_level=1234                          | success            | dble_information |
       | conn_0 | false   | select flow_high_level,flow_low_level from dble_db_instance where name ='0B042'                           | has{((4567,1234),)} | dble_information |
 
 
@@ -505,7 +506,7 @@
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                              | expect       | db               |
-#      | conn_0 | false   | update dble_db_instance set database_type=null where name='0B021'                                | success      | dble_information |
+      | conn_0 | false   | update dble_db_instance set database_type=null where name='0B020'                                | Update failure.The reason is Column 'database_type' values only support [MYSQL, CLICKHOUSE]      | dble_information |
       | conn_0 | false   | update dble_db_instance set db_district=null,db_data_center=null where name='0B053'              | success      | dble_information |
       | conn_0 | false   | select db_district,db_data_center from dble_db_instance where name ='0B053'                      | has{((None, None),)}     | dble_information |
 
@@ -561,16 +562,16 @@
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                         | expect       | db               |
-      | conn_0 | false   | select * from dble_db_instance                                              | length{(27)} | dble_information |
+      | conn_0 | false   | select * from dble_db_instance                                              | length{(28)} | dble_information |
       | conn_0 | false   | select * from dble_db_group                                                 | length{(18)} | dble_information |
       | conn_0 | false   | delete from dble_db_instance where name='0B051'                             | success      | dble_information |
       | conn_0 | false   | delete from dble_db_instance where name='0B03'                              | success      | dble_information |
-      | conn_0 | false   | select * from dble_db_instance                                              | length{(25)} | dble_information |
+      | conn_0 | false   | select * from dble_db_instance                                              | length{(26)} | dble_information |
       | conn_0 | false   | select * from dble_db_group                                                 | length{(17)} | dble_information |
       | conn_0 | false   | delete from dble_db_instance where name ='hostM8' and db_group ='ha_group8' | success      | dble_information |
       | conn_0 | false   | delete from dble_db_instance where name ='hostM10' or db_group ='ha_group9' | success      | dble_information |
       | conn_0 | false   | delete from dble_db_instance where max_conn_count >10000                    | success      | dble_information |
-      | conn_0 | false   | select * from dble_db_instance                                              | length{(22)} | dble_information |
+      | conn_0 | false   | select * from dble_db_instance                                              | length{(23)} | dble_information |
       | conn_0 | false   | select * from dble_db_group                                                 | length{(14)} | dble_information |
       | conn_0 | false   | select * from dble_rw_split_entry                                           | length{(16)} | dble_information |
       | conn_0 | false   | delete from dble_rw_split_entry where id in (3,5)                           | success      | dble_information |
@@ -1169,11 +1170,11 @@
       | conn   | toClose  | sql                      | expect      | db               |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,database_type='null'                | Not Supported of Value EXPR :'null'                                                                      | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,database_type=' '                   | Not Supported of Value EXPR :' '                                                                         | dble_information |
-#      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,database_type='0B01'                | Insert failure.The reason is Column 'test_while_idle' values only support 'false' or 'true'              | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,database_type='0B01'                | unknown error:No enum constant com.actiontech.dble.config.model.db.type.DataBaseType.0B01             | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,database_type=0B01                  | Not Supported of Value EXPR :0B01                                                                        | dble_information |
-#      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,database_type=-1                    | unknown error:No enum constant com.actiontech.dble.config.model.db.type.DataBaseType.-1       | dble_information |
+      | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,database_type=-1                    | unknown error:No enum constant com.actiontech.dble.config.model.db.type.DataBaseType.-1       | dble_information |
       | conn_0 | false     | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,database_type=1.3                   | Not Supported of Value EXPR :1.3                                                                         | dble_information |
-#      | conn_0 | false     | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,database_type=88                   | Not Supported of Value EXPR :1.3                                                                         | dble_information |
+      | conn_0 | false     | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,database_type=88                   | unknown error:No enum constant com.actiontech.dble.config.model.db.type.DataBaseType.88                                                                       | dble_information |
   Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                      | expect      | db               |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,db_district='null'                 | Not Supported of Value EXPR :'null'             | dble_information |
@@ -1472,14 +1473,26 @@
        ####   test_while_idle
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                   | expect               | db               |
+      | conn_0 | false   | update dble_db_instance set test_while_idle=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle='0B01' where db_group='ha_group1'            | Update failure.The reason is Column 'test_while_idle' values only support 'false' or 'true'                        | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'test_while_idle' values only support 'false' or 'true'                        | dble_information |
+
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql                   | expect               | db               |
       | conn_0 | false   | update dble_db_instance set database_type=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set database_type='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
       | conn_0 | false   | update dble_db_instance set database_type=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
-#      | conn_0 | false   | update dble_db_instance set database_type='0B01' where db_group='ha_group1'            |                       | dble_information |
+      | conn_0 | false   | update dble_db_instance set database_type='0B01' where db_group='ha_group1'            | unknown error:No enum constant com.actiontech.dble.config.model.db.type.DataBaseType.0B01                      | dble_information |
       | conn_0 | false   | update dble_db_instance set database_type=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set database_type=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set database_type=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
-#      | conn_0 | false   | update dble_db_instance set database_type=-2 where db_group='ha_group1'                |                       | dble_information |
+      | conn_0 | false   | update dble_db_instance set database_type=-2 where db_group='ha_group1'                | unknown error:No enum constant com.actiontech.dble.config.model.db.type.DataBaseType.-2                      | dble_information |
+      | conn_0 | false   | update dble_db_instance set database_type="clickhouse" where db_group='ha_group1'                | shardingNodeDbGroup [ha_group1] define error ,all dbInstance database type must be MYSQL                      | dble_information |
 
      Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                   | expect               | db               |
