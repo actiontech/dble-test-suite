@@ -7,7 +7,7 @@
 Feature: show @@sql XXX
 #  1.show @@sql  描述：展示每个用户近期执行完的1024条sql语句，每隔5s清理多余数据
 #  2.show @@sql.high  描述：展示每个用户近期执行高频的1024条sql语句，每隔5s清理多余数据
-#  3.show @@sql.slow  描述：展⽰执⾏时间超过给定阈值(默认100毫秒，可通过reload修改)的sql(默认10条，可以通过设置系统参数sqlRecordCount修改，多余的每5秒清理⼀次）
+#  3.show @@sql.slow  描述：展⽰执⾏时间超过给定阈值(默认100毫秒，可通过reload修改)的sql(默认10条 多余的每5秒清理⼀次）
 #  4.show @@sql.resultset 描述：展⽰结果集⼤⼩超过某个阈值(默认512K，可以通过maxResultSet配置) 的sql，结果集统计信息
 #  8.show @@sql.large 描述：展⽰各个⽤⼾的结果集超过10000⾏的sql(容量为10,多的会被定时清理，清理周期5秒)
 

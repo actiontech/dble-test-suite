@@ -42,12 +42,10 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       $a\-DflowControlStartThreshold=-4096
       $a\-DflowControlStopThreshold=-256
       $a\-DsqlSlowTime=-100
-      $a\-DuseSqlStat=2
       $a\-DuseCompression=2
       $a\-Dcharset=utf-8
       $a\-DtxIsolation=30
       $a\-DrecordTxn=2
-      $a\-DbufferUsagePercent=120
       $a\-DfrontSocketNoDelay=2
       $a\-DbackSocketNoDelay=2
       $a\-DusingAIO=2
@@ -83,8 +81,6 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       $a\-DbufferPoolChunkSize=-32767
       $a\-DbufferPoolPageNumber=-512
       $a\-DbufferPoolPageSize=-2000
-      $a\-DclearBigSQLResultSetMapMs=-600000
-      $a\-DsqlRecordCount=-10
       $a\-DmaxResultSet=-524288
       $a\-DbackSocketSoRcvbuf=-4194304
       $a\-DbackSocketSoSndbuf=-1048576
@@ -103,11 +99,9 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ bufferPoolChunkSize \] '-32767' in bootstrap.cnf is illegal, you may need use the default value 4096 replaced
       Property \[ bufferPoolPageNumber \] '-512' in bootstrap.cnf is illegal, you may need use the default value 409 replaced
       Property \[ bufferPoolPageSize \] '-2000' in bootstrap.cnf is illegal, you may need use the default value 2097152 replaced
-      Property \[ bufferUsagePercent \] '120' in bootstrap.cnf is illegal, you may need use the default value 80 replaced
       Property \[ charset \] 'utf-8' in bootstrap.cnf is illegal, use utf8mb4 replaced
 
       Property \[ checkTableConsistencyPeriod \] '-1800' in bootstrap.cnf is illegal, you may need use the default value 1800000 replaced
-      Property \[ clearBigSQLResultSetMapMs \] '-600000' in bootstrap.cnf is illegal, you may need use the default value 600000 replaced
       property \[ complexExecutor \] has been replaced by the property \[ complexQueryWorker \].  Property \[ complexQueryWorker \] '-4' in bootstrap.cnf is illegal, you may need use the default value.*replaced
       Property \[ costSamplePercent \] '-2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
 
@@ -136,7 +130,6 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       property \[ processorExecutor \] has been replaced by the property \[ frontWorker \].  Property \[ frontWorker \] '-3' in bootstrap.cnf is illegal, you may need use the default value.*replaced
 
       Property \[ sqlExecuteTimeout \] '-20' in bootstrap.cnf is illegal, you may need use the default value 300 replaced
-      Property \[ sqlRecordCount \] '-10' in bootstrap.cnf is illegal, you may need use the default value 10 replaced
       Property \[ sqlSlowTime \] '-100' in bootstrap.cnf is illegal, you may need use the default value 100 replaced
       Property \[ txIsolation \] '30' in bootstrap.cnf is illegal, you may need use the default value 3 replaced
 
@@ -156,7 +149,6 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       # Property \[ useCompression \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       # Property \[ useCostTimeStat \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       # Property \[ usePerformanceMode \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
-      # Property \[ useSqlStat \] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       # Property \[ useThreadUsageStat \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       # Property \[ usingAIO \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       # property \[ enableFlowControl \] '5' data type should be boolean

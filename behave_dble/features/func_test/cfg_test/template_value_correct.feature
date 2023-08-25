@@ -39,12 +39,10 @@ Feature: config all dble config files correct and restart dble
       $a\-DflowControlHighLevel=4096
       $a\-DflowControlLowLevel=256
       $a\-DsqlSlowTime=100
-      $a\-DuseSqlStat=1
       $a\-DuseCompression=0
       $a\-Dcharset=utf8mb4
       $a\-DtxIsolation=3
       $a\-DrecordTxn=1
-      $a\-DbufferUsagePercent=80
       $a\-DfrontSocketNoDelay=1
       $a\-DbackSocketNoDelay=1
       $a\-DusingAIO=0
@@ -78,8 +76,6 @@ Feature: config all dble config files correct and restart dble
       $a\-DbufferPoolChunkSize=4096
       $a\-DbufferPoolPageNumber=512
       $a\-DbufferPoolPageSize=2097152
-      $a\-DclearBigSQLResultSetMapMs=600000
-      $a\-DsqlRecordCount=10
       $a\-DmaxResultSet=524288
       $a\-DbackSocketSoRcvbuf=4194304
       $a\-DbackSocketSoSndbuf=1048576
@@ -139,11 +135,7 @@ Feature: config all dble config files correct and restart dble
       | bufferPoolPageSize          | 2097152B                        |
       | bufferPoolPageNumber        | 512                             |
       | mappedFileSize              | 67108864B                       |
-      | useSqlStat                  | 1                               |
-      | sqlRecordCount              | 10                              |
       | maxResultSet                | 524288B                         |
-      | bufferUsagePercent          | 80%                             |
-      | clearBigSQLResultSetMapMs   | 600000ms                        |
       | frontSocketSoRcvbuf         | 1048576B                        |
       | frontSocketSoSndbuf         | 4194304B                        |
       | frontSocketNoDelay          | 1                               |
