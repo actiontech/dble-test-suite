@@ -150,9 +150,9 @@ Feature:manager Cmd
     Then execute admin cmd "enable @@statistic"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                 | expect      | db               |
-      | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user    | length{(0)} | dble_information |
-      | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | length{(0)} | dble_information |
-      | conn_0 | true    | select * from sql_statistic_by_table_by_user_by_entry               | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user    | length{(1)} | dble_information |
+      | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | length{(5)} | dble_information |
+      | conn_0 | true    | select * from sql_statistic_by_table_by_user_by_entry               | length{(3)} | dble_information |
 
    #case check bootstrap.dynamic.cnf
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
@@ -398,9 +398,9 @@ Feature:manager Cmd
       | tableByUserByEntryTableSize             | 1                |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                 | expect      |
-      | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user    | length{(0)} |
-      | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | length{(0)} |
-      | conn_0 | False   | select * from sql_statistic_by_table_by_user_by_entry               | length{(0)} |
+      | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user    | length{(1)} |
+      | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | length{(1)} |
+      | conn_0 | False   | select * from sql_statistic_by_table_by_user_by_entry               | length{(1)} |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                     | expect  | db      |
       | conn_1 | False   | drop table if exists sharding_4_t1                                                      | success | schema1 |
@@ -1094,24 +1094,22 @@ Feature:manager Cmd
       | frontendByBackendByEntryByUserTableSize | 1024             |
       | tableByUserByEntryTableSize             | 1024             |
 
-
-# DBLE0REQ-2293
-#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-#    """
-#    $a -DstatisticQueueSize=10
-#    $a -DenableStatistic=-1
-#    $a -DassociateTablesByEntryByUserTableSize=0
-#    $a -DfrontendByBackendByEntryByUserTableSize=44%
-#    $a -DtableByUserByEntryTableSize=-1
-#    """
-#    Then restart dble in "dble-1" failed for
-#    """
-#    Property \[ statisticQueueSize \] '10' in bootstrap.cnf is illegal, size must not be less than 1 and must be a power of 2, you may need use the default value 4096 replaced
-#    Property \[ enableStatistic \] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
-#    property \[ frontendByBackendByEntryByUserTableSize \] '44%' data type should be int
-#    Property \[ tableByUserByEntryTableSize \] '-1' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
-#    Property \[ associateTablesByEntryByUserTableSize \] '0' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
-#    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a -DstatisticQueueSize=10
+    $a -DenableStatistic=-1
+    $a -DassociateTablesByEntryByUserTableSize=0
+    $a -DfrontendByBackendByEntryByUserTableSize=44%
+    $a -DtableByUserByEntryTableSize=-1
+    """
+    Then restart dble in "dble-1" failed for
+    """
+    Property \[ statisticQueueSize \] '10' in bootstrap.cnf is illegal, size must not be less than 1 and must be a power of 2, you may need use the default value 4096 replaced
+    check the property \[ enableStatistic \] '-1' data type or value
+    property \[ frontendByBackendByEntryByUserTableSize \] '44%' data type should be int
+    Property \[ tableByUserByEntryTableSize \] '-1' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
+    Property \[ associateTablesByEntryByUserTableSize \] '0' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
+    """
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -1317,7 +1315,6 @@ Feature:manager Cmd
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                        | expect       | db               | timeout |
       | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')   | has{(('enableStatistic', '0'), ('associateTablesByEntryByUserTableSize', '111'), ('frontendByBackendByEntryByUserTableSize', '111'), ('tableByUserByEntryTableSize', '111'))}  | dble_information | 11 |
-
 
     #case reload @@statistic_table_size = 200 where table =
     Then execute admin cmd  in "dble-1" at background

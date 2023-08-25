@@ -109,13 +109,13 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.btrace.provider.CostTimeProvider#beginRequest||前段开始请求|
 |com.actiontech.dble.server.NonBlockingSession#setRequestTime||收到前端请求|
 |com.actiontech.dble.server.NonBlockingSession#startProcess||开始处理请求~开始解析|
-|com.actiontech.dble.server.NonBlockingSession#endParse||解析结束，准备计算路由|
-|com.actiontech.dble.server.NonBlockingSession#endRoute||路由计算结束，准备下发sql|
+|com.actiontech.dble.statistic.trace.TrackProbe#endParse||解析结束，准备计算路由|   //3.23.08变更
+|com.actiontech.dble.statistic.trace.TrackProbe#endRoute||路由计算结束，准备下发sql|  //3.23.08变更
 |com.actiontech.dble.server.NonBlockingSession#readyToDeliver||准备交付（在setPreExecuteEnd断点之前）|
 |com.actiontech.dble.server.NonBlockingSession#setPreExecuteEnd||下发前准备工作结束（对于ddl：指“select 1”返回结果；对于查询：指下一步要下发sql）|
 |com.actiontech.dble.btrace.provider.CostTimeProvider#startExecuteBackend||将sql下发节点实例|
 |com.actiontech.dble.btrace.provider.CostTimeProvider#execLastBack||将sql下发至最后节点实例|
-|com.actiontech.dble.server.NonBlockingSession#setBackendResponseTime||收到后端mysql返回的结果（指已收到一个包的返回）|
+|com.actiontech.dble.statistic.trace.TrackProbe#setBackendResponseTime||收到后端mysql返回的结果（指已收到一个包的返回）|  //3.23.08变更
 |com.actiontech.dble.btrace.provider.CostTimeProvider#resFromBack||收到第一个节点实例返回的时间点（在setBackendResponseTime断点中）|
 |com.actiontech.dble.btrace.provider.CostTimeProvider#resLastBack||收到最后节点实例返回的时间点（在setBackendResponseTime断点中，且在resFromBack断点之后）|
 |com.actiontech.dble.btrace.provider.CostTimeProvider#allBackendConnReceive||所有的连接(节点实例)结果集都返回了的时间点|

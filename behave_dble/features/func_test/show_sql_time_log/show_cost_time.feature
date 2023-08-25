@@ -10,8 +10,7 @@ Feature: show @@cost_time;
   ## FRONT_PREPARE: 前端连接以及dble中的耗时
   ## BACKEND_EXECUTE: 后端连接执行耗时
 
-
-  Scenario: show @@cost_time
+  Scenario: show @@cost_time   #1
     ##查看各参数的默认值
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                        | expect                           | db               |
@@ -118,9 +117,10 @@ Feature: show @@cost_time;
       | test1 | 111111 | conn_3  | False   | set @@trace=1                        | schema1 | success                                     |
       | test1 | 111111 | conn_3  | False   | select @@trace                       | schema1 | success                                     |
       | test1 | 111111 | conn_3  | true    | select 1                             | schema1 | success                                     |
+    ###
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql               | expect       | timeout |
-      | conn_0 | False   | show @@cost_time  | length{(12)} | 10,3    |
+      | conn_0 | False   | show @@cost_time  | length{(8)}  | 10,3    |
 
     ###事务未结束
     Then execute sql in "dble-1" in "user" mode
@@ -129,7 +129,7 @@ Feature: show @@cost_time;
       | test1 | 111111 | conn_3  | False   | select * from sharding_4_t1                               | schema1 | success                 |
      Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql               | expect       | timeout |
-      | conn_0 | False   | show @@cost_time  | length{(15)} | 10,3    |
+      | conn_0 | False   | show @@cost_time  | length{(10)} | 10,3    |
 
     ###不记录除了分库分表用户外的用户执行的sql
     Then execute sql in "dble-1" in "user" mode
@@ -138,7 +138,7 @@ Feature: show @@cost_time;
       | ana1  | 111111    | conn_12 | true     | select 1 | success  |
      Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql               | expect       | timeout |
-      | conn_0 | true    | show @@cost_time  | length{(15)} | 10,3    |
+      | conn_0 | true    | show @@cost_time  | length{(10)} | 10,3    |
 
     Then check "NullPointerException|caught err|unknown error|setError" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
@@ -176,4 +176,3 @@ Feature: show @@cost_time;
       | conn_0 | False   | show @@cost_time      | length{(2052)}  | 10,3    |
 
     Then check "NullPointerException|caught err|unknown error|setError" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
-

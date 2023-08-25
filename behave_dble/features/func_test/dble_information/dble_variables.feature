@@ -23,21 +23,17 @@ Feature:  dble_variables test
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_1"
       | conn   | toClose | sql                 | db               |
       | conn_0 | False   | desc dble_variables | dble_information |
-    Then check resultset "dble_variables_1" has lines with following column values
+    Then check resultset "dble_variables_1" has lines with following column values and has "4" lines
       | Field-0        | Type-1       | Null-2 | Key-3 | Default-4 | Extra-5 |
       | variable_name  | varchar(32)  | NO     | PRI   | None      |         |
       | variable_value | varchar(255) | NO     |       | None      |         |
       | comment        | varchar(255) | NO     |       | None      |         |
       | read_only      | varchar(7)   | NO     |       | None      |         |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                             | expect            | db               |
-      | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(147)}     | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
       | conn_0 | False   | select * from dble_variables | dble_information |
-    Then check resultset "dble_variables_2" has lines with following column values
+    Then check resultset "dble_variables_2" has lines with following column values and has "144" lines
       | variable_name-0                         | variable_value-1                            | comment-2                                                                                                                                                                                                            | read_only-3 |
       | version_comment                         | dble Server (ActionTech)                    | version_comment                                                                                                                                                                                                      | true        |
       | isOnline                                | true                                        | When it is set to offline, COM_PING/COM_HEARTBEAT/SELECT USER()/SELECT CURRENT_USER() will return error                                                                                                              | false       |
@@ -62,7 +58,7 @@ Feature:  dble_variables test
       | frontendByBackendByEntryByUserTableSize | 1024                                        | FrontendByBackendByEntryByUser table size, the default is 1024                                                                                                                                                       | false       |
       | tableByUserByEntryTableSize             | 1024                                        | TableByUserByEntry table size, the default is 1024                                                                                                                                                                   | false       |
       | sqlLogTableSize                         | 1024                                        | SqlLog table size, the default is 1024                                                                                                                                                                               | false       |
-      | samplingRate                            | 0                                           | Sampling rate, the default is 0, it is a percentage                                                                                                                                                                  | false       |
+      | samplingRate                            | 100                                         | Sampling rate, the default is 100, it is a percentage                                                                                                                                                                | false       |
       | xaIdCheckPeriod                         | 300s                                        | The period for check xaId, the default is 300 second                                                                                                                                                                 | false       |
       | enableSqlDumpLog                        | 0                                           | Whether enable sqlDumpLog, the default value is 0(off)                                                                                                                                                               | false       |
       | enableMemoryBufferMonitor               | 0                                          | Whether enable memory buffer monitor, enable this option will cost a lot of  resources. the default value is 0(off)                                                                                                  | false       |
@@ -122,11 +118,7 @@ Feature:  dble_variables test
       | bufferPoolPageSize                      | 2097152B                                    | The page size of memory bufferPool. The max direct memory used for allocating                                                                                                                                        | true        |
       | bufferPoolPageNumber                    | 409                                         | The page number of memory bufferPool. The All bufferPool size is PageNumber * PageSize                                                                                                                               | true        |
       | mappedFileSize                          | 67108864B                                   | The Memory linked file size,when complex query resultSet is too large the Memory will be turned to file temporary                                                                                                    | true        |
-      | useSqlStat                              | 1                                           | Whether the SQL statistics function is enable or not. The default value is 1                                                                                                                                         | true        |
-      | sqlRecordCount                          | 10                                          | The slow SQL statistics limit,if the slow SQL record is large than the size, the record will be clear. The default value is 10                                                                                       | true        |
       | maxResultSet                            | 524288B                                     | The large resultSet SQL standard. The default value is 524288B(means 512*1024)                                                                                                                                       | true        |
-      | bufferUsagePercent                      | 80%                                         | Large result set cleanup trigger percentage. The default value is 80                                                                                                                                                 | true        |
-      | clearBigSQLResultSetMapMs               | 600000ms                                    | The period for clear the large resultSet SQL statistics. The default value is 6000000ms                                                                                                                              | true        |
       | frontSocketSoRcvbuf                     | 1048576B                                    | The buffer size of frontend receive socket. The default value is 1048576B(means 1024*1024)                                                                                                                           | true        |
       | frontSocketSoSndbuf                     | 4194304B                                    | The buffer size of frontend send socket. The default value is 4194304B(means 1024*1024*4)                                                                                                                            | true        |
       | frontSocketNoDelay                      | 1                                           | The frontend nagle is disabled. The default value is 1                                                                                                                                                               | true        |
@@ -186,15 +178,16 @@ Feature:  dble_variables test
       | tcpKeepInterval                         | 10                                          | Keep-Alive retransmission interval time,unit is s,  default value is 10s                                                                                                                                             | true        |
       | tcpKeepCount                            | 3                                           | Keep-Alive retransmission maximum limit, default value is 3                                                                                                                                                          | true        |
       | managerFrontWorker                      | 2                                           | The size of fixed thread pool named of managerFrontWorker, the default value is 2                                                                                                                                    | true        |
+      | enableStatisticAnalysis                 | 0                                           | Enable statistic analysis sql('show @@sql.sum.user/table' or 'show @@sql.condition'), the default is 0(false)                                                                                                        | false       |
 
   #case supported select limit /order by/ where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                               | expect       | db               |
       | conn_0 | False   | select * from dble_variables limit 10                             | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(24)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(24)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(147)}| dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(25)} | dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(25)} | dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(144)}| dble_information |
   #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                              | db               |
@@ -217,7 +210,7 @@ Feature:  dble_variables test
       | sqlSlowTime                             | 100ms                          | false       |
       | sqlLogTableSize                         | 1024                           | false       |
       | slowQueueOverflowPolicy                 | 1                              | false       |
-      | samplingRate                            | 0                              | false       |
+      | samplingRate                            | 100                            | false       |
       | maxRowSizeToFile                        | 100000                         | false       |
       | isOnline                                | true                           | false       |
       | generalLogFile                          | /opt/dble/general/general.log  | false       |
@@ -239,8 +232,8 @@ Feature:  dble_variables test
       | conn_0 | False   | select read_only,count(*) from dble_variables group by read_only | dble_information |
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
-      | false       | 24      |
-      | true        | 123     |
+      | false       | 25      |
+      | true        | 119     |
 
   #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
@@ -264,9 +257,9 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('xalog',),)}   | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('',),)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(129)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(128)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(18)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(127)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(127)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
   #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
       | conn_0 | False   | update dble_variables set comment='sqlSlowTime1' where variable_value='true' | Access denied for table 'dble_variables' | dble_information |

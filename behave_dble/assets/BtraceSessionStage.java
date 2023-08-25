@@ -52,7 +52,7 @@ public final class BtraceSessionStage {
     }
 
     @OnMethod(
-            clazz = "com.actiontech.dble.server.NonBlockingSession",
+            clazz = "com.actiontech.dble.statistic.trace.TrackProbe",
             method = "endParse",
             location = @Location(Kind.RETURN)
     )
@@ -68,7 +68,7 @@ public final class BtraceSessionStage {
     }
 
     @OnMethod(
-            clazz = "com.actiontech.dble.server.NonBlockingSession",
+            clazz = "com.actiontech.dble.statistic.trace.TrackProbe",
             method = "endRoute",
             location = @Location(Kind.RETURN)
     )

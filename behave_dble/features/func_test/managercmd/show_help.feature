@@ -7,13 +7,10 @@ Feature: test show @@help
 
   @NORMAL
   Scenario: test "show @@help" #1
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(121)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
-    Then check resultset "rs_A" has lines with following column values
+    Then check resultset "rs_A" has lines with following column values and has "121" lines
       | STATEMENT-0                                                                                              | DESCRIPTION-1                                                                     |
       | select @@VERSION_COMMENT                                                                                 | Show the version comment of dble                                                  |
       | show @@time.current                                                                                      | Report current timestamp                                                          |
@@ -76,8 +73,6 @@ Feature: test show @@help
       | reload @@config                                                                                          | Reload basic config from file                                                     |
       | reload @@config_all                                                                                      | Reload all config from file                                                       |
       | reload @@metadata [where schema=? [and table=?] \| where table in ('schema1.table1',...)]                | Reload metadata of tables or specified table                                      |
-      | reload @@sqlslow=                                                                                        | Set Slow SQL Time(ms)                                                             |
-      | reload @@user_stat                                                                                       | Reset show @@sql  @@sql.sum @@sql.slow                                            |
       | reload @@query_cf[=table&column]                                                                         | Reset show @@sql.condition                                                        |
       | release @@reload_metadata                                                                                | Release reload process , unlock the config meta lock                              |
       | reload @@load_data.num=?                                                                                 | Set the value of maxRowSizeToFile                                                 |
@@ -147,6 +142,8 @@ Feature: test show @@help
       | file @@list                            |
       | file @@show filename                   |
       | file @@upload filename content         |
+      | reload @@sqlslow=                      |
+      | reload @@user_stat                     |
 
 
 

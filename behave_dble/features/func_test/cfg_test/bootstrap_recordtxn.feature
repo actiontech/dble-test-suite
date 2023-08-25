@@ -213,13 +213,13 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
-    ConnID:4, XID:1
+    ConnID:4, XID:21
     \[dn2\]INSERT INTO sharding_4_t1 VALUES \(1, 10, 11\)
-    ConnID:4, XID:2
+    ConnID:4, XID:22
     \[dn2\]update sharding_4_t1 set age=20 where id=1
-    ConnID:4, XID:3
+    ConnID:4, XID:23
     \[dn2\]delete from sharding_4_t1 where id=1
-    ConnID:4, XID:4
+    ConnID:4, XID:24
     \[dn1\]INSERT INTO sharding_4_t1 VALUES \(4, 40, 44\)
     \[dn2\]INSERT INTO sharding_4_t1 VALUES \(5, 50, 55\)
     \[dn3\]INSERT INTO sharding_4_t1 VALUES \(2, 20, 22\)
@@ -236,12 +236,10 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     \[dn5\]insert into no_sharding_t1 values \(12,20,2\),\(13,30,3\),\(14,40,4\),\(15,50,5\)
     \[dn5\]update no_sharding_t1 set age=20 where id in \(11, 12\)
     \[dn5\]delete from no_sharding_t1
-    ConnID:4, XID:14
+    ConnID:4, XID:34
     """
     Then check following text exist "N" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
-    ConnID:4, XID:7
-    ConnID:4, XID:15
     select * from sharding_4_t1 where id=3
     select * from sharding_4_t1
     select * from no_sharding_t1 where id=13
@@ -549,7 +547,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
-    ConnID:3, XID:1
+    ConnID:3, XID:25
     begin
     [[]dn1[]]INSERT INTO test
     VALUES \(1, 10, 11\)
@@ -566,7 +564,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
-    ConnID:3, XID:2
+    ConnID:3, XID:26
     begin
     [[]dn1[]]UPDATE test
     SET age = 20
@@ -584,7 +582,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
-    ConnID:3, XID:3
+    ConnID:3, XID:27
     begin
     [[]dn1[]]DELETE FROM test
     WHERE id = 1
@@ -601,7 +599,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
-    ConnID:3, XID:4
+    ConnID:3, XID:28
     begin
     commit
     """
@@ -617,7 +615,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
-    ConnID:3, XID:5
+    ConnID:3, XID:29
     begin
     [[]dn1[]]INSERT INTO sing1
     VALUES \(11, 10, 1\),
@@ -632,7 +630,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
-    ConnID:3, XID:6
+    ConnID:3, XID:30
     begin
     [[]dn1[]]UPDATE sing1
     SET age = 20
@@ -646,7 +644,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
-    ConnID:3, XID:7
+    ConnID:3, XID:31
     begin
     [[]dn1[]]DELETE FROM sing1
     WHERE id = 11
@@ -660,7 +658,7 @@ Feature: test recordTxn in bootstrap.cnf - DBLE0REQ-853
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/txlogs/server-tx.log" in host "dble-1"
     """
-    ConnID:3, XID:8
+    ConnID:3, XID:32
     begin
     commit
     """
