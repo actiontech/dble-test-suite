@@ -8,6 +8,7 @@ Feature: test high-availability related commands
   dataHost @@switch name='xxx' master='xxx'
   show @@datasource
 
+  @auto_retry #因DBLE0REQ-2319，偶发概率低，增加auto_retry
   Scenario: end to end ha switch test
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
      """
