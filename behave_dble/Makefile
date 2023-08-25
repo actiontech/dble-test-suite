@@ -65,7 +65,8 @@ run_func_stable_case: up
 	features/func_test/sql_plan/ \
 	features/func_test/heartbeat/ \
 	features/func_test/metalock/ \
-	features/func_test/show_sql_time_log
+	features/func_test/show_sql_time_log \
+	features/func_test/htap_test
 
 run_cfg_case: up
 	pipenv run behave -D dble_conf=template features/setup.feature \
