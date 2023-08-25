@@ -124,29 +124,24 @@ Feature: htap basic functionality test
     ## 不包含聚合函数的select -->TP
     Given execute single sql in "dble-1" in "user" mode and save resultset in "none_agre_select_rs"
       | user  | passwd    | conn   | toClose | sql                                                                         | expect  | db      |
-      | htap1 | 111111    | conn_1 | true    | explain select * from sharding_4_t1 t1 join sharding_4_t2 t2 on t1.id=t2.id | success | htapDb1 |
+      | htap1 | 111111    | conn_1 | true    | explain select * from sharding_4_t1 t1 join sharding_4_t2 t2 on t1.id=t2.id | success | htapDb2 |
     Then check resultset "none_agre_select_rs" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                            |
-      | dn1_0             | BASE SQL        | select `t1`.`id`,`t1`.`name`,`t1`.`age` from  `sharding_4_t1` `t1` ORDER BY `t1`.`id` ASC |
-      | dn2_0             | BASE SQL        | select `t1`.`id`,`t1`.`name`,`t1`.`age` from  `sharding_4_t1` `t1` ORDER BY `t1`.`id` ASC |
-      | dn3_0             | BASE SQL        | select `t1`.`id`,`t1`.`name`,`t1`.`age` from  `sharding_4_t1` `t1` ORDER BY `t1`.`id` ASC |
-      | dn4_0             | BASE SQL        | select `t1`.`id`,`t1`.`name`,`t1`.`age` from  `sharding_4_t1` `t1` ORDER BY `t1`.`id` ASC |
-      | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0; dn3_0; dn4_0                                                                |
-      | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                         |
-      | dn5_0             | BASE SQL        | select `t2`.`id`,`t2`.`name`,`t2`.`age` from  `sharding_4_t2` `t2` order by `t2`.`id` ASC |
-      | merge_1           | MERGE           | dn5_0                                                                                     |
-      | join_1            | JOIN            | shuffle_field_1; merge_1                                                                  |
-      | shuffle_field_2   | SHUFFLE_FIELD   | join_1                                                                                    |
+      | dn1_0           | BASE SQL      | select `t1`.`id`,`t1`.`name`,`t1`.`age`,`t2`.`id`,`t2`.`name`,`t2`.`age` from  `sharding_4_t1` `t1` join  `sharding_4_t2` `t2` on `t1`.`id` = `t2`.`id` where 1=1  |
+      | dn2_0           | BASE SQL      | select `t1`.`id`,`t1`.`name`,`t1`.`age`,`t2`.`id`,`t2`.`name`,`t2`.`age` from  `sharding_4_t1` `t1` join  `sharding_4_t2` `t2` on `t1`.`id` = `t2`.`id` where 1=1  |
+      | dn3_0           | BASE SQL      | select `t1`.`id`,`t1`.`name`,`t1`.`age`,`t2`.`id`,`t2`.`name`,`t2`.`age` from  `sharding_4_t1` `t1` join  `sharding_4_t2` `t2` on `t1`.`id` = `t2`.`id` where 1=1  |
+      | dn4_0           | BASE SQL      | select `t1`.`id`,`t1`.`name`,`t1`.`age`,`t2`.`id`,`t2`.`name`,`t2`.`age` from  `sharding_4_t1` `t1` join  `sharding_4_t2` `t2` on `t1`.`id` = `t2`.`id` where 1=1  |
+      | merge_1         | MERGE         | dn1_0; dn2_0; dn3_0; dn4_0                                                                                                                                         |
+      | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                                                                            |
     Then execute sql in "dble-1" in "user" mode
       | user  | conn   | toClose | sql                                                                                          | expect       | db      |
-      | htap1 | conn_0 | True    | select * from sharding_4_t1 t1 join sharding_4_t2 t2 on t1.id=t2.id                          | length{(4)}  | htapDb1  |
-    # trx-->TP issue:DBLE0REQ-2321
-#    Given execute single sql in "dble-1" in "user" mode and save resultset in "trx_agre_rs"
-#      | user  | passwd    | conn   | toClose | sql                                                                         | expect  | db      |
-#      | test  | 111111    | conn_1 | true    | set autocommit=0;explain select count(*) from sharding_4_t2                 | success | schema1 |
-#    Then check resultset "trx_agre_rs" has lines with following column values
-#      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                    |
-#      | apNode1           | BASE SQL | select count(*) from sharding_4_t2 |
+      | htap1 | conn_0 | True    | select * from sharding_4_t1 t1 join sharding_4_t2 t2 on t1.id=t2.id                          | length{(4)}  | htapDb2  |
+
+    # trx-->TP
+    Then execute sql in "dble-1" in "user" mode
+      | user  | passwd    | conn   | toClose | sql                                                                         | expect                                                                             | db      |
+      | test  | 111111    | conn_1 | true    | set autocommit=0;explain select count(*) from sharding_4_t2                 | hasStr{(), (('dn5', 'BASE SQL', 'SELECT count(*) FROM sharding_4_t2 LIMIT 100'),)} | schema1 |
+
     ## hint -->TP
     Given execute single sql in "dble-1" in "user" mode and save resultset in "hint_agre_rs"
       | user  | passwd    | conn   | toClose | sql                                                                         | expect  | db      |
