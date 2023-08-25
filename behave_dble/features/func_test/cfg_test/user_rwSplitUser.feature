@@ -330,7 +330,7 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@sql.condition                                              | length{(2)}   |
       | conn_0 | False   | show @@heartbeat                                                  | length{(4)}   |
       | conn_0 | False   | show @@heartbeat.detail  where name='hostM1'                      | success       |
-      | conn_0 | False   | show @@sysparam                                                   | length{(143)} |
+      | conn_0 | False   | show @@sysparam                                                   | length{(140)} |
       | conn_0 | False   | show @@white                                                      | length{(3)}   |
       | conn_0 | False   | show @@directmemory                                               | length{(1)}   |
       | conn_0 | False   | show @@command.count                                              | length{(1)}   |
@@ -358,7 +358,6 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | reload @@config                                                   | success       |
       | conn_0 | False   | reload @@config_all                                               | success       |
       | conn_0 | False   | reload @@metadata                                                 | success       |
-      | conn_0 | False   | reload @@sqlslow=1                                                | success       |
       | conn_0 | False   | reload @@query_cf                                                 | success       |
       | conn_0 | true    | release @@reload_metadata                                         | Dble not in reloading or reload status not interruptible       |
       | conn_0 | False   | show @@dbinstance.synstatus                                       | success       |
@@ -489,28 +488,6 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@backend where port= 3307          | success     |
       | conn_0 | False   | show @@session            | length{(0)}  |
       | conn_0 | False   | show @@session.xa         | length{(0)}  |
-
-
-#### 没有统计到读写分离用户的sql ####DBLE0REQ-1701
-#    Given execute sql "50" times in "dble-1" at concurrent
-#      | user  | passwd | sql             |
-#      |  rwS1  | 111111 | select 1        |
-#    Given execute sql "20" times in "dble-1" at concurrent
-#      | user  | passwd | sql             |
-#      |  rwS1  | 111111 | select 1        |
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                     | expect       |
-#      | conn_0 | False   | show @@connection.sql        | length{(1)}  |
-#      | conn_0 | False   | show @@sql        | length{(1)}  |
-#      | conn_0 | False   | show @@sql.high            | length{(1)}  |
-#      | conn_0 | False   | show @@sql.slow           | length{(1)}  |
-#      | conn_0 | False   | show @@sql.large           | length{(1)}  |
-#      | conn_0 | False   | show @@sql.sum          | length{(1)}  |
-#      | conn_0 | False   | show @@sql.sum.user          | length{(1)}  |
-#      | conn_0 | False   | show @@sql.sum.table           | length{(1)}  |
-#      | conn_0 | False   | show @@connection.coun          | length{(1)}  |
-#      | conn_0 | False   | reload @@user_stat            | length{(1)}  | 重置前面命令的状态 Reset show @@sql  @@sql.sum @@sql.slow  @@sql.high  @@sql.large  @@sql.resultset  success
-
 
 
   Scenario:  rwSplitUser with the prepared sql  DBLE0REQ-1065   #14
