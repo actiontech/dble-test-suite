@@ -44,7 +44,7 @@ show @@sql.high
 show @@sql.slow
 show @@sql.resultset
 show @@sql.large
-show @@sql.large true
+#show @@sql.large true
 show @@sql.sum
 show @@sql.sum true
 show @@sql.sum.user
