@@ -5,6 +5,7 @@
 
 Feature: htap basic functionality test
 
+
   Scenario: test basic htap #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
@@ -49,7 +50,11 @@ Feature: htap basic functionality test
       <hybridTAUser name="htap1" password="111111" schemas="htapDb1,htapDb2"  maxCon="20"/>
       <hybridTAUser name="htap2" password="111111" schemas="htapDb1"  maxCon="20"/>
       """
-    Then execute admin cmd "reload @@config"
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      $a -DenableStatisticAnalysis=1
+      """
+    Then restart dble in "dble-1" success
 
     # dble暂未支持APNode相关的管理端命令，所以需连接后端手动建立后ck实例的物理库
     Then execute sql in "clickhouse-server_1" in "clickhouse" mode
@@ -78,6 +83,8 @@ Feature: htap basic functionality test
       | test | 111111    | conn_1 | False   | create table ckdb2.sharding_4_t2(id int,name varchar(10),age int) ENGINE = MergeTree order by id   | success | ckdb1    |
       | test | 111111    | conn_1 | True    | insert into ckdb2.sharding_4_t2 values (1,1,1),(2,2,2),(3,3,3),(4,4,4),(9,9,9),(10,10,10)          | success | ckdb1    |
 
+    ##开启SQL统计的参数，记录hybridTAUser用户执行的sql
+    Then execute admin cmd "enable @@statistic"
 
     # 1.路由到TP，并准备数据(explain及结果集检测)
     Then execute sql in "dble-1" in "user" mode
@@ -101,6 +108,56 @@ Feature: htap basic functionality test
       | htap1 | 111111    | conn_1 | False   | create table sharding_4_t2(id int,name varchar(10),age int)                          | success | htapDb2 |
       | htap1 | 111111    | conn_1 | True    | insert into sharding_4_t2 values (1,1,1),(2,2,2),(3,3,3),(4,4,4),(9,9,9),(10,10,10)  | success | htapDb2 |
 
+    ##校验sql是否被正确记录
+     Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                  | expect          | timeout |
+      | new_a0 | False   | show @@sql.sum.user  | hasStr{'htap1'} | 5       |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_11"
+      | conn   | toClose | sql                                                                 | db               |
+      | new_a1 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
+    Then check resultset "resultset_11" has lines with following column values and has "5" lines
+      | entry-0 | user-1  | backend_host-3 | backend_port-4 | sharding_node-5 | db_instance-6 | tx_count-7 | tx_rows-8 | sql_insert_count-10 | sql_insert_rows-11 | sql_update_count-13 | sql_update_rows-14 | sql_delete_count-16 | sql_delete_rows-17 | sql_select_count-19 | sql_select_rows-20 |
+      | 1       | htap1   | 172.100.9.6    | 3306           | dn2             | hostM2        | 12         | 10        | 4                   | 10                 | 0                   | 0                  | 0                   | 0                  | 0                   | 0                  |
+      | 1       | htap1   | 172.100.9.5    | 3306           | dn1             | hostM1        | 11         | 7         | 3                   | 7                  | 0                   | 0                  | 0                   | 0                  | 0                   | 0                  |
+      | 1       | htap1   | 172.100.9.6    | 3306           | dn4             | hostM2        | 9          | 6         | 3                   | 6                  | 0                   | 0                  | 0                   | 0                  | 0                   | 0                  |
+      | 1       | htap1   | 172.100.9.5    | 3306           | dn3             | hostM1        | 9          | 7         | 3                   | 7                  | 0                   | 0                  | 0                   | 0                  | 0                   | 0                  |
+      | 1       | htap1   | 172.100.9.5    | 3306           | dn5             | hostM1        | 6          | 7         | 2                   | 7                  | 0                   | 0                  | 0                   | 0                  | 0                   | 0                  |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_21"
+      | conn   | toClose | sql                                                                 | db               |
+      | new_a1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
+    Then check resultset "resultset_21" has lines with following column values and has "6" lines
+      | entry-0 | user-1 | table-2               | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_rows-10 |
+      | 1       | htap1  | htapDb1.test          | 1                  | 4                 | 0                  | 0                 | 0                  | 0                 | 0                  | 0                  |
+      | 1       | htap1  | htapDb1.sharding_2_t1 | 1                  | 4                 | 0                  | 0                 | 0                  | 0                 | 0                  | 0                  |
+      | 1       | htap1  | htapDb1.sharding_4_t1 | 1                  | 4                 | 0                  | 0                 | 0                  | 0                 | 0                  | 0                  |
+      | 1       | htap1  | htapDb2.ck2_sing1     | 1                  | 4                 | 0                  | 0                 | 0                  | 0                 | 0                  | 0                  |
+      | 1       | htap1  | htapDb1.ck1_sing1     | 1                  | 3                 | 0                  | 0                 | 0                  | 0                 | 0                  | 0                  |
+      | 1       | htap1  | htapDb2.sharding_4_t2 | 1                  | 6                 | 0                  | 0                 | 0                  | 0                 | 0                  | 0                  |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
+      | conn   | toClose | sql                     | db               |
+      | new_a1 | False   | select * from sql_log   | dble_information |
+    Then check resultset "resulte_1" has lines with following column values and has "18" lines
+      | sql_id-0 | sql_stmt-1                                                                          | sql_digest-2                                                            | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 | result_size-11 |
+      | 1        | drop table if exists ck1_sing1                                                      | DROP TABLE IF EXISTS ck1_sing1                                          | DDL        | 1       | 1       | htap1  | 172.100.9.8   | 8066          | 0      | 0               | 11             |
+      | 2        | create table ck1_sing1(id int,name varchar(10),age int)                             | CREATE TABLE ck1_sing1 (  id int,  name varchar(10),  age int )         | DDL        | 2       | 1       | htap1  | 172.100.9.8   | 8066          | 0      | 0               | 11             |
+      | 3        | insert into ck1_sing1 values (1,1,1),(2,2,2),(9,9,9)                                | INSERT INTO ck1_sing1 VALUES (?, ?, ?)                                  | Insert     | 3       | 1       | htap1  | 172.100.9.8   | 8066          | 3      | 3               | 50             |
+      | 4        | drop table if exists test                                                           | DROP TABLE IF EXISTS test                                               | DDL        | 4       | 1       | htap1  | 172.100.9.8   | 8066          | 0      | 0               | 44             |
+      | 5        | create table test(id int,name varchar(10),age int)                                  | CREATE TABLE test (  id int,  name varchar(10),  age int )              | DDL        | 5       | 1       | htap1  | 172.100.9.8   | 8066          | 0      | 0               | 44             |
+      | 6        | insert into test values (1,1,1),(2,2,2),(9,9,9),(10,10,10)                          | INSERT INTO test VALUES (?, ?, ?)                                       | Insert     | 6       | 1       | htap1  | 172.100.9.8   | 8066          | 4      | 16              | 200            |
+      | 7        | drop table if exists sharding_2_t1                                                  | DROP TABLE IF EXISTS sharding_2_t1                                      | DDL        | 7       | 1       | htap1  | 172.100.9.8   | 8066          | 0      | 0               | 22             |
+      | 8        | create table sharding_2_t1(id int,name varchar(10),age int)                         | CREATE TABLE sharding_2_t1 (  id int,  name varchar(10),  age int )     | DDL        | 8       | 1       | htap1  | 172.100.9.8   | 8066          | 0      | 0               | 22             |
+      | 9        | insert into sharding_2_t1 values (1,1,1),(4,4,4),(9,9,9),(10,10,10)                 | INSERT INTO sharding_2_t1 VALUES (?, ?, ?)                              | Insert     | 9       | 1       | htap1  | 172.100.9.8   | 8066          | 4      | 4               | 100            |
+      | 10       | drop table if exists sharding_4_t1                                                  | DROP TABLE IF EXISTS sharding_4_t1                                      | DDL        | 10      | 1       | htap1  | 172.100.9.8   | 8066          | 0      | 0               | 44             |
+      | 11       | create table sharding_4_t1(id int,name varchar(10),age int)                         | CREATE TABLE sharding_4_t1 (  id int,  name varchar(10),  age int )     | DDL        | 11      | 1       | htap1  | 172.100.9.8   | 8066          | 0      | 0               | 44             |
+      | 12       | insert into sharding_4_t1 values (1,1,1),(3,3,3),(9,9,9),(10,10,10)                 | INSERT INTO sharding_4_t1 VALUES (?, ?, ?)                              | Insert     | 12      | 1       | htap1  | 172.100.9.8   | 8066          | 4      | 4               | 72             |
+      | 13       | drop table if exists htapDb2.ck2_sing1                                              | DROP TABLE IF EXISTS htapDb2.ck2_sing1                                  | DDL        | 13      | 1       | htap1  | 172.100.9.8   | 8066          | 0      | 0               | 11             |
+      | 14       | create table htapDb2.ck2_sing1(id int,name varchar(10),age int)                     | CREATE TABLE htapDb2.ck2_sing1 (  id int,  name varchar(10),  age int ) | DDL        | 14      | 1       | htap1  | 172.100.9.8   | 8066          | 0      | 0               | 11             |
+      | 15       | insert into htapDb2.ck2_sing1 values (1,1,1),(4,4,4),(9,9,9),(2,2,2)                | INSERT INTO htapDb2.ck2_sing1 VALUES (?, ?, ?)                          | Insert     | 15      | 1       | htap1  | 172.100.9.8   | 8066          | 4      | 4               | 50             |
+      | 16       | drop table if exists sharding_4_t2                                                  | DROP TABLE IF EXISTS sharding_4_t2                                      | DDL        | 16      | 1       | htap1  | 172.100.9.8   | 8066          | 0      | 0               | 44             |
+      | 17       | create table sharding_4_t2(id int,name varchar(10),age int)                         | CREATE TABLE sharding_4_t2 (  id int,  name varchar(10),  age int )     | DDL        | 17      | 1       | htap1  | 172.100.9.8   | 8066          | 0      | 0               | 44             |
+      | 18       | insert into sharding_4_t2 values (1,1,1),(2,2,2),(3,3,3),(4,4,4),(9,9,9),(10,10,10) | INSERT INTO sharding_4_t2 VALUES (?, ?, ?)                              | Insert     | 18      | 1       | htap1  | 172.100.9.8   | 8066          | 6      | 6               | 122            |
 
     ## ddl-->TP
     Given execute single sql in "dble-1" in "user" mode and save resultset in "ddl_rs"

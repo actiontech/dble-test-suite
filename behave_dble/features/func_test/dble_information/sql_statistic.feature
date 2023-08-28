@@ -355,7 +355,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False    | delete from sharding_2_t1                                                                 | success | schema1 |
        ##增加跨库的操作
       | conn_0 | False    | select * from schema2.test1 where id = (select id from sharding_4_t1 where name='name1')     | success | schema1 |
-
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_11"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | True    | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
@@ -778,6 +778,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | rwS1 | 111111 | conn_4 | False   | update test_table1 set age =44 where id=100        | success | db2 |
       | rwS1 | 111111 | conn_4 | False   | commit                                             | success | db2 |
 
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_12"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
@@ -805,6 +806,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | rwS1 | 111111 | conn_4 | False   | update test_table1 set age=age*3 where id=2              | success | db2 |
       | rwS1 | 111111 | conn_4 | False   | rollback                                                 | success | db2 |
 
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_13"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
@@ -829,6 +831,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | rwS1 | 111111 | conn_31 | False   | begin                        | success | db1 |
       | rwS1 | 111111 | conn_31 | true    | delete from db2.test_table1  | success | db1 |
 
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_13"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
