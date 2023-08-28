@@ -365,10 +365,10 @@ Feature: sqldump log test  3.22.11
        \[ea659244\]\[Select\]\[21\]\[2\]\[rw1\]\[172.100.9.8:.*\]\[172.100.9.5:3306\].* SELECT \* FROM test_table2 WHERE age IN \(  SELECT age  FROM db1.test_table1  WHERE id != \? \)
        \[2950e7a9\]\[Delete\]\[22\]\[0\]\[rw1\]\[172.100.9.8:.*\]\[172.100.9.5:3306\].* DELETE test_table2 FROM test_table2, db1.test_table1 WHERE test_table2.id = \?  AND test_table1.id = \?
        \[92c7b07a\]\[Delete\]\[23\]\[0\]\[rw1\]\[172.100.9.8:.*\]\[172.100.9.5:3306\].* delete from db1.test_table1 where name in \(\(select age from \(select name,age from test_table2 order by id desc\) as tmp\)\)
-       \[2b858627\]\[Other\]\[24\]\[0\]\[rw1\]\[172.100.9.8:.*\]\[172.100.9.5:3306\].* DROP VIEW IF EXISTS test_view
-       \[6c4122ef\]\[Other\]\[25\]\[0\]\[rw1\]\[172.100.9.8:.*\]\[172.100.9.5:3306\].* CREATE VIEW test_view \(  id,   name,   age \) AS SELECT \* FROM test_table1
+       \[2b858627\]\[DDL\]\[24\]\[0\]\[rw1\]\[172.100.9.8:.*\]\[172.100.9.5:3306\].* DROP VIEW IF EXISTS test_view
+       \[6c4122ef\]\[DDL\]\[25\]\[0\]\[rw1\]\[172.100.9.8:.*\]\[172.100.9.5:3306\].* CREATE VIEW test_view \(  id,   name,   age \) AS SELECT \* FROM test_table1
        \[a9322a39\]\[Select\]\[26\]\[4\]\[rw1\]\[172.100.9.8:.*\]\[172.100.9.5:3306\].* select \* from test_view union select \* from test_table1
-       \[8bb4bc8\]\[Other\]\[27\]\[0\]\[rw1\]\[172.100.9.8:.*\]\[172.100.9.5:3306\].* DROP VIEW test_view
+       \[8bb4bc8\]\[DDL\]\[27\]\[0\]\[rw1\]\[172.100.9.8:.*\]\[172.100.9.5:3306\].* DROP VIEW test_view
        \[275d0ea2\]\[Select\]\[28\]\[0\]\[rw1\]\[172.100.9.8:.*\]\[172.100.9.5:3306\].* SELECT \* FROM \(  SELECT s.sno  FROM test_table1 s  WHERE s.id = \? \)
        \[17862\]\[Other\]\[29\]\[0\]\[rw1\]\[172.100.9.8:.*\]\[172.100.9.5:3306\].* Other
        \[3ae4b7ec\]\[DDL\]\[30\]\[0\]\[rw1\]\[172.100.9.8:.*\]\[172.100.9.5:3306\].* DROP TABLE IF EXISTS test_table1
@@ -428,13 +428,7 @@ Feature: sqldump log test  3.22.11
        """
        rm -rf /root/sandboxes/sandbox/master/data/test.txt
        """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      caught err:
-      exception occurred when the statistics were recorded
-      Exception processing
-      """
+    Then check "NullPointerException|caught err|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
 
