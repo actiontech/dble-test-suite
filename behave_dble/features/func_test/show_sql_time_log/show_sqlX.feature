@@ -26,7 +26,7 @@ Feature: show @@sql XXX
       """
     Then restart dble in "dble-1" failed for
       """
-      property \[ enableStatisticAnalysis \] '99.99' data type should be int
+      check the property \[ enableStatisticAnalysis \] '99.99' data type or value
       """
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -35,7 +35,7 @@ Feature: show @@sql XXX
       """
     Then restart dble in "dble-1" failed for
       """
-      Property \[ enableStatisticAnalysis \] '-199' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      check the property \[ enableStatisticAnalysis \] '-199' data type or value
       """
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -44,7 +44,7 @@ Feature: show @@sql XXX
       """
     Then restart dble in "dble-1" failed for
       """
-      property \[ enableStatisticAnalysis \] 'abc' data type should be int
+      check the property \[ enableStatisticAnalysis \] 'abc' data type or value
       """
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -53,7 +53,7 @@ Feature: show @@sql XXX
       """
     Then restart dble in "dble-1" failed for
       """
-      property \[ enableStatisticAnalysis \] 'null' data type should be int
+      check the property \[ enableStatisticAnalysis \] 'null' data type or value
       """
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -62,7 +62,7 @@ Feature: show @@sql XXX
       """
     Then restart dble in "dble-1" failed for
       """
-      property \[ enableStatisticAnalysis \] '' data type should be int
+      check the property \[ enableStatisticAnalysis \] '' data type or value
       """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -70,7 +70,7 @@ Feature: show @@sql XXX
       """
     Then restart dble in "dble-1" failed for
       """
-      property \[ enableStatisticAnalysis \] '@' data type should be int
+      check the property \[ enableStatisticAnalysis \] '@' data type or value
       """
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -82,18 +82,24 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                                                                                                 | expect          | db               |
       | conn_0 | true    | select variable_value from dble_variables where variable_name = "enableStatisticAnalysis"           | has{(('0',),)}  | dble_information |
 
-#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-#      """
-#      $a -DenableStatisticAnalysis=true
-#      """
-#    Then restart dble in "dble-1" success
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                                                 | expect          | db               |
-#      | conn_0 | true    | select variable_value from dble_variables where variable_name = "enableStatisticAnalysis"           | has{(('1',),)}  | dble_information |
-    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
-    """
-    enableStatisticAnalysis
-    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      $a -DenableStatisticAnalysis=true
+      """
+    Then restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                 | expect          | db               |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name = "enableStatisticAnalysis"           | has{(('1',),)}  | dble_information |
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      /-DenableStatisticAnalysis/d
+      $a -DenableStatisticAnalysis=false
+      """
+    Then restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                 | expect          | db               |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name = "enableStatisticAnalysis"           | has{(('0',),)}  | dble_information |
 
 
   Scenario: show @@sql.sum  && show @@sql.sum.user && show @@sql.sum.table  #2
