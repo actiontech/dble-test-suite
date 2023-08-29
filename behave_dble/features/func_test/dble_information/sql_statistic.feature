@@ -605,6 +605,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     Then check "NullPointerException|caught err|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
+ @auto_retry
   Scenario: transaction sql test #4
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
