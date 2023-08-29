@@ -2,7 +2,6 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by chenhuiming at 2022/2/28
-@skip #DBLE0REQ-2340
 Feature: test with hint plan A with other table type
 
   @delete_mysql_tables
