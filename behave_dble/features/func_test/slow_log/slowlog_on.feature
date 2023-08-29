@@ -27,7 +27,6 @@ Feature: Keep slow log on, dble may occur oom
     Given delete file "/opt/dble/BtraceAboutslowlog.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutslowlog.java.log" on "dble-1"
     Given prepare a thread run btrace script "BtraceAboutslowlog.java" in "dble-1"
-#    Given sleep "5" seconds
     Given execute sql "1000" times in "dble-1" at concurrent
       | sql                                                   | db      |
       | /*!dble:shardingnode=dn1*/select * from sharding_2_t1 | schema1 |
@@ -67,11 +66,10 @@ Feature: Keep slow log on, dble may occur oom
     Given delete file "/opt/dble/BtraceAboutslowlog.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutslowlog.java.log" on "dble-1"
     Given prepare a thread run btrace script "BtraceAboutslowlog.java" in "dble-1"
-#    Given sleep "5" seconds
     Given execute sql "1000" times in "dble-1" at concurrent
       | sql                                                                                     | db      |
       | load data infile './test.txt' into table sharding_2_t1 fields terminated by ','         | schema1 |
-    Then check btrace "BtraceAboutslowlog.java" output in "dble-1" with "2000" times
+    Then check btrace "BtraceAboutslowlog.java" output in "dble-1" with "1000" times
     """
     enter setShardingNodes
     """

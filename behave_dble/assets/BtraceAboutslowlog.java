@@ -9,10 +9,10 @@ public final class BtraceAboutslowlog {
     private BtraceAboutslowlog() {
     }
     @OnMethod(
-            clazz = "com.actiontech.dble.btrace.provider.SlowLogProvider",
+            clazz = "com.actiontech.dble.statistic.trace.TraceResult",
             method = "setShardingNodes"
     )
-    public static void setShardingNodes(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+    public static void testSetShardingNode() {
         BTraceUtils.println("enter setShardingNodes");
     }
 
