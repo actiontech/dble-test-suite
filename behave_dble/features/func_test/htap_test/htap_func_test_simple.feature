@@ -108,6 +108,9 @@ Feature: htap basic functionality test
       | htap1 | 111111    | conn_1 | False   | create table sharding_4_t2(id int,name varchar(10),age int)                          | success | htapDb2 |
       | htap1 | 111111    | conn_1 | True    | insert into sharding_4_t2 values (1,1,1),(2,2,2),(3,3,3),(4,4,4),(9,9,9),(10,10,10)  | success | htapDb2 |
 
+    ##同步同名表sharding_4_t1的元数据信息到htapDb2
+    Then execute admin cmd "reload @@metadata"
+
     ##校验sql是否被正确记录
      Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect          | timeout |
