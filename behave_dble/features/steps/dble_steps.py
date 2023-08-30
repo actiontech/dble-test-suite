@@ -127,6 +127,46 @@ def step_impl(context, host_name, result_key, mode_name=None):
     setattr(context, result_key, res)
     context.logger.debug("the {0} is {1}".format(key, getattr(context, result_key)))
 
+
+@Given('execute single sql in "{host_name}" and save resultset in "{result_key}" check result has "{lines}" length with retry "{retry_param}" times')
+@Given('execute single sql in "{host_name}" in "{mode_name}" mode and save resultset in "{result_key}" check result has "{lines}" length with retry "{retry_param}" times')
+def step_impl(context, host_name, result_key, mode_name=None, retry_param=1, lines=0):
+    if "," in str(retry_param):
+        retry_times = int(retry_param.split(",")[0])
+        sep_time = float(retry_param.split(",")[1])
+    else:
+        retry_times = int(retry_param)
+        sep_time = 1
+
+    row = context.table[0]
+    info_dict = row.as_dict()
+    execute_times = retry_times + 1
+    key = result_key
+    res, _ = execute_sql_in_host(host_name, info_dict, mode_name)
+    if len(res) == int(lines):         # 如果执行一次满足条件就退出
+        setattr(context, result_key, res)
+        context.logger.debug("Actual lines: {},Expected lines: {},the {} is {}".format(len(res), int(lines), key, getattr(context, result_key)))
+    else:
+         for i in range(execute_times):
+            try:
+                if len(res) != int(lines):
+                    res, _ = execute_sql_in_host(host_name, info_dict, mode_name)
+                    setattr(context, result_key, res)
+                    context.logger.debug("the {0} is {1}".format(key, getattr(context, result_key)))
+                    raise AssertionError("actual lines: {} not equel expected lines: {}, \nThe actual result is:\n{}".format(len(res), int(lines),"\n".join(map(str, res))))
+                else:  # 循环过程中，满足条件继续退出
+                    setattr(context, result_key, res)
+                    context.logger.debug("Actual lines: {},Expected lines: {},the {} is {}".format(len(res), int(lines), key, getattr(context, result_key)))
+                    break
+
+            except Exception as e:
+                logger.info(f"sql result is not except, execute sql total {i+1} times")
+                if i == execute_times - 1:
+                    raise e
+                else:
+                    sleep_by_time(context, sep_time)
+
+
 @Then('execute admin cmd  in "{host}" at background')
 @Then('execute "{mode_name}" cmd  in "{host}" at background')
 @Then('execute "{mode_name}" cmd  in "{host}" at background with "{flag}" in file name')
