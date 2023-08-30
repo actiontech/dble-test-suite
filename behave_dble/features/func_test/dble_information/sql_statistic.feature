@@ -863,6 +863,8 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
 
       | rwS1 | 111111 | conn_31 | true    | delete from db2.test_table1                                   | success | db1 |
 
+    # 数据是异步写入的
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_14"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
