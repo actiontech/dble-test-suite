@@ -122,7 +122,7 @@ Feature: heartbeat basic test
     Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
     #sleep 14s to let heartbeat timeout(2 heartbeat times)
     Given sleep "14" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5" times
     """
     heartbeat to \[172.100.9.5:3306\] setTimeout
     """
