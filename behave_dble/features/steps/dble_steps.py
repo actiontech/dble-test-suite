@@ -16,6 +16,7 @@ from steps.lib.QueryMeta import QueryMeta
 from steps.lib.generate_util import generate
 from steps.lib.utils import get_node
 from steps.prepared_query import *
+from steps.resultset_compare import *
 
 logger = logging.getLogger('root')
 
@@ -303,3 +304,39 @@ def step_imp(context, sql, params ,num, user, database):
     logger.debug("the PrepStmts sql:'{}' result:{}  the sql_cmd length :{},the sql_pre length :{}".format(sql_cmd[0:512] ,result,len(sql_cmd),len(sql_pre)))
     results.append(result)
     return results
+
+
+@Then('connect "{host}" execute sql "{sql}" in mode "{mode_name}" use db "{database}" and user "{user}" to check has following and length "{lines}"')
+@Then('connect "{host}" execute sql "{sql}" in mode "{mode_name}" use db "{database}" and user "{user}" to check has following and length "{lines}" retry "{retry_param}" times')
+def step_impl(context, host, sql, mode_name, database, user, lines, retry_param=1):
+    if "," in str(retry_param):
+        retry_times = int(retry_param.split(",")[0])
+        sep_time = float(retry_param.split(",")[1])
+    else:
+        retry_times = int(retry_param)
+        sep_time = 1
+
+    rs_key = "res"
+    execute_times = retry_times + 1
+
+    res, err = execute_sql_in_host(host, {"sql": sql, "db": database, "user": user}, mode_name)
+    assert err is None, " expect sql no err, but outcomes {0}".format(err) #先判断sql是否正确
+
+    for i in range(execute_times):
+        try:
+            if len(res) != int(lines): #先判断期望的lines是否和实际一样，不一样继续执行sql
+                res, err = execute_sql_in_host(host, {"sql": sql, "db": database, "user": user}, mode_name)
+                setattr(context, rs_key, res)
+                raise AssertionError("actual lines: {} not equel expected lines: {}, \nThe actual result is:\n{}".format(len(res),int(lines),"\n".join(map(str, res))))
+
+            else: #再判断期望内容是否和实际一致
+                setattr(context, rs_key, res)
+                if check_resultset(context, rs_key, lines):
+                    break
+
+        except Exception as e:
+            logger.info(f"sql result is not except, execute sql total {i + 1} times")
+            if i == execute_times - 1:
+                raise e
+            else:
+                sleep_by_time(context, sep_time)
