@@ -295,7 +295,8 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@sql.condition                                              | length{(2)}   |
       | conn_0 | False   | show @@heartbeat                                                  | length{(4)}   |
       | conn_0 | False   | show @@heartbeat.detail  where name='hostM1'                      | success       |
-      | conn_0 | False   | show @@sysparam                                                   | length{(105)} |
+      # 异步release的enableAsyncRelease、releaseTimeout未合并，多了enableCheckSchema
+      | conn_0 | False   | show @@sysparam                                                   | length{(104)} |
       | conn_0 | False   | show @@white                                                      | length{(3)}   |
       | conn_0 | False   | show @@directmemory                                               | length{(1)}   |
       | conn_0 | False   | show @@command.count                                              | length{(1)}   |

@@ -446,7 +446,7 @@ Feature: connection pool basic test
 
 
 
-
+  @skip #DBLE0REQ-1867未合并
   Scenario: 当空闲链接被占用又没到扩缩容的时间，新增一个sql1会等待连接，这个时候再来一个sql2 borrow了一根链接给前一个sql1使用，前一个sql1使用的时候也会给sql2使用  issue:DBLE0REQ-1867  #11
      Given delete file "/opt/dble/newConnectionAfter*" on "dble-1"
      Given delete file "/opt/dble/borrowDirectlyConnectionBefore*" on "dble-1"
