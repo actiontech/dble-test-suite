@@ -305,16 +305,6 @@ def step_imp(context, sql, params ,num, user, database):
     results.append(result)
     return results
 
-# @Then('execute sql "{sql}" in "{host}" with "{results}" result')
-# def step_impl(context,sql,host,results):
-#     for row in context.table:
-#         dict = row.as_dict()
-#         resultList = getattr(context,results)
-#         for result in resultList:
-#             sql = sql + ' ' +'"{0}"'.format(result)
-#             dict.update({"sql": sql})
-#
-#             execute_sql_in_host(host, dict, "mysql")
 
 @Then('connect "{host}" execute sql "{sql}" in mode "{mode_name}" use db "{database}" and user "{user}" to check has following columns length "{lines}" retry "{retry_param}" times')
 def step_impl(context, host, sql, mode_name, database, user, lines, retry_param):
