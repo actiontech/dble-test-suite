@@ -306,8 +306,9 @@ def step_imp(context, sql, params ,num, user, database):
     return results
 
 
+@Then('connect "{host}" execute sql "{sql}" in mode "{mode_name}" use db "{database}" and user "{user}" to check has following columns length "{lines}"')
 @Then('connect "{host}" execute sql "{sql}" in mode "{mode_name}" use db "{database}" and user "{user}" to check has following columns length "{lines}" retry "{retry_param}" times')
-def step_impl(context, host, sql, mode_name, database, user, lines, retry_param):
+def step_impl(context, host, sql, mode_name, database, user, lines, retry_param=1):
     if "," in str(retry_param):
         retry_times = int(retry_param.split(",")[0])
         sep_time = float(retry_param.split(",")[1])
