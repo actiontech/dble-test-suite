@@ -74,6 +74,9 @@ def step_impl(context, rs_name):
 @Then('check resultset "{rs_name}" has lines with following column values')
 @Then('check resultset "{rs_name}" has lines with following column values and has "{exp_line}" lines')
 def step_impl(context, rs_name, exp_line=0):
+    check_resultset(context, rs_name, exp_line)
+
+def check_resultset(context, rs_name, exp_line):
     col_idx_list = []
     check_line = False
 
@@ -159,8 +162,7 @@ def step_impl(context, rs_name, exp_line=0):
             context.logger.debug("expect row:{0}, is found".format(expect_row))
 
     if not_found:  # 如果有数据行没有找到，则抛出异常
-        assert False, "Opps!! in resultset '{1}' not found row\n{0}, \nThe actual result is:\n{2}".format("\n".join(map(str, not_found)), rs_name, "\n".join(map(str, rs)))
-
+        assert False, "Opps!! On result not found following row:\n{0}, \nThe actual result is following row:\n{1}".format("\n".join(map(str, not_found)), "\n".join(map(str, rs)))
 
 
 @Then('check "{rs_name}" only has "{num}" connection of "{host}"')
