@@ -1,7 +1,7 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wujinling at 2022/10/18
-
+@skip #DBLE0REQ-1867未合并
 Feature: connection pool basic test, from DBLE0REQ-1867
   Background: config for this test suites
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"

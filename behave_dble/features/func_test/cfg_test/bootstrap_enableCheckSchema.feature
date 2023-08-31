@@ -3,7 +3,6 @@
 # Created by quexiuping at 2023/08/16
 
 
-  @skip
 Feature: test enableCheckSchema in bootstrap.cnf - DBLE0REQ-2060
     #about http://10.186.18.11/jira/browse/DBLE0REQ-2060  just for  3.21.03
 

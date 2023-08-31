@@ -4,7 +4,7 @@
 # DBLE0REQ-2196
 #1、被操作的表格是全局表或者分片表，其余所有表格都是全局表，并且分片范围都能覆盖被操作的表格（需注意“分片范围”指的是配置文件里面配的表分片范围，而不是经过 where 二次筛选后的范围。)
 #2、被操作的表格是单节点表，where条件中的所有表格都有条件能路由到同一个节点
-
+@skip #未合并
 Feature: test special supported multi_table update
 
   Background: prepare for special supported multi_table update
