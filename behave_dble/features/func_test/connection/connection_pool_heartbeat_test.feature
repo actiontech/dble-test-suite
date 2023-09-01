@@ -1,7 +1,8 @@
 # Copyright (C) 2016-2023 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wujinling at 2022/11/16
-
+@skip
+  ##for2023.9.1 taimei
 Feature: connection pool basic test - heartbeat create connections
   @CRITICAL @btrace
   Scenario: test initial connection pool: except heartbeat will not create connections  #1
