@@ -280,4 +280,4 @@ Feature: htap basic functionality test
       | shuffle_field_2   | SHUFFLE_FIELD   | aggregate_1                                                                                                                                                             |
     Then execute sql in "dble-1" in "user" mode
       | user  | conn   | toClose | sql                                                                                        | expect                | db      |
-      | htap1 | conn_0 | True    | select bc.c_last,bc.c_first,count(bo.o_id) as ordered_count from bmsql_oorder bo right join bmsql_customer bc on bo.o_c_id=bc.c_id where bc.c_d_id =1 and bc.c_w_id=4 and DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= date(bo.o_entry_d) group by bc.c_id | hasStr{(('ABLEABLEATION', 'zIgqEQLes4qR', 1),)}    | htapDb1 |
+      | htap1 | conn_0 | True    | select bc.c_last,bc.c_first,count(bo.o_id) as ordered_count from bmsql_oorder bo right join bmsql_customer bc on bo.o_c_id=bc.c_id where bc.c_d_id =1 and bc.c_w_id=4 and DATE_SUB('2023-08-31', INTERVAL 30 DAY) <= date(bo.o_entry_d) group by bc.c_id | hasStr{(('ABLEABLEATION', 'zIgqEQLes4qR', 1),)}    | htapDb1 |
