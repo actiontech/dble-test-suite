@@ -158,17 +158,11 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect         | timeout |
       | conn_1 | False   | show @@sql.sum.user  | hasStr{'test'} | 5       |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql1"
-      | sql            |
-      | show @@sql.sum |
-    Then check resultset "sql1" has lines with following column values and has "1" lines
+    Then connect "dble-1" execute sql "show @@sql.sum" in mode "admin" use db "dble_information" and user "root" to check has following and length "1" retry "5" times
       | ID-0 | USER-1 | R-2 | W-3 | R%-4 | MAX-5 |
       | 1    | test   | 3   | 8   | 0.27 | 1     |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql2"
-      | sql                  |
-      | show @@sql.sum.table |
-    Then check resultset "sql2" has lines with following column values and has "1" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.table" in mode "admin" use db "dble_information" and user "root" to check has following and length "1" retry "5" times
       | ID-0 | TABLE-1         | R-2 | W-3 | R%-4 | RELATABLE-5           | RELACOUNT-6 |
       | 1    | schema1.test    | 3   | 8   | 0.27 | schema1.test,         | 1,          |
 
@@ -182,16 +176,11 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect                                 | timeout |
       | conn_1 | False   | show @@sql.sum       | length{(1)}                            | 5       |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql3"
-      | sql                  |
-      | show @@sql.sum.user  |
-    Then check resultset "sql3" has lines with following column values and has "1" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.user" in mode "admin" use db "dble_information" and user "root" to check has following and length "1" retry "5" times
       | ID-0 | USER-1 | R-2 | W-3  | R%-4 | MAX-5 |
       | 1    | test   | 3   | 14   | 0.18 | 1     |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql4"
-      | sql                  |
-      | show @@sql.sum.table |
-    Then check resultset "sql4" has lines with following column values and has "2" lines
+
+    Then connect "dble-1" execute sql "show @@sql.sum.table" in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | ID-0 | TABLE-1                  | R-2 | W-3 | R%-4 | RELATABLE-5           | RELACOUNT-6 |
       | 1    | schema1.test             | 3   | 8   | 0.27 | schema1.test,         | 1,          |
       | 2    | schema1.sharding_4_t1    | 0   | 6   | 0.00 | NULL                  | NULL        |
@@ -212,18 +201,12 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect                | timeout  |
       | conn_1 | False   | show @@sql.sum.user  | length{(2)}           | 5        |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql5"
-      | sql                  |
-      | show @@sql.sum.user  |
-    Then check resultset "sql5" has lines with following column values and has "2" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.user" in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | ID-0 | USER-1 | R-2 | W-3  | R%-4 | MAX-5 |
       | 1    | test   | 3   | 14   | 0.18 | 1     |
       | 2    | test1  | 3   | 5    | 0.38 | 1     |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql6"
-      | sql                  |
-      | show @@sql.sum.table |
-    Then check resultset "sql6" has lines with following column values and has "2" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.table" in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | ID-0 | TABLE-1                  | R-2 | W-3  | R%-4 | RELATABLE-5           | RELACOUNT-6 |
       | 1    | schema1.test             | 4   | 12   | 0.25 | schema1.test,         | 1,          |
       | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.sharding_4_t1, schema1.test,         | 1, 2,          |
@@ -245,22 +228,16 @@ Feature: show @@sql XXX
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                            | timeout  |
       | conn_1 | False   | show @@sql.sum       | length{(2)}                                                                       | 5        |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql7"
-      | sql                  |
-      | show @@sql.sum.user  |
-    Then check resultset "sql7" has lines with following column values and has "2" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.user" in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | ID-0 | USER-1 | R-2 | W-3  | R%-4 | MAX-5 |
       | 1    | test   | 3   | 14   | 0.18 | 1     |
       | 2    | test1  | 7   | 7    | 0.50 | 1     |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql8"
-      | sql                  |
-      | show @@sql.sum.table |
-    Then check resultset "sql8" has lines with following column values and has "3" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.table" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
       | ID-0 | TABLE-1                  | R-2 | W-3  | R%-4 | RELATABLE-5           | RELACOUNT-6 |
       | 1    | schema1.test             | 4   | 13   | 0.24 | schema1.test,         | 1,          |
-      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.sharding_4_t1, schema1.test,         | 1, 2,          |
-      | 3    | schema1.view_test        | 0   | 1    | 0.00 | NULL         | NULL        |
+      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.sharding_4_t1, schema1.test,         | 1, 2,       |
+      | 3    | schema1.view_test        | 0   | 1    | 0.00 | NULL                                         | NULL        |
 
    ### case 5:load data语句不记录
     Given execute oscmd in "dble-1"
@@ -274,21 +251,15 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect                                                                            | timeout |
       | conn_1 | False   | show @@sql.sum       | length{(2)}                                                                       |         |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql9"
-      | sql                  |
-      | show @@sql.sum.user  |
-    Then check resultset "sql9" has lines with following column values and has "2" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.user" in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | ID-0 | USER-1 | R-2 | W-3  | R%-4 | MAX-5 |
       | 1    | test   | 3   | 14   | 0.18 | 1     |
       | 2    | test1  | 7   | 7    | 0.50 | 1     |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql10"
-      | sql                  |
-      | show @@sql.sum.table |
-    Then check resultset "sql10" has lines with following column values and has "3" lines
-      | ID-0 | TABLE-1                  | R-2 | W-3  | R%-4 | RELATABLE-5           | RELACOUNT-6 |
-      | 1    | schema1.test             | 4   | 13   | 0.24 | schema1.test,         | 1,          |
-      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.sharding_4_t1, schema1.test,         | 1, 2,          |
-      | 3    | schema1.view_test        | 0   | 1    | 0.00 | NULL         | NULL        |
+    Then connect "dble-1" execute sql "show @@sql.sum.table" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
+      | ID-0 | TABLE-1                  | R-2 | W-3  | R%-4 | RELATABLE-5                                  | RELACOUNT-6 |
+      | 1    | schema1.test             | 4   | 13   | 0.24 | schema1.test,                                | 1,          |
+      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.sharding_4_t1, schema1.test,         | 1, 2,       |
+      | 3    | schema1.view_test        | 0   | 1    | 0.00 | NULL                                         | NULL        |
 
     ### case 6:记录除了管理端用户外的用户执行的sql
     Then execute sql in "dble-1" in "user" mode
@@ -299,24 +270,18 @@ Feature: show @@sql XXX
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                            | timeout  |
       | conn_1 | False   | show @@sql.sum       | length{(4)}                                                                       | 5        |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql11"
-      | sql                  |
-      | show @@sql.sum.user  |
-    Then check resultset "sql11" has lines with following column values and has "4" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.user" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | USER-1 | R-2 | W-3  | R%-4 | MAX-5 |
       | test   | 3   | 14   | 0.18 | 1     |
       | test1  | 7   | 7    | 0.50 | 1     |
       | rw1    | 1   | 0    | 1.00 | 1     |
       | ana1   | 1   | 0    | 1.00 | 1     |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql12"
-      | sql                  |
-      | show @@sql.sum.table |
-    Then check resultset "sql12" has lines with following column values and has "3" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.table" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
       | ID-0 | TABLE-1                  | R-2 | W-3  | R%-4 | RELATABLE-5           | RELACOUNT-6 |
       | 1    | schema1.test             | 4   | 13   | 0.24 | schema1.test,         | 1,          |
-      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.sharding_4_t1, schema1.test,         | 1, 2,          |
-      | 3    | schema1.view_test        | 0   | 1    | 0.00 | NULL                  | NULL        |
+      | 2    | schema1.sharding_4_t1    | 2   | 7    | 0.22 | schema1.sharding_4_t1, schema1.test,         | 1, 2,       |
+      | 3    | schema1.view_test        | 0   | 1    | 0.00 | NULL                                         | NULL        |
 
      ### case 7: show @@sql xxx true 会重置清空数据
     Then execute sql in "dble-1" in "admin" mode
@@ -339,10 +304,7 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                  | expect      | timeout  |
       | conn_1 | False   | show @@sql.sum       | length{(3)} | 5        |
       | conn_1 | False   | show @@sql.sum.table | length{(0)} | 5        |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql13"
-      | sql                  |
-      | show @@sql.sum.user  |
-    Then check resultset "sql13" has lines with following column values and has "3" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.user" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
       | USER-1       | R-2 | W-3  | R%-4 | MAX-5 |
       | test         | 1   | 0    | 1.00 | 1     |
       | test1        | 1   | 0    | 1.00 | 1     |
@@ -364,22 +326,12 @@ Feature: show @@sql XXX
       | conn_21 | False   | begin;update sharding_2_t1 a,schema2.sharding2 b set a.name=b.name where a.id=2 and b.id=2;begin;commit;rollback;begin;select * from schema2.sing1 as tmp                                                                                              | success | schema1 |
       | conn_21 | False   | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1                                                                                                                                 | success | schema1 |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect         | timeout  |
-      | conn_1 | False   | show @@sql.sum.user  | length{(3)}    | 5        |
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql14"
-      | sql              |
-      | show @@sql.sum   |
-    Then check resultset "sql14" has lines with following column values and has "3" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.user" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
       | USER-1       | R-2 | W-3  | R%-4 | MAX-5 |
       | test         | 6   | 23   | 0.21 | 1     |
       | test1        | 1   | 0    | 1.00 | 1     |
       | test2:ten1   | 1   | 0    | 1.00 | 1     |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql15"
-      | sql                  |
-      | show @@sql.sum.table |
-    Then check resultset "sql15" has lines with following column values and has "5" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.table" in mode "admin" use db "dble_information" and user "root" to check has following and length "5" retry "5" times
       | ID-0 | TABLE-1               | R-2 | W-3 | R%-4 | RELATABLE-5                                   | RELACOUNT-6 |
       | 1    | schema1.sharding_2_t1 | 2   | 5   | 0.29 | schema2.sharding2, schema2.sing1,             | 3, 1,       |
       | 2    | schema1.test          | 1   | 6   | 0.14 | schema1.sharding_2_t1, schema2.global2,       | 1, 3,       |
@@ -391,21 +343,13 @@ Feature: show @@sql XXX
     Given execute sql "1050" times in "dble-1" at concurrent 1000
      | user  | sql                                                                                             | db      |
      | test1 | begin;begin;update test set name= '4' where name in (select name from schema2.global2 )         | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect         | timeout  |
-      | conn_1 | False   | show @@sql.sum.user  | length{(3)}    | 5        |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql16"
-      | sql              |
-      | show @@sql.sum   |
-    Then check resultset "sql16" has lines with following column values and has "3" lines
+
+    Then connect "dble-1" execute sql "show @@sql.sum.user" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
       | USER-1       | R-2 | W-3  | R%-4 | MAX-5 |
       | test         | 6   | 23   | 0.21 | 1     |
       | test1        | 1   | 1050 | 0.00 | 1     |
       | test2:ten1   | 1   | 0    | 1.00 | 1     |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql16"
-      | sql                  |
-      | show @@sql.sum.table |
-    Then check resultset "sql16" has lines with following column values and has "5" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.table" in mode "admin" use db "dble_information" and user "root" to check has following and length "5" retry "5" times
       | TABLE-1               | R-2 | W-3    | R%-4 | RELATABLE-5                                   | RELACOUNT-6 |
       | schema1.test          | 1   | 1056   | 0.00 | schema1.sharding_2_t1, schema2.global2,       | 1, 1053,    |
 
@@ -426,22 +370,13 @@ Feature: show @@sql XXX
       | rw1  | 111111 | conn_3 | False   | begin;delete test_table from test_table,db2.test_table1 where test_table.id=1 and db2.test_table1.id =1                                                      | success | db1 |
       | rw1  | 111111 | conn_3 | False   | delete from db2.test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp))                                      | success | db1 |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect         | timeout  |
-      | conn_1 | False   | show @@sql.sum.user  | length{(4)}    | 5        |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql17"
-      | sql              |
-      | show @@sql.sum   |
-    Then check resultset "sql17" has lines with following column values and has "4" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.user" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | USER-1       | R-2 | W-3  | R%-4 | MAX-5 |
       | test         | 6   | 23   | 0.21 | 1     |
       | test1        | 1   | 1050 | 0.00 | 1     |
       | test2:ten1   | 1   | 0    | 1.00 | 1     |
       | rw1          | 3   | 15   | 0.17 | 1     |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql18"
-      | sql                  |
-      | show @@sql.sum.table |
-    Then check resultset "sql18" has lines with following column values and has "7" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.table" in mode "admin" use db "dble_information" and user "root" to check has following and length "7" retry "5" times
       | TABLE-1          | R-2 | W-3 | R%-4 | RELATABLE-5                         | RELACOUNT-6 |
       | db1.test_table   | 3   | 8   | 0.27 | db2.test_table1, db1.test_table,    | 5, 3,       |
       | db2.test_table1  | 0   | 7   | 0.00 | db2.test_table1, db1.test_table,    | 2, 1,       |
@@ -450,22 +385,13 @@ Feature: show @@sql XXX
     Then execute prepared sql "select %s from test where id =%s" with params "(name,1);(id,3)" on db "schema1" and user "test"
     Then execute prepared sql "select %s from test_table where id =%s" with params "(name,1);(id,3)" on db "db1" and user "rw1"
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect         | timeout  |
-      | conn_1 | False   | show @@sql.sum.user  | length{(4)}    | 5        |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql18"
-      | sql              |
-      | show @@sql.sum   |
-    Then check resultset "sql18" has lines with following column values and has "4" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.user" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | USER-1       | R-2 | W-3  | R%-4 | MAX-5 |
       | test         | 8   | 23   | 0.26 | 1     |
       | test1        | 1   | 1050 | 0.00 | 1     |
       | test2:ten1   | 1   | 0    | 1.00 | 1     |
       | rw1          | 5   | 15   | 0.25 | 1     |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql19"
-      | sql                  |
-      | show @@sql.sum.table |
-    Then check resultset "sql19" has lines with following column values and has "7" lines
+    Then connect "dble-1" execute sql "show @@sql.sum.table" in mode "admin" use db "dble_information" and user "root" to check has following and length "7" retry "5" times
       | TABLE-1          | R-2 | W-3    | R%-4 | RELATABLE-5                        | RELACOUNT-6 |
       | db1.test_table   | 5   | 8      | 0.38 | db2.test_table1, db1.test_table,   | 5, 3,          |
       | schema1.test     | 3   | 1056   | 0.00 | schema1.sharding_2_t1, schema2.global2,   | 1, 1053,     |
@@ -527,17 +453,10 @@ Feature: show @@sql XXX
       | conn_0 | True     | alter table test drop column k                | schema1 | success |
     ### case 1: dml ddl 都被记录
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect          | timeout |
-      | conn_1 | False   | show @@sql           | length{(11)}    | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(9)}     |         |
-      | conn_1 | False   | show @@sql.slow      | length{(11)}    |         |
-      | conn_1 | False   | show @@sql.resultset | length{(1)}     |         |
-      | conn_1 | False   | show @@sql.large     | length{(0)}     |         |
+      | conn   | toClose | sql                  | expect          |
+      | conn_1 | False   | show @@sql.large     | length{(0)}     |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql1"
-      | sql        |
-      | show @@sql |
-    Then check resultset "sql1" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql" in mode "admin" use db "dble_information" and user "root" to check has following and length "11" retry "5" times
       | USER-1 | SQL-4                                         |
       | test   | drop table if exists test                     |
       | test   | create table test(id int,k longblob)          |
@@ -550,10 +469,8 @@ Feature: show @@sql XXX
       | test   | select * from test where id=2                 |
       | test   | delete from test where id=1                   |
       | test   | alter table test drop column k                |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high1"
-      | sql             |
-      | show @@sql.high |
-    Then check resultset "sql_high1" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.high" in mode "admin" use db "dble_information" and user "root" to check has following and length "9" retry "5" times
       | USER-1 | FREQUENCY-2 | SQL-8                                           |
       | test   | 1           | ALTER TABLE test  DROP COLUMN k                 |
       | test   | 1           | CREATE TABLE test (  id int,  k longblob )      |
@@ -564,10 +481,8 @@ Feature: show @@sql XXX
       | test   | 1           | SELECT * FROM test ORDER BY id LIMIT ?          |
       | test   | 1           | SELECT * FROM test WHERE id = ?                 |
       | test   | 1           | UPDATE test SET k = ? WHERE id = ?              |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_slow1"
-      | sql             |
-      | show @@sql.slow |
-    Then check resultset "sql_slow1" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.slow" in mode "admin" use db "dble_information" and user "root" to check has following and length "11" retry "5" times
       | USER-0 | SQL-3                                         |
       | test   | drop table if exists test                     |
       | test   | create table test(id int,k longblob)          |
@@ -580,10 +495,8 @@ Feature: show @@sql XXX
       | test   | select * from test where id=2                 |
       | test   | delete from test where id=1                   |
       | test   | alter table test drop column k                |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_resultset1"
-      | sql                  |
-      | show @@sql.resultset |
-    Then check resultset "sql_resultset1" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.resultset" in mode "admin" use db "dble_information" and user "root" to check has following and length "1" retry "5" times
       | USER-1 | FREQUENCY-2 | SQL-3               | RESULTSET_SIZE-4 |
       | test   | 1           | select * from test  | 525920           |
 
@@ -594,17 +507,11 @@ Feature: show @@sql XXX
       | conn_2 | False   | insert into sharding_4_t1 value (1, repeat('a', 1100));insert into sharding_4_t1 value (2, repeat('b',1100)) | schema1 | success |
       | conn_2 | true    | update sharding_4_t1 set k="c" where id=3;alter table sharding_4_t1 drop column k                            | schema1 | success |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect            | timeout |
-      | conn_1 | False   | show @@sql           | length{(17)}      | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(14)}      |         |
-      | conn_1 | False   | show @@sql.slow      | length{(17)}      |         |
-      | conn_1 | False   | show @@sql.resultset | length{(1)}       |         |
-      | conn_1 | False   | show @@sql.large     | length{(0)}       |         |
+      | conn   | toClose | sql                  | expect            |
+      | conn_1 | False   | show @@sql.resultset | length{(1)}       |
+      | conn_1 | False   | show @@sql.large     | length{(0)}       |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql2"
-      | sql        |
-      | show @@sql |
-    Then check resultset "sql2" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql" in mode "admin" use db "dble_information" and user "root" to check has following and length "17" retry "5" times
       | USER-1 | SQL-4                                                  |
       | test   | drop table if exists sharding_4_t1                     |
       | test   | create table sharding_4_t1(id int,k varchar(1500))     |
@@ -613,10 +520,7 @@ Feature: show @@sql XXX
       | test   | update sharding_4_t1 set k="c" where id=3              |
       | test   | alter table sharding_4_t1 drop column k                |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high2"
-      | sql             |
-      | show @@sql.high |
-    Then check resultset "sql_high2" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.high" in mode "admin" use db "dble_information" and user "root" to check has following and length "14" retry "5" times
       | USER-1 | FREQUENCY-2 | SQL-8                                                    |
       | test   | 1           | ALTER TABLE test  DROP COLUMN k                          |
       | test   | 1           | DELETE FROM test WHERE id = ?                            |
@@ -631,10 +535,8 @@ Feature: show @@sql XXX
       | test   | 1           | DROP TABLE IF EXISTS sharding_4_t1                       |
       | test   | 2           | INSERT INTO sharding_4_t1 VALUES (?, repeat(?, ?))       |
       | test   | 1           | UPDATE sharding_4_t1 SET k = ? WHERE id = ?              |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_slow2"
-      | sql             |
-      | show @@sql.slow |
-    Then check resultset "sql_slow2" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.slow" in mode "admin" use db "dble_information" and user "root" to check has following and length "17" retry "5" times
       | USER-0 | SQL-3                                                  |
       | test   | drop table if exists sharding_4_t1                     |
       | test   | create table sharding_4_t1(id int,k varchar(1500))     |
@@ -653,16 +555,8 @@ Feature: show @@sql XXX
       | test1 | 111111 | conn_3 | False   | set autocommit=1;insert into test values (5)                                                                                      | schema1 | success |
       | test1 | 111111 | conn_3 | False   | begin;insert into test values (6);begin;insert into test values (7);rollback;                                                     | schema1 | success |
       | test1 | 111111 | conn_3 | true    | select * from test                                                                                                                | schema1 | success |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect                | timeout |
-      | conn_1 | False   | show @@sql           | length{(34)}          | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(24)}          |         |
-      | conn_1 | False   | show @@sql.slow      | length{(34)}          |         |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql3"
-      | sql        |
-      | show @@sql |
-    Then check resultset "sql3" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql" in mode "admin" use db "dble_information" and user "root" to check has following and length "34" retry "5" times
       | USER-1 | SQL-4                                                                                                  |
       | test1  | begin                                                                                                  |
       | test1  | select * from sharding_4_t1 a inner join test b on a.id=b.id where a.id =1                             |
@@ -681,10 +575,8 @@ Feature: show @@sql XXX
       | test1  | insert into test values (7)                                                                            |
       | test1  | rollback                                                                                               |
       | test1  | select * from test                                                                                     |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high3"
-      | sql             |
-      | show @@sql.high |
-    Then check resultset "sql_high3" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.high" in mode "admin" use db "dble_information" and user "root" to check has following and length "24" retry "5" times
       | USER-1 | FREQUENCY-2 | SQL-8                                                                                                  |
       | test1  | 3           | begin                                                                                                  |
       | test1  | 1           | commit                                                                                                 |
@@ -696,10 +588,8 @@ Feature: show @@sql XXX
       | test1  | 1           | select * from test                                                                                     |
       | test1  | 2           | SET autocommit = ?                                                                                     |
       | test1  | 1           | start transaction                                                                                      |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_slow3"
-      | sql             |
-      | show @@sql.slow |
-    Then check resultset "sql_slow3" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.slow" in mode "admin" use db "dble_information" and user "root" to check has following and length "34" retry "5" times
       | USER-0 | SQL-3                                                                                                  |
       | test1  | begin                                                                                                  |
       | test1  | select * from sharding_4_t1 a inner join test b on a.id=b.id where a.id =1                             |
@@ -733,16 +623,7 @@ Feature: show @@sql XXX
       | test1 | 111111 | new    | False   | create view view_test as select * from test   | schema1 | success                            |
 
     ###不记录错误语句  select + show + set + view select 1 记录
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect            | timeout |
-      | conn_1 | False   | show @@sql           | length{(41)}      | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(31)}      |         |
-      | conn_1 | False   | show @@sql.slow      | length{(41)}      |         |
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql4"
-      | sql        |
-      | show @@sql |
-    Then check resultset "sql4" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql" in mode "admin" use db "dble_information" and user "root" to check has following and length "41" retry "5" times
       | USER-1 | SQL-4                                       |
       | test1  | select user()                               |
       | test1  | show tables                                 |
@@ -751,10 +632,8 @@ Feature: show @@sql XXX
       | test1  | select 1                                    |
       | test1  | drop view if exists schema1.view_test       |
       | test1  | create view view_test as select * from test |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high4"
-      | sql             |
-      | show @@sql.high |
-    Then check resultset "sql_high4" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.high" in mode "admin" use db "dble_information" and user "root" to check has following and length "31" retry "5" times
       | USER-1 | FREQUENCY-2 | SQL-8                                       |
       | test1  | 1           | CREATE VIEW view_test AS SELECT * FROM test |
       | test1  | 1           | DROP VIEW IF EXISTS schema1.view_test       |
@@ -763,10 +642,8 @@ Feature: show @@sql XXX
       | test1  | 1           | select user()                               |
       | test1  | 1           | SET @@trace = ?                             |
       | test1  | 1           | show tables                                 |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_slow4"
-      | sql             |
-      | show @@sql.slow |
-    Then check resultset "sql_slow4" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.slow" in mode "admin" use db "dble_information" and user "root" to check has following and length "41" retry "5" times
       | USER-0 | SQL-3                                       |
       | test1  | select user()                               |
       | test1  | show tables                                 |
@@ -785,30 +662,16 @@ Feature: show @@sql XXX
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                     | expect       | db      |
       | new    | False   | load data infile '/opt/dble/data.txt' into table sharding_4_t1 character SET 'utf8' fields terminated by ',' lines terminated by '\n'   | success      | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect                    | timeout |
-      | conn_1 | False   | show @@sql           | length{(42)}              | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(32)}              |         |
-      | conn_1 | False   | show @@sql.slow      | length{(42)}              |         |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql5"
-      | sql        |
-      | show @@sql |
-    Then check resultset "sql5" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql" in mode "admin" use db "dble_information" and user "root" to check has following and length "42" retry "5" times
       | USER-1 | SQL-4                                                                                                                                           |
       | test1  | load data infile '/opt/dble/data.txt' into table sharding_4_t1 character SET 'utf8' fields terminated by ',' lines terminated by '\n'           |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high5"
-      | sql             |
-      | show @@sql.high |
-    Then check resultset "sql_high5" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.high" in mode "admin" use db "dble_information" and user "root" to check has following and length "32" retry "5" times
       | USER-1 | FREQUENCY-2 | SQL-8                                                                                     |
       | test1  | 1           | LOAD DATA INFILE ? INTO TABLE sharding_4_t1 COLUMNS TERMINATED BY ? LINES TERMINATED BY ? |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_slow5"
-      | sql             |
-      | show @@sql.slow |
-    Then check resultset "sql_slow5" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.slow" in mode "admin" use db "dble_information" and user "root" to check has following and length "42" retry "5" times
       | USER-0 | SQL-3                                                                                                                                           |
       | test1  | load data infile '/opt/dble/data.txt' into table sharding_4_t1 character SET 'utf8' fields terminated by ',' lines terminated by '\n'           |
 
@@ -831,7 +694,7 @@ Feature: show @@sql XXX
       | conn_1 | False   | show @@sql.high true              | Unsupported statement |         |
       | conn_1 | False   | show @@sql.slow true              | Unsupported statement |         |
       | conn_1 | False   | show @@sql.resultset true         | Unsupported statement |         |
-      | conn_1 | False   | show @@sql.large true            | Unsupported statement |         |
+      | conn_1 | False   | show @@sql.large true             | Unsupported statement |         |
       | conn_1 | False   | truncate dble_information.sql_log | success               | 10      |
       | conn_1 | False   | show @@sql.high                   | length{(0)}           | 10      |
       | conn_1 | False   | show @@sql                        | length{(0)}           |         |
@@ -845,14 +708,11 @@ Feature: show @@sql XXX
     ##阈值是1024
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect         | timeout |
-      | conn_1 | False   | show @@sql           | length{(1024)} | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(1)}    |         |
-      | conn_1 | False   | show @@sql.slow      | length{(1024)} |         |
+      | conn_1 | False   | show @@sql.high      | length{(1)}    | 5       |
+      | conn_1 | False   | show @@sql.slow      | length{(1024)} | 5       |
+      | conn_1 | False   | show @@sql           | length{(1024)} | 5       |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high8"
-      | sql             |
-      | show @@sql.high |
-    Then check resultset "sql_high8" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.high" in mode "admin" use db "dble_information" and user "root" to check has following and length "1" retry "5" times
       | USER-1     | FREQUENCY-2 | SQL-8                           |
       | test2:ten1 | 1024        | SELECT * FROM test WHERE id = ? |
 
@@ -863,14 +723,11 @@ Feature: show @@sql XXX
       | test2:ten1 | 111111 | conn_13 | true    | select 21 | success |
     ### 这个1024是根据全局txd计算的，
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect         | timeout |
-      | conn_1 | False   | show @@sql           | length{(1024)} | 10      |
-      | conn_1 | true    | show @@sql.high      | length{(4)}    |         |
-      | conn_1 | False   | show @@sql.slow      | length{(1024)} |         |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high9"
-      | sql             |
-      | show @@sql.high |
-    Then check resultset "sql_high9" has lines with following column values
+      | conn   | toClose | sql                  | expect         |
+      | conn_1 | False   | show @@sql           | length{(1024)} |
+      | conn_1 | False   | show @@sql.slow      | length{(1024)} |
+
+    Then connect "dble-1" execute sql "show @@sql.high" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | USER-1     | FREQUENCY-2 | SQL-8                           |
       | test2:ten1 | 1021        | SELECT * FROM test WHERE id = ? |
       | test       | 1           | SELECT ?                        |
@@ -909,16 +766,10 @@ Feature: show @@sql XXX
       | conn_21 | False   | begin;update sharding_2_t1 a,schema2.sharding2 b set a.name=b.name where a.id=2 and b.id=2;begin;commit;rollback;begin;select * from schema2.sing1 as tmp                                                                                              | success | schema1 |
       | conn_21 | False   | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1                                                                                                                                 | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect          | timeout |
-      | conn_1 | False   | show @@sql           | length{(33)}    | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(31)}    |         |
-      | conn_1 | False   | show @@sql.slow      | length{(0)}     |         |
-      | conn_1 | False   | show @@sql.resultset | length{(28)}    |         |
+      | conn   | toClose | sql                  | expect          |
+      | conn_1 | False   | show @@sql.slow      | length{(0)}     |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql10"
-      | sql        |
-      | show @@sql |
-    Then check resultset "sql10" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql" in mode "admin" use db "dble_information" and user "root" to check has following and length "33" retry "5" times
       | ID-0 | USER-1 | SQL-4                                                                                                                  |
       | 20   | test   | select * from test a inner join sharding_2_t1 b on a.name=b.name where a.id =1                                         |
       | 21   | test   | select * from schema2.global2 a inner join sharding_2_t1 b on a.name=b.name where a.id =1                              |
@@ -953,10 +804,8 @@ Feature: show @@sql XXX
       | 17   | test   | insert into test(id, name) select id,name from schema2.global2                                                         |
       | 18   | test   | insert into schema2.sing1(id, name) select id,name from schema2.sing1                                                  |
       | 19   | test   | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                          |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high10"
-      | sql             |
-      | show @@sql.high |
-    Then check resultset "sql_high10" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.high" in mode "admin" use db "dble_information" and user "root" to check has following and length "31" retry "5" times
       | USER-1 | FREQUENCY-2 | SQL-8                                                                                                                       |
       | test   | 1           | CREATE TABLE schema2.global2 (  id int,  name char(20) )                                                                    |
       | test   | 1           | CREATE TABLE schema2.sharding2 (  id int,  name char(20) )                                                                  |
@@ -989,10 +838,8 @@ Feature: show @@sql XXX
       | test   | 1           | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.name = b.name WHERE a.id = ?  AND b.id = ?                                |
       | test   | 1           | UPDATE test SET name = ? WHERE name = (   SELECT name   FROM schema2.global2   ORDER BY id DESC   LIMIT ?  )                |
       | test   | 1           | UPDATE test SET name = ? WHERE name IN (   SELECT name   FROM schema2.global2  )                                            |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_resultset10"
-      | sql                  |
-      | show @@sql.resultset |
-    Then check resultset "sql_resultset10" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.resultset" in mode "admin" use db "dble_information" and user "root" to check has following and length "28" retry "5" times
       | ID-0 | USER-1 | FREQUENCY-2 | SQL-3                                                                                                                  | RESULTSET_SIZE-4 |
       | 1    | test   | 1           | drop table if exists test                                                                                              | 44               |
       | 2    | test   | 1           | drop table if exists sharding_2_t1                                                                                     | 22               |
@@ -1042,17 +889,7 @@ Feature: show @@sql XXX
       | rw1  | 111111 | conn_3 | False   | delete from db2.test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp))                                      | success | db1 |
 
    ###这边show @@sql.slow逻辑性不强，数据会重新从sql_log过滤筛选得到
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect          | timeout |
-      | conn_1 | False   | show @@sql           | length{(58)}    | 10      |
-      | conn_1 | False   | show @@sql.high      | length{(50)}    |         |
-      | conn_1 | true    | show @@sql.slow      | length{(58)}    |         |
-      | conn_1 | False   | show @@sql.resultset | length{(47)}    |         |
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql11"
-      | sql        |
-      | show @@sql |
-    Then check resultset "sql11" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql" in mode "admin" use db "dble_information" and user "root" to check has following and length "58" retry "5" times
       | USER-1 | SQL-4                                                                                                                   |
       | rw1    | drop table if exists test_table                                                                                         |
       | rw1    | create table test_table(id int,name varchar(20),age int)                                                                |
@@ -1080,10 +917,7 @@ Feature: show @@sql XXX
       | rw1    | delete test_table from test_table,db2.test_table1 where test_table.id=1 and db2.test_table1.id =1                       |
       | rw1    | delete from db2.test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high11"
-      | sql             |
-      | show @@sql.high |
-    Then check resultset "sql_high11" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.high" in mode "admin" use db "dble_information" and user "root" to check has following and length "50" retry "5" times
       | USER-1 | FREQUENCY-2 | SQL-8                                                                                                                   |
       | rw1    | 4           | begin                                                                                                                   |
       | rw1    | 2           | commit                                                                                                                  |
@@ -1104,10 +938,8 @@ Feature: show @@sql XXX
       | rw1    | 1           | UPDATE test_table a, db2.test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               |
       | rw1    | 1           | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM db2.test_table1  )                                      |
       | rw1    | 2           | UPDATE test_table1 SET age = ? WHERE id = ?                                                                             |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_slow11"
-      | sql             |
-      | show @@sql.slow |
-    Then check resultset "sql_slow11" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.slow" in mode "admin" use db "dble_information" and user "root" to check has following and length "58" retry "5" times
       | USER-0 | SQL-3                                                                                                                   |
       | rw1    | drop table if exists test_table                                                                                         |
       | rw1    | create table test_table(id int,name varchar(20),age int)                                                                |
@@ -1139,15 +971,10 @@ Feature: show @@sql XXX
     Then execute prepared sql "select %s from test where id =%s" with params "(name,1);(id,3)" on db "schema1" and user "test"
     Then execute prepared sql "select %s from test_table where id =%s" with params "(name,1);(id,3)" on db "db1" and user "rw1"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect          | timeout |
-      | conn_1 | False   | show @@sql           | length{(66)}    | 10      |
-      | conn_1 | true    | show @@sql.high      | length{(56)}    |         |
-      | conn_1 | true    | show @@sql.slow      | length{(66)}    |         |
-      | conn_1 | False   | show @@sql.resultset | length{(49)}    |         |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql12"
-      | sql        |
-      | show @@sql |
-    Then check resultset "sql12" has lines with following column values
+      | conn   | toClose | sql                  | expect          |
+      | conn_1 | False   | show @@sql.resultset | length{(49)}    |
+
+    Then connect "dble-1" execute sql "show @@sql" in mode "admin" use db "dble_information" and user "root" to check has following and length "66" retry "5" times
       | USER-1 | SQL-4                                            |
       | rw1    | SET NAMES 'utf8' COLLATE 'utf8_general_ci'       |
       | rw1    | SET @@session.autocommit = ON                    |
@@ -1157,10 +984,8 @@ Feature: show @@sql XXX
       | test   | SET @@session.autocommit = ON                    |
       | test   | select 'name' from test where id =1              |
       | test   | select 'id' from test where id =3                |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_high12"
-      | sql             |
-      | show @@sql.high |
-    Then check resultset "sql_high12" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.high" in mode "admin" use db "dble_information" and user "root" to check has following and length "56" retry "5" times
       | USER-1 | FREQUENCY-2 | SQL-8                                |
       | rw1    | 2           | select ? from test_table where id =? |
       | test   | 2           | SELECT ? FROM test WHERE id = ?      |
@@ -1168,10 +993,8 @@ Feature: show @@sql XXX
       | test   | 1           | SET @@session.autocommit = ON        |
       | rw1    | 1           | SET NAMES ?                          |
       | test   | 1           | SET NAMES ?                          |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_slow12"
-      | sql             |
-      | show @@sql.slow |
-    Then check resultset "sql_slow12" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.slow" in mode "admin" use db "dble_information" and user "root" to check has following and length "66" retry "5" times
       | USER-0 | SQL-3                                            |
       | rw1    | SET NAMES 'utf8' COLLATE 'utf8_general_ci'       |
       | rw1    | SET @@session.autocommit = ON                    |
@@ -1185,7 +1008,7 @@ Feature: show @@sql XXX
     Then check "NullPointerException|caught err|unknown error|setError" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
-  Scenario: show @@sql.large show @@sql.condition #4
+  Scenario: show @@sql.large   #4
     ##| USER | ROWS | START_TIME | EXECUTE_TIME | SQL |
     ##| ID-0 | KEY-1  KEY: schema.table 最后两⾏为schema.table.valuekey 和 schema.table.valuecount      | VALUE-2 | COUNT-3 |
     ##reload @@query_cf=table&column;   ## 根据sql_log过滤得到
@@ -1236,15 +1059,7 @@ Feature: show @@sql XXX
       | conn_3 | False   | select * from sharding_4_t1 limit 100000   | success     | schema1 |
       | conn_3 | False   | select * from test1 limit 100000           | success     | schema1 |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                      | expect         | timeout |
-      | conn_1 | False   | show @@sql.large         | length{(1)}    | 10      |
-      | conn_1 | False   | show @@sql.condition     | length{(2)}    | 10      |
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_large1"
-      | sql              |
-      | show @@sql.large |
-    Then check resultset "sql_large1" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.large" in mode "admin" use db "dble_information" and user "root" to check has following and length "1" retry "5" times
       | USER-0 | ROWS-1 | SQL-4                                    |
       | test   | 10001  | select * from sharding_4_t1 limit 100000 |
 
@@ -1253,13 +1068,7 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                                                                                                        | expect      | db      |
       | conn_3 | False   | select * from sharding_4_t1 where id>0 limit 100000;select id from sharding_4_t1 where id>0 limit 100000   | success     | schema1 |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect         | timeout |
-      | conn_1 | False   | show @@sql.large     | length{(3)}    | 10      |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_large2"
-      | sql              |
-      | show @@sql.large |
-    Then check resultset "sql_large2" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.large" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
       | USER-0 | ROWS-1 | SQL-4                                                   |
       | test   | 10001  | select * from sharding_4_t1 limit 100000                |
       | test   | 10001  | select * from sharding_4_t1 where id>0 limit 100000     |
@@ -1275,18 +1084,13 @@ Feature: show @@sql XXX
       | test1 | 111111 | conn_4 | False   | set autocommit=1;select * from test1 limit 100000                                                                                 | schema1     | success |
       | test1 | 111111 | conn_4 | true    | select * from test order by id limit 100000                                                                                       | schema1      | success |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect         | timeout |
-      | conn_1 | False   | show @@sql.large     | length{(7)}    | 10      |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_large2"
-      | sql              |
-      | show @@sql.large |
-    Then check resultset "sql_large2" has lines with following column values
-      | USER-0 | ROWS-1 | SQL-4                                                                                    |
+    Then connect "dble-1" execute sql "show @@sql.large" in mode "admin" use db "dble_information" and user "root" to check has following and length "7" retry "5" times
+      | USER-0 | ROWS-1 | SQL-4                                                                                     |
       | test1   | 15000  | select * from test order by id limit 100000                                              |
       | test1   | 15000  | /*!dble:shardingNode=dn1*/ select name from test limit 100000                            |
       | test1   | 15000  | select name from test limit 100000                                                       |
       | test1   | 10001  | select * from sharding_4_t1 a inner join test b on a.id=b.id where a.id > 0 limit 100000 |
+
      Then execute sql in "dble-1" in "user" mode
       | user       | conn   | toClose | sql                                                                                                  | expect      | db      |
       | test2:ten1 | conn_5 | False   | select * from test where id>0 limit 100000;select id from test1 where id>0 limit 100000              | success     | schema1 |
@@ -1316,19 +1120,15 @@ Feature: show @@sql XXX
     ### case 6: ps协议
     Then execute prepared sql "select %s from test where id >%s limit 1000000" with params "(name,1);(id,3)" on db "schema1" and user "test"
     Then execute prepared sql "select %s from table1 where id >%s" with params "(name,1);(id,3)" on db "db1" and user "rw1"
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                | expect      | timeout |
-      | conn_1 | false   | show @@sql.large                   | length{(5)} | 10      |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_large2"
-      | sql              |
-      | show @@sql.large |
-    Then check resultset "sql_large2" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.large" in mode "admin" use db "dble_information" and user "root" to check has following and length "5" retry "5" times
       | USER-0 | ROWS-1 | SQL-4                                             |
       | test   | 14999  | select 'name' from test where id >1 limit 1000000 |
       | test   | 14997  | select 'id' from test where id >3 limit 1000000   |
       | rw1    | 10333  | select * from  table1 limit 1000000               |
       | rw1    | 10332  | select ? from table1 where id >?                  |
       | rw1    | 10330  | select ? from table1 where id >?                  |
+
     Then check "NullPointerException|caught err|unknown error|setError" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
@@ -1378,13 +1178,7 @@ Feature: show @@sql XXX
       | conn_3 | False   | select id from sharding_4_t1 where id=1                                                    | success     | schema1 |
 
     ### case : 没有设置reload @@query_cf=table&column; show @@sql.condition为2条null数据
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                      | expect         | timeout |
-      | conn_1 | False   | show @@sql.condition     | length{(2)}    | 10      |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_condition1"
-      | sql                  |
-      | show @@sql.condition |
-    Then check resultset "sql_condition1" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.condition" in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | ID-0 | KEY-1                | VALUE-2 | COUNT-3 |
       | 1    | null.null.valuekey   | size    | 0       |
       | 2    | null.null.valuecount | total   | 0       |
@@ -1398,13 +1192,7 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                                         | expect      | db      |
       | conn_3 | False   | select id from sharding_4_t1 where id=1     | success     | schema1 |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                      | expect         | timeout |
-      | conn_1 | False   | show @@sql.condition     | length{(3)}    | 10      |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_condition1"
-      | sql                  |
-      | show @@sql.condition |
-    Then check resultset "sql_condition1" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.condition" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
       | KEY-1                       | VALUE-2 | COUNT-3 |
       | sharding_4_t1.id            | 1       |     1 |
       | sharding_4_t1.id.valuekey   | size    |     1 |
@@ -1419,13 +1207,7 @@ Feature: show @@sql XXX
       | sql                                             | db      |
       | select id from sharding_4_t1 where id=1         | schema1 |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                      | expect         | timeout |
-      | conn_1 | False   | show @@sql.condition     | length{(5)}    | 10      |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_condition1"
-      | sql                  |
-      | show @@sql.condition |
-    Then check resultset "sql_condition1" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.condition" in mode "admin" use db "dble_information" and user "root" to check has following and length "5" retry "5" times
       | KEY-1                       | VALUE-2 | COUNT-3 |
       | sharding_4_t1.id            | 0       | 1       |
       | sharding_4_t1.id            | 1       | 102     |
@@ -1462,13 +1244,7 @@ Feature: show @@sql XXX
       | test1      | conn_3 | False   | select name from sharding_4_t1 where id=0     | success     | schema1 |
       | test2:ten1 | conn_3 | False   | select name from sharding_4_t1 where id=2     | success     | schema1 |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                      | expect         | timeout |
-      | conn_1 | False   | show @@sql.condition     | length{(2)}    | 10      |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_condition1"
-      | sql                  |
-      | show @@sql.condition |
-    Then check resultset "sql_condition1" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.condition" in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | KEY-1                         | VALUE-2 | COUNT-3 |
       | sharding_4_t1.name.valuekey   | size    | 0       |
       | sharding_4_t1.name.valuecount | total   | 0       |
@@ -1477,13 +1253,8 @@ Feature: show @@sql XXX
       | user       | conn   | toClose | sql                                             | expect      | db      |
       | test1      | conn_3 | False   | select name from sharding_4_t1 where name=0     | success     | schema1 |
       | test2:ten1 | conn_3 | False   | select name from sharding_4_t1 where name=2     | success     | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                      | expect         | timeout |
-      | conn_1 | False   | show @@sql.condition     | length{(4)}    | 10      |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_condition1"
-      | sql                  |
-      | show @@sql.condition |
-    Then check resultset "sql_condition1" has lines with following column values
+
+    Then connect "dble-1" execute sql "show @@sql.condition" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "4" times
       | KEY-1                         | VALUE-2 | COUNT-3 |
       | sharding_4_t1.name            | 0       | 1       |
       | sharding_4_t1.name            | 2       | 1       |
@@ -1506,13 +1277,7 @@ Feature: show @@sql XXX
       | user       | conn   | toClose | sql                                    | expect      | db      |
       | test1      | conn_3 | False   | select name from test where name=0     | success     | schema1 |
       | test2:ten1 | conn_3 | False   | select name from test where name=2     | success     | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                      | expect         | timeout |
-      | conn_1 | False   | show @@sql.condition     | length{(4)}    | 10      |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_condition1"
-      | sql                  |
-      | show @@sql.condition |
-    Then check resultset "sql_condition1" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.condition" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | KEY-1                | VALUE-2 | COUNT-3 |
       | test.name            | 0       | 1       |
       | test.name            | 2       | 1       |
@@ -1531,13 +1296,7 @@ Feature: show @@sql XXX
       | rw1   | 111111    | conn_11 | true     | drop table if exists table1;create table table1(id int,name varchar(20))         | success  | db1 |
       | rw1   | 111111    | conn_11 | true     | select name from table1 where name=0;select name from table1 where name=1        | success  | db1 |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                      | expect         | timeout |
-      | conn_1 | False   | show @@sql.condition     | length{(4)}    | 10      |
-     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_condition6"
-      | sql                  |
-      | show @@sql.condition |
-    Then check resultset "sql_condition6" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.condition" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | KEY-1                  | VALUE-2 | COUNT-3 |
       | table1.name            | 0       | 1       |
       | table1.name            | 1       | 1       |
@@ -1547,13 +1306,7 @@ Feature: show @@sql XXX
     ### case 7: ps协议
       ###读写分离用户的ps直接下发占位符？ 相当于没有记录
     Then execute prepared sql "select %s from table1 where name =%s" with params "(name,1);(id,3)" on db "db1" and user "rw1"
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                      | expect         | timeout |
-      | conn_1 | False   | show @@sql.condition     | length{(4)}    | 10      |
-     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_condition7"
-      | sql                  |
-      | show @@sql.condition |
-    Then check resultset "sql_condition7" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.condition" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | KEY-1                  | VALUE-2 | COUNT-3 |
       | table1.name            | 0       | 1       |
       | table1.name            | 1       | 1       |
@@ -1562,13 +1315,7 @@ Feature: show @@sql XXX
      ###切换成分库分表用户
     Then execute admin cmd "reload @@query_cf=test&id"
     Then execute prepared sql "select %s from test where id =%s limit 1000000" with params "(name,1);(id,3)" on db "schema1" and user "test"
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                      | expect         | timeout |
-      | conn_1 | False   | show @@sql.condition     | length{(4)}    | 10      |
-     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_condition7"
-      | sql                  |
-      | show @@sql.condition |
-    Then check resultset "sql_condition7" has lines with following column values
+    Then connect "dble-1" execute sql "show @@sql.condition" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | KEY-1              | VALUE-2 | COUNT-3 |
       | test.id            | 1       | 1       |
       | test.id            | 3       | 1       |
