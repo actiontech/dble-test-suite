@@ -16,18 +16,8 @@ sql_log_by_tx_digest_by_entry_by_user
 
 
   Scenario: desc table and unsupported dml  #1
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                        | expect        | db               |
-      | conn_0 | False   | desc sql_log                               | length{(14)}  | dble_information |
-      | conn_0 | False   | desc sql_log_by_tx_by_entry_by_user        | length{(10)}  | dble_information |
-      | conn_0 | False   | desc sql_log_by_digest_by_entry_by_user    | length{(8)}   | dble_information |
-      | conn_0 | False   | desc sql_log_by_tx_digest_by_entry_by_user | length{(11)}  | dble_information |
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_1"
-      | conn   | toClose | sql          | db               |
-      | conn_0 | False   | desc sql_log | dble_information |
     ## coz DBLE0REQ-2101 新增参数 result_size
-    Then check resultset "table_1" has lines with following column values
+    Then connect "dble-1" execute sql "desc sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "14"
       | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
       | sql_id        | int(11)       | NO     | PRI   | None      |         |
       | sql_stmt      | varchar(1024) | NO     |       | None      |         |
@@ -44,10 +34,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | start_time    | timestamp     | NO     |       | None      |         |
       | duration      | int(11)       | NO     |       | None      |         |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_2"
-      | conn   | toClose | sql                                 | db               |
-      | conn_0 | False   | desc sql_log_by_tx_by_entry_by_user | dble_information |
-    Then check resultset "table_2" has lines with following column values
+    Then connect "dble-1" execute sql "desc sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "10"
       | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
       | tx_id         | int(11)       | NO     |       | None      |         |
       | entry         | int(11)       | NO     |       | None      |         |
@@ -60,10 +47,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | busy_time     | int(11)       | NO     |       | None      |         |
       | examined_rows | int(11)       | NO     |       | None      |         |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_3"
-      | conn   | toClose | sql                                     | db               |
-      | conn_0 | False   | desc sql_log_by_digest_by_entry_by_user | dble_information |
-    Then check resultset "table_3" has lines with following column values
+    Then connect "dble-1" execute sql "desc sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "8"
       | Field-0       | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
       | sql_digest    | int(11)     | NO     |       | None      |         |
       | entry         | int(11)     | NO     |       | None      |         |
@@ -74,10 +58,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | examined_rows | int(11)     | NO     |       | None      |         |
       | avg_duration  | int(11)     | NO     |       | None      |         |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_4"
-      | conn   | toClose | sql                                        | db               |
-      | conn_0 | False   | desc sql_log_by_tx_digest_by_entry_by_user | dble_information |
-    Then check resultset "table_4" has lines with following column values
+    Then connect "dble-1" execute sql "desc sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "11"
       | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
       | tx_digest     | varchar(1024) | NO     |       | None      |         |
       | exec          | int(11)       | NO     |       | None      |         |
@@ -347,7 +328,6 @@ sql_log_by_tx_digest_by_entry_by_user
     Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql             | db      |
       | select 2        | schema1 |
-    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect        | db               | timeout |
       | conn_0 | False   | select * from sql_log                               | length{(100)} | dble_information | 10      |
@@ -452,10 +432,10 @@ sql_log_by_tx_digest_by_entry_by_user
     Then execute admin cmd "disable @@statistic"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
-      | rw1 | 111111 | conn_3 | False   | drop table if exists test_table               | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | create table test_table(id int,name char(20)) | success | db1 |
-      | rw1 | 111111 | conn_3 | False   | insert into test_table values (1,2)           | success | db1 |
-      | rw1 | 111111 | conn_3 | true    | select 2                                      | success | db1 |
+      | rw1  | 111111 | conn_3 | False   | drop table if exists test_table               | success | db1 |
+      | rw1  | 111111 | conn_3 | False   | create table test_table(id int,name char(20)) | success | db1 |
+      | rw1  | 111111 | conn_3 | False   | insert into test_table values (1,2)           | success | db1 |
+      | rw1  | 111111 | conn_3 | true    | select 2                                      | success | db1 |
       | rwS2 | 111111 | conn_4 | False   | drop table if exists test_table               | success | db2 |
       | rwS2 | 111111 | conn_4 | False   | create table test_table(id int,name char(20)) | success | db2 |
       | rwS2 | 111111 | conn_4 | False   | insert into test_table values (1,2)           | success | db2 |
@@ -525,7 +505,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | create table global (id int,name char(20)) | success | schema1 |
     ## 10001，包含1条sql insert into global (id,name) values(1,'NJ100001')
     Then connect "dble-1" to insert "10001" of data for "global"
-    Given sleep "4" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                        | expect  | db      |
       | conn_1 | False   | insert into global values (1,1),(2,2)      | success | schema1 |
@@ -542,19 +521,9 @@ sql_log_by_tx_digest_by_entry_by_user
       | rw1  | 111111 | conn_3 | False   | create table test_table(id int,name char(20)) | success | db1 |
       | rw1  | 111111 | conn_3 | False   | insert into test_table values (1,2)           | success | db1 |
       | rw1  | 111111 | conn_3 | False   | select 2                                      | success | db1 |
-     #DBLE0REQ-1112
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                 | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                               | length{(14)} | dble_information | 10      |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                        | length{(14)} | dble_information | 10      |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                    | length{(14)} | dble_information | 10      |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                 | length{(14)} | dble_information | 10      |
 
     ### exit不加入统计
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "14" retry "5" times
       | sql_stmt-1                                          | sql_digest-2                                        | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | result_size-11 |
       | drop table if exists global                         | DROP TABLE IF EXISTS global                         | DDL        | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 44             |
       | create table global (id int,name char(20))          | CREATE TABLE global (  id int,  name char(20) )     | DDL        | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 44             |
@@ -571,11 +540,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | insert into test_table values (1,2)                 | INSERT INTO test_table VALUES (?, ?)                | Insert     | 13      | 5       | rw1    | 172.100.9.8   | 8066          | 1      | 11             |
       | select 2                                            | SELECT ?                                            | Select     | 14      | 5       | rw1    | 172.100.9.8   | 8066          | 1      | 56             |
 
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "14" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6 |
       | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1          |
       | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1          |
@@ -593,10 +558,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 14      | 5       | rw1    | 172.100.9.8   | 8066          | 14        | 1          |
 
     #DBLE0REQ-1112
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "14" retry "5" times
       | sql_digest-0                                        | entry-1 | user-2 | exec-3 | rows-5 |
       | CREATE TABLE global (  id int,  name char(20) )     | 2       | test   | 1      | 0      |
       | CREATE TABLE test_table (  id int,  name char(20) ) | 5       | rw1    | 1      | 0      |
@@ -613,11 +575,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | show databases                                      | 2       | test   | 1      | 1      |
       | UPDATE global SET name = ? WHERE id = ?             | 2       | test   | 1      | 2      |
 
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "14" retry "5" times
       | tx_digest-0                                         | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
       | CREATE TABLE global (  id int,  name char(20) )     | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 2         |
       | CREATE TABLE test_table (  id int,  name char(20) ) | 1      | rw1    | 5       | 1          | 172.100.9.8   | 8066          | 12        |
@@ -638,9 +596,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                                                   | expect       | db               | timeout  |
       | conn_0 | False   | truncate dble_information.sql_log                     | success      | dble_information |          |
       | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information | 10       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information | 10       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(0)}  | dble_information | 10       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information | 10       |
 
       ### view 视图
     Then execute sql in "dble-1" in "user" mode
@@ -651,47 +606,28 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | drop view view_test                              | success | schema1 |
       | conn_1 | False   | truncate  global                                 | success | schema1 |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(5)}  | dble_information | 3       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(5)}  | dble_information | 3       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(5)}  | dble_information | 3       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(5)}  | dble_information | 3       |
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "5" retry "5" times
       | sql_id-0 | sql_stmt-1                                    | sql_digest-2                                  | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
       | 15       | drop view if exists view_test                 | DROP VIEW IF EXISTS view_test                 | DDL        | 15      | 2       | test   | 172.100.9.8   | 8066          | 0      |
       | 16       | create view view_test as select * from global | CREATE VIEW view_test AS SELECT * FROM global | DDL        | 16      | 2       | test   | 172.100.9.8   | 8066          | 0      |
       | 17       | select * from view_test                       | select * from view_test                       | Select     | 17      | 2       | test   | 172.100.9.8   | 8066          | 10002  |
       | 18       | drop view view_test                           | DROP VIEW view_test                           | DDL        | 18      | 2       | test   | 172.100.9.8   | 8066          | 0      |
       | 19       | truncate  global                              | truncate  global                              | DDL        | 19      | 2       | test   | 172.100.9.8   | 8066          | 0      |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "5" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
       | 15      | 2       | test   | 172.100.9.8   | 8066          | 15        | 1           |
       | 16      | 2       | test   | 172.100.9.8   | 8066          | 16        | 1           |
       | 17      | 2       | test   | 172.100.9.8   | 8066          | 17        | 1           |
       | 18      | 2       | test   | 172.100.9.8   | 8066          | 18        | 1           |
       | 19      | 2       | test   | 172.100.9.8   | 8066          | 19        | 1           |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "5" retry "5" times
       | sql_digest-0                                  | entry-1 | user-2 | exec-3 | rows-5 |
       | CREATE VIEW view_test AS SELECT * FROM global | 2       | test   | 1      | 0      |
       | DROP VIEW IF EXISTS view_test                 | 2       | test   | 1      | 0      |
       | DROP VIEW view_test                           | 2       | test   | 1      | 0      |
       | select * from view_test                       | 2       | test   | 1      | 10002  |
       | truncate  global                              | 2       | test   | 1      | 0      |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "5" retry "5" times
       | tx_digest-0                                   | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
       | CREATE VIEW view_test AS SELECT * FROM global | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 16        |
       | DROP VIEW IF EXISTS view_test                 | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 15        |
@@ -776,18 +712,9 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | update test set name= '4' where name in (select name from schema2.global2 )                                            | success | schema1 |
       | conn_1 | False   | update sharding_2_t1 a,schema2.sharding2 b set a.name=b.name where a.id=2 and b.id=2                                   | success | schema1 |
       | conn_1 | False   | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1 | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect        | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(12)}  | dble_information | 5       |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user          | length{(12)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(12)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(12)}  | dble_information | 5       |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
     #### sql_id为7的那一行，因为join数据的时候，后端返回的影响行数不固定，所以去除examined_rows一列的比对
-    Then check resultset "resulte_1" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "12" retry "5" times
       | sql_id-0 | sql_stmt-1                                                                                                             | sql_digest-2                                                                                                                | sql_type-3 | tx_id-4  | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
       | 1        | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                              | insert into sharding_2_t1(id, name) select id,name from schema2.sharding2                                                   | Insert     | 16       | 2       | test   | 172.100.9.8   | 8066          | 4      |
       | 2        | insert into test(id, name) select id,name from schema2.global2                                                         | insert into test(id, name) select id,name from schema2.global2                                                              | Insert     | 17       | 2       | test   | 172.100.9.8   | 8066          | 4      |
@@ -802,10 +729,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 11       | update sharding_2_t1 a,schema2.sharding2 b set a.name=b.name where a.id=2 and b.id=2                                   | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.name = b.name WHERE a.id = ?  AND b.id = ?                                | Update     | 26       | 2       | test   | 172.100.9.8   | 8066          | 0      |
       | 12       | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1 | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | Delete     | 27       | 2       | test   | 172.100.9.8   | 8066          | 2      |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "12" retry "5" times
       | tx_id-0  | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
       | 16       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           |
       | 17       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           |
@@ -820,10 +744,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 26       | 2       | test   | 172.100.9.8   | 8066          | 11        | 1           |
       | 27       | 2       | test   | 172.100.9.8   | 8066          | 12        | 1           |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "12" retry "5" times
       | sql_digest-0                                                                                                                | entry-1 | user-2 | exec-3 | rows-5 |
       | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | 2       | test   | 1      | 2      |
       | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                               | 2       | test   | 1      | 4      |
@@ -838,10 +759,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | UPDATE test SET name = ? WHERE name = (   SELECT name   FROM schema2.global2   ORDER BY id DESC   LIMIT ?  )                | 2       | test   | 1      | 2      |
       | UPDATE test SET name = ? WHERE name IN (   SELECT name   FROM schema2.global2  )                                            | 2       | test   | 1      | 6      |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "12" retry "5" times
       | tx_digest-0                                                                                                                 | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
       | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 12        |
       | insert into schema2.sharding2(id, name) select id,name from schema2.sharding2                                               | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 4         |
@@ -876,9 +794,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
       | conn_0 | true    | truncate dble_information.sql_log                     | success      | dble_information |         |
       | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(0)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information | 5       |
 
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                                                                                                                           | expect  | db      |
@@ -894,16 +809,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | test1 | 111111 | conn_2 | False   | select n.id,s.name from sharding_2_t1 n join schema2.sharding2 s on n.id=s.id                                                | success | schema1 |
       | test1 | 111111 | conn_2 | False   | select * from sharding_2_t1 where age <> (select age from schema2.sharding2 where id !=1)                                    | success | schema1 |
       | test1 | 111111 | conn_2 | False   | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1       | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect        | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(11)}  | dble_information | 3       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(11)}  | dble_information | 3       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(11)}  | dble_information | 3       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(11)}  | dble_information | 3       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "11" retry "5" times
       | sql_id-0 | sql_stmt-1                                                                                                                  | sql_digest-2                                                                                                                | sql_type-3 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
       | 25       | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | insert into no_sharding_t1(id,name,age) select id,name,age from schema2.no_shar                                             | Insert     | 3       | test1  | 172.100.9.8   | 8066          | 2      |
       | 26       | update no_sharding_t1 set name='test_name' where id in (select id from schema2.no_shar)                                     | UPDATE no_sharding_t1 SET name = ? WHERE id IN (   SELECT id   FROM schema2.no_shar  )                                      | Update     | 3       | test1  | 172.100.9.8   | 8066          | 4      |
@@ -917,10 +824,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 34       | select * from sharding_2_t1 where age <> (select age from schema2.sharding2 where id !=1)                                   | SELECT * FROM sharding_2_t1 WHERE age <> (  SELECT age  FROM schema2.sharding2  WHERE id != ? )                             | Select     | 3       | test1  | 172.100.9.8   | 8066          | 3      |
       | 35       | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1      | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | Delete     | 3       | test1  | 172.100.9.8   | 8066          | 2      |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "11" retry "5" times
       | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
       | 3       | test1  | 172.100.9.8   | 8066          | 25        | 1           |
       | 3       | test1  | 172.100.9.8   | 8066          | 26        | 1           |
@@ -934,10 +838,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 3       | test1  | 172.100.9.8   | 8066          | 34        | 1           |
       | 3       | test1  | 172.100.9.8   | 8066          | 35        | 1           |
 
-     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "11" retry "5" times
       | sql_digest-0                                                                                                                | entry-1 | user-2 | exec-3 | rows-5 |
       | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | 3       | test1  | 1      | 2      |
       | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | 3       | test1  | 1      | 2      |
@@ -951,10 +852,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | UPDATE no_sharding_t1 SET name = ? WHERE id IN (   SELECT id   FROM schema2.no_shar  )                                      | 3       | test1  | 1      | 4      |
       | UPDATE sharding_2_t1 a, schema2.sharding2 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                              | 3       | test1  | 1      | 2      |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "11" retry "5" times
       | tx_digest-0                                                                                                                 | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
       | delete from schema2.no_shar where name in ((select age from (select name,age from no_sharding_t1 order by id desc) as tmp)) | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 30        |
       | DELETE schema1.sharding_2_t1 FROM sharding_2_t1, schema2.sharding2 WHERE sharding_2_t1.id = ?  AND schema2.sharding2.id = ? | 1      | test1  | 3       | 1          | 172.100.9.8   | 8066          | 35        |
@@ -982,9 +880,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
       | conn_0 | true    | truncate dble_information.sql_log                     | success      | dble_information |         |
       | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information |         |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(0)}  | dble_information |         |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information |         |
 
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                                | expect  | db  |
@@ -996,16 +891,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | rw1 | 111111 | conn_3 | False   | select * from test_table where age <> (select age from test_table1 where id !=1)                                    | success | db1 |
       | rw1 | 111111 | conn_3 | False   | delete test_table from test_table,test_table1 where test_table.id=1 and test_table1.id =1                           | success | db1 |
       | rw1 | 111111 | conn_3 | False   | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | success | db1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(8)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(8)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(7)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(7)}  | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "8" retry "5" times
       | sql_id-0 | sql_stmt-1                                                                                                          | sql_digest-2                                                                                                        | sql_type-3 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
       | 42       | insert into test_table(id,name,age) select id,name,age from test_table1                                             | insert into test_table(id,name,age) select id,name,age from test_table1                                             | Insert     | 4       | rw1   | 172.100.9.8   | 8066          | 2      |
       | 43       | update test_table set name='test_name' where id in (select id from test_table1 )                                    | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | Update     | 4       | rw1   | 172.100.9.8   | 8066          | 4      |
@@ -1016,10 +903,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 48       | delete test_table from test_table,test_table1 where test_table.id=1 and test_table1.id =1                           | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | Delete     | 4       | rw1   | 172.100.9.8   | 8066          | 2      |
       | 49       | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | Delete     | 4       | rw1   | 172.100.9.8   | 8066          | 1      |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "8" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
       | 57      | 4       | rw1   | 172.100.9.8   | 8066          | 42        | 1           |
       | 58      | 4       | rw1   | 172.100.9.8   | 8066          | 43        | 1           |
@@ -1030,10 +914,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 63      | 4       | rw1   | 172.100.9.8   | 8066          | 48        | 1           |
       | 64      | 4       | rw1   | 172.100.9.8   | 8066          | 49        | 1           |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "7" retry "5" times
       | sql_digest-0                                                                                                        | entry-1 | user-2 | exec-3 | rows-5 |
       | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | 4       | rw1   | 1      | 1      |
       | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | 4       | rw1   | 1      | 2      |
@@ -1043,10 +924,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | UPDATE test_table a, test_table1 b SET a.age = b.age - ? WHERE a.id = ?  AND b.id = ?                               | 4       | rw1   | 1      | 2      |
       | UPDATE test_table SET name = ? WHERE id IN (   SELECT id   FROM test_table1  )                                      | 4       | rw1   | 1      | 4      |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "7" retry "5" times
       | tx_digest-0                                                                                                         | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
       | delete from test_table1 where name in ((select age from (select name,age from test_table order by id desc) as tmp)) | 1      | rw1   | 4       | 1          | 172.100.9.8   | 8066          | 49        |
       | DELETE test_table FROM test_table, test_table1 WHERE test_table.id = ?  AND test_table1.id = ?                      | 1      | rw1   | 4       | 1          | 172.100.9.8   | 8066          | 48        |
@@ -1061,10 +939,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
       | conn_0 | true    | truncate dble_information.sql_log                     | success      | dble_information |         |
       | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information |         |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(0)}  | dble_information |         |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information |         |
-            # add case for mysql 5.7 shrdinguser
+
+    # add case for mysql 5.7 shrdinguser
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                      | expect  | db      |
       | conn_1 | False   | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                      | success | schema1 |
@@ -1072,13 +948,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | create view test_view(id,name) AS select * from test union select * from schema2.global2 | success | schema1 |
       | conn_1 | False   | select * from test union select * from schema2.global2                                   | success | schema1 |
       | conn_1 | False   | drop view test_view                                                                      | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(5)}  | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "5" retry "5" times
       | sql_id-0 | sql_stmt-1                                                                               | sql_digest-2                                                                                    | sql_type-3 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
       | 50       | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                      | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                             | Other      | 2       | test   | 172.100.9.8   | 8066          | 2      |
       | 51       | drop view if exists test_view                                                            | DROP VIEW IF EXISTS test_view                                                                   | DDL        | 2       | test   | 172.100.9.8   | 8066          | 0      |
@@ -1086,10 +957,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 53       | select * from test union select * from schema2.global2                                   | select * from test union select * from schema2.global2                                          | Select     | 2       | test   | 172.100.9.8   | 8066          | 8      |
       | 54       | drop view test_view                                                                      | DROP VIEW test_view                                                                             | DDL        | 2       | test   | 172.100.9.8   | 8066          | 0      |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "5" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
       | 65      | 2       | test   | 172.100.9.8   | 8066          | 50        | 1           |
       | 66      | 2       | test   | 172.100.9.8   | 8066          | 51        | 1           |
@@ -1097,20 +965,15 @@ sql_log_by_tx_digest_by_entry_by_user
       | 68      | 2       | test   | 172.100.9.8   | 8066          | 53        | 1           |
       | 69      | 2       | test   | 172.100.9.8   | 8066          | 54        | 1           |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "5" retry "5" times
       | sql_digest-0                                                                                    | entry-1 | user-2 | exec-3 | rows-5 |
       | CREATE VIEW test_view (  id,   name ) AS SELECT * FROM test UNION SELECT * FROM schema2.global2 | 2       | test   | 1      | 0      |
       | DROP VIEW IF EXISTS test_view                                                                   | 2       | test   | 1      | 0      |
       | DROP VIEW test_view                                                                             | 2       | test   | 1      | 0      |
       | replace into sharding_2_t1(id) select a.id from schema2.sharding2 a                             | 2       | test   | 1      | 2      |
+      | select * from test union select * from schema2.global2                                          | 2       | test   | 1      | 8      |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "5" retry "5" times
       | tx_digest-0                                                                                     | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
       | CREATE VIEW test_view (  id,   name ) AS SELECT * FROM test UNION SELECT * FROM schema2.global2 | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 52        |
       | DROP VIEW IF EXISTS test_view                                                                   | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 51        |
@@ -1154,45 +1017,28 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False    | /*!dble:shardingNode=dn3*/ update sharding_4_t1 set name = 'dn1' where id=666             | success | schema1 |
       | conn_1 | True     | /*!dble:shardingNode=dn4*/ delete from sharding_4_t1 where id=666                         | success | schema1 |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(4)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(4)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(4)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(4)}  | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | sql_id-0 | sql_stmt-1                                                                    | sql_digest-2                                   | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
       | 1        | /*!dble:shardingNode=dn1*/ select * from sharding_4_t1                        | SELECT * FROM sharding_4_t1                    | Select     | 4       | 2       | test   | 172.100.9.8   | 8066          | 1      |
       | 2        | /*!dble:shardingNode=dn2*/ insert into sharding_4_t1 values(666, 'name666')   | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 5       | 2       | test   | 172.100.9.8   | 8066          | 1      |
       | 3        | /*!dble:shardingNode=dn3*/ update sharding_4_t1 set name = 'dn1' where id=666 | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 6       | 2       | test   | 172.100.9.8   | 8066          | 0      |
       | 4        | /*!dble:shardingNode=dn4*/ delete from sharding_4_t1 where id=666             | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 7       | 2       | test   | 172.100.9.8   | 8066          | 0      |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  |
       | 4       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           |
       | 5       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           |
       | 6       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1           |
       | 7       | 2       | test   | 172.100.9.8   | 8066          | 4         | 1           |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | sql_digest-0                                   | entry-1 | user-2 | exec-3 | rows-5 |
       | DELETE FROM sharding_4_t1 WHERE id = ?         | 2       | test   | 1      | 0      |
       | INSERT INTO sharding_4_t1 VALUES (?, ?)        | 2       | test   | 1      | 1      |
       | SELECT * FROM sharding_4_t1                    | 2       | test   | 1      | 1      |
       | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | 2       | test   | 1      | 0      |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | tx_digest-0                                    | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
       | DELETE FROM sharding_4_t1 WHERE id = ?         | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 4         |
       | INSERT INTO sharding_4_t1 VALUES (?, ?)        | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 2         |
@@ -1205,16 +1051,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False    | insert into sharding_4_t1 values(666, 'name666')               | success | schema1 |
       | conn_1 | False    | update sharding_4_t1 set name = 'dn1' where id=666             | success | schema1 |
       | conn_1 | True     | delete from sharding_4_t1 where id=666                         | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect        | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(8)}   | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(8)}   | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(4)}   | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(4)}   | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "8" retry "5" times
       | sql_id-0 | sql_stmt-1                                                                    | sql_digest-2                                   | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 |
       | 1        | /*!dble:shardingNode=dn1*/ select * from sharding_4_t1                        | SELECT * FROM sharding_4_t1                    | Select     | 4       | 2       | test   | 172.100.9.8   | 8066          | 1      |
       | 2        | /*!dble:shardingNode=dn2*/ insert into sharding_4_t1 values(666, 'name666')   | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 5       | 2       | test   | 172.100.9.8   | 8066          | 1      |
@@ -1225,10 +1063,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 7        | update sharding_4_t1 set name = 'dn1' where id=666                            | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 10      | 2       | test   | 172.100.9.8   | 8066          | 1      |
       | 8        | delete from sharding_4_t1 where id=666                                        | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 11      | 2       | test   | 172.100.9.8   | 8066          | 1      |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "8" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6 |
       | 4       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1          |
       | 5       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1          |
@@ -1239,20 +1074,14 @@ sql_log_by_tx_digest_by_entry_by_user
       | 10      | 2       | test   | 172.100.9.8   | 8066          | 7         | 1          |
       | 11      | 2       | test   | 172.100.9.8   | 8066          | 8         | 1          |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | sql_digest-0                                   | entry-1 | user-2 | exec-3 | rows-5 |
       | DELETE FROM sharding_4_t1 WHERE id = ?         | 2       | test   | 2      | 1      |
       | INSERT INTO sharding_4_t1 VALUES (?, ?)        | 2       | test   | 2      | 2      |
       | SELECT * FROM sharding_4_t1                    | 2       | test   | 2      | 6      |
       | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | 2       | test   | 2      | 1      |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | tx_digest-0                                    | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 |
       | DELETE FROM sharding_4_t1 WHERE id = ?         | 2      | test   | 2       | 2          | 172.100.9.8   | 8066          | 4,8       |
       | INSERT INTO sharding_4_t1 VALUES (?, ?)        | 2      | test   | 2       | 2          | 172.100.9.8   | 8066          | 2,6       |
@@ -1297,16 +1126,9 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False    | update sharding_4_t1 set name='dn1' where id=100                                | success | schema1 |
       | conn_1 | False    | commit                                                                          | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(9)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(2)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(7)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(2)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user                                 | success  | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+      | conn   | toClose | sql                                                                        | expect       | db               | timeout |
+      | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user        | success  | dble_information | 5       |
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "9" retry "5" times
       | sql_id-0 | sql_stmt-1                                       | sql_digest-2                                   | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
       | 1        | begin                                            | begin                                          | Begin      | 7       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 2        | select * from sharding_4_t1                      | select * from sharding_4_t1                    | Select     | 7       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
@@ -1318,18 +1140,12 @@ sql_log_by_tx_digest_by_entry_by_user
       | 8        | update sharding_4_t1 set name='dn1' where id=100 | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 8       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 9        | commit                                           | commit                                         | Commit     | 8       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
       | 7       | 2       | test   | 172.100.9.8   | 8066          | 1,2,3,4   | 4           | 5               |
       | 8       | 2       | test   | 172.100.9.8   | 8066          | 5,6,7,8,9 | 5           | 2               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "7" retry "5" times
       | sql_digest-0                                   | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | begin                                          | 2       | test   | 1      | 0      | 0               |
       | commit                                         | 2       | test   | 2      | 0      | 0               |
@@ -1339,14 +1155,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | start transaction                              | 2       | test   | 1      | 0      | 0               |
       | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | 2       | test   | 2      | 1      | 1               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | tx_digest-0                                                                                                                                                   | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
       | begin,select * from sharding_4_t1,INSERT INTO sharding_4_t1 VALUES (?, ?),commit                                                                              | 1      | test   | 2       | 4          | 172.100.9.8   | 8066          | 1,2,3,4   | 5                |
       | start transaction,UPDATE sharding_4_t1 SET name = ? WHERE id = ?,DELETE FROM sharding_4_t1 WHERE id = ?,UPDATE sharding_4_t1 SET name = ? WHERE id = ?,commit | 1      | test   | 2       | 5          | 172.100.9.8   | 8066          | 5,6,7,8,9 | 2                |
-
 
     #case  begin ... rollback
     Then execute sql in "dble-1" in "user" mode
@@ -1361,13 +1173,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_2 | False    | update sharding_4_t1 set name='dn4' where id=3                                  | success | schema1 |
       | conn_2 | False    | update sharding_4_t1 set name='dn1' where id=100                                | success | schema1 |
       | conn_2 | False    | rollback                                                                        | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect        | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(18)}  | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "18" retry "5" times
       | sql_id-0 | sql_stmt-1                                              | sql_digest-2                                   | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
       | 10       | begin                                                   | begin                                          | Begin      | 9       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 11       | insert into sharding_4_t1 values(5,'name5'),(6,'name6') | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 9       | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
@@ -1378,18 +1184,12 @@ sql_log_by_tx_digest_by_entry_by_user
       | 16       | update sharding_4_t1 set name='dn4' where id=3          | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 10      | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
       | 17       | update sharding_4_t1 set name='dn1' where id=100        | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 18       | rollback                                                | rollback                                       | Rollback   | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5      | sql_exec-6  | examined_rows-9 |
       | 9       | 2       | test   | 172.100.9.8   | 8066          | 10,11,12,13    | 4           | 3               |
       | 10      | 2       | test   | 172.100.9.8   | 8066          | 14,15,16,17,18 | 5           | 2               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "9" retry "5" times
       | sql_digest-0                                   | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | begin                                          | 2       | test   | 2      | 0      | 0               |
       | commit                                         | 2       | test   | 2      | 0      | 0               |
@@ -1401,23 +1201,17 @@ sql_log_by_tx_digest_by_entry_by_user
       | start transaction                              | 2       | test   | 2      | 0      | 0               |
       | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | 2       | test   | 4      | 2      | 2               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | tx_digest-0                                                                                                                                                       | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7      | examined_rows-10 |
       | begin,INSERT INTO sharding_4_t1 VALUES (?, ?),DELETE FROM sharding_4_t1 WHERE id = ?,rollback                                                                     | 1      | test   | 2       | 4          | 172.100.9.8   | 8066          | 10,11,12,13    | 3                |
       | begin,select * from sharding_4_t1,INSERT INTO sharding_4_t1 VALUES (?, ?),commit                                                                                  | 1      | test   | 2       | 4          | 172.100.9.8   | 8066          | 1,2,3,4        | 5                |
       | start transaction,SELECT * FROM sharding_4_t1 WHERE id = ?,UPDATE sharding_4_t1 SET name = ? WHERE id = ?,UPDATE sharding_4_t1 SET name = ? WHERE id = ?,rollback | 1      | test   | 2       | 5          | 172.100.9.8   | 8066          | 14,15,16,17,18 | 2                |
       | start transaction,UPDATE sharding_4_t1 SET name = ? WHERE id = ?,DELETE FROM sharding_4_t1 WHERE id = ?,UPDATE sharding_4_t1 SET name = ? WHERE id = ?,commit     | 1      | test   | 2       | 5          | 172.100.9.8   | 8066          | 5,6,7,8,9      | 2                |
-    Given sleep "2" seconds
+
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
       | conn_0 | true    | truncate dble_information.sql_log                     | success      | dble_information |         |
-      | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information |         |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(0)}  | dble_information |         |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information |         |
+      | conn_0 | true    | select * from sql_log                                 | length{(0)}  | dble_information | 5       |
 
     #case  begin ... start transaction
     Then execute sql in "dble-1" in "user" mode
@@ -1427,43 +1221,27 @@ sql_log_by_tx_digest_by_entry_by_user
 
       | conn_2 | False    | begin                                                                           | success | schema1 |
       | conn_2 | true     | delete from sharding_4_t1                                                       | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(4)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(2)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(4)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(2)}  | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | sql_id-0 | sql_stmt-1                | sql_digest-2              | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
       | 19       | start transaction         | start transaction         | Other      | 11      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 20       | delete from sharding_2_t1 | delete from sharding_2_t1 | Delete     | 11      | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
       | 21       | begin                     | begin                     | Begin      | 12      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 22       | delete from sharding_4_t1 | delete from sharding_4_t1 | Delete     | 12      | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | tx_id-0  | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
       | 11       | 2       | test   | 172.100.9.8   | 8066          | 19,20     | 2           | 2               |
       | 12       | 2       | test   | 172.100.9.8   | 8066          | 21,22     | 2           | 4               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | sql_digest-0              | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | begin                     | 2       | test   | 1      | 0      | 0               |
       | delete from sharding_2_t1 | 2       | test   | 1      | 2      | 2               |
       | delete from sharding_4_t1 | 2       | test   | 1      | 4      | 4               |
       | start transaction         | 2       | test   | 1      | 0      | 0               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | tx_digest-0                                       | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
       | begin,delete from sharding_4_t1                   | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 21,22     | 4                |
       | start transaction,delete from sharding_2_t1       | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 19,20     | 2                |
@@ -1484,13 +1262,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_3 | False    | rollback                                                                        | success | schema1 |
 
       | conn_3 | True     | delete from sharding_4_t1                                                       | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(8)}  | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "8" retry "5" times
       | sql_id-0 | sql_stmt-1                                              | sql_digest-2                              | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
       | 1        | set autocommit=0                                        | SET autocommit = ?                        | Set        | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 2        | update sharding_4_t1 set name='test_name'               | UPDATE sharding_4_t1 SET name = ?         | Update     | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
@@ -1500,19 +1273,14 @@ sql_log_by_tx_digest_by_entry_by_user
       | 6        | insert into sharding_4_t1 values(3,'name3'),(4,'name4') | INSERT INTO sharding_4_t1 VALUES (?, ?)   | Insert     | 2       | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
       | 7        | rollback                                                | rollback                                  | Rollback   | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 8        | delete from sharding_4_t1                               | delete from sharding_4_t1                 | Delete     | 3       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
       | 1       | 2       | test   | 172.100.9.8   | 8066          | 1,2,3     | 3           | 8               |
       | 2       | 2       | test   | 172.100.9.8   | 8066          | 4,5,6     | 3           | 4               |
       | 3       | 2       | test   | 172.100.9.8   | 8066          | 7,8       | 2           | 4               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "8" retry "5" times
       | sql_digest-0                              | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | commit                                    | 2       | test   | 1      | 0      | 0               |
       | delete from sharding_4_t1                 | 2       | test   | 1      | 4      | 4               |
@@ -1521,11 +1289,9 @@ sql_log_by_tx_digest_by_entry_by_user
       | rollback                                  | 2       | test   | 1      | 0      | 0               |
       | select * from sharding_4_t1               | 2       | test   | 1      | 4      | 4               |
       | SET autocommit = ?                        | 2       | test   | 1      | 0      | 0               |
+      | UPDATE sharding_4_t1 SET name = ?         | 2       | test   | 1      | 4      | 4               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
       | tx_digest-0                                                                                | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
       | commit,DELETE FROM sharding_4_t1 WHERE id IN (?),INSERT INTO sharding_4_t1 VALUES (?, ?)   | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 4,5,6     | 4                |
       | rollback,delete from sharding_4_t1                                                         | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 7,8       | 4                |
@@ -1594,10 +1360,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | rw1 | 111111 | conn_4 | False   | create table test_table1(id int,name varchar(20),age int) | success | db2 |
       | rw1 | 111111 | conn_4 | true    | insert into test_table1 values (1,'1',1),(2, '2',2)       | success | db2 |
 
-    Given Restart dble in "dble-1" success
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                 | expect      | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(0)} | dble_information |
+    Then restart dble in "dble-1" success
 
     #case  begin ... commit
     Then execute sql in "dble-1" in "user" mode
@@ -1612,16 +1375,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | rw1 | 111111 | conn_4 | False   | delete from test_table1 where id=5                 | success | db2 |
       | rw1 | 111111 | conn_4 | False   | update test_table1 set age =44 where id=100        | success | db2 |
       | rw1 | 111111 | conn_4 | False   | commit                                             | success | db2 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(9)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(2)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(7)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(2)}  | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "9" retry "5" times
       | sql_id-0 | sql_stmt-1                                  | sql_digest-2                                | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
       | 1        | begin                                       | begin                                       | Begin      | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
       | 2        | select * from test_table                    | select * from test_table                    | Select     | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 2      | 2                |
@@ -1633,18 +1388,12 @@ sql_log_by_tx_digest_by_entry_by_user
       | 8        | update test_table1 set age =44 where id=100 | UPDATE test_table1 SET age = ? WHERE id = ? | Update     | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
       | 9        | commit                                      | commit                                      | Commit     | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
       | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 1,2,3,4   | 4           | 3               |
       | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 5,6,7,8,9 | 5           | 1               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "7" retry "5" times
       | sql_digest-0                                | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | begin                                       | 1       | rw1   | 1      | 0      | 0               |
       | commit                                      | 1       | rw1   | 2      | 0      | 0               |
@@ -1654,14 +1403,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | start transaction                           | 1       | rw1   | 1      | 0      | 0               |
       | UPDATE test_table1 SET age = ? WHERE id = ? | 1       | rw1   | 2      | 1      | 1               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | tx_digest-0                                                                                                                                           | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
       | begin,select * from test_table,INSERT INTO test_table VALUES (?, ?, ?),commit                                                                         | 1      | rw1   | 1       | 4          | 172.100.9.8   | 8066          | 1,2,3,4   | 3                |
       | start transaction,UPDATE test_table1 SET age = ? WHERE id = ?,DELETE FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = ? WHERE id = ?,commit | 1      | rw1   | 1       | 5          | 172.100.9.8   | 8066          | 5,6,7,8,9 | 1                |
-
 
     #case  begin ... rollback
     Then execute sql in "dble-1" in "user" mode
@@ -1676,14 +1421,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | rw1 | 111111 | conn_4 | False   | update test_table1 set age=age-1 where id=1              | success | db2 |
       | rw1 | 111111 | conn_4 | False   | update test_table1 set age=age*3 where id=2              | success | db2 |
       | rw1 | 111111 | conn_4 | False   | rollback                                                 | success | db2 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect        | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(18)}  | dble_information | 5       |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "18" retry "5" times
       | sql_id-0 | sql_stmt-1                                               | sql_digest-2                                      | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
       | 10       | begin                                                    | begin                                             | Begin      | 3       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
       | 11       | insert into test_table values(5,'name5',5),(6,'name6',6) | INSERT INTO test_table VALUES (?, ?, ?)           | Insert     | 3       | 1       | rw1   | 172.100.9.8   | 8066          | 2      | 2                |
@@ -1695,20 +1434,14 @@ sql_log_by_tx_digest_by_entry_by_user
       | 17       | update test_table1 set age=age*3 where id=2              | UPDATE test_table1 SET age = age * ? WHERE id = ? | Update     | 4       | 1       | rw1   | 172.100.9.8   | 8066          | 1      | 1                |
       | 18       | rollback                                                 | rollback                                          | Rollback   | 4       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5      | sql_exec-6 | examined_rows-9 |
-      | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 1,2,3,4        | 4          | 3               |
-      | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 5,6,7,8,9      | 5          | 1               |
-      | 3       | 1       | rw1   | 172.100.9.8   | 8066          | 10,11,12,13    | 4          | 3               |
-      | 4       | 1       | rw1   | 172.100.9.8   | 8066          | 14,15,16,17,18 | 5          | 3               |
+      | 1       | 1       | rw1    | 172.100.9.8   | 8066          | 1,2,3,4        | 4          | 3               |
+      | 2       | 1       | rw1    | 172.100.9.8   | 8066          | 5,6,7,8,9      | 5          | 1               |
+      | 3       | 1       | rw1    | 172.100.9.8   | 8066          | 10,11,12,13    | 4          | 3               |
+      | 4       | 1       | rw1    | 172.100.9.8   | 8066          | 14,15,16,17,18 | 5          | 3               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "12" retry "5" times
       | sql_digest-0                                      | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | begin                                             | 1       | rw1   | 2      | 0      | 0               |
       | commit                                            | 1       | rw1   | 2      | 0      | 0               |
@@ -1723,10 +1456,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | UPDATE test_table1 SET age = age * ? WHERE id = ? | 1       | rw1   | 1      | 1      | 1               |
       | UPDATE test_table1 SET age = age - ? WHERE id = ? | 1       | rw1   | 1      | 1      | 1               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "4" retry "5" times
       | tx_digest-0                                                                                                                                                           | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7      | examined_rows-10 |
       | begin,INSERT INTO test_table VALUES (?, ?, ?),DELETE FROM test_table WHERE id = ?,rollback                                                                            | 1      | rw1   | 1       | 4          | 172.100.9.8   | 8066          | 10,11,12,13    | 3                |
       | begin,select * from test_table,INSERT INTO test_table VALUES (?, ?, ?),commit                                                                                         | 1      | rw1   | 1       | 4          | 172.100.9.8   | 8066          | 1,2,3,4        | 3                |
@@ -1737,27 +1467,20 @@ sql_log_by_tx_digest_by_entry_by_user
     #case  begin ... start transaction
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose | sql                          | expect  | db  |
-      | rw1 | 111111 | conn_31 | False   | start transaction            | success | db1 |
-      | rw1 | 111111 | conn_31 | False   | delete from test_table       | success | db1 |
+      | rw1  | 111111 | conn_31 | False   | start transaction            | success | db1 |
+      | rw1  | 111111 | conn_31 | False   | delete from test_table       | success | db1 |
 
-      | rw1 | 111111 | conn_31 | False   | begin                        | success | db1 |
-      | rw1 | 111111 | conn_31 | true    | delete from db2.test_table1  | success | db1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect        | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(22)}  | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+      | rw1  | 111111 | conn_31 | False   | begin                        | success | db1 |
+      | rw1  | 111111 | conn_31 | true    | delete from db2.test_table1  | success | db1 |
+
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "22" retry "5" times
       | sql_id-0 | sql_stmt-1                  | sql_digest-2                | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-      | 19       | start transaction           | start transaction           | Other      | 5       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 20       | delete from test_table      | delete from test_table      | Delete     | 5       | 1       | rw1   | 172.100.9.8   | 8066          | 3      | 3                |
-      | 21       | begin                       | begin                       | Begin      | 6       | 1       | rw1   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 22       | delete from db2.test_table1 | delete from db2.test_table1 | Delete     | 6       | 1       | rw1   | 172.100.9.8   | 8066          | 2      | 2                |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+      | 19       | start transaction           | start transaction           | Other      | 5       | 1       | rw1    | 172.100.9.8   | 8066          | 0      | 0                |
+      | 20       | delete from test_table      | delete from test_table      | Delete     | 5       | 1       | rw1    | 172.100.9.8   | 8066          | 3      | 3                |
+      | 21       | begin                       | begin                       | Begin      | 6       | 1       | rw1    | 172.100.9.8   | 8066          | 0      | 0                |
+      | 22       | delete from db2.test_table1 | delete from db2.test_table1 | Delete     | 6       | 1       | rw1    | 172.100.9.8   | 8066          | 2      | 2                |
+
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "6" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5      | sql_exec-6 | examined_rows-9 |
       | 1       | 1       | rw1    | 172.100.9.8   | 8066          | 1,2,3,4        | 4          | 3               |
       | 2       | 1       | rw1    | 172.100.9.8   | 8066          | 5,6,7,8,9      | 5          | 1               |
@@ -1766,10 +1489,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 5       | 1       | rw1    | 172.100.9.8   | 8066          | 19,20          | 2          | 3               |
       | 6       | 1       | rw1    | 172.100.9.8   | 8066          | 21,22          | 2          | 2               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "14" retry "5" times
       | sql_digest-0                                      | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | begin                                             | 1       | rw1   | 3      | 0      | 0               |
       | commit                                            | 1       | rw1   | 2      | 0      | 0               |
@@ -1786,10 +1506,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | UPDATE test_table1 SET age = age * ? WHERE id = ? | 1       | rw1   | 1      | 1      | 1               |
       | UPDATE test_table1 SET age = age - ? WHERE id = ? | 1       | rw1   | 1      | 1      | 1               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "6" retry "5" times
       | tx_digest-0                                                                                                                                                           | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7      | examined_rows-10 |
       | begin,INSERT INTO test_table VALUES (?, ?, ?),DELETE FROM test_table WHERE id = ?,rollback                                                                            | 1      | rw1   | 1       | 4           | 172.100.9.8   | 8066          | 10,11,12,13    | 3                |
       | begin,select * from test_table,INSERT INTO test_table VALUES (?, ?, ?),commit                                                                                         | 1      | rw1   | 1       | 4           | 172.100.9.8   | 8066          | 1,2,3,4        | 3                |
@@ -1799,8 +1516,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | start transaction,UPDATE test_table1 SET age = ? WHERE id = ?,DELETE FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = ? WHERE id = ?,commit                 | 1      | rw1   | 1       | 5           | 172.100.9.8   | 8066          | 5,6,7,8,9      | 1                |
 
     Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
-
-
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user| passwd | conn    | toClose | sql                                                           | expect  | db  |
@@ -1814,16 +1529,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | rw1 | 111111 | conn_31 | False   | rollback                                                      | success | db1 |
 
       | rw1 | 111111 | conn_31 | true    | delete from db2.test_table1                                   | success | db1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(8)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(3)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(8)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(3)}  | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "8" retry "5" times
       | sql_id-0 | sql_stmt-1                                                    | sql_digest-2                                 | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
       | 1        | set autocommit=0                                              | SET autocommit = ?                           | Set        | 1       | 1       | rw1    | 172.100.9.8   | 8066          | 0      | 0                |
       | 2        | update test_table set name='test_name'                        | UPDATE test_table SET name = ?               | Update     | 1       | 1       | rw1    | 172.100.9.8   | 8066          | 0      | 0                |
@@ -1833,19 +1540,14 @@ sql_log_by_tx_digest_by_entry_by_user
       | 6        | insert into db2.test_table1 values(3,'name3',3),(4,'name4',4) | INSERT INTO db2.test_table1 VALUES (?, ?, ?) | Insert     | 2       | 1       | rw1    | 172.100.9.8   | 8066          | 2      | 2                |
       | 7        | rollback                                                      | rollback                                     | Rollback   | 3       | 1       | rw1    | 172.100.9.8   | 8066          | 0      | 0                |
       | 8        | delete from db2.test_table1                                   | delete from db2.test_table1                  | Delete     | 3       | 1       | rw1    | 172.100.9.8   | 8066          | 2      | 2                |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                          | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6 | examined_rows-9 |
       | 1       | 1       | rw1   | 172.100.9.8   | 8066          | 1,2,3      | 3           | 0               |
       | 2       | 1       | rw1   | 172.100.9.8   | 8066          | 4,5,6      | 3           | 3               |
       | 3       | 1       | rw1   | 172.100.9.8   | 8066          | 7,8        | 2           | 2               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "8" retry "5" times
       | sql_digest-0                                 | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | commit                                       | 1       | rw1    | 1      | 0      | 0               |
       | delete from db2.test_table1                  | 1       | rw1    | 1      | 2      | 2               |
@@ -1856,17 +1558,13 @@ sql_log_by_tx_digest_by_entry_by_user
       | SET autocommit = ?                           | 1       | rw1    | 1      | 0      | 0               |
       | UPDATE test_table SET name = ?               | 1       | rw1    | 1      | 0      | 0               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
       | tx_digest-0                                                                                       | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
       | commit,DELETE FROM db2.test_table1 WHERE id IN (?),INSERT INTO db2.test_table1 VALUES (?, ?, ?)   | 1      | rw1    | 1       | 3          | 172.100.9.8   | 8066          | 4,5,6     | 3                |
       | rollback,delete from db2.test_table1                                                              | 1      | rw1    | 1       | 2          | 172.100.9.8   | 8066          | 7,8       | 2                |
       | SET autocommit = ?,UPDATE test_table SET name = ?,select * from test_table                        | 1      | rw1    | 1       | 3          | 172.100.9.8   | 8066          | 1,2,3      | 0                |
 
     Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
-
     Given Restart dble in "dble-1" success
 
     Then execute sql in "dble-1" in "user" mode
@@ -1931,16 +1629,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False    | delete from sharding_4_t1 where id=4                                            | success | schema1 |
       | conn_1 | False    | rollback                                                                        | success | schema1 |
       | conn_1 | True     | delete from sharding_4_t1                                                       | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect        | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(9)}   | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(3)}   | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(9)}   | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(3)}   | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "9" retry "5" times
       | sql_id-0 | sql_stmt-1                                     | sql_digest-2                                   | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
       | 1        | set autocommit=0                               | SET autocommit = ?                             | Set        | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 2        | set xa=on                                      | set xa=on                                      | Set        | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
@@ -1951,19 +1641,14 @@ sql_log_by_tx_digest_by_entry_by_user
       | 7        | delete from sharding_4_t1 where id=4           | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
       | 8        | rollback                                       | rollback                                       | Rollback   | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 9        | delete from sharding_4_t1                      | delete from sharding_4_t1                      | Delete     | 3       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
       | 1       | 2       | test   | 172.100.9.8   | 8066          | 1,2,3,4   | 4           | 5               |
       | 2       | 2       | test   | 172.100.9.8   | 8066          | 5,6,7     | 3           | 2               |
       | 3       | 2       | test   | 172.100.9.8   | 8066          | 8,9       | 2           | 4               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "9" retry "5" times
       | sql_digest-0                                   | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | commit                                         | 2       | test   | 1      | 0      | 0               |
       | delete from sharding_4_t1                      | 2       | test   | 1      | 4      | 4               |
@@ -1975,10 +1660,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | set xa=on                                      | 2       | test   | 1      | 0      | 0               |
       | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | 2       | test   | 1      | 1      | 1               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "3" retry "5" times
       | tx_digest-0                                                                                                    | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
       | rollback,delete from sharding_4_t1                                                                             | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 8,9       | 4                |
       | commit,INSERT INTO sharding_4_t1 VALUES (?, ?),DELETE FROM sharding_4_t1 WHERE id = ?                          | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 5,6,7     | 2                |
@@ -2008,10 +1690,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | true     | create table sharding_4_t1(id int, name varchar(20))                            | success | schema1 |
 
     Given Restart dble in "dble-1" success
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                 | expect      | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(0)} | dble_information |
-
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_1 | False    | begin                                                                           | success | schema1 |
@@ -2040,16 +1718,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False    | delete from sharding_4_t1 where id=2                                            | success | schema1 |
       | conn_1 | False    | drop table if exists sharding_4_t2                                              | success | schema1 |
       | conn_1 | False    | drop table if exists sharding_4_t1                                              | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect        | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(26)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(11)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(14)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(11)}  | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_1" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "26" retry "5" times
       | sql_id-0 | sql_stmt-1                                                                      | sql_digest-2                                              | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
       | 1        | begin                                                                           | begin                                                     | Begin      | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 2        | insert into sharding_4_t1 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | INSERT INTO sharding_4_t1 VALUES (?, ?)                   | Insert     | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
@@ -2078,10 +1748,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 25       | drop table if exists sharding_4_t2                                              | DROP TABLE IF EXISTS sharding_4_t2                        | DDL        | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 26       | drop table if exists sharding_4_t1                                              | DROP TABLE IF EXISTS sharding_4_t1                        | DDL        | 11      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                          | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "11" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5    | sql_exec-6  | examined_rows-9 |
       | 1       | 2       | test   | 172.100.9.8   | 8066          | 1,2,3        | 3           | 4               |
       | 2       | 2       | test   | 172.100.9.8   | 8066          | 4,5,6        | 3           | 4               |
@@ -2095,10 +1762,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 10      | 2       | test   | 172.100.9.8   | 8066          | 23,24,25     | 3           | 1               |
       | 11      | 2       | test   | 172.100.9.8   | 8066          | 26           | 1           | 0               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "14" retry "5" times
       | sql_digest-0                                              | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | begin                                                     | 2       | test   | 9      | 0      | 0               |
       | CREATE INDEX index_name1 ON sharding_4_t1 (name)          | 2       | test   | 1      | 0      | 0               |
@@ -2115,10 +1779,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | truncate table sharding_4_t2                              | 2       | test   | 1      | 0      | 0               |
       | UPDATE sharding_4_t1 SET name = ? WHERE id = ?            | 2       | test   | 2      | 2      | 2               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "11" retry "5" times
       | tx_digest-0                                                                                             | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7    | examined_rows-10 |
       | begin                                                                                                   | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 12           | 0                |
       | begin,DELETE FROM sharding_4_t1 WHERE id = ?,DROP TABLE IF EXISTS sharding_4_t2                         | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 23,24,25     | 1                |
@@ -2179,17 +1840,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | explain select * from test           | success                               | schema1 |
       | conn_1 | False   | explain2 select * from test          | success                               | schema1 |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(6)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(6)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(6)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(6)}  | dble_information | 5       |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-
-    Then check resultset "resulte_1" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "6" retry "5" times
       | sql_id-0 | sql_stmt-1                  | sql_digest-2               | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
       | 1        | SELECT DATABASE()           | SELECT DATABASE()          | Select     | 1       | 2       | test   | 172.100.9.8   | 8066          | 1      | 0                |
       | 2        | SELECT USER()               | SELECT USER()              | Select     | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      | 0                |
@@ -2198,10 +1849,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 5        | explain select * from test  | explain select * from test | Other      | 7       | 2       | test   | 172.100.9.8   | 8066          | 1      | 0                |
       | 6        | explain2 select * from test | Other                      | Other      | 8       | 2       | test   | 172.100.9.8   | 8066          | 1      | 0                |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_2" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "6" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6 | examined_rows-9 |
       | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           | 0               |
       | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           | 0               |
@@ -2209,10 +1857,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | 4       | 2       | test   | 172.100.9.8   | 8066          | 4         | 1           | 0               |
       | 7       | 2       | test   | 172.100.9.8   | 8066          | 5         | 1           | 0               |
       | 8       | 2       | test   | 172.100.9.8   | 8066          | 6         | 1           | 0               |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+
+    Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "6" retry "5" times
       | sql_digest-0                | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | SELECT ?                    | 2       | test   | 1      | 1      | 1               |
       | SELECT DATABASE()           | 2       | test   | 1      | 1      | 0               |
@@ -2221,10 +1867,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | Other                       | 2       | test   | 1      | 1      | 0               |
       | explain select * from test  | 2       | test   | 1      | 1      | 0               |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+    Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "6" retry "5" times
       | tx_digest-0                            | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
       | SELECT ?                               | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 3         | 1                |
       | SELECT DATABASE()                      | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 1         | 0                |
@@ -2232,7 +1875,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | show tables                            | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 4         | 0                |
       | Other                                  | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 6         | 0                |
       | explain select * from test             | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 5         | 0                |
-
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect                                 | db      |
@@ -2274,9 +1916,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                                                   | expect       | db               | timeout |
       | conn_0 | true    | truncate dble_information.sql_log                     | success      | dble_information |         |
       | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information |         |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(0)}  | dble_information |         |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information |         |
 
       #complex don't supported sql
     Then execute sql in "dble-1" in "user" mode
@@ -2298,7 +1937,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(0)} | dble_information | 10      |
 
     Then check "NullPointerException|caught err|unknown error|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
-
 
     #case Syntax error sql will not be counted --rwSplitUser
      Then execute sql in "dble-1" in "user" mode
@@ -2330,39 +1968,19 @@ sql_log_by_tx_digest_by_entry_by_user
       | split1 | 111111 | conn_3 | true     | select * from (select s.sno from test_table s where s.id=1)      | Every derived table must have its own alias                      | db1 |
 
     ### 就统计1个 一个explain
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect       | db               | timeout |
-      | conn_0 | False   | select * from sql_log                                 | length{(1)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(1)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(1)}  | dble_information | 5       |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(1)}  | dble_information | 5       |
-     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_11"
-      | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from sql_log   | dble_information |
-    Then check resultset "resulte_11" has lines with following column values
+     Then connect "dble-1" execute sql "select * from sql_log" in mode "admin" use db "dble_information" and user "root" to check has following and length "1" retry "5" times
       | sql_id-0 | sql_stmt-1                            | sql_digest-2                           | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
       | 1        | explain select * from test_table      | explain select * from test_table       | Other      | 4       | 4       | split1 | 172.100.9.8   | 8066          | 1      | 1                |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_12"
-      | conn   | toClose | sql                                            | db               |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_12" has lines with following column values
+     Then connect "dble-1" execute sql "select * from sql_log_by_tx_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "1" retry "5" times
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6 | examined_rows-9 |
       | 4       | 4       | split1 | 172.100.9.8   | 8066          | 1         | 1          | 1               |
 
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-      | conn   | toClose | sql                                                | db               |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_3" has lines with following column values
+     Then connect "dble-1" execute sql "select * from sql_log_by_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "1" retry "5" times
       | sql_digest-0                      | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | explain select * from test_table  | 4       | split1 | 1      | 1      | 1               |
 
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-      | conn   | toClose | sql                                                   | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-    Then check resultset "resulte_4" has lines with following column values
+     Then connect "dble-1" execute sql "select * from sql_log_by_tx_digest_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "1" retry "5" times
       | tx_digest-0                                                              | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
       | explain select * from test_table                                         | 1      | split1 | 4       | 1          | 172.100.9.8   | 8066          | 1         | 1                |
 
