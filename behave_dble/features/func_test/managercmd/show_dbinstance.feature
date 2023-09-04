@@ -34,7 +34,11 @@ Feature: show_dbinstance
         | hostM1 | 172.100.9.5   | 3306     |    0     |
 
 
+  @restore_global_setting
   Scenario: check rwSplitUser READ_LOAD and WRITE_LOAD #3
+  """
+  {'restore_global_setting':{'mysql':{'general_log':0},'mysql-slave3':{'general_log':0}}}
+  """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DrwStickyTime/d
@@ -62,6 +66,13 @@ Feature: show_dbinstance
       | hostM3 | 172.100.9.4   | 3306   | 0           | 0            |
       | hostS3 | 172.100.9.4   | 3307   | 0           | 0            |
 
+    # debug code start
+    Given turn on general log in "mysql"
+    Given turn on general log in "mysql-slave3"
+    Then execute admin cmd "reload @@general_log_file='/opt/dble/logs/general.log'"
+    Then execute admin cmd "enable @@general_log"
+    # debug code end
+
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                                      | expect                | db  | timeout |
       | rw1   | 111111 | conn_1 | False   | drop table if exists test_tb             | success               | db1 |         |
@@ -75,6 +86,21 @@ Feature: show_dbinstance
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs2"
       | sql               |
       | show @@dbInstance |
+
+    # debug code start
+    Then execute admin cmd "disable @@general_log"
+    Given execute oscmd in "mysql"
+     """
+     cat /root/sandboxes/sandbox/master/data/mysql.log
+     """
+     Given execute oscmd in "mysql-slave3"
+     """
+     cat /root/sandboxes/sandbox/node1/data/mysql.log
+     """
+    Given turn off general log in "mysql"
+    Given turn off general log in "mysql-slave3"
+    # debug code end
+
      # 读写分离的show强制发master,但统计为read（符合预期）
     Then check resultset "sql_rs2" has lines with following column values
       | NAME-1 | HOST-2        | PORT-3 | READ_LOAD-8 | WRITE_LOAD-9 |
