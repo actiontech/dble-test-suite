@@ -61,7 +61,8 @@ run_func_stable_case: up
 	features/func_test/sql_plan/ \
 	features/func_test/trace/  \
 	features/func_test/heartbeat/ \
-	features/func_test/metalock/
+	features/func_test/metalock/ \
+	features/func_test/local_read/ \
 
 
 run_func_unstable_case: up
