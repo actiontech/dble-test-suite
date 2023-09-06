@@ -101,6 +101,42 @@ Feature: show @@sql XXX
       | conn   | toClose | sql                                                                                                 | expect          | db               |
       | conn_0 | true    | select variable_value from dble_variables where variable_name = "enableStatisticAnalysis"           | has{(('0',),)}  | dble_information |
 
+    Then connect "dble-1" execute sql "show @@statistic" in mode "admin" use db "dble_information" and user "root" to check has following and length "8" retry "5" times
+      | NAME-0                                  | VALUE-1 |
+      | statistic                               | OFF     |
+      | statisticAnalysis                       | OFF     |
+      | associateTablesByEntryByUserTableSize   | 1024    |
+      | frontendByBackendByEntryByUserTableSize | 1024    |
+      | tableByUserByEntryTableSize             | 1024    |
+      | sqlLogTableSize                         | 1024    |
+      | samplingRate                            | 100     |
+      | queueMonitor                            | -       |
+
+    Then execute admin cmd "enable @@StatisticAnalysis"
+    Then connect "dble-1" execute sql "show @@statistic" in mode "admin" use db "dble_information" and user "root" to check has following and length "8" retry "5" times
+      | NAME-0                                  | VALUE-1 |
+      | statistic                               | OFF     |
+      | statisticAnalysis                       | ON      |
+      | associateTablesByEntryByUserTableSize   | 1024    |
+      | frontendByBackendByEntryByUserTableSize | 1024    |
+      | tableByUserByEntryTableSize             | 1024    |
+      | sqlLogTableSize                         | 1024    |
+      | samplingRate                            | 100     |
+      | queueMonitor                            | -       |
+
+    Then execute admin cmd "disable @@StatisticAnalysis"
+    Then connect "dble-1" execute sql "show @@statistic" in mode "admin" use db "dble_information" and user "root" to check has following and length "8" retry "5" times
+      | NAME-0                                  | VALUE-1 |
+      | statistic                               | OFF     |
+      | statisticAnalysis                       | OFF     |
+      | associateTablesByEntryByUserTableSize   | 1024    |
+      | frontendByBackendByEntryByUserTableSize | 1024    |
+      | tableByUserByEntryTableSize             | 1024    |
+      | sqlLogTableSize                         | 1024    |
+      | samplingRate                            | 100     |
+      | queueMonitor                            | -       |
+
+
 
   Scenario: show @@sql.sum  && show @@sql.sum.user && show @@sql.sum.table  #2
   ##| ID   | USER | R 读的次数   | W 写的次数   | R%   | MAX 最大并发数  | NET_IN | NET_OUT | TIME_COUNT query在四个时间区间的个数分布，四个区间分别是前一天22-06 ,06-13 ,13-18，18-22   | TTL_COUNT query耗时在四个时间级别内的个数分布，分别是10毫秒内,10-200毫秒内,1秒内,超过1秒   | LAST_TIME           |
