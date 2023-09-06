@@ -305,7 +305,7 @@ def stop_dble_in_node(context, node):
 
     @wait_for(context, text="Stop dble failed! dble process still exists", duration=6, interval=1)
     def condition(ssh_client):
-        cmd = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | wc -l"
+        cmd = "ps aux|grep dble| grep -v grep | awk '{print $2}' | wc -l"
         rc, sto, ste = ssh_client.exec_command(cmd)
         if len(ste) == 0:
             return str(sto) == '0'
@@ -333,9 +333,10 @@ def stop_dble_in_node(context, node):
 
 
 def check_dble_exist(ssh_client, dble_install_path):
-    cmd = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | wc -l"
+    cmd = "ps aux|grep dble | grep -v grep | awk '{print $2}' | wc -l"
     rc, sto, ste = ssh_client.exec_command(cmd)
-    dble_pid_exist = str(sto) == '1'
+    # ps结果有2条记录，1条为dble进程，1条为wrapper进程，存在dble进程死了但wrapper还活着的情况
+    dble_pid_exist = (str(sto) == '1' or str(sto) == '2')
 
     exist_cmd = "[ -f {0}/dble/bin/dble ] && (echo 1) || (echo 0)".format(dble_install_path)
     cd, out, err = ssh_client.exec_command(exist_cmd)
