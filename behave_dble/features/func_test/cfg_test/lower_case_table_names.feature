@@ -163,7 +163,7 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)          |error totally whack | schema1 |
       | conn_1 | True    |select s.id from DbTest.`Test_Table` s where s.name='aa'                  |success             | schema1 |
 
-  @skip # DBLE0REQ-2336
+  # DBLE0REQ-2336
   @BLOCKER @restore_mysql_config
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive #3
   """
@@ -201,7 +201,11 @@ Feature: check collation/lower_case_table_names works right for dble
         </privileges>
     </shardingUser>
     """
-    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    Reload Failure, The reason is Dble memory's lowercase value is 0, But it was found that the lower_case_table_names value of the dbInstance is not 0. Please unify dbInstances's lower_case_table_names or use 'reload @@config_all -r;'
+    """
+    Then execute admin cmd "reload @@config_all -r"
     Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user      | passwd | conn   | toClose | sql                                             | expect  |
@@ -245,6 +249,10 @@ Feature: check collation/lower_case_table_names works right for dble
         </schema>
     """
     Then execute admin cmd "reload @@config_all"
+    """
+    Reload Failure, The reason is Dble memory's lowercase value is 0, But it was found that the lower_case_table_names value of the dbInstance is not 0. Please unify dbInstances's lower_case_table_names or use 'reload @@config_all -r;'
+    """
+    Then execute admin cmd "reload @@config_all -r"
     Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                       | expect  |

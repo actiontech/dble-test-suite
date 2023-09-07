@@ -39,7 +39,7 @@ Feature: #mysql node disconnected,check the change of dble
       | conn   | toClose | sql                   | expect                                                                                                                                |
       | conn_0 | True    | dryrun                | hasStr{Get Vars from backend failed, Maybe all backend MySQL can't connected}                                                          |
       # DBLE0REQ-2334
-#      | conn_0 | True    | reload @@config_all   | Reload Failure, The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly  |
+      | conn_0 | True    | reload @@config_all   | Reload Failure, The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly  |
     Then restart dble in "dble-1" failed for
     """
     Can't get variables from all dbGroups
