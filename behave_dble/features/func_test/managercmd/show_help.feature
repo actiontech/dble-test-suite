@@ -132,8 +132,8 @@ Feature: test show @@help
       | enable @@memory_buffer_monitor                                                                           | Turn on memory buffer monitor                                                     |
       | disable @@memory_buffer_monitor                                                                          | Turn off memory buffer monitor                                                    |
       ##3.23.08 add
-      | enable @@StatisticAnalysis                                                                               | Turn on statistic analysis sql('show @@sql.sum.user/table' or 'show @@sql.condition')  |
-      | disable @@StatisticAnalysis                                                                              | Turn off statistic analysis sql('show @@sql.sum.user/table' or 'show @@sql.condition') |
+      | enable @@statisticAnalysis                                                                               | Turn on statistic analysis sql('show @@sql.sum.user/table' or 'show @@sql.condition')  |
+      | disable @@statisticAnalysis                                                                              | Turn off statistic analysis sql('show @@sql.sum.user/table' or 'show @@sql.condition') |
 
     Then check resultset "rs_A" has not lines with following column values
       | STATEMENT-0                            |
