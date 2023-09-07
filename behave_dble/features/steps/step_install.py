@@ -314,9 +314,6 @@ def stop_dble_in_node(context, node):
     if dble_pid_exist:
         # stop dble gracefully to generate .exec for code coverage
         stop_dble_cmd = "{0}/dble/bin/dble stop".format(dble_install_path)
-        # dble进程存在，但dble目录不存在
-        if not dble_dir_exist:
-            stop_dble_cmd = "ps -ef |grep dble | grep -v grep | awk '{print $2}' | xargs -r kill -9"
         rc1, sto1, ste1 = ssh_client.exec_command(stop_dble_cmd)
         assert_that(len(ste1) == 0, "stop dble fail for:{0}".format(ste1))
 
