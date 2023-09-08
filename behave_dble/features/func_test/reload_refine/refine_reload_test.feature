@@ -18,7 +18,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
@@ -31,7 +31,7 @@ Feature: refine reload of DBLE0REQ-1793
       | name-0   | heartbeat_stmt-1 | heartbeat_timeout-2| heartbeat_retry-3| heartbeat_keep_alive-4| rw_split_mode-5| delay_threshold-6| delay_period_millis-7|delay_database-8|disable_ha-9| active-10 |
       | ha_group1| select user()    | 0                  | 1                | 60                    | 0              |        100       |  -1                  | null           |   false    |     true  |
       | ha_group2| select user()    | 0                  | 1                | 60                    | 0              |        100       |  -1                  | null           |   false    |     true  |
-      | mysql-tg | show slave status| 0                  | 0                | 60                    | 1              |        -1        |  -1                  | None           |   false    |     false |
+      | mysql-tg | show slave status| 0                  | 0                | 60                    | 1              |        -1        |  -1                  | null           |   false    |     false |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                               | expect              | db               |
       | conn_0 | False   | select * from dble_db_group                       | length{(3)}         | dble_information |
@@ -47,7 +47,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
@@ -60,7 +60,7 @@ Feature: refine reload of DBLE0REQ-1793
       | name-0   | heartbeat_stmt-1 | heartbeat_timeout-2| heartbeat_retry-3| heartbeat_keep_alive-4| rw_split_mode-5| delay_threshold-6| delay_period_millis-7|delay_database-8|disable_ha-9| active-10 |
       | ha_group1| select user()    | 0                  | 1                | 60                    | 0              |        100       |  -1                  | null           |   false    |     true  |
       | ha_group2| select user()    | 0                  | 1                | 60                    | 0              |        100       |  -1                  | null           |   false    |     true  |
-      | mysql-tg | select user()    | 10                 | 2                | 30                    | 3              |        12        |  -1                  | None           |   true     |     false |
+      | mysql-tg | select user()    | 10                 | 2                | 30                    | 3              |        12        |  -1                  | null           |   true     |     false |
     # 测试3 变更active=false状态的dbGroup相关参数值
     Given record current dble log line number in "log_linenu"
     Then execute sql in "dble-1" in "admin" mode
@@ -74,7 +74,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
@@ -123,7 +123,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance\[name=host4S
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
     get system variables :show variables,dbInstance
     SELF_RELOAD] start heartbeat :
     """
@@ -167,7 +167,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance\[name=host6S1
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
     get system variables :show variables,dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] start connection pool :dbInstance\[name=host6S1
@@ -241,7 +241,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] stop connection pool :dbInstance
     SELF_RELOAD] start connection pool :dbInstance\[name=host4S
     SELF_RELOAD] start heartbeat :
@@ -277,8 +277,8 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] stop connection pool :dbInstance
@@ -320,7 +320,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] stop connection pool :dbInstance
@@ -359,7 +359,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
@@ -395,8 +395,8 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
@@ -430,8 +430,8 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] stop connection pool :dbInstance\[name=host4M
@@ -475,8 +475,8 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] stop connection pool :dbInstance
@@ -509,8 +509,8 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] stop connection pool :dbInstance\[name=host4M
@@ -549,8 +549,8 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
@@ -579,8 +579,8 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] stop connection pool :dbInstance
@@ -617,8 +617,8 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] stop connection pool :dbInstance
@@ -647,8 +647,8 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
@@ -723,8 +723,8 @@ Feature: refine reload of DBLE0REQ-1793
     get system variables :show variables,dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
     """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
@@ -814,8 +814,8 @@ Feature: refine reload of DBLE0REQ-1793
     get system variables :show variables,dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
     """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
@@ -881,8 +881,8 @@ Feature: refine reload of DBLE0REQ-1793
     get system variables :show variables,dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
     """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
@@ -949,8 +949,8 @@ Feature: refine reload of DBLE0REQ-1793
     get system variables :show variables,dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
     """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
@@ -1019,7 +1019,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
@@ -1061,7 +1061,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
@@ -1073,7 +1073,7 @@ Feature: refine reload of DBLE0REQ-1793
      # issue wait for fixed
     Then check resultset "refine_reload#8_1" has lines with following column values
       | name-0   | heartbeat_stmt-1| heartbeat_timeout-2| heartbeat_retry-3| heartbeat_keep_alive-4| rw_split_mode-5| delay_threshold-6| delay_period_millis-7|delay_database-8|disable_ha-9| active-10 |
-      | ha_group1| select 1        | 0                  | 0                | 60                    | 1              |        -1        |  -1                  | None           |   false    |     false |
+      | ha_group1| select 1        | 0                  | 0                | 60                    | 1              |        -1        |  -1                  | null           |   false    |     false |
   # 测试0  通过添加1M1S 的dbGroup,  ha_group2，reload后生效rwSplitMode=3  没有被引用，只新增心跳，没有新增连接池
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
@@ -1091,8 +1091,8 @@ Feature: refine reload of DBLE0REQ-1793
       """
       SELF_RELOAD] test connection dbInstance:dbInstance\[name=host6M
       SELF_RELOAD] test connection dbInstance:dbInstance\[name=host6S1
-      SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6M
-      SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
+      SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6M
+      SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host6S1
       get system variables :show variables,dbInstance
       SELF_RELOAD] start heartbeat :
       """
@@ -1118,7 +1118,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance\[name=host4M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
     get system variables :show variables,dbInstance
     SELF_RELOAD] start heartbeat :
     """
@@ -1152,7 +1152,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
       """
       SELF_RELOAD] test connection dbInstance:dbInstance\[name=host4S
-      SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
+      SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4S
       get system variables :show variables,dbInstance
       SELF_RELOAD] start heartbeat :
       """
@@ -1192,7 +1192,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
     SELF_RELOAD] stop heartbeat :
@@ -1221,7 +1221,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
     SELF_RELOAD] stop heartbeat :
@@ -1250,7 +1250,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
     SELF_RELOAD] stop heartbeat :
@@ -1279,7 +1279,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
     SELF_RELOAD] stop heartbeat :
@@ -1308,7 +1308,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
     SELF_RELOAD] stop heartbeat :
@@ -1337,7 +1337,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] start connection pool :dbInstance
     SELF_RELOAD] stop heartbeat :
@@ -1372,7 +1372,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] stop connection pool :dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
@@ -1400,7 +1400,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start connection pool :dbInstance
     SELF_RELOAD] stop connection pool :dbInstance
     SELF_RELOAD] start heartbeat :
@@ -1433,7 +1433,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] stop connection pool :dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
@@ -1464,7 +1464,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start connection pool :dbInstance
     SELF_RELOAD] stop connection pool :dbInstance
     SELF_RELOAD] start heartbeat :
@@ -1504,7 +1504,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start connection pool :dbInstance
     SELF_RELOAD] stop connection pool :dbInstance\[name=host4M
     SELF_RELOAD] start heartbeat :
@@ -1532,7 +1532,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     get system variables :show variables,dbInstance
     SELF_RELOAD] start connection pool :dbInstance
     SELF_RELOAD] stop connection pool :dbInstance\[name=host4M
@@ -1564,7 +1564,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start connection pool :dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
@@ -1597,7 +1597,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start connection pool :dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
@@ -1636,7 +1636,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     SELF_RELOAD] start connection pool :dbInstance
     SELF_RELOAD] stop connection pool :dbInstance\[name=host4M
     SELF_RELOAD] start heartbeat :
@@ -1682,7 +1682,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance\[name=host4M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
     get system variables :show variables,dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
@@ -1704,7 +1704,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance\[name=host4M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
     get system variables :show variables,dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
@@ -1757,7 +1757,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance\[name=host4M
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance\[name=host4M
     get system variables :show variables,dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
@@ -1852,7 +1852,7 @@ Feature: refine reload of DBLE0REQ-1793
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     SELF_RELOAD] test connection dbInstance:dbInstance
-    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation,@@version,@@back_log,dbInstance:dbInstance
+    SELF_RELOAD] get key variables :select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@transaction_isolation,@@version,@@back_log,dbInstance:dbInstance
     get system variables :show variables,dbInstance
     SELF_RELOAD] start heartbeat :
     SELF_RELOAD] stop heartbeat :
