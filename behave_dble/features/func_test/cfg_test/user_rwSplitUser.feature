@@ -313,8 +313,8 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@time.startup                                               | length{(1)}   |
       | conn_0 | False   | show @@version                                                    | length{(1)}   |
       | conn_0 | False   | show @@server                                                     | length{(1)}   |
-      | conn_0 | False   | show @@threadpool                                                 | length{(6)}   |
-      | conn_0 | False   | show @@threadpool.task                                            | length{(6)}   |
+      | conn_0 | False   | show @@threadpool                                                 | length{(7)}   |
+      | conn_0 | False   | show @@threadpool.task                                            | length{(7)}   |
       | conn_0 | False   | show @@database                                                   | length{(1)}   |
       | conn_0 | False   | show @@shardingNode                                               | length{(5)}   |
       | conn_0 | False   | show @@shardingNode where schema = "schema2"                      | length{(0)}   |
@@ -337,7 +337,7 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn_0 | False   | show @@backend.statistics                                         | length{(4)}   |
       | conn_0 | False   | show @@backend.old                                                | length{(0)}   |
       | conn_0 | False   | show @@binlog.status                                              | length{(2)}   |
-      | conn_0 | False   | show @@help                                                       | length{(121)} |
+      | conn_0 | False   | show @@help                                                       | length{(123)} |
       | conn_0 | False   | show @@thread_used                                                | success       |
       | conn_0 | False   | show @@algorithm where schema='schema1' and table='sharding_4_t1' | length{(5)}   |
       | conn_0 | False   | show @@ddl                                                        | length{(0)}   |

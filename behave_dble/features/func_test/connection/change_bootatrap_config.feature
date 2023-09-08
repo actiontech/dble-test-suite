@@ -73,7 +73,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='NIOFront' or name ='NIOBackendRW'                                                                   | success | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=6 where name like 'NIO%'                                                                                           | success | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=8 where name in ('frontWorker','backendWorker','complexQueryWorker','writeToBackendWorker','managerFrontWorker')   | success | dble_information |
-      | conn_0 | true    | update dble_thread_pool set core_pool_size=10 where name not in ('Timer')                                                                                     | success | dble_information |
+      | conn_0 | true    | update dble_thread_pool set core_pool_size=10 where name not in ('Timer','TimerScheduler')                                                                                     | success | dble_information |
 
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -92,7 +92,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect                                                | db               |
-      | conn_0 | true    | select name,core_pool_size from dble_thread_pool    | has{(('Timer',1), ('frontWorker',10), ('backendWorker',10), ('complexQueryWorker',10), ('writeToBackendWorker',10), ('NIOFrontRW',10), ('NIOBackendRW',10), ('managerFrontWorker',10))} | dble_information |
+      | conn_0 | true    | select name,core_pool_size from dble_thread_pool    | has{(('Timer',1), ('TimerScheduler',2), ('frontWorker',10), ('backendWorker',10), ('complexQueryWorker',10), ('writeToBackendWorker',10), ('NIOFrontRW',10), ('NIOBackendRW',10), ('managerFrontWorker',10))} | dble_information |
 
     Then Restart dble in "dble-1" success
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
@@ -107,7 +107,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                              | expect                                                | db               |
-      | conn_0 | true    | select name,core_pool_size from dble_thread_pool | has{(('Timer',1), ('frontWorker',10), ('backendWorker',10), ('complexQueryWorker',10), ('writeToBackendWorker',10), ('NIOFrontRW',10), ('NIOBackendRW',10), ('managerFrontWorker',10))} | dble_information |
+      | conn_0 | true    | select name,core_pool_size from dble_thread_pool | has{(('Timer',1), ('TimerScheduler',2), ('frontWorker',10), ('backendWorker',10), ('complexQueryWorker',10), ('writeToBackendWorker',10), ('NIOFrontRW',10), ('NIOBackendRW',10), ('managerFrontWorker',10))} | dble_information |
 
 
   @skip_restart
