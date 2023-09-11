@@ -418,7 +418,7 @@ Feature: test config in user.xml  ---  analysisUser
       | conn_0 | False   | show @@backend.statistics                                         | length{(4)}   |
       | conn_0 | False   | show @@backend.old                                                | length{(0)}   |
       | conn_0 | False   | show @@binlog.status                                              | length{(2)}   |
-      | conn_0 | False   | show @@help                                                       | length{(123)} |
+      | conn_0 | False   | show @@help                                                       | length{(124)} |
       | conn_0 | False   | show @@thread_used                                                | success       |
       | conn_0 | False   | show @@algorithm where schema='schema1' and table='sharding_4_t1' | length{(5)}   |
       | conn_0 | False   | show @@ddl                                                        | length{(0)}   |

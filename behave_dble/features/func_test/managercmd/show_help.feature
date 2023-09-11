@@ -10,7 +10,7 @@ Feature: test show @@help
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
-    Then check resultset "rs_A" has lines with following column values and has "123" lines
+    Then check resultset "rs_A" has lines with following column values and has "124" lines
       | STATEMENT-0                                                                                              | DESCRIPTION-1                                                                     |
       | select @@VERSION_COMMENT                                                                                 | Show the version comment of dble                                                  |
       | show @@time.current                                                                                      | Report current timestamp                                                          |
@@ -136,6 +136,7 @@ Feature: test show @@help
       | disable @@statisticAnalysis                                                                              | Turn off statistic analysis sql('show @@sql.sum.user/table' or 'show @@sql.condition') |
       | thread @@kill [name\|poolname] ='?'                                                                      | Gracefully interrupt a single thread or thread pool                                    |
       | thread @@recover [name\|poolname] ='?'                                                                   | Restoring a single thread or thread pool                                               |
+      | thread @@print [name ='?']                                                                               | Print the status and stack of a single or all threads                                  |
 
     Then check resultset "rs_A" has not lines with following column values
       | STATEMENT-0                            |
