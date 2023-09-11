@@ -74,14 +74,18 @@ Feature: show_dbinstance
     # debug code end
 
     Then execute sql in "dble-1" in "user" mode
-      | user  | passwd | conn   | toClose | sql                                      | expect                | db  | timeout |
-      | rw1   | 111111 | conn_1 | False   | drop table if exists test_tb             | success               | db1 |         |
-      | rw1   | 111111 | conn_1 | False   | create table test_tb (id int, age int)   | success               | db1 |         |
-      | rw1   | 111111 | conn_1 | False   | insert into test_tb values (1,20),(2,20) | success               | db1 |         |
-      | rw1   | 111111 | conn_1 | False   | update test_tb set age=25 where id=1     | success               | db1 |         |
-      | rw1   | 111111 | conn_1 | False   | delete from test_tb where id=2           | success               | db1 |         |
-      | rw1   | 111111 | conn_1 | False   | select * from test_tb                    | has{((1,25),)}        | db1 | 5       |
-      | rw1   | 111111 | conn_1 | False   | show tables                              | has{(('test_tb',),)}  | db1 |         |
+      | user  | passwd | conn   | toClose | sql                                      | expect                | db  |
+      | rw1   | 111111 | conn_1 | False   | drop table if exists test_tb             | success               | db1 |
+      | rw1   | 111111 | conn_1 | False   | create table test_tb (id int, age int)   | success               | db1 |
+      | rw1   | 111111 | conn_1 | False   | insert into test_tb values (1,20),(2,20) | success               | db1 |
+      | rw1   | 111111 | conn_1 | False   | update test_tb set age=25 where id=1     | success               | db1 |
+      | rw1   | 111111 | conn_1 | False   | delete from test_tb where id=2           | success               | db1 |
+      # hostS3 read+1
+      | rw1   | 111111 | conn_1 | False   | select sleep(3)                          | success               | db1 |
+      # hostS3 read+1
+      | rw1   | 111111 | conn_1 | False   | select * from test_tb                    | has{((1,25),)}        | db1 |
+      # hostS3 read+1
+      | rw1   | 111111 | conn_1 | False   | show tables                              | has{(('test_tb',),)}  | db1 |
      # DBLE0REQ-2324
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs2"
       | sql               |
@@ -105,7 +109,7 @@ Feature: show_dbinstance
     Then check resultset "sql_rs2" has lines with following column values
       | NAME-1 | HOST-2        | PORT-3 | READ_LOAD-8 | WRITE_LOAD-9 |
       | hostM3 | 172.100.9.4   | 3306   | 6           | 0            |
-      | hostS3 | 172.100.9.4   | 3307   | 2           | 0            |
+      | hostS3 | 172.100.9.4   | 3307   | 3           | 0            |
 
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                                      | expect                | db  |
@@ -130,7 +134,7 @@ Feature: show_dbinstance
     Then check resultset "sql_rs3" has lines with following column values
       | NAME-1 | HOST-2        | PORT-3 | READ_LOAD-8 | WRITE_LOAD-9 |
       | hostM3 | 172.100.9.4   | 3306   | 8           | 1            |
-      | hostS3 | 172.100.9.4   | 3307   | 2           | 0            |
+      | hostS3 | 172.100.9.4   | 3307   | 3           | 0            |
 
     # db_instance_url,uproxy_dest未统计，其他2条都统计到了write里
     Then execute sql in "dble-1" in "user" mode
@@ -145,7 +149,7 @@ Feature: show_dbinstance
     Then check resultset "sql_rs4" has lines with following column values
       | NAME-1 | HOST-2        | PORT-3 | READ_LOAD-8 | WRITE_LOAD-9 |
       | hostM3 | 172.100.9.4   | 3306   | 8           | 3            |
-      | hostS3 | 172.100.9.4   | 3307   | 2           | 0            |
+      | hostS3 | 172.100.9.4   | 3307   | 3           | 0            |
 
     # 只第一条统计了，后面3条都没统计
     Then execute sql in "dble-1" in "user" mode
@@ -162,7 +166,7 @@ Feature: show_dbinstance
     Then check resultset "sql_rs5" has lines with following column values
       | NAME-1 | HOST-2        | PORT-3 | READ_LOAD-8 | WRITE_LOAD-9 |
       | hostM3 | 172.100.9.4   | 3306   | 8           | 3            |
-      | hostS3 | 172.100.9.4   | 3307   | 4           | 0            |
+      | hostS3 | 172.100.9.4   | 3307   | 5           | 0            |
 
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                                 | expect                               | db  |
@@ -181,7 +185,7 @@ Feature: show_dbinstance
     Then check resultset "sql_rs5" has lines with following column values
       | NAME-1 | HOST-2        | PORT-3 | READ_LOAD-8 | WRITE_LOAD-9 |
       | hostM3 | 172.100.9.4   | 3306   | 9           | 3            |
-      | hostS3 | 172.100.9.4   | 3307   | 7           | 0            |
+      | hostS3 | 172.100.9.4   | 3307   | 8           | 0            |
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                           | expect  | db  |
       | rw1   | 111111 | conn_1 | True    | drop table if exists test_tb  | success | db1 |  
@@ -214,27 +218,29 @@ Feature: show_dbinstance
       | hostS2 | 172.100.9.6   | 3307   | 0           | 0            |
 
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                            | expect                      | db      | timeout |
+      | conn   | toClose | sql                                            | expect                      | db      |
       # hostM1 write+2, hostM2 write+2
-      | conn_1 | False   | drop table if exists sharding_4_t1             | success                     | schema1 |         |
+      | conn_1 | False   | drop table if exists sharding_4_t1             | success                     | schema1 |
       # hostM1 write+2, hostM2 write+2
-      | conn_1 | False   | create table sharding_4_t1 (id int, age int)   | success                     | schema1 |         |
+      | conn_1 | False   | create table sharding_4_t1 (id int, age int)   | success                     | schema1 |
       # hostM1 write+1, hostM2 write+1
-      | conn_1 | False   | insert into sharding_4_t1 values (1,20),(2,20) | success                     | schema1 |         |
+      | conn_1 | False   | insert into sharding_4_t1 values (1,20),(2,20) | success                     | schema1 |
       # hostM2 write+1
-      | conn_1 | False   | update sharding_4_t1 set age=25 where id=1     | success                     | schema1 |         |
+      | conn_1 | False   | update sharding_4_t1 set age=25 where id=1     | success                     | schema1 |
       # hostM2 write+1
-      | conn_1 | False   | delete from sharding_4_t1 where id=1           | success                     | schema1 |         |
-      # hostM1 read+2, hostS2 read+2
-      | conn_1 | False   | select * from sharding_4_t1                    | length{(1)}                 | schema1 | 5       |
+      | conn_1 | False   | delete from sharding_4_t1 where id=1           | success                     | schema1 |
       # hostM1 read+1
-      | conn_1 | True    | show tables                                    | has{(('sharding_4_t1',),)}  | schema1 |         |
+      | conn_1 | False   | select sleep(3)                                | success                     | schema1 |
+      # hostM1 read+2, hostS2 read+2
+      | conn_1 | False   | select * from sharding_4_t1                    | length{(1)}                 | schema1 |
+      # hostM1 read+1
+      | conn_1 | True    | show tables                                    | has{(('sharding_4_t1',),)}  | schema1 |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs2"
       | sql               |
       | show @@dbInstance |
     Then check resultset "sql_rs2" has lines with following column values
       | NAME-1 | HOST-2        | PORT-3 | READ_LOAD-8 | WRITE_LOAD-9 |
-      | hostM1 | 172.100.9.5   | 3306   | 3           | 5            |
+      | hostM1 | 172.100.9.5   | 3306   | 4           | 5            |
       | hostM2 | 172.100.9.6   | 3306   | 0           | 7            |
       | hostS2 | 172.100.9.6   | 3307   | 2           | 0            |
 
@@ -264,7 +270,7 @@ Feature: show_dbinstance
       | show @@dbInstance |
     Then check resultset "sql_rs3" has lines with following column values
       | NAME-1 | HOST-2        | PORT-3 | READ_LOAD-8 | WRITE_LOAD-9 |
-      | hostM1 | 172.100.9.5   | 3306   | 3           | 9            |
+      | hostM1 | 172.100.9.5   | 3306   | 4           | 9            |
       | hostM2 | 172.100.9.6   | 3306   | 0           | 12           |
       | hostS2 | 172.100.9.6   | 3307   | 2           | 0            |
 
@@ -282,7 +288,7 @@ Feature: show_dbinstance
       | show @@dbInstance |
     Then check resultset "sql_rs4" has lines with following column values
       | NAME-1 | HOST-2        | PORT-3 | READ_LOAD-8 | WRITE_LOAD-9 |
-      | hostM1 | 172.100.9.5   | 3306   | 5           | 11           |
+      | hostM1 | 172.100.9.5   | 3306   | 6           | 11           |
       | hostM2 | 172.100.9.6   | 3306   | 0           | 14           |
       | hostS2 | 172.100.9.6   | 3307   | 5           | 0            |
 
@@ -299,7 +305,7 @@ Feature: show_dbinstance
       | show @@dbInstance |
     Then check resultset "sql_rs5" has lines with following column values
       | NAME-1 | HOST-2        | PORT-3 | READ_LOAD-8 | WRITE_LOAD-9 |
-      | hostM1 | 172.100.9.5   | 3306   | 7           | 11           |
+      | hostM1 | 172.100.9.5   | 3306   | 8           | 11           |
       | hostM2 | 172.100.9.6   | 3306   | 0           | 14           |
       | hostS2 | 172.100.9.6   | 3307   | 5           | 0            |
     Then execute sql in "dble-1" in "user" mode
