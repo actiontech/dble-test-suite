@@ -138,6 +138,21 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ xaRetryCount \] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       Property \[ xaSessionCheckPeriod \] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
       The specified MySQL Version (5.6.24.00) is not valid, the version should look like 'x.y.z'.
+
+      check the property \[ autocommit \] '-3' data type or value
+      check the property \[ backSocketNoDelay \] '2' data type or value
+      check the property \[ checkTableConsistency \] '-10100101' data type or value
+      check the property \[ enableSlowLog \] '2' data type or value
+      check the property \[ frontSocketNoDelay \] '2' data type or value
+      check the property \[ recordTxn \] '2' data type or value
+      check the property \[ useCompression \] '2' data type or value
+      check the property \[ useCostTimeStat \] '2' data type or value
+      check the property \[ usePerformanceMode \] '2' data type or value
+      check the property \[ useThreadUsageStat \] '2' data type or value
+      check the property \[ usingAIO \] '2' data type or value
+      check the property \[ enableFlowControl \] '5' data type or value
+      check the property \[ useJoinStrategy \] '5' data type or value
+      check the property \[ useOuterHa \] '5' data type or value
       """
       # DBLE0REQ-2293
       # Property \[ autocommit \] '-3' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
@@ -373,3 +388,361 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     """
     homePath is not set
     """
+
+
+  Scenario: enable/disable parameters support 0/1/false/true #11
+    # set parameters values: 0
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+      $a\-DuseCompression=0
+      $a\-DusingAIO=0
+      $a\-DuseThreadUsageStat=0
+      $a\-DusePerformanceMode=0
+      $a\-DuseCostTimeStat=0
+      $a\-Dautocommit=0
+      $a\-DcheckTableConsistency=0
+      $a\-DrecordTxn=0
+      $a\-DfrontSocketNoDelay=0
+      $a\-DbackSocketNoDelay=0
+      $a\-DenableGeneralLog=0
+      $a\-DenableBatchLoadData=0
+      $a\-DenableRoutePenetration=0
+      $a\-DenableAlert=0
+      $a\-DenableStatistic=0
+      $a\-DenableStatisticAnalysis=0
+      $a\-DenableSessionActiveRatioStat=0
+      $a\-DenableConnectionAssociateThread=0
+      $a\-DenableAsyncRelease=0
+      $a\-DenableMemoryBufferMonitor=0
+      $a\-DenableMemoryBufferMonitorRecordPool=0
+      $a\-DenableSlowLog=0
+      $a\-DenableSqlDumpLog=0
+      $a\-DuseSerializableMode=0
+      $a\-DsqlDumpLogOnStartupRotate=0
+
+      $a\-DcapClientFoundRows=0
+      $a\-DuseJoinStrategy=0
+      $a\-DenableCursor=0
+      $a\-DenableFlowControl=0
+      $a\-DuseOuterHa=0
+      $a\-DuseNewJoinOptimizer=0
+      $a\-DinSubQueryTransformToJoin=0
+      $a\-DcloseHeartBeatRecord=0
+    """
+      #$a\-DsupportSSL=0
+
+    Then restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_rs1"
+      | conn   | toClose | sql                          | db               |
+      | conn_0 | true    | select * from dble_variables | dble_information |
+    Then check resultset "dble_variables_rs1" has lines with following column values
+      | variable_name-0                         | variable_value-1                            | comment-2                                                                                                                                                                                                            | read_only-3 |
+      # useNewJoinOptimizer, useSerializableMode, enableTrace未显示
+      | useCompression                          | 0                                           | Whether the Compression is enable, the default number is 0                                                                                                                                                           | true        |
+      | usingAIO                                | 0                                           | Whether the AIO is enable, the default number is 0(use NIO instead)                                                                                                                                                  | true        |
+      | useThreadUsageStat                      | 0                                           | Whether the thread usage statistics function is enabled. The default value is 0                                                                                                                                      | true        |
+      | usePerformanceMode                      | 0                                           | Whether use the performance mode is enabled. The default value is 0                                                                                                                                                  | true        |
+      | useCostTimeStat                         | 0                                           | Whether the cost time of query can be track by Btrace. The default value is 0                                                                                                                                        | true        |
+      | autocommit                              | 0                                           | The initially autocommit value.The default value is 1                                                                                                                                                                | true        |
+      | checkTableConsistency                   | 0                                           | Whether the consistency tableStructure check is enabled. The default value is 0                                                                                                                                      | true        |
+      | recordTxn                               | 0                                           | Whether the transaction be recorded as a file, the default value is 0                                                                                                                                                | true        |
+      | frontSocketNoDelay                      | 0                                           | The frontend nagle is disabled. The default value is 1                                                                                                                                                               | true        |
+      | backSocketNoDelay                       | 0                                           | The backend nagle is disabled. The default value is 1                                                                                                                                                                | true        |
+      | enableGeneralLog                        | 0                                           | Enable general log                                                                                                                                                                                                   | false       |
+      | enableBatchLoadData                     | 0                                           | Enable Batch Load Data. The default value is 0(false)                                                                                                                                                                | false       |
+      | enableRoutePenetration                  | 0                                           | Whether enable route penetration.The default value is 0                                                                                                                                                              | true        |
+      | enableAlert                             | 0                                           | Enable or disable alert                                                                                                                                                                                              | false       |
+      | enableStatistic                         | 0                                           | Enable statistic sql, the default is 0(false)                                                                                                                                                                        | false       |
+      | enableStatisticAnalysis                 | 0                                           | Enable statistic analysis sql('show @@sql.sum.user/table' or 'show @@sql.condition'), the default is 0(false)                                                                                                        | false       |
+      | enableSessionActiveRatioStat            | 0                                           | Whether frontend connection activity ratio statistics are enabled. The default value is 1.                                                                                                                           | true        |
+      | enableConnectionAssociateThread         | 0                                           | Whether to open frontend connection and backend connection are associated with threads. The default value is 1.                                                                                                      | true        |
+      | enableAsyncRelease                      | 0                                           | Whether enable async release . default value is 1(on).                                                                                                                                                               | true        |
+      | enableMemoryBufferMonitor               | 0                                           | Whether enable memory buffer monitor, enable this option will cost a lot of  resources. the default value is 0(off)                                                                                                  | false       |
+      | enableMemoryBufferMonitorRecordPool     | 0                                           | Whether record the connection pool memory if the memory buffer monitor is ON. the default value is 1(ON).                                                                                                            | true        |
+      | enableSlowLog                           | 0                                           | Enable Slow Query Log                                                                                                                                                                                                | false       |
+      | enableSqlDumpLog                        | 0                                           | Whether enable sqlDumpLog, the default value is 0(off)                                                                                                                                                               | false       |
+      | capClientFoundRows                      | false                                       | Whether to turn on EOF_Packet to return found rows, the default value is false                                                                                                                                       | false       |
+      | useJoinStrategy                         | false                                       | Whether nest loop join is enabled. The default value is false                                                                                                                                                        | true        |
+      | enableCursor                            | false                                       | Whether the server-side cursor  is enable or not. The default value is false                                                                                                                                         | true        |
+      | enableFlowControl                       | false                                       | Whether use flow control feature                                                                                                                                                                                     | false       |
+      | useOuterHa                              | false                                       | Whether use outer ha component. The default value is true and it will always true when clusterEnable=true.If no component in fact, nothing will happen.                                                              | true        |
+      | inSubQueryTransformToJoin               | false                                       | The inSubQuery is transformed into the join ,the default value is false                                                                                                                                              | true        |
+      | closeHeartBeatRecord                    | false                                       | close heartbeat record. if closed, `show @@dbinstance.synstatus`,`show @@dbinstance.syndetail`,`show @@heartbeat.detail` will be empty and `show @@heartbeat`'s EXECUTE_TIME will be '-' .The default value is false | true        |
+      | isSupportSSL                            | false                                       | isSupportSSL in configuration                                                                                                                                                                                        | true        |
+      | sqlDumpLogOnStartupRotate               | 0                                           | The onStartup of rotate policy, the default value is 1; -1 said not to participate in the strategy                                                                                                                   | true        |
+
+    # set parameters values: 1
+     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+      s/-DenableSessionActiveRatioStat=0/-DenableSessionActiveRatioStat=1/
+      s/-DenableConnectionAssociateThread=0/-DenableConnectionAssociateThread=1/
+      s/-DenableFlowControl=0/-DenableFlowControl=1/
+    """
+    Then restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_rs2"
+      | conn   | toClose | sql                                                                                                                                         | db               |
+      | conn_1 | true    | select * from dble_variables where variable_name in ('enableSessionActiveRatioStat','enableConnectionAssociateThread','enableFlowControl') | dble_information |
+    Then check resultset "dble_variables_rs2" has lines with following column values
+      | variable_name-0                         | variable_value-1                            | comment-2                                                                                                                                                                                                            | read_only-3 |
+      | enableSessionActiveRatioStat            | 1                                           | Whether frontend connection activity ratio statistics are enabled. The default value is 1.                                                                                                                           | true        |
+      | enableConnectionAssociateThread         | 1                                           | Whether to open frontend connection and backend connection are associated with threads. The default value is 1.                                                                                                      | true        |
+      | enableFlowControl                       | true                                        | Whether use flow control feature                                                                                                                                                                                     | false       |
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+      s/-DuseCompression=0/-DuseCompression=1/
+      s/-DusingAIO=0/-DusingAIO=1/
+      s/-DuseThreadUsageStat=0/-DuseThreadUsageStat=1/
+      s/-DusePerformanceMode=0/-DusePerformanceMode=1/
+      s/-DuseCostTimeStat=0/-DuseCostTimeStat=1/
+      s/-Dautocommit=0/-Dautocommit=1/
+      s/-DcheckTableConsistency=0/-DcheckTableConsistency=1/
+      s/-DrecordTxn=0/-DrecordTxn=1/
+      s/-DfrontSocketNoDelay=0/-DfrontSocketNoDelay=1/
+      s/-DbackSocketNoDelay=0/-DbackSocketNoDelay=1/
+      s/-DenableGeneralLog=0/-DenableGeneralLog=1/
+      s/-DenableBatchLoadData=0/-DenableBatchLoadData=1/
+      s/-DenableRoutePenetration=0/-DenableRoutePenetration=1/
+      s/-DenableAlert=0/-DenableAlert=1/
+      s/-DenableStatistic=0/-DenableStatistic=1/
+      s/-DenableStatisticAnalysis=0/-DenableStatisticAnalysis=1/
+      s/-DenableAsyncRelease=0/-DenableAsyncRelease=1/
+      s/-DenableMemoryBufferMonitor=0/-DenableMemoryBufferMonitor=1/
+      s/-DenableMemoryBufferMonitorRecordPool=0/-DenableMemoryBufferMonitorRecordPool=1/
+      s/-DenableSlowLog=0/-DenableSlowLog=1/
+      s/-DenableSqlDumpLog=0/-DenableSqlDumpLog=1/
+      s/-DuseSerializableMode=0/-DuseSerializableMode=1/
+      s/-DsqlDumpLogOnStartupRotate=0/-DsqlDumpLogOnStartupRotate=1/
+
+      s/-DcapClientFoundRows=0/-DcapClientFoundRows=1/
+      s/-DuseJoinStrategy=0/-DuseJoinStrategy=1/
+      s/-DenableCursor=0/-DenableCursor=1/
+      s/-DuseOuterHa=0/-DuseOuterHa=1/
+      s/-DuseNewJoinOptimizer=0/-DuseNewJoinOptimizer=1/
+      s/-DinSubQueryTransformToJoin=0/-DinSubQueryTransformToJoin=1/
+      s/-DcloseHeartBeatRecord=0/-DcloseHeartBeatRecord=1/
+
+      $a -DroutePenetrationRules={"rules":[{"regex":"select\\\\sid\\\\sfrom\\\\ssharding_2_t1"}]}
+    """
+      #s/-DsupportSSL=0/-DsupportSSL=1/
+
+    Then restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_rs2"
+      | conn   | toClose | sql                          | db               |
+      | conn_1 | true    | select * from dble_variables | dble_information |
+    Then check resultset "dble_variables_rs2" has lines with following column values
+      | variable_name-0                         | variable_value-1                            | comment-2                                                                                                                                                                                                            | read_only-3 |
+      # useNewJoinOptimizer, useSerializableMode, enableTrace未显示
+      | useCompression                          | 1                                           | Whether the Compression is enable, the default number is 0                                                                                                                                                           | true        |
+      | usingAIO                                | 1                                           | Whether the AIO is enable, the default number is 0(use NIO instead)                                                                                                                                                  | true        |
+      | useThreadUsageStat                      | 1                                           | Whether the thread usage statistics function is enabled. The default value is 0                                                                                                                                      | true        |
+      | usePerformanceMode                      | 1                                           | Whether use the performance mode is enabled. The default value is 0                                                                                                                                                  | true        |
+      | useCostTimeStat                         | 1                                           | Whether the cost time of query can be track by Btrace. The default value is 0                                                                                                                                        | true        |
+      | autocommit                              | 1                                           | The initially autocommit value.The default value is 1                                                                                                                                                                | true        |
+      | checkTableConsistency                   | 1                                           | Whether the consistency tableStructure check is enabled. The default value is 0                                                                                                                                      | true        |
+      | recordTxn                               | 1                                           | Whether the transaction be recorded as a file, the default value is 0                                                                                                                                                | true        |
+      | frontSocketNoDelay                      | 1                                           | The frontend nagle is disabled. The default value is 1                                                                                                                                                               | true        |
+      | backSocketNoDelay                       | 1                                           | The backend nagle is disabled. The default value is 1                                                                                                                                                                | true        |
+      | enableGeneralLog                        | 1                                           | Enable general log                                                                                                                                                                                                   | false       |
+      | enableBatchLoadData                     | 1                                           | Enable Batch Load Data. The default value is 0(false)                                                                                                                                                                | false       |
+      | enableRoutePenetration                  | 1                                           | Whether enable route penetration.The default value is 0                                                                                                                                                              | true        |
+      | enableAlert                             | 1                                           | Enable or disable alert                                                                                                                                                                                              | false       |
+      | enableStatistic                         | 1                                           | Enable statistic sql, the default is 0(false)                                                                                                                                                                        | false       |
+      | enableStatisticAnalysis                 | 1                                           | Enable statistic analysis sql('show @@sql.sum.user/table' or 'show @@sql.condition'), the default is 0(false)                                                                                                        | false       |
+      # usePerformanceMode=1时，配置不生效
+      | enableSessionActiveRatioStat            | 0                                           | Whether frontend connection activity ratio statistics are enabled. The default value is 1.                                                                                                                           | true        |
+      # usePerformanceMode=1时，配置不生效
+      | enableConnectionAssociateThread         | 0                                           | Whether to open frontend connection and backend connection are associated with threads. The default value is 1.                                                                                                      | true        |
+      | enableAsyncRelease                      | 1                                           | Whether enable async release . default value is 1(on).                                                                                                                                                               | true        |
+      | enableMemoryBufferMonitor               | 1                                           | Whether enable memory buffer monitor, enable this option will cost a lot of  resources. the default value is 0(off)                                                                                                  | false       |
+      | enableMemoryBufferMonitorRecordPool     | 1                                           | Whether record the connection pool memory if the memory buffer monitor is ON. the default value is 1(ON).                                                                                                            | true        |
+      | enableSlowLog                           | 1                                           | Enable Slow Query Log                                                                                                                                                                                                | false       |
+      | enableSqlDumpLog                        | 1                                           | Whether enable sqlDumpLog, the default value is 0(off)                                                                                                                                                               | false       |
+      | capClientFoundRows                      | true                                        | Whether to turn on EOF_Packet to return found rows, the default value is false                                                                                                                                       | false       |
+      | useJoinStrategy                         | true                                        | Whether nest loop join is enabled. The default value is false                                                                                                                                                        | true        |
+      | enableCursor                            | true                                        | Whether the server-side cursor  is enable or not. The default value is false                                                                                                                                         | true        |
+      # usingAIO=1时，配置不生效 flow control is not support AIO
+      | enableFlowControl                       | false                                       | Whether use flow control feature                                                                                                                                                                                     | false       |
+      | useOuterHa                              | true                                        | Whether use outer ha component. The default value is true and it will always true when clusterEnable=true.If no component in fact, nothing will happen.                                                              | true        |
+      | inSubQueryTransformToJoin               | true                                        | The inSubQuery is transformed into the join ,the default value is false                                                                                                                                              | true        |
+      | closeHeartBeatRecord                    | true                                        | close heartbeat record. if closed, `show @@dbinstance.synstatus`,`show @@dbinstance.syndetail`,`show @@heartbeat.detail` will be empty and `show @@heartbeat`'s EXECUTE_TIME will be '-' .The default value is false | true        |
+      | isSupportSSL                            | false                                       | isSupportSSL in configuration                                                                                                                                                                                        | true        |
+      | sqlDumpLogOnStartupRotate               | 1                                           | The onStartup of rotate policy, the default value is 1; -1 said not to participate in the strategy                                                                                                                   | true        |
+
+    # set parameters values: false
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+      $a\-DuseCompression=false
+      $a\-DusingAIO=false
+      $a\-DuseThreadUsageStat=false
+      $a\-DusePerformanceMode=false
+      $a\-DuseCostTimeStat=false
+      $a\-Dautocommit=false
+      $a\-DcheckTableConsistency=false
+      $a\-DrecordTxn=false
+      $a\-DfrontSocketNoDelay=false
+      $a\-DbackSocketNoDelay=false
+      $a\-DenableGeneralLog=false
+      $a\-DenableBatchLoadData=false
+      $a\-DenableRoutePenetration=false
+      $a\-DenableAlert=false
+      $a\-DenableStatistic=false
+      $a\-DenableStatisticAnalysis=false
+      $a\-DenableSessionActiveRatioStat=false
+      $a\-DenableConnectionAssociateThread=false
+      $a\-DenableAsyncRelease=false
+      $a\-DenableMemoryBufferMonitor=false
+      $a\-DenableMemoryBufferMonitorRecordPool=false
+      $a\-DenableSlowLog=false
+
+      $a\-DcapClientFoundRows=false
+      $a\-DuseJoinStrategy=false
+      $a\-DenableCursor=false
+      $a\-DenableFlowControl=false
+      $a\-DuseOuterHa=false
+      $a\-DuseNewJoinOptimizer=false
+      $a\-DinSubQueryTransformToJoin=false
+      $a\-DcloseHeartBeatRecord=false
+      $a\-DsupportSSL=false
+    """
+      #$a\-DenableSqlDumpLog=false
+      #$a\-DuseSerializableMode=false
+      #$a\-DsqlDumpLogOnStartupRotate=false
+
+    Then restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_rs1"
+      | conn   | toClose | sql                          | db               |
+      | conn_0 | true    | select * from dble_variables | dble_information |
+    Then check resultset "dble_variables_rs1" has lines with following column values
+      | variable_name-0                         | variable_value-1                            | comment-2                                                                                                                                                                                                            | read_only-3 |
+        # useNewJoinOptimizer, useSerializableMode, enableTrace未显示
+      | useCompression                          | 0                                           | Whether the Compression is enable, the default number is 0                                                                                                                                                           | true        |
+      | usingAIO                                | 0                                           | Whether the AIO is enable, the default number is 0(use NIO instead)                                                                                                                                                  | true        |
+      | useThreadUsageStat                      | 0                                           | Whether the thread usage statistics function is enabled. The default value is 0                                                                                                                                      | true        |
+      | usePerformanceMode                      | 0                                           | Whether use the performance mode is enabled. The default value is 0                                                                                                                                                  | true        |
+      | useCostTimeStat                         | 0                                           | Whether the cost time of query can be track by Btrace. The default value is 0                                                                                                                                        | true        |
+      | autocommit                              | 0                                           | The initially autocommit value.The default value is 1                                                                                                                                                                | true        |
+      | checkTableConsistency                   | 0                                           | Whether the consistency tableStructure check is enabled. The default value is 0                                                                                                                                      | true        |
+      | recordTxn                               | 0                                           | Whether the transaction be recorded as a file, the default value is 0                                                                                                                                                | true        |
+      | frontSocketNoDelay                      | 0                                           | The frontend nagle is disabled. The default value is 1                                                                                                                                                               | true        |
+      | backSocketNoDelay                       | 0                                           | The backend nagle is disabled. The default value is 1                                                                                                                                                                | true        |
+      | enableGeneralLog                        | 0                                           | Enable general log                                                                                                                                                                                                   | false       |
+      | enableBatchLoadData                     | 0                                           | Enable Batch Load Data. The default value is 0(false)                                                                                                                                                                | false       |
+      | enableRoutePenetration                  | 0                                           | Whether enable route penetration.The default value is 0                                                                                                                                                              | true        |
+      | enableAlert                             | 0                                           | Enable or disable alert                                                                                                                                                                                              | false       |
+      | enableStatistic                         | 0                                           | Enable statistic sql, the default is 0(false)                                                                                                                                                                        | false       |
+      | enableSessionActiveRatioStat            | 0                                           | Whether frontend connection activity ratio statistics are enabled. The default value is 1.                                                                                                                           | true        |
+      | enableConnectionAssociateThread         | 0                                           | Whether to open frontend connection and backend connection are associated with threads. The default value is 1.                                                                                                      | true        |
+      | enableAsyncRelease                      | 0                                           | Whether enable async release . default value is 1(on).                                                                                                                                                               | true        |
+      | enableMemoryBufferMonitor               | 0                                           | Whether enable memory buffer monitor, enable this option will cost a lot of  resources. the default value is 0(off)                                                                                                  | false       |
+      | enableMemoryBufferMonitorRecordPool     | 0                                           | Whether record the connection pool memory if the memory buffer monitor is ON. the default value is 1(ON).                                                                                                            | true        |
+      | enableSlowLog                           | 0                                           | Enable Slow Query Log                                                                                                                                                                                                | false       |
+  #      | enableSqlDumpLog                        | 0                                           | Whether enable sqlDumpLog, the default value is 0(off)                                                                                                                                                               | false       |
+      | capClientFoundRows                      | false                                       | Whether to turn on EOF_Packet to return found rows, the default value is false                                                                                                                                       | false       |
+      | useJoinStrategy                         | false                                       | Whether nest loop join is enabled. The default value is false                                                                                                                                                        | true        |
+      | enableCursor                            | false                                       | Whether the server-side cursor  is enable or not. The default value is false                                                                                                                                         | true        |
+      | enableFlowControl                       | false                                       | Whether use flow control feature                                                                                                                                                                                     | false       |
+      | useOuterHa                              | false                                       | Whether use outer ha component. The default value is true and it will always true when clusterEnable=true.If no component in fact, nothing will happen.                                                              | true        |
+      | inSubQueryTransformToJoin               | false                                       | The inSubQuery is transformed into the join ,the default value is false                                                                                                                                              | true        |
+      | closeHeartBeatRecord                    | false                                       | close heartbeat record. if closed, `show @@dbinstance.synstatus`,`show @@dbinstance.syndetail`,`show @@heartbeat.detail` will be empty and `show @@heartbeat`'s EXECUTE_TIME will be '-' .The default value is false | true        |
+      | isSupportSSL                            | false                                       | isSupportSSL in configuration                                                                                                                                                                                        | true        |
+#      | sqlDumpLogOnStartupRotate               | 0                                           | The onStartup of rotate policy, the default value is 1; -1 said not to participate in the strategy                                                                                                                   | true        |
+
+      # set parameters values: 1
+     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+      s/-DenableSessionActiveRatioStat=false/-DenableSessionActiveRatioStat=true/
+      s/-DenableConnectionAssociateThread=false/-DenableConnectionAssociateThread=true/
+      s/-DenableFlowControl=false/-DenableFlowControl=true/
+    """
+    Then restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_rs2"
+      | conn   | toClose | sql                                                                                                                                                     | db               |
+      | conn_1 | true    | select * from dble_variables where variable_name in ('enableSessionActiveRatioStat','enableConnectionAssociateThread','enableFlowControl','supportSSL') | dble_information |
+    Then check resultset "dble_variables_rs2" has lines with following column values
+      | variable_name-0                         | variable_value-1                            | comment-2                                                                                                                                                                                                            | read_only-3 |
+      | enableSessionActiveRatioStat            | 1                                           | Whether frontend connection activity ratio statistics are enabled. The default value is 1.                                                                                                                           | true        |
+      | enableConnectionAssociateThread         | 1                                           | Whether to open frontend connection and backend connection are associated with threads. The default value is 1.                                                                                                      | true        |
+      | enableFlowControl                       | true                                        | Whether use flow control feature                                                                                                                                                                                     | false       |
+
+    # set parameters values: true
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+      s/-DuseCompression=false/-DuseCompression=true/
+      s/-DusingAIO=false/-DusingAIO=true/
+      s/-DuseThreadUsageStat=false/-DuseThreadUsageStat=true/
+      s/-DusePerformanceMode=false/-DusePerformanceMode=true/
+      s/-DuseCostTimeStat=false/-DuseCostTimeStat=true/
+      s/-Dautocommit=false/-Dautocommit=true/
+      s/-DcheckTableConsistency=false/-DcheckTableConsistency=true/
+      s/-DrecordTxn=false/-DrecordTxn=true/
+      s/-DfrontSocketNoDelay=false/-DfrontSocketNoDelay=true/
+      s/-DbackSocketNoDelay=false/-DbackSocketNoDelay=true/
+      s/-DenableGeneralLog=false/-DenableGeneralLog=true/
+      s/-DenableBatchLoadData=false/-DenableBatchLoadData=true/
+      s/-DenableRoutePenetration=false/-DenableRoutePenetration=true/
+      s/-DenableAlert=false/-DenableAlert=true/
+      s/-DenableStatistic=false/-DenableStatistic=true/
+      s/-DenableStatisticAnalysis=false/-DenableStatisticAnalysis=true/
+      s/-DenableAsyncRelease=false/-DenableAsyncRelease=true/
+      s/-DenableMemoryBufferMonitor=false/-DenableMemoryBufferMonitor=true/
+      s/-DenableMemoryBufferMonitorRecordPool=false/-DenableMemoryBufferMonitorRecordPool=true/
+      s/-DenableSlowLog=false/-DenableSlowLog=true/
+
+      s/-DcapClientFoundRows=false/-DcapClientFoundRows=true/
+      s/-DuseJoinStrategy=false/-DuseJoinStrategy=true/
+      s/-DenableCursor=false/-DenableCursor=true/
+      s/-DuseOuterHa=false/-DuseOuterHa=true/
+      s/-DuseNewJoinOptimizer=false/-DuseNewJoinOptimizer=true/
+      s/-DinSubQueryTransformToJoin=false/-DinSubQueryTransformToJoin=true/
+      s/-DcloseHeartBeatRecord=false/-DcloseHeartBeatRecord=true/
+
+      $a -DroutePenetrationRules={"rules":[{"regex":"select\\\\sid\\\\sfrom\\\\ssharding_2_t1"}]}
+    """
+      #s/-DsupportSSL=false/-DsupportSSL=true/ supportSSL为true时需要配置证书dble才能启动成功
+      #s/-DenableSqlDumpLog=false/-DenableSqlDumpLog=true/
+      #s/-DuseSerializableMode=false/-DuseSerializableMode=true/
+      #s/-DsqlDumpLogOnStartupRotate=false/-DsqlDumpLogOnStartupRotate=true/
+
+    Then restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_rs2"
+      | conn   | toClose | sql                          | db               |
+      | conn_1 | true    | select * from dble_variables | dble_information |
+    Then check resultset "dble_variables_rs2" has lines with following column values
+      | variable_name-0                         | variable_value-1                            | comment-2                                                                                                                                                                                                            | read_only-3 |
+      # useNewJoinOptimizer, useSerializableMode, enableTrace未显示
+      | useCompression                          | 1                                           | Whether the Compression is enable, the default number is 0                                                                                                                                                           | true        |
+      | usingAIO                                | 1                                           | Whether the AIO is enable, the default number is 0(use NIO instead)                                                                                                                                                  | true        |
+      | useThreadUsageStat                      | 1                                           | Whether the thread usage statistics function is enabled. The default value is 0                                                                                                                                      | true        |
+      | usePerformanceMode                      | 1                                           | Whether use the performance mode is enabled. The default value is 0                                                                                                                                                  | true        |
+      | useCostTimeStat                         | 1                                           | Whether the cost time of query can be track by Btrace. The default value is 0                                                                                                                                        | true        |
+      | autocommit                              | 1                                           | The initially autocommit value.The default value is 1                                                                                                                                                                | true        |
+      | checkTableConsistency                   | 1                                           | Whether the consistency tableStructure check is enabled. The default value is 0                                                                                                                                      | true        |
+      | recordTxn                               | 1                                           | Whether the transaction be recorded as a file, the default value is 0                                                                                                                                                | true        |
+      | frontSocketNoDelay                      | 1                                           | The frontend nagle is disabled. The default value is 1                                                                                                                                                               | true        |
+      | backSocketNoDelay                       | 1                                           | The backend nagle is disabled. The default value is 1                                                                                                                                                                | true        |
+      | enableGeneralLog                        | 1                                           | Enable general log                                                                                                                                                                                                   | false       |
+      | enableBatchLoadData                     | 1                                           | Enable Batch Load Data. The default value is 0(false)                                                                                                                                                                | false       |
+      | enableRoutePenetration                  | 1                                           | Whether enable route penetration.The default value is 0                                                                                                                                                              | true        |
+      | enableAlert                             | 1                                           | Enable or disable alert                                                                                                                                                                                              | false       |
+      | enableStatistic                         | 1                                           | Enable statistic sql, the default is 0(false)                                                                                                                                                                        | false       |
+      # usePerformanceMode=1时，配置不生效
+      | enableSessionActiveRatioStat            | 0                                           | Whether frontend connection activity ratio statistics are enabled. The default value is 1.                                                                                                                           | true        |
+      # usePerformanceMode=1时，配置不生效
+      | enableConnectionAssociateThread         | 0                                           | Whether to open frontend connection and backend connection are associated with threads. The default value is 1.                                                                                                      | true        |
+      | enableAsyncRelease                      | 1                                           | Whether enable async release . default value is 1(on).                                                                                                                                                               | true        |
+      | enableMemoryBufferMonitor               | 1                                           | Whether enable memory buffer monitor, enable this option will cost a lot of  resources. the default value is 0(off)                                                                                                  | false       |
+      | enableMemoryBufferMonitorRecordPool     | 1                                           | Whether record the connection pool memory if the memory buffer monitor is ON. the default value is 1(ON).                                                                                                            | true        |
+      | enableSlowLog                           | 1                                           | Enable Slow Query Log                                                                                                                                                                                                | false       |
+      | enableSqlDumpLog                        | 1                                           | Whether enable sqlDumpLog, the default value is 0(off)                                                                                                                                                               | false       |
+
+      | capClientFoundRows                      | true                                        | Whether to turn on EOF_Packet to return found rows, the default value is false                                                                                                                                       | false       |
+      | useJoinStrategy                         | true                                        | Whether nest loop join is enabled. The default value is false                                                                                                                                                        | true        |
+      | enableCursor                            | true                                        | Whether the server-side cursor  is enable or not. The default value is false                                                                                                                                         | true        |
+      # usingAIO=1时，配置不生效 flow control is not support AIO
+      | enableFlowControl                       | false                                       | Whether use flow control feature                                                                                                                                                                                     | false       |
+      | useOuterHa                              | true                                        | Whether use outer ha component. The default value is true and it will always true when clusterEnable=true.If no component in fact, nothing will happen.                                                              | true        |
+      | inSubQueryTransformToJoin               | true                                        | The inSubQuery is transformed into the join ,the default value is false                                                                                                                                              | true        |
+      | closeHeartBeatRecord                    | true                                        | close heartbeat record. if closed, `show @@dbinstance.synstatus`,`show @@dbinstance.syndetail`,`show @@heartbeat.detail` will be empty and `show @@heartbeat`'s EXECUTE_TIME will be '-' .The default value is false | true        |
+      | isSupportSSL                            | false                                       | isSupportSSL in configuration                                                                                                                                                                                        | true        |
+#      | sqlDumpLogOnStartupRotate               | 1                                           | The onStartup of rotate policy, the default value is 1; -1 said not to participate in the strategy                                                                                                                   | true        |
