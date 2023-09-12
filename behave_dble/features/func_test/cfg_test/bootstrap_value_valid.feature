@@ -523,6 +523,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       s/-DcloseHeartBeatRecord=0/-DcloseHeartBeatRecord=1/
 
       $a -DroutePenetrationRules={"rules":[{"regex":"select\\\\sid\\\\sfrom\\\\ssharding_2_t1"}]}
+      $a -DNIOBackendRW=4
     """
       #s/-DsupportSSL=0/-DsupportSSL=1/
 
@@ -698,6 +699,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       s/-DcloseHeartBeatRecord=false/-DcloseHeartBeatRecord=true/
 
       $a -DroutePenetrationRules={"rules":[{"regex":"select\\\\sid\\\\sfrom\\\\ssharding_2_t1"}]}
+      $a -DNIOBackendRW=4
     """
       #s/-DsupportSSL=false/-DsupportSSL=true/ supportSSL为true时需要配置证书dble才能启动成功
       #s/-DenableSqlDumpLog=false/-DenableSqlDumpLog=true/
