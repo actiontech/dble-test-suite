@@ -141,7 +141,7 @@ Feature: case about load data batch
     Given update file content "./assets/BtraceAboutLoadDataBatch.java" in "behave" with sed cmds
     """
      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-     /delayBeforeLoadData/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
+     /delayBeforeLoadData/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceAboutLoadDataBatch.java" in "dble-1"
 
