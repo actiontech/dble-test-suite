@@ -699,30 +699,30 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | rwS1 | 111111 | conn_31 | False   | select * from test_table                                      | success | db1 |
       | rwS1 | 111111 | conn_31 | False   | commit                                                        | success | db1 |
 
-      | rwS1 | 111111 | conn_31 | False   | delete from db2.test_table1 where id in (1, 4)                | success | db1 |
-      | rwS1 | 111111 | conn_31 | False   | insert into db2.test_table1 values(3,'name3',3),(4,'name4',4) | success | db1 |
-      | rwS1 | 111111 | conn_31 | False   | rollback                                                      | success | db1 |
+      | rwS1 | 111111 | conn_41 | False   | delete from db2.test_table1 where id in (1, 4)                | success | db1 |
+      | rwS1 | 111111 | conn_41 | False   | insert into db2.test_table1 values(3,'name3',3),(4,'name4',4) | success | db1 |
+      | rwS1 | 111111 | conn_41 | False   | rollback                                                      | success | db1 |
 
-      | rwS1 | 111111 | conn_31 | true    | delete from db2.test_table1                                   | success | db1 |
+      | rwS1 | 111111 | conn_41 | true    | delete from db2.test_table1                                   | success | db1 |
 
     Then connect "dble-1" execute sql "select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "1" retry "5" times
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 1       | rwS1   | 172.100.9.4    | 3306           | -               | hostM1        | 4          | 5         | 1                  | 2                 | 1                   | 0                  | 2                   | 3                  | 1                   | 0                  |
+      | 1       | rwS1   | 172.100.9.4    | 3306           | -               | hostM1        | 5          | 6         | 1                  | 2                 | 1                   | 0                  | 2                   | 4                  | 1                   | 0                  |
 
     Then connect "dble-1" execute sql "select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_table_by_user_by_entry " in mode "admin" use db "dble_information" and user "root" to check has following and length "2" retry "5" times
       | entry-0 | user-1 | table-2         | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_rows-10 |
-      | 1       | rwS1   | db2.test_table1 | 1                  | 2                 | 0                  | 0                 | 2                  | 3                 | 0                  | 0                  |
+      | 1       | rwS1   | db2.test_table1 | 1                  | 2                 | 0                  | 0                 | 2                  | 4                 | 0                  | 0                  |
       | 1       | rwS1   | db1.test_table  | 0                  | 0                 | 1                  | 0                 | 0                  | 0                 | 1                  | 0                  |
 
      Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose  | sql                                                                                           | expect  | db  |
-      | rwS1 | 111111 | conn_31 | False    | begin                                                                                         | success | db1 |
-      | rwS1 | 111111 | conn_31 | False    | select * from db2.test_table1 where name <> (select name from test_table where id !=1)        | success | db1 |
-      | rwS1 | 111111 | conn_31 | False    | commit                                                                                        | success | db1 |
+      | rwS1 | 111111 | conn_41 | False    | begin                                                                                         | success | db1 |
+      | rwS1 | 111111 | conn_41 | False    | select * from db2.test_table1 where name <> (select name from test_table where id !=1)        | success | db1 |
+      | rwS1 | 111111 | conn_41 | False    | commit                                                                                        | success | db1 |
 
-      | rwS1 | 111111 | conn_31 | False    | start transaction                                                                             | success | db1 |
-      | rwS1 | 111111 | conn_31 | False    | select * from db2.test_table1 where name <> (select name from test_table where id !=1)        | success | db1 |
-      | rwS1 | 111111 | conn_31 | True     | commit                                                                                        | success | db1 |
+      | rwS1 | 111111 | conn_41 | False    | start transaction                                                                             | success | db1 |
+      | rwS1 | 111111 | conn_41 | False    | select * from db2.test_table1 where name <> (select name from test_table where id !=1)        | success | db1 |
+      | rwS1 | 111111 | conn_41 | True     | commit                                                                                        | success | db1 |
 
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose  | sql                                                                                           | expect  | db  |
