@@ -136,10 +136,10 @@ Feature: test "binlog" in zk cluster
   @btrace @stop_tcpdump
   Scenario: query "show @@binlog.status" timeout, do ddl #2
     """
-    {'stop_tcpdump':'dble-1'}
+    {'stop_tcpdump':'dble-2'}
     """
     # 开始抓包
-    Given prepare a thread to run tcpdump in "dble-1"
+    Given prepare a thread to run tcpdump in "dble-2"
      """
      tcpdump -w /tmp/tcpdump.log
      """
@@ -467,7 +467,7 @@ Feature: test "binlog" in zk cluster
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-3"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-3"
     # 停止抓包
-    Given stop and destroy tcpdump threads list in "dble-1"
+    Given stop and destroy tcpdump threads list in "dble-2"
 
   @btrace
   Scenario: during "transaction" ,the admin cmd of "show @@binlog.status" be blocked,and set timeout  #3
