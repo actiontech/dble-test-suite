@@ -372,7 +372,7 @@ def step_impl(context, dblehost):
     node = get_node(dblehost)
     ssh_client = node.ssh_conn
     clean_dble_viewConf = "rm -rf /opt/dble/viewConf > /dev/null 2>&1"
-    clean_zk_viewConf = "cd /opt/zookeeper/bin && (sh zkCli.sh deleteall /dble >/dev/null 2>&1)"
+    clean_zk_viewConf = "cd /opt/zookeeper/bin && (sh zkCli.sh rmr /dble >/dev/null 2>&1)"
     rc1, sto1, ste1 = ssh_client.exec_command(clean_dble_viewConf)
     rc1, sto1, ste2 = ssh_client.exec_command(clean_zk_viewConf)
     assert len(ste1) == 0 and len(ste2) == 0, "remove viewConf in {} failed".format(dblehost)
