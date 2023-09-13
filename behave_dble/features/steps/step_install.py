@@ -536,7 +536,7 @@ def reset_zk_nodes(context):
 
     node = get_node("dble-1")
     ssh_client = node.ssh_conn
-    resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh deleteall /dble".format(node.install_dir)
+    resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh rmr /dble".format(node.install_dir)
     rc, sto, ste = ssh_client.exec_command(resetCmd)
     if context.reset_zk_time < 3:
         context.reset_zk_time = context.reset_zk_time + 1
@@ -609,7 +609,8 @@ def step_impl(context, zk_path, flag="Y", retry_param=1, hostname="dble-1"):
     ssh_client = get_ssh(hostname)
     for linestr in strs_list:
         #目前取最后10行（主要是排除过多的登录信息），如果有其他需求可以自行修改
-        cmd = "cd {0}/bin && ./zkCli.sh get {1} | tail -10 |grep -E -n \"{2}\"".format(context.cfg_zookeeper['home'],zk_path,linestr)
+        # 3.4.14版本的zookeeper，get path命令会将znode的状态信息打印到标准错误输出，将标准错误输出丢弃
+        cmd = "cd {0}/bin && ./zkCli.sh get {1} 2>/dev/null | tail -10 |grep -E -n \"{2}\"".format(context.cfg_zookeeper['home'],zk_path,linestr)
         LOGGER.debug("check cmd is: {}".format(cmd))
         retry_exec_command(context, ssh_client, linestr, cmd, zk_path, retry_param,flag)
 
@@ -627,6 +628,7 @@ def retry_exec_command(context, ssh_client, linestr, cmd, zk_path, retry_param,f
     for i in range(execute_times):
         try:
             rc, stdout, stderr = ssh_client.exec_command(cmd)
+            # 3.4.14版本的zookeeper，get path命令会将znode的状态信息打印到标准错误输出，导致下面的断言捕获到错误
             assert_that(len(stderr) == 0, "the command:{1}, got err:{0}".format(stderr, cmd))
 
             if flag == "not":
