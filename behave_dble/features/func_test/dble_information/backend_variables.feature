@@ -18,11 +18,16 @@ Feature:  backend_variables test
       | variable_value  | varchar(12) | NO     |       | None      |         |
       | variable_type   | varchar(3)  | NO     |       | None      |         |
     ###根据默认配置minCon="10" 加一根心跳 backend_connections总数22   backend_variables=22*8
+    ###但是，初始化连接池创建连接的时候，可能会和检测元数据并发，导致多建一根连接（对应连接包含关键字：createByWaiter:true），而空闲连接默认最长需要90s后才会被回收
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_1"
+      | conn   | toClose | sql                                                                                                                                      | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'    | success       | dble_information  |
+    Then kill the redundant connections if "rs_1" is more then expect value "10" in "mysql-master1"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                               | expect        | db               | timeout |
-      | conn_0 | False   | desc backend_variables            | length{(4)}   | dble_information |         |
-      | conn_0 | False   | select * from backend_connections | length{(22)}  | dble_information | 10,3    |
-      | conn_0 | False   | select * from backend_variables   | length{(176)} | dble_information | 10,3    |
+      | conn   | toClose | sql                               | expect        | db               |
+      | conn_0 | False   | desc backend_variables            | length{(4)}   | dble_information |
+      | conn_0 | False   | select * from backend_connections | length{(22)}  | dble_information |
+      | conn_0 | False   | select * from backend_variables   | length{(176)} | dble_information |
 
     #case select * from backend_variables  就是一根链接下有固定的8个初始值，可以有其他设置的值
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_2"
@@ -66,10 +71,14 @@ Feature:  backend_variables test
       """
     Then execute admin cmd "reload @@config"
     ###根据minCon="4" 加一根心跳 backend_connections总数5   backend_variables=5*8
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_2"
+      | conn   | toClose | sql                                                                                                                                      | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'    | success       | dble_information  |
+    Then kill the redundant connections if "rs_2" is more then expect value "4" in "mysql-master1"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                               | expect       | db               | timeout |
-      | conn_0 | False   | select * from backend_connections | length{(5)}  | dble_information | 10,3    |
-      | conn_0 | False   | select * from backend_variables   | length{(40)} | dble_information | 10,3    |
+      | conn   | toClose | sql                               | expect       | db               |
+      | conn_0 | False   | select * from backend_connections | length{(5)}  | dble_information |
+      | conn_0 | False   | select * from backend_variables   | length{(40)} | dble_information |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                      | expect          |
@@ -189,10 +198,14 @@ Feature:  backend_variables test
     """
     Given Restart dble in "dble-1" success
     ###根据minCon="4" 加一根心跳 backend_connections总数5   backend_variables=5*8
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_3"
+      | conn   | toClose | sql                                                                                                                                      | expect        | db                |
+      | conn_0 | True    | select remote_processlist_id from backend_connections where state='idle' and used_for_heartbeat='false' and remote_addr='172.100.9.5'    | success       | dble_information  |
+    Then kill the redundant connections if "rs_3" is more then expect value "4" in "mysql-master1"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                               | expect       | db               | timeout |
-      | conn_0 | False   | select * from backend_connections | length{(5)}  | dble_information | 10,3    |
-      | conn_0 | False   | select * from backend_variables   | length{(40)} | dble_information | 10,3    |
+      | conn   | toClose | sql                               | expect       | db               |
+      | conn_0 | False   | select * from backend_connections | length{(5)}  | dble_information |
+      | conn_0 | False   | select * from backend_variables   | length{(40)} | dble_information |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                      | expect          |
