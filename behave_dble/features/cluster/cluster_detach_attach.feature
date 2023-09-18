@@ -1022,7 +1022,7 @@ Feature: check single dble detach or attach from cluster
     get into zkDetachCluster
     """
     Given prepare a thread execute sql "reload @@config_all" with "conn_1"
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-2"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-2" retry "5" times
     """
     ignore event because of detached
     """
