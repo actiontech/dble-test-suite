@@ -705,6 +705,7 @@ def step_impl(context, filename, hostname, line_num_rs=None):
         else:
             cmd = "grep \'{0}\' {1}".format(key, filename)
         rc, stdout, stderr = ssh.exec_command(cmd)
+        assert_that(len(stderr) == 0, "execute cmd: {1}, got err:{0}".format(stderr, cmd))
 
         str_list = stdout.splitlines()
         pre_datetime = ""
