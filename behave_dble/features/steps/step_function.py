@@ -269,6 +269,7 @@ def check_text(context,flag,filename,hostname,checkFromLine=0, retry_param=1):
         logger.debug("grep cmd is: {}".format(cmd))
         if flag == "N":
             rc, stdout, stderr = ssh.exec_command(cmd)
+            assert_that(len(stderr) == 0, "execute cmd: {0}, got err:{1}".format(cmd, stderr))
             assert_that(len(stdout) == 0, "expect \"{0}\" not exist in file {1},but exist, the checkFromLine is {2}".format(str, filename,checkFromLine))
         else:
             # default take flag as Y
@@ -287,12 +288,14 @@ def retry_exec_command(context, ssh_client, exe_cmd, check_str, filename, retry_
     for i in range(execute_times):
         try:
             rc, stdout, stderr = ssh_client.exec_command(exe_cmd)
+            assert_that(len(stderr) == 0, "execute cmd: {0}, got err:{1}".format(exe_cmd, stderr))
             ###排除dble.log是可以有地方找到dble.log和dble.log打印会占屏
             if "dble.log" in str(filename):
                 assert_that(len(stdout) > 0, "expect {} exist in file {},but not ,the checkFromLine is {}".format(check_str, filename, checkFromLine))
             else:
                 cmd_cat = "cat {}".format(filename)
                 rc1, stdout1, stderr1 = ssh_client.exec_command(cmd_cat)
+                assert_that(len(stderr1) == 0, "execute cmd: {0}, got err:{1}".format(cmd_cat, stderr1))
                 assert_that(len(stdout) > 0, "expect {} exist in file {}, but not exist \nThen file {} string is\n{}  \nthe checkFromLine is {}".format(check_str, filename, filename, stdout1, checkFromLine))
             break
         except Exception as e:
