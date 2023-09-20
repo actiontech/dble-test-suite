@@ -190,8 +190,8 @@ Feature: check fingerprint log
     Given record current dble log line number in "log_linenu1"
     Then execute admin cmd "reload @@metadata"
     Then check the time interval of following key after line "log_linenu1" in file "/opt/dble/logs/dble.log" in "dble-1"
-      | key                                                                                         | interval_times | percent |
-      | from=instance-test reason=sql job\*/show full tables where Table_type ='BASE TABLE'  to con | 15             | 1       |
+      | key                                                                                             | interval_times | percent |
+      | from=instance-test reason=sql job\*/show full tables where Table_type =                         | 15             | 1       |
     Given record current dble log line number in "log_linenu2"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                             | expect  | db      |
