@@ -181,3 +181,29 @@ def step_impl(context, rs_name1, rs_name2, table_type):
     else:
         expect_num = int((1000000 - rs2[0][0])/50000)
     assert int(rs1) == expect_num, "expect file num is {0}, but is {1}".format(expect_num, rs1)
+
+
+@Then('check resultsets "{rs_name1}" and "{rs_name2}" the columns have the following relationship')
+def step_impl(context, rs_name1, rs_name2):
+    rs_1 = getattr(context, rs_name1)
+    rs_2 = getattr(context, rs_name2)
+    assert len(rs_1) == len(rs_2), "len {}:{}, and len {}:{}, expect length equal.\n{} is {} ,\n{} is {}".format(
+        rs_name1, len(rs_1), rs_name1, len(rs_2), rs_name1, rs_1, rs_name1, rs_2)
+
+    for row1, row2 in zip(rs_1, rs_2):
+        for row in context.table:
+            idx = int(row['column_index'])
+            relation_type = str(row['relation_type'])
+
+            if relation_type == '>':
+                assert row1[idx] > row2[idx], f"{rs_name1} value: {row1}, {rs_name2} value: {row2}, in column '{row['column']}', {row1[idx]} not {relation_type} {row2[idx]}"
+            elif relation_type == '<':
+                assert row1[idx] < row2[idx], f"{rs_name1} value: {row1}, {rs_name2} value: {row2}, in column '{row['column']}', {row1[idx]} not {relation_type} {row2[idx]}"
+            elif relation_type == '!=':
+                assert row1[idx] != row2[idx], f"{rs_name1} value: {row1}, {rs_name2} value: {row2}, in column '{row['column']}', {row1[idx]} not {relation_type} {row2[idx]}"
+            elif relation_type == '>=':
+                assert row1[idx] >= row2[idx], f"{rs_name1} value: {row1}, {rs_name2} value: {row2}, in column '{row['column']}', {row1[idx]} not {relation_type} {row2[idx]}"
+            elif relation_type == '<=':
+                assert row1[idx] <= row2[idx], f"{rs_name1} value: {row1}, {rs_name2} value: {row2}, in column '{row['column']}', {row1[idx]} not {relation_type} {row2[idx]}"
+            else:
+                assert row1[idx] == row2[idx], f"{rs_name1} value: {row1}, {rs_name2} value: {row2}, in column '{row['column']}', {row1[idx]} not equal {row2[idx]}"
