@@ -324,6 +324,7 @@ Feature: check inner thread command
       $a  -DbackendWorker=6
       $a  -DwriteToBackendWorker=5
       $a  -DNIOBackendRW=4
+      $a  -DNIOFrontRW=3
       $a  -DcomplexQueryWorker=3
       """
     Then restart dble in "dble-1" success
@@ -407,8 +408,10 @@ Feature: check inner thread command
       # NIOFrontRW don't support thread @@kill/recover
       | conn_0 | False   | thread @@kill name='0-NIOFrontRW'                      | The kill operation of thread[0-NIOFrontRW] is not supported                     | dble_information |         |
       | conn_0 | False   | thread @@kill name='2-NIOFrontRW'                      | The kill operation of thread[2-NIOFrontRW] is not supported                     | dble_information |         |
+      | conn_0 | False   | thread @@kill name='3-NIOFrontRW'                      | Thread[3-NIOFrontRW] does not exist                                             | dble_information |         |
       | conn_0 | False   | thread @@recover name='0-NIOFrontRW'                   | The recover operation of thread[0-NIOFrontRW] is not supported                  | dble_information |         |
-      | conn_0 | True    | thread @@recover name='2-NIOFrontRW'                   | The recover operation of thread[2-NIOFrontRW] is not supported                  | dble_information |         |
+      | conn_0 | False   | thread @@recover name='2-NIOFrontRW'                   | The recover operation of thread[2-NIOFrontRW] is not supported                  | dble_information |         |
+      | conn_0 | True    | thread @@recover name='3-NIOFrontRW'                   | The recover operation of thread[3-NIOFrontRW] is not supported                  | dble_information |         |
 
     # kill all frontWorker 8066 login fail
     Given execute admin cmd "thread @@kill name='0-frontWorker'" success
