@@ -346,10 +346,10 @@ Feature: check inner thread command
       | conn_0 | False   | thread @@kill name='10-complexQueryWorker'                               | Thread[10-complexQueryWorker] does not exist                  | dble_information |         |
       | conn_0 | False   | thread @@kill thread_name='0-abc'                                        | Syntax Error, Please check the help to use the thread command | dble_information |         |
       | conn_0 | False   | thread @@kill name='0-backendWorker,0-frontWorker'                       | Syntax Error, Please check the help to use the thread command | dble_information |         |
-      | conn_0 | False   | thread @@recover name='TimerScheduler'                                   | The recover operation of thread[TimerScheduler] is not supported | dble_information |  |
+      | conn_0 | False   | thread @@recover name='TimerScheduler'                                   | The recover operation of thread[TimerScheduler] is not supported | dble_information |      |
       | conn_0 | False   | thread @@recover name='Timer'                                            | The recover operation of thread[Timer] is not supported       | dble_information |         |
-      | conn_0 | False   | thread @@recover name='0-abc'                                            | The recover operation of threadPool[0-abc] is not supported   | dble_information |         |
-      | conn_0 | False   | thread @@recover name='10-complexQueryWorker'                            | The recover operation of threadPool[10-complexQueryWorker] is not supported | dble_information |  |
+      | conn_0 | False   | thread @@recover name='0-abc'                                            | The recover operation of thread[0-abc] is not supported       | dble_information |         |
+      | conn_0 | False   | thread @@recover name='8-complexQueryWorker'                             | The recover operation of thread[8-complexQueryWorker] is not supported| dble_information | |
       | conn_0 | False   | thread @@recover thread_name='0-abc'                                     | Syntax Error, Please check the help to use the thread command | dble_information |         |
       | conn_0 | False   | thread @@recover name='0-backendWorker,0-frontworker'                    | Syntax Error, Please check the help to use the thread command | dble_information |         |
       # if active_count == pool_size, recover fail
@@ -357,13 +357,6 @@ Feature: check inner thread command
       | conn_0 | False   | thread @@recover name='0-NIOBackendRW'                                   | threadPool[{NIOBackendRW}] does not need to be recover        | dble_information |         |
       | conn_0 | False   | thread @@recover name='0-writeToBackendWorker'                           | threadPool[{writeToBackendWorker}] does not need to be recover| dble_information |         |
       | conn_0 | False   | thread @@recover name='0-backendWorker'                                  | success                                                       | dble_information |         |
-
-      | conn_0 | False   | thread @@kill name='3-NIOBackendRW'                                                             | success                                | dble_information |         |
-      # thread @@kill active_count-1
-      | conn_0 | False   | select name,core_pool_size,active_count from dble_thread_pool where name='NIOBackendRW'         | has{(('NIOBackendRW', 4, 3),)}         | dble_information | 5       |
-      | conn_0 | False   | thread @@recover name='3-NIOBackendRW'                                                          | success                                | dble_information |         |
-      # thread @@recover active_count+1
-      | conn_0 | False   | select name,core_pool_size,active_count from dble_thread_pool where name='NIOBackendRW'         | has{(('NIOBackendRW', 4, 4),)}         | dble_information | 5       |
 
       | conn_0 | False   | thread @@kill name='5-backendWorker'                                                            | success                                | dble_information |         |
       | conn_0 | False   | thread @@kill name='4-backendWorker'                                                            | success                                | dble_information |         |
@@ -375,8 +368,10 @@ Feature: check inner thread command
       | conn_0 | False   | select name,core_pool_size,active_count from dble_thread_pool where name='backendWorker'        | has{(('backendWorker', 6, 0),)}        | dble_information | 5       |
 
       | conn_0 | False   | thread @@kill name='0-frontWorker'                                                              | success                                | dble_information |         |
+      # thread @@kill active_count-1
       | conn_0 | False   | select name,core_pool_size,active_count from dble_thread_pool where name='frontWorker'          | has{(('frontWorker', 1, 0),)}          | dble_information | 5       |
       | conn_0 | False   | thread @@recover name='0-frontWorker'                                                           | success                                | dble_information |         |
+      # thread @@recover active_count+1
       | conn_0 | False   | select name,core_pool_size,active_count from dble_thread_pool where name='frontWorker'          | has{(('frontWorker', 1, 1),)}          | dble_information | 5       |
 
       | conn_0 | False   | thread @@kill name='4-writeToBackendWorker'                                                     | success                                | dble_information |         |
@@ -393,21 +388,57 @@ Feature: check inner thread command
 
       # only support thread @@kill, do not support thread @@recover
       # 以TimerScheduler这种为例：一般只有发现此线程hang了，才可能执行此kill命令，这种情况下，kill是解决这个线程hang的问题，kill掉后此线程意味着恢复工作，就无需recover操作了
-      | conn_0 | False   | thread @@recover name='2-complexQueryWorker'                | The recover operation of threadPool[2-complexQueryWorker] is not supported | dble_information |         |
-      | conn_0 | False   | thread @@kill name='0-Timer'                                | success                                                                    | dble_information |         |
-      | conn_0 | False   | thread @@recover name='0-Timer'                             | The recover operation of threadPool[0-Timer] is not supported              | dble_information |         |
-      | conn_0 | False   | thread @@kill name='1-TimerScheduler'                       | success                                                                    | dble_information |         |
-      | conn_0 | False   | thread @@recover name='1-TimerScheduler'                    | The recover operation of threadPool[1-TimerScheduler] is not supported     | dble_information |         |
-      | conn_0 | False   | thread @@kill name='0-ThreadChecker'                        | success                                                                    | dble_information |         |
-      | conn_0 | False   | thread @@recover name='0-ThreadChecker'                     | The recover operation of threadPool[0-ThreadChecker] is not supported      | dble_information |         |
-      | conn_0 | False   | thread @@kill name='connection-pool-evictor-thread'         | success                                                                    | dble_information |         |
-      | conn_0 | False   | thread @@kill name='connection-pool-evictor-thread'         | success                                                                    | dble_information |         |
-      | conn_0 | False   | thread @@kill name='connection-pool-evictor-thread'         | success                                                                    | dble_information |         |
-      | conn_0 | False   | thread @@recover name='connection-pool-evictor-thread'      | The recover operation of thread[connection-pool-evictor-thread] is not supported | dble_information |         |
-      | conn_0 | False   | thread @@recover name='connection-pool-evictor-thread'      | The recover operation of thread[connection-pool-evictor-thread] is not supported | dble_information |         |
-      | conn_0 | False   | thread @@recover name='connection-pool-evictor-thread'      | The recover operation of thread[connection-pool-evictor-thread] is not supported | dble_information |         |
-      | conn_0 | False   | thread @@kill name='0-alertSenderExecutor'                  | success                                                                    | dble_information |         |
-      | conn_0 | True    | thread @@recover name='0-alertSenderExecutor'               | The recover operation of threadPool[0-alertSenderExecutor] is not supported| dble_information |         |
+      | conn_0 | False   | thread @@recover name='2-complexQueryWorker'           | The recover operation of thread[2-complexQueryWorker] is not supported          | dble_information |         |
+      | conn_0 | False   | thread @@kill name='0-Timer'                           | success                                                                         | dble_information |         |
+      | conn_0 | False   | thread @@recover name='0-Timer'                        | The recover operation of thread[0-Timer] is not supported                       | dble_information |         |
+      | conn_0 | False   | thread @@kill name='1-TimerScheduler'                  | success                                                                         | dble_information |         |
+      | conn_0 | False   | thread @@recover name='1-TimerScheduler'               | The recover operation of thread[1-TimerScheduler] is not supported              | dble_information |         |
+      | conn_0 | False   | thread @@kill name='0-ThreadChecker'                   | success                                                                         | dble_information |         |
+      | conn_0 | False   | thread @@recover name='0-ThreadChecker'                | The recover operation of thread[0-ThreadChecker] is not supported               | dble_information |         |
+      | conn_0 | False   | thread @@kill name='connection-pool-evictor-thread'    | success                                                                         | dble_information |         |
+      | conn_0 | False   | thread @@kill name='connection-pool-evictor-thread'    | success                                                                         | dble_information |         |
+      | conn_0 | False   | thread @@kill name='connection-pool-evictor-thread'    | success                                                                         | dble_information |         |
+      | conn_0 | False   | thread @@recover name='connection-pool-evictor-thread' | The recover operation of thread[connection-pool-evictor-thread] is not supported| dble_information |         |
+      | conn_0 | False   | thread @@recover name='connection-pool-evictor-thread' | The recover operation of thread[connection-pool-evictor-thread] is not supported| dble_information |         |
+      | conn_0 | False   | thread @@recover name='connection-pool-evictor-thread' | The recover operation of thread[connection-pool-evictor-thread] is not supported| dble_information |         |
+      | conn_0 | False   | thread @@kill name='0-alertSenderExecutor'             | success                                                                         | dble_information |         |
+      | conn_0 | False   | thread @@recover name='0-alertSenderExecutor'          | The recover operation of thread[0-alertSenderExecutor] is not supported         | dble_information |         |
+
+      # NIOFrontRW don't support thread @@kill/recover
+      | conn_0 | False   | thread @@kill name='0-NIOFrontRW'                      | The kill operation of thread[0-NIOFrontRW] is not supported                     | dble_information |         |
+      | conn_0 | False   | thread @@kill name='2-NIOFrontRW'                      | The kill operation of thread[2-NIOFrontRW] is not supported                     | dble_information |         |
+      | conn_0 | False   | thread @@recover name='0-NIOFrontRW'                   | The recover operation of thread[0-NIOFrontRW] is not supported                  | dble_information |         |
+      | conn_0 | True    | thread @@recover name='2-NIOFrontRW'                   | The recover operation of thread[2-NIOFrontRW] is not supported                  | dble_information |         |
+
+    # kill all frontWorker 8066 login fail
+    Given execute admin cmd "thread @@kill name='0-frontWorker'" success
+    Then  execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                | expect                                                                             | db      |
+      | conn_1 | True    | drop table if exists sharding_4_t1 | Lost connection to MySQL server at 'reading authorization packet', system error: 0 | schema1 |
+    Given execute admin cmd "thread @@recover name='0-frontWorker'" success
+
+    # NIOFrontRW、NIOBackendRW用于监听已经建立的连接（前侧应用-dble、dble-后侧）
+    # 这2个线程kill可能的影响：已经建立的连接丢失了对响应的监听，所以不要轻易的kill。即使recover，恢复的也不是原来的监听器，而是创建了新的监听器（和recover创建的是新的连接池一样）
+    # 可使用fresh conn forced强制刷新后端连接池，等待心跳恢复，或者执行`reload @@config_all -r`重置连接池
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                     | expect                                 | db               | timeout |
+      | conn_0 | False   | thread @@kill name='3-NIOBackendRW'                                                     | success                                | dble_information |         |
+      | conn_0 | False   | select name,core_pool_size,active_count from dble_thread_pool where name='NIOBackendRW' | has{(('NIOBackendRW', 4, 3),)}         | dble_information | 5       |
+      | conn_0 | False   | thread @@recover name='3-NIOBackendRW'                                                  | success                                | dble_information |         |
+      | conn_0 | False   | select name,core_pool_size,active_count from dble_thread_pool where name='NIOBackendRW' | has{(('NIOBackendRW', 4, 4),)}         | dble_information | 5       |
+      | conn_0 | True    | reload @@config_all -r                                                                  | success                                | dble_information |         |
+#      | conn_0 | False   | fresh conn forced where dbGroup='ha_group1'                                             | success                                | dble_information |         |
+#      | conn_0 | False   | fresh conn forced where dbGroup='ha_group2'                                             | success                                | dble_information |         |
+
+    Then  execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                     | expect  | db      |
+      | conn_1 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
+      | conn_1 | False   | create table sharding_4_t1(id int,name varchar(20))     | success | schema1 |
+      | conn_1 | False   | begin                                                   | success | schema1 |
+      | conn_1 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
+      | conn_1 | False   | commit                                                  | success | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1                             | success | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1                      | success | schema1 |
 
     # check log
     Then check following text exist "Y" in file "/opt/dble/logs/thread.log" in host "dble-1" retry "5" times
@@ -427,23 +458,6 @@ Feature: check inner thread command
     exec interrupt Thread\[connection-pool-evictor-thread\]
     exec interrupt Thread\[0-alertSenderExecutor\]
     """
-
-    # kill all frontWorker 8066 login fail
-    Given execute admin cmd "thread @@kill name='0-frontWorker'" success
-    Then  execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                | expect                                                                             | db      |
-      | conn_1 | True   | drop table if exists sharding_4_t1  | Lost connection to MySQL server at 'reading authorization packet', system error: 0 | schema1 |
-
-    Given execute admin cmd "thread @@recover name='0-frontWorker'" success
-    Then  execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                     | expect  | db      |
-      | conn_1 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
-      | conn_1 | False   | create table sharding_4_t1(id int,name varchar(20))     | success | schema1 |
-      | conn_1 | False   | begin                                                   | success | schema1 |
-      | conn_1 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-      | conn_1 | False   | commit                                                  | success | schema1 |
-      | conn_1 | False   | select * from sharding_4_t1                             | success | schema1 |
-      | conn_1 | True    | drop table if exists sharding_4_t1                      | success | schema1 |
 
   @skip # case运行时间久，不适合ci上运行
   Scenario: check TimerScheduler hang #5
