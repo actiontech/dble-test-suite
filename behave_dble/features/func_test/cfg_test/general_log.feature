@@ -50,10 +50,10 @@ Feature: general log test
     # check default value
     Then check following text exist "N" in file "/opt/dble/conf/bootstrap.cnf" in host "dble-1"
       """
-      -DenableGeneralLog=0
-      -DgeneralLogFile=general/general.log
-      -DgeneralLogFileSize=16
-      -DgeneralLogQueueSize=4096
+      \-DenableGeneralLog=0
+      \-DgeneralLogFile=general/general.log
+      \-DgeneralLogFileSize=16
+      \-DgeneralLogQueueSize=4096
       """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                | expect                                                                                | db               |
@@ -296,12 +296,9 @@ Feature: general log test
       | conn   | toClose | sql                   | expect                                                                                | db               |
       | conn_0 | false   | disable @@general_log | success                                                                               | dble_information |
       | conn_0 | true    | show @@general_log    | has{(('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log'),)} | dble_information |
-    Then check following text exist "N" in file "/opt/dble/general/general.log" in host "dble-1"
-    """
-    \/FAKE_PATH\/mysqld, Version: FAKE_VERSION. started with:
-    Tcp port: 3320  Unix socket: FAKE_SOCK
-    Time                 Id Command    Argument
-    """
+    #关闭之后，不会生成日志文件
+    Then check path "/opt/dble/general/general.log" in "dble-1" should not exist
+
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DenableGeneralLog/d
