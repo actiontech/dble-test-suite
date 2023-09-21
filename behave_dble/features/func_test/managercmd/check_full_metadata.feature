@@ -437,12 +437,12 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | CREATE TABLE test_shard (id BIGINT PRIMARY KEY AUTO_INCREMENT,clientNum CHAR(20) NOT NULL ) | success  | schema1 |
       | conn_0 | True    | insert into test_shard values(1,1),(2,2),(3,3),(4,4),(5,5)  | success  | schema1 |
     Then execute admin cmd "reload @@config_all"
-    Then check following text exist "N" in file "dble.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       CREATE TABLE \`test_shard\`
       """
     Then execute admin cmd "reload @@metadata"
-    Then check following text exist "N" in file "dble.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       CREATE TABLE \`test_shard\`
       """
@@ -454,12 +454,12 @@ Feature: test "check full @@metadata...'"
        $a -DcheckTableConsistencyPeriod=1000
        """
     Given Restart dble in "dble-1" success
-    Then check following text exist "N" in file "dble.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       CREATE TABLE \`test_shard\`
       """
     Given sleep "1" seconds
-    Then check following text exist "N" in file "dble.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       CREATE TABLE \`test_shard\`
       """
@@ -472,12 +472,12 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | create table mytest_auto_test1 (id int(11),R_REGIONKEY bigint primary key AUTO_INCREMENT,R_NAME varchar(50),R_COMMENT varchar(50)) | success  | schema1 |
       | conn_0 | True    | insert into mytest_auto_test1(id,R_NAME,R_COMMENT) values(1,1,1),(2,2,2),(3,3,3),(4,4,4),(5,5,5)  | success  | schema1 |
     Then execute admin cmd "reload @@config_all"
-    Then check following text exist "N" in file "dble.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       CREATE TABLE \`mytest_auto_test1\`
       """
     Then execute admin cmd "reload @@metadata"
-    Then check following text exist "N" in file "dble.log" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       CREATE TABLE \`mytest_auto_test1\`
       """
