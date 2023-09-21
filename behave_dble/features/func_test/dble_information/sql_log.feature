@@ -216,8 +216,8 @@ sql_log_by_tx_digest_by_entry_by_user
     #case check defalut values
     Then check following text exist "N" in file "/opt/dble/conf/bootstrap.cnf" in host "dble-1"
       """
-      -DsamplingRate=0
-      -DsqlLogTableSize=1024
+      \-DsamplingRate=0
+      \-DsqlLogTableSize=1024
       """
     #error values
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
