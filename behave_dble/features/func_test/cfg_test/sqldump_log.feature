@@ -64,15 +64,15 @@ Feature: sqldump log test  3.22.11
     # check default value
     Then check following text exist "N" in file "/opt/dble/conf/bootstrap.cnf" in host "dble-1"
       """
-      -DenableSqlDumpLog=0
-      -DsqlDumpLogBasePath=sqldump
-      -DsqlDumpLogFileName=sqldump.log
-      -DsqlDumpLogCompressFilePattern=${date:yyyy-MM}/sqldump-%d{MM-dd}-%i.log.gz
-      -DsqlDumpLogOnStartupRotate=1
-      -DsqlDumpLogSizeBasedRotate=52428800
-      -DsqlDumpLogTimeBasedRotate=1
-      -DsqlDumpLogDeleteFileAge=90d
-      -DsqlDumpLogCompressFilePath=*/sqldump-*.log.gz
+      \-DenableSqlDumpLog=0
+      \-DsqlDumpLogBasePath=sqldump
+      \-DsqlDumpLogFileName=sqldump.log
+      \-DsqlDumpLogCompressFilePattern=${date:yyyy-MM}/sqldump-%d{MM-dd}-%i.log.gz
+      \-DsqlDumpLogOnStartupRotate=1
+      \-DsqlDumpLogSizeBasedRotate=52428800
+      \-DsqlDumpLogTimeBasedRotate=1
+      \-DsqlDumpLogDeleteFileAge=90d
+      \-DsqlDumpLogCompressFilePath=*/sqldump-*.log.gz
       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sqldump_log_rs1"
       | conn   | toClose | sql                                                                                              | db               |

@@ -1080,9 +1080,9 @@ Feature:manager Cmd
     #case check defalut values
     Then check following text exist "N" in file "/opt/dble/conf/bootstrap.cnf" in host "dble-1"
       """
-      -DenableStatistic=0
-      -DstatisticTableSize=1024
-      -DstatisticQueueSize=4096
+      \-DenableStatistic=0
+      \-DstatisticTableSize=1024
+      \-DstatisticQueueSize=4096
       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_1"
       | conn   | toClose | sql                     | db               |
