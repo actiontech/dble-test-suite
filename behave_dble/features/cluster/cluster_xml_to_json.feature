@@ -633,9 +633,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
      Then check following text exist "Y" in file "/opt/dble/conf/sequence_conf.properties" in host "dble-1" retry "6,2" times
       """
-      `schema2`.`GLOBAL`.MINID=10001
-      `schema2`.`GLOBAL`.MAXID=20000
-      `schema2`.`GLOBAL`.CURID=10000
+      \`schema2\`.\`GLOBAL\`.MINID=10001
+      \`schema2\`.\`GLOBAL\`.MAXID=20000
+      \`schema2\`.\`GLOBAL\`.CURID=10000
       """
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2" retry "6,2" times
@@ -672,9 +672,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
      Then check following text exist "Y" in file "/opt/dble/conf/sequence_conf.properties" in host "dble-2" retry "6,2" times
       """
-      `schema2`.`GLOBAL`.MINID=10001
-      `schema2`.`GLOBAL`.MAXID=20000
-      `schema2`.`GLOBAL`.CURID=10000
+      \`schema2\`.\`GLOBAL\`.MINID=10001
+      \`schema2\`.\`GLOBAL\`.MAXID=20000
+      \`schema2\`.\`GLOBAL\`.CURID=10000
       """
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1" retry "6,2" times
@@ -711,9 +711,9 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
      Then check following text exist "Y" in file "/opt/dble/conf/sequence_conf.properties" in host "dble-3" retry "6,2" times
       """
-      `schema2`.`GLOBAL`.MINID=10001
-      `schema2`.`GLOBAL`.MAXID=20000
-      `schema2`.`GLOBAL`.CURID=10000
+      \`schema2\`.\`GLOBAL\`.MINID=10001
+      \`schema2\`.\`GLOBAL\`.MAXID=20000
+      \`schema2\`.\`GLOBAL\`.CURID=10000
       """
 
 
