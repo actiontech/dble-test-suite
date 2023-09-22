@@ -15,7 +15,7 @@ public final class BtraceTimerScheduler2 {
     )
     public static void compress(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("========== get into compress ========== " + BTraceUtils.Time.timestamp("yyyy-MM-dd HH:mm:ss.SSS"));
-        BTraceUtils.println("Scheduler thread printDDLOutOfLimit 60s " + BTraceUtils.Time.timestamp("yyyy-MM-dd HH:mm:ss.SSS"));
+        BTraceUtils.println("Scheduler thread compress 5s " + BTraceUtils.Time.timestamp("yyyy-MM-dd HH:mm:ss.SSS"));
         Thread.sleep(300000L);
         BTraceUtils.println("========== " + BTraceUtils.Time.timestamp("yyyy-MM-dd HH:mm:ss.SSS"));
     }

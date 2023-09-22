@@ -296,7 +296,7 @@ Feature: check inner thread command
     dbGroup\[ha_group2\] startHeartbeat...
     dbGroup\[ha_group1\] startDelayDetection...
     dbGroup\[ha_group2\] startDelayDetection...
-    stopXaIdCheckPeriod...
+    startXaIdCheckPeriod...
     """
 
     Then  execute sql in "dble-1" in "user" mode
@@ -476,6 +476,7 @@ Feature: check inner thread command
     Given delete file "/opt/dble/BtraceTimerScheduler1.java.log" on "dble-1"
     Given delete file "/opt/dble/BtraceTimerScheduler2.java.log" on "dble-1"
 
+    # TimerScheduler线程管理的DDL定时任务
     Given update file content "./assets/BtraceTimerScheduler1.java" in "behave" with sed cmds
     """
     /printDDLOutOfLimit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(600000L)/;/\}/!ba}
@@ -507,6 +508,7 @@ Feature: check inner thread command
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                     | expect                                  |
       | conn_0 | True    | show @@threadpool.task  | hasStr{'TimerScheduler', 2, 0, 13}      |
+    # TimerScheduler线程管理的前端连接繁忙率定时任务
     Given update file content "./assets/BtraceTimerScheduler2.java" in "behave" with sed cmds
     """
     /compress/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(600000L)/;/\}/!ba}
@@ -592,6 +594,7 @@ Feature: check inner thread command
     Given delete file "/opt/dble/BtraceThreadTimer.java" on "dble-1"
     Given delete file "/opt/dble/BtraceThreadTimer.java.log" on "dble-1"
 
+    # Timer线程管理的XA定时任务
     Given update file content "./assets/BtraceThreadTimer.java" in "behave" with sed cmds
     """
     /checkXaSessions/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(300000L)/;/\}/!ba}
