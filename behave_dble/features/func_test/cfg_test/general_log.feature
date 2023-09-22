@@ -348,6 +348,7 @@ Feature: general log test
     Tcp port: 3320  Unix socket: FAKE_SOCK
     Time                 Id Command    Argument
     """
+    Then check path "/test/general/general.log" in "dble-1" should not exist
     Given delete file "/opt/dble/test/general.log" on "dble-1"
 
     #check reload @@general_log_file, relative path
