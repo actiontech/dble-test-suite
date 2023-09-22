@@ -345,12 +345,7 @@ Feature: general log test
     Tcp port: 3320  Unix socket: FAKE_SOCK
     Time                 Id Command    Argument
     """
-    Then check following text exist "N" in file "/test/general/general.log" in host "dble-1"
-    """
-    \/FAKE_PATH\/mysqld, Version: FAKE_VERSION. started with:
-    Tcp port: 3320  Unix socket: FAKE_SOCK
-    Time                 Id Command    Argument
-    """
+    Then check path "/test/general/general.log" in "dble-1" should not exist
     Given delete file "/opt/dble/test/general.log" on "dble-1"
 
     #check reload @@general_log_file, relative path
