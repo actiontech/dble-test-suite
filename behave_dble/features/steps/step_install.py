@@ -567,6 +567,10 @@ def replace_config_in_node(context, node):
 
     # for code coverage start
     if context.test_conf["code_coverage"] == "true":
+        if not dble_dir_exist:
+            cmd = 'mkdir -p {0}/dble/lib'.format(dble_install_path)
+            ssh_client.exec_command(cmd)
+
         LOGGER.info('enable code_coverage, copy jacocoagent.jar begin')
         sourcejarDir = "{0}/{1}".format(os.getcwd(), "assets")
         local_jar = "{0}/{1}".format(sourcejarDir, "jacocoagent.jar")
