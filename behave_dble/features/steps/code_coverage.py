@@ -13,7 +13,7 @@ logger = logging.getLogger('root')
 
 @Given('check code coverage and change bootstrap conf')
 def init_code_coverage_conf(context):
-    code_coverage = context.config.userdata["code_coverage"].lower()
+    code_coverage = context.test_conf["code_coverage"].lower()
     logger.debug(f"code_coverage is {code_coverage}")
 
     code_conf_str = '-javaagent:lib/jacocoagent.jar=output=file,append=true,destfile=/opt/dble/logs/dble_jacoco.exec'
@@ -44,7 +44,7 @@ def init_code_coverage_conf(context):
 @Given('execute command to general code coverage html report')
 def general_jacoco_report(context):
     dble_remote_host = context.test_conf.get('dble_remote_host')
-    code_coverage = context.config.userdata["code_coverage"].lower()
+    code_coverage = context.test_conf["code_coverage"].lower()
     logger.debug(f"general html repport code_coverage is {code_coverage}")
 
     if code_coverage == "true" and dble_remote_host.startswith('ftp'):
