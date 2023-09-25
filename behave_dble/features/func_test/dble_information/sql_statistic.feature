@@ -704,7 +704,8 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | rwS1 | 111111 | conn_41 | False   | rollback                                                      | success | db2 |
 
       | rwS1 | 111111 | conn_41 | False   | delete from db2.test_table1                                   | success | db2 |
-
+    #尝试增加sleep，让结果落盘稳定
+    Given sleep "5" seconds
     Then connect "dble-1" execute sql "select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user" in mode "admin" use db "dble_information" and user "root" to check has following and length "1" retry "5" times
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
       | 1       | rwS1   | 172.100.9.4    | 3306           | -               | hostM1        | 5          | 6         | 1                  | 2                 | 1                   | 0                  | 2                   | 4                  | 1                   | 0                  |
