@@ -1203,6 +1203,7 @@
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,flow_low_level=0B01                  | Not Supported of Value EXPR :0B01                                                                        | dble_information |
       | conn_0 | false    | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,flow_low_level=-1                    | Insert failure.The reason is Column 'flow_low_level' should be an integer greater than 0!               | dble_information |
       | conn_0 | true     | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,flow_low_level=1.3                   | Not Supported of Value EXPR :1.3                                                                         | dble_information |
+      | conn_0 | true     | insert into dble_db_instance set name='hostM9',db_group='ha_group9',addr='172.100.9.9',port=3307,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,flow_low_level=22,flow_high_level=2                    | The flowHighLevel must bigger than flowLowLevel                                                                       | dble_information |
 
 
     Given execute sql in "dble-1" in "admin" mode
@@ -1522,7 +1523,7 @@
       | conn_0 | false   | update dble_db_instance set flow_high_level=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set flow_high_level=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set flow_high_level=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'flow_high_level' should be an integer greater than 0!       | dble_information |
-#      | conn_0 | false   | update dble_db_instance set flow_high_level=2,flow_low_level=55 where db_group='ha_group1'                | Update failure.The reason is Column 'flow_high_level' should be an integer greater than 0!       | dble_information |
+      | conn_0 | false   | update dble_db_instance set flow_high_level=2,flow_low_level=55 where db_group='ha_group1'                | The flowHighLevel must bigger than flowLowLevel       | dble_information |
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                   | expect               | db               |
