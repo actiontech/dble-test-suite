@@ -234,6 +234,9 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.server.ServerQueryHandler#query||分库分表用户执行sql的线程|
 |com.actiontech.dble.services.rwsplit.RWSplitQueryHandler#query||读写分离用户执行sql的线程|
 |com.actiontech.dble.services.manager.ManagerQueryHandler#query||管理端执行sql的线程|
+|com.actiontech.dble.singleton.XASessionCheck#checkSessions||Timer线程管理的XA定时任务|
+|com.actiontech.dble.singleton.DDLTraceHelper#printDDLOutOfLimit||TimerScheduler线程管理的DDL定时任务|
+|com.actiontech.dble.statistic.stat.FrontActiveRatioStat#compress||TimerScheduler线程管理的前端连接繁忙率定时任务|
 
 ### 小版本改动：
 * 版本号
