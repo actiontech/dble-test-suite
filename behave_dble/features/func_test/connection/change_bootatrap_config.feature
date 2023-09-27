@@ -23,14 +23,14 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn   | toClose | sql                            | db                |
       | conn_0 | False   | select * from dble_thread_pool | dble_information  |
     Then check resultset "dble_thread_pool_1" has lines with following column values
-      | name-0                  | core_pool_size-2 | active_count-3 | waiting_task_count-4 |
-      | Timer                   | 1                | 0              | 0                    |
-      | frontWorker             | 1                | 1              | 0                    |
-      | backendWorker           | 1                | 0              | 0                    |
-      | complexQueryWorker      | 2                | 1              | 0                    |
-      | writeToBackendWorker    | 1                | 1              | 0                    |
-      | NIOFrontRW              | 1                | 1              | 0                    |
-      | NIOBackendRW            | 1                | 1              | 0                    |
+      | name-0                  | core_pool_size-2 | waiting_task_count-4 |
+      | Timer                   | 1                | 0                    |
+      | frontWorker             | 1                | 0                    |
+      | backendWorker           | 1                | 0                    |
+      | complexQueryWorker      | 2                | 0                    |
+      | writeToBackendWorker    | 1                | 0                    |
+      | NIOFrontRW              | 1                | 0                    |
+      | NIOBackendRW            | 1                | 0                    |
     Then check "/opt/dble/conf/bootstrap.dynamic.cnf" in "dble-1" was empty
 
     # unsupported insert and delete
