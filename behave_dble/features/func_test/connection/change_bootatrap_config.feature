@@ -24,12 +24,12 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     ####偶现timer刚刚好做任务，出现waiting_task_count值为1
       | name-0                  | core_pool_size-2 |
       | Timer                   | 1                |
-      | frontWorker             | 1                |
-      | backendWorker           | 1                |
-      | complexQueryWorker      | 2                |
-      | writeToBackendWorker    | 1                |
-      | NIOFrontRW              | 1                |
-      | NIOBackendRW            | 1                |
+      | BusinessExecutor        | 1                |
+      | backendBusinessExecutor | 1                |
+      | complexQueryExecutor    | 2                |
+      | writeToBackendExecutor  | 1                |
+      | $_NIO_REACTOR_FRONT-    | 1                |
+      | $_NIO_REACTOR_BACKEND-  | 1                |
     Then check "/opt/dble/conf/bootstrap.dynamic.cnf" in "dble-1" was empty
 
     # unsupported insert and delete
