@@ -566,7 +566,7 @@ def replace_config_in_node(context, node):
         node.sftp_conn.sftp_put(local_file, remote_file)
 
     # for code coverage start
-    if context.test_conf["code_coverage"] == "true":
+    if context.test_conf["code_coverage"].lower() == "true":
         if not dble_dir_exist:
             cmd = 'mkdir -p {0}/dble/lib'.format(dble_install_path)
             ssh_client.exec_command(cmd)
