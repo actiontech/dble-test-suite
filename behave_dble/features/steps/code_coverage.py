@@ -22,7 +22,7 @@ def init_code_coverage_conf(context):
         if file.endswith('_bk'):
             filename = "dble_conf/" + file + "/bootstrap.cnf"
 
-            if code_coverage == "true":
+            if code_coverage is not None and code_coverage.lower() == "true":
                 with open(filename, 'a', encoding='utf-8') as fp:
                     fp.write('\n')
                     fp.write(code_conf_str)
@@ -45,7 +45,7 @@ def init_code_coverage_conf(context):
 def general_jacoco_report(context):
     dble_remote_host = context.test_conf.get('dble_remote_host')
     code_coverage = context.test_conf["code_coverage"]
-    logger.debug(f"general html repport code_coverage is {code_coverage}")
+    logger.debug(f"general html report code_coverage is {code_coverage}")
 
     if code_coverage == "true" and dble_remote_host.startswith('ftp'):
         ftp_user = context.test_conf.get('ftp_user')
