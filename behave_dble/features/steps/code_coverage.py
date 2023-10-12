@@ -58,14 +58,14 @@ def general_jacoco_report(context):
 
         for node in DbleMeta.dbles:
             logger.debug('download dble source jar begin')
-            kwargs = {'local': f'/tmp/{source_jar}', 'remote': source_path, 'u': ftp_user,
+            kwargs = {'local': f'/share/{source_jar}', 'remote': source_path, 'u': ftp_user,
                       'p': ftp_passwd}
             wget_cmd = 'wget -q -O {local} --ftp-user={u} --ftp-password={p} {remote}'.format(**kwargs)
             rc, _, ste = node.ssh_conn.exec_command(wget_cmd)
             logger.debug('download dble source jar end')
             assert_that(rc, equal_to(0), "wget dble source jar failed for: {0}".format(ste))
 
-            mv_cmd = f"mv /tmp/{source_jar} {node.install_dir}/dble/logs"
+            mv_cmd = f"mv /share/{source_jar} {node.install_dir}/dble/logs"
             rc, sto, ste = node.ssh_conn.exec_command(tar_cmd)
             assert_that(len(ste) == 0, "mv dble source jar failed for: {0}".format(ste))
 
