@@ -348,7 +348,9 @@ def check_dble_exist(ssh_client, dble_install_path):
 def restart_dbles(context, nodes):
     stop_dbles(context)
     # sleep 4s to generate .exec for code coverage
-    # time.sleep(4)
+    if context.test_conf["code_coverage"].lower() == "true":
+        time.sleep(4)
+
     if len(nodes) > 1:
         config_zk_in_dble_nodes(context, "all zookeeper hosts")
         reset_zk_nodes(context)
@@ -564,10 +566,17 @@ def replace_config_in_node(context, node):
         node.sftp_conn.sftp_put(local_file, remote_file)
 
     # for code coverage start
-    # sourcejarDir = "{0}/{1}".format(os.getcwd(), "assets")
-    # local_jar="{0}/{1}".format(sourcejarDir,"jacocoagent.jar")
-    # remote_jar="{0}/dble/lib/{1}".format(node.install_dir,"jacocoagent.jar")
-    # node.sftp_conn.sftp_put(local_jar, remote_jar)
+    if context.test_conf["code_coverage"].lower() == "true":
+        if not dble_dir_exist:
+            cmd = 'mkdir -p {0}/dble/lib'.format(dble_install_path)
+            ssh_client.exec_command(cmd)
+
+        LOGGER.info('enable code_coverage, copy jacocoagent.jar begin')
+        sourcejarDir = "{0}/{1}".format(os.getcwd(), "assets")
+        local_jar = "{0}/{1}".format(sourcejarDir, "jacocoagent.jar")
+        remote_jar = "{0}/dble/lib/{1}".format(node.install_dir, "jacocoagent.jar")
+        node.sftp_conn.sftp_put(local_jar, remote_jar)
+        LOGGER.info('enable code_coverage, copy jacocoagent.jar end')
     # for code coverage end
 
 

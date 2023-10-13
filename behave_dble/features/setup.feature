@@ -16,6 +16,9 @@ Feature: Deploy DBLE test environment
     Given I create databases named db1, db2, db3, db4 on group1, group2, group3
     Given I create databases named schema1,schema2,schema3,testdb,db1,db2,db3,db4 on compare_mysql
 
+  @skip_restart
+  Scenario: Initialize the code coverage
+    Given check code coverage and change bootstrap conf
 
   @use.with_dble_topo=single
   Scenario: Initialize the single DBLE

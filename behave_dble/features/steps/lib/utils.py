@@ -454,3 +454,8 @@ def handle_env_variables(context: Context, userdata: UserData):
         assert_that(context.test_conf['ftp_password'], any_of(instance_of(str), none()))  # type: ignore
 
     handle_env_variable(context, userdata, 'ftp_password', check=ftp_password_check)
+
+    def code_coverage_check() -> None:
+        assert_that(context.test_conf['code_coverage'], any_of(instance_of(str), none()))  # type: ignore
+
+    handle_env_variable(context, userdata, 'code_coverage', check=code_coverage_check)
