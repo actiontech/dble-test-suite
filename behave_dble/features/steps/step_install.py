@@ -348,7 +348,7 @@ def check_dble_exist(ssh_client, dble_install_path):
 def restart_dbles(context, nodes):
     stop_dbles(context)
     # sleep 4s to generate .exec for code coverage
-    if context.test_conf["code_coverage"] == "true":
+    if context.test_conf["code_coverage"].lower() == "true":
         time.sleep(4)
 
     if len(nodes) > 1:
