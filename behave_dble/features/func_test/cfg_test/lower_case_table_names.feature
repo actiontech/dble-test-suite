@@ -2,6 +2,8 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhaohongjie at 2018/10/15
 # Modified by wujinling at 2019/09/17
+# Modified by yangjiaoge at 2023/10/13
+
 @use.with_mysql_version=5.7
 Feature: check collation/lower_case_table_names works right for dble
 #  lower_case_table_names=0, case sensitive
@@ -384,3 +386,42 @@ Feature: check collation/lower_case_table_names works right for dble
     Then restart dble in "dble-1" success
     Then execute admin cmd "dryrun"
     Then execute admin cmd "reload @@config_all -r"
+
+    #  """
+    #  issue DBLE0REQ-2318
+    #  后端mysql的lower_case_table_names配置不一致，在不变更配置的情况下，reload后，心跳现象不符合预期
+    #   repaired in 3.23.08 In other versions this case should be skipped
+    #  """
+  @restore_mysql_config
+  Scenario: issue-2318
+    """
+    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}
+    """
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                       | expect  | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                                        | success | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id bigint primary key auto_increment, v int)   | success | schema1 |
+    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+        """
+        /lower_case_table_names/d
+        /server-id/a lower_case_table_names = 1
+        """
+    Then execute sql in "dble-1" in "user" mode
+        | conn   | toClose | sql                                     | expect   | db      |
+        | conn_0 | False   | insert into sharding_4_t1 values(1)     | Please check the dbInstance is accessible  | schema1 |
+
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "5" times
+     """
+     this dbInstance\[=172.100.9.6:3306\]'s lower_case is wrong, set heartbeat Error
+     """
+
+    Then execute admin cmd "reload @@config_all "
+    
+    Then execute sql in "dble-1" in "user" mode
+        | conn   | toClose | sql                                     | expect   | db      |
+        | conn_0 | False   | insert into sharding_4_t1 values(1)     |Please check the dbInstance is accessible | schema1 |
+
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1" retry "5" times
+     """
+     this dbInstance\[=172.100.9.6:3306\]'s lower_case is wrong, set heartbeat Error
+     """
