@@ -47,7 +47,7 @@ def general_jacoco_report(context):
     code_coverage = context.test_conf["code_coverage"]
     logger.debug(f"general html report code_coverage is {code_coverage}")
 
-    if code_coverage.lower() == "true" and dble_remote_host.startswith('ftp'):
+    if code_coverage is not None and code_coverage.lower() == "true" and dble_remote_host.startswith('ftp'):
         ftp_user = context.test_conf.get('ftp_user')
         ftp_passwd = context.test_conf.get('ftp_password')
         dble_version = context.test_conf['dble_version']
