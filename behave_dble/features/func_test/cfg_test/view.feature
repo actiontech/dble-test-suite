@@ -9,6 +9,11 @@ Feature: #view test except sql cover
      """
     {'restore_view':{'dble-1':{'schema1':'view_test'}}}
     """
+    # 没有指定库的时候，crete view 不报错  coz：DBLE0REQ-2154
+     Then  execute sql in "dble-1" in "user" mode
+       | conn    | toClose  | sql                                            | expect               |
+       | conn_01 | true     | create view view_test as select * from test    | No database selected |
+
      Then  execute sql in "dble-1" in "user" mode
        | conn   | toClose  | sql                                           | expect  | db      |
        | conn_0 | False    | drop table if exists test                     | success | schema1 |
