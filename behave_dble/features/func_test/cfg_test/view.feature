@@ -11,8 +11,11 @@ Feature: #view test except sql cover
     """
     # 没有指定库的时候，crete view 不报错  coz：DBLE0REQ-2154
      Then  execute sql in "dble-1" in "user" mode
-       | conn    | toClose  | sql                                            | expect               |
-       | conn_01 | true     | create view view_test as select * from test    | No database selected |
+       | conn    | toClose  | sql                                                      | expect               |
+       | conn_01 | true     | create view view_test as select * from test              | No database selected |
+       | conn_01 | true     | create or replace view view_test as select * from test   | No database selected |
+       | conn_01 | true     | alter view view_test as select * from test               | No database selected |
+       | conn_01 | true     | drop view if exists view_test                            | No database selected |
 
      Then  execute sql in "dble-1" in "user" mode
        | conn   | toClose  | sql                                           | expect  | db      |
