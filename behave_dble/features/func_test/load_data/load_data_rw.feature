@@ -69,8 +69,8 @@ Feature: connect dble rwSplitUser in mysql(172.100.9.4), and execute cmd "load d
     rm -rf /root/sandboxes/sandbox/master/data/test.txt
     """
 
-#@skip
-  #coz:DBLE0REQ-2184
+
+
   Scenario: The value of a column in the data is empty, and the data can be successfully inserted  #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
