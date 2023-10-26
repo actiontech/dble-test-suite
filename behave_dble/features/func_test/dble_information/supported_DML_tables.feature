@@ -1735,7 +1735,7 @@
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose   | sql                                                                         | db               |
       | conn_0 | true      | update dble_db_group set heartbeat_timeout=100 where heartbeat_timeout=0    | dble_information |
-    Then check btrace "BtraceAboutConfig.java" output in "dble-1" with ">0" times
+    Then check btrace "BtraceAboutConfig.java" output in "dble-1" with ">5" times
     """
     setVersion
     """
