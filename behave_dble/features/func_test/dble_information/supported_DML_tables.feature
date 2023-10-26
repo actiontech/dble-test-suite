@@ -1725,7 +1725,23 @@
 
   Scenario: 验证获取KeyVariables时引入了超时机制，超时时间为heartbeatPeriodMillis，不会产生npe   #11
     ##DBLE0REQ-2129
-    # dble启动，默认的heartbeatPeriodMillis 10000ms
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+       <dbGroup rwSplitMode="1" name="ha_group1" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+             <property name="heartbeatPeriodMillis">100</property>
+          </dbInstance>
+      </dbGroup>
+      <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+             <property name="heartbeatPeriodMillis">100</property>
+          </dbInstance>
+      </dbGroup>
+    """
+    Then execute admin cmd "reload @@config"
+
     Given delete file "/opt/dble/BtraceAboutConfig.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutConfig.java.log" on "dble-1"
     #桩的默认时间为15s，桩的作用是进去getKeyVariables的逻辑
@@ -1735,12 +1751,12 @@
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose   | sql                                                                         | db               |
       | conn_0 | true      | update dble_db_group set heartbeat_timeout=100 where heartbeat_timeout=0    | dble_information |
-    Then check btrace "BtraceAboutConfig.java" output in "dble-1" with ">5" times
+    Then check btrace "BtraceAboutConfig.java" output in "dble-1" with ">10" times
     """
     setVersion
     """
     #等待10s，让日志输出
-    Given sleep "10" seconds
+    Given sleep "5" seconds
     Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
     Given stop btrace script "BtraceAboutConfig.java" in "dble-1"
     Given destroy btrace threads list
