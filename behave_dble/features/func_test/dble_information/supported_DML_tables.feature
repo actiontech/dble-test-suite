@@ -93,6 +93,8 @@
       | conn_0 | false   | insert into DBLE_db_group set name='ha_group21',heartbeat_stmt='select user',rw_split_mode=2,disable_ha='true', heartbeat_keep_alive=null    | success     | dble_information |
       | conn_0 | false   | select heartbeat_keep_alive from DBLE_db_group where name ='ha_group21'                                                    | has{((60,),)} | dble_information |
 
+    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
 
   @skip_restart
   Scenario: test the langreage of insert in dble manager   ---- dble_db_instance  #2
@@ -221,6 +223,8 @@
       | conn_0 | false   | insert into dble_db_instance set name='0B042',db_group='ha_group20',addr='172.100.9.1',port=3306,user='test',password_encrypt='111111',encrypt_configured='false',`primary`='true',min_conn_count=1,max_conn_count=9,flow_high_level=4567,flow_low_level=1234                          | success            | dble_information |
       | conn_0 | false   | select flow_high_level,flow_low_level from dble_db_instance where name ='0B042'                           | has{((4567,1234),)} | dble_information |
 
+    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
 
   @skip_restart
   Scenario: test the langreage of insert in dble manager   ---- dble_rw_split_entry  #3
@@ -288,6 +292,8 @@
       | conn_0 | false   | insert into dble_rw_split_entry set username='unique4',password_encrypt='111111',encrypt_configured='false',max_conn_count=16,db_group='ha_group6',conn_attr_value=-1,conn_attr_key='tenant'            | success     | dble_information |
       | conn_0 | false   | insert into dble_rw_split_entry set username='unique5',password_encrypt='111111',encrypt_configured='false',max_conn_count=18,db_group='ha_group6',conn_attr_value=0,conn_attr_key='tenant'             | success     | dble_information |
       | conn_0 | true    | insert into dble_rw_split_entry set username='unique6',password_encrypt='111111',encrypt_configured='false',max_conn_count=11,db_group='ha_group6',conn_attr_value=null,conn_attr_key=null              | success     | dble_information |
+
+    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
   @skip_restart
@@ -370,6 +376,8 @@
       | conn_0 | false   | update dble_db_group set heartbeat_keep_alive=80 where name = 'ha_group11'                          | success  | dble_information |
       | conn_0 | false   | update dble_db_group set delay_period_millis=20,delay_database='db1' where name = 'ha_group11'      | success  | dble_information |
       | conn_0 | false   | select heartbeat_keep_alive,delay_period_millis,delay_database from dble_db_group where name = 'ha_group11'        | has{((80,20,'db1'),)}  | dble_information |
+
+    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
   @skip_restart
@@ -509,6 +517,8 @@
       | conn_0 | false   | update dble_db_instance set db_district=null,db_data_center=null where name='0B053'              | success      | dble_information |
       | conn_0 | false   | select db_district,db_data_center from dble_db_instance where name ='0B053'                      | has{((None, None),)}     | dble_information |
 
+    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
 
   @skip_restart
   Scenario:  test the langreage of update in dble manager ----- dble_rw_split_entry #6
@@ -550,11 +560,11 @@
       | 17   | conn_attr | unique5    | false                | tenant          | 0                 | None           | 200              | None        | ha_group6   |
       | 18   | username  | unique6    | false                | None            | None              | None           | 11               | None        | ha_group6   |
 
-
-
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                            | expect       | db               |
       | conn_0 | false   | update dble_rw_split_entry set encrypt_configured=null where db_group='ha_group6'              | success      | dble_information |
+
+    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
   Scenario: test the langreage of delete in dble manager   ---- dble_db_group   dble_db_instance  dble_rw_split_entry #7
@@ -675,7 +685,7 @@
       | conn_0 | false   | delete from dble_db_group where active ='true'                                 | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_db_instance`(`db_group`) REFERENCES `dble_db_group`(`name`)    | dble_information |
       | conn_0 | false   | delete from dble_db_group where name ='ha_group2'                              | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_db_instance`(`db_group`) REFERENCES `dble_db_group`(`name`)    | dble_information |
 
-#    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
     Then execute admin cmd "reload @@config_all"
 
@@ -909,6 +919,8 @@
       | conn_0 | false   | update dble_db_group set heartbeat_keep_alive=delay_period_millis*10  where rw_split_mode = 0       | Not Supported of Value EXPR :delay_period_millis * 10              | dble_information |
       | conn_0 | false   | update dble_db_group set heartbeat_keep_alive=SYSDATE()  where rw_split_mode = 0                    | Not Supported of Value EXPR :SYSDATE()                             | dble_information |
       | conn_0 | false   | update dble_db_group set heartbeat_keep_alive=-2 where rw_split_mode = 0                            | Update failure.The reason is Column 'heartbeat_keep_alive' should be an integer greater than or equal to 0 | dble_information |
+
+    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
 
 
   Scenario: test unsupported syntax dble_db_instance   #9
@@ -1522,6 +1534,8 @@
       | conn_0 | false   | update dble_db_instance set flow_low_level=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set flow_low_level=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'flow_low_level' should be an integer greater than 0!       | dble_information |
 
+    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
 
   Scenario: test unsupported syntax dble_rw_split_entry   #10
     Given execute sql in "dble-1" in "admin" mode
@@ -1691,3 +1705,46 @@
       | conn_0 | false   | update dble_rw_split_entry set db_group=user*10  where db_group='ha_group6'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
       | conn_0 | false   | update dble_rw_split_entry set db_group=SYSDATE()  where db_group='ha_group6'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
       | conn_0 | false   | update dble_rw_split_entry set db_group=-2 where db_group='ha_group6'                | Update failure.The reason is Column 'db_group' value '-2' does not exist or not active                            | dble_information |
+
+    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+
+
+  Scenario: 验证获取KeyVariables时引入了超时机制，超时时间为heartbeatPeriodMillis，不会产生npe   #11
+    ##DBLE0REQ-2129
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+       <dbGroup rwSplitMode="1" name="ha_group1" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+             <property name="heartbeatPeriodMillis">100</property>
+          </dbInstance>
+      </dbGroup>
+      <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+             <property name="heartbeatPeriodMillis">100</property>
+          </dbInstance>
+      </dbGroup>
+    """
+    Then execute admin cmd "reload @@config"
+
+    Given delete file "/opt/dble/BtraceAboutConfig.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutConfig.java.log" on "dble-1"
+    #桩的默认时间为15s，桩的作用是进去getKeyVariables的逻辑
+    Given prepare a thread run btrace script "BtraceAboutConfig.java" in "dble-1"
+
+    #9066端口执行update
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose   | sql                                                                         | db               |
+      | conn_0 | true      | update dble_db_group set heartbeat_timeout=100 where heartbeat_timeout=0    | dble_information |
+    Then check btrace "BtraceAboutConfig.java" output in "dble-1" with ">10" times
+    """
+    setVersion
+    """
+    #等待10s，让日志输出
+    Given sleep "5" seconds
+    Then check "NullPointerException|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Given stop btrace script "BtraceAboutConfig.java" in "dble-1"
+    Given destroy btrace threads list
+    Given delete file "/opt/dble/BtraceAboutConfig.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutConfig.java.log" on "dble-1"
