@@ -497,7 +497,7 @@ Feature: check single dble detach or attach from cluster
     Given update file content "./assets/BtraceClusterDetachAttach1.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    /handle/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(8000L)/;/\}/!ba}
     """
     Given update file content "./assets/BtraceClusterDetachAttach3.java" in "behave" with sed cmds
     """
