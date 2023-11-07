@@ -1589,7 +1589,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False   | select * from sql_log                                                | length{(17)}     | dble_information | 5       |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                         | length{(15)}     | dble_information | 5       |
     #has issue :DBLE0REQ-2251
-#    Then check "NullPointerException|caught err|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then check "NullPointerException|caught err|exception occurred when the statistics were recorded|Exception processing" not exist in file "/opt/dble/logs/dble.log" in host "dble-1"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       use server prepare
