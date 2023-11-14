@@ -13,7 +13,7 @@ pymysql = "==1.0.3"
 pyyaml = "==6.0"
 allure-behave = "==2.13.2"
 lxml = "==4.9.2"
-pip = "==23.1.2"
+pip = "==23.3"
 mysql-connector-python = "==8.0.11"
 
 [dev-packages]
