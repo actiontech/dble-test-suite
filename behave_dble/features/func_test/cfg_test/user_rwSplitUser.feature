@@ -514,3 +514,61 @@ Feature: test config in user.xml  ---  rwSplitUser
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                               | expect  | db  |
       | rwS1 | 111111 | conn_0 | true    | drop table if exists test_table                   | success | db1 |
+
+@skip_restart
+  Scenario: test for DBLE0REQ-2377
+    ## 读写分离用户下，dbGroup @@disable 存在异步问题
+     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      """
+      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true" />
+      </dbGroup>
+      """
+     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+      <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
+      """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      /-Dprocessors=/d
+      /-DprocessorExecutor=/d
+      $a -Dprocessors=4
+      $a -DprocessorExecutor=4
+      """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                               | expect  | db  |
+      | rwS1 | 111111 | conn_0 | False   | drop table if exists test_table                   | success | db1 |
+      | rwS1 | 111111 | conn_0 | False   | create table test_table(id int, name varchar(12)) | success | db1 |
+
+    Given prepare a thread run btrace script "BtraceAbout2377.java" in "dble-1"
+    ##开启桩，8066 执行sql hang住
+    Then execute "user" cmd  in "dble-1" at background
+      | user | passwd  | conn   | toClose | sql                                              | db   |
+      | rwS1 | 111111  | conn_1 | false   | insert into test_table values(1,'1'),(2,'2')     | db1  |
+    Then check btrace "BtraceAbout2377.java" output in "dble-1"
+       """
+       get into 15s sleep
+       """
+    ## 8066hang住的时候 9066执行disable enable,show @@heartbeat;show @@dbinstance,多次执行的结果不变 stop：false，disable：false
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                     | expect   |
+      | conn_2 | False   | dbGroup @@disable name = 'ha_group3'    | success  |
+      | conn_2 | False   | dbGroup @@enable name = 'ha_group3'     | success  |
+      | conn_2 | False   | show @@heartbeat     | hasStr{'false'}   |
+      | conn_2 | False   | show @@dbinstance    | hasStr{'false'}   |
+      | conn_2 | False   | show @@heartbeat     | hasStr{'false'}   |
+      | conn_2 | False   | show @@dbinstance    | hasStr{'false'}   |
+      | conn_2 | False   | show @@heartbeat     | hasStr{'false'}   |
+      | conn_2 | False   | show @@dbinstance    | hasStr{'false'}   |
+    #btrace的时间大于默认心跳恢复时间
+    Given sleep "15" seconds
+    Given stop btrace script "BtraceAbout2377.java" in "dble-1"
+    Given destroy btrace threads list
+    ##退出桩，8066执行sql不报错
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                             | expect  | db  |
+      | rwS1 | 111111 | conn_0 | False   | insert into test_table values(1,'1'),(2,'2')    | success | db1 |
+      | rwS1 | 111111 | conn_0 | False   | insert into test_table values(1,'1'),(2,'2')    | success | db1 |
+      | rwS1 | 111111 | conn_0 | true    | drop table if exists test_table                 | success | db1 |
