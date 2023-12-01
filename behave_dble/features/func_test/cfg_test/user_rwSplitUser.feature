@@ -537,7 +537,7 @@ Feature: test config in user.xml  ---  rwSplitUser
       | user | passwd | conn   | toClose | sql                                               | expect  | db  |
       | rwS1 | 111111 | conn_0 | true    | drop table if exists test_table                   | success | db1 |
 
-@skip_restart
+
   Scenario: test for DBLE0REQ-2377
     ## 读写分离用户下，dbGroup @@disable 存在异步问题
      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -578,12 +578,33 @@ Feature: test config in user.xml  ---  rwSplitUser
       | conn   | toClose | sql                                     | expect   |
       | conn_2 | False   | dbGroup @@disable name = 'ha_group3'    | success  |
       | conn_2 | False   | dbGroup @@enable name = 'ha_group3'     | success  |
-      | conn_2 | False   | show @@heartbeat     | hasStr{'false'}   |
-      | conn_2 | False   | show @@dbinstance    | hasStr{'false'}   |
-      | conn_2 | False   | show @@heartbeat     | hasStr{'false'}   |
-      | conn_2 | False   | show @@dbinstance    | hasStr{'false'}   |
-      | conn_2 | False   | show @@heartbeat     | hasStr{'false'}   |
-      | conn_2 | False   | show @@dbinstance    | hasStr{'false'}   |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_1"
+      | conn   | toClose | sql               |
+      | conn_3 | false   | show @@heartbeat  |
+    Then check resultset "heartbeat_1" has lines with following column values
+      | NAME-0 | HOST-1      | PORT-2 | STOP-9 |
+      | hostM3 | 172.100.9.4 | 3306   | false  |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_1"
+      | sql               |
+      | show @@dbinstance |
+    Then check resultset "Res_1" has lines with following column values
+      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | DISABLED-10 |
+      | ha_group3  | hostM3 | 172.100.9.4 | 3306   | false       |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "heartbeat_rs"
+      | conn   | toClose | sql               |
+      | conn_3 | false   | show @@heartbeat  |
+    Then check resultset "heartbeat_rs" has lines with following column values
+      | NAME-0 | HOST-1      | PORT-2 | STOP-9 |
+      | hostM3 | 172.100.9.4 | 3306   | false  |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_D"
+      | sql               |
+      | show @@dbinstance |
+    Then check resultset "Res_D" has lines with following column values
+      | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | DISABLED-10 |
+      | ha_group3  | hostM3 | 172.100.9.4 | 3306   | false       |
+
+
+
     #btrace的时间大于默认心跳恢复时间
     Given sleep "15" seconds
     Given stop btrace script "BtraceAbout2377.java" in "dble-1"
