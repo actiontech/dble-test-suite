@@ -9,6 +9,17 @@ Feature: #view test except sql cover
      """
     {'restore_view':{'dble-1':{'schema1':'view_test'}}}
     """
+    # 没有指定库的时候，crete view 不报错  coz：DBLE0REQ-2154 DBLE0REQ-2372
+     Then  execute sql in "dble-1" in "user" mode
+       | conn    | toClose  | sql                                                      | expect               |
+       | conn_01 | true     | create view view_test as select * from test              | No database selected |
+       | conn_01 | true     | create or replace view view_test as select * from test   | No database selected |
+       | conn_01 | true     | alter view view_test as select * from test               | No database selected |
+       | conn_01 | true     | drop view if exists view_test                            | No database selected |
+       | conn_01 | true     | drop view if exists shce.view_test                       | Unknown database shce|
+       | conn_01 | true     | drop view view_test as select * from test                | sql syntax error     |
+       | conn_01 | true     | drop view if exists schema1.view_test                    | success |
+
      Then  execute sql in "dble-1" in "user" mode
        | conn   | toClose  | sql                                           | expect  | db      |
        | conn_0 | False    | drop table if exists test                     | success | schema1 |
@@ -137,7 +148,7 @@ Feature: #view test except sql cover
 
 
   @skip
-    #3.21.06修复，不确定是否往前合
+   # 3.21.06修复，不确定是否往前合
   Scenario: create some view ,drop view in dble from DBLE0REQ-1163  #3
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
