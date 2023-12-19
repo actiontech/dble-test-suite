@@ -7,7 +7,7 @@ verify_ssl = true
 mysqlclient = "==1.4.2"
 behave = "==1.2.6"
 environs = "==9.5.0"
-paramiko = "==3.2.0"
+paramiko = "==3.4.0"
 pyhamcrest = "==2.0.4"
 pymysql = "==1.0.3"
 pyyaml = "==6.0"
