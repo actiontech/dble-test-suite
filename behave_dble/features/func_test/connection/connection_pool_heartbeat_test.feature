@@ -71,7 +71,7 @@ Feature: connection pool basic test - heartbeat create connections
     Given sleep "10" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5,1" times
     """
-    heartbeat to \[172.100.9.5:3306\] setError
+    heartbeat to \[ha_group1:hostM1:172.100.9.5:3306\] setError
     """
     Given start mysql in host "mysql-master1"
     Given sleep "10" seconds
@@ -115,7 +115,7 @@ Feature: connection pool basic test - heartbeat create connections
     Given sleep "10" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5,1" times
     """
-    heartbeat to \[172.100.9.5:3306\] setTimeout
+    heartbeat to \[ha_group1:hostM1:172.100.9.5:3306\] setTimeout
     """
     Given execute oscmd in "mysql-master1"
       """
