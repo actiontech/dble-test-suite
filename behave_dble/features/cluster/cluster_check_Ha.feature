@@ -259,33 +259,33 @@ Feature: test "ha" in zk cluster
       | conn_2  | False   | insert into sharding2 values (1,1)       | success                                                                                 | schema1 |         |
       | conn_2  | False   | insert into sharding2 values (2,2)       | success                                                                                 | schema1 |         |
       | conn_2  | False   | select * from sharding2                  | length{(2)}                                                                             | schema1 | 6,2     |
-      | conn_2  | False   | insert into sharding4 values (1,1)       | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema1 |         |
-      | conn_2  | False   | insert into sharding4 values (3,3)       | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema1 |         |
+      | conn_2  | False   | insert into sharding4 values (1,1)       | the dbInstance[ha_group2:hostM2:172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema1 |         |
+      | conn_2  | False   | insert into sharding4 values (3,3)       | the dbInstance[ha_group2:hostM2:172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema1 |         |
       | conn_2  | False   | insert into sharding4 values (2,2)       | success                                                                                 | schema1 |         |
       | conn_2  | False   | insert into sharding4 values (4,4)       | success                                                                                 | schema1 |         |
-      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema1 |         |
+      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | the dbInstance[ha_group2:hostM2:172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema1 |         |
       | conn_2  | False   | select * from sharding4                  | the dbGroup[ha_group2] doesn't contain active dbInstance.                               | schema1 |         |
       | conn_2  | False   | select * from sharding4 where id=2       | length{(1)}                                                                             | schema1 | 6,2     |
       | conn_2  | False   | select * from sharding4 where id=1       | the dbGroup[ha_group2] doesn't contain active dbInstance.                               | schema1 |         |
       | conn_2  | False   | insert into child1 values (1,1)          | success                                                                                 | schema1 |         |
       | conn_2  | False   | insert into child1 values (2,2)          | success                                                                                 | schema1 |         |
       | conn_2  | true    | select * from child1                     | length{(2)}                                                                             | schema1 | 6,2     |
-      | conn_21 | False   | insert into sharding21 values (1,1)      | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema3 |         |
-      | conn_21 | False   | insert into sharding21 values (2,2)      | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema3 |         |
+      | conn_21 | False   | insert into sharding21 values (1,1)      | the dbInstance[ha_group2:hostM2:172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema3 |         |
+      | conn_21 | False   | insert into sharding21 values (2,2)      | the dbInstance[ha_group2:hostM2:172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema3 |         |
       | conn_21 | true    | select * from sharding21                 | the dbGroup[ha_group2] doesn't contain active dbInstance.                               | schema3 |         |
 
     Then execute sql in "dble-3" in "user" mode
       | conn    | toClose | sql                                   | expect                                                                                  | db      | timeout |
       | conn_3  | False   | insert into sing1 values (1)          | success                                                                                 | schema1 |         |
       | conn_3  | False   | select * from sing1                   | length{(1)}                                                                             | schema1 | 6,2     |
-      | conn_3  | False   | insert into sing2 values (1)          | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema1 |         |
+      | conn_3  | False   | insert into sing2 values (1)          | the dbInstance[ha_group2:hostM2:172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema1 |         |
       | conn_3  | False   | select * from sing2                   | the dbGroup[ha_group2] doesn't contain active dbInstance.                               | schema1 |         |
       | conn_3  | False   | insert into no_sharding1 values (1,1) | success                                                                                 | schema1 |         |
       | conn_3  | true    | select * from no_sharding1            | length{(1)}                                                                             | schema1 | 6,2     |
-      | conn_31 | False   | insert into no_sharding2 values (1,1) | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema3 |         |
+      | conn_31 | False   | insert into no_sharding2 values (1,1) | the dbInstance[ha_group2:hostM2:172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema3 |         |
       | conn_31 | true    | select * from no_sharding2            | the dbGroup[ha_group2] doesn't contain active dbInstance.                               | schema3 |         |
       | conn_32 | False   | show tables                           | the dbGroup[ha_group2] doesn't contain active dbInstance.                               | schema2 |         |
-      | conn_32 | False   | insert into vertical1 values (1)      | the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema2 |         |
+      | conn_32 | False   | insert into vertical1 values (1)      | the dbInstance[ha_group2:hostM2:172.100.9.6:3306] is disable. Please check the dbInstance disable status | schema2 |         |
       | conn_32 | true    | select * from  vertical1              | the dbGroup[ha_group2] doesn't contain active dbInstance.                               | schema2 |         |
 
     #case change master to slave1 on mysql group
@@ -591,33 +591,33 @@ Feature: test "ha" in zk cluster
       | conn_2  | False   | insert into sharding2 values (1,1)       | success                                                                                 | schema1 |         |
       | conn_2  | False   | insert into sharding2 values (2,2)       | success                                                                                 | schema1 |         |
       | conn_2  | False   | select * from sharding2                  | length{(6)}                                                                             | schema1 | 6,2     |
-      | conn_2  | False   | insert into sharding4 values (1,1)       | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema1 |         |
-      | conn_2  | False   | insert into sharding4 values (3,3)       | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema1 |         |
+      | conn_2  | False   | insert into sharding4 values (1,1)       | the dbInstance[ha_group2:hostS1:172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema1 |         |
+      | conn_2  | False   | insert into sharding4 values (3,3)       | the dbInstance[ha_group2:hostS1:172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema1 |         |
       | conn_2  | False   | insert into sharding4 values (2,2)       | success                                                                                 | schema1 |         |
       | conn_2  | False   | insert into sharding4 values (4,4)       | success                                                                                 | schema1 |         |
-      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema1 |         |
+      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | the dbInstance[ha_group2:hostS1:172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema1 |         |
       | conn_2  | False   | select * from sharding4                  | length{(8)}                                                                             | schema1 | 6,2     |
       | conn_2  | False   | select * from sharding4 where id=2       | length{(3)}                                                                             | schema1 | 6,2     |
       | conn_2  | False   | select * from sharding4 where id=1       | length{(1)}                                                                             | schema1 | 6,2     |
       | conn_2  | False   | insert into child1 values (1,1)          | success                                                                                 | schema1 |         |
       | conn_2  | False   | insert into child1 values (2,2)          | success                                                                                 | schema1 |         |
       | conn_2  | true    | select * from child1                     | length{(5)}                                                                             | schema1 | 6,2     |
-      | conn_21 | False   | insert into sharding21 values (1,1)      | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema3 |         |
-      | conn_21 | False   | insert into sharding21 values (2,2)      | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema3 |         |
+      | conn_21 | False   | insert into sharding21 values (1,1)      | the dbInstance[ha_group2:hostS1:172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema3 |         |
+      | conn_21 | False   | insert into sharding21 values (2,2)      | the dbInstance[ha_group2:hostS1:172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema3 |         |
       | conn_21 | true    | select * from sharding21                 | length{(2)}                                                                             | schema3 | 6,2     |
 
     Then execute sql in "dble-3" in "user" mode
       | conn    | toClose | sql                                   | expect                                                                                  | db      | timeout |
       | conn_3  | False   | insert into sing1 values (1)          | success                                                                                 | schema1 |         |
       | conn_3  | False   | select * from sing1                   | length{(3)}                                                                             | schema1 | 6,2     |
-      | conn_3  | False   | insert into sing2 values (1)          | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema1 |         |
+      | conn_3  | False   | insert into sing2 values (1)          | the dbInstance[ha_group2:hostS1:172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema1 |         |
       | conn_3  | False   | select * from sing2                   | length{(1)}                                                                             | schema1 | 6,2     |
       | conn_3  | False   | insert into no_sharding1 values (1,1) | success                                                                                 | schema1 |         |
       | conn_3  | true    | select * from no_sharding1            | length{(3)}                                                                             | schema1 | 6,2     |
-      | conn_31 | False   | insert into no_sharding2 values (1,1) | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema3 |         |
+      | conn_31 | False   | insert into no_sharding2 values (1,1) | the dbInstance[ha_group2:hostS1:172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema3 |         |
       | conn_31 | true    | select * from no_sharding2            | length{(1)}                                                                             | schema3 | 6,2     |
       | conn_32 | False   | show tables                           | success                                                                                 | schema2 |         |
-      | conn_32 | False   | insert into vertical1 values (1)      | the dbInstance[172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema2 |         |
+      | conn_32 | False   | insert into vertical1 values (1)      | the dbInstance[ha_group2:hostS1:172.100.9.6:3307] is disable. Please check the dbInstance disable status | schema2 |         |
       | conn_32 | true    | select * from  vertical1              | length{(1)}                                                                             | schema2 |         |
 
     #case change master to slave2 on mysql group
