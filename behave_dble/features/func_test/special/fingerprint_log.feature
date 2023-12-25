@@ -223,7 +223,7 @@ Feature: check fingerprint log
       """
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu1" in host "dble-1" retry "2,2" times
     """
-    heartbeat to [[]172.100.9.6:3306[]] setOK
+    heartbeat to [[]ha_group2:hostM2:172.100.9.6:3306[]] setOK
     """
     Then check general log in host "mysql-master2" has "from=instance-test reason=heartbeat\*/select user()" occured ">0" times
     Given turn off general log in "mysql-master2"
