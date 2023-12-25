@@ -234,7 +234,7 @@ Feature: test "ha" in zk cluster
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
       """
-      the dbInstance\[172.100.9.6:3306\] is disable. Please check the dbInstance disable status
+      the dbInstance\[ha_group2:hostM2:172.100.9.6:3306\] is disable. Please check the dbInstance disable status
       """
     Given delete file "/opt/dble/logs/dble_user_query.log" on "dble-1"
     Given execute sqls in "dble-1" at background
@@ -243,7 +243,7 @@ Feature: test "ha" in zk cluster
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
       """
-      the dbInstance\[172.100.9.6:3306\] is disable. Please check the dbInstance disable status
+      the dbInstance\[ha_group2:hostM2:172.100.9.6:3306\] is disable. Please check the dbInstance disable status
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect                                                    | db      | timeout |
@@ -568,7 +568,7 @@ Feature: test "ha" in zk cluster
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
       """
-      the dbInstance\[172.100.9.6:3307\] is disable. Please check the dbInstance disable status
+      the dbInstance\[ha_group2:hostS1:172.100.9.6:3307\] is disable. Please check the dbInstance disable status
       """
     Given delete file "/opt/dble/logs/dble_user_query.log" on "dble-1"
     Given execute sqls in "dble-1" at background
@@ -577,7 +577,7 @@ Feature: test "ha" in zk cluster
     Given sleep "1" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble_user_query.log" in host "dble-1"
       """
-      the dbInstance\[172.100.9.6:3307\] is disable. Please check the dbInstance disable status
+      the dbInstance\[ha_group2:hostS1:172.100.9.6:3307\] is disable. Please check the dbInstance disable status
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect      | db      | timeout |

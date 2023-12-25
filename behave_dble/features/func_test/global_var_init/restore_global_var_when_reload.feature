@@ -476,7 +476,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to \[172.100.9.5:3306\] setError
+    heartbeat to \[ha_group1:hostM1:172.100.9.5:3306\] setError
     """
     Given prepare a thread run btrace script "BtraceSelectGlobalVars1.java" in "dble-1"
     Given prepare a thread run btrace script "BtraceSelectGlobalVars2.java" in "dble-1"
@@ -501,5 +501,5 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to \[172.100.9.5:3306\] setError
+    heartbeat to \[ha_group1:hostM1:172.100.9.5:3306\] setError
     """

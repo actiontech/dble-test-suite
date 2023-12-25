@@ -253,7 +253,7 @@ Feature: check inner thread command
       | total_task      | 5            |
     Then  execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect                                                                                  | db      |
-      | conn_1 | True   | drop table if exists sharding_4_t1  | the dbInstance[172.100.9.5:3306] can't reach. Please check the dbInstance is accessible | schema1 |
+      | conn_1 | True   | drop table if exists sharding_4_t1  | the dbInstance[ha_group1:hostM1:172.100.9.5:3306] can't reach. Please check the dbInstance is accessible | schema1 |
       # check heartbeat
       Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql               | expect                                                                                       |

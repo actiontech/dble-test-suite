@@ -124,7 +124,7 @@ Feature: heartbeat basic test
     Given sleep "14" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1" retry "5" times
     """
-    heartbeat to \[172.100.9.5:3306\] setTimeout
+    heartbeat to \[ha_group1:hostM1:172.100.9.5:3306\] setTimeout
     """
 
 
@@ -170,7 +170,7 @@ Feature: heartbeat basic test
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to \[172.100.9.5:3306\] setError
+    heartbeat to \[ha_group1:hostM1:172.100.9.5:3306\] setError
     """
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                         | expect              | db      |
@@ -279,7 +279,7 @@ Feature: heartbeat basic test
     """
     select user\(\)\] is closed, due to stream closed by peer, we will try again immediately
     retry to do heartbeat for the 3 times
-    heartbeat to \[172.100.9.5:3306\] setError
+    heartbeat to \[ha_group1:hostM1:172.100.9.5:3306\] setError
     """
     #sleep 1s (timeout配置的时间为1s) 使其进入心跳timeout逻辑
     Then execute sql in "dble-1" in "user" mode
@@ -376,7 +376,7 @@ Feature: heartbeat basic test
     """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to \[172.100.9.5:3306\] setError
+    heartbeat to \[ha_group1:hostM1:172.100.9.5:3306\] setError
     """
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                         | expect  | db     |
