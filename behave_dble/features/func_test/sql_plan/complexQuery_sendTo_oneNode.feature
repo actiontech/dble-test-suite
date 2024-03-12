@@ -134,10 +134,10 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | explain select count(*) from aly_test a where a.c='a' or a.c='b' and a.id =1 |
     Then check resultset "rs_4" has lines with following column values
       | DATA_NODE-0     | TYPE-1        | SQL/REF-2                                               |
-      | dn1_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where ((`a`.`c` = 'b') AND (`a`.`id` = 1)) OR (a.c IN ('a')) LIMIT 100     |
-      | dn2_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where ((`a`.`c` = 'b') AND (`a`.`id` = 1)) OR (a.c IN ('a')) LIMIT 100     |
-      | dn3_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where ((`a`.`c` = 'b') AND (`a`.`id` = 1)) OR (a.c IN ('a')) LIMIT 100     |
-      | dn4_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where ((`a`.`c` = 'b') AND (`a`.`id` = 1)) OR (a.c IN ('a')) LIMIT 100     |
+      | dn1_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR a.c IN ('a')) LIMIT 100     |
+      | dn2_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR a.c IN ('a')) LIMIT 100     |
+      | dn3_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR a.c IN ('a')) LIMIT 100     |
+      | dn4_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR a.c IN ('a')) LIMIT 100     |
       | merge_1         | MERGE         | dn1_0; dn2_0; dn3_0; dn4_0                                                                                                           |
       | aggregate_1     | AGGREGATE     | merge_1                                                                                                                              |
       | limit_1         | LIMIT         | aggregate_1                                                                                                                          |
@@ -217,10 +217,10 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | explain select * from aly_test a join a_manager b on a.id = b.id where a.id =1 and b.id=1 |
     Then check resultset "rs_9" has lines with following column values
       | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
-      | dn2_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` where (`a`.`id` = 1) AND (`a`.`id` = 1) ORDER BY `a`.`id` ASC  |
+      | dn2_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` where  ( `a`.`id` = 1 AND `a`.`id` = 1) ORDER BY `a`.`id` ASC  |
       | merge_1         | MERGE         | dn2_0                                                                                                       |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                     |
-      | dn1_0           | BASE SQL      | select `b`.`id`,`b`.`c` from  `a_manager` `b` where (`b`.`id` = 1) AND (`b`.`id` = 1) ORDER BY `b`.`id` ASC |
+      | dn1_0           | BASE SQL      | select `b`.`id`,`b`.`c` from  `a_manager` `b` where  ( `b`.`id` = 1 AND `b`.`id` = 1) ORDER BY `b`.`id` ASC |
       | merge_2         | MERGE         | dn1_0                                                                                                       |
       | shuffle_field_3 | SHUFFLE_FIELD | merge_2                                                                                                     |
       | join_1          | JOIN          | shuffle_field_1; shuffle_field_3                                                                            |
@@ -318,12 +318,12 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | explain select * from aly_test a join aly_order b on a.c = b.c where (a.id =1 and b.id=1) or (a.id=2 and b.id=2) |
     Then check resultset "rs_17" has lines with following column values
       | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                               |
-      | dn2_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` where (`a`.`id` = 1) OR (`a`.`id` = 2) ORDER BY `a`.`c` ASC  |
-      | dn3_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` where (`a`.`id` = 1) OR (`a`.`id` = 2) ORDER BY `a`.`c` ASC  |
+      | dn2_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` where  ( `a`.`id` = 1 OR `a`.`id` = 2) ORDER BY `a`.`c` ASC  |
+      | dn3_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` where  ( `a`.`id` = 1 OR `a`.`id` = 2) ORDER BY `a`.`c` ASC  |
       | merge_and_order_1 | MERGE_AND_ORDER | dn2_0; dn3_0                                                                                              |
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                         |
-      | dn2_1             | BASE SQL        | select `b`.`id`,`b`.`c` from  `aly_order` `b` where (`b`.`id` = 1) OR (`b`.`id` = 2) ORDER BY `b`.`c` ASC |
-      | dn3_1             | BASE SQL        | select `b`.`id`,`b`.`c` from  `aly_order` `b` where (`b`.`id` = 1) OR (`b`.`id` = 2) ORDER BY `b`.`c` ASC |
+      | dn2_1             | BASE SQL        | select `b`.`id`,`b`.`c` from  `aly_order` `b` where  ( `b`.`id` = 1 OR `b`.`id` = 2) ORDER BY `b`.`c` ASC |
+      | dn3_1             | BASE SQL        | select `b`.`id`,`b`.`c` from  `aly_order` `b` where  ( `b`.`id` = 1 OR `b`.`id` = 2) ORDER BY `b`.`c` ASC |
       | merge_and_order_2 | MERGE_AND_ORDER | dn2_1; dn3_1                                                                                              |
       | shuffle_field_3   | SHUFFLE_FIELD   | merge_and_order_2                                                                                         |
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_3                                                                          |
@@ -338,8 +338,8 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | explain select * from aly_test a join a_three b on a.c = b.c where (a.id =4 and b.id=1) or (a.id=3) |
     Then check resultset "rs_18" has lines with following column values
       | DATA_NODE-0   | TYPE-1          | SQL/REF-2                                               |
-      | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` where (`a`.`id` = 4) OR (a.id IN (3)) ORDER BY `a`.`c` ASC     |
-      | dn4_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` where (`a`.`id` = 4) OR (a.id IN (3)) ORDER BY `a`.`c` ASC     |
+      | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` where  ( `a`.`id` = 4 OR a.id IN (3)) ORDER BY `a`.`c` ASC |
+      | dn4_0             | BASE SQL        | select `a`.`id`,`a`.`c` from  `aly_test` `a` where  ( `a`.`id` = 4 OR a.id IN (3)) ORDER BY `a`.`c` ASC |
       | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn4_0                                                                                                |
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                           |
       | dn1_1             | BASE SQL        | select `b`.`id`,`b`.`c` from  `a_three` `b` ORDER BY `b`.`c` ASC                                            |
@@ -369,10 +369,10 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | explain select * from aly_test a join aly_order b using(id,c)  where a.id=2 or b.id=1 |
     Then check resultset "rs_20" has lines with following column values
       | DATA_NODE-0 | TYPE-1        | SQL/REF-2                                               |
-      | dn2_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and (a.c = b.c) where (b.id IN (1)) OR (a.id IN (2)) |
-      | dn3_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and (a.c = b.c) where (b.id IN (1)) OR (a.id IN (2)) |
-      | merge_1         | MERGE         | dn2_0; dn3_0                                                                                                                                   |
-      | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                                                        |
+      | dn2_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and (a.c = b.c) where  ( b.id IN (1) OR a.id IN (2)) |
+      | dn3_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` join  `aly_order` `b` on `a`.`id` = `b`.`id` and (a.c = b.c) where  ( b.id IN (1) OR a.id IN (2)) |
+      | merge_1         | MERGE         | dn2_0; dn3_0                                                                                                                                           |
+      | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                                                                |
     Then execute sql in "dble-1" and the result should be consistent with mysql
       | conn   | toClose | sql                                                                                 | db      |
       | conn_0 | False   | select * from aly_test a join aly_order b using(id,c)  where a.id=2 or b.id=1       | schema1 |
@@ -481,7 +481,7 @@ Feature: following complex queries are able to send one datanode
       | limit_1            | LIMIT                 | merge_1                                                                                                                                                                                                                                  |
       | shuffle_field_1    | SHUFFLE_FIELD         | limit_1                                                                                                                                                                                                                                  |
       | scalar_sub_query_1 | SCALAR_SUB_QUERY      | shuffle_field_1                                                                                                                                                                                                                          |
-      | dn1_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `sharding_two_node`.`id`,`sharding_two_node`.`c_flag`,`sharding_two_node`.`c_decimal` from  `sharding_two_node` where (`sharding_two_node`.`id` = 1) AND (`sharding_two_node`.`c_flag` = '{NEED_TO_REPLACE}') |
+      | dn1_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `sharding_two_node`.`id`,`sharding_two_node`.`c_flag`,`sharding_two_node`.`c_decimal` from  `sharding_two_node` where  ( `sharding_two_node`.`id` = 1 AND `sharding_two_node`.`c_flag` = '{NEED_TO_REPLACE}') |
       | merge_2            | MERGE                 | dn1_0                                                                                                                                                                                                                                    |
       | shuffle_field_2    | SHUFFLE_FIELD         | merge_2                                                                                                                                                                                                                                  |
     Then execute sql in "dble-1" and the result should be consistent with mysql
