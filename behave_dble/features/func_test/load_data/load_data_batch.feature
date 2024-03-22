@@ -282,7 +282,6 @@ Feature: case about load data batch
       | new_1  | true    | drop table if exists schema1.test1                 | schema1 |
 
 
-  @skip ## skip for DBLE0REQ-2191
   Scenario: test something wrong with file , the logic of load data batch          #4
     #for Multi-node-sharding table
     Given execute oscmd in "dble-1"
@@ -455,7 +454,6 @@ Feature: case about load data batch
 
 
      ##coz DBLE0REQ-2190
-  @skip ## skip for DBLE0REQ-2191
   Scenario: test during execute load data, backend mysql disconnected, the logic of load data batch       #5
     Given execute admin cmd "kill @@load_data" success
     Given execute admin cmd "enable @@load_data_batch" success
@@ -572,7 +570,7 @@ Feature: case about load data batch
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
     Given remove local and server file "data1.txt"
 
-  @skip ## skip for DBLE0REQ-2191
+
   Scenario: test with kill @@load_data                    #6
     Given execute oscmd in "dble-1"
     """
