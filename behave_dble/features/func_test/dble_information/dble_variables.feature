@@ -30,7 +30,7 @@ Feature:  dble_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(120)}     | dble_information |
+      | conn_0 | False   | select * from dble_variables    | length{(121)}     | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
@@ -89,6 +89,7 @@ Feature:  dble_variables test
       | checkTableConsistencyPeriod             | 1800000ms                       | The period of consistency tableStructure check. The default value is 1800000ms(means 30minutes=30*60*1000)                                                                                                           | true        |
       | processorCheckPeriod                    | 1000ms                          | The period between the jobs for cleaning the closed or overtime connections. The default is 1000ms                                                                                                                   | true        |
       | sqlExecuteTimeout                       | 300s                            | The max query executing time.If time out,the connection will be closed. The default is 300 seconds                                                                                                                   | true        |
+      | heartbeatSqlExecuteTimeout              | 10s                             | The max heartbeat query executing time.If time out,the connection will be closed. The default is 10 seconds.set 0 to disable it.                                                                                     | true        |
       | recordTxn                               | 0                               | Whether the transaction be recorded as a file, the default value is 0                                                                                                                                                | true        |
       | transactionLogBaseDir                   | ./txlogs/                       | The directory of the transaction record file, the default value is ./txlogs/                                                                                                                                         | true        |
       | transactionLogBaseName                  | server-tx                       | The name of the transaction record file. The default value is server-tx                                                                                                                                              | true        |
@@ -165,7 +166,7 @@ Feature:  dble_variables test
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(20)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(20)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(120)}| dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(121)}| dble_information |
     #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                              | db               |
@@ -210,7 +211,7 @@ Feature:  dble_variables test
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
       | false       | 20      |
-      | true        | 100     |
+      | true        | 101     |
 
   #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
@@ -234,8 +235,8 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{(('xalog',),)}   | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{(('',),)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(103)}        | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(100)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(104)}        | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(101)}        | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
   #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
