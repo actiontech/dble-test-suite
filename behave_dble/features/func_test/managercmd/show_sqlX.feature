@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2023 ActionTech.
+# Copyright (C) 2016-2025 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 Feature: show @@sql, show @@sql.resultset
     ###这个case加retry是因为机器的时间震荡问题，到时sql记录的开始时间和结束时间会出现偏差。导致记录sql的id和sql对应不上，下次失败，先查看时间。
