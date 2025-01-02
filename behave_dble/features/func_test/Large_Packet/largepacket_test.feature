@@ -1,5 +1,5 @@
 # -*- coding=utf-8 -*-
-# Copyright (C) 2016-2023 ActionTech.
+# Copyright (C) 2016-2025 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 2023/02/15  2023/06/21
 ## case 中的重启dble都是设计过的，每次重启dble是为了内存的释放，修改者移除要注意
